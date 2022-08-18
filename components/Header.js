@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     box:{
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:30
+        marginTop:33
     },
     text:{
         color: '#000000',
@@ -37,5 +37,6 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop:15
     }
 })
