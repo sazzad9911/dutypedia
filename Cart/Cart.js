@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, Dimensions, Image } from 'react-native';
+import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
 
 
 const { width, height } = Dimensions.get('window')
 function Cart(props) {
     return (
-        <View style={{
+        <TouchableOpacity style={{
             width: width / 3,
-            height: 120,
+            height: 140,
             shadowOffset: {
                 height: 1,
                 width: 1,
@@ -24,18 +24,21 @@ function Cart(props) {
 
 
         }}>
-            
-                <Image style={{
-                    height: 80,
-                    width: '100%',
-                    borderTopRightRadius:5,
-                    borderTopLeftRadius:5,
-                }} source={{ uri: 'https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2' }} />
-            
-            <Text>
 
+            <Image style={{
+                height: 80,
+                width: '100%',
+                borderTopRightRadius: 5,
+                borderTopLeftRadius: 5,
+            }} source={{ uri: 'https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2' }} />
+
+            <Text style={{
+
+                margin: 10,
+            }}>
+                Builder Service
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 }
 
