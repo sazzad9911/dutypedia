@@ -1,12 +1,17 @@
 import React from 'react';
-import {View,Text} from 'react-native';
+import {ScrollView,Text} from 'react-native';
+import ChatCart from './../Cart/ChatCart';
 
 
-const Message = () => {
+const Message = (props) => {
     return (
-        <View>
-            
-        </View>
+        <ScrollView>
+           <ChatCart navigation={props.navigation} active={true}/> 
+           <ChatCart navigation={props.navigation}/> 
+           <ChatCart navigation={props.navigation} active={true}/> 
+           <ChatCart navigation={props.navigation}/> 
+           <ChatCart navigation={props.navigation}/> 
+        </ScrollView>
     );
 };
 

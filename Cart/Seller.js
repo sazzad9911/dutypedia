@@ -15,12 +15,12 @@ function Seller(props) {
                 width: 1,
             },
             shadowColor: "black",
-            shadowRadius: 5,
-            elevation: 5,
+            shadowRadius: 1,
+            elevation: 1,
             shadowOpacity: .5,
             backgroundColor: primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 5,
             flexDirection: 'row',
 
@@ -48,7 +48,8 @@ function Seller(props) {
             </View>
             <View style={{
                 marginTop: 5,
-                flex: 6
+                flex: 4,
+                marginLeft: 5,
             }}>
                 <Text style={{
                     fontSize: 15
@@ -57,7 +58,7 @@ function Seller(props) {
                     Easin Arafat
                 </Text>
                 <Text style={{
-                    fontSize: 8
+                    fontSize: 10
 
                 }}>
                     Peciality : It

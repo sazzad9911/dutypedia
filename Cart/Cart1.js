@@ -6,6 +6,7 @@ import { Foundation } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 function Cart1(props) {
+    const [Select,setSelect]=React.useState(false)
     return (
         <View style={{
             width: 250,
@@ -15,12 +16,12 @@ function Cart1(props) {
                 width: 1,
             },
             shadowColor: "black",
-            shadowRadius: 5,
-            elevation: 5,
+            shadowRadius: 1,
+            elevation: 1,
             shadowOpacity: .5,
             backgroundColor: primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 5,
             flexDirection: 'row',
 
@@ -46,7 +47,7 @@ function Cart1(props) {
                     Builder Service
                 </Text>
             </View>
-            <TouchableOpacity style={{
+            <TouchableOpacity onPress={() =>setSelect(!Select)} style={{
                 margin: 10,
                 borderColor: 'black',
                 borderRadius: 15,
@@ -57,9 +58,11 @@ function Cart1(props) {
                 flex: 1
             }}>
                 <Text style={{
-                    color: 'red',
+                    color: Select?'green': 'red',
                 }}>
-                    +add
+                    {
+                        Select?'done':'+add'
+                    }
                 </Text>
 
             </TouchableOpacity>

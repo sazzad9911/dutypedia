@@ -14,12 +14,12 @@ function Cart(props) {
                 width: 1,
             },
             shadowColor: "black",
-            shadowRadius: 5,
-            elevation: 5,
+            shadowRadius: 1,
+            elevation: 1,
             shadowOpacity: .5,
             backgroundColor: primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 5,
 
 

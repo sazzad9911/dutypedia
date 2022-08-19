@@ -5,22 +5,25 @@ import { Foundation } from '@expo/vector-icons';
 
 
 const { width, height } = Dimensions.get('window')
+
 function Options(props) {
+    const [Select,setSelect]=React.useState(false)
     return (
-        <TouchableOpacity style={{
-            width: width/3,
-            height: 50,
+        <TouchableOpacity onPress={() =>setSelect(!Select)} style={{
+            minWidth: width/3,
+            paddingHorizontal: 30,
+            height: 45,
             shadowOffset: {
                 height: 1,
                 width: 1,
             },
             shadowColor: "black",
-            shadowRadius: 5,
-            elevation: 5,
+            shadowRadius: 1,
+            elevation: 1,
             shadowOpacity: .5,
-            backgroundColor: primaryColor,
+            backgroundColor: Select?'#117A65': primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 25,
             flexDirection: 'row',
             justifyContent:'center',
@@ -31,8 +34,9 @@ function Options(props) {
             <Text style={{
                 justifyContent:'center',
                 alignItems:'center',
+                color:Select?'white':'black'
             }}>
-                Lawyer
+                {props.name?props.name:'Lawyer'}
             </Text>
             
         </TouchableOpacity>
