@@ -1,34 +1,42 @@
 import React from 'react';
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 const Profile = () => {
+    const window = Dimensions.get('window')
     return (
-        <View style={{
-            height: 160,
-            backgroundColor: 'red',
+        <ScrollView style={{
             marginLeft: 10,
             marginRight: 10,
-            borderRadius: 5,
+            flexDirection: 'column',
+            overflow: 'visible',
+            backgroundColor: 'transparent',
         }}>
-
-            <TouchableOpacity style={{
-                height: 40,
-                width: 40,
-                borderRadius: 20,
-                backgroundColor: 'white',
-                margin: 10,
-                marginHorizontal: width - 80,
-                alignItems: 'center',
-                justifyContent: 'center',
-
+            <View style={{
+                height: 160,
+                backgroundColor: 'red',
+                borderRadius: 5,
             }}>
-                <Ionicons name="camera-outline" size={24} color="red" />
 
-            </TouchableOpacity>
+                <TouchableOpacity style={{
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    backgroundColor: 'white',
+                    margin: 10,
+                    marginHorizontal: width - 80,
+                    alignItems: 'center',
+                    justifyContent: 'center',
 
-        </View>
+                }}>
+                    <Ionicons name="camera-outline" size={24} color="red" />
+
+                </TouchableOpacity>
+
+            </View>
+            
+        </ScrollView>
     );
 };
 
