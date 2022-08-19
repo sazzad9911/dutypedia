@@ -5,7 +5,8 @@ import { Foundation } from '@expo/vector-icons';
 
 
 const { width, height } = Dimensions.get('window')
-function Cart1(props) {
+
+function Options(props) {
     const [Select,setSelect]=React.useState(false)
     return (
         <TouchableOpacity onPress={() =>setSelect(!Select)} style={{
@@ -42,4 +43,4 @@ function Cart1(props) {
     );
 }
 
-export default Cart1;
+export default Options;

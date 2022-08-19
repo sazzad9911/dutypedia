@@ -2,6 +2,7 @@ import React from 'react';
 import {ScrollView,Text} from 'react-native';
 import ChatCart from './../Cart/ChatCart';
 
+
 const Message = (props) => {
     return (
         <ScrollView>
