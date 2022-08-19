@@ -102,48 +102,13 @@ const Home = () => {
                 Popular Category
             </Text>
             <View style={{
-                flexDirection: 'row',
-                height: 140,
-                backgroundColor:'#ffb5f5',
-                
-                borderRadius: 10,
-            }}>
-                <View style={{
-                    flex:3,
+                flexDirection:'row',
+                flexWrap: 'wrap',
                 }}>
-                    <Text style={{
-                        fontSize: 20,
-                        marginLeft: 10,
-                        marginTop: 20,
-                    }}>
-                        Become A Seller
-                    </Text>
-                    <TouchableOpacity style={{
-                        marginLeft: 10,
-                        marginTop:20,
-                        height: 40,
-                        backgroundColor: 'white',
-                        borderRadius: 20,
-                        justifyContent:'center',
-                        alignItems:'center'
-                    }}>
-                    <Text>
-                        Create An Account
-                    </Text>
-
-                    </TouchableOpacity>
-                    
-                </View>
-                <View style={{
-                    flex :2,
-                }}>
-                    <Image style={{
-                        height:120,
-                        margin:10,
-                
-            }} source={{ uri: 'https://www.incimages.com/uploaded_files/image/1920x1080/getty_486140535_970936970450058_85865.jpg' }} />
-
-                    </View>
+            <Options name='New Service'/>
+            <Options name='Electricity Service' />
+            <Options />
+            <Options />
             </View>
             <View style={{height:20}}/>
             <SellerCart/>
