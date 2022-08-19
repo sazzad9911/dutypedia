@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
 import { FontAwesome } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 function Cart2(props) {
@@ -88,10 +88,16 @@ function Cart2(props) {
             }} >
                 500$
             </Text>
-            <TouchableOpacity  style={{
+            <TouchableOpacity onPress={() =>setLove(!Love)} style={{
                 flex:1
             }} >
-            <EvilIcons name="heart" size={24} color="black" />
+            {
+                Love?(
+                    <AntDesign name="heart" size={24} color="black" />
+                ):(
+                    <AntDesign name="hearto" size={24} color="black" />
+                )
+            }
             </TouchableOpacity>
 
             </View>

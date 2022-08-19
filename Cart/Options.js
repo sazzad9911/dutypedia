@@ -19,7 +19,7 @@ function Cart1(props) {
             shadowRadius: 5,
             elevation: 5,
             shadowOpacity: .5,
-            backgroundColor: Select?'#229954': primaryColor,
+            backgroundColor: Select?'#117A65': primaryColor,
             margin: 10,
             marginLeft: 5,
             borderRadius: 25,
@@ -34,7 +34,7 @@ function Cart1(props) {
                 alignItems:'center',
                 color:Select?'white':'black'
             }}>
-                Lawyer
+                {props.name?props.name:'Lawyer'}
             </Text>
             
         </TouchableOpacity>
