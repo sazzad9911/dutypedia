@@ -5,9 +5,9 @@ import { Foundation } from '@expo/vector-icons';
 
 
 const { width, height } = Dimensions.get('window')
-function Cart1(props) {
+function Seller(props) {
     return (
-        <View style={{
+        <TouchableOpacity style={{
             width: 250,
             height: 50,
             shadowOffset: {
@@ -27,44 +27,45 @@ function Cart1(props) {
 
         }}>
             <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Foundation style={{
-                    margin: 10
-                }} name="music" size={24} color="black" />
-            </View>
-            <View style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Text style={{
 
-                    margin: 10,
-                }}>
-                    Builder Service
-                </Text>
-            </View>
-            <TouchableOpacity style={{
-                margin: 10,
-                borderColor: 'black',
-                borderRadius: 15,
-                height: 30,
+
+                margin: 5,
+                width: 40,
+                height: 40,
+                borderRadius: 20,
                 borderWidth: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                flex: 1
+            }}>
+                <Image style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                }}
+                    source={{ uri: 'https://img.freepik.com/free-photo/stylish-little-smiling-girl-posing-dress-isolated-white-studio-background-caucasian-blonde-female-model-human-emotions-facial-expression-childhood-standing-with-hands-crossed_155003-23028.jpg?w=2000' }}
+                />
+
+            </View>
+            <View style={{
+                marginTop: 5,
+                flex: 6
             }}>
                 <Text style={{
-                    color: 'red',
-                }}>
-                    +add
-                </Text>
+                    fontSize: 15
 
-            </TouchableOpacity>
-        </View>
+                }}>
+                    Easin Arafat
+                </Text>
+                <Text style={{
+                    fontSize: 8
+
+                }}>
+                    Peciality : It
+                </Text>
+            </View>
+
+        </TouchableOpacity>
     );
 }
 
-export default Cart1;
+export default Seller;

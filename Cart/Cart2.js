@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
 import { FontAwesome } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 function Cart2(props) {
@@ -37,28 +38,30 @@ function Cart2(props) {
             }}>
                 <View style={{
                     flexDirection: 'row',
-                    margin: 5,
+                    marginLeft: 10,
                     marginTop:5,
-                    flex:4,
+                    flex:6,
                 }}>
 
-                    <FontAwesome name="star" size={12} color="#FFCC00" />
-                    <FontAwesome name="star" size={12} color="#FFCC00" />
-                    <FontAwesome name="star" size={12} color="#FFCC00" />
-                    <FontAwesome name="star" size={12} color="#FFCC00" />
-                    <FontAwesome name="star" size={12} color="#FFCC00" />
+                    <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
+                    <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
+                    <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
+                    <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
+                    <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
                     <Text style={{
-                        marginLeft:5
-                        
+                        marginLeft:5,
+                        fontSize:10,
                     }}>
                         5.0
                     </Text>
                 </View>
                 <View style={{
                     flex:2,
-                    margin:5,
+                    marginTop:5,
                 }}>
-                    <Text>
+                    <Text style={{
+                        fontSize:10
+                    }}>
                         View 10k
                     </Text>
                 </View>
@@ -66,10 +69,29 @@ function Cart2(props) {
             </View>
             <Text style={{
 
-                margin: 10,
+                marginLeft: 10,
+                marginRight:10,
             }}>
-                Builder Service
+                I Will Make a Custom Graphics For Your Blog
             </Text>
+            <View style={{
+                flexDirection:'row',
+                marginTop:10,
+            }}>
+            <Text style={{
+                flex:6,
+                marginLeft:10,
+                
+            }} >
+                500$
+            </Text>
+            <TouchableOpacity  style={{
+                flex:1
+            }} >
+            <EvilIcons name="heart" size={24} color="black" />
+            </TouchableOpacity>
+
+            </View>
         </TouchableOpacity>
     );
 }
