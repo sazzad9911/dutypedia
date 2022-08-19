@@ -19,7 +19,7 @@ function Cart(props) {
             shadowOpacity: .5,
             backgroundColor: primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 5,
 
 

@@ -6,10 +6,11 @@ import { Foundation } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 function Cart1(props) {
+    const [Select,setSelect]=React.useState(false)
     return (
-        <TouchableOpacity style={{
+        <TouchableOpacity onPress={() =>setSelect(!Select)} style={{
             width: width/3,
-            height: 50,
+            height: 45,
             shadowOffset: {
                 height: 1,
                 width: 1,
@@ -18,9 +19,9 @@ function Cart1(props) {
             shadowRadius: 5,
             elevation: 5,
             shadowOpacity: .5,
-            backgroundColor: primaryColor,
+            backgroundColor: Select?'#229954': primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 25,
             flexDirection: 'row',
             justifyContent:'center',
@@ -31,6 +32,7 @@ function Cart1(props) {
             <Text style={{
                 justifyContent:'center',
                 alignItems:'center',
+                color:Select?'white':'black'
             }}>
                 Lawyer
             </Text>

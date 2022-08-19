@@ -6,6 +6,7 @@ import { EvilIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window')
 function Cart2(props) {
+    const [Love,setLove]=React.useState(false)
     return (
         <TouchableOpacity style={{
             width: 240,
@@ -20,7 +21,7 @@ function Cart2(props) {
             shadowOpacity: .5,
             backgroundColor: primaryColor,
             margin: 10,
-            marginLeft: 0,
+            marginLeft: 5,
             borderRadius: 5,
 
 
@@ -41,6 +42,7 @@ function Cart2(props) {
                     marginLeft: 10,
                     marginTop:5,
                     flex:6,
+                    marginBottom:5
                 }}>
 
                     <FontAwesome style={{ marginTop:3}} name="star" size={10} color="#FFCC00" />
@@ -67,7 +69,7 @@ function Cart2(props) {
                 </View>
 
             </View>
-            <Text style={{
+            <Text numLines={2} style={{
 
                 marginLeft: 10,
                 marginRight:10,
@@ -81,6 +83,7 @@ function Cart2(props) {
             <Text style={{
                 flex:6,
                 marginLeft:10,
+                fontSize:18
                 
             }} >
                 500$

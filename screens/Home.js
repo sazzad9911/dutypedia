@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, Dimensions,
+     TouchableOpacity, Image } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
 import Cart from '../Cart/Cart';
 import Cart1 from '../Cart/Cart1';
@@ -12,13 +13,15 @@ const { width, height } = Dimensions.get('window')
 const Home = () => {
     return (
         <ScrollView style={{
-            marginLeft: 20,
-            marginRight: 20,
+            paddingLeft: 15,
+            paddingRight: 15,
         }}>
             <View>
                 <Text style={{
                     fontSize: 20,
-                    color: textColor
+                    color: textColor,
+                    fontWeight: 'bold',
+                    marginLeft:5
                 }}>Category</Text>
             </View>
             <ScrollView horizontal={true}>
@@ -27,7 +30,11 @@ const Home = () => {
                 <Cart />
                 <Cart />
             </ScrollView>
-            <Text>
+            <Text style={{
+                fontWeight:'bold',
+                marginVertical:10,
+                marginLeft:5
+            }}>
                 What is Your Best Interested Category
             </Text>
             <ScrollView horizontal={true}>
@@ -55,16 +62,23 @@ const Home = () => {
                 flexDirection: 'row',
             }}>
                 <Text style={{
-
-                    flex: 5
-                }}>
+                fontWeight:'bold',
+                marginVertical:10,
+                flex:5,
+                marginLeft:5
+            }}>
                     Some Suggest
                 </Text>
                 <TouchableOpacity style={{
-                    flex: 1,
+                marginVertical:10,
+                flex:1
                 }}>
-                    <Text>
-                        view all
+                    <Text style={{
+                        fontWeight:'bold',
+                        textDecorationLine: 'underline',
+                        marginRight:5
+                    }}>
+                        View All
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -75,7 +89,11 @@ const Home = () => {
                 <Cart2 />
             </ScrollView>
 
-            <Text>
+            <Text style={{
+                fontWeight:'bold',
+                marginVertical:10,
+                marginLeft:5
+            }}>
                 Top Seller
             </Text>
             <ScrollView horizontal={true}>
