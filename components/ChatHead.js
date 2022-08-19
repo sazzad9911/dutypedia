@@ -6,12 +6,14 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { assentColor, primaryColor } from './../assets/colors';
 import { FontAwesome } from '@expo/vector-icons';
+import OutsideView from 'react-native-detect-press-outside';
 
 const ChatHead = (props) => {
     const navigation = props.navigation
     const [visible,setVisible]=React.useState(false)
     return (
-        <View style={{
+        
+        <View  style={{
             marginTop:33,
             minHeight:50,
             paddingVertical:5,
@@ -41,9 +43,10 @@ const ChatHead = (props) => {
         <Modal transparent={true} visible={visible} onRequestClose={()=>{
             setVisible(!visible);
         }}>
-        <MenuBar/>
+        <MenuBar setVisible={setVisible}/>
         </Modal>
         </View>
+     
     );
 };
 
@@ -90,11 +93,23 @@ const styles= StyleSheet.create({
         alignItems: 'center',
     }
 })
-const MenuBar=()=>{
+const MenuBar=(props)=>{
     const [Call, setCall] = React.useState(false);
     const [Mute,setMute] = React.useState(false);
+    const childRef = React.useRef();
     return (
-        <View style={styles.menuContainer}>
+        <OutsideView 
+      childRef={childRef}
+      onPressOutside={() => {
+        // handle press outside of childRef event
+        props.setVisible(false)
+      }}
+    >
+    <View style={{
+        width: '100%',
+        height: '100%',
+    }}>
+        <View ref={childRef} style={styles.menuContainer}>
         <View style={styles.menuSubContainer}>
         <Ionicons name="ios-call" size={20} color="black" />
         <Text>Call</Text>
@@ -127,5 +142,7 @@ const MenuBar=()=>{
         <View style={{width:5}}/>
         </View>
         </View>
+        </View>
+        </OutsideView>
     )
 }

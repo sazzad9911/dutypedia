@@ -5351,6 +5351,11 @@ rc@~1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-detect-click-outside@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/react-detect-click-outside/-/react-detect-click-outside-1.1.7.tgz#8dd5766544475ab0d55084b3e2a35165e9a47854"
+  integrity sha512-dMrBZD7JW0Eh/uYNmMLTNwFj6afGYxAnc80fDSGJdjXjxJddH8ZazyMg2emyb8CAx9Hilr+r1fY+tm7O7m9eJg==
+
 react-devtools-core@4.24.0:
   version "4.24.0"
   resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.24.0.tgz#7daa196bdc64f3626b3f54f2ff2b96f7c4fdf017"
@@ -5388,6 +5393,11 @@ react-native-codegen@^0.69.1:
     flow-parser "^0.121.0"
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
+
+react-native-detect-press-outside@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-detect-press-outside/-/react-native-detect-press-outside-1.0.4.tgz#9a5e2fca38c4b56398e237a8dc170d81fca8753f"
+  integrity sha512-XiUD6Ls5kf+bOXNSyrPK1gx4cnUEMt1hvWWFuXZeCT9McoY2Vh1sXShotKwetp6jSi0l+SzeNm3hA1izhm8Riw==
 
 react-native-gradle-plugin@^0.0.7:
   version "0.0.7"
