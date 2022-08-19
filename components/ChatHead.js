@@ -91,6 +91,7 @@ const styles= StyleSheet.create({
         justifyContent:'space-between',
         marginHorizontal:5,
         alignItems: 'center',
+        marginVertical:5
     }
 })
 const MenuBar=(props)=>{

@@ -26,7 +26,8 @@ const Home = () => {
                     marginLeft:5
                 }}>Category</Text>
             </View>
-            <ScrollView horizontal={true}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} horizontal={true}>
                 <Cart />
                 <Cart />
                 <Cart />
@@ -39,7 +40,8 @@ const Home = () => {
             }}>
                 What is Your Best Interested Category
             </Text>
-            <ScrollView horizontal={true}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} horizontal={true}>
             <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
             <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
             <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
@@ -69,7 +71,8 @@ const Home = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <ScrollView horizontal={true}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} horizontal={true}>
                 <Cart2 />
                 <Cart2 />
                 <Cart2 />
@@ -83,13 +86,15 @@ const Home = () => {
             }}>
                 Top Seller
             </Text>
-            <ScrollView horizontal={true}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} horizontal={true}>
                 <Options />
                 <Options />
                 <Options />
                 <Options />
             </ScrollView>
-            <ScrollView horizontal={true}>
+            <ScrollView showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} horizontal={true}>
             <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
             <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
             <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>

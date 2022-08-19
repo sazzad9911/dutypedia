@@ -44,7 +44,7 @@ const TabRoute = () => {
         <Tab.Screen options={{header:()=><Header/>}} name="Search" component={Search} />
         <Tab.Screen options={{header:()=><ChatHeader/>}} name="Message" component={Message} />
         <Tab.Screen options={{header:()=><Header/>}} name="Notification" component={Notification} />
-        <Tab.Screen options={{header:()=><Header/>}} name="Profile" component={Profile} />
+        <Tab.Screen options={{headerShown:false}} name="Profile" component={Profile} />
       </Tab.Navigator>
     );
 };
