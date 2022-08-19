@@ -111,11 +111,12 @@ const Home = () => {
             <View style={{
                 flexDirection: 'row',
                 height: 140,
+                backgroundColor:'#ffb5f5',
                 
                 borderRadius: 10,
             }}>
                 <View style={{
-flex:3
+flex:3,
                 }}>
                     <Text style={{
                         fontSize: 20,

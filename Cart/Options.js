@@ -5,7 +5,7 @@ import { Foundation } from '@expo/vector-icons';
 
 
 const { width, height } = Dimensions.get('window')
-function Cart1(props) {
+function Options(props) {
     return (
         <TouchableOpacity style={{
             width: width/3,
@@ -39,4 +39,4 @@ function Cart1(props) {
     );
 }
 
-export default Cart1;
+export default Options;
