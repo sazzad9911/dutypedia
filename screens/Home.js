@@ -1,24 +1,29 @@
 import React from 'react';
-import { View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, Dimensions,
+     TouchableOpacity, Image } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
 import Cart from '../Cart/Cart';
 import Cart1 from '../Cart/Cart1';
 import Cart2 from '../Cart/Cart2';
 import Options from '../Cart/Options';
 import Seller from '../Cart/Seller';
+import SellerCart from './../Cart/SellerCart';
+import CombineCart from './../Cart/CombineCart';
 
 const { width, height } = Dimensions.get('window')
 
 const Home = () => {
     return (
         <ScrollView style={{
-            marginLeft: 20,
-            marginRight: 20,
+            paddingLeft: 15,
+            paddingRight: 15,
         }}>
             <View>
                 <Text style={{
                     fontSize: 20,
-                    color: textColor
+                    color: textColor,
+                    fontWeight: 'bold',
+                    marginLeft:5
                 }}>Category</Text>
             </View>
             <ScrollView horizontal={true}>
@@ -27,44 +32,40 @@ const Home = () => {
                 <Cart />
                 <Cart />
             </ScrollView>
-            <Text>
+            <Text style={{
+                fontWeight:'bold',
+                marginVertical:10,
+                marginLeft:5
+            }}>
                 What is Your Best Interested Category
             </Text>
             <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
             </ScrollView>
-            <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-            </ScrollView>
-            <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-            </ScrollView>
+            
             <View style={{
                 flexDirection: 'row',
             }}>
                 <Text style={{
-
-                    flex: 5
-                }}>
+                fontWeight:'bold',
+                marginVertical:10,
+                flex:5,
+                marginLeft:5
+            }}>
                     Some Suggest
                 </Text>
                 <TouchableOpacity style={{
-                    flex: 1,
+                marginVertical:10,
+                flex:1
                 }}>
-                    <Text>
-                        view all
+                    <Text style={{
+                        fontWeight:'bold',
+                        textDecorationLine: 'underline',
+                        marginRight:5
+                    }}>
+                        View All
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -75,7 +76,11 @@ const Home = () => {
                 <Cart2 />
             </ScrollView>
 
-            <Text>
+            <Text style={{
+                fontWeight:'bold',
+                marginVertical:10,
+                marginLeft:5
+            }}>
                 Top Seller
             </Text>
             <ScrollView horizontal={true}>
@@ -85,28 +90,16 @@ const Home = () => {
                 <Options />
             </ScrollView>
             <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
             </ScrollView>
-            <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-            </ScrollView>
-            <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-            </ScrollView>
-            <Text>
-                Popular Categpry
+            <Text style={{
+                fontWeight:'bold',
+                marginVertical:10,
+                marginLeft:5
+            }}>
+                Popular Category
             </Text>
             <View style={{
                 flexDirection: 'row',
@@ -116,7 +109,7 @@ const Home = () => {
                 borderRadius: 10,
             }}>
                 <View style={{
-flex:3,
+                    flex:3,
                 }}>
                     <Text style={{
                         fontSize: 20,
@@ -152,7 +145,9 @@ flex:3,
 
                     </View>
             </View>
-
+            <View style={{height:20}}/>
+            <SellerCart/>
+            <View style={{height:10}}/>
         </ScrollView>
     );
 };

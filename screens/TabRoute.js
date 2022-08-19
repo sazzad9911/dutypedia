@@ -8,6 +8,7 @@ import Message from './Message';
 import Notification from './Notification';
 import Profile from './Profile';
 import { Ionicons } from '@expo/vector-icons';
+import ChatHeader from './../components/ChatHeader';
 const Tab = createBottomTabNavigator();
 
 const TabRoute = () => {
@@ -41,7 +42,7 @@ const TabRoute = () => {
         })}>
         <Tab.Screen options={{header:()=><Header/>}} name="Home" component={Home} />
         <Tab.Screen options={{header:()=><Header/>}} name="Search" component={Search} />
-        <Tab.Screen options={{header:()=><Header/>}} name="Message" component={Message} />
+        <Tab.Screen options={{header:()=><ChatHeader/>}} name="Message" component={Message} />
         <Tab.Screen options={{header:()=><Header/>}} name="Notification" component={Notification} />
         <Tab.Screen options={{header:()=><Header/>}} name="Profile" component={Profile} />
       </Tab.Navigator>
