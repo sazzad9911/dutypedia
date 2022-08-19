@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Text, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { textColor, primaryColor } from './../assets/colors';
+import { Foundation } from '@expo/vector-icons';
 
 
 const { width, height } = Dimensions.get('window')
-function Cart(props) {
+function Cart1(props) {
     return (
         <TouchableOpacity style={{
-            width: width / 3,
-            height: 140,
+            width: width/3,
+            height: 50,
             shadowOffset: {
                 height: 1,
                 width: 1,
@@ -20,26 +21,22 @@ function Cart(props) {
             backgroundColor: primaryColor,
             margin: 10,
             marginLeft: 0,
-            borderRadius: 5,
+            borderRadius: 25,
+            flexDirection: 'row',
+            justifyContent:'center',
+                alignItems:'center',
 
 
         }}>
-
-            <Image style={{
-                height: 80,
-                width: '100%',
-                borderTopRightRadius: 5,
-                borderTopLeftRadius: 5,
-            }} source={{ uri: 'https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2' }} />
-
             <Text style={{
-
-                margin: 10,
+                justifyContent:'center',
+                alignItems:'center',
             }}>
-                Builder Service
+                Lawyer
             </Text>
+            
         </TouchableOpacity>
     );
 }
 
-export default Cart;
+export default Cart1;
