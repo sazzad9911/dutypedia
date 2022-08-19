@@ -9,7 +9,8 @@ function Cart1(props) {
     const [Select,setSelect]=React.useState(false)
     return (
         <TouchableOpacity onPress={() =>setSelect(!Select)} style={{
-            width: width/3,
+            minWidth: width/3,
+            paddingHorizontal: 30,
             height: 45,
             shadowOffset: {
                 height: 1,

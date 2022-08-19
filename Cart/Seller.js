@@ -48,7 +48,8 @@ function Seller(props) {
             </View>
             <View style={{
                 marginTop: 5,
-                flex: 6
+                flex: 4,
+                marginLeft: 5,
             }}>
                 <Text style={{
                     fontSize: 15
@@ -57,7 +58,7 @@ function Seller(props) {
                     Easin Arafat
                 </Text>
                 <Text style={{
-                    fontSize: 8
+                    fontSize: 10
 
                 }}>
                     Peciality : It

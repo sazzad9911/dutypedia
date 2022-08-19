@@ -8,6 +8,7 @@ import Cart2 from '../Cart/Cart2';
 import Options from '../Cart/Options';
 import Seller from '../Cart/Seller';
 import SellerCart from './../Cart/SellerCart';
+import CombineCart from './../Cart/CombineCart';
 
 const { width, height } = Dimensions.get('window')
 
@@ -39,26 +40,11 @@ const Home = () => {
                 What is Your Best Interested Category
             </Text>
             <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Cart1/>}/>
             </ScrollView>
-            <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-            </ScrollView>
-            <ScrollView horizontal={true}>
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-                <Cart1 />
-            </ScrollView>
+            
             <View style={{
                 flexDirection: 'row',
             }}>
@@ -104,25 +90,9 @@ const Home = () => {
                 <Options />
             </ScrollView>
             <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-            </ScrollView>
-            <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-            </ScrollView>
-            <ScrollView horizontal={true}>
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
-                <Seller />
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
+            <CombineCart num={[2,3,4]} Component={()=><Seller/>}/>
             </ScrollView>
             <Text style={{
                 fontWeight:'bold',
@@ -131,12 +101,15 @@ const Home = () => {
             }}>
                 Popular Category
             </Text>
-            <ScrollView horizontal={true}>
+            <View style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+            }} horizontal={true}>
                 <Options name="Builder" />
+                <Options name='Business Service' />
+                <Options name='Labour'/>
                 <Options />
-                <Options />
-                <Options />
-            </ScrollView>
+            </View>
             <View style={{height:20}}/>
             <SellerCart/>
             <View style={{height:10}}/>
