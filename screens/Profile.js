@@ -23,7 +23,9 @@ const Profile = () => {
           style={styles.backgroundContainer}
           colors={["#983C85", "#983C85", "#983C53"]}
         ></LinearGradient>
-        <View style={styles.profile}></View>
+        <View style={styles.profile}>
+
+        </View>
       </View>
     </ScrollView>
   );
@@ -33,10 +35,11 @@ export default Profile;
 const styles = StyleSheet.create({
   backgroundContainer: {
     minHeight: 200,
+    
   },
   container: {
     minHeight: 330,
-    backgroundColor: backgroundColor,
+    backgroundColor: primaryColor,
   },
   profile: {
     borderWidth: 1,
@@ -45,7 +48,10 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowColor: backgroundColor,
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
+    marginTop:-40,
+    alignSelf:'center',
+    backgroundColor:primaryColor
   },
 });
