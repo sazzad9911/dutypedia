@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   View,
@@ -10,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { primaryColor, backgroundColor } from "./../assets/colors";
+
 
 const { width, height } = Dimensions.get("window");
 const Profile = () => {

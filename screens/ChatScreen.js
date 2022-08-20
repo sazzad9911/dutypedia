@@ -1,16 +1,20 @@
-import React from "react";
-import { View, Text, ScrollView } from "react-native";
-import ChatBox from "./../components/ChatBox";
+
+import React from 'react';
+import { View, Text, ScrollView, Dimensions } from 'react-native'
+import ChatBox from './../components/ChatBox';
+
 
 const ChatScreen = () => {
-  return (
-    <View>
-      <ScrollView>
-        <Text>hello</Text>
-      </ScrollView>
-      <ChatBox />
-    </View>
-  );
+    
+    return (
+        <ScrollView>
+            <ChatBox />
+            <ChatBox />
+            <ChatBox />
+            <ChatBox />
+            <ChatBox />
+        </ScrollView>
+    );
 };
 
 export default ChatScreen;
