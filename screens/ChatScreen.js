@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, Text, ScrollView, Dimensions } from 'react-native'
 import ChatBox from './../components/ChatBox';
@@ -6,8 +7,7 @@ import ChatBox from './../components/ChatBox';
 const ChatScreen = () => {
     
     return (
-        <ScrollView
-        >
+        <ScrollView>
             <ChatBox />
             <ChatBox />
             <ChatBox />
