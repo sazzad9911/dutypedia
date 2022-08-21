@@ -33,7 +33,7 @@ function Cart(props) {
             }} source={{ uri: 'https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2' }} />
 
             <Text style={{
-
+                color: textColor,
                 margin: 10,
             }}>
                 Builder Service

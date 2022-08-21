@@ -5,8 +5,9 @@ import { Foundation } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 function Seller(props) {
+  const navigation = props.navigation
   return (
-    <TouchableOpacity
+    <TouchableOpacity onPress={() =>navigation.navigate('OtherProfile')}
       style={{
         width: 250,
         height: 50,

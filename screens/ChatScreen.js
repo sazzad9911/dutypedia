@@ -11,7 +11,7 @@ import {
 import ChatBox from "./../components/ChatBox";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { backgroundColor, assentColor, primaryColor } from "./../assets/colors";
+import { backgroundColor, assentColor, primaryColor,secondaryColor } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 
 const ChatScreen = () => {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    backgroundColor: assentColor,
+    backgroundColor: secondaryColor,
     flex: 7,
     height: 40,
     fontSize: 14,

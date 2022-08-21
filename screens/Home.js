@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { textColor, primaryColor ,secondaryColor} from "./../assets/colors";
 import Cart from "../Cart/Cart";
 import Cart1 from "../Cart/Cart1";
 import Cart2 from "../Cart/Cart2";
@@ -18,7 +18,8 @@ import CombineCart from "./../Cart/CombineCart";
 
 const { width, height } = Dimensions.get("window");
 
-const Home = () => {
+const Home = (props) => {
+  const navigation = props.navigation
   return (
     <ScrollView showsVerticalScrollIndicator={false}
     showsHorizontalScrollIndicator={false}
@@ -137,9 +138,9 @@ const Home = () => {
         showsHorizontalScrollIndicator={false}
         horizontal={true}
       >
-        <CombineCart num={[2, 3, 4]} Component={() => <Seller />} />
-        <CombineCart num={[2, 3, 4]} Component={() => <Seller />} />
-        <CombineCart num={[2, 3, 4]} Component={() => <Seller />} />
+        <CombineCart num={[2, 3, 4]} Component={() => <Seller navigation={navigation} />} />
+        <CombineCart num={[2, 3, 4]} Component={() => <Seller navigation={navigation}/>} />
+        <CombineCart num={[2, 3, 4]} Component={() => <Seller navigation={navigation}/>} />
       </ScrollView>
       <Text
         style={{

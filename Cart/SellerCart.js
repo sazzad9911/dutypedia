@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { primaryColor, textColor } from './../assets/colors';
 
 export default function SellerCart() {
   return (
@@ -35,7 +36,7 @@ export default function SellerCart() {
             marginLeft: 20,
             marginTop: 20,
             height: 40,
-            backgroundColor: "white",
+            backgroundColor: primaryColor,
             borderRadius: 20,
             justifyContent: "center",
             alignItems: "center",
@@ -46,6 +47,7 @@ export default function SellerCart() {
             style={{
               fontSize: 12,
               fontWeight: "bold",
+              color:textColor
             }}
           >
             Create An Account

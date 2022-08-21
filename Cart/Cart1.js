@@ -39,7 +39,7 @@ function Cart1(props) {
           }}
           name="music"
           size={24}
-          color="black"
+          color={textColor}
         />
       </View>
       <View
@@ -51,6 +51,7 @@ function Cart1(props) {
         <Text
           style={{
             margin: 10,
+            color:textColor
           }}
         >
           Builder Service
@@ -60,7 +61,7 @@ function Cart1(props) {
         onPress={() => setSelect(!Select)}
         style={{
           margin: 10,
-          borderColor: "black",
+          borderColor: textColor,
           borderRadius: 15,
           height: 30,
           borderWidth: 1,
