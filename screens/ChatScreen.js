@@ -78,7 +78,6 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.icon}>
         <Ionicons
-          style={{ marginRight: 9 }}
           name="camera-outline"
           size={24}
           color="black"
@@ -89,6 +88,9 @@ const BottomBar = (props) => {
       }} style={styles.input} placeholder="Write message here.." />
       <TouchableOpacity
         onPress={() => {
+          if(!Message){
+            return
+          }
           props.onSend(Message).then(() => {
             setMessage('')
           })

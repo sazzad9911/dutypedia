@@ -20,7 +20,8 @@ const { width, height } = Dimensions.get("window");
 
 const Home = () => {
   return (
-    <ScrollView
+    <ScrollView showsVerticalScrollIndicator={false}
+    showsHorizontalScrollIndicator={false}
       style={{
         paddingLeft: 15,
         paddingRight: 15,
