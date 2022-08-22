@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { backgroundColor, assentColor, primaryColor,secondaryColor } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 
+
 const ChatScreen = () => {
   const scrollRef = React.useRef();
   const [Messages, setMessages] = React.useState([
