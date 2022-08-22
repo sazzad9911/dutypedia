@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   View,
@@ -8,19 +7,31 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import ChatBox from "./../components/ChatBox";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { backgroundColor, assentColor, primaryColor,secondaryColor } from "./../assets/colors";
+import {
+  backgroundColor,
+  assentColor,
+  primaryColor,
+  secondaryColor,
+} from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+const Tab = createBottomTabNavigator();
 
 const ChatScreen = () => {
   const scrollRef = React.useRef();
   const [Messages, setMessages] = React.useState([
     {
-      message: "In publishing and graphic design, Lorem ipsum is a placeholder text",
+      message:
+        "In publishing and graphic design, Lorem ipsum is a placeholder text",
       send: true,
+      id: 1,
     },
     {
       message: `In publishing and graphic design, Lorem ipsum is a placeholder text
@@ -28,73 +39,87 @@ const ChatScreen = () => {
     typeface without relying on meaningful content. Lorem ipsum may be
     used as a placeholder before final copy is available.`,
       send: false,
+      id: 2,
     },
     {
-      message: "In publishing and graphic design, Lorem ipsum is a placeholder text",
+      message:
+        "In publishing and graphic design, Lorem ipsum is a placeholder text",
       send: true,
+      id: 3,
     },
     {
-      message: "In publishing and graphic design, Lorem ipsum is a placeholder text",
+      message:
+        "In publishing and graphic design, Lorem ipsum is a placeholder text",
       send: false,
+      id: 4,
     },
   ]);
   const onPressTouch = () => {
-    scrollRef.current?.scrollTo({
-      y: height - 80,
-      animated: true,
-    });
+    // scrollRef.current?.scrollTo({
+    //   y: height-60 ,
+    //   animated: true,
+    // });
+    scrollRef.current?.scrollToEnd({ animated: true });
   };
   React.useEffect(() => {
-   
     onPressTouch();
   }, [Messages.length]);
-  
-const sendMessage =async(message) =>{
- await setMessages(val=>[...val,{'message':message,'send':true}])
-}
+
+  const sendMessage = async (message) => {
+    await setMessages((val) => [
+      ...val,
+      { message: message, send: true, id: val.length + 1 },
+    ]);
+  };
   return (
-    <View
-      style={{
-        height: "100%",
-      }}
-    >
-      <ScrollView ref={scrollRef}>
-        {Messages.map((d, i) => (
-          <ChatBox key={i} message={d.message} send={d.send} />
-        ))}
-      </ScrollView>
-      <BottomBar onSend={sendMessage} />
-    </View>
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          ref={scrollRef}
+          data={Messages}
+          renderItem={({ item }) => {
+            return (
+              <ChatBox key={item.id} message={item.message} send={item.send} />
+            );
+          }}
+          keyExtractor={(item) => item.id}
+        />
+
+        <BottomBar onSend={sendMessage} />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 export default ChatScreen;
 
 const BottomBar = (props) => {
-  const [Message, setMessage]= React.useState()
+  const [Message, setMessage] = React.useState();
   return (
     <View style={styles.view}>
       <TouchableOpacity style={styles.icon}>
         <EvilIcons name="image" size={26} color="black" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.icon}>
-        <Ionicons
-          name="camera-outline"
-          size={24}
-          color="black"
-        />
+        <Ionicons name="camera-outline" size={24} color="black" />
       </TouchableOpacity>
-      <TextInput value={Message} onChangeText={(value) =>{
-        setMessage(value)
-      }} style={styles.input} placeholder="Write message here.." />
+      <TextInput
+        value={Message}
+        onChangeText={(value) => {
+          setMessage(value);
+        }}
+        style={styles.input}
+        placeholder="Write message here.."
+      />
       <TouchableOpacity
         onPress={() => {
-          if(!Message){
-            return
+          if (!Message) {
+            return;
           }
           props.onSend(Message).then(() => {
-            setMessage('')
-          })
+            setMessage("");
+          });
         }}
         style={styles.icon}
       >
