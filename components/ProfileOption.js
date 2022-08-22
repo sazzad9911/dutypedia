@@ -5,7 +5,11 @@ import { primaryColor } from './../assets/colors';
 
 const ProfileOption = (props) => {
   return (
-    <TouchableOpacity style={styles.box}>
+    <TouchableOpacity onPress={() =>{
+      if(props.onPress){
+        props.onPress()
+      }
+    }} style={styles.box}>
       <props.Icon  style={styles.icon} />
       <Text style={styles.text}>{props.title}</Text>
       <MaterialIcons style={styles.icon} name="keyboard-arrow-right" size={24} color="black" />

@@ -10,6 +10,7 @@ const Stack = createNativeStackNavigator();
 import { secondaryColor } from "./assets/colors";
 import SearchScreen from "./screens/SearchScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ManageOrder from './screens/ManageOrder';
 
 export default function App() {
   const MyTheme = {
@@ -43,6 +44,11 @@ export default function App() {
             options={{ headerShown: false }}
             name="SearchScreen"
             component={SearchScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="ManageOrder"
+            component={ManageOrder}
           />
         </Stack.Navigator>
       </NavigationContainer>
