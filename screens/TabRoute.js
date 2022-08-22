@@ -42,22 +42,22 @@ const TabRoute = () => {
       })}
     >
       <Tab.Screen
-        options={{ header: () => <Header /> }}
+        options={{ header: (props) => <Header {...props}/> }}
         name="Home"
         component={Home}
       />
       <Tab.Screen
-        options={{ header: () => <Header /> }}
+        options={{ header: (props) => <Header {...props}/> }}
         name="Search"
         component={Search}
       />
       <Tab.Screen
-        options={{ header: () => <ChatHeader /> }}
+        options={{ header: (props) => <ChatHeader {...props}/> }}
         name="Message"
         component={Message}
       />
       <Tab.Screen
-        options={{ header: () => <Header /> }}
+        options={{ header: (props) => <Header {...props}/> }}
         name="Notification"
         component={Notification}
       />

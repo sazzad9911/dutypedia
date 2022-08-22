@@ -9,7 +9,14 @@ function Options(props) {
   const [Select, setSelect] = React.useState(false);
   return (
     <TouchableOpacity
-      onPress={() => setSelect(!Select)}
+      onPress={() => {
+        if(!props.action){
+          setSelect(!Select)
+        }
+        if(props.onPress){
+          props.onPress()
+        }
+        }}
       style={{
         minWidth: width / 3,
         paddingHorizontal: 30,
@@ -35,7 +42,7 @@ function Options(props) {
         style={{
           justifyContent: "center",
           alignItems: "center",
-          color: Select ? "white" : "black",
+          color: Select ? "white" : textColor,
         }}
       >
         {props.name ? props.name : "Lawyer"}

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { primaryColor } from "./../assets/colors";
+import { primaryColor,textColor } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 
 const ChatCart = (props) => {
@@ -73,10 +73,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: "100",
+    color:textColor
   },
   date: {
     fontSize: 10,
     textAlign: "right",
+    color:textColor
   },
   active: {
     backgroundColor: "green",

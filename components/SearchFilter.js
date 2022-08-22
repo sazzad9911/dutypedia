@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch,TouchableOpacity,TextInput } from 'react-native';
 import { primaryColor,secondaryColor } from '../assets/colors';

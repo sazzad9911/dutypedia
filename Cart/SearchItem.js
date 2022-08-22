@@ -1,53 +1,33 @@
 import React from "react";
-import { View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
+import { primaryColor,secondaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-const { width, height } = Dimensions.get("window");
-function Cart2(props) {
-  const [Love, setLove] = React.useState(false);
+const SearchItem = () => {
+    const [Love,setLove]= React.useState(false);
   return (
-    <TouchableOpacity
-      style={{
-        width: 240,
-        height: 240,
-        shadowOffset: {
-          height: 1,
-          width: 1,
-        },
-        shadowColor: "rgba(0, 0, 0, 0.636)",
-        shadowRadius: 1,
-        elevation: 1,
-        shadowOpacity: 0.2,
-        backgroundColor: primaryColor,
-        margin: 10,
-        marginLeft: 5,
-        borderRadius: 5,
-      }}
-    >
+    <TouchableOpacity style={styles.box}>
       <Image
-        style={{
-          height: 130,
-          width: "100%",
-          borderTopRightRadius: 5,
-          borderTopLeftRadius: 5,
-        }}
+        style={styles.image}
         source={{
-          uri: "https://media.istockphoto.com/photos/graphic-designer-at-work-picture-id1363772590?b=1&k=20&m=1363772590&s=170667a&w=0&h=u2GS9_Sd396ng762zsKCR9zonfsw83lssqpxdlh0F4g=",
+          uri: "https://thumbs.dreamstime.com/b/technical-support-customer-service-business-technology-internet-concept-100232431.jpg",
         }}
       />
-
+      <View style={{
+        flex: 1,
+      }}>
       <View
         style={{
           flexDirection: "row",
-        }}>
+          justifyContent: "space-between"
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
             marginLeft: 10,
             marginTop: 5,
-            flex: 6,
             marginBottom: 5,
           }}
         >
@@ -93,8 +73,8 @@ function Cart2(props) {
         </View>
         <View
           style={{
-            flex: 2,
             marginTop: 5,
+            marginRight: 10,
           }}
         >
           <Text
@@ -140,14 +120,40 @@ function Cart2(props) {
           }}
         >
           {Love ? (
-            <AntDesign name="heart" size={24} color="black" />
+            <AntDesign name="heart" size={24} color={textColor} />
           ) : (
-            <AntDesign name="hearto" size={24} color="black" />
+            <AntDesign name="hearto" size={24} color={textColor} />
           )}
         </TouchableOpacity>
       </View>
+      </View>
     </TouchableOpacity>
   );
-}
+};
 
-export default Cart2;
+export default SearchItem;
+const styles = StyleSheet.create({
+  box: {
+    width: "98%",
+    height: 120,
+    backgroundColor: primaryColor,
+    marginVertical: 5,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    marginHorizontal: "1%",
+    overflow: "hidden",
+    flexDirection: "row",
+  },
+  image: {
+    width: 120,
+    height: 120,
+  },
+});
