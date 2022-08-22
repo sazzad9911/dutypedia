@@ -24,6 +24,7 @@ const { width, height } = Dimensions.get("window");
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
+
 const ChatScreen = () => {
   const scrollRef = React.useRef();
   const [Messages, setMessages] = React.useState([
