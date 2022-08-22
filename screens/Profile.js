@@ -19,10 +19,11 @@ import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 const { width, height } = Dimensions.get("window");
-const Profile = () => {
+const Profile = (props) => {
   const window = Dimensions.get("window");
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
+  const navigation= props.navigation
 
 
   const pickImage = async () => {
@@ -82,7 +83,9 @@ const Profile = () => {
         <Text style={styles.headLine}>Easin Arafat</Text>
         <Text style={styles.text}>@Easinarafat</Text>
       </View>
-      <ProfileOption
+      <ProfileOption onPress={()=>{
+        navigation.navigate('ManageOrder')
+      }}
         Icon={() => <Octicons name="checklist" size={24} color="black" />}
         title="Manage Order"
       />

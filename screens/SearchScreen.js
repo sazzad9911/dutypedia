@@ -13,6 +13,7 @@ import SearchItem from "./../Cart/SearchItem";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { primaryColor,secondaryColor } from './../assets/colors';
+import SearchFilter from './../components/SearchFilter';
 
 const SearchScreen = (props) => {
   const params = props.route.params;
@@ -74,7 +75,7 @@ const SearchScreen = (props) => {
         style={styles.container}
       >
         <BottomSheetScrollView>
-
+        <SearchFilter/>
         </BottomSheetScrollView>
       </BottomSheet>
       </View>
