@@ -20,7 +20,9 @@ const SearchHeader = (props) => {
       </TouchableOpacity>
       <TextInput value={props.search} onChangeText={val=>props.onChange(val)} 
       autoFocus={true} style={styles.input} placeholder="Search here..." />
-      <TouchableOpacity style={[styles.icon,{
+      <TouchableOpacity onPress={()=>{
+        props.setIndex(1);
+      }} style={[styles.icon,{
         alignItems: 'flex-end',
       }]}>
         <Ionicons name="md-filter-outline" size={24} color={textColor} />
