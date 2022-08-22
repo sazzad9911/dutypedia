@@ -18,6 +18,7 @@ export default function App() {
       background: secondaryColor
     },
   };
+  
   return (
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>

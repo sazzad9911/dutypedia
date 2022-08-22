@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text } from "react-native";
 import Options from "../Cart/Options";
 
-const Search = () => {
+const Search = (props) => {
+  const navigation = props.navigation
   return (
     <View
       style={{
@@ -11,9 +12,15 @@ const Search = () => {
         paddingHorizontal: 15,
       }}
     >
-      <Options name="Lower" />
-      <Options name="Electric Service" />
-      <Options name="Cleaning Service" />
+      <Options action={true} onPress={()=>{
+        navigation.navigate('SearchScreen',{search:'Lower'})
+      }} name="Lower" />
+      <Options action={true} onPress={()=>{
+        navigation.navigate('SearchScreen',{search:'Electric Service'})
+      }} name="Electric Service" />
+      <Options action={true} onPress={()=>{
+        navigation.navigate('SearchScreen',{search:'Cleaning Service'})
+      }} name="Cleaning Service" />
     </View>
   );
 };

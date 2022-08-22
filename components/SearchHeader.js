@@ -18,7 +18,8 @@ const SearchHeader = (props) => {
       }} style={styles.icon}>
         <Ionicons name="ios-chevron-back" size={24} color={textColor} />
       </TouchableOpacity>
-      <TextInput autoFocus={true} style={styles.input} placeholder="Search here..." />
+      <TextInput value={props.search} onChangeText={val=>props.onChange(val)} 
+      autoFocus={true} style={styles.input} placeholder="Search here..." />
       <TouchableOpacity style={[styles.icon,{
         alignItems: 'flex-end',
       }]}>

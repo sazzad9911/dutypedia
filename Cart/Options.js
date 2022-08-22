@@ -10,7 +10,9 @@ function Options(props) {
   return (
     <TouchableOpacity
       onPress={() => {
-        setSelect(!Select)
+        if(!props.action){
+          setSelect(!Select)
+        }
         if(props.onPress){
           props.onPress()
         }

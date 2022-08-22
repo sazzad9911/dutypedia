@@ -41,8 +41,7 @@ function Cart2(props) {
       <View
         style={{
           flexDirection: "row",
-        }}
-      >
+        }}>
         <View
           style={{
             flexDirection: "row",
@@ -86,7 +85,7 @@ function Cart2(props) {
             style={{
               marginLeft: 5,
               fontSize: 10,
-              color:textColor
+              color: textColor,
             }}
           >
             5.0
@@ -101,7 +100,7 @@ function Cart2(props) {
           <Text
             style={{
               fontSize: 10,
-              color:textColor
+              color: textColor,
             }}
           >
             View 10k
@@ -113,7 +112,7 @@ function Cart2(props) {
         style={{
           marginLeft: 10,
           marginRight: 10,
-          color:textColor
+          color: textColor,
         }}
       >
         I Will Make a Custom Graphics For Your Blog
@@ -129,7 +128,7 @@ function Cart2(props) {
             flex: 6,
             marginLeft: 10,
             fontSize: 18,
-            color:textColor
+            color: textColor,
           }}
         >
           500$
