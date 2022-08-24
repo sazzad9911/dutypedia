@@ -9,38 +9,13 @@ import Notification from "./Notification";
 import Profile from "./Profile";
 import { Ionicons } from "@expo/vector-icons";
 import ChatHeader from "./../components/ChatHeader";
+import BottomBar from './../components/BottomBar';
+import SearchScreen from './SearchScreen';
 const Tab = createBottomTabNavigator();
 
 const TabRoute = () => {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Search") {
-            iconName = focused ? "search-sharp" : "search-outline";
-          } else if (route.name === "Message") {
-            iconName = focused ? "paper-plane-sharp" : "paper-plane-outline";
-          } else if (route.name === "Notification") {
-            iconName = focused
-              ? "notifications-sharp"
-              : "notifications-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused
-              ? "person-circle-sharp"
-              : "person-circle-outline";
-          }
-
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#808080",
-        tabBarInactiveTintColor: "gray",
-      })}
-    >
+    <Tab.Navigator tabBar={(props)=><BottomBar {...props}/>}>
       <Tab.Screen
         options={{ header: (props) => <Header {...props}/> }}
         name="Home"
@@ -66,6 +41,11 @@ const TabRoute = () => {
         name="Profile"
         component={Profile}
       />
+      <Tab.Screen
+            options={{ headerShown: false }}
+            name="SearchScreen"
+            component={SearchScreen}
+          />
     </Tab.Navigator>
   );
 };

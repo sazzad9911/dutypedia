@@ -58,8 +58,7 @@ const SearchFilter = () => {
     {
       label: "Electrician & Mechanician",
       value: "Electrician",
-    },
-    
+    },  
   ]
   const sellerLevel=[
     {
@@ -113,6 +112,19 @@ const SearchFilter = () => {
       value:'Sylhet'
     },
   ]
+  if(visible){
+    return(
+      <Selection onChange={(val)=>{
+        if(type=='category'){
+          setCategory(val);
+        }else if(type=='seller_level'){
+          setSellerLevel(val);
+        }else if(type=='seller_location'){
+          setSellerLocation(val);
+        }
+      }} data={data} close={setVisible} visible={visible} />
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -317,15 +329,6 @@ const SearchFilter = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <Selection onChange={(val)=>{
-        if(type=='category'){
-          setCategory(val);
-        }else if(type=='seller_level'){
-          setSellerLevel(val);
-        }else if(type=='seller_location'){
-          setSellerLocation(val);
-        }
-      }} data={data} close={setVisible} visible={visible} />
     </KeyboardAvoidingView>
   );
 };
@@ -379,6 +382,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
+  button: {
+    width: '80%',
+    height:40,
+    backgroundColor: 'green',
+    alignSelf: 'center',
+    margin: 10,
+    borderRadius:5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 const Selection = (props) => {
@@ -389,17 +402,10 @@ const Selection = (props) => {
   return (
     <View
       style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
         backgroundColor: secondaryColor,
-        zIndex: 4,
-        width: "100%",
-        height: "100%",
       }}
     >
-      <BottomSheetScrollView style={{flex: 1}}>
-        {data.map((doc, i) => (
+      {data.map((doc, i) => (
           <TouchableOpacity
             style={styles.view}
             key={i}
@@ -415,8 +421,13 @@ const Selection = (props) => {
             <Text style={styles.text}>{doc.label}</Text>
           </TouchableOpacity>
         ))}
-
-      </BottomSheetScrollView>
+        <TouchableOpacity style={styles.button} onPress={() =>{
+          props.close(!props.visible);
+        }}>
+          <Text style={{
+            color:'white'
+          }}>Close</Text>
+        </TouchableOpacity>
     </View>
   );
 };

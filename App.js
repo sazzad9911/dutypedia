@@ -40,7 +40,9 @@ export default function App() {
           })}
         >
           <Stack.Screen
-            options={{ headerShown: false }}
+            options={{ headerShown: false,presentation: 'modal',
+              animationTypeForReplace: 'push',
+              animation:'slide_from_right' }}
             name="Dashboard"
             component={TabRoute}
           />
@@ -56,11 +58,7 @@ export default function App() {
             name="OtherProfile"
             component={OtherProfile}
           />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="SearchScreen"
-            component={SearchScreen}
-          />
+          
           <Stack.Screen
             options={{ header: (props) => <SubHeader {...props} /> }}
             name="ManageOrder"

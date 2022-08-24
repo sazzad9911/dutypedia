@@ -140,7 +140,7 @@ function Cart2(props) {
           }}
         >
           {Love ? (
-            <AntDesign name="heart" size={24} color="black" />
+            <AntDesign name="heart" size={24} color="#DA1e37" />
           ) : (
             <AntDesign name="hearto" size={24} color="black" />
           )}

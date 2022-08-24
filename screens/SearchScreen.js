@@ -14,6 +14,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { primaryColor, secondaryColor } from "./../assets/colors";
 import SearchFilter from "./../components/SearchFilter";
+import BottomBar from './../components/BottomBar';
 
 const SearchScreen = (props) => {
   const params = props.route.params;
@@ -27,6 +28,7 @@ const SearchScreen = (props) => {
     setIndex(index);
   }, []);
   const handleClosePress = () => bottomSheetRef.current.close();
+ 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
