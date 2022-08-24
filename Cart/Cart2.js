@@ -131,7 +131,7 @@ function Cart2(props) {
             color: textColor,
           }}
         >
-          500$
+          500৳
         </Text>
         <TouchableOpacity
           onPress={() => setLove(!Love)}

@@ -12,10 +12,107 @@ import {
 } from "react-native";
 import { primaryColor, secondaryColor } from "../assets/colors";
 import { AntDesign } from "@expo/vector-icons";
+import { textColor } from "./../assets/colors";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 const SearchFilter = () => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [Online,setOnline]= React.useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const toggleSwitch2 = () => setOnline((previousState) => !previousState);
+  const [visible, setVisible] = useState(false);
+  const [Category, setCategory]= React.useState('Select');
+  const [SellerLevel, setSellerLevel]= React.useState();
+  const [SellerLocation, setSellerLocation]= React.useState()
+  const [type,setType] =React.useState('category');
+  const [data, setData] = useState();
+  const category=[
+    {
+      label: "Select Category",
+      value: "Select",
+    },
+    {
+      label: "Builder",
+      value: "Builder",
+    },
+    {
+      label: "IT & Technology",
+      value: "IT",
+    },
+    {
+      label: "Music & Audio",
+      value: "Music",
+    },
+    {
+      label: "Lawyer",
+      value: "Lawyer",
+    },
+    {
+      label: "Parlor & Salon",
+      value: "Parlor",
+    },
+    {
+      label: "House Keeper",
+      value: "House",
+    },
+    {
+      label: "Electrician & Mechanician",
+      value: "Electrician",
+    },
+    
+  ]
+  const sellerLevel=[
+    {
+      label: "Seller level 1",
+      value:1
+    },
+    {
+      label: "Seller level 2",
+      value:2
+    },
+    {
+      label: "Seller level 3",
+      value:3
+    },
+    {
+      label: "Seller level 4",
+      value:4
+    },
+    {
+      label: "Seller level 5",
+      value:5
+    }
+  ]
+  const sellerLocation=[
+    {
+      label:'Barishal',
+      value:'Barishal'
+    },
+    {
+      label:'Chittagong',
+      value:'Chittagong'
+    },
+    {
+      label:'Dhaka',
+      value:'Dhaka'
+    },
+    {
+      label:'Khulna',
+      value:'Khulna'
+    },
+    {
+      label:'Rajshahi',
+      value:'Rajshahi'
+    },
+    {
+      label:'Rangpur',
+      value:'Rangpur'
+    },
+    {
+      label:'Sylhet',
+      value:'Sylhet'
+    },
+  ]
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -28,7 +125,6 @@ const SearchFilter = () => {
           marginRight: 10,
         }}
       >
-        
         <View>
           <View style={styles.box}>
             <Text
@@ -39,15 +135,17 @@ const SearchFilter = () => {
               Sort By
             </Text>
           </View>
-          <View
-            style={{
-              height: 50,
-              marginLeft: 10,
-              backgroundColor: "#ffffff",
-              justifyContent: "center",
-            }}
-          >
-            <Text>Online Seller</Text>
+          <View style={[styles.box1, { flexDirection: "row" }]}>
+            <Text style={{ flex: 7 }}>Online Seller</Text>
+            <View style={styles.container}>
+              <Switch
+                trackColor={{ false: "#767577", true: "#808000" }}
+                thumbColor={isEnabled ? "#f4f3f4 " : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            </View>
           </View>
           <View style={styles.gap}></View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
@@ -61,10 +159,10 @@ const SearchFilter = () => {
             <View style={styles.container}>
               <Switch
                 trackColor={{ false: "#767577", true: "#808000" }}
-                thumbColor={isEnabled ? "#f4f3f4 " : "#f4f3f4"}
+                thumbColor={Online ? "#f4f3f4 " : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isEnabled}
+                onValueChange={toggleSwitch2}
+                value={Online}
               />
             </View>
           </View>
@@ -89,7 +187,14 @@ const SearchFilter = () => {
               height: 2,
             }}
           ></View>
-          <View style={[styles.box1, { flexDirection: "row" }]}>
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(true);
+              setType('category')
+              setData(category)
+            }}
+            style={[styles.box1, { flexDirection: "row" }]}
+          >
             <Text
               style={{
                 flex: 9,
@@ -97,7 +202,7 @@ const SearchFilter = () => {
             >
               Category
             </Text>
-            <TouchableOpacity
+            <View
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
@@ -111,7 +216,7 @@ const SearchFilter = () => {
                   flex: 2,
                 }}
               >
-                Select
+                {Category}
               </Text>
               <AntDesign
                 style={{
@@ -121,8 +226,8 @@ const SearchFilter = () => {
                 size={16}
                 color="black"
               />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
           <View style={styles.box}>
             <Text
               style={{
@@ -140,8 +245,7 @@ const SearchFilter = () => {
             >
               Price Rang
             </Text>
-            <TextInput style={styles.input}>
-              <Text>$</Text>
+            <TextInput placeholder='৳' style={styles.input}>
             </TextInput>
             <View
               style={{
@@ -158,12 +262,15 @@ const SearchFilter = () => {
                 To
               </Text>
             </View>
-            <TextInput style={styles.input}>
-              <Text style={{}}>$</Text>
+            <TextInput placeholder='৳' style={styles.input}>
             </TextInput>
           </View>
           <View style={styles.gap}></View>
-          <View style={[styles.box1, { flexDirection: "row" }]}>
+          <TouchableOpacity onPress={() => {
+              setVisible(true);
+              setType('seller_level')
+              setData(sellerLevel)
+            }} style={[styles.box1, { flexDirection: "row" }]}>
             <Text
               style={{
                 flex: 9,
@@ -171,7 +278,7 @@ const SearchFilter = () => {
             >
               Seller Level
             </Text>
-            <TouchableOpacity style={styles.touch}>
+            <View style={styles.touch}>
               <AntDesign
                 style={{
                   marginTop: 5,
@@ -181,10 +288,14 @@ const SearchFilter = () => {
                 size={16}
                 color="black"
               />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
           <View style={styles.gap}></View>
-          <View style={[styles.box1, { flexDirection: "row" }]}>
+          <TouchableOpacity onPress={() => {
+              setVisible(true);
+              setType('seller_location')
+              setData(sellerLocation)
+            }} style={[styles.box1, { flexDirection: "row" }]}>
             <Text
               style={{
                 flex: 9,
@@ -192,7 +303,7 @@ const SearchFilter = () => {
             >
               Seller Location
             </Text>
-            <TouchableOpacity style={styles.touch}>
+            <View style={styles.touch}>
               <AntDesign
                 style={{
                   marginTop: 5,
@@ -202,10 +313,19 @@ const SearchFilter = () => {
                 size={16}
                 color="black"
               />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
+      <Selection onChange={(val)=>{
+        if(type=='category'){
+          setCategory(val);
+        }else if(type=='seller_level'){
+          setSellerLevel(val);
+        }else if(type=='seller_location'){
+          setSellerLocation(val);
+        }
+      }} data={data} close={setVisible} visible={visible} />
     </KeyboardAvoidingView>
   );
 };
@@ -237,6 +357,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 3,
     borderRadius: 5,
+    padding:5
   },
   touch: {
     flexDirection: "row",
@@ -248,4 +369,54 @@ const styles = StyleSheet.create({
     backgroundColor: secondaryColor,
     height: 2,
   },
+  text: {
+    fontSize: 18,
+    color: textColor,
+  },
+  view: {
+    marginTop: 5,
+    backgroundColor: primaryColor,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
 });
+
+const Selection = (props) => {
+  const data = props.data ? props.data : [];
+  if (!props.visible) {
+    return <></>;
+  }
+  return (
+    <View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        backgroundColor: secondaryColor,
+        zIndex: 4,
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <BottomSheetScrollView style={{flex: 1}}>
+        {data.map((doc, i) => (
+          <TouchableOpacity
+            style={styles.view}
+            key={i}
+            onPress={() => {
+              if (props.close) {
+                props.close(!props.visible);
+              }
+              if (props.onChange) {
+                props.onChange(doc.value);
+              }
+            }}
+          >
+            <Text style={styles.text}>{doc.label}</Text>
+          </TouchableOpacity>
+        ))}
+
+      </BottomSheetScrollView>
+    </View>
+  );
+};

@@ -40,14 +40,6 @@ const styles = StyleSheet.create({
         paddingVertical:10,
         alignItems: 'center',
         backgroundColor:secondaryColor,
-        shadowOffset: {
-            width: 2,
-            height: 0
-        },
-        shadowRadius:5,
-        shadowColor:textColor,
-        elevation:2,
-        shadowOpacity:.2
     },
     icon: {
         flex:1,

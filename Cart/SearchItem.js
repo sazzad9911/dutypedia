@@ -111,7 +111,7 @@ const SearchItem = () => {
             color: textColor,
           }}
         >
-          500$
+          500৳
         </Text>
         <TouchableOpacity
           onPress={() => setLove(!Love)}

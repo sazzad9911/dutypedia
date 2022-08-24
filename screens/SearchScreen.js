@@ -45,10 +45,7 @@ const SearchScreen = (props) => {
           navigation={props.navigation}
         />
         <ScrollView
-          scrollEventThrottle={() => {
-            handleClosePress();
-            Keyboard.dismiss();
-          }}
+          
           onScroll={() => {
             handleClosePress();
             Keyboard.dismiss();
