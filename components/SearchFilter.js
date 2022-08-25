@@ -14,19 +14,26 @@ import { primaryColor, secondaryColor } from "../assets/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { textColor } from "./../assets/colors";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 
-const SearchFilter = () => {
+const SearchFilter = (props) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [Online,setOnline]= React.useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const toggleSwitch2 = () => setOnline((previousState) => !previousState);
-  const [visible, setVisible] = useState(false);
-  const [Category, setCategory]= React.useState('Select');
-  const [SellerLevel, setSellerLevel]= React.useState();
-  const [SellerLocation, setSellerLocation]= React.useState()
-  const [type,setType] =React.useState('category');
+  const [Online, setOnline] = React.useState(false);
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+    props.disabled(false);
+  }
+  const toggleSwitch2 = () => {
+    setOnline((previousState) => !previousState);
+    props.disabled(false);
+  }
+  //const [visible, setVisible] = useState(false);
+  const [Category, setCategory] = React.useState("Select");
+  const [SellerLevel, setSellerLevel] = React.useState();
+  const [SellerLocation, setSellerLocation] = React.useState();
+  const [type, setType] = React.useState("category");
   const [data, setData] = useState();
-  const category=[
+  const category = [
     {
       label: "Select Category",
       value: "Select",
@@ -58,72 +65,78 @@ const SearchFilter = () => {
     {
       label: "Electrician & Mechanician",
       value: "Electrician",
-    },  
-  ]
-  const sellerLevel=[
+    },
+  ];
+  const sellerLevel = [
     {
       label: "Seller level 1",
-      value:1
+      value: 1,
     },
     {
       label: "Seller level 2",
-      value:2
+      value: 2,
     },
     {
       label: "Seller level 3",
-      value:3
+      value: 3,
     },
     {
       label: "Seller level 4",
-      value:4
+      value: 4,
     },
     {
       label: "Seller level 5",
-      value:5
-    }
-  ]
-  const sellerLocation=[
+      value: 5,
+    },
+  ];
+  const sellerLocation = [
     {
-      label:'Barishal',
-      value:'Barishal'
+      label: "Barishal",
+      value: "Barishal",
     },
     {
-      label:'Chittagong',
-      value:'Chittagong'
+      label: "Chittagong",
+      value: "Chittagong",
     },
     {
-      label:'Dhaka',
-      value:'Dhaka'
+      label: "Dhaka",
+      value: "Dhaka",
     },
     {
-      label:'Khulna',
-      value:'Khulna'
+      label: "Khulna",
+      value: "Khulna",
     },
     {
-      label:'Rajshahi',
-      value:'Rajshahi'
+      label: "Rajshahi",
+      value: "Rajshahi",
     },
     {
-      label:'Rangpur',
-      value:'Rangpur'
+      label: "Rangpur",
+      value: "Rangpur",
     },
     {
-      label:'Sylhet',
-      value:'Sylhet'
+      label: "Sylhet",
+      value: "Sylhet",
     },
-  ]
-  if(visible){
-    return(
-      <Selection onChange={(val)=>{
-        if(type=='category'){
-          setCategory(val);
-        }else if(type=='seller_level'){
-          setSellerLevel(val);
-        }else if(type=='seller_location'){
-          setSellerLocation(val);
-        }
-      }} data={data} close={setVisible} visible={visible} />
-    )
+  ];
+  if (props.visible) {
+    return (
+      <Selection
+        onChange={(val) => {
+          props.disabled(false)
+          if (type == "category") {
+            setCategory(val);
+          } else if (type == "seller_level") {
+            setSellerLevel(val);
+          } else if (type == "seller_location") {
+            setSellerLocation(val);
+          }
+        }}
+        data={data}
+        close={props.setVisible}
+        visible={props.visible}
+      />
+    );
   }
   return (
     <KeyboardAvoidingView
@@ -131,7 +144,8 @@ const SearchFilter = () => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
     >
-      <View
+      <Animated.View
+        entering={SlideInLeft}
         style={{
           marginLeft: 10,
           marginRight: 10,
@@ -201,9 +215,9 @@ const SearchFilter = () => {
           ></View>
           <TouchableOpacity
             onPress={() => {
-              setVisible(true);
-              setType('category')
-              setData(category)
+              props.setVisible(true);
+              setType("category");
+              setData(category);
             }}
             style={[styles.box1, { flexDirection: "row" }]}
           >
@@ -257,8 +271,7 @@ const SearchFilter = () => {
             >
               Price Rang
             </Text>
-            <TextInput placeholder='৳' style={styles.input}>
-            </TextInput>
+            <TextInput placeholder="৳" style={styles.input}></TextInput>
             <View
               style={{
                 alignItems: "center",
@@ -274,15 +287,17 @@ const SearchFilter = () => {
                 To
               </Text>
             </View>
-            <TextInput placeholder='৳' style={styles.input}>
-            </TextInput>
+            <TextInput placeholder="৳" style={styles.input}></TextInput>
           </View>
           <View style={styles.gap}></View>
-          <TouchableOpacity onPress={() => {
-              setVisible(true);
-              setType('seller_level')
-              setData(sellerLevel)
-            }} style={[styles.box1, { flexDirection: "row" }]}>
+          <TouchableOpacity
+            onPress={() => {
+              props.setVisible(true);
+              setType("seller_level");
+              setData(sellerLevel);
+            }}
+            style={[styles.box1, { flexDirection: "row" }]}
+          >
             <Text
               style={{
                 flex: 9,
@@ -303,11 +318,14 @@ const SearchFilter = () => {
             </View>
           </TouchableOpacity>
           <View style={styles.gap}></View>
-          <TouchableOpacity onPress={() => {
-              setVisible(true);
-              setType('seller_location')
-              setData(sellerLocation)
-            }} style={[styles.box1, { flexDirection: "row" }]}>
+          <TouchableOpacity
+            onPress={() => {
+              props.setVisible(true);
+              setType("seller_location");
+              setData(sellerLocation);
+            }}
+            style={[styles.box1, { flexDirection: "row" }]}
+          >
             <Text
               style={{
                 flex: 9,
@@ -328,7 +346,7 @@ const SearchFilter = () => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </Animated.View>
     </KeyboardAvoidingView>
   );
 };
@@ -360,7 +378,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 3,
     borderRadius: 5,
-    padding:5
+    padding: 5,
   },
   touch: {
     flexDirection: "row",
@@ -373,25 +391,16 @@ const styles = StyleSheet.create({
     height: 2,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     color: textColor,
   },
   view: {
-    marginTop: 5,
+    marginBottom: 1.5,
     backgroundColor: primaryColor,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
-  button: {
-    width: '80%',
-    height:40,
-    backgroundColor: 'green',
-    alignSelf: 'center',
-    margin: 10,
-    borderRadius:5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
+  
 });
 
 const Selection = (props) => {
@@ -400,34 +409,29 @@ const Selection = (props) => {
     return <></>;
   }
   return (
-    <View
+    <Animated.View
+      entering={SlideInRight}
       style={{
         backgroundColor: secondaryColor,
       }}
     >
       {data.map((doc, i) => (
-          <TouchableOpacity
-            style={styles.view}
-            key={i}
-            onPress={() => {
-              if (props.close) {
-                props.close(!props.visible);
-              }
-              if (props.onChange) {
-                props.onChange(doc.value);
-              }
-            }}
-          >
-            <Text style={styles.text}>{doc.label}</Text>
-          </TouchableOpacity>
-        ))}
-        <TouchableOpacity style={styles.button} onPress={() =>{
-          props.close(!props.visible);
-        }}>
-          <Text style={{
-            color:'white'
-          }}>Close</Text>
+        <TouchableOpacity
+          style={styles.view}
+          key={i}
+          onPress={() => {
+            if (props.close) {
+              props.close(!props.visible);
+            }
+            if (props.onChange) {
+              props.onChange(doc.value);
+            }
+          }}
+        >
+          <Text style={styles.text}>{doc.label}</Text>
         </TouchableOpacity>
-    </View>
+      ))}
+      
+    </Animated.View>
   );
 };

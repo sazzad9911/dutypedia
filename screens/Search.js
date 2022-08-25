@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Options from "../Cart/Options";
+import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 
 const Search = (props) => {
   const navigation = props.navigation

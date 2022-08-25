@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor, secondaryColor, textColor } from "./../assets/colors";
+import {useSelector,useDispatch} from 'react-redux'
+import { setBottomSheet } from './../action';
 
 const SearchHeader = (props) => {
     const navigation = props.navigation
+    const dispatch=useDispatch()
   return (
     <View style={styles.box}>
       <TouchableOpacity onPress={() =>{
@@ -21,7 +24,7 @@ const SearchHeader = (props) => {
       <TextInput value={props.search} onChangeText={val=>props.onChange(val)} 
       autoFocus={true} style={styles.input} placeholder="Search here..." />
       <TouchableOpacity onPress={()=>{
-        props.setIndex(1);
+        dispatch(setBottomSheet(1))
       }} style={[styles.icon,{
         alignItems: 'flex-end',
       }]}>

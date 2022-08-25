@@ -15,6 +15,7 @@ import {
   backgroundColor,
   assentColor,
   secondaryColor,
+  textColor
 } from "./../assets/colors";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ import ProfileOption from "./../components/ProfileOption";
 import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = () => {
@@ -65,9 +67,17 @@ const OtherProfile = () => {
           }}>Position of Ceo</Text>
         </View>
       </View>
+      <Options Icon={()=>(
+        <MaterialCommunityIcons name="brain" size={24} color={textColor} />
+      )}
+       text='Specialty in Graphic Design, Software Engineer'/>
+       <Options Icon={()=>(
+        <MaterialCommunityIcons name="brain" size={24} color={textColor} />
+      )}
+       text='Worker'/>
       <ProfileOption
         Icon={() => (
-          <AntDesign name="calendar" size={24} color={secondaryColor} />
+          <AntDesign name="calendar" size={24} color={textColor} />
         )}
         title="Company Calender"
       />
@@ -76,7 +86,7 @@ const OtherProfile = () => {
           <AntDesign
             name="exclamationcircleo"
             size={24}
-            color={secondaryColor}
+            color={textColor}
           />
         )}
         title="About"
@@ -91,7 +101,7 @@ const styles = StyleSheet.create({
     minHeight: 200,
   },
   container: {
-    minHeight: 415,
+    minHeight: 30,
     backgroundColor: primaryColor,
   },
   profile: {
@@ -151,3 +161,27 @@ const styles = StyleSheet.create({
     height: 80,
   },
 });
+const Options =({text,Icon})=>{
+  return(
+    <TouchableOpacity style={{
+      width: '100%',
+      marginBottom: 1,
+      backgroundColor:primaryColor,
+      flexDirection: "row",
+      paddingHorizontal:20,
+      justifyContent:'space-between',
+      paddingVertical:5
+    }}>
+    <Icon style={{
+      flex: 1,
+    }}/>
+    <Text style={{
+      fontSize: 15,
+      flex:8,
+      marginLeft: 10,
+    }}>
+      {text}
+    </Text>
+    </TouchableOpacity>
+  )
+}
