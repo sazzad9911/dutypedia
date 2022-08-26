@@ -28,7 +28,8 @@ import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "./../components/Button";
 import RatingView from "./../components/RatingView";
-import star from "./../assets/icons/star.svg"
+import { brain, flag, info, star, user, verified } from "../assets/icon";
+import { SvgXml } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = () => {
@@ -85,17 +86,17 @@ const OtherProfile = () => {
       </View>
       <Options
         Icon={() => (
-          <MaterialCommunityIcons name="brain" size={24} color={assentColor} />
+          <SvgXml xml={brain} height="20" width="20"/>
         )}
         text="Specialty in Graphic Design, Software Engineer"
       />
       <Options
-        Icon={() => <FontAwesome name="users" size={23} color={assentColor} />}
+        Icon={() => <SvgXml xml={user} height="20" width="20"/>}
         text="Worker and Team(12 member)"
       />
       <Options
         Icon={() => (
-          <Ionicons name="md-flag-sharp" size={24} color={assentColor} />
+          <SvgXml xml={flag} height="20" width="20"/>
         )}
         text="Since 2022"
       />
@@ -111,10 +112,10 @@ const OtherProfile = () => {
             flexDirection: "row",
           }}
         >
-          <AntDesign name="infocirlce" size={18} color={assentColor} />
+          <SvgXml xml={info} height="20" width="20"/>
           <Text
             style={{
-              marginLeft: 15,
+              marginLeft: 10,
               color: textColor,
               fontSize: 15,
             }}
@@ -127,15 +128,16 @@ const OtherProfile = () => {
             paddingHorizontal: 30,
           }}
         >
-          <TouchableOpacity onPress={() => {
-                setLines((num) => {
-                  if (num === 2) {
-                    return 30;
-                  } else {
-                    return 2;
-                  }
-                });
-              }}
+          <TouchableOpacity
+            onPress={() => {
+              setLines((num) => {
+                if (num === 2) {
+                  return 30;
+                } else {
+                  return 2;
+                }
+              });
+            }}
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
@@ -176,12 +178,11 @@ const OtherProfile = () => {
               marginBottom: 10,
             }}
           >
-          <Image source={star} style={{width:24,height:24}}/>
-            <FontAwesome name="star" size={18} color="#F1C00F" />
-            <FontAwesome name="star" size={18} color="#F1C00F" />
-            <FontAwesome name="star" size={18} color="#F1C00F" />
-            <FontAwesome name="star" size={18} color="#F1C00F" />
-            <FontAwesome name="star" size={18} color="#F1C00F" />
+            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml xml={star} height="18" width="18" />
             <Text
               style={{
                 marginLeft: 10,

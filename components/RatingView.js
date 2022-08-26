@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import {SvgXml} from 'react-native-svg';
+import {star} from '../assets/icon'
 
 const RatingView = ({ title, rate, style }) => {
   const [period, setPeriod] = React.useState([]);
@@ -38,7 +39,7 @@ const RatingView = ({ title, rate, style }) => {
         }}
       >
         {period.map((doc, i) => (
-          <FontAwesome key={i} name="star" size={18} color="#F1C00F" />
+          <SvgXml key={i} xml={star} height="18" width="18" />
         ))}
         <Text
           style={{
