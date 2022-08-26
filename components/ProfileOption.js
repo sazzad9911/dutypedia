@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal:20,
     backgroundColor:primaryColor,
-    marginVertical:3
+    marginVertical:1
 },
 icon: {
     flex:1

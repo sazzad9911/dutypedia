@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   icon: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: assentColor,
+    backgroundColor: '#ffff',
     width: 30,
     height: 30,
     borderRadius: 15,

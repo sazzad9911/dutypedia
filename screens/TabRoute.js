@@ -42,7 +42,7 @@ const TabRoute = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
       <Tab.Navigator tabBar={(props) => {
-        if(bottomSheetRef && props.state.index!=5){
+        if(bottomSheetRef && bottomSheetRef.current && props.state.index!=5){
           bottomSheetRef.current.close()
         }
         return(
