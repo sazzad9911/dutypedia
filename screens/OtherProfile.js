@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,16 +31,21 @@ import Button from "./../components/Button";
 import RatingView from "./../components/RatingView";
 import { brain, flag, info, star, user, verified } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
+import ReviewCart from "./../Cart/ReviewCart";
+import RelatedService from "./../Cart/RelatedService";
 
 const { width, height } = Dimensions.get("window");
-const OtherProfile = () => {
+const OtherProfile = (props) => {
   const window = Dimensions.get("window");
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [Lines, setLines] = React.useState(2);
+  const navigation = props.navigation;
 
   return (
-    <ScrollView>
+    <ScrollView style={{
+      backgroundColor:'#f1f1f2'
+    }}>
       <View style={styles.container}>
         {backgroundImage ? (
           <Image
@@ -71,6 +77,7 @@ const OtherProfile = () => {
             style={{
               marginTop: 10,
               fontSize: 17,
+              fontWeight: "bold",
             }}
           >
             Easin Arafat (Male)
@@ -78,28 +85,22 @@ const OtherProfile = () => {
           <Text
             style={{
               fontSize: 14,
+              fontWeight: "bold",
             }}
           >
             Position of Ceo
           </Text>
         </View>
+        <SvgXml style={{
+          position: "absolute",
+          right: 30,
+          zIndex: 6,
+          top:210
+        }} xml={verified} height="50" width="50" />
       </View>
-      <Options
-        Icon={() => (
-          <SvgXml xml={brain} height="20" width="20"/>
-        )}
-        text="Specialty in Graphic Design, Software Engineer"
-      />
-      <Options
-        Icon={() => <SvgXml xml={user} height="20" width="20"/>}
-        text="Worker and Team(12 member)"
-      />
-      <Options
-        Icon={() => (
-          <SvgXml xml={flag} height="20" width="20"/>
-        )}
-        text="Since 2022"
-      />
+      <BarOption icon={brain} title='Specialty in Graphic Design, Software Engineer'/>
+      <BarOption icon={user} title='Worker and Team (12 member)'/>
+      <BarOption icon={flag} title='Since 2020'/>
       <View
         style={{
           backgroundColor: primaryColor,
@@ -112,7 +113,7 @@ const OtherProfile = () => {
             flexDirection: "row",
           }}
         >
-          <SvgXml xml={info} height="20" width="20"/>
+          <SvgXml xml={info} height="20" width="20" />
           <Text
             style={{
               marginLeft: 10,
@@ -178,11 +179,11 @@ const OtherProfile = () => {
               marginBottom: 10,
             }}
           >
-            <SvgXml xml={star} height="18" width="18" />
-            <SvgXml xml={star} height="18" width="18" />
-            <SvgXml xml={star} height="18" width="18" />
-            <SvgXml xml={star} height="18" width="18" />
-            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml style={styles.starIcon} xml={star} height="18" width="18" />
+            <SvgXml style={styles.starIcon} xml={star} height="18" width="18" />
+            <SvgXml style={styles.starIcon} xml={star} height="18" width="18" />
+            <SvgXml style={styles.starIcon} xml={star} height="18" width="18" />
+            <SvgXml style={styles.starIcon} xml={star} height="18" width="18" />
             <Text
               style={{
                 marginLeft: 10,
@@ -390,6 +391,53 @@ const OtherProfile = () => {
           rate={3.2}
         />
       </View>
+      <ReviewCart />
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          flex: 1,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            color: textColor,
+            paddingHorizontal: 20,
+          }}
+        >
+          Related Service
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{ width: 10 }} />
+          <RelatedService navigation={props.navigation} />
+          <RelatedService navigation={props.navigation} />
+          <RelatedService navigation={props.navigation} />
+        </ScrollView>
+      </View>
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          flex: 1,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            color: textColor,
+            paddingHorizontal: 20,
+          }}
+        >
+          Related Service
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{ width: 10 }} />
+          <RelatedService navigation={props.navigation} />
+          <RelatedService navigation={props.navigation} />
+          <RelatedService navigation={props.navigation} />
+        </ScrollView>
+      </View>
     </ScrollView>
   );
 };
@@ -450,6 +498,7 @@ const styles = StyleSheet.create({
   },
   headLine: {
     fontSize: 20,
+    fontWeight: "bold",
   },
   text: {
     textAlign: "center",
@@ -459,6 +508,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
+  starIcon:{
+    marginRight:3
+  }
 });
 const Options = ({ text, Icon }) => {
   return (
@@ -490,3 +542,34 @@ const Options = ({ text, Icon }) => {
     </TouchableOpacity>
   );
 };
+const BarOption=({icon,title})=>{
+  return (
+    <View
+        style={{
+          paddingHorizontal: 20,
+          flexDirection: "row",
+          paddingTop:5,
+          backgroundColor: primaryColor,
+        }}
+      >
+        <SvgXml xml={icon} height="20" width="20" />
+        <View style={{
+          flex:6,
+          marginLeft: 10,
+        }}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              marginBottom:5
+            }}
+          >
+            {title}
+          </Text>
+          <View style={{
+            height:1,
+            backgroundColor:'#f1f1f2'
+          }}></View>
+        </View>
+      </View>
+  )
+}

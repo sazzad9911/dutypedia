@@ -39,7 +39,9 @@ const RatingView = ({ title, rate, style }) => {
         }}
       >
         {period.map((doc, i) => (
-          <SvgXml key={i} xml={star} height="18" width="18" />
+          <SvgXml style={{
+            marginRight:3
+          }} key={i} xml={star} height="18" width="18" />
         ))}
         <Text
           style={{
