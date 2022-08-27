@@ -9,7 +9,7 @@ const ProfileOption = (props) => {
       if(props.onPress){
         props.onPress()
       }
-    }} style={styles.box}>
+    }} style={[styles.box,props.style]}>
       <props.Icon  style={styles.icon} />
       <Text style={styles.text}>{props.title}</Text>
       <MaterialIcons style={styles.icon} name="keyboard-arrow-right" size={24} color="black" />
@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal:20,
     backgroundColor:primaryColor,
-    marginVertical:5
+    marginVertical:0,
+    marginTop:5
 },
 icon: {
     flex:1

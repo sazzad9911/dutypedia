@@ -7,8 +7,11 @@ import { AntDesign } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
   const [Love, setLove] = React.useState(false);
+  const navigation = props.navigation
   return (
-    <TouchableOpacity
+    <TouchableOpacity onPress={() =>{
+      navigation.push('OtherProfile')
+    }}
       style={{
         width: 240,
         height: 240,

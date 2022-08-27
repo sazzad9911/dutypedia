@@ -98,7 +98,7 @@ const OtherProfile = (props) => {
           top:210
         }} xml={verified} height="50" width="50" />
       </View>
-      <BarOption icon={brain} title='Specialty in Graphic Design, Software Engineer'/>
+      <BarOption icon={brain} title='Specialty in Graphic Design, Software Engineer, Data Science'/>
       <BarOption icon={user} title='Worker and Team (12 member)'/>
       <BarOption icon={flag} title='Since 2020'/>
       <View
@@ -242,7 +242,9 @@ const OtherProfile = (props) => {
         Icon={() => <AntDesign name="calendar" size={24} color={assentColor} />}
         title="Company Calender"
       />
-      <ProfileOption
+      <ProfileOption style={{
+        marginBottom:5
+      }}
         Icon={() => (
           <FontAwesome5
             style={{
@@ -391,7 +393,7 @@ const OtherProfile = (props) => {
           rate={3.2}
         />
       </View>
-      <ReviewCart />
+      <ReviewCart navigation={navigation} />
       <View
         style={{
           backgroundColor: primaryColor,
@@ -543,13 +545,21 @@ const Options = ({ text, Icon }) => {
   );
 };
 const BarOption=({icon,title})=>{
+  const [lines,setLines]=React.useState(1)
   return (
-    <View
+    <TouchableOpacity onPress={()=>{
+      setLines(d=>{
+        if(d===1) {
+          return 10;
+        }
+        return 1
+      })
+    }}
         style={{
           paddingHorizontal: 20,
           flexDirection: "row",
-          paddingTop:5,
           backgroundColor: primaryColor,
+          paddingVertical:5
         }}
       >
         <SvgXml xml={icon} height="20" width="20" />
@@ -557,7 +567,7 @@ const BarOption=({icon,title})=>{
           flex:6,
           marginLeft: 10,
         }}>
-          <Text
+          <Text numberOfLines={lines}
             style={{
               fontWeight: "bold",
               marginBottom:5
@@ -570,6 +580,6 @@ const BarOption=({icon,title})=>{
             backgroundColor:'#f1f1f2'
           }}></View>
         </View>
-      </View>
+      </TouchableOpacity>
   )
 }

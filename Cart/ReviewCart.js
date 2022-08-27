@@ -12,7 +12,7 @@ import { SvgXml } from "react-native-svg";
 import { primaryColor, secondaryColor } from "./../assets/colors";
 import { numToArray } from "./../action";
 
-const ReviewCart = () => {
+const ReviewCart = ({navigation}) => {
   return (
     <View
       style={{
@@ -28,7 +28,9 @@ const ReviewCart = () => {
         }}
       >
         <Text style={styles.text1}>23 Review</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() =>{
+          navigation.push('AllReview')
+        }}>
           <Text style={styles.text1}>See All</Text>
         </TouchableOpacity>
       </View>
@@ -36,11 +38,6 @@ const ReviewCart = () => {
       <View
         style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
       />
-      <Cart />
-      <View
-        style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
-      />
-      <Cart />
     </View>
   );
 };
@@ -61,7 +58,7 @@ const styles = StyleSheet.create({
     color: "#808080",
   },
 });
-const Cart = () => {
+export const Cart = () => {
   return (
     <View
       style={{

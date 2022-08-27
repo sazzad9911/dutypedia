@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import { primaryColor, textColor, secondaryColor } from "./../assets/colors";
+import { primaryColor, textColor, secondaryColor,backgroundColor } from "./../assets/colors";
 import { SvgXml } from "react-native-svg";
 import { star } from "../assets/icon";
 import { AntDesign } from "@expo/vector-icons";
@@ -29,11 +29,12 @@ const RelatedService = (props) => {
           width: 2,
           height: 2,
         },
-        shadowOpacity: 0.2,
+        shadowOpacity: .6,
         shadowRadius: 2,
         elevation: 2,
         margin: 10,
         overflow: "hidden",
+        shadowColor: 'black'
       }}
     >
       <Image

@@ -16,6 +16,9 @@ import SubHeader from "./components/SubHeader";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import store from "./store";
+import OtherProfileHeader from './components/OtherProfileHeader';
+import AllReviewHeader from './components/AllReviewHeader';
+import AllReview from './screens/AllReview';
 
 export default function App() {
   const MyTheme = {
@@ -57,7 +60,7 @@ export default function App() {
               component={ChatScreen}
             />
             <Stack.Screen
-              options={{ headerShown: false }}
+              options={{ header: (props)=><OtherProfileHeader {...props}/> }}
               name="OtherProfile"
               component={OtherProfile}
             />
@@ -66,6 +69,10 @@ export default function App() {
               options={{ header: (props) => <SubHeader {...props} /> }}
               name="ManageOrder"
               component={ManageOrder}
+            />
+            <Stack.Screen options={{ header: (props) => <AllReviewHeader {...props}/>}}
+            name="AllReview"
+            component={AllReview}
             />
           </Stack.Navigator>
         </NavigationContainer>

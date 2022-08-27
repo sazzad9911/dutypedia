@@ -122,10 +122,10 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
-          <Cart2 />
-          <Cart2 />
-          <Cart2 />
-          <Cart2 />
+          <Cart2 navigation={props.navigation}/>
+          <Cart2 navigation={props.navigation}/>
+          <Cart2 navigation={props.navigation}/>
+          <Cart2 navigation={props.navigation}/>
         </ScrollView>
 
         <Text
