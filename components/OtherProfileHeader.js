@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text,Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor } from "./../assets/colors";
 
@@ -7,12 +7,11 @@ const OtherProfileHeader = ({navigation}) => {
   return (
     <View
       style={{
-        marginTop: 26,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingBottom: 10,
-        paddingTop: 5,
+        paddingTop:Platform.OS=='ios'? 25:31,
         backgroundColor: primaryColor,
       }}
     >

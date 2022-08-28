@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text,Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor,textColor } from "./../assets/colors";
 
@@ -8,13 +8,13 @@ const AllReviewHeader = (props) => {
   return (
     <View
       style={{
-        marginTop: 31,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingBottom: 10,
         paddingTop: 10,
         backgroundColor: primaryColor,
+        paddingTop:Platform.OS=='ios'?28:35
       }}
     >
       <TouchableOpacity style={{

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity,Platform } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import {secondaryColor, primaryColor,textColor} from '../assets/colors'
 
@@ -30,8 +30,8 @@ export const styles = StyleSheet.create({
   box: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 33,
-    backgroundColor: secondaryColor
+    backgroundColor: secondaryColor,
+    paddingTop:Platform.OS =='ios'?28:35,
   },
   text: {
     color: textColor,

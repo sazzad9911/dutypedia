@@ -112,15 +112,16 @@ const Home = (props) => {
           <TouchableOpacity
             style={{
               marginVertical: 10,
-              flex: 1,
+              flex: 2,
             }}
           >
             <Text
               style={{
                 fontWeight: "bold",
                 textDecorationLine: "underline",
-                marginRight: 5,
+                marginRight: 20,
                 fontSize: 14,
+                textAlign: "right"
               }}
             >
               View All
