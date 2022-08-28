@@ -70,23 +70,23 @@ const SearchFilter = (props) => {
   const sellerLevel = [
     {
       label: "Seller level 1",
-      value: 1,
+      value: 'Lev 1',
     },
     {
       label: "Seller level 2",
-      value: 2,
+      value: 'Lev 2',
     },
     {
       label: "Seller level 3",
-      value: 3,
+      value: 'Lev 3',
     },
     {
       label: "Seller level 4",
-      value: 4,
+      value: 'Lev 4',
     },
     {
       label: "Seller level 5",
-      value: 5,
+      value: 'Lev 5',
     },
   ];
   const sellerLocation = [
@@ -142,7 +142,7 @@ const SearchFilter = (props) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
       <Animated.View
         entering={SlideInLeft}
@@ -305,11 +305,19 @@ const SearchFilter = (props) => {
             >
               Seller Level
             </Text>
+            <Text
+                style={{
+                  marginRight: 15,
+                  flex: 2,
+                }}
+              >
+                {SellerLevel}
+              </Text>
             <View style={styles.touch}>
+            
               <AntDesign
                 style={{
                   marginTop: 5,
-                  marginLeft: 18,
                 }}
                 name="right"
                 size={16}
@@ -333,11 +341,18 @@ const SearchFilter = (props) => {
             >
               Seller Location
             </Text>
+            <Text
+                style={{
+                  marginRight: 15,
+                  flex: 2,
+                }}
+              >
+                {SellerLocation}
+              </Text>
             <View style={styles.touch}>
               <AntDesign
                 style={{
                   marginTop: 5,
-                  marginLeft: 18,
                 }}
                 name="right"
                 size={16}

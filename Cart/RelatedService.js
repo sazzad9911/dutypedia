@@ -98,6 +98,7 @@ const RelatedService = (props) => {
           style={{
             marginHorizontal: 10,
             color: textColor,
+            fontWeight: "700"
           }}
         >
           I will make custom graphic for your blog I will

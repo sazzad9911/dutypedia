@@ -3,7 +3,8 @@ import { TouchableOpacity, View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor,textColor } from "./../assets/colors";
 
-const AllReviewHeader = ({ navigation }) => {
+const AllReviewHeader = (props) => {
+  //console.log(props.navigation)
   return (
     <View
       style={{
@@ -16,15 +17,18 @@ const AllReviewHeader = ({ navigation }) => {
         backgroundColor: primaryColor,
       }}
     >
-      <TouchableOpacity onPress={() => {
-          navigation.goBack();
+      <TouchableOpacity style={{
+        flex: 1,
+      }} onPress={() => {
+        //console.log('ok')
+          props.navigation.goBack();
         }}
       >
         <Ionicons name="md-chevron-back-sharp" size={25} color="black" />
       </TouchableOpacity>
       <Text style={{
         textAlign: 'center',
-        flex:1,
+        flex:12,
         marginLeft:-24,
         alignItems: 'center',
         fontWeight: 'bold',

@@ -26,7 +26,7 @@ const Header = (props) => {
 };
 
 export default Header;
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   box: {
     justifyContent: "center",
     alignItems: "center",
