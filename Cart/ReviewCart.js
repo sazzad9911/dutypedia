@@ -12,7 +12,7 @@ import { SvgXml } from "react-native-svg";
 import { primaryColor, secondaryColor } from "./../assets/colors";
 import { numToArray } from "./../action";
 
-const ReviewCart = ({navigation}) => {
+const ReviewCart = ({ navigation }) => {
   return (
     <View
       style={{
@@ -28,9 +28,11 @@ const ReviewCart = ({navigation}) => {
         }}
       >
         <Text style={styles.text1}>23 Review</Text>
-        <TouchableOpacity onPress={() =>{
-          navigation.push('AllReview')
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.push("AllReview");
+          }}
+        >
           <Text style={styles.text1}>See All</Text>
         </TouchableOpacity>
       </View>
@@ -111,36 +113,38 @@ export const Cart = () => {
         <View
           style={{
             flexDirection: "row",
-            paddingRight: 100,
-            justifyContent: "space-between",
             marginVertical: 10,
+            justifyContent: "space-between"
           }}
         >
-          {numToArray(5.2).map((doc, i) => (
-            <SvgXml style={{
-              marginRight:3
-            }} key={i} xml={star} height="18" width="18" />
-          ))}
-          <Text
-            style={[
-              styles.text2,
-              {
-                marginLeft: 5,
-              },
-            ]}
-          >
-            5.2
-          </Text>
-          <Text
-            style={[
-              styles.text2,
-              {
-                marginLeft: 100,
-              },
-            ]}
-          >
-            Bargaining
-          </Text>
+          <View style={{
+            flexDirection: "row",
+          }}>
+            {numToArray(5.2).map((doc, i) => (
+              <SvgXml
+                style={{
+                  marginRight: 3,
+                }}
+                key={i}
+                xml={star}
+                height="18"
+                width="18"
+              />
+            ))}
+            <Text
+              style={[
+                styles.text2,
+                {
+                  marginLeft: 5,
+                },
+              ]}
+            >
+              5.2
+            </Text>
+          </View>
+          <Text style={[styles.text2,{
+            
+          }]}>Bargaining</Text>
         </View>
         <View
           style={{

@@ -11,14 +11,14 @@ function Cart1(props) {
       style={{
         width: 250,
         height: 50,
+        shadowColor: "#d5d5d5",
         shadowOffset: {
-          height: 1,
-          width: 1,
+          width: 0,
+          height: 2,
         },
-        shadowColor: "rgba(0, 0, 0, 0.636)",
-        shadowRadius: 1,
-        elevation: 1,
-        shadowOpacity: 0.2,
+        shadowOpacity: 1,
+        shadowRadius: 5,
+        elevation: 3,
         backgroundColor: primaryColor,
         margin: 10,
         marginLeft: 5,
@@ -51,7 +51,7 @@ function Cart1(props) {
         <Text
           style={{
             margin: 10,
-            color:textColor
+            color: textColor,
           }}
         >
           Builder Service

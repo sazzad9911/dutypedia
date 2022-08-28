@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  StatusBar
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -43,9 +44,11 @@ const OtherProfile = (props) => {
   const navigation = props.navigation;
 
   return (
-    <ScrollView style={{
-      backgroundColor:'#f1f1f2'
-    }}>
+    <ScrollView
+      style={{
+        backgroundColor: "#f1f1f2",
+      }}
+    >
       <View style={styles.container}>
         {backgroundImage ? (
           <Image
@@ -91,16 +94,24 @@ const OtherProfile = (props) => {
             Position of Ceo
           </Text>
         </View>
-        <SvgXml style={{
-          position: "absolute",
-          right: 30,
-          zIndex: 6,
-          top:210
-        }} xml={verified} height="50" width="50" />
+        <SvgXml
+          style={{
+            position: "absolute",
+            right: 30,
+            zIndex: 6,
+            top: 210,
+          }}
+          xml={verified}
+          height="50"
+          width="50"
+        />
       </View>
-      <BarOption icon={brain} title='Specialty in Graphic Design, Software Engineer, Data Science'/>
-      <BarOption icon={user} title='Worker and Team (12 member)'/>
-      <BarOption icon={flag} title='Since 2020'/>
+      <BarOption
+        icon={brain}
+        title="Specialty in Graphic Design, Software Engineer, Data Science"
+      />
+      <BarOption icon={user} title="Worker and Team (12 member)" />
+      <BarOption icon={flag} title="Since 2020" />
       <View
         style={{
           backgroundColor: primaryColor,
@@ -242,9 +253,10 @@ const OtherProfile = (props) => {
         Icon={() => <AntDesign name="calendar" size={24} color={assentColor} />}
         title="Company Calender"
       />
-      <ProfileOption style={{
-        marginBottom:5
-      }}
+      <ProfileOption
+        style={{
+          marginBottom: 5,
+        }}
         Icon={() => (
           <FontAwesome5
             style={{
@@ -397,7 +409,6 @@ const OtherProfile = (props) => {
       <View
         style={{
           backgroundColor: primaryColor,
-          flex: 1,
         }}
       >
         <Text
@@ -416,13 +427,6 @@ const OtherProfile = (props) => {
           <RelatedService navigation={props.navigation} />
           <RelatedService navigation={props.navigation} />
         </ScrollView>
-      </View>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          flex: 1,
-        }}
-      >
         <Text
           style={{
             fontSize: 14,
@@ -510,9 +514,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
-  starIcon:{
-    marginRight:3
-  }
+  starIcon: {
+    marginRight: 3,
+  },
 });
 const Options = ({ text, Icon }) => {
   return (
@@ -544,42 +548,48 @@ const Options = ({ text, Icon }) => {
     </TouchableOpacity>
   );
 };
-const BarOption=({icon,title})=>{
-  const [lines,setLines]=React.useState(1)
+const BarOption = ({ icon, title }) => {
+  const [lines, setLines] = React.useState(1);
   return (
-    <TouchableOpacity onPress={()=>{
-      setLines(d=>{
-        if(d===1) {
-          return 10;
-        }
-        return 1
-      })
-    }}
+    <TouchableOpacity
+      onPress={() => {
+        setLines((d) => {
+          if (d === 1) {
+            return 10;
+          }
+          return 1;
+        });
+      }}
+      style={{
+        paddingHorizontal: 20,
+        flexDirection: "row",
+        backgroundColor: primaryColor,
+        paddingVertical: 5,
+      }}
+    >
+      <SvgXml xml={icon} height="20" width="20" />
+      <View
         style={{
-          paddingHorizontal: 20,
-          flexDirection: "row",
-          backgroundColor: primaryColor,
-          paddingVertical:5
+          flex: 6,
+          marginLeft: 10,
         }}
       >
-        <SvgXml xml={icon} height="20" width="20" />
-        <View style={{
-          flex:6,
-          marginLeft: 10,
-        }}>
-          <Text numberOfLines={lines}
-            style={{
-              fontWeight: "bold",
-              marginBottom:5
-            }}
-          >
-            {title}
-          </Text>
-          <View style={{
-            height:1,
-            backgroundColor:'#f1f1f2'
-          }}></View>
-        </View>
-      </TouchableOpacity>
-  )
-}
+        <Text
+          numberOfLines={lines}
+          style={{
+            fontWeight: "bold",
+            marginBottom: 5,
+          }}
+        >
+          {title}
+        </Text>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: "#f1f1f2",
+          }}
+        ></View>
+      </View>
+    </TouchableOpacity>
+  );
+};

@@ -7,7 +7,7 @@ const OtherProfileHeader = ({navigation}) => {
   return (
     <View
       style={{
-        marginTop: 31,
+        marginTop: 26,
         flexDirection: "row",
         justifyContent: "space-between",
         paddingHorizontal: 20,

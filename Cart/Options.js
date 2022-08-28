@@ -10,25 +10,25 @@ function Options(props) {
   return (
     <TouchableOpacity
       onPress={() => {
-        if(!props.action){
-          setSelect(!Select)
+        if (!props.action) {
+          setSelect(!Select);
         }
-        if(props.onPress){
-          props.onPress()
+        if (props.onPress) {
+          props.onPress();
         }
-        }}
+      }}
       style={{
         minWidth: width / 3,
         paddingHorizontal: 30,
         height: 45,
+        shadowColor: "#d5d5d5",
         shadowOffset: {
-          height: 1,
-          width: 1,
+          width: 0,
+          height: 2,
         },
-        shadowColor: "rgba(0, 0, 0, 0.636)",
-        shadowRadius: 1,
-        elevation: 1,
-        shadowOpacity: 0.2,
+        shadowOpacity: 1,
+        shadowRadius: 5,
+        elevation: 2,
         backgroundColor: Select ? "#117A65" : primaryColor,
         margin: 10,
         marginLeft: 5,

@@ -9,16 +9,16 @@ function Cart(props) {
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity
         style={{
-          width: width / 3,
-          height: 140,
+          width: (width / 3)-15,
+          height: 150,
+          shadowColor: "#d5d5d5",
           shadowOffset: {
-            height: 2,
             width: 2,
+            height: 2,
           },
-          shadowColor: "rgba(0, 0, 0, 0.636)",
-          shadowRadius: 1,
-          elevation: 1,
-          shadowOpacity: 0.2,
+          shadowOpacity: 1,
+          shadowRadius: 5,
+          elevation: 4,
           backgroundColor: primaryColor,
           margin: 10,
           marginLeft: 5,
@@ -41,6 +41,7 @@ function Cart(props) {
           style={{
             color: textColor,
             margin: 10,
+            marginTop:17
           }}
         >
           Builder Service

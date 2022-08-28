@@ -7,22 +7,23 @@ import { AntDesign } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
   const [Love, setLove] = React.useState(false);
-  const navigation = props.navigation
+  const navigation = props.navigation;
   return (
-    <TouchableOpacity onPress={() =>{
-      navigation.push('OtherProfile')
-    }}
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push("OtherProfile");
+      }}
       style={{
         width: 240,
         height: 240,
-        shadowOffset: {
-          height: 1,
-          width: 1,
-        },
-        shadowColor: "rgba(0, 0, 0, 0.636)",
-        shadowRadius: 1,
-        elevation: 1,
-        shadowOpacity: 0.2,
+        shadowColor: "#d5d5d5",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 1,
+          shadowRadius: 5,
+          elevation: 4,
         backgroundColor: primaryColor,
         margin: 10,
         marginLeft: 5,
@@ -44,7 +45,8 @@ function Cart2(props) {
       <View
         style={{
           flexDirection: "row",
-        }}>
+        }}
+      >
         <View
           style={{
             flexDirection: "row",

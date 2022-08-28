@@ -15,13 +15,17 @@ import Options from "../Cart/Options";
 import Seller from "../Cart/Seller";
 import SellerCart from "./../Cart/SellerCart";
 import CombineCart from "./../Cart/CombineCart";
-import Animated, { useAnimatedStyle,withSpring,delayMS  } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  delayMS,
+} from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
 
 const Home = (props) => {
   const navigation = props.navigation;
-  const [trans,setTrans]= React.useState(1)
+  const [trans, setTrans] = React.useState(1);
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [
@@ -31,16 +35,12 @@ const Home = (props) => {
       ],
     };
   });
- 
+
   return (
-    <Animated.View style={[{flex: 1,},animatedStyles]}>
+    <Animated.View style={[{ flex: 1 }, animatedStyles]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        style={{
-          paddingLeft: 15,
-          paddingRight: 15,
-        }}
       >
         <View>
           <Text
@@ -49,6 +49,8 @@ const Home = (props) => {
               color: textColor,
               fontWeight: "bold",
               marginLeft: 5,
+              paddingLeft: 15,
+              paddingRight: 15,
             }}
           >
             Category
@@ -59,16 +61,20 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
+          <View style={{ width: 15 }} />
           <Cart />
           <Cart />
           <Cart />
           <Cart />
+          <View style={{ width: 15 }} />
         </ScrollView>
         <Text
           style={{
             fontWeight: "bold",
             marginVertical: 10,
             marginLeft: 5,
+            paddingLeft: 15,
+            paddingRight: 15,
           }}
         >
           What is Your Best Interested Category
@@ -78,9 +84,11 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
+          <View style={{ width: 15 }} />
           <CombineCart num={[2, 3, 4]} Component={() => <Cart1 />} />
           <CombineCart num={[2, 3, 4]} Component={() => <Cart1 />} />
           <CombineCart num={[2, 3, 4]} Component={() => <Cart1 />} />
+          <View style={{ width: 15 }} />
         </ScrollView>
 
         <View
@@ -95,6 +103,8 @@ const Home = (props) => {
               flex: 5,
               marginLeft: 5,
               fontSize: 14,
+              paddingLeft: 15,
+              paddingRight: 15,
             }}
           >
             Some Suggest
@@ -122,10 +132,12 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
-          <Cart2 navigation={props.navigation}/>
-          <Cart2 navigation={props.navigation}/>
-          <Cart2 navigation={props.navigation}/>
-          <Cart2 navigation={props.navigation}/>
+          <View style={{ width: 15 }} />
+          <Cart2 navigation={props.navigation} />
+          <Cart2 navigation={props.navigation} />
+          <Cart2 navigation={props.navigation} />
+          <Cart2 navigation={props.navigation} />
+          <View style={{ width: 15 }} />
         </ScrollView>
 
         <Text
@@ -133,6 +145,8 @@ const Home = (props) => {
             fontWeight: "bold",
             marginVertical: 10,
             marginLeft: 5,
+            paddingLeft: 15,
+            paddingRight: 15,
           }}
         >
           Top Seller
@@ -142,16 +156,19 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
+          <View style={{ width: 15 }} />
           <Options />
           <Options />
           <Options />
           <Options />
+          <View style={{ width: 15 }} />
         </ScrollView>
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
+        <View style={{ width: 15 }} />
           <CombineCart
             num={[2, 3, 4]}
             Component={() => <Seller navigation={navigation} />}
@@ -164,12 +181,15 @@ const Home = (props) => {
             num={[2, 3, 4]}
             Component={() => <Seller navigation={navigation} />}
           />
+          <View style={{ width: 15 }} />
         </ScrollView>
         <Text
           style={{
             fontWeight: "bold",
             marginVertical: 10,
             marginLeft: 5,
+            paddingLeft: 15,
+            paddingRight: 15,
           }}
         >
           Popular Category
@@ -178,6 +198,8 @@ const Home = (props) => {
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
+            paddingLeft: 15,
+            paddingRight: 15,
           }}
         >
           <Options name="New Service" />
