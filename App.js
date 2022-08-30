@@ -65,12 +65,7 @@ export default function App() {
               component={OtherProfile}
             />
 
-            <Stack.Screen
-              options={{ header: (props) => <SubHeader {...props} /> }}
-              name="ManageOrder"
-              component={ManageOrder}
-            />
-            <Stack.Screen options={{ header: (props) => <AllReviewHeader {...props}/>}}
+            <Stack.Screen options={{ header: (props) => <AllReviewHeader title='23 Review' {...props}/>}}
             name="AllReview"
             component={AllReview}
             />

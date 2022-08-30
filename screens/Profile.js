@@ -17,9 +17,30 @@ import ProfileOption from "./../components/ProfileOption";
 import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { createStackNavigator } from "@react-navigation/stack";
+import ManageOrder from './ManageOrder';
+import Appointment from './Appointment';
+import SubHeader from './../components/SubHeader';
+const Stack = createStackNavigator();
+
+const Profile=({navigation})=>{
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name='MainProfile' options={{
+        headerShown: false
+      }} component={MainProfile}/>
+      <Stack.Screen name='ManageOrder' options={{
+        header:(props)=><SubHeader title='Manage Order' {...props}/>
+      }} component={ManageOrder}/>
+      <Stack.Screen name='Appointment' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Appointment}/>
+    </Stack.Navigator>
+  )
+}
 
 const { width, height } = Dimensions.get("window");
-const Profile = (props) => {
+const MainProfile = (props) => {
   const window = Dimensions.get("window");
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -88,8 +109,10 @@ const Profile = (props) => {
       }}
         Icon={() => <Octicons name="checklist" size={24} color="black" />}
         title="Manage Order"
-      />
-      <ProfileOption
+      /> 
+      <ProfileOption onPress={()=>{
+        navigation.navigate('Appointment')
+      }}
         Icon={() => <AntDesign name="calendar" size={24} color="black" />}
         title="Appointment"
       />

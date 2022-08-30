@@ -14,7 +14,7 @@ const AllReviewHeader = (props) => {
         paddingBottom: 10,
         paddingTop: 10,
         backgroundColor: primaryColor,
-        paddingTop:Platform.OS=='ios'?28:35
+        paddingTop:Platform.OS=='ios'?28:35,
       }}
     >
       <TouchableOpacity style={{
@@ -29,12 +29,12 @@ const AllReviewHeader = (props) => {
       <Text style={{
         textAlign: 'center',
         flex:12,
-        marginLeft:-24,
+        marginLeft:-25,
         alignItems: 'center',
         fontWeight: 'bold',
         fontSize:15,
         color:textColor
-      }}>23 Review</Text>
+      }}>{props.title}</Text>
     </View>
   );
 };

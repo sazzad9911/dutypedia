@@ -1,28 +1,29 @@
 import React from "react";
-import { View, Text,TouchableOpacity } from "react-native";
-import { primaryColor,secondaryColor} from './../assets/colors';
-import { AntDesign } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Platform } from "react-native";
+import { primaryColor, secondaryColor } from "./../assets/colors";
+import { AntDesign } from "@expo/vector-icons";
 
 const SubHeader = (props) => {
-    const navigation = props.navigation
+  const navigation = props.navigation;
 
   return (
-    <TouchableOpacity onPress={()=>{
-        navigation.goBack()
-    }}
+    <View
       style={{
-        height: 35,
         backgroundColor: primaryColor,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginTop:33
+        paddingTop: Platform.OS == "ios" ? 28 : 35,
+        paddingBottom: 10,
       }}
     >
       <AntDesign
+        onPress={() => {
+          navigation.goBack();
+        }}
         style={{
           flex: 1,
-          marginLeft: 10,
+          marginLeft: 20,
         }}
         name="left"
         size={25}
@@ -31,11 +32,12 @@ const SubHeader = (props) => {
       <Text
         style={{
           flex: 2,
+          fontSize: 18,
         }}
       >
-        Manage Order
+        {props.title}
       </Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

@@ -26,6 +26,8 @@ import SearchFilter from "./../components/SearchFilter";
 import { useSelector, useDispatch } from "react-redux";
 import { setBottomSheet } from "./../action";
 import bottomRef from '../action';
+import AllReviewHeader from './../components/AllReviewHeader';
+import Appointment from './Appointment';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,7 +48,7 @@ const TabRoute = () => {
           bottomSheetRef.current.close()
         }
         return(
-          <BottomBar {...props} />
+          <BottomBar {...props} /> 
         )
       }}>
         <Tab.Screen
@@ -81,6 +83,11 @@ const TabRoute = () => {
           options={{ headerShown: false }}
           name="SearchScreen"
          component={SearchScreen}
+        />
+        <Tab.Screen
+          options={{ header:(props)=><AllReviewHeader title="Appointment" {...props}/> }}
+          name="Appointment"
+         component={Appointment}
         />
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
