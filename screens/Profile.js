@@ -21,6 +21,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ManageOrder from './ManageOrder';
 import Appointment from './Appointment';
 import SubHeader from './../components/SubHeader';
+import Upcoming from './Appointment/Upcoming';
+import AppointmentDetails from './Appointment/AppointmentDetails';
+import Previous from './Appointment/Previous';
+import SaveList from './SaveList';
+import Request from './Appointment/Request';
+import Receive from './Appointment/Receive';
+import Send from './Appointment/Send';
 const Stack = createStackNavigator();
 
 const Profile=({navigation})=>{
@@ -35,6 +42,27 @@ const Profile=({navigation})=>{
       <Stack.Screen name='Appointment' options={{
         header:(props)=><SubHeader title='Appointment' {...props}/>
       }} component={Appointment}/>
+      <Stack.Screen name='Upcoming' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Upcoming}/>
+      <Stack.Screen name='AppointmentDetails' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={AppointmentDetails}/>
+      <Stack.Screen name='Previous' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Previous}/>
+      <Stack.Screen name='Request' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Request}/>
+      <Stack.Screen name='Receive' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Receive}/>
+      <Stack.Screen name='Send' options={{
+        header:(props)=><SubHeader title='Appointment' {...props}/>
+      }} component={Send}/>
+      <Stack.Screen name='SaveList' options={{
+        headerShown: false
+      }} component={SaveList}/>
     </Stack.Navigator>
   )
 }
@@ -120,7 +148,9 @@ const MainProfile = (props) => {
         Icon={() => <AntDesign name="wallet" size={24} color="black" />}
         title="Account Balance"
       />
-      <ProfileOption
+      <ProfileOption onPress={() => {
+        navigation.navigate('SaveList')
+      }}
         Icon={() => <AntDesign name="hearto" size={24} color="black" />}
         title="Saved"
       />
