@@ -38,15 +38,20 @@ const BottomBar = (props) => {
         <Text style={styles.text}>Notification</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=>{
-        navigation.navigate('Profile')
-        setRoute(4)
+        if(route===4){
+          navigation.navigate('MainProfile')
+          setRoute(4)
+        }else{
+          navigation.navigate('Profile')
+          setRoute(4)
+        }
       }} style={styles.button}>
        {route==4?( <Ionicons name="person-circle-sharp" size={24} color="#808080" />):( <Ionicons name="person-circle-outline" size={24} color="#808080" />)}
         <Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}; 
 
 export default BottomBar;
 const styles = StyleSheet.create({

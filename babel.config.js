@@ -5,5 +5,10 @@ module.exports = function(api) {
     plugins: [
       'react-native-reanimated/plugin', // This line.
     ],
+    env: {
+      production: {
+        plugins: ['react-native-paper/babel'],
+      },
+    },
   };
 };

@@ -28,6 +28,7 @@ import SaveList from './SaveList';
 import Request from './Appointment/Request';
 import Receive from './Appointment/Receive';
 import Send from './Appointment/Send';
+import Support from './Support';
 const Stack = createStackNavigator();
 
 const Profile=({navigation})=>{
@@ -63,6 +64,9 @@ const Profile=({navigation})=>{
       <Stack.Screen name='SaveList' options={{
         headerShown: false
       }} component={SaveList}/>
+      <Stack.Screen name='Support' options={{
+       header:(props)=><SubHeader title='Contact Form' {...props}/>
+      }} component={Support}/>
     </Stack.Navigator>
   )
 }
@@ -158,7 +162,9 @@ const MainProfile = (props) => {
         Icon={() => <Ionicons name="business" size={24} color="black" />}
         title="Create a business account"
       />
-      <ProfileOption
+      <ProfileOption onPress={()=>{
+        navigation.navigate('Support')
+      }}
         Icon={() => <FontAwesome name="support" size={24} color="black" />}
         title="Support"
       />

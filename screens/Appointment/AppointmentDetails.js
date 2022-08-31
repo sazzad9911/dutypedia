@@ -10,11 +10,10 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { primaryColor, secondaryColor, textColor } from "../../assets/colors";
 const { width, height } = Dimensions.get("window");
-import Animated, {
-  ZoomIn,FadeIn,FadeInDown
-} from "react-native-reanimated";
+import Animated, { ZoomIn, FadeIn, FadeInDown } from "react-native-reanimated";
 import OutsideView from "react-native-detect-press-outside";
-import { backgroundColor } from './../../assets/colors';
+import { backgroundColor } from "./../../assets/colors";
+import { Menu, Divider, Provider } from "react-native-paper";
 
 const AppointmentDetails = ({ route, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -23,10 +22,10 @@ const AppointmentDetails = ({ route, navigation }) => {
 
   return (
     <ScrollView>
-      <OutsideView
+      <Provider
         childRef={ref}
         onPressOutside={() => {
-          setVisible(false);
+          //setVisible(false);
         }}
       >
         <View
@@ -53,7 +52,7 @@ const AppointmentDetails = ({ route, navigation }) => {
             >
               01/012/2022
             </Text>
-            
+
             {params && params.status && params.status == "ok" ? (
               <Text
                 style={{
@@ -73,24 +72,52 @@ const AppointmentDetails = ({ route, navigation }) => {
                 {"(Canceled)"}
               </Text>
             ) : params && params.request ? (
-              <View style={{flexDirection: "row"}}>
-                <SmallButton style={{
-                  backgroundColor:'red',
-                  marginRight:10
-                }} title="Cancel"/>
-                <SmallButton style={{
-                  backgroundColor:'green'
-                }} title="Accept"/>
+              <View style={{ flexDirection: "row" }}>
+                <SmallButton
+                  style={{
+                    backgroundColor: "red",
+                    marginRight: 10,
+                  }}
+                  title="Cancel"
+                />
+                <SmallButton
+                  style={{
+                    backgroundColor: "green",
+                  }}
+                  title="Accept"
+                />
               </View>
             ) : (
-              <Entypo
-                onPress={() => {
-                  setVisible(!Visible);
-                }}
-                name="dots-three-vertical"
-                size={24}
-                color={textColor}
-              />
+              <Menu
+              style={{
+                marginTop:-68,
+                marginLeft:-25
+              }}
+              contentStyle={{
+                backgroundColor: primaryColor,
+                padding:10
+              }}
+                visible={Visible}
+                onDismiss={() => setVisible(!Visible)}
+                anchor={
+                  <Entypo
+                    onPress={() => {
+                      setVisible(!Visible);
+                    }}
+                    name="dots-three-vertical"
+                    size={24}
+                    color={textColor}
+                  />
+                }
+              >
+                <MenuItem onPress={() => {
+                  setVisible(false);
+                }} title="Cancel Appointment" />
+                <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
+                <MenuItem onPress={() => {
+                  setVisible(false);
+                }} title="Complete" />
+              </Menu>
             )}
           </View>
           <Text
@@ -119,46 +146,20 @@ const AppointmentDetails = ({ route, navigation }) => {
             et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
             Lorem ipsum dolor sit amet. Lorem{" "}
           </Text>
-          <View
-              ref={ref}
-              style={{
-                position: "absolute",
-                right: 40,
-                top: 18,
-                zIndex: 1,
-                backgroundColor: primaryColor,
-              }}
-            >
-              {Visible ? (
-                <Animated.View
-                  
-                  style={{
-                    backgroundColor: primaryColor,
-                    width: 180,
-                    borderWidth: 1,
-                    borderColor: "#e5e5e5",
-                    borderRadius: 10,
-                    padding: 10,
-                  }}
-                >
-                  <MenuItem title="Cancel Appointment" />
-                  <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-                  <MenuItem title="Complete" />
-                </Animated.View>
-              ) : (
-                <></>
-              )}
-            </View>
         </View>
-      </OutsideView>
+      </Provider>
     </ScrollView>
   );
 };
 
 export default AppointmentDetails;
-const MenuItem = ({ title }) => {
+const MenuItem = ({ title,onPress }) => {
   return (
-    <TouchableOpacity
+    <TouchableOpacity onPress={() =>{
+      if(onPress){
+        onPress()
+      }
+    }}
       style={{
         marginHorizontal: 5,
         marginVertical: 5,
@@ -180,24 +181,34 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
-const SmallButton=({title,style,onPress})=>{
-  return(
-    <TouchableOpacity onPress={()=>{
-      if(onPress){
-        onPress()
-      }
-    }} style={[{
-      backgroundColor:'blue',
-      margin:2,
-      paddingVertical: 5,
-      paddingHorizontal:15,
-      borderRadius:5
-    },style]}>
-      <Text style={{
-        color:'white',
-        fontSize:13,
-        fontWeight:'bold'
-      }}>{title}</Text>
+const SmallButton = ({ title, style, onPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}
+      style={[
+        {
+          backgroundColor: "blue",
+          margin: 2,
+          paddingVertical: 5,
+          paddingHorizontal: 15,
+          borderRadius: 5,
+        },
+        style,
+      ]}
+    >
+      <Text
+        style={{
+          color: "white",
+          fontSize: 13,
+          fontWeight: "bold",
+        }}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
-  )
-}
+  );
+};
