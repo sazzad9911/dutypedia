@@ -48,17 +48,20 @@ export default ChatCart;
 const styles = StyleSheet.create({
   outBox: {
     marginHorizontal: 20,
-    marginVertical: 3,
+    marginVertical: 0,
     width: width - 40,
     minHeight: 50,
-    backgroundColor: primaryColor,
     padding: 10,
     borderRadius: 10,
     flexDirection: "row",
-    paddingVertical: 20,
+    alignItems: "center",
+    
   },
   box: {
     flex: 4,
+    borderBottomWidth:1,
+    borderBottomColor:'#e5e5e5',
+    paddingVertical: 20,
   },
   image: {
     width: 50,
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     width: 10,
     borderRadius: 5,
     position: "absolute",
-    top: 55,
+    top: 75,
     left: 50,
     borderWidth: 1,
     borderColor: "white",

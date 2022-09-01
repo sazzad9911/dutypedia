@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { primaryColor, secondaryColor, textColor } from "../../assets/colors";
@@ -30,7 +31,31 @@ const AppointmentDetails = ({ route, navigation }) => {
       >
         <View
           style={{
-            marginTop: 20,
+            flexDirection: "row",
+            marginHorizontal:20,
+            alignItems: 'center',
+            backgroundColor:primaryColor
+          }}
+        >
+          <Image style={{
+            width: 50,
+            height: 50,
+            borderRadius:5,
+            margin:10,
+            marginLeft:0
+          }}
+            source={{
+              uri: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
+            }}
+          />
+          <View style={{}}>
+            <Text>Easin Arafat</Text>
+            <Text>@easinarafat</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 0,
             backgroundColor: primaryColor,
             minHeight: height - 110,
           }}
@@ -89,14 +114,14 @@ const AppointmentDetails = ({ route, navigation }) => {
               </View>
             ) : (
               <Menu
-              style={{
-                marginTop:-68,
-                marginLeft:-25
-              }}
-              contentStyle={{
-                backgroundColor: primaryColor,
-                padding:10
-              }}
+                style={{
+                  marginTop: -68,
+                  marginLeft: -25,
+                }}
+                contentStyle={{
+                  backgroundColor: primaryColor,
+                  padding: 10,
+                }}
                 visible={Visible}
                 onDismiss={() => setVisible(!Visible)}
                 anchor={
@@ -110,13 +135,19 @@ const AppointmentDetails = ({ route, navigation }) => {
                   />
                 }
               >
-                <MenuItem onPress={() => {
-                  setVisible(false);
-                }} title="Cancel Appointment" />
+                <MenuItem
+                  onPress={() => {
+                    setVisible(false);
+                  }}
+                  title="Cancel Appointment"
+                />
                 <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-                <MenuItem onPress={() => {
-                  setVisible(false);
-                }} title="Complete" />
+                <MenuItem
+                  onPress={() => {
+                    setVisible(false);
+                  }}
+                  title="Complete"
+                />
               </Menu>
             )}
           </View>
@@ -153,13 +184,14 @@ const AppointmentDetails = ({ route, navigation }) => {
 };
 
 export default AppointmentDetails;
-const MenuItem = ({ title,onPress }) => {
+const MenuItem = ({ title, onPress }) => {
   return (
-    <TouchableOpacity onPress={() =>{
-      if(onPress){
-        onPress()
-      }
-    }}
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}
       style={{
         marginHorizontal: 5,
         marginVertical: 5,

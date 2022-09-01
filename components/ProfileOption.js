@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { primaryColor } from './../assets/colors';
+import { Badge } from "react-native-paper";
 
 const ProfileOption = (props) => {
   return (
@@ -12,6 +13,7 @@ const ProfileOption = (props) => {
     }} style={[styles.box,props.style]}>
       <props.Icon  style={styles.icon} />
       <Text style={styles.text}>{props.title}</Text>
+      {props.badge?(<Badge>2</Badge>):(<></>)}
       <MaterialIcons style={styles.icon} name="keyboard-arrow-right" size={24} color="black" />
     </TouchableOpacity>
   );
@@ -25,10 +27,10 @@ const styles = StyleSheet.create({
     paddingHorizontal:20,
     backgroundColor:primaryColor,
     marginVertical:0,
-    marginTop:5
+    marginTop:5,
 },
 icon: {
-    flex:1
+    flex:1,
 },
 text: {
     flex:10,

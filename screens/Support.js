@@ -15,7 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 
-const Support = () => {
+const Support = ({ navigation}) => {
   const ref = React.useRef();
   const [Images, setImages] = React.useState([]);
   const [Visible, setVisible] = React.useState(false);
@@ -132,6 +132,7 @@ const Support = () => {
                 flexDirection: "row",
                 marginVertical: 10,
                 flex: 1,
+                alignItems: "center"
               }}
             >
               <Text
@@ -150,15 +151,22 @@ const Support = () => {
               >
                 {doc.uri.split(/[\\\/]/).pop()}
               </Text>
-              <Text
-                style={{
-                  flex: 2,
-                  textDecorationLine: "underline",
-                  marginLeft: 10,
-                }}
-              >
-                View
-              </Text>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate('ImageViewer',{
+                  uri:doc.uri
+                })
+              }}>
+                <Text
+                  style={{
+                    flex: 2,
+                    textDecorationLine: "underline",
+                    marginLeft: 10,
+                    marginRight:10
+                  }}
+                >
+                  View
+                </Text>
+              </TouchableOpacity>
               <MaterialIcons
                 onPress={() => removeFromArray(doc)}
                 style={{
@@ -227,7 +235,9 @@ const Support = () => {
         }}
         title="Send Request"
       />
-      <Button
+      <Button onPress={() =>{
+        navigation.goBack()
+      }}
         style={{
           marginHorizontal: 30,
           marginVertical: 10,
@@ -272,7 +282,7 @@ const AlertDesign = ({ visible }) => {
           fontSize: 16,
           margin: 30,
           lineHeight: 25,
-          textAlign: "justify",
+          
         }}
       >
         Your request has been successfully sent our team will contact with you

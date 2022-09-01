@@ -52,8 +52,18 @@ const SaveList = ({ navigation }) => {
     return {
       opacity: interpolate(
         scrollValue.value,
-        [0, 10, 30],
-        [1, 1, 0],
+        [0, 5,10,15, 30],
+        [1,.8,.5, .2, 0],
+        Extrapolate.CLAMP
+      ),
+    };
+  });
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollValue.value,
+        [0,100 ],
+        [0, 1],
         Extrapolate.CLAMP
       ),
     };
@@ -63,8 +73,14 @@ const SaveList = ({ navigation }) => {
       <View
         style={[
           styles.headerBarContainer,
-          { width: width, backgroundColor: "#48496D",
-           height: 70,zIndex:6 },
+          {
+            width: width,
+            backgroundColor: "#48496D",
+            height: 70,
+            zIndex: 6,
+            flexDirection: "row",
+            alignItems: "center",
+          },
         ]}
       >
         <AntDesign
@@ -72,14 +88,26 @@ const SaveList = ({ navigation }) => {
             navigation.goBack();
           }}
           style={{
-            marginTop:40,
-            alignSelf:'flex-start',
-            marginLeft:10
+            marginTop: 40,
+            alignSelf: "flex-start",
+            marginLeft: 10,
           }}
           name="left"
           size={24}
           color="#f5f5f5"
         />
+        <Animated.View style={headerAnimatedStyle}>
+          <Text
+            style={{
+              color: primaryColor,
+              fontSize: 15,
+              marginTop: 30,
+              marginLeft: 20,
+            }}
+          >
+            Created By Easin Arafat
+          </Text>
+        </Animated.View>
       </View>
       <View style={screenStyles.stretchContainer}>
         <StickyHeaderScrollView
@@ -97,14 +125,19 @@ const SaveList = ({ navigation }) => {
                   backgroundColor: "#48496D",
                   justifyContent: "center",
                   alignItems: "center",
-                  height:240
+                  height: 240,
                 }}
               >
                 {/* <Foreground scrollValue={scrollValue} /> */}
-                <Animated.View style={[foregroundWrapperAnimatedStyle,{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }]}>
+                <Animated.View
+                  style={[
+                    foregroundWrapperAnimatedStyle,
+                    {
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                  ]}
+                >
                   <SvgXml
                     style={{
                       marginTop: 30,
@@ -135,7 +168,17 @@ const SaveList = ({ navigation }) => {
             edges={["left", "right", "bottom"]}
             style={[styles.content, { marginTop: -20 }]}
           >
-            <Text></Text>
+            <Text
+              style={{
+                marginTop: 40,
+                marginBottom: 20,
+                marginLeft: 5,
+                fontWeight: "700",
+                fontSize: 18,
+              }}
+            >
+              Save List
+            </Text>
             <SearchItem testID={simsScreenTestIDs.contentTestID} />
             <SearchItem testID={simsScreenTestIDs.contentTestID} />
             <SearchItem testID={simsScreenTestIDs.contentTestID} />

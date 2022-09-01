@@ -29,6 +29,8 @@ import Request from './Appointment/Request';
 import Receive from './Appointment/Receive';
 import Send from './Appointment/Send';
 import Support from './Support';
+import ImageViewer from './ImageViewer';
+
 const Stack = createStackNavigator();
 
 const Profile=({navigation})=>{
@@ -67,6 +69,9 @@ const Profile=({navigation})=>{
       <Stack.Screen name='Support' options={{
        header:(props)=><SubHeader title='Contact Form' {...props}/>
       }} component={Support}/>
+      <Stack.Screen name='ImageViewer' options={{
+       header:(props)=><SubHeader title='Contact Form' {...props}/>
+      }} component={ImageViewer}/>
     </Stack.Navigator>
   )
 }
@@ -136,13 +141,13 @@ const MainProfile = (props) => {
         <Text style={styles.headLine}>Easin Arafat</Text>
         <Text style={styles.text}>@Easinarafat</Text>
       </View>
-      <ProfileOption onPress={()=>{
+      <ProfileOption badge={true} onPress={()=>{
         navigation.navigate('ManageOrder')
       }}
         Icon={() => <Octicons name="checklist" size={24} color="black" />}
         title="Manage Order"
       /> 
-      <ProfileOption onPress={()=>{
+      <ProfileOption badge={true} onPress={()=>{
         navigation.navigate('Appointment')
       }}
         Icon={() => <AntDesign name="calendar" size={24} color="black" />}
