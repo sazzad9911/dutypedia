@@ -112,16 +112,16 @@ function Cart2(props) {
             alignItems: "center",
           }}
         >
-          <FontAwesome name="star" size={10} color="#FFCC00" />
-          <FontAwesome name="star" size={10} color="#FFCC00" />
-          <FontAwesome name="star" size={10} color="#FFCC00" />
-          <FontAwesome name="star" size={10} color="#FFCC00" />
-          <FontAwesome name="star" size={10} color="#FFCC00" />
+          <FontAwesome name="star" size={15} color="#FFCC00" />
+          <FontAwesome name="star" size={15} color="#FFCC00" />
+          <FontAwesome name="star" size={15} color="#FFCC00" />
+          <FontAwesome name="star" size={15} color="#FFCC00" />
+          <FontAwesome name="star" size={15} color="#FFCC00" />
           <Text
             style={{
               marginLeft: 5,
-              fontSize: 10,
-              color: textColor,
+              fontSize: 13,
+              color: '#898585',
             }}
           >
             5.0
@@ -129,14 +129,15 @@ function Cart2(props) {
         </View>
         <View
           style={{
-            flex: 2,
+            flex: 2.5,
             marginTop: 5,
+         
           }}
         >
           <Text
             style={{
-              fontSize: 10,
-              color: textColor,
+              fontSize: 13,
+              color: '#898585',
             }}
           >
             View 10k
@@ -149,6 +150,9 @@ function Cart2(props) {
           marginLeft: 10,
           marginRight: 10,
           color: textColor,
+          fontSize:15,
+          textAlign: 'justify',
+          fontWeight: '600'
         }}
       >
         I Will Make a Custom Graphics For Your Blog
@@ -165,6 +169,7 @@ function Cart2(props) {
             marginLeft: 10,
             fontSize: 18,
             color: textColor,
+            fontWeight: "700"
           }}
         >
           500৳

@@ -2,11 +2,11 @@ import React from "react";
 import {
   View,
   Text,
-  Switch,
   Image,
   StyleSheet,
   TouchableOpacity,
   Modal,
+  Platform
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import { assentColor, primaryColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
+import { Switch } from 'react-native-paper';
 
 const ChatHead = (props) => {
   const navigation = props.navigation;
@@ -112,9 +113,9 @@ const styles = StyleSheet.create({
   menuContainer: {
     minWidth: 150,
     minHeight: 100,
-    backgroundColor: assentColor,
+    backgroundColor: primaryColor,
     position: "absolute",
-    top: 22,
+    top: 20,
     right: 30,
     padding: 10,
     borderRadius: 5,
@@ -154,34 +155,28 @@ const MenuBar = (props) => {
           <View style={styles.menuSubContainer}>
             <Ionicons name="ios-call" size={20} color="black" />
             <Text>Call</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#D2FE51" }}
-              thumbColor={Call ? "#f4f3f4" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={(value) => {
-                setCall(value);
-              }}
-              value={Call}
-            />
+            <Switch style={{
+              height:35,
+              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
+            }} color='#A8AF63' value={Call} onValueChange={(val)=>{
+              setCall(val)
+            }} />
           </View>
           <View style={styles.menuSubContainer}>
             <Ionicons name="volume-mute" size={20} color="black" />
             <Text>Mute</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#D2FE51" }}
-              thumbColor={Call ? "#f4f3f4" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={(value) => {
-                setMute(value);
-              }}
-              value={Mute}
-            />
+            <Switch style={{
+              height:35,
+              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
+            }} color='#A8AF63' value={Mute} onValueChange={(val)=>{
+              setMute(val);
+            }} />
           </View>
-          <View style={styles.menuSubContainer}>
+          <TouchableOpacity style={styles.menuSubContainer}>
             <FontAwesome name="user-circle-o" size={20} color="black" />
             <Text>View Profile</Text>
             <View style={{ width: 5 }} />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </OutsideView>
