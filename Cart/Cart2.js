@@ -14,7 +14,7 @@ function Cart2(props) {
         navigation.push("OtherProfile");
       }}
       style={{
-        width: 240,
+        width: 260,
         shadowColor: "#d5d5d5",
         shadowOffset: {
           width: 0,
@@ -68,8 +68,8 @@ function Cart2(props) {
             borderWidth: 1,
             borderRadius:5,
             position: "absolute",
-            right:2,
-            bottom:2,
+            right:0,
+            bottom:3,
           }}/>
         </View>
         <View
@@ -81,7 +81,7 @@ function Cart2(props) {
           <Text
             numberOfLines={1}
             style={{
-              fontWeight: "bold",
+              fontFamily: 'Poppins-SemiBold',
               fontSize: 13,
             }}
           >
@@ -91,6 +91,7 @@ function Cart2(props) {
             numberOfLines={1}
             style={{
               fontSize: 13,
+              fontFamily: 'Poppins-Light'
             }}
           >
             Specialty: It, Graphic Design, Digital Marketing, Online Tution
@@ -113,15 +114,16 @@ function Cart2(props) {
           }}
         >
           <FontAwesome name="star" size={15} color="#FFCC00" />
-          <FontAwesome name="star" size={15} color="#FFCC00" />
-          <FontAwesome name="star" size={15} color="#FFCC00" />
-          <FontAwesome name="star" size={15} color="#FFCC00" />
-          <FontAwesome name="star" size={15} color="#FFCC00" />
+          <FontAwesome style={{marginLeft:1.5}} name="star" size={14} color="#FFCC00" />
+          <FontAwesome style={{marginLeft:1.5}} name="star" size={14} color="#FFCC00" />
+          <FontAwesome style={{marginLeft:1.5}} name="star" size={14} color="#FFCC00" />
+          <FontAwesome style={{marginLeft:1.5}} name="star" size={14} color="#FFCC00" />
           <Text
             style={{
               marginLeft: 5,
-              fontSize: 13,
+              fontSize: 12,
               color: '#898585',
+              fontFamily: 'Poppins-Medium'
             }}
           >
             5.0
@@ -129,15 +131,16 @@ function Cart2(props) {
         </View>
         <View
           style={{
-            flex: 2.5,
+            flex: 2,
             marginTop: 5,
          
           }}
         >
           <Text
             style={{
-              fontSize: 13,
+              fontSize: 12,
               color: '#898585',
+              fontFamily: 'Poppins-Medium'
             }}
           >
             View 10k
@@ -150,9 +153,9 @@ function Cart2(props) {
           marginLeft: 10,
           marginRight: 10,
           color: textColor,
-          fontSize:15,
+          fontSize:13,
           textAlign: 'justify',
-          fontWeight: '600'
+          fontFamily: 'Poppins-Medium'
         }}
       >
         I Will Make a Custom Graphics For Your Blog
@@ -167,9 +170,9 @@ function Cart2(props) {
           style={{
             flex: 6,
             marginLeft: 10,
-            fontSize: 18,
+            fontSize: 20,
             color: textColor,
-            fontWeight: "700"
+            fontFamily: 'Poppins-Medium'
           }}
         >
           500৳

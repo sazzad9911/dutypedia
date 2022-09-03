@@ -22,11 +22,11 @@ const SearchFilter = (props) => {
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
     props.disabled(false);
-  }
+  };
   const toggleSwitch2 = () => {
     setOnline((previousState) => !previousState);
     props.disabled(false);
-  }
+  };
   //const [visible, setVisible] = useState(false);
   const [Category, setCategory] = React.useState("Select");
   const [SellerLevel, setSellerLevel] = React.useState();
@@ -70,23 +70,23 @@ const SearchFilter = (props) => {
   const sellerLevel = [
     {
       label: "Seller level 1",
-      value: 'Lev 1',
+      value: "Lev 1",
     },
     {
       label: "Seller level 2",
-      value: 'Lev 2',
+      value: "Lev 2",
     },
     {
       label: "Seller level 3",
-      value: 'Lev 3',
+      value: "Lev 3",
     },
     {
       label: "Seller level 4",
-      value: 'Lev 4',
+      value: "Lev 4",
     },
     {
       label: "Seller level 5",
-      value: 'Lev 5',
+      value: "Lev 5",
     },
   ];
   const sellerLocation = [
@@ -123,7 +123,7 @@ const SearchFilter = (props) => {
     return (
       <Selection
         onChange={(val) => {
-          props.disabled(false)
+          props.disabled(false);
           if (type == "category") {
             setCategory(val);
           } else if (type == "seller_level") {
@@ -155,16 +155,22 @@ const SearchFilter = (props) => {
           <View style={styles.box}>
             <Text
               style={{
-                fontWeight: "bold",
+                fontFamily: "Poppins-Medium",
+                fontSize: 14,
               }}
             >
               Sort By
             </Text>
           </View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
-            <Text style={{ flex: 7 }}>Online Seller</Text>
+            <Text style={[{ flex: 7 },styles.text]}>Online Seller</Text>
             <View style={styles.container}>
-              <Switch
+              <Switch style={{
+                  transform: [
+                    { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                    { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+                  ],
+                }}
                 trackColor={{ false: "#767577", true: "#808000" }}
                 thumbColor={isEnabled ? "#f4f3f4 " : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
@@ -176,14 +182,23 @@ const SearchFilter = (props) => {
           <View style={styles.gap}></View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
             <Text
-              style={{
-                flex: 7,
-              }}
+              style={[
+                {
+                  flex: 7,
+                },
+                styles.text,
+              ]}
             >
               Verified Seller
             </Text>
             <View style={styles.container}>
               <Switch
+                style={{
+                  transform: [
+                    { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                    { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+                  ],
+                }}
                 trackColor={{ false: "#767577", true: "#808000" }}
                 thumbColor={Online ? "#f4f3f4 " : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
@@ -199,13 +214,7 @@ const SearchFilter = (props) => {
             }}
           ></View>
           <View style={styles.box}>
-            <Text
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              Filter
-            </Text>
+            <Text style={styles.textHeader}>Filter</Text>
           </View>
           <View
             style={{
@@ -222,9 +231,9 @@ const SearchFilter = (props) => {
             style={[styles.box1, { flexDirection: "row" }]}
           >
             <Text
-              style={{
+              style={[{
                 flex: 9,
-              }}
+              },styles.text]}
             >
               Category
             </Text>
@@ -237,16 +246,16 @@ const SearchFilter = (props) => {
               }}
             >
               <Text
-                style={{
+                style={[{
                   marginRight: 20,
                   flex: 2,
-                }}
+                },styles.text]}
               >
                 {Category}
               </Text>
               <AntDesign
                 style={{
-                  marginTop: 5,
+                  
                 }}
                 name="right"
                 size={16}
@@ -256,18 +265,16 @@ const SearchFilter = (props) => {
           </TouchableOpacity>
           <View style={styles.box}>
             <Text
-              style={{
-                fontWeight: "bold",
-              }}
+              style={styles.textHeader}
             >
               Filter
             </Text>
           </View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
             <Text
-              style={{
+              style={[{
                 flex: 4,
-              }}
+              },styles.text]}
             >
               Price Rang
             </Text>
@@ -279,10 +286,10 @@ const SearchFilter = (props) => {
               }}
             >
               <Text
-                style={{
+                style={[{
                   marginLeft: 10,
                   marginRight: 10,
-                }}
+                },styles.text]}
               >
                 To
               </Text>
@@ -299,22 +306,21 @@ const SearchFilter = (props) => {
             style={[styles.box1, { flexDirection: "row" }]}
           >
             <Text
-              style={{
+              style={[{
                 flex: 9,
-              }}
+              },styles.text]}
             >
               Seller Level
             </Text>
             <Text
-                style={{
-                  marginRight: 15,
-                  flex: 2,
-                }}
-              >
-                {SellerLevel}
-              </Text>
+              style={{
+                marginRight: 15,
+                flex: 2,
+              }}
+            >
+              {SellerLevel}
+            </Text>
             <View style={styles.touch}>
-            
               <AntDesign
                 style={{
                   marginTop: 5,
@@ -342,13 +348,13 @@ const SearchFilter = (props) => {
               Seller Location
             </Text>
             <Text
-                style={{
-                  marginRight: 15,
-                  flex: 2,
-                }}
-              >
-                {SellerLocation}
-              </Text>
+              style={{
+                marginRight: 15,
+                flex: 2,
+              }}
+            >
+              {SellerLocation}
+            </Text>
             <View style={styles.touch}>
               <AntDesign
                 style={{
@@ -406,8 +412,9 @@ const styles = StyleSheet.create({
     height: 2,
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     color: textColor,
+    fontFamily: "Poppins-Light",
   },
   view: {
     marginBottom: 1.5,
@@ -415,7 +422,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
-  
+  textHeader: {
+    fontSize: 15,
+    color: textColor,
+    fontFamily: "Poppins-Medium",
+  },
 });
 
 const Selection = (props) => {
@@ -446,7 +457,6 @@ const Selection = (props) => {
           <Text style={styles.text}>{doc.label}</Text>
         </TouchableOpacity>
       ))}
-      
     </Animated.View>
   );
 };

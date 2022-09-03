@@ -47,10 +47,10 @@ const Home = (props) => {
             style={{
               fontSize: 20,
               color: textColor,
-              fontWeight: "bold",
               marginLeft: 5,
               paddingLeft: 15,
               paddingRight: 15,
+              fontFamily: 'Poppins-SemiBold'
             }}
           >
             Category
@@ -70,7 +70,7 @@ const Home = (props) => {
         </ScrollView>
         <Text
           style={{
-            fontWeight: "bold",
+            fontFamily: 'Poppins-SemiBold',
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,
@@ -98,7 +98,7 @@ const Home = (props) => {
         >
           <Text
             style={{
-              fontWeight: "bold",
+              fontFamily: 'Poppins-SemiBold',
               marginVertical: 10,
               flex: 5,
               marginLeft: 5,
@@ -117,7 +117,7 @@ const Home = (props) => {
           >
             <Text
               style={{
-                fontWeight: "bold",
+                fontFamily: 'Poppins-SemiBold',
                 textDecorationLine: "underline",
                 marginRight: 20,
                 fontSize: 14,
@@ -143,7 +143,7 @@ const Home = (props) => {
 
         <Text
           style={{
-            fontWeight: "bold",
+            fontFamily: 'Poppins-SemiBold',
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,
@@ -186,7 +186,7 @@ const Home = (props) => {
         </ScrollView>
         <Text
           style={{
-            fontWeight: "bold",
+           fontFamily: 'Poppins-SemiBold',
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,

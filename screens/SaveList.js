@@ -103,6 +103,7 @@ const SaveList = ({ navigation }) => {
               fontSize: 15,
               marginTop: 30,
               marginLeft: 20,
+              fontFamily: 'Poppins-Light'
             }}
           >
             Created By Easin Arafat
@@ -140,7 +141,7 @@ const SaveList = ({ navigation }) => {
                 >
                   <SvgXml
                     style={{
-                      marginTop: 30,
+                      marginTop: 40,
                     }}
                     xml={Bear}
                     height="100"
@@ -150,7 +151,7 @@ const SaveList = ({ navigation }) => {
                     style={{
                       color: "white",
                       marginTop: 15,
-                      fontWeight: "bold",
+                      fontFamily: 'Poppins-Medium',
                       fontSize: 16,
                     }}
                   >
@@ -170,10 +171,10 @@ const SaveList = ({ navigation }) => {
           >
             <Text
               style={{
-                marginTop: 40,
-                marginBottom: 20,
+                marginTop: 30,
+                marginBottom: 10,
                 marginLeft: 5,
-                fontWeight: "700",
+                fontFamily: 'Poppins-Medium',
                 fontSize: 18,
               }}
             >

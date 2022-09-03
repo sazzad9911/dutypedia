@@ -33,6 +33,7 @@ const SubHeader = (props) => {
         style={{
           flex: 2,
           fontSize: 18,
+          fontFamily:'Poppins-Medium'
         }}
       >
         {props.title}

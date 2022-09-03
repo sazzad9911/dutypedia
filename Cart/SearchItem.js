@@ -66,6 +66,7 @@ const SearchItem = () => {
               marginLeft: 5,
               fontSize: 10,
               color: textColor,
+              fontFamily: 'Poppins-Light'
             }}
           >
             5.0
@@ -81,6 +82,7 @@ const SearchItem = () => {
             style={{
               fontSize: 10,
               color: textColor,
+              fontFamily: 'Poppins-Light'
             }}
           >
             View 10k
@@ -93,6 +95,8 @@ const SearchItem = () => {
           marginLeft: 10,
           marginRight: 10,
           color: textColor,
+          fontFamily: 'Poppins-Medium',
+          fontSize:14
         }}
       >
         I Will Make a Custom Graphics For Your Blog
@@ -109,6 +113,7 @@ const SearchItem = () => {
             marginLeft: 10,
             fontSize: 18,
             color: textColor,
+            fontFamily: "Poppins-Medium"
           }}
         >
           500৳

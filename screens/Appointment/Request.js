@@ -12,6 +12,7 @@ const Request = ({ navigation }) => {
           marginVertical: 15,
           marginHorizontal: 20,
           fontSize: 20,
+          fontFamily: 'Poppins-Medium'
         }}
       >
         Request

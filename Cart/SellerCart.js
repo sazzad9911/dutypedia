@@ -8,7 +8,7 @@ export default function SellerCart() {
       style={{
         flexDirection: "row",
         borderRadius: 10,
-        backgroundColor: "#FFF2DA",
+        backgroundColor: "#EBE4CD",
         borderRadius: 5,
         margin: 10,
         marginLeft: 5,
@@ -24,9 +24,10 @@ export default function SellerCart() {
       >
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 18,
             marginLeft: 20,
             marginTop: 20,
+            fontFamily: 'Poppins-Medium'
           }}
         >
           Become A Seller
@@ -40,13 +41,13 @@ export default function SellerCart() {
             borderRadius: 20,
             justifyContent: "center",
             alignItems: "center",
-            width: 140,
+            width: 160,
           }}
         >
           <Text
             style={{
-              fontSize: 12,
-              fontWeight: "bold",
+              fontSize: 13,
+              fontFamily: 'Poppins-SemiBold',
               color:textColor
             }}
           >

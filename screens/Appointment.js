@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { primaryColor } from "./../assets/colors";
+import { primaryColor,textColor } from "./../assets/colors";
 
 const Appointment = ({ navigation }) => {
   const [Options, setOptions] = React.useState();
@@ -12,7 +12,7 @@ const Appointment = ({ navigation }) => {
           marginVertical: 15,
           marginHorizontal: 20,
           fontSize: 20,
-          fontWeight: "bold",
+          fontFamily: 'Poppins-SemiBold'
         }}
       >
         Appointment
@@ -74,6 +74,7 @@ export const ListView = ({ onPress, title, number }) => {
         <Text
           style={{
             fontSize: 17,
+            fontFamily: "Poppins-Medium"
           }}
         >
           {title}
@@ -85,7 +86,10 @@ export const ListView = ({ onPress, title, number }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text>{number}</Text>
+          <Text style={{
+            fontFamily: "Poppins-Medium",
+            color:textColor
+          }}>{number}</Text>
           <AntDesign name="right" size={24} color="black" />
         </View>
       </View>
@@ -121,6 +125,7 @@ const ListView2 = ({ onPress, title, number }) => {
           style={{
             flex: 1,
             fontSize: 17,
+            fontFamily:'Poppins-Medium'
           }}
         >
           {title}
@@ -136,11 +141,13 @@ const ListView2 = ({ onPress, title, number }) => {
             <Text
               style={{
                 marginLeft: "50%",
+                fontFamily: "Poppins-Medium"
               }}
             >
               Sent
             </Text>
-            <Text style={{ marginLeft: 10 }}>{number}</Text>
+            <Text style={{ marginLeft: 10,
+            fontFamily: "Poppins-Medium" }}>{number}</Text>
           </View>
         </View>
         <View
@@ -154,11 +161,13 @@ const ListView2 = ({ onPress, title, number }) => {
             <Text
               style={{
                 marginLeft: "22%",
+                fontFamily: "Poppins-Medium"
               }}
             >
               Receive
             </Text>
-            <Text style={{ marginLeft: 10 }}>{number}</Text>
+            <Text style={{ marginLeft: 10, 
+            fontFamily: "Poppins-Medium"}}>{number}</Text>
           </View>
           <AntDesign name="right" size={24} color="black" />
         </View>

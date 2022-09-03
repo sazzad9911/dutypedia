@@ -78,6 +78,7 @@ const AppointmentCart = ({onPress,status,request}) => {
 export default AppointmentCart;
 const styles = StyleSheet.create({
   text:{
-    fontSize:12
+    fontSize:12,
+    fontFamily: 'Poppins-Medium'
   }
 })

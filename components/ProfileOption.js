@@ -13,7 +13,8 @@ const ProfileOption = (props) => {
     }} style={[styles.box,props.style]}>
       <props.Icon  style={styles.icon} />
       <Text style={styles.text}>{props.title}</Text>
-      {props.badge?(<Badge>2</Badge>):(<></>)}
+      {props.badge?(<Badge style={{
+      }}>2</Badge>):(<></>)}
       <MaterialIcons style={styles.icon} name="keyboard-arrow-right" size={24} color="black" />
     </TouchableOpacity>
   );
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor:primaryColor,
     marginVertical:0,
     marginTop:5,
+    alignItems: "center",
 },
 icon: {
     flex:1,
@@ -35,6 +37,7 @@ icon: {
 text: {
     flex:10,
     marginLeft:10,
-    fontSize:16
+    fontSize:16,
+    fontFamily: 'Poppins-Medium'
 }
 });

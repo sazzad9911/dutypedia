@@ -118,5 +118,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13,
     color: "#808080",
+    fontFamily: 'Poppins-Light'
   },
 });

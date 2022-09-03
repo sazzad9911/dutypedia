@@ -43,6 +43,8 @@ function Options(props) {
           justifyContent: "center",
           alignItems: "center",
           color: Select ? "white" : textColor,
+          fontFamily: 'Poppins-SemiBold',
+          fontSize:13
         }}
       >
         {props.name ? props.name : "Lawyer"}

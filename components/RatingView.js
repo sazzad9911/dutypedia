@@ -27,7 +27,7 @@ const RatingView = ({ title, rate, style }) => {
       <Text
         style={{
           fontSize: 14,
-          fontWeight: "bold",
+          fontFamily: 'Poppins-Medium',
           color: "#808080",
         }}
       >
@@ -46,7 +46,7 @@ const RatingView = ({ title, rate, style }) => {
         <Text
           style={{
             fontSize: 14,
-            fontWeight: "bold",
+            fontFamily: 'Poppins-Medium',
             color: "#808080",
             marginLeft:10
           }}

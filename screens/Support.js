@@ -72,13 +72,17 @@ const Support = ({ navigation}) => {
           style={{
             fontSize: 16,
             color: "#061365",
+            fontFamily:'Poppins-Medium'
           }}
         >
           Do not share sensitive information (attachments or text). ex. Your
           credit card details or personal ID number
         </Text>
       </View>
-      <Text style={{ fontSize: 16, marginLeft: 30, marginTop: 10 }}>
+      <Text style={{ fontSize: 16, 
+      marginLeft: 30,
+       marginTop: 10,
+       fontFamily: 'Poppins-Medium'}}>
         Subject
       </Text>
       <TextInput
@@ -91,9 +95,13 @@ const Support = ({ navigation}) => {
           marginVertical: 10,
           backgroundColor: primaryColor,
           padding: 10,
+          fontFamily:'Poppins-Medium'
         }}
       />
-      <Text style={{ fontSize: 16, marginLeft: 30, marginTop: 10 }}>
+      <Text style={{ fontSize: 16,
+       marginLeft: 30,
+        marginTop: 10,
+        fontFamily: 'Poppins-Medium'}}>
         Description
       </Text>
       <TouchableOpacity
@@ -113,7 +121,7 @@ const Support = ({ navigation}) => {
       >
         <TextInput
           ref={ref}
-          style={{ width: "100%", fontSize: 14 }}
+          style={{ width: "100%", fontSize: 14,fontFamily:'Poppins-Medium' }}
           multiline={true}
           placeholder="By Describing the most important
       facts, we can quickly resolve your request."
@@ -138,6 +146,7 @@ const Support = ({ navigation}) => {
               <Text
                 style={{
                   flex: 1,
+                  fontFamily: 'Poppins-Medium'
                 }}
               >
                 {i + 1} .{" "}
@@ -147,6 +156,7 @@ const Support = ({ navigation}) => {
                 style={{
                   flex: 10,
                   marginLeft: 3,
+                  fontFamily: 'Poppins-Medium'
                 }}
               >
                 {doc.uri.split(/[\\\/]/).pop()}
@@ -161,7 +171,8 @@ const Support = ({ navigation}) => {
                     flex: 2,
                     textDecorationLine: "underline",
                     marginLeft: 10,
-                    marginRight:10
+                    marginRight:10,
+                    fontFamily: 'Poppins-Medium'
                   }}
                 >
                   View
@@ -282,6 +293,7 @@ const AlertDesign = ({ visible }) => {
           fontSize: 16,
           margin: 30,
           lineHeight: 25,
+          fontFamily: 'Poppins-Medium'
           
         }}
       >

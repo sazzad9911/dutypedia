@@ -19,6 +19,7 @@ import {
   assentColor,
   primaryColor,
   secondaryColor,
+  textColor
 } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -100,10 +101,10 @@ const BottomBar = (props) => {
   return (
     <View style={styles.view}>
       <TouchableOpacity style={styles.icon}>
-        <EvilIcons name="image" size={26} color="black" />
+        <EvilIcons name="image" size={26} color={textColor} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.icon}>
-        <Ionicons name="camera-outline" size={24} color="black" />
+        <Ionicons name="camera-outline" size={24} color={textColor} />
       </TouchableOpacity>
       <TextInput
         value={Message}
@@ -157,5 +158,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderRadius: 20,
     paddingHorizontal: 10,
+    fontFamily: 'Poppins-Light'
   },
 });

@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { assentColor, primaryColor } from "./../assets/colors";
+import { assentColor, primaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
 import { Switch } from 'react-native-paper';
@@ -37,7 +37,7 @@ const ChatHead = (props) => {
           onPress={() => navigation.goBack()}
           name="chevron-back"
           size={24}
-          color="black"
+          color={textColor}
         />
         <Image
           style={styles.image}
@@ -56,14 +56,14 @@ const ChatHead = (props) => {
         ]}
       >
         <TouchableOpacity>
-          <Zocial style={styles.icon} name="call" size={24} color="black" />
+          <Zocial style={styles.icon} name="call" size={24} color={textColor} />
         </TouchableOpacity>
         <TouchableOpacity>
           <MaterialIcons
             style={styles.icon}
             name="videocam"
             size={24}
-            color="black"
+            color={textColor}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setVisible(!visible)}>
@@ -71,7 +71,7 @@ const ChatHead = (props) => {
             style={styles.icon}
             name="dots-three-vertical"
             size={24}
-            color="black"
+            color={textColor}
           />
         </TouchableOpacity>
       </View>
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   text: {
-    fontSize: 15,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontFamily: 'Poppins-Medium'
   },
   icon: {
     marginLeft: 20,
@@ -153,8 +153,12 @@ const MenuBar = (props) => {
       >
         <View ref={childRef} style={styles.menuContainer}>
           <View style={styles.menuSubContainer}>
-            <Ionicons name="ios-call" size={20} color="black" />
-            <Text>Call</Text>
+            <Ionicons name="ios-call" size={20} color={textColor} />
+            <Text style={{
+              fontFamily: 'Poppins-Light',
+              fontSize:13,
+              color:textColor
+            }}>Call</Text>
             <Switch style={{
               height:35,
               transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
@@ -163,8 +167,12 @@ const MenuBar = (props) => {
             }} />
           </View>
           <View style={styles.menuSubContainer}>
-            <Ionicons name="volume-mute" size={20} color="black" />
-            <Text>Mute</Text>
+            <Ionicons name="volume-mute" size={20} color={textColor} />
+            <Text style={{
+              fontFamily: 'Poppins-Light',
+              fontSize:13,
+              color:textColor
+            }}>Mute</Text>
             <Switch style={{
               height:35,
               transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
@@ -173,8 +181,13 @@ const MenuBar = (props) => {
             }} />
           </View>
           <TouchableOpacity style={styles.menuSubContainer}>
-            <FontAwesome name="user-circle-o" size={20} color="black" />
-            <Text>View Profile</Text>
+            <FontAwesome name="user-circle-o" size={20} color={textColor} />
+            <Text style={{
+              fontFamily: 'Poppins-Light',
+              fontSize:13,
+              color:textColor
+
+            }}>View Profile</Text>
             <View style={{ width: 5 }} />
           </TouchableOpacity>
         </View>

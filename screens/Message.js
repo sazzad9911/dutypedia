@@ -4,10 +4,16 @@ import ChatCart from "./../Cart/ChatCart";
 
 const Message = (props) => {
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <ChatCart navigation={props.navigation} active={true} />
       <ChatCart navigation={props.navigation} />
       <ChatCart navigation={props.navigation} active={true} />
+      <ChatCart navigation={props.navigation} />
+      <ChatCart navigation={props.navigation} />
+      <ChatCart navigation={props.navigation} />
+      <ChatCart navigation={props.navigation} />
+      <ChatCart navigation={props.navigation} />
+      <ChatCart navigation={props.navigation} />
       <ChatCart navigation={props.navigation} />
       <ChatCart navigation={props.navigation} />
     </ScrollView>

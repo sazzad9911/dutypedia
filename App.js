@@ -16,9 +16,12 @@ import SubHeader from "./components/SubHeader";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import store from "./store";
-import OtherProfileHeader from './components/OtherProfileHeader';
-import AllReviewHeader from './components/AllReviewHeader';
-import AllReview from './screens/AllReview';
+import OtherProfileHeader from "./components/OtherProfileHeader";
+import AllReviewHeader from "./components/AllReviewHeader";
+import AllReview from "./screens/AllReview";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import React from "react"
 
 export default function App() {
   const MyTheme = {
@@ -28,10 +31,35 @@ export default function App() {
       background: secondaryColor,
     },
   };
+  const [fontsLoaded] = useFonts({
+    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+    'Poppins-Light': require("./assets/fonts/Poppins-Light.ttf"),
+    'Poppins-Medium': require("./assets/fonts/Poppins-Medium.ttf"),
+    'Poppins-Thin': require("./assets/fonts/Poppins-Thin.ttf"),
+    'Poppins-SemiBold': require("./assets/fonts/Poppins-SemiBold.ttf")
+  });
+
+  // React.useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
+
+  //   prepare();
+  // }, []);
+
+  // const onLayoutRootView = React.useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView  style={{ flex: 1 }}>
         <NavigationContainer theme={MyTheme}>
           <Stack.Navigator
             screenOptions={({ route, navigation }) => ({
@@ -60,14 +88,19 @@ export default function App() {
               component={ChatScreen}
             />
             <Stack.Screen
-              options={{ header: (props)=><OtherProfileHeader {...props}/> }}
+              options={{ header: (props) => <OtherProfileHeader {...props} /> }}
               name="OtherProfile"
               component={OtherProfile}
             />
 
-            <Stack.Screen options={{ header: (props) => <AllReviewHeader title='23 Review' {...props}/>}}
-            name="AllReview"
-            component={AllReview}
+            <Stack.Screen
+              options={{
+                header: (props) => (
+                  <AllReviewHeader title="23 Review" {...props} />
+                ),
+              }}
+              name="AllReview"
+              component={AllReview}
             />
           </Stack.Navigator>
         </NavigationContainer>

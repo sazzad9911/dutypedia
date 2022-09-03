@@ -49,7 +49,7 @@ const SearchScreen = (props) => {
           }}
           navigation={props.navigation}
         />
-        <ScrollView
+        <ScrollView showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           style={{
@@ -59,7 +59,7 @@ const SearchScreen = (props) => {
           <Text
             style={{
               fontSize: 16,
-              fontWeight: "bold",
+              fontFamily: 'Poppins-SemiBold',
               marginVertical: 10,
             }}
           >

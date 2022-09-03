@@ -46,7 +46,7 @@ const OtherProfile = (props) => {
 
   return (
     <SafeAreaView>
-      <ScrollView
+      <ScrollView showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: "#f1f1f2",
         }}
@@ -84,7 +84,7 @@ const OtherProfile = (props) => {
               style={{
                 marginTop: 10,
                 fontSize: 17,
-                fontWeight: "bold",
+                fontFamily: 'Poppins-SemiBold'
               }}
             >
               Easin Arafat (Male)
@@ -92,7 +92,7 @@ const OtherProfile = (props) => {
             <Text
               style={{
                 fontSize: 14,
-                fontWeight: "bold",
+                fontFamily: 'Poppins-SemiBold'
               }}
             >
               Position of Ceo
@@ -134,6 +134,7 @@ const OtherProfile = (props) => {
                 marginLeft: 10,
                 color: textColor,
                 fontSize: 15,
+                fontFamily: 'Poppins-Medium'
               }}
             >
               About
@@ -164,6 +165,7 @@ const OtherProfile = (props) => {
                 style={{
                   fontSize: 14,
                   textAlign: "justify",
+                  fontFamily: 'Poppins-Medium'
                 }}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -178,7 +180,7 @@ const OtherProfile = (props) => {
                 <Text
                   style={{
                     color: "tomato",
-                    fontWeight: "bold",
+                    fontFamily: "Poppins-SemiBold",
                     fontSize: 14,
                     marginTop: 1,
                   }}
@@ -227,6 +229,7 @@ const OtherProfile = (props) => {
               <Text
                 style={{
                   marginLeft: 10,
+                  fontFamily: 'Poppins-Medium'
                 }}
               >
                 4.6
@@ -234,6 +237,7 @@ const OtherProfile = (props) => {
               <Text
                 style={{
                   marginLeft: 30,
+                  fontFamily: 'Poppins-Medium'
                 }}
               >
                 Profile View 10k
@@ -379,6 +383,7 @@ const OtherProfile = (props) => {
               marginVertical: 10,
               fontSize: 14,
               color: textColor,
+              fontFamily: "Poppins-Light"
             }}
           >
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -394,6 +399,7 @@ const OtherProfile = (props) => {
               fontWeight: "bold",
               marginBottom: 20,
               color: textColor,
+              fontFamily: 'Poppins-Medium'
             }}
           >
             From 500 ৳
@@ -448,8 +454,8 @@ const OtherProfile = (props) => {
         >
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "bold",
+              fontSize: 15,
+              fontFamily:'Poppins-SemiBold',
               color: textColor,
               paddingHorizontal: 20,
             }}
@@ -464,8 +470,8 @@ const OtherProfile = (props) => {
           </ScrollView>
           <Text
             style={{
-              fontSize: 14,
-              fontWeight: "bold",
+              fontSize: 15,
+              fontFamily:'Poppins-SemiBold',
               color: textColor,
               paddingHorizontal: 20,
             }}
@@ -540,11 +546,12 @@ const styles = StyleSheet.create({
   },
   headLine: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Poppins-SemiBold'
   },
   text: {
     textAlign: "center",
     fontSize: 14,
+    fontFamily: 'Poppins-Medium'
   },
   image: {
     width: 80,
@@ -613,7 +620,7 @@ const BarOption = ({ icon, title }) => {
         <Text
           numberOfLines={lines}
           style={{
-            fontWeight: "bold",
+            fontFamily: 'Poppins-SemiBold',
             marginBottom: 5,
           }}
         >

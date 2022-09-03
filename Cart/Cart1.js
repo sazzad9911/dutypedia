@@ -24,6 +24,7 @@ function Cart1(props) {
         marginLeft: 5,
         borderRadius: 5,
         flexDirection: "row",
+        alignItems: "center",
       }}
     >
       <View
@@ -35,7 +36,7 @@ function Cart1(props) {
       >
         <Foundation
           style={{
-            margin: 10,
+            
           }}
           name="music"
           size={24}
@@ -46,12 +47,14 @@ function Cart1(props) {
         style={{
           justifyContent: "center",
           alignItems: "center",
+          flex: 2,
         }}
       >
-        <Text
+        <Text numberOfLines={1}
           style={{
-            margin: 10,
             color: textColor,
+            fontSize:13,
+            fontFamily: 'Poppins-SemiBold'
           }}
         >
           Builder Service
@@ -60,19 +63,23 @@ function Cart1(props) {
       <TouchableOpacity
         onPress={() => setSelect(!Select)}
         style={{
-          margin: 10,
           borderColor: textColor,
           borderRadius: 15,
-          height: 30,
+          height: 32,
           borderWidth: 1,
           justifyContent: "center",
           alignItems: "center",
-          flex: 1,
+          width:60,
+          marginLeft:10,
+          marginRight:10
         }}
       >
         <Text
           style={{
             color: Select ? "green" : "red",
+            fontSize:12,
+            fontFamily: 'Poppins-Medium',
+            margin:5
           }}
         >
           {Select ? "done" : "+add"}

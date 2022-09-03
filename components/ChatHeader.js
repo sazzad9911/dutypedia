@@ -5,7 +5,6 @@ import { EvilIcons } from "@expo/vector-icons";
 const ChatHeader = () => {
   return (
     <View style={styles.box}>
-      <Text style={styles.text}>Dutypedia</Text>
       <TouchableOpacity style={styles.input}>
         <EvilIcons
           style={{

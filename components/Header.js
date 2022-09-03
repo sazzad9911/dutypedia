@@ -17,9 +17,12 @@ const Header = (props) => {
           }}
           name="search"
           size={24}
-          color="black"
+          color={textColor}
         />
-        <Text>Search On Dutypedia</Text>
+        <Text style={{
+          color: textColor,
+          fontFamily: 'Poppins-Medium'
+        }}>Search On Dutypedia</Text>
       </TouchableOpacity>
     </View>
   );
@@ -36,7 +39,7 @@ export const styles = StyleSheet.create({
   text: {
     color: textColor,
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: 'Poppins-SemiBold'
   },
   input: {
     margin: 20,

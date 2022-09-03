@@ -22,7 +22,7 @@ const AppointmentDetails = ({ route, navigation }) => {
   const params = route.params;
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Provider
         childRef={ref}
         onPressOutside={() => {
@@ -32,25 +32,41 @@ const AppointmentDetails = ({ route, navigation }) => {
         <View
           style={{
             flexDirection: "row",
-            marginHorizontal:20,
-            alignItems: 'center',
-            backgroundColor:primaryColor
+            marginHorizontal: 20,
+            alignItems: "center",
+            backgroundColor: primaryColor,
           }}
         >
-          <Image style={{
-            width: 50,
-            height: 50,
-            borderRadius:5,
-            margin:10,
-            marginLeft:0
-          }}
+          <Image
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 5,
+              margin: 10,
+              marginLeft: 0,
+            }}
             source={{
               uri: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
             }}
           />
           <View style={{}}>
-            <Text>Easin Arafat</Text>
-            <Text>@easinarafat</Text>
+            <Text
+              style={{
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              Easin Arafat
+            </Text>
+            <Text
+              style={{
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+                marginTop: -5,
+              }}
+            >
+              @easinarafat
+            </Text>
           </View>
         </View>
         <View
@@ -73,9 +89,10 @@ const AppointmentDetails = ({ route, navigation }) => {
             <Text
               style={{
                 fontSize: 15,
+                fontFamily: "Poppins-Medium",
               }}
             >
-              01/012/2022
+              01/012/2022 08:00 AM
             </Text>
 
             {params && params.status && params.status == "ok" ? (
@@ -105,12 +122,16 @@ const AppointmentDetails = ({ route, navigation }) => {
                   }}
                   title="Cancel"
                 />
-                <SmallButton
-                  style={{
-                    backgroundColor: "green",
-                  }}
-                  title="Accept"
-                />
+                {params && params.sent ? (
+                  <></>
+                ) : (
+                  <SmallButton
+                    style={{
+                      backgroundColor: "green",
+                    }}
+                    title="Accept"
+                  />
+                )}
               </View>
             ) : (
               <Menu
@@ -156,9 +177,9 @@ const AppointmentDetails = ({ route, navigation }) => {
             style={{
               marginVertical: 10,
               marginHorizontal: 20,
-              fontSize: 20,
+              fontSize: 18,
               color: textColor,
-              fontWeight: "bold",
+              fontFamily: "Poppins-Medium",
             }}
           >
             Business Deal And Contract Sign
@@ -169,6 +190,7 @@ const AppointmentDetails = ({ route, navigation }) => {
               marginHorizontal: 20,
               color: textColor,
               textAlign: "justify",
+              fontFamily: "Poppins-Light",
             }}
           >
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -201,6 +223,7 @@ const MenuItem = ({ title, onPress }) => {
       <Text
         style={{
           fontSize: 16,
+          fontFamily: "Poppins-Light",
         }}
       >
         {title}

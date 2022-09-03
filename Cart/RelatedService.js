@@ -76,6 +76,7 @@ const RelatedService = (props) => {
               style={{
                 marginLeft: 5,
                 color: textColor,
+                fontFamily: 'Poppins-Medium'
               }}
             >
               5.0
@@ -98,7 +99,8 @@ const RelatedService = (props) => {
           style={{
             marginHorizontal: 10,
             color: textColor,
-            fontWeight: "700"
+            fontFamily: 'Poppins-Medium',
+            fontSize:13
           }}
         >
           I will make custom graphic for your blog I will
@@ -120,6 +122,7 @@ const RelatedService = (props) => {
               style={{
                 fontSize: 13,
                 color: textColor,
+                fontFamily: 'Poppins-Light'
               }}
             >
               From
@@ -129,6 +132,7 @@ const RelatedService = (props) => {
                 fontSize: 18,
                 color: textColor,
                 marginLeft: 5,
+                fontFamily: 'Poppins-Medium'
               }}
             >
               500৳

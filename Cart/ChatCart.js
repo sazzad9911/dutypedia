@@ -61,27 +61,28 @@ const styles = StyleSheet.create({
     flex: 4,
     borderBottomWidth:1,
     borderBottomColor:'#e5e5e5',
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     borderRadius: 25,
     marginRight: 10,
   },
   head: {
-    fontSize: 17,
-    fontWeight: "700",
+    fontSize: 14,
+    fontFamily: 'Poppins-Medium'
   },
   text: {
-    fontSize: 15,
-    fontWeight: "100",
+    fontSize: 13,
+    fontFamily: 'Poppins-Light',
     color:textColor
   },
   date: {
     fontSize: 10,
     textAlign: "right",
-    color:textColor
+    color:textColor,
+    fontFamily: 'Poppins-Light'
   },
   active: {
     backgroundColor: "green",
@@ -89,8 +90,8 @@ const styles = StyleSheet.create({
     width: 10,
     borderRadius: 5,
     position: "absolute",
-    top: 75,
-    left: 50,
+    top: 55,
+    left: 48,
     borderWidth: 1,
     borderColor: "white",
   },

@@ -48,16 +48,18 @@ export default ReviewCart;
 const styles = StyleSheet.create({
   text1: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontFamily: 'Poppins-Medium',
     color: "#808080",
   },
   text2: {
     fontSize: 14,
     color: "#808080",
+    fontFamily: 'Poppins-Light'
   },
   text3: {
     fontSize: 11,
     color: "#808080",
+    fontFamily: 'Poppins-Light'
   },
 });
 export const Cart = () => {

@@ -156,7 +156,7 @@ const Bottom = (props) => {
         <Text
           style={{
             fontSize: 14,
-            fontWeight: "bold",
+            fontFamily: 'Poppins-Medium',
             justifySelf: "center",
             textAlign: "center",
           }}

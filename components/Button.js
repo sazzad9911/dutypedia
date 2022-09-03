@@ -27,6 +27,7 @@ const Button = ({ style, title, onPress }) => {
             fontSize: 13,
             fontWeight: "bold",
             color: style && style.color ? style.color : "#808080",
+            fontFamily:'Poppins-SemiBold'
           }}
         >
           {title}

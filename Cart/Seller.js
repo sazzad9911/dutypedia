@@ -59,13 +59,16 @@ function Seller(props) {
         <Text
           style={{
             fontSize: 15,
+            fontFamily: 'Poppins-Medium'
           }}
         >
           Easin Arafat
         </Text>
         <Text
           style={{
-            fontSize: 10,
+            fontSize: 11,
+            fontFamily: 'Poppins-Light',
+            marginTop: -5
           }}
         >
           Peciality : It

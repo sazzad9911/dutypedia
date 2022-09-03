@@ -37,11 +37,13 @@ function Cart(props) {
           }}
         />
 
-        <Text
+        <Text numberOfLines={2}
           style={{
             color: textColor,
             margin: 10,
-            marginTop:17
+            marginTop:17,
+            fontFamily:'Poppins-SemiBold',
+            fontSize:13
           }}
         >
           Builder Service

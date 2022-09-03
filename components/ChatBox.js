@@ -14,13 +14,16 @@ const ChatBox = (props) => {
         <View
           style={{
             width: 240,
-            backgroundColor: "#b4f9fa",
+            backgroundColor: "#C4FFC4",
             borderRadius: 10,
             padding: 10,
             alignSelf:'flex-end'
           }}
         >
-          <Text>
+          <Text style={{
+            fontSize:13,
+            fontFamily: 'Poppins-Light'
+          }}>
             {props.message}
           </Text>
 
@@ -71,7 +74,10 @@ const ChatBox = (props) => {
             alignItems: "center",
           }}
         >
-          <Text Style={{}}>
+          <Text Style={{
+            fontSize:14,
+            fontFamily: 'Poppins-Light'
+          }}>
           {props.message}
           </Text>
 
@@ -86,6 +92,7 @@ const ChatBox = (props) => {
                 fontSize: 10,
                 flex: 3,
                 fontColor: "#808080",
+                fontFamily: "Poppins-Light"
               }}
             >
               {" "}
