@@ -11,7 +11,7 @@ function Cart2(props) {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push("OtherProfile");
+        navigation.navigate("OtherProfile")
       }}
       style={{
         width: 260,

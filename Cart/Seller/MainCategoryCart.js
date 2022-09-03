@@ -23,12 +23,12 @@ const MainCategoryCart = ({ icon, title, color,navigation }) => {
         alignItems: "center",
         shadowColor: "#d5d5d5",
         shadowOffset: {
-          width: 2,
-          height: 2,
+          width: 1,
+          height: 1,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
-        elevation: 4,
+        shadowRadius: 2,
+        elevation: 2,
       }}
     >
       <View

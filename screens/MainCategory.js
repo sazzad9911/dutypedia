@@ -4,6 +4,7 @@ import Category from './Seller/Category';
 import BackHeader from './../components/BackHeader';
 import SubHeader from './../components/SubHeader';
 import SubCategories from './Seller/SubCategories';
+import TableData from './Seller/TableData';
 const Stack = createStackNavigator();
 
 const MainCategory = (props) => {
@@ -15,6 +16,7 @@ const MainCategory = (props) => {
             <Stack.Screen name="SubCategories" options={{
                 header:(props)=><SubHeader {...props}/>
             }} component={SubCategories}/>
+            
         </Stack.Navigator>
     );
 };

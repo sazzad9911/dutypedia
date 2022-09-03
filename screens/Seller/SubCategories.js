@@ -4,9 +4,11 @@ import builder from "../../assets/Images/builder.webp";
 import { textColor } from './../../assets/colors';
 import SubCategoryCart from './../../Cart/Seller/SubCategoryCart';
 import AddButton from './../../components/AddButton';
+import Input from './../../components/Input';
 
 const SubCategories = ({ navigation, route }) => {
-  const title = route.params;
+  const title = route.params.title;
+  const [Visible, setVisible]= React.useState(false);
   return (
     <ScrollView>
       <ImageBackground
@@ -31,10 +33,15 @@ const SubCategories = ({ navigation, route }) => {
           }]}>Your Services</Text>
         </View>
       </ImageBackground>
-      <SubCategoryCart title='Bridge Builder'/>
+      <SubCategoryCart onPress={() =>{
+        navigation.navigate('TableData',{title: title})
+      }} title='Bridge Builder'/>
       <SubCategoryCart title='Carpenter'/>
       <SubCategoryCart title='House Builder'/>
-      <AddButton title='Add New'/>
+      {Visible?(<Input/>):( <></>)}
+      <AddButton onPress={()=>{
+        setVisible(true)
+      }} title={Visible?'Save':'Add New'}/>
     </ScrollView>
   );
 };

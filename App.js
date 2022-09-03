@@ -22,6 +22,7 @@ import AllReview from "./screens/AllReview";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react"
+import TableData from './screens/Seller/TableData';
 
 export default function App() {
   const MyTheme = {
@@ -98,6 +99,9 @@ export default function App() {
               name="AllReview"
               component={AllReview}
             />
+            <Stack.Screen name="TableData" options={{
+                header:(props)=><SubHeader {...props}/>
+            }} component={TableData}/>
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

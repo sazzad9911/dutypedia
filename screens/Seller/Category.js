@@ -80,7 +80,7 @@ const Category = (props) => {
     }
   ];
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
     {
         DATA.map((data,i) =>(
             <MainCategoryCart key={i} 
