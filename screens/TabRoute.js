@@ -28,6 +28,10 @@ import { setBottomSheet } from "./../action";
 import bottomRef from '../action';
 import AllReviewHeader from './../components/AllReviewHeader';
 import Appointment from './Appointment';
+import OtherProfile from './OtherProfile'
+import OtherProfileHeader from '../components/OtherProfileHeader';
+import MainCategory from './MainCategory';
+import BackHeader from './../components/BackHeader';
 
 const Tab = createBottomTabNavigator();
 
@@ -89,6 +93,14 @@ const TabRoute = () => {
           name="Appointment"
          component={Appointment}
         />
+         <Tab.Screen
+              options={{ header: (props) => <OtherProfileHeader {...props} /> }}
+              name="OtherProfile"
+              component={OtherProfile}
+            />
+          <Tab.Screen options={{headerShown: false}}
+          name="MainCategory"
+          component={MainCategory}/>
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
     </KeyboardAvoidingView>

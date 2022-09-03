@@ -209,7 +209,7 @@ const Home = (props) => {
           <Options />
         </View>
         <View style={{ height: 20 }} />
-        <SellerCart />
+        <SellerCart {...props}/>
         <View style={{ height: 10 }} />
       </ScrollView>
     </Animated.View>

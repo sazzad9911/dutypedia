@@ -5,13 +5,13 @@ import { AntDesign } from "@expo/vector-icons";
 
 const SubHeader = (props) => {
   const navigation = props.navigation;
+  const params=props.route.params;
 
   return (
     <View
       style={{
         backgroundColor: primaryColor,
         flexDirection: "row",
-        justifyContent: "center",
         alignItems: "center",
         paddingTop: Platform.OS == "ios" ? 28 : 35,
         paddingBottom: 10,
@@ -22,7 +22,6 @@ const SubHeader = (props) => {
           navigation.goBack();
         }}
         style={{
-          flex: 1,
           marginLeft: 20,
         }}
         name="left"
@@ -31,12 +30,15 @@ const SubHeader = (props) => {
       />
       <Text
         style={{
-          flex: 2,
           fontSize: 18,
-          fontFamily:'Poppins-Medium'
+          fontFamily:'Poppins-Medium',
+          flex:1,
+          textAlign:"center",
+          marginLeft:-50,
+          zIndex:-1
         }}
       >
-        {props.title}
+        {props.title? props.title:params.title?params.title:''}
       </Text>
     </View>
   );

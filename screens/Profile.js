@@ -161,7 +161,6 @@ const MainProfile = (props) => {
   };
   return (
     <View style={{flex: 1}}>
-    <Header {...props}/>
       <ScrollView>
         <View style={styles.container}>
           <TouchableOpacity

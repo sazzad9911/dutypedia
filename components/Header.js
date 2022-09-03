@@ -22,7 +22,7 @@ const Header = (props) => {
         <Text style={{
           color: textColor,
           fontFamily: 'Poppins-Medium'
-        }}>Search On Dutypedia</Text>
+        }}>{props.placeholder?props.placeholder:'Search On Dutypedia'}</Text>
       </TouchableOpacity>
     </View>
   );

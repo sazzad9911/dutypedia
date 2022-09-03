@@ -87,11 +87,7 @@ export default function App() {
               name="ChatScreen"
               component={ChatScreen}
             />
-            <Stack.Screen
-              options={{ header: (props) => <OtherProfileHeader {...props} /> }}
-              name="OtherProfile"
-              component={OtherProfile}
-            />
+           
 
             <Stack.Screen
               options={{

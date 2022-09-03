@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { primaryColor, textColor } from './../assets/colors';
 
-export default function SellerCart() {
+export default function SellerCart({navigation}) {
   return (
     <View
       style={{
@@ -32,7 +32,9 @@ export default function SellerCart() {
         >
           Become A Seller
         </Text>
-        <TouchableOpacity
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate('MainCategory')
+        }}
           style={{
             marginLeft: 20,
             marginTop: 20,
