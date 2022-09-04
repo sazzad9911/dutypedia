@@ -4,6 +4,12 @@ export const setBottomSheet=(data)=>{
         playload:data
     }
 }
+export const setAllData=(data)=>{
+    return{
+        type:'SET_DATA',
+        playload:data
+    }
+}
 export const bottomRef=(data)=>{
     return{
         type:'SET_BOTTOM_REF',

@@ -2,535 +2,534 @@ import uuid from 'react-native-uuid';
 import {BuilderIcon} from '../assets/icon'
 
 export const BuilderOptions = {
-  ICON:BuilderIcon,
   housebuilder: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "House Extensions",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Basement Renovations",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "New Garages",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Garage Conversions",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Contract Work",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Roofing Works",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bathrooms",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Kitchens",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Property Maintenance",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Painting & Decorating",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Fire Damage",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Windows & Doors",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Exterior & Interior Doors",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "All Electrical Services",
     },
   ],
   officebuilder: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Types Of Spaces",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Employee/Visitor Support Spaces",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Offices",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "A Operation and Maintenance spaces",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Dministrative Support Spaces",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: " Important Design Considerations",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Cost Effective",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Functional/Operational",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Flexibility",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Ur Productive",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Ban Planning",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Technical Connectivity",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Secure/Safe",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Sustainable",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Emerging Issues",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Additional Resources",
     },
   ],
   carpenter: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Woodcarving",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Woodwork",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Veneered",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Shelve",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bed",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bookshelf",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Almary",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "dressing table",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "chest of drawers",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "sofa set",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "dining table",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "chair",
     },
   ],
   roadconstruction: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Casualty",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Closure",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Congestion",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Cycling",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Death",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Road Gang",
     },
   ],
   bridgebuilder: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridge Builder",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridge Span",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridge Table",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridge The Chasm",
     },
 
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridge Building",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridgeboard",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Bridgehead",
     },
   ],
   Mobile: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Crack Display",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Hardware Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Speaker/Voice Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Water Damage",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Software Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Touch Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Camera Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Charging Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Battery Issu",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Country Lock",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Sim Lock",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Icloud Lock",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Password Recovery",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Flash",
     },
   ],
   Pc: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Laptop/Macbook",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Pc/Mac",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Hard Disc/Ram",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Virus/Security",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Monitor",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Keyboard",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Graphics Card",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Power Supply",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Data Recovery/Backup",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Software/Opareting",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Printer",
     },
   ],
   Printer: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Full Check-Up",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Diagnose",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "No Display Power",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Unexpect Shutdown",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Time And Date Problem",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Slow Boot",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Color Change",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Scanner",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Full Set Up",
     },
   ],
   jewellaryitems: {
     "Jewelry Items": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Mangtika",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Necklace",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Ear Rings",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Nose Rings",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Bangles",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arm Band",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Rings",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Waist Band",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Anklet & Toe Rings",
       },
     ],
     "Goldsmith Services": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Ring Sizing Includes Rhodium Plating",
       },
 
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Chain Soldering",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Claw Re Tipping",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cleaning,Polishing Jewellery",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Back Of Ring Fill In",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pearl Re Stringing",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Engraving",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Replace Earring Backing",
       },
     ],
     "Gold Type": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "14k",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "18k",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "22k",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "24k",
       },
     ],
     "Types Of Diamonds": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "White Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Champagne Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pink Champagne Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Yellow Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Blue Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Green Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Purple Diamonds",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Synthetic Diamonds",
       },
     ],
@@ -538,88 +537,88 @@ export const BuilderOptions = {
   tailorservice: {
     "Ladies Dress": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "3 Piece",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "4 Piece",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lehenga",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Scart",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Borka",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Blouse",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Ladies Shirt",
       },
     ],
     "Jeans Dress": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Shirt",
       },
 
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pant",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Panjabi",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Suit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Blazer",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lungi",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "T-Shirt",
       },
     ],
     "Baby Dress": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Frock",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Scart",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Romper",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Shirt",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pant",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "T-Shirt",
       },
     ],

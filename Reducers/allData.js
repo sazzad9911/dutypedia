@@ -1,76 +1,40 @@
 import builder from '../assets/Images/builder.webp'
-
+import uuid from 'react-native-uuid';
+import { BuilderOptions } from './../Data/builder';
+import {BuilderIcon} from '../assets/icon'
 const initialState = [
   {
     title: "Builder Services",
     icon: BuilderIcon,
     color: "#FF9C68",
-    image:''
+    image:builder,
     data:[
         {
             title: "Bridge Builder",
-            data: [
-
+            list: [
+              {
+                title:'Bridge Builder',
+                data:BuilderOptions.bridgebuilder
+              }
             ]
         },
         {
-            title: "Carpenter"
+            title: "Carpenter",
+            list:[
+              {
+                title:'Carpenter',
+                data:BuilderOptions.carpenter
+              }
+            ]
+            
         }
     ]
   },
-  {
-    title: "Business Services",
-    icon: BusinessServiceIcon,
-    color: "blue",
-  },
-  {
-    title: "Cooking Services",
-    icon: CookerIcon,
-    color: "#ED488B",
-  },
-  {
-    title: "Electrician & Mechanician",
-    icon: ElectricIcon,
-    color: "#FFB800",
-  },
-  {
-    title: "Entertainment",
-    icon: EntertainmentIcon,
-    color: "#8E4DD5",
-  },
-  {
-    title: "House Keeper",
-    icon: HouseKeeperIcon,
-    color: "#FF4155",
-  },
-  {
-    title: "It & Technology",
-    icon: ItIcon,
-    color: "#2381FF",
-  },
-  {
-    title: "Music & Audio Service",
-    icon: MusicIcon,
-    color: "#FEB944",
-  },
-  {
-    title: "Online Tution",
-    icon: OnlineTutionIcon,
-    color: "#FBB540",
-  },
-  {
-    title: "Painter",
-    icon: PainterIcon,
-    color: "#D934BF",
-  },
-  {
-    title: "Parlour & Saloon",
-    icon: SaloonIcon,
-    color: "#FF5364",
-  },
-  {
-    title: "Labor",
-    icon: RentIcon,
-    color: "#61AFF6",
-  },
 ];
+const allData=(state=initialState,action)=>{
+  if(action.type === "SET_DATA"){
+    return state=action.playload
+  }
+  return state
+}
+export default allData

@@ -4,12 +4,12 @@ import { SvgXml } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
 import { primaryColor } from "./../../assets/colors";
 
-const MainCategoryCart = ({ icon, title, color,navigation }) => {
+const MainCategoryCart = ({ icon, title, color,navigation,onPress }) => {
   return (
     <TouchableOpacity onPress={() =>{
-        navigation.navigate('SubCategories',{
-            title:title,
-        })
+        if(onPress){
+          onPress()
+        }
     }}
       style={{
         flexDirection: "row",

@@ -13,6 +13,8 @@ const optionsPerPage = [2, 3];
 const TableData = (props) => {
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
+  const list=props.route.params.list
+  
 
   React.useEffect(() => {
     setPage(0);
@@ -20,11 +22,13 @@ const TableData = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        <Table title="New Service" {...props} />
-        <Table title="Old Service" {...props} />
-        <Table title="Old Service" {...props} />
-        <Table title="Old Service" {...props} />
-        <Table title="Old Service" {...props} />
+      {
+        Array.isArray(list)?(
+          list.map((list, i)=>(
+            <Table key={i} data={list.data} title={list.title} {...props} />
+          ))
+        ):(<></>)
+      }
       </ScrollView>
       <Button
         style={{
@@ -42,7 +46,7 @@ const TableData = (props) => {
 };
 
 export default TableData;
-const Table = ({ navigation, route, title }) => {
+const Table = ({ navigation, route, title,data }) => {
   const [Visible, setVisible] = React.useState(false);
 
   return (
@@ -94,10 +98,13 @@ const Table = ({ navigation, route, title }) => {
           </View>
         </View>
         <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-        <Rows />
-        <Rows />
-        <Rows />
-        <Rows />
+        {
+          Array.isArray(data)?(
+            data.map((data, i)=>(
+              <Rows data={data} key={i} title={data.title} />
+            ))
+          ):(<></>)
+        }
       </View>
       {Visible ? <Input /> : <></>}
       <AddButton
@@ -109,7 +116,7 @@ const Table = ({ navigation, route, title }) => {
     </View>
   );
 };
-const Rows = () => {
+const Rows = ({title,data}) => {
   const [checked, setChecked] = React.useState(false);
   return (
     <View
@@ -126,7 +133,7 @@ const Rows = () => {
           fontFamily: "Poppins-Light",
         }}
       >
-        Frozen yogurt
+        {title}
       </Text>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View style={{
