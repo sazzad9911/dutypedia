@@ -1,1184 +1,1184 @@
-import { nanoid } from "nanoid";
+import  uuid  from "uuid";
 
 export const ItOptions = {
   Data: {
     Databases: {
       Category: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Design & Optimization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Queries",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cloud Based Solutions",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Database Administration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation",
         },
       ],
-      "Database Type": [
+      "DatabaseType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Centralized Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Distributed Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Graph Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hierarchical Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Key-Value Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Network Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non-Relational Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Object-Oriented Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Relational Database",
         },
       ],
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Airtable",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bigquery",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Couchbase",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Db2",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Elasticsearch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Filemaker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Firebase",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Firebird",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hadoop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Informix",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mariadb",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mongodb",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ms Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mysql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Neo4J",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Oracle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pl/Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Postgressql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sql Server",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sybase",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Teradata",
         },
       ],
-      "Cloud Platform": [
+      "CloudPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Web Service",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Oracle Database",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Microsoft Azure",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Cloud Platform",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ibm Db2",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mongodb Atlas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Openstack",
         },
       ],
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Big Data",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Center",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Structure",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Wearhouse",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Encryptionh",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Erd",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Normalization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nosql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Virtualization",
         },
 
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dcl",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ddl",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dml",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Query Optimization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Migration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Troubleshooting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Administrator",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Backup & Recovery",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Capacity Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Configuration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Database Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Disaster Recovery",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Installation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance Monitoring",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Permissions",
         },
       ],
     },
     DataProcessing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Mining & Scraping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Formulas & Macros",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Automations",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation",
         },
       ],
       Technology: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C#",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Javascript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Php",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Sheets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scrapy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Selenium",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Uipath",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vba",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Apps Script",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Redshift",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Cassandra",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Hadoop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Kafka",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Spark",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Julia",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Matlab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scala",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spss",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Talend",
         },
       ],
-      "Scraping Technique": [
+      "ScrapingTechnique": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Automated",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manual",
         },
       ],
-      "Information Type": [
+      "InformationType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Competitor Research",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Contact Information",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Content Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Currency & Stocks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Listings",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News & Events",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Price Comparison",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Products & Reviews",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media",
         },
       ],
       Expertis: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Formatting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fixing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pivot Tables",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Formulas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Functions",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Macros",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Add-Ins",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Classification",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clustering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Acquisition",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Extraction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Flow",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Manipulation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Upload",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Validation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Etl",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Normalization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ranking",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transformation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nosql",
         },
       ],
     },
     DataAnalytics: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Sales",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product & Ux",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Surveys & Research",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business & Financial",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Planning & Supply Chain",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation",
         },
       ],
       Technology: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Alteryx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anylogic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Spark",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Eviews",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Data Studio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Sheets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jupyter Notebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Matlab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Minitab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixpanel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qlikview",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Redash",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Splunk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spss",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stata",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tableau",
         },
       ],
-      "Analysis Type": [
+      "AnalysisType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Quantitative Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qualitative Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Impact Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Statistical Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Descriptive Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Diagnostic Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Predictive Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Prescriptive Analysis",
         },
       ],
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Web Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Alerts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business Insights",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ab Test",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Experiment Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Trends",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Algorithms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Prediction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forecasting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Probability",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anomaly Detection",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Math",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Churn & Retention",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Statistics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cohort Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Factor Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Monte Carlo Simulation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Regression Testing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sentiment Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Time Series Analysis",
         },
       ],
     },
     DataVisualization: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Graphs & Charts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dashboards",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Geographic Information Systems",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reports",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation",
         },
       ],
       Tool: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arcgis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "D3.Js",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Data Studio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Infogram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixpanel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Power BI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qgis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qlikview",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qlik Sense",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sisense",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tableau",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Visme",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Whatagraph",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Batchgeo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Esri",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Geoda",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Earth Pro",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Maps Api",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mapinfo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Maptitude",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Powerpoint",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sap Crystal Reports",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Word",
         },
       ],
-      "Chart Type": [
+      "ChartType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Comparison",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Concept",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Distribution",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hierarchy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "How To",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Location",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Movement",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Over Time",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Patterns",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Processes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Range",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Relationship",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "User Interaction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Word Cloud",
         },
       ],
     },
     DataScience: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Computer Vision",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Text Analysis & Nlp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ranking & Recommendation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Time Series Analysis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation",
         },
       ],
-      "Models & Methods": [
+      "Models_Methods": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Machine Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Deep Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Neural Networks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Supervised Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unsupervised Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Semi Supervised Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reinforcement Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Decision Trees",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Learning To Rank",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Feature Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anomaly Detection",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cluster Computing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linear Regression",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bayesian Statistics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Classification Models",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tabular Modeling",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Churn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sentimental Analyis",
         },
       ],
       Technology: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lisp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Julia",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scala",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tensorflow",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pytorch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opencv",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opennn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ibm Watson",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Keras",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Ml Kit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Sagemaker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scikit Learn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Colab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jupyter Notebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apache Mahout",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Azure Ml Studio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Theano",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mlflow",
         },
       ],
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image Processing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image Recognition",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Face Recognition",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ocr",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Alpr",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image Segmentation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Object Detection",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image Tagging",
         },
       ],
@@ -1186,69 +1186,69 @@ export const ItOptions = {
     DataEntry: {
       Type: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clean Data",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Copy Paste",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Convert Data",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fix Format",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Insert Data",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tagging",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Typing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Merge Data",
         },
       ],
       Tool: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Sheets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Other Spreadsheets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Word",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Docs",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pdf Editor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Powerpoint",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Slides",
         },
       ],
@@ -1257,857 +1257,857 @@ export const ItOptions = {
 
   Graphic: {
     GraphicsForStreamers: {
-      "Asset Type": [
+      "AssetType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Overlays & Screen Packs",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Panels",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Alerts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Emotes & Badges",
         },
         ,
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Thumbnails",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Banners",
         },
       ],
-      "Streaming Platform": [
+      "StreamingPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         ,
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DLive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Smashcast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bigo.TV",
         },
       ],
     },
 
     BusinessCards: {
-      "Main Type": [
+      "MainType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business Cards",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stationery",
         },
       ],
-      "Image File Format ": [
+      "ImageFileFormat ": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         ,
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
     },
     Illustration: {
-      "Artistic Technique": [
+      "ArtisticTechnique": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pencil",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Charcoal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pen & Ink",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Watercolor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Acrylics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Collage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Woodcutting/Engraving",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Freehand Digital ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vector Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D Graphics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixed Media",
         },
       ],
 
       Style: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "for children",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "realistic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "abastrct",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "flat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "isometric",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "sketch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "line art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "grafiti",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "retro/vintage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "pop art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "linocut",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "low poly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "poixel art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "comic & cartoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "caricature",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "anime & manga",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "chibi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "doodle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "technical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "caligraphy",
         },
       ],
       Theme: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Commercial & Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Editorial",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Educational",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Concept Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fantasy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sci-Fi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Surrealistic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Psychedelic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fan Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dark Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Horror",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Satirical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fine Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manuals/Instruction",
         },
       ],
 
       Subject: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anatomy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty/Health",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Drink",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Innovation/Tech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Landscape",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Maps",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nature",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Objects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "People",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science & Medical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shape",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sport & Fitness",
         },
         ,
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Text & Lettering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Urban",
         },
       ],
     },
     PatternDesign: {
-      "Design Technique": [
+      "DesignTechnique": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hand Drawn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Digital",
         },
       ],
 
-      "Design Style": [
+      "DesignStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Abstract",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cartoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Collage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Realistic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Watercolor",
         },
       ],
 
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Accessories",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Home Decor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stationary",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Textile & Fabric",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wallpaper",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website",
         },
       ],
 
-      "Pattern Theme": [
+      "PatternTheme": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Boho",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Floral",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nature",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Objects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "People",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Seasonal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Texture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Geometric",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tribal",
         },
       ],
     },
     FlyerDesign: {
-      "Format Type": [
+      "FormatType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flyers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Door Hangers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media Kit",
         },
       ],
 
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
     },
     BookDesign: {
-      "Design Style": [
+      "DesignStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Illustrative",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photographic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Typographic",
         },
       ],
 
       Genre: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Academics / Textbooks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Biographies / Memoir",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Children's Books",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cookbooks / Recipes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Comic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crime",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fantasy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Horror / Thriller",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "How-To",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Humor / Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "History",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Literature",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religious / Spiritual",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Romance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science Fiction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Self-Help / Wellness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Young Adult",
         },
       ],
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MOBI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EPUB",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
       ],
     },
     AlbumCoverDesign: {
-      "Design Style": [
+      "DesignStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "illustrative",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "photographic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "typographic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3d_art",
         },
       ],
-      "Mesical Genre": [
+      "MesicalGenre": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blues",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Children’s Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Classical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Country",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Electronic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Folk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hip-Hop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Holiday",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instrumental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jazz",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Latin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Metal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "New Age",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opera",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Punk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R&B",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rap",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reggae",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rock",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Soul",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "World ",
         },
       ],
-      "Album Type": [
+      "AlbumType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Album",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Single",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixtape",
         },
       ],
     },
     PackagingDesign: {
-      "Product Type": [
+      "ProductType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product Label",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Box",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bottle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bag/Pouch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Can",
         },
       ],
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "INDD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
       ],
@@ -2115,91 +2115,91 @@ export const ItOptions = {
     ArFiltersLenses: {
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram/Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
       ],
-      "Filter Type": [
+      "FilterType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Appearance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Background & Environment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Camera Effects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Games",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Virtual Objects",
         },
       ],
     },
     WebMobileDesign: {
-      "Main Type": [
+      "MainType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Websites",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Landing Pages",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile Apps",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Email Templates",
         },
       ],
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SVG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SWF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ICO",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BMPR",
         },
       ],
@@ -2207,57 +2207,57 @@ export const ItOptions = {
     SocialMediaDesign: {
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LinkedIn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pinterest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website (Generic)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TikTok",
         },
       ],
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
@@ -2265,599 +2265,599 @@ export const ItOptions = {
     MenuDesign: {
       Pourpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Restaurant",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bar",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spa & Beauty",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Price List",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Weddings & Events",
         },
       ],
       Style: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Typographic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Illustrated & Hand-Drawn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chalkboard",
         },
       ],
     },
     InvitationDesign: {
-      "Main Type": [
+      "MainType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wedding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Party",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Baby & Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Holiday",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertaining",
         },
       ],
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
     },
     PortraitsCaricatures: {
-      "Illustration Type": [
+      "IllustrationType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Portrait",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pet Portrait",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Caricature",
         },
       ],
-      "Illustration Style": [
+      "IllustrationStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Freestyle Drawing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Realistic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Famous Cartoons",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Watercolor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pop art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anime",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vector Art",
         },
       ],
     },
     CartoonsComics: {
-      "Main Type": [
+      "MainType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cartoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Comics",
         },
       ],
-      "Illustration Style": [
+      "IllustrationStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anime",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pop Art",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Freestyle Drawing",
         },
       ],
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
 
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
     },
     WebBanners: {
-      "Main Type": [
+      "MainType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Static Banner",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animated Banner",
         },
       ],
 
-      "Image File Format": [
+      "ImageFileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GIF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SWF",
         },
       ],
     },
     PhotoshopEditing: {
-      "Editing Type": [
+      "EditingType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Background Removal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Resizing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Restoration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Filters & Effects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retouching & Enhancement",
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPEG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "RAW",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TIFF",
         },
       ],
     },
     ArchitectureInteriorDesign: {
-      "service type": [
+      "servicetype": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D DRAWINGS & FLOOR PLANS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D MODELING & RENDERING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PLANNING & DESIGN",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VIRTUAL STAGING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DIAGRAMS & MAPPING",
         },
       ],
 
-      "Project Scale": [
+      "ProjectScale": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "object",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "room",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "apartment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "building",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "building complex",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "neighborhood",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "city",
         },
       ],
 
-      "Building Type": [
+      "BuildingType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Residential ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Commercial",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Office & Workspace",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hospitality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Industrial",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Institutional & Public ",
         },
       ],
 
-      "Image file Format": [
+      "ImagefileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SLDPRT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DWG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "STL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MB",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SKP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DAE ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BLEND",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "RVT",
         },
       ],
     },
     LandscapeDesign: {
-      "service type": [
+      "servicetype": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GRAPHICS & DESIGN",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DIGITAL MARKETING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WRITING & TRANSLATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VIDEO & ANIMATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MUSIC & AUDIO",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PROGRAMMING & TECH",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DATA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BUSINESS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LIFESTYLE",
         },
       ],
 
       Software: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autodesk AutoCAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autocad Civil 3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vectorworks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ArchiCAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autodesk Civil 3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SketchUp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autodesk Revit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MicroStation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rhinoceros 3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Grasshopper",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "V-Ray",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Skatter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lumion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blender",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Corona",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adobe Photoshop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adobe Illustrator",
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DWG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SKP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MAX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "RVT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FBX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BLEND",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TIFF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EXR",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
@@ -2865,1323 +2865,1323 @@ export const ItOptions = {
     CharacterModeling: {
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Film",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D Printing",
         },
       ],
 
       Style: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D Printing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Abstract",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anime",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cartoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Low Poly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Minimalist",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pixel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Realistic",
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FBX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MA/MB",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MAX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C4D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BLEND",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "STL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DAE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VRML/X3D",
         },
       ],
     },
     IndustrialproductDesign: {
-      "Service type": [
+      "Servicetype": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONCEPT DEVELOPMENT ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D DRAWING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D MODELING & RENDERING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PROTOTYPING & 3D PRINTING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PRODUCT MANUFACTURING",
         },
       ],
 
-      "Field Of expetise": [
+      "FieldOfexpetise": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Appliances",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consumer Electronics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Footware",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Furniture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "IoT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jewelry",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lighting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Machinery",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sustainable Products",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Toys",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wearables",
         },
       ],
 
-      "Design Software": [
+      "DesignSoftware": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DS MAX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adobe CC",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ArtiosCAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AutoCAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blender",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CAPE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Catia",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Corel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Creo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Esko Suite",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fusion 360",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Inventor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "KeyShot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MeshLab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Maya",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rhinoceros",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SketchUp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Solidworks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Studio",
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3MF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Collada",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DWG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FBX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "STL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SLDPRT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SLDDRW ",
         },
         ,
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SLDASM",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "STEP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VRML",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "X3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SKP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AMF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BLEND",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DM",
         },
       ],
     },
     TradeBoothTrade: {
-      "Booth Type": [
+      "BoothType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Modular systems booth",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Custom Made Booth",
         },
       ],
-      "Booth Layout": [
+      "BoothLayout": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Inline (one side exposed)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Peninsula (three sides exposed)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Island (four sides exposed",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Architecture & Interior Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Audio Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Biotech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business Services & Consulting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crypto & Blockchain",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cyber Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "E-Commerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Engineering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Government & Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hardware & Electronics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media & Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical & Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Software",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Telecommunications",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wellness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
     },
     FashionDesign: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TECHNICAL DRAWING & TECH PACK",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PATTERN MAKING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FASHION ILLUSTRATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D GARMENT DESIGN",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FULL DESIGN PROCESS",
         },
       ],
-      "Item Type": [
+      "ItemType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clothing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shoes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bags",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Accessories",
         },
       ],
 
-      "Gender And Group": [
+      "GenderAndGroup": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Men",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Women",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Babies",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unisex",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SOFTWARE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gerber",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lectra",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Optitex",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autocad",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gemini CAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CLO 3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Browzwear / VStitcher",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marvelous Designer",
         },
       ],
 
-      "Illustration Purpose": [
+      "IllustrationPurpose": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pre-production",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pre-production",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Editorial",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wholesale & Retail",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Virtual Clothing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
       ],
 
-      "Design Expertise": [
+      "DesignExpertise": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bridal Wear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Evening Wear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sportswear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Activewear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Swimwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Underwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sweatsuits",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Streetwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Outerwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Uniforms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Knitwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nightwear",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Costumes",
         },
       ],
 
-      "Tailoring Method": [
+      "TailoringMethod": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Made-to-Measure",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mass Production",
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DXF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPEG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MDL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PLT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TMP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HPGL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ASTM",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AAMA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EPS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DAE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FBX",
         },
       ],
     },
     JewelryDesign: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D MODELING & RENDERING ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONCEPT DESIGN & SKETCHING",
         },
       ],
       Software: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gemvision Matrix",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rhinoceros",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autodesk 3ds Max",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Solidworks",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ZBrush",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jewelry CAD Dream",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "V-Ray",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blender",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "KeyShot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Materialise Magics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tinkercad",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SketchUp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AutoCAD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fusion 360",
         },
       ],
 
-      "Jewelry Type": [
+      "JewelryType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ring",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bracelet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Necklace",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pendant",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Earrings",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nose Ring",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Brooch/Hairpin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cufflinks",
         },
       ],
     },
     ResentationDesign: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Full Presentation Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Custom Template Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Minor Design Touchups",
         },
       ],
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Investor Pitch/Fundraising ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sales",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Conferences",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business Proposal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education/Training",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Research",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analysis",
         },
       ],
 
-      "Presentation Software": [
+      "PresentationSoftware": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Power Point",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Slides",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Prezi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Keynote",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Canva",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Architecture & Interior Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Audio Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Biotech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business Services & Consulting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crypto & Blockchain",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cyber Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "E-Commerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Engineering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Biotech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Government & Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hardware & Electronics ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media & Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical & Pharmaceutical ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Software",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Telecommunications",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wellness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
 
-      "Image File format": [
+      "ImageFileformat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PPT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "KEY",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PPTX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MP4",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Prezi ",
         },
       ],
     },
     CarWraps: {
-      "Vehicle Type": [
+      "VehicleType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Car or Van",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Truck",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Motorcycle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bicycle",
         },
       ],
 
-      "File format": [
+      "Fileformat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AI ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PDF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
       ],
     },
     TattooDesign: {
-      "Tattoo Style": [
+      "TattooStyle": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "traditional old school",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "realism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "watercolor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "japanese",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "linework",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "dotwork",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "calligraphy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "minimalist",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "neo traditional",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "new school",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "tribal",
         },
       ],
 
-      "Color Type": [
+      "ColorType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "any colo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "black",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "white",
         },
       ],
@@ -4189,1045 +4189,1045 @@ export const ItOptions = {
 
     BrandStyleGuide: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Not Defined",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vintage/Retro",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hand-Drawn",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mascot/Cartoon",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flat/Minimalist",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Watercolor/Feminine",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Signature",
       },
     ],
     FormatType: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Not Defined",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Catalog",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sell Sheet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Magazine",
       },
     ],
     GameCategory: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Not Defined",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "2D",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "3D",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Abstract",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Anime",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cartoon",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Low Poly",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Minimalist",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pixel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Realistic",
       },
     ],
     Infographic: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Al",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "JPG",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "PDF",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "PNG",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "PSD",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "PPT",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "KEY",
       },
     ],
     LogoDesign: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "3D",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Versatile",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vintage/Retro",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hand-Drawn",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mascot/Cartoon",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flat/Minimalist",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Watercolor/Feminine",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Signature",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lettering",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Geometric",
       },
     ],
     PodcastDesign: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Illustrative",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "photographic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "typographic",
       },
     ],
     PostcardDesign: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Not Defined",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Promotional",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Invitation Card",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Holiday",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gift Voucher",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Loyalty Card",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Real estate",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Personal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Recipe Card",
       },
     ],
     SignageDesign: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Yards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Billboards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Banners",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Roll Ups",
       },
     ],
     StoryBoards: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Not Defined",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Games",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Live Action Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Animation",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Books",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Presentations",
       },
     ],
     Tshirt: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "T-shirts",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Totes & Bags",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mugs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Stickers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hats",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Socks",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clothing & Apparel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pillows",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Phone Cases",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pens",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Accessories",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Face Masks",
       },
     ],
   },
-  "Digital Marketing": {
+  "DigitalMarketing": {
     SocialMediaMarketing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Consultation & Audience Research",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Profile Setup & Integration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Content",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media Management",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics & Tracking",
         },
       ],
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linkedin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pinterest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Youtube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product Hunt",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tiktok",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reddit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clubhouse",
         },
       ],
-      "Content Type": [
+      "ContentType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Text",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gif",
         },
       ],
-      "Management Tools": [
+      "ManagementTools": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hootsuite",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Buffer",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Pilot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hubspot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Zoho Social",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Meetedgar",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sprout Social",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agora Pulse",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Falcon.Io",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Coschedule",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Eclincher",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Oktopost",
         },
       ],
     },
     PodcastMarketing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcast Promotion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Advertising Within Podcasts",
         },
       ],
-      "Podcast Category": [
+      "PodcastCategory": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arts And Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business And Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Comedy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Educational",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Games",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids And Family",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Life Style And Health",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "New And Politics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Society And Culture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports And Recreation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stories",
         },
       ],
-      "Podcast Aggregator": [
+      "PodcastAggregator": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bello Collective",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Castro",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Downcast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Play",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Itunes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Overcast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcast Republic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcastland",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcast Addict",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcast Subreddit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tuneln",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spotify",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stitcher",
         },
       ],
     },
     SOCIALMEDIAADVERTISING: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Strategy & Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tire Fitting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ads Setup & Management ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics & Tracking ",
         },
       ],
-      "Platform Type ": [
+      "PlatformType ": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linkedin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pinterest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Youtube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product Hunt",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tiktok",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reddit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clubhouse",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Industry",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crypto Blockchain",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cyber Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "E Commerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services Banking ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Government Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Health Wellness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Insurance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids And Family",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail Wholesale ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Society And Culture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports And Recreation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology Internet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation Automotive",
         },
       ],
     },
     Seo: {
-      "Service Type ": [
+      "ServiceType ": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Keyword Research",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "On-Page Seo ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technical Seo ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Off-Page Seo ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Competitor Analysis ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Voice Search Seo ",
         },
       ],
-      "Industry Expertise": [
+      "IndustryExpertise": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arts ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crypto & Blockchain ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cyber Security ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "E-Commerce ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services/ Banking ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Games ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Government& Public Sector ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Health & Wellness ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Insurance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids And Family ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media & Entertainment ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical & Pharmaceutical ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non-Profit ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Society And Culture ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports And Recreation ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology & Internet ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
       ],
     },
     EmailMarketing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EMAIL PLATFORM SUPPORT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AUDIENCE DEVELOPMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CAMPAIGN MANAGEMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EMAIL AUTOMATIONS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "COLD EMAILS",
         },
       ],
 
-      "Email Platform": [
+      "EmailPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MailChimp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iContact",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GetResponse",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Constant Contact",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Campaigner",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AWeber",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Campaign Monitor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Infusionsoft",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HubSpot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SendinBlue",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ActiveCampaign",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Klaviyo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Interspire",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SendGrid",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mautic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cold email software",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "keap",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Go HighLevel",
         },
       ],
 
       Method: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "web scraping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "manual email collection",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "viral contests",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "forms and pop ups",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "landing page",
         },
       ],
 
       Tools: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "mailshake",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "hubspot sales",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "prospect.io",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "autoklose ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "lemlist",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gmass",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "woodpecker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "yesware",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gmelius",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "bananatag",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cirrus insight",
         },
       ],
@@ -5235,599 +5235,599 @@ export const ItOptions = {
     TextMessageMarketing: {
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EZ Texting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Textedly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podium",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Simple Texting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Slick Text",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Active Trail",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twilio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Plivo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "User.com",
         },
       ],
-      "Messaging Type": [
+      "MessagingType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "One Time  Blast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Event-Based Automation",
         },
       ],
     },
     Sem: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SETUP & STRATEGY CONSULTATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SEARCH ENGINE MARKETING MANAGEMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PRODUCT AD CAMPAIGNS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AD REVIEW & OPTIMIZATION",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing and Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical and Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
 
       Method: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "web scraping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "manual email collection",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "viral contests",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "forms and pop ups",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "landing page",
         },
       ],
 
       Tools: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "mailshake",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "hubspot sales",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "prospect.io",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "autoklose ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "lemlist",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gmass",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "woodpecker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "yesware",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gmelius",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "bananatag",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cirrus insight",
         },
       ],
     },
     Crowdfunding: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Campaign Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Campaign Marketing",
         },
       ],
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kickstarter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Indiegogo​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Go Fund Me",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fundly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Patreon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crowd Rise",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rocket Hub",
         },
       ],
     },
     DisplayAdvertising: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CAMPAIGN SETUP & MANAGEMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AD REVIEW & OPTIMIZATION ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "RETARGETING ",
         },
       ],
 
-      "Ad Network": [
+      "AdNetwork": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Display Network (GDN)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bing Ads",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DV360 ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon DSP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile App Networks",
         },
       ],
 
       Placement: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "all placements",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "mobile",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "desktop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "tv",
         },
       ],
 
-      "Ad Format": [
+      "AdFormat": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Image (static)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HTML 5",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Text",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "All Industries ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing and Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media and Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical and Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
 
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
     },
     Surveys: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SURVEY CREATION",
         },
       ],
 
-      "Survey Platform": [
+      "SurveyPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SurveyMonkey",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Forms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Typeform",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JotForm",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Zoho Survey",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Survey Gizmo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qualtrics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "QuestionPro",
         },
       ],
 
-      " Survey Type": [
+      "SurveyType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Info Gathering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Satisfaction & Feedback",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Application Form",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opinion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Quiz",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Personal & Fun",
         },
       ],
@@ -5835,2591 +5835,2591 @@ export const ItOptions = {
     MarketingStrategy: {
       Consulting: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MARKETING PLANS ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "INDUSTRY",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing and Advertising ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media and Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical and Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
 
-      "Strategy Purpose": [
+      "StrategyPurpose": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Company / Brand Strategy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product Launch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Growth / Scale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Campaign / Special Promotion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Conversion funne",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Event",
         },
       ],
 
-      "Business stage": [
+      "Businessstage": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Startup",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Small Business ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medium Business ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Large Business",
         },
       ],
 
-      "Business Type": [
+      "BusinessType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "B2B ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "B2C",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "B2G ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Personal brand ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
       ],
     },
     ECommerceMarketing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "E-Commerce Seo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website Promotion",
         },
       ],
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ebay​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Etsy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kindle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopify",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Aliexpress",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook Shops",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Walmart​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Woocommerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flipkart",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Magento",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Poshmark",
         },
       ],
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing And Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media And Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical And Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
-      "Promotion Method": [
+      "PromotionMethod": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Off-Page SEO",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media Shoutout​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Email List Promotion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Paid Ads",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Classified Ads",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Growth Hacking",
         },
       ],
     },
     InfluencerMarketing: {
-      "Strategy & Research": [
+      "StrategyResearch": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SHOUTOUTS & PROMOTION ",
         },
       ],
 
-      "Target Audience": [
+      "TargetAudience": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Auto & Transport",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Fashion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Family, Education & Childcare",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environment & Green Tech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events & Weddings",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Finance, Legal & Consulting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Government & Municipal ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Home & Garden ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Internet & Tech",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Communications",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical & Dental  ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music & Bands ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion, Non-Profit & Charity",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & E-comm",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Hospitality ",
         },
       ],
 
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LinkedIn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pinterest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Product Hunt",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TikTok",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reddit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "twitch",
         },
       ],
     },
     CommunityManagement: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PLANNING, STRATEGY & SETUP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SOURCING & RECRUITMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GROWTH, PARTNERSHIPS & MONETIZATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MANAGEMENT & ENGAGEMENT ",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing and Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media and Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical and Pharmaceutical ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
 
-      "Community Presence": [
+      "CommunityPresence": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "offline",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "online",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DIGITAL PLATFORM",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "facebook group",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "linkedin group",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "whatsapp group",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "telegram group ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "subreddit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "forum",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "dedicated platform",
         },
       ],
     },
     AffilateMarkting: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PROGRAM STRATEGY & SETUP ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AFFILIATES RECRUITMENT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MARKETING FUNNELS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LINK PROMOTION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "INDUSTRY",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Energy ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing and Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media and Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical and Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing ",
         },
       ],
 
-      " Affiliate Networks": [
+      "AffiliateNetworks": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ClickBank",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JVZoo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Warrior Plus",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ShareASale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AWIN",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CJ Affiliate ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rakuten Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Avangate Affiliate Network",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FlexOffers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Peerfly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LinkConnector",
         },
       ],
 
-      "Affiliate Networks/ Programs": [
+      "AffiliateNetworksPrograms": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ClickBank",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JVZoo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Warrior Plus",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ShareASale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AWIN",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CJ Affiliate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rakuten Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Avangate Affiliate Network",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FlexOffers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Peerfly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LinkConnector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Associates",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "eBay Partner Network",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ali Express",
         },
       ],
     },
     MobileAppMarketing: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "APP STORE OPTIMIZATION ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "APP PROMOTION",
         },
       ],
 
-      "Application Store": [
+      "ApplicationStore": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apple App Store",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Play",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Samsung Galaxy Apps",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Huawei App Store",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sony Apps",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Agriculture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animals & Pets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Art & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Cosmetics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Construction",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environmental",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events Planning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion & Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Financial Services & Business",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food & Beverage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Legal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manufacturing & Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Advertising ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Media & Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical & Pharmaceutical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Photography & Videography",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Public Sector",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Real Estate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Religion & Spirituality",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Services",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Technology",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Retail & Wholesale",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transportation & Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel & Tourism",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Writing & Publishing",
         },
       ],
     },
     MusicPromotion: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ORGANIC PROMOTION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PAID ADVERTISING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MUSIC STREAMING SERVICES ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PLAYLISTS AND PLACEMENTS",
         },
       ],
 
-      "Music Platform": [
+      "MusicPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SoundCloud",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iTunes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spotify",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iHeart Radio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pandora",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tidal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bandcamp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Deezer",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apple Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixcloud",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TikTok",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Audiomack",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Play Music",
         },
       ],
 
-      "Musical Genre": [
+      "MusicalGenre": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hip hop, Rap, R&B & Trap",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EDM",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rock",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jazz",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gospel & Soul",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Punk & Metal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Classical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blues",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Funk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Country & Folk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reggae",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Latin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "World",
         },
       ],
 
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "tv",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "radio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "digital streaming platforms",
         },
       ],
 
       Channel: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social media platforms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blogs and websites",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Digital streaming platforms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Emails",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Communities",
         },
       ],
     },
     DomainResearch: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Godaddy",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Google Domains",
       },
     ],
     LocalSeo: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Google My Business",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Local Citations And Directories",
       },
     ],
     VideoMarketing: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Consultation & Audience Research",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Seo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Promotion & Distribution",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Ad Campaigns",
       },
     ],
     WebAnalytics: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Setup",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tracking & Reporting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Optimization",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bug Fixes",
       },
     ],
   },
-  "Programing & Teach": {
+  "ProgramingTeach": {
     WebsiteBuildersCms: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Full Website Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Theme/Plugin Installation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bug Fixes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Backup, Cloning & Migration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance & Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Help/Consultation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Landing Page​",
         },
       ],
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Drupal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Joomla​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Squarespace",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vbulletin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wix",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Weebly Blogger",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sitebuilder",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Webflow​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Django",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Godaddy",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Umbraco",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Moodle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jekyll​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adobe Dreamweaver",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tilda",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Duda",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobirise",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clickfunnels",
         },
       ],
       Specialization: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blog",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Portfolio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non-Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wedding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcasting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Online Communities",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crowdfunding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wiki /Knowledge",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Saas​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Job Board",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Portal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Brochure",
         },
       ],
-      "Supported Plugin Types": [
+      "SupportedPluginTypes": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Payment​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forum",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customer Support",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shipping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Inventory",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Form",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Membership",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Map",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Faq",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gallery",
         },
       ],
     },
     Wordpress: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Backup, Cloning & Migration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bug Fixes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wp Installation & Setup",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Full Website Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Help/Consultation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Landing Page",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance & Seo",
         },
       ],
       Specialization: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blog",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Portfolio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Non-Profit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wedding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Podcasting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Online Communities",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Crowdfunding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wiki /Knowledge",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Saas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Job Board",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Portal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Brochure",
         },
       ],
-      "Supported Plugin Types": [
+      "SupportedPluginTypes": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Payment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forum",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customer Support",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shipping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Inventory",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Form",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Membership",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Map",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Faq",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gallery",
         },
       ],
-      "Integrating Plugins": [
+      "IntegratingPlugins": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adsense",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Akismet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "All In One SEO Pack",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Aweber",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clickbank",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Contact Form 7",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Getresponse",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gravity Forms",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linkedin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mailchimp",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opencart",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Paypal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vimeo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "W3 Total Cache",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Woocommerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wordpress SEO By Yoast",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Youtube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Elementor",
         },
       ],
     },
     GameDevelopment: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FULL GAME CREATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PROTOTYPING",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CUSTOMIZATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BUG FIXES",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BACKUP & MIGRATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONSULTATION",
         },
       ],
 
-      "Game Type": [
+      "GameType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GAME ENGINE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "unity",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "unreal engine",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gamemaker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "rpg maker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "amazon lumberyard",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "appgamekit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "buildbox",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cocoonjs",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "arkit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "blender",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cocos2d",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cryengine",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gamesalad",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gdevelop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "godot",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "libgdx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "marmalade sdk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "monogame",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "urho3d",
         },
       ],
 
-      "Platform Type": [
+      "PlatformType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PC",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Console",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Smart TV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Smart Watch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VR",
         },
       ],
 
       Genree: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Action",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adventure",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arcade",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Educational",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fighting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Idle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Platformers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Puzzle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Racing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Role Playing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shooter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Simulation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Strategy",
         },
       ],
 
       Plugins: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ads/Monetization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anti-Cheat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AR",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Machine Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Billing/In-app purchasing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Utilities",
         },
       ],
 
-      "Customization Type": [
+      "CustomizationType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Building Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Environment Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Items Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mod Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ad Integration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Levels Addition",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Reskinning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Modding",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scripting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Server Setup",
         },
       ],
 
-      "Game Name": [
+      "GameName": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "minecraft",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "roblox",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "gta",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "fortnite save the world",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "animal jam",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "terraria",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "second life",
         },
       ],
     },
     DevelopmentForStreamers: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Setup & Installation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Addons & Customization",
         },
       ],
       Software: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Obs Studio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Streamlabs Obs​",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Streamelements",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Xsplit",
         },
       ],
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Youtube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixer",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gosu Gamers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dlive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discomelee",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bigolive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hitbox",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagib TV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Smashcast",
         },
       ],
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Business",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Streamshare",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Webinar",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Movies",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertainment",
         },
       ],
     },
     OnlineCodingLessons: {
-      "Lesson Purpose": [
+      "LessonPurpose": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Programming Language",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website Development",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Databases",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game Development",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile Apps",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Testing & Automation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cloud Computing",
         },
       ],
 
-      "Development Techonlogy": [
+      "DevelopmentTechonlogy": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HTML",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CSS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bootstrap",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JavaScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TypeScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Angular",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "React",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby on Rails",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Node.js",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: ".NET",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C/C++",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C#",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lua",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PHP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Laravel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kotlin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Django",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Go",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scratch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rust",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Swift",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "React Native",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flutter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wordpress",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopify ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SQL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "NoSQL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Matlab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VB/VBA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unity",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arduino",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unreal Engine",
         },
       ],
@@ -8427,305 +8427,305 @@ export const ItOptions = {
     SupportIt: {
       Device: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Desktop/Laptop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Server/Hosting",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile",
         },
       ],
-      "Operating System": [
+      "OperatingSystem": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ios",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Osx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linux/ Unix",
         },
       ],
-      "Also Delivering": [
+      "AlsoDelivering": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Remote Connection Support",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Documentation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Package Deal",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Multiple Revisions",
         },
       ],
     },
     Chatbots: {
-      "Messaging Platform": [
+      "MessagingPlatform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Amazon Alexa",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cisko Spark",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Email",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook Messenger",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Assistant",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kakao Talk",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kik",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Line",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Microsoft",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Samsung Bixby",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Slack",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Skype",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SMS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CSteam",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TeamSpeak",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Telegram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Telephone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twillio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Viber",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VK",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WeChat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Whatsapp",
         },
       ],
 
-      "Bot Type": [
+      "BotType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "hopping/Ordering",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customer Service",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Health/Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lead Info Capture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Moderation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News/RSS/Blog",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Resume/CV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Schedule/Assistant",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media Engagement",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Survey",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Transport",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Trivia/Gaming",
         },
       ],
 
       "Development Technology": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beep Boop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Botkit",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Botsify",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bottr",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chatfuel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ChatterOn.io",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chattypeople",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dialogflow",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flow XO",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gupshup",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JAVA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manychat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Motion.ai",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "NodeJS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Octane.ai",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "QnA maker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Recast.ai",
         },
       ],
@@ -8733,153 +8733,153 @@ export const ItOptions = {
     DataAnalysisReports: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Modeling",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Visualization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vba/Macros",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Mining/Scraping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Help/Consultation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Machine Learning",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Entry/Cleaning",
         },
       ],
       Tool: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Spreadsheets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Tableau",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Power BI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Matlab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "R",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sas",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Spss",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Anylogic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stata",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Minitab",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arcgis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Qlikview",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Google Data Studio",
         },
       ],
     },
     ConvertFiles: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Convert To A Fillable Form",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Convert To An Ebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Convert To An Editable File",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Convert To Another File",
         },
       ],
-      "Convert From": [
+      "ConvertFrom": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pdf",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Doc,Docx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Xls,Xlsx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ppt,Pptx",
         },
       ],
-      "Convert To": [
+      "ConvertTo": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Doc,Docx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Xls,Xlsx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ppt,Pptx",
         },
       ],
@@ -8887,346 +8887,346 @@ export const ItOptions = {
     Databases: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Optimization & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Queries",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Help/Consultation",
         },
       ],
       "Databases Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Access",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ms Sql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mysql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Oracle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Postgres",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Couchbase",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mongo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Teradata",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sqlite",
         },
       ],
     },
     QaReview: {
-      "Service Type": [
+      "ServiceType": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SOFTWARE TESTING ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CODE REVIEW",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DESIGN REVIEW",
         },
       ],
 
-      "Testing Application": [
+      "TestingApplication": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Software",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile App",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Games",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Web Application",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Desktop Application",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "API",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Database",
         },
       ],
 
-      "Development Technology": [
+      "DevelopmentTechnology": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: ".NET",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Angular",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C/C++",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C#",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Delphi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Django",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flash",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flutter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Go",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HTML & CSS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JAVA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JavaScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kotlin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lua",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Node.js",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "NoSQL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Perl",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PHP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "React",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "React Native",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby on Rails",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scala",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopify Store",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SQL",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Swift",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TypeScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unity",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unreal Engine",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VB/VBA",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wordpress Website",
         },
       ],
 
       Device: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PC",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mac",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linux",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iPhone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iPad",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android Mobile Phone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android Tablet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows Phone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game Console",
         },
       ],
 
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Algorithmic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Clean Code",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Code Efficiency",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Structure",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Design Patterns",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Error Handling",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Unit Tests",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Version Control",
         },
 
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Caching",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cloud Based Solution",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Storage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dockers",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Memory Usage",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Load & Performance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Usability",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "System Architecture",
         },
       ],
@@ -9234,61 +9234,61 @@ export const ItOptions = {
     UserTesting: {
       "Testing Platform": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Website Testing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile Testing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Software Testing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game Testing",
         },
       ],
       Device: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pc",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mac",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linux",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Iphone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ipad",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android Mobile Phone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android Tablet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows Phone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows Tablet",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Game Console",
         },
       ],
@@ -9296,125 +9296,125 @@ export const ItOptions = {
     WebProgramming: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CUSTOM WEBSITE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WEB APPLICATION ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BUG FIXES",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "EMAIL TEMPLATE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONVERT PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SCRIPTING ",
         },
       ],
 
       "Programming Language": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ASP.NET",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HTML & CSS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Games",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "javaScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Perl",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PHP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ruby/RoR",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scala",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flash",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TypeScript",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C#",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Go",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kotlin",
         },
       ],
 
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cross Browser Compatibility",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD to HTML",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Localization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "W3C Validation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Design",
         },
       ],
@@ -9422,175 +9422,175 @@ export const ItOptions = {
     DesktopApplications: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Custom Application",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Application Improvements",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bug Fixes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Help/Consultation",
         },
       ],
       "Programming Language": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Python",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C&C++",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "C#/.Net",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vb",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lua",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Delphi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kotlin",
         },
       ],
       "Operating System": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Osx",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Linux/ Unix",
         },
       ],
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Planning & Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Setup & Installation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Development",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Debugging",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "W3c Validation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Localization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Review & Optimization",
         },
       ],
       Application: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Binance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Biymex",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Excel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Metatrader",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixer",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mysql",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ninjatrader",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nodejs",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Powershell",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Skype",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Slack",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Youtube",
         },
       ],
@@ -9598,169 +9598,169 @@ export const ItOptions = {
     ECommerceDevelopment: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FULL WEBSITE CREATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "THEME/PLUGIN INSTALLATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CUSTOMIZATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BUG FIXES",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BACKUP, CLONING & MIGRATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PERFORMANCE & SECURITY",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HELP/CONSULTATION",
         },
       ],
 
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Magento",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopify",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Opencart",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Prestashop",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Bigcommerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WooCommerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VTEX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Wix",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SiteBuilder",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Squarespace",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Webflow",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopware",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ecwid",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OsCommerce",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Big Cartel",
         },
       ],
 
       "Supported Plugin Types": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Payment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forum ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Customer Support",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shipping ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Inventory",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dropshipping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Membership",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Finance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Map",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FAQ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gallery ",
         },
       ],
@@ -9768,259 +9768,259 @@ export const ItOptions = {
     MobileApps: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CUSTOM APP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONVERT SITE TO APP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "APP IMPROVEMENTS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "BUG FIXES",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HELP/CONSULTATION",
         },
       ],
 
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iOS App",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Android App",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "iOS & Android (Dual)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Windows Mobile App",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mobile Web",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "APP TYPE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Native",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Hybrid",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PWA",
         },
       ],
 
       "Development Technology": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Flutter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "React Native",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Java",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kotlin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Swift",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Objective-C",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ionic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Xamarin",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PhoneGap",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Appcelerator Titanium",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "NativeScript",
         },
       ],
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Chat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Dating",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Delivery",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Streaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Music",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Restaurant",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shopping",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Taxi",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Booking",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Finance",
         },
 
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Networking",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Entertainment",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Health & Fitness",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Maps & Navigation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "IOT",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AR",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "News",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Trivia",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Travel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Productivity Tools",
         },
       ],
 
       Expertise: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cross Browser/Device Compatibility",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Localization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Performance",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Security",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Design",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Ads & Monetization",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Data Storage ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Firebase",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Analytics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Release Management",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Widgets",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instant App/ App Clip",
         },
       ],
@@ -10030,218 +10030,218 @@ export const ItOptions = {
     WhiteboardanimatedExplainers: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D ANIMATED EXPLAINERS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D ANIMATED EXPLAINERS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ISOMETRIC EXPLAINERS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WHITEBOARD EXPLAINERS",
         },
       ],
 
       "Explanier Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Illustration",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Infographics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Text Animation",
         },
       ],
 
       "Software Expertise": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "After Effects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Adobe Animate",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Character Animator",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Toon Boom Harmony",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Videoscribe",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Videomaker FX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vyond",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Powtoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animaker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Moho",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animatron",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Moovly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Explainidio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Renderforest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Toonly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animiz",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cinema4D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Autodesk Maya",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Blender",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3DsMax",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixamo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Poser",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MotionBuilder",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LightWave 3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Avatar Builder",
         },
       ],
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Education & Training",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Corporate Communication",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Marketing & Advertising",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ISOMETRIC DIMENSION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D",
         },
       ],
 
       "Tool Expertise": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Manual Creation",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "After Effects",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Videoscribe",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Doodly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Powtoon",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vyond",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animaker",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Moovly",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Rawshorts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Renderforest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Explainidio",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Easy Sketch Pro",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Toonly",
         },
       ],
@@ -10249,74 +10249,74 @@ export const ItOptions = {
     AnimatedGifs: {
       Purpose: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Social Media & Ads",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Emails & Newsletters",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stickers & Emojis",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Greeting Cards & Invitations",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ANIMATION STYLE",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Illustrated",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Footage Based",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Typographic",
         },
       ],
 
       "File Format": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "GIF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MP4",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SVG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CSS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WebP",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FLIF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "HTML5",
         },
       ],
@@ -10324,54 +10324,54 @@ export const ItOptions = {
     IntrosOutros: {
       "Intro/Outro Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube Channel Intro",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Call to Action Outro",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Title Sequence",
         },
       ],
 
       "Video File Format": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MP4",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MOV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AVI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FLV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "M4V",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SWF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WMV",
         },
       ],
@@ -10379,74 +10379,74 @@ export const ItOptions = {
     ShortVideoAds: {
       Platform: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Instagram",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Snapchat",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TikTok",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitter",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "LinkedIn",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pinterest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Generic",
         },
       ],
 
       "Video Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animated",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Live Action",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VIDEO ORIENTATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Vertical (9:16)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Horizontal (16:9)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Square (1:1)",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Any",
         },
       ],
@@ -10454,38 +10454,38 @@ export const ItOptions = {
     CharacterAnimation: {
       "Animation Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D",
         },
       ],
 
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Advertising & Marketing",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Film & Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion",
         },
       ],
@@ -10493,72 +10493,72 @@ export const ItOptions = {
     dProductAnimation: {
       Industry: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Medical",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Architecture",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Film & Video",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Science",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food",
         },
       ],
       Environment: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Realistic",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Neutral",
         },
       ],
 
       "file format": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MP4",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MOV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FBX",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Collada",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "OBJ",
         },
       ],
@@ -10566,37 +10566,37 @@ export const ItOptions = {
     LyricMusicVideos: {
       "Service Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MUSIC VISUALIZATION",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "DANCE VIDEOS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "NARRATIVE-BASED VIDEOS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PERFORMANCE VIDEOS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "CONCEPTUAL VIDEOS",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "ANIME MUSIC VIDEOS",
         },
       ],
       "Video Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Animated",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Live Action",
         },
       ],
@@ -10604,37 +10604,37 @@ export const ItOptions = {
     AnimationForKids: {
       "Animation Style": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "2D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "3D",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stop Motion",
         },
       ],
       "Video Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Nursery Rhymes & Songs",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Educational",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Stories",
         },
       ],
@@ -10642,57 +10642,57 @@ export const ItOptions = {
     AnimationForStreamers: {
       Column1: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "STREAMING PLATFORM",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Twitch",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "YouTube",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Discord",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mixer",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Facebook",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Periscope",
         },
       ],
       "Asset Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Not Defined",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Alerts & Notifications",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Scene Transitions",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Panels & Overlays",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Emotes",
         },
       ],
@@ -10700,41 +10700,41 @@ export const ItOptions = {
     LiveActionExplainers: {
       Setting: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Seller Provides Location",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Client Provides Location",
         },
       ],
       "Video File format": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "AVI",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "FLV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MOV",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MP4",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "MPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "SWF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "WMV",
         },
       ],
@@ -10742,73 +10742,73 @@ export const ItOptions = {
     UnboxingVideos: {
       "vedio type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "technical  review",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "cinematic overveiw",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "stop motion",
         },
       ],
       "product Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Arts & Crafts",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Automotive",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Personal Care ",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Electronics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fashion",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Gaming",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Health",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "High-End Accessories",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Home & Garden",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Luggage & Bags",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mystery Boxes",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pet Supply",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Outdoor",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Toys",
         },
       ],
@@ -10816,64 +10816,64 @@ export const ItOptions = {
     DroneVideography: {
       "Media type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "video& photo",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "VR",
         },
       ],
       Themes: [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "City",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Mountains",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beach & Water",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Forest",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Roads",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Buildings",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Desert",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Fields",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Interior",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Events",
         },
       ],
 
       "Drone Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Cameradrone",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "racing & FPV Drone",
         },
       ],
@@ -10881,525 +10881,525 @@ export const ItOptions = {
     productPhotography: {
       "file Format": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "JPG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "TIFF",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PNG",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "PSD",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "RAW",
         },
       ],
       "Photo Setting": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "white Background",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "indoor lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "outdoor lifestyle",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "360 degree",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "black background",
         },
       ],
 
       "Product Type": [
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Beauty & Health",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Apparel",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Electronics",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Home & Kitchen",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Jewelry",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Food",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids & Toys",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Kids & Toys",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Pet Supplies",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Sports & Outdoors",
         },
         {
-          id: nanoid(),
+          id: uuid.v4(),
           title: "Shoes",
         },
       ],
     },
     AppWebsitePreviews: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Website",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mobile And Application",
       },
     ],
     ElearingVideoProduction: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Production",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Narrated Presentation",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Animated",
       },
     ],
     LottieWebsiteAnimation: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "JSON (Lottie)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "SVG",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "GIF",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "CSS",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HTML",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Java Script",
       },
     ],
     ScreencastingVideos: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Desktop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mobile",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tablet",
       },
     ],
     SlideShowVideos: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Corporate Presentations",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "eLearning",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Family & Travel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sports & Games",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weddings & Events",
       },
     ],
     SubtitleCaptions: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Albanian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Arabic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bengali",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bosnian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Catalan",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chinese (Simplified)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chinese (Traditional)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Croatian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Czech",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Danish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dutch",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "English",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Estonian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Filipino",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Finnish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Georgian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "German",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Greek",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Haitian Creole",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hawaiian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hebrew",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hindi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hungarian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Icelandic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Indonesian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Irish Gaelic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Italian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jamaican Patois",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Japanese",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kazakh",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Korean",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latvian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lithuanian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Luxembourgish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Macedonian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Malay",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Maltese",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Marathi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nepali",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nigerian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Norwegian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Oriya",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Persian/Farsi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Polish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Portuguese",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Punjabi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Romanian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Russian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Serbian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Slovak",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Slovenian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Somali",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Spanish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Swahili",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Swedish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tagalog",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tamil",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Thai",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Turkish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ukrainian",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Urdu",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vietnamese",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Welsh",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Yiddish",
       },
     ],
     VideoEditing: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ads & Social Media Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Family & Travel Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gaming Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Explainer Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Corporate Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Music Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wedding & Event Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fiction Films",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Showreels",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "eLearning",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "VR & 360",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Movie Trailers",
       },
     ],
     VisualEffect: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rotoscoping & Keying",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Color Grading",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Match Moving",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Compositing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cleanups",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beauty Retouching",
       },
     ],

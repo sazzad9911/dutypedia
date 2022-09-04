@@ -2,329 +2,328 @@ import uuid from 'react-native-uuid';
 import {BusinessServiceIcon} from '../assets/icon'
 
 export const BusinessOptions = {
-  ICON:BusinessServiceIcon,
   PROJECTMANAGEMENT: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Graphics & Design Projects",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Digital Marketing Projects",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Writing & Translation Projects",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Video & Animation Projects",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Music & Audio Projects",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Programming & Tech Projects",
     },
   ],
   BRANDINGSERVICES: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Startup",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Micro Business",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Small Business",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Medium Business",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Large Business",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Non Profit",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Personal",
     },
   ],
   CAREERCOUNSELING: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Search & Apply",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Interview Preparation",
     },
   ],
   LEADGENERATION: [
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Agriculture",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Animals & Pets",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Art & Design",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Beauty & Cosmetics",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Construction",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Education",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Energy & Utilities",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Environmental",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Events Planning",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Fashion & Apparel",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Financial Services & Business",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Food & Beverage",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Gaming",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Kids",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Legal",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Lifestyle",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Manufacturing & Storage",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Marketing & Advertising",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Media & Entertainment",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Medical & Pharmaceutical",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Non Profit",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Photography & Videography",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Public Sector",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Religion & Spirituality",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Real Estate",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Retail & Wholesale",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Science",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Services",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Sports & Fitness",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Technology",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Transportation & Automotive",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Travel & Tourism",
     },
     {
-      id: uuid(),
+      id: uuid.v4(),
       title: "Writing & Publishing",
     },
   ],
   BusinessConsulting: {
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arts & Culture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Auto & Transportation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business, Finance & Law",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Entertainment & Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Family & Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Food & Beverage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Health & Medical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Internet & Technology",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "News & Politics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Ecommerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Science",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Recreation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Hospitality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "General",
       },
     ],
     Purpose: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Company Launch",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Digital Transformation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Go-to-market",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Organizational Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Profit/loss",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Scalability",
       },
     ],
@@ -332,1521 +331,1521 @@ export const BusinessOptions = {
   FinancialConsulting: {
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arts & Culture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Auto & Transportation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business, Finance & Law",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Entertainment & Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Family & Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Food & Beverage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Health & Medical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Internet & Technology",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "News & Politics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Ecommerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Science",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Recreation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Hospitality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "General",
       },
     ],
     Purpose: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Company Launch",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Digital Transformation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Go-to-market",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Organizational Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Profit/loss",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Scalability",
       },
     ],
   },
   BusinessPlans: {
-    "Business Type": [
+    "BusinessType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Startup",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Micro Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Small Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medium Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Large Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Personal",
       },
     ],
-    "Plan Format": [
+    "PlanFormat": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Excel Spreadsheet",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Google Sheets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Powerpoint Presentation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Google Slides",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Word Doc",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Google Docs",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pdf",
       },
     ],
-    "Plan Purpose": [
+    "PlanPurpose": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Investors Roadshow",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Loan Approval",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Partnerships / Joint Ventures",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Personal Use",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Immigration",
       },
     ],
   },
   CustomerCare: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Customer Success",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Planning & Setup",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Consulting",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Customer Support",
       },
     ],
     Timezone: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Utc Daytime",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Utc Nighttime",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "24hour",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Go-to-market",
       },
     ],
-    "Support Software": [
+    "SupportSoftware": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Zoho Desk",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Freshdesk",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Zendesk",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Salesforce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Liveagent",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Intercom",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Activecampaign",
       },
     ],
-    "Knowledgebase Software": [
+    "KnowledgebaseSoftware": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Document 360",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Confluence",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Freshdesk",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Freshservice",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Bitrix24",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Caspio",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Liveagent",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Tribe",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Zoho",
       },
     ],
-    "Social Media Platform": [
+    "SocialMediaPlatform": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Facebook",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Twitter",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Instagram",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Linkedin",
       },
     ],
-    "Service Type": [
+    "ServiceType_2": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Technical Support",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non-Technical Support",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Agriculture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Animals & Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Art & Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty & Cosmetics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Energy & Utilities",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Events Planning",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion & Apparel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services & Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Food & Beverage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Kids",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing & Advertising",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Media & Entertainment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medical & Pharmaceutical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Photography & Videography",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Religion & Spirituality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Science",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Technology",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotive",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Tourism",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Writing & Publishing",
       },
     ],
   },
   DataEntry: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cleaning",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Insert Data",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fix Format",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Copy data",
       },
     ],
     Tool: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Excel Spreadsheet",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Google Sheets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "other Spreadsheet",
       },
     ],
   },
   VIRTUALASSISTANT: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Research",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "File Conversion",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Administration",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Skip Tracing",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Call Center & Calling",
       },
     ],
     Purpose: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "personal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "business",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "agriculture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "animals&pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Architecture & Interior Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Audio Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty & Cosmetics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Biotech",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Services & Consulting",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Crypto & Blockchain",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cyber Security",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Data Analytics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "E-Commerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Energy",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Engineering",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Events Planning",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion & Apparel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Food & Beverage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Government & Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Hardware & Electronics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing & Advertising",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medical & Pharmaceutical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Photography",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Religion & Spirituality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Software",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Telecommunications",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotive",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Tourism",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Video Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Wellness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Writing & Publishing",
       },
     ],
   },
   HrConsulting: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Organizational Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Talent Acquisition & Recruitment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Performance Management",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Employee Learning & Development",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Compensation & Benefits",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Hr Information Systems",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Agriculture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Animals & Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Art & Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty & Cosmetics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Energy & Utilities",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Events Planning",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion & Apparel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services & Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Food & Beverage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Kids",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing & Advertising",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Media & Entertainment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medical & Pharmaceutical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Photography & Videography",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Religion & Spirituality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Science",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Technology",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotive",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Tourism",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Writing & Publishing",
       },
     ],
   },
   ECommerceManagement: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "PRODUCT RESEARCH",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "STORE MANAGEMENT",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "PRODUCT UPLOAD",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arts",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Crypto & Blockchain",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cyber Security",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "E-Commerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services/ Banking",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Games",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Government& Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Health & Wellness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Insurance",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Kids and Family ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Media & Entertainment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Music",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "News",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non-Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Society and Culturer",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports and Recreation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Technology & Internet",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotivet",
       },
     ],
     Platform: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Alibaba",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Ali Express ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Amazon",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Big Cartel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Bigcommerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Daraz",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: " eBay",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Ecwid",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Etsy",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Facebook Shop",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "JD",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Magento",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Opencart",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "OsCommerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Prestashop",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Shopify",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Shopware",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "SiteBuilder",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Squarespace",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Taobao",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Volusion",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "VTEX",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Webflow",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Zendesk",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Wix",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "WooCommerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Walmart",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Wordpress",
       },
     ],
   },
   LegalConsulting: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal Research",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal Documents & Contracts",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arbitration & Mediation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "General Legal Advice",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Applications & Registrations",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal Disputes",
       },
     ],
-    "Field Of Law": [
+    "FieldOfLaw": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Admiralty (Maritime) ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Finance",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business (Corporate)",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Civil Rights ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Entertainment ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Family",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Health & Medical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Immigration",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Intellectual Property",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "International",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Labor (Employment)",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Military",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Personal Injury",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Property",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Commercial",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Privacy",
       },
     ],
-    "Document Type": [
+    "DocumentType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Demand Letters",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Declarations / Affidavits",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lawyer Confirmation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal Opinion",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Letter Of Appeal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal Dispute / Claims Letter",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Dmca Claims",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Terms Of Service",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Privacy Policy",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Esop Plan",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sexual",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Harassment Policy",
       },
     ],
-    "Agreement Type": [
+    "AgreementType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Nda",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Evaluation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Leases",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Partnership Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Service Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "License Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Procurement Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Founders Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Share Purchase Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Employment Agreement",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Stock Option Agreement",
       },
     ],
   },
 
   FinancialConsulting: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "ONLINE TRADING LESSONS",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "FINANCIAL FORECASTING & MODELING",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "PERSONAL FINANCE & WEALTH MANAGEMENT",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "TAX CONSULTING",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "ACCOUNTING & BOOKKEEPING",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "ANALYSIS, VALUATION & OPTIMIZATION",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Agriculture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Animals & Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Architecture & Interior Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Art & Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Audio Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty & Cosmetics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Biotech",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Services & Consulting",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Crypto & Blockchain",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cyber Security ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Data Analytics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "E-Commerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Energy",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Engineering",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Events Planning ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion & Apparel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Government & Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Hardware & Electronics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing & Advertising",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Media & Entertainment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medical & Pharmaceutical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Music",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Photography",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Religion & Spirituality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Software",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Telecommunications",
       },
 
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotive",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Tourism",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Video Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Wellness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Writing & Publishing",
       },
     ],
   },
   SupplyChainManagement: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Procurement & Vendor Management",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Logistics",
       },
     ],
-    "Product Type": [
+    "ProductType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Raw Material",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Product",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Service",
       },
     ],
@@ -1854,361 +1853,361 @@ export const BusinessOptions = {
   GameConceptDesign: {
     Genre: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Action",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Adventure",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Arcade",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fighting",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Idle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Music",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Platformers",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Puzzle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Racing",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Role Playing",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Shooter",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Simulation",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Strategy",
       },
     ],
-    "Game Type": [
+    "GameType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Video Game",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Tabletop Game",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Escape Room",
       },
     ],
-    "Platform Type": [
+    "PlatformType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pc",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Console",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Mobile",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Smart TV",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Smart Watch",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "VR",
       },
     ],
-    "Monetization Model": [
+    "MonetizationModel": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "F2P",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Premium",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Subscription",
       },
     ],
     Purpose: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Serious",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Recreational",
       },
     ],
   },
   PRESENTATIONS: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Powerpoint",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Google Slides",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Prezi",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Keynote",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Canva",
       },
     ],
 
-    "Presentation Type": [
+    "PresentationType": [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Investor",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Training",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Pitch",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sales",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Conference",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Proposal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Research / Analysis ",
       },
     ],
     Industry: [
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Agriculture",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Animals & Pets",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Architecture & Interior Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Art & Design",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Audio Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Beauty & Cosmetics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Biotech",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Business Services & Consulting",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Construction",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Crypto & Blockchain",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Cyber Security ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Data Analytics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "E-Commerce",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Education",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Energy",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Engineering",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Environmental ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Events Planning ",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Fashion & Apparel",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Financial Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Gaming",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Government & Public Sector",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Hardware & Electronics",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Legal",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Lifestyle",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Manufacturing & Storage",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Marketing & Advertising",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Media & Entertainment",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Medical & Pharmaceutical",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Music",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Non Profit",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Photography",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Real Estate",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Religion & Spirituality",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Retail & Wholesale",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Software",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Sports & Fitness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Telecommunications",
       },
 
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Transportation & Automotive",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Travel & Tourism",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Video Services",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Wellness",
       },
       {
-        id: uuid(),
+        id: uuid.v4(),
         title: "Writing & Publishing",
       },
     ],

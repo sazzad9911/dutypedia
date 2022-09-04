@@ -1,15 +1,33 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text,Keyboard } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor, secondaryColor } from "./../assets/colors";
 import { Badge } from "react-native-paper";
+import  Animated,{FadeIn}  from 'react-native-reanimated';
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
   const [route, setRoute] = React.useState(props.state.index);
+  const [keyboardStatus, setKeyboardStatus] = React.useState(false);
 
+  React.useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+  if(keyboardStatus){
+    return(<></>)
+  }
   return (
-    <View style={styles.box}>
+    <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Home");
@@ -91,7 +109,7 @@ const BottomBar = (props) => {
         )}
         <Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -16,10 +16,11 @@ const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
   const [Visible, setVisible] = React.useState(false);
   const data = route.params.data;
+  const image=route.params.image;
   return (
     <ScrollView>
       <ImageBackground
-        source={builder}
+        source={image}
         style={{
           height: 250,
           marginBottom: 5,
@@ -62,6 +63,7 @@ const SubCategories = ({ navigation, route }) => {
                 navigation.navigate("SubCategories", {
                   title: data.title,
                   data: data.data,
+                  image:data.image
                 });
               } else {
                 navigation.navigate("TableData", {

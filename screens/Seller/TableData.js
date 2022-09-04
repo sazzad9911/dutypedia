@@ -1,5 +1,7 @@
 import React from "react";
-import { ScrollView, Dimensions, Text, View,Platform } from "react-native";
+import { ScrollView, Dimensions, Text, View,Platform,
+  KeyboardAvoidingView,
+ } from "react-native";
 import { DataTable } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
 import { primaryColor } from "./../../assets/colors";
@@ -20,7 +22,8 @@ const TableData = (props) => {
     setPage(0);
   }, [itemsPerPage]);
   return (
-    <View style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView>
       {
         Array.isArray(list)?(
@@ -41,7 +44,7 @@ const TableData = (props) => {
         }}
         title="Save"
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -73,7 +76,7 @@ const Table = ({ navigation, route, title,data }) => {
             <Text
               style={{
                 fontFamily: "Poppins-Medium",
-                fontSize: 15,
+                fontSize: Platform.OS=='ios'?16:15,
               }}
             >
               {title}
@@ -89,7 +92,7 @@ const Table = ({ navigation, route, title,data }) => {
             <Text
               style={{
                 fontFamily: "Poppins-Medium",
-                fontSize: 15,
+                fontSize: Platform.OS=='ios'?16:15,
                 textAlign: "center",
               }}
             >
@@ -129,7 +132,7 @@ const Rows = ({title,data}) => {
       <Text
         style={{
           flex: 3,
-          fontSize: 14,
+          fontSize: Platform.OS=='ios'?16:14 ,
           fontFamily: "Poppins-Light",
         }}
       >
@@ -139,12 +142,16 @@ const Rows = ({title,data}) => {
         <View style={{
           borderWidth:Platform.OS=='ios' ?1:0,
           borderColor:'#e5e5e5',
-          height:20,
-          width:20,
+          height:35,
+          width:35,
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          borderRadius:20
         }}>
-          <Checkbox
+          <Checkbox style={{
+            backgroundColor:'red',
+            transform: [{ scaleX: Platform.OS=='ios'?.4:1 }, { scaleY: Platform.OS=='ios'?.4:1}]
+          }}
             status={checked ? "checked" : "unchecked"}
             onPress={() => {
               setChecked(!checked);

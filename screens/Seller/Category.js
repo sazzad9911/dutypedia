@@ -30,7 +30,7 @@ const Category = (props) => {
       title: "Business Services",
       icon: BusinessServiceIcon,
       color: "blue",
-    },
+    }, 
     {
       title: "Cooking Services",
       icon: CookerIcon,
@@ -91,6 +91,7 @@ const Category = (props) => {
               props.navigation.navigate("SubCategories", {
                 title: data.title,
                 data: data.data,
+                image:data.image
               });
             } else {
               props.navigation.navigate("TableData", {

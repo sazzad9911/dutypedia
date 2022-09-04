@@ -1,642 +1,642 @@
-import { nanoid } from "nanoid";
+import uuid from  'react-native-uuid';
 
 export const ElectricianOptions = {
   Ac: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clogged Air Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Blower",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Circuit Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clogged Ac Drain",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Dirty Outside AC Unit",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Refrigerant Recharge",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Expansion Valve",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Capacitor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Freon Leak",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Coil Leak",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan Motor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Compressor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuse",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condensate Pump",
     },
   ],
   Bicycle: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fram And Fork For Visible Damage",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Adjust The Gears",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tyres Checked For Wear And Damge",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Inflate Tyres To Correct Pressure",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Nuts And Bolt Tightened And Correct Torque Setting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Adjust Headset",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Break/Break Pad",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lubricate Brakes",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lubricate Chain And Casstte",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Chain For Wear",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Chainset And Change Ring For Wear",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clean Chain And Re-lubricate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clean Cassette And Re-lubricate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Wheel Are True And Adjust",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Bottom Bracket For Movement",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Strip Down To Frame And Forks/Clean And Then Rebuild",
     },
   ],
   Car: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Oil And Oil Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Air Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Spark Plugs",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pollen Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuel Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check And All Top Up All Under Bonnet Fluid Levels",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tyre Condition And Pressure",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condition Of Brake Components",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Steering Components",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Forte Treatments",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuel Lines",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Horn/Service",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Windscreen Washers And Wipers",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Battery/Service",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Exhaust System",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Transfer Box And Axile Oil",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Gear Box Oil Level",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Wheel Bearing",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Cv Joints And Gaiters",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Suspenson And Components",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Seatbelts",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Road Test Vehicle",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Air Con Cleaner And Aircon Cleaner",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tracking/Wheel Alignment",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Diagnostic Plug In",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Wheel Balancing",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Puncture Repair",
     },
   ],
   Camera: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "DSLR",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Digital",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Film Camera",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Shutter Jam/Other",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "View Finder Malfunction",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Light Seal Replacement",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Cleaning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Focus Ring",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Aperture",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Battery Cap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leather",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Flash Problem",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
   ],
   Refrigerator: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Control Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Evaporator",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Ice Maker",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Freezer",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Sealed System",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Compressor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condenser Coil Cleaning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Water Dispenser",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fridge Door",
     },
   ],
   Mobile: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Crack Display",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hardware Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Speaker/Voice Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Water Damage",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Touch Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Camera Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Charging Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Battery Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Country Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Sim Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Icloud Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Password Recovery",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Flash",
     },
   ],
   Pc: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Laptop/Macbook",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pc/Mac",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hard Disc/Ram",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Virus/Security",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Monitor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Keyboard",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Graphics Card",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Power Supply",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Data Recovery/Backup",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software/Opareting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Printer",
     },
   ],
   Printer: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Check-Up",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Diagnose",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "No Display Power",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Unexpect Shutdown",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Time And Date Problem",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Slow Boot",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Color Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Scanner",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Set Up",
     },
   ],
   Bike: {
-    "Tyres & Wheel": [
+    "Tyres_Wheel": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Puncture Repair",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tyre Fitting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wheel Bearing Fitting/Re-Grease/Axle Change",
       },
     ],
     Gear: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gear Adjustment",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gear Cable Fitting And Adjust",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gear Service Front & Back Gear,Existing Cable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chain Fitting And Gear Adjustment",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Front Gear Mechanism Fitting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rear Gear Mechanism Fitting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chain Wheel Or Casset Fitting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bottom Bracket Fitting And Adjustment",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Brake Service",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hydraulic Disk Brak Fluid Change",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Break Disc Fit",
       },
     ],
     Genaral: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pedal Fit",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Saddle Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Handle Bar Grips Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Handlebar Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Stem Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mudguard Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pannier Rack Fit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Headset Service",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fork Fitting",
       },
     ],
-    "Safety Check": [
+    "SafetyCheck": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tyre Check,Tyre Pressure Check & Visual Assessment",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pre Ride-Service",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gear, Break, Headset, Tyre, Pressure,Safety And Bolt Check",
       },
     ],

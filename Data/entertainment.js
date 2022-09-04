@@ -1,316 +1,315 @@
-import { nanoid } from "nanoid";
+import uuid from "uuid";
 
 export const EntertainmentOptions = {
   VideographerServices: {
     Services: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Editing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Printing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Coloring",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trailer",
       },
     ],
-    "Video shoot": [
+    "VideoShoot": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video -Story  Or Cinematography(Full_HD)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Indoor Shoot ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Outdoor Shoot",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full body video",
       },
     ],
   },
-
-  "photographer services": {
+  "photographer_services": {
     Sessions: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Editing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Printing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Coloring",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Matting and Framing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Advertising Skills",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Concierge Service",
       },
     ],
 
-    "photography style": [
+    "photography_style": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Abstract PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Adventure PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "ASTROPHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "BLACK AND WHITE PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "BUSINESS PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "CANDID PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "CITYSCAPE PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "COMMERCIAL PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "DOCUMENTARY PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "EDITORIAL PHOTOGRAPHY ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: " FASHION PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "FAMILY PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "FILM PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HOLIDAY PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Indoor PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Outdoor PHOTOGRAPHY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wedding  PHOTOGRAPHY",
       },
     ],
   },
   picnic: {
-    "all city picnic spot": [
+    "all_city_picnic_spot": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "every country picnic spot",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "breakfast",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "lunch",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "evening snacks",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "picnic spot every rides",
       },
     ],
 
     Vehicles: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "hiace",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "bus",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "mini bus",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "private car",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "train",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "airlines",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "launch",
       },
     ],
   },
   Birthday: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Balloon Decoration",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Theme Based Decoration",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Magician  & Musician ",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "DJ's & Sound System & Lighting ",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Backdrop, Lighting & Drapes",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Photography",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Video -Story  Or Cinematography ( Full _HD )",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: " Birthday cake",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Birthday Cupcake Table Cover",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Birthday Cupcake Glass & Etc.",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Goody Bags and Favor Sets",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Noisemakers",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Live Snacks",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Ice-cream",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Chocolate fountain ,Candy floss",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Coffee",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pop-corn & Candy floss",
     },
   ],
   wedding: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Photography",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Video -story  or Cinematography ( full _HD )",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Wedding stage decor & Flower Art's",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hall Ceiling & table decor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Premium Wedding Planning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lighting & Sound System",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Band, DJ's & Kawali",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Horse cart , Shahi Palki",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Projection & Live -Telecast",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Live Snacks",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "lunch/dinner all items",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: " Shahi Palki",
     },
   ],

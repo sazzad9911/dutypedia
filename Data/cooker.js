@@ -1,56 +1,56 @@
-import { nanoid } from "nanoid";
+import uuid from  'react-native-uuid';
 
 export const CookerOptions = {
   eventitems: {
     birthday: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cake",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Biryani",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Noodles",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Payasam",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "pudding",
       },
     ],
-    "Picnic & Anniversary": [
+    "Picnic_Anniversary": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Polao",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Khicuri",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "biriyani",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gchicken roast",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "beef curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "chicken fry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Egg fry",
       },
     ],
@@ -59,468 +59,468 @@ export const CookerOptions = {
   hotelrestaurentitems: {
     Restaurant: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Normal Restaurant",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sami Vip Restaurent",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vip Restaurent",
       },
     ],
     Hotel: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Normal Hotel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "3 Star Hotel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "4 Star Hotel ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "5 Star Hotel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "7 Star Hotel",
       },
     ],
     breakfast: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Two Fresh Eggs any style",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sausage",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Fries",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Toast- 2 Slices",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Parata- 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chapatti- 2 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhaji",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Aloo dum",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sujir Halwa",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bread Basket- 6 Rolls of Bread",
       },
     ],
     Beverages: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Variety of Juice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Coffee",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tea",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hot Chocolate",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Milk",
       },
     ],
     Snacks: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kids Special Noodles",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Samosa 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Spring roll 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Butterfly Prawn 4 Pcs with dip",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Immigration",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable Singara 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kabab Roll with choice of beef or chicken",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Nugget 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chen Kiev 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Finger 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Fries",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Cutlet 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Cutlet 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn on Toast 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mini Chicken Shashlic 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jhal muri / Chanachur 3 Persons",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Toast 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keema Chop 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shammi Kabab 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pantarash 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Finger- served with French Fries and Mayonnaise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhaja Pora- vegetable pakora /beguni /peyaju 16 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cheese Singara Platter 10 Pcs",
       },
     ],
   },
-  "Dinner & Lunch": {
-    "Charcoal Choice": [
+  "Dinner_Lunch": {
+    "CharcoalChoice": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "CBBQ Chicken 1 Pc",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Sheek Kabab 1 Pc",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bangladeshi Delicacies(Serves 3 /4 Persons)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Korma",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Butter Chicken",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shorshe Chicken",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Jhal Frazee",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Korma",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Handi Kabab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Acchar Beef",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shammi Kabab 4 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Jalli Kabab 4 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mutton Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Curry 4pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Jhol Torkari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn Do piazza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chingri Macher Malaikari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhorta (Choose any – Begun Bhorta, Alu Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal Bhorta, Egg Bhorta, Chingri Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shutki Bhorta, Mach Bhorta, Sheem Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Barbati Bhorta, Patal Bhorta, Tomato Bhorta)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mixed Vegetable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seasonal Vegetable Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chinese Style Vegetable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal Chorchori",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seasonal Salad",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rice One Person",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dessert",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gurer Payesh",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Brownie",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Caramel Pudding (serves 6)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Caramel Pudding (serves 12)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beverage",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tea",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Coffee",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soft Drinks – Litre Bottle",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soft Drinks – 250 ml can",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bottled Mineral Water",
       },
     ],
     Soups: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Corn Soup",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Thai Soup",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken/ Beef Noodle Soup",
       },
     ],
     Sandwich: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Homemade Chicken Sandwich 2 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Club Sandwich with Chicken & Vegetable",
       },
     ],
     Pizzas: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "DChef’s special Beef Pizza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chef’s Special Chicken Pizza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chef’s Special Shrimp Pizza",
       },
     ],
     Pasta: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Special Chicken Pasta",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Special Beef pasta",
       },
     ],
-    "set menu": [
+    "setmenu": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "MAINS food",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "rice bowl,vegetable curry,chicken fry & curry,1 soft drink",
       },
     ],
     Desserts: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "jorda",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rosogolla",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "ice cream",
       },
     ],
@@ -528,267 +528,267 @@ export const CookerOptions = {
   WeddingItems: {
     Wedding: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ring Ceremony",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mehndi Ceremony",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sangeet Ceremony ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wedding Reception",
       },
     ],
-    "Rice Items": [
+    "RiceItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Basanti Pulao",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "White Rice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fried Rice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable Rice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Biryani",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Khichuri",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kacchi",
       },
     ],
-    "Curry Items": [
+    "CurryItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Aloor Dom",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chilli Phulkopi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chhanar Daalna Or Cottage Cheese Kofta Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chholar Dal With Coconut And Beguni",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Echorer Dalna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mutton Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Curry",
       },
     ],
-    "Cutlet Items": [
+    "CutletItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Koraishutir Kochuri",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kabiraji Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Potato Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mutton Cutlet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Cutlet",
       },
     ],
-    "Kebab Items": [
+    "KebabItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reshmi Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mutton Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mushroom Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hara Masala Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shami Kebab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rajma Kebab",
       },
     ],
-    "Fish Items": [
+    "FishItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ilish Paturi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Doi Rui",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Maacher Chop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chingri Malaikari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Any Fish Fry",
       },
     ],
-    "Chicken Items": [
+    "ChickenItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Fry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Chaap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Berbecue Chicken",
       },
     ],
-    "Beef Items": [
+    "BeefItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Brisket",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Casserole",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Steaks",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Stew",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Stroganoff",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Corned Beef",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Meatballs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Meatloaf",
       },
     ],
-    "Dessert Items": [
+    "DessertItems": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jorda",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Borhani",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rosogolla",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mishti Doi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kheer Kodom",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Langcha",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chennar Jilipi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ice Cream",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soft Drinks",
       },
     ],
