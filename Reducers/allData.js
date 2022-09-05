@@ -1,7 +1,8 @@
 import builder_1 from "../assets/Images/builder_1.jpg";
 import uuid from "react-native-uuid";
 import { BuilderOptions } from "./../Data/builder";
-import { BuilderIcon, 
+import {
+  BuilderIcon,
   BusinessServiceIcon,
   CookerIcon,
   ElectricIcon,
@@ -9,22 +10,29 @@ import { BuilderIcon,
   HouseKeeperIcon,
   ItIcon,
   MusicIcon,
-  PainterIcon
- } from "../assets/icon";
+  PainterIcon,
+  OnlineTutionIcon,
+  SaloonIcon,
+  RentIcon
+} from "../assets/icon";
 import business from "../assets/Images/business.webp";
 import { BusinessOptions } from "./../Data/business";
-import { CookerOptions } from './../Data/cooker';
-import { ElectricianOptions } from './../Data/electrician';
-import electrician from "../assets/Images/electrician.webp"
-import entertainment from '../assets/Images/entertainment.webp'
-import { EntertainmentOptions } from './../Data/entertainment';
-import MainHouseKeeper from './../Data/MainHouseKeeper';
-import it from '../assets/Images/it.webp'
-import { ItOptions } from './../Data/it';
-import musicaudio from '../assets/Images/musicaudio.webp'
-import { MusicAudioOptions } from './../Data/musicaudio';
-import MainPainter from './../Data/MainPainter';
-
+import { CookerOptions } from "./../Data/cooker";
+import { ElectricianOptions } from "./../Data/electrician";
+import electrician from "../assets/Images/electrician.webp";
+import entertainment from "../assets/Images/entertainment.webp";
+import { EntertainmentOptions } from "./../Data/entertainment";
+import MainHouseKeeper from "./../Data/MainHouseKeeper";
+import it from "../assets/Images/it.webp";
+import { ItOptions } from "./../Data/it";
+import musicaudio from "../assets/Images/musicaudio.webp";
+import { MusicAudioOptions } from "./../Data/musicaudio";
+import MainPainter from "./../Data/MainPainter";
+import { OnlineTutionOptions } from "./../Data/onlinetution";
+import onlinetution from "../assets/Images/onlinetution.webp";
+import parlour from "../assets/Images/parlour.webp"
+import { ParlorOptions } from './../Data/parlor';
+import MainLabor from './../Data/MainLabor';
 
 
 const initialState = [
@@ -656,9 +664,9 @@ const initialState = [
     image: entertainment,
     list: [
       {
-        title:'House Keeper',
-        data:MainHouseKeeper
-      }
+        title: "House Keeper",
+        data: MainHouseKeeper,
+      },
     ],
   },
   {
@@ -676,23 +684,23 @@ const initialState = [
             list: [
               {
                 title: "Category",
-                data:ItOptions.Data.Databases.Category
+                data: ItOptions.Data.Databases.Category,
               },
               {
                 title: "Database Type",
-                data:ItOptions.Data.Databases.DatabaseType
+                data: ItOptions.Data.Databases.DatabaseType,
               },
               {
                 title: "Platform",
-                data:ItOptions.Data.Databases.Platform
+                data: ItOptions.Data.Databases.Platform,
               },
               {
                 title: "Cloud Platform",
-                data:ItOptions.Data.Databases.CloudPlatform
+                data: ItOptions.Data.Databases.CloudPlatform,
               },
               {
                 title: "Expertise",
-                data:ItOptions.Data.Databases.Expertise
+                data: ItOptions.Data.Databases.Expertise,
               },
             ],
           },
@@ -701,23 +709,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Data.DataProcessing.ServiceType
+                data: ItOptions.Data.DataProcessing.ServiceType,
               },
               {
                 title: "Technology",
-                data:ItOptions.Data.DataProcessing.Technology
+                data: ItOptions.Data.DataProcessing.Technology,
               },
               {
                 title: "ScrapingTechnique",
-                data:ItOptions.Data.DataProcessing.ScrapingTechnique
+                data: ItOptions.Data.DataProcessing.ScrapingTechnique,
               },
               {
                 title: "Information Type",
-                data:ItOptions.Data.DataProcessing.InformationType
+                data: ItOptions.Data.DataProcessing.InformationType,
               },
               {
                 title: "Expertise",
-                data:ItOptions.Data.DataProcessing.Expertis
+                data: ItOptions.Data.DataProcessing.Expertis,
               },
             ],
           },
@@ -726,19 +734,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Data.DataAnalytics.ServiceType
+                data: ItOptions.Data.DataAnalytics.ServiceType,
               },
               {
                 title: "Technology",
-                data:ItOptions.Data.DataAnalytics.Technology
+                data: ItOptions.Data.DataAnalytics.Technology,
               },
               {
                 title: "Analysis Type",
-                data:ItOptions.Data.DataProcessing.AnalysisType
+                data: ItOptions.Data.DataProcessing.AnalysisType,
               },
               {
                 title: "Expertise",
-                data:ItOptions.Data.DataAnalytics.Expertise
+                data: ItOptions.Data.DataAnalytics.Expertise,
               },
             ],
           },
@@ -747,15 +755,15 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Data.DataVisualization.ServiceType
+                data: ItOptions.Data.DataVisualization.ServiceType,
               },
               {
                 title: "Tool",
-                data:ItOptions.Data.DataVisualization.Tool
+                data: ItOptions.Data.DataVisualization.Tool,
               },
               {
                 title: "Chart Type",
-                data:ItOptions.Data.DataVisualization.ChartType
+                data: ItOptions.Data.DataVisualization.ChartType,
               },
             ],
           },
@@ -764,19 +772,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Data.DataScience.ServiceType
+                data: ItOptions.Data.DataScience.ServiceType,
               },
               {
                 title: "Models & Methods",
-                data:ItOptions.Data.DataScience.Models_Methods
+                data: ItOptions.Data.DataScience.Models_Methods,
               },
               {
                 title: "Technology",
-                data:ItOptions.Data.DataScience.Technology
+                data: ItOptions.Data.DataScience.Technology,
               },
               {
                 title: "Expertise",
-                data:ItOptions.Data.DataScience.Expertise
+                data: ItOptions.Data.DataScience.Expertise,
               },
             ],
           },
@@ -785,11 +793,11 @@ const initialState = [
             list: [
               {
                 title: "Type",
-                data:ItOptions.Data.DataEntry.Type
+                data: ItOptions.Data.DataEntry.Type,
               },
               {
                 title: "Tool",
-                data:ItOptions.Data.DataEntry.Tool
+                data: ItOptions.Data.DataEntry.Tool,
               },
             ],
           },
@@ -804,11 +812,11 @@ const initialState = [
             list: [
               {
                 title: "Asset Type",
-                data:ItOptions.Graphic.GraphicsForStreamers.AssetType
+                data: ItOptions.Graphic.GraphicsForStreamers.AssetType,
               },
               {
                 title: "Streaming Platform",
-                data:ItOptions.Graphic.GraphicsForStreamers.StreamingPlatform
+                data: ItOptions.Graphic.GraphicsForStreamers.StreamingPlatform,
               },
             ],
           },
@@ -817,11 +825,11 @@ const initialState = [
             list: [
               {
                 title: "Main Type",
-                data:ItOptions.Graphic.BusinessCards.MainType
+                data: ItOptions.Graphic.BusinessCards.MainType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.BusinessCards.ImageFileFormat
+                data: ItOptions.Graphic.BusinessCards.ImageFileFormat,
               },
             ],
           },
@@ -830,19 +838,19 @@ const initialState = [
             list: [
               {
                 title: "Artistic Technique",
-                data:ItOptions.Graphic.Illustration.ArtisticTechnique
+                data: ItOptions.Graphic.Illustration.ArtisticTechnique,
               },
               {
                 title: "Style",
-                data:ItOptions.Graphic.Illustration.Style
+                data: ItOptions.Graphic.Illustration.Style,
               },
               {
                 title: "Theme",
-                data:ItOptions.Graphic.Illustration.Theme
+                data: ItOptions.Graphic.Illustration.Theme,
               },
               {
                 title: "Subject",
-                data:ItOptions.Graphic.Illustration.Subject
+                data: ItOptions.Graphic.Illustration.Subject,
               },
             ],
           },
@@ -851,19 +859,19 @@ const initialState = [
             list: [
               {
                 title: "Design Technique",
-                data:ItOptions.Graphic.PatternDesign.DesignTechnique
+                data: ItOptions.Graphic.PatternDesign.DesignTechnique,
               },
               {
                 title: "Design Style",
-                data:ItOptions.Graphic.PatternDesign.DesignStyle
+                data: ItOptions.Graphic.PatternDesign.DesignStyle,
               },
               {
                 title: "Purpose",
-                data:ItOptions.Graphic.PatternDesign.Purpose
+                data: ItOptions.Graphic.PatternDesign.Purpose,
               },
               {
                 title: "Pattern Theme",
-                data:ItOptions.Graphic.PatternDesign.PatternTheme
+                data: ItOptions.Graphic.PatternDesign.PatternTheme,
               },
             ],
           },
@@ -872,11 +880,11 @@ const initialState = [
             list: [
               {
                 title: "Format Type",
-                data:ItOptions.Graphic.FlyerDesign.FormatType
+                data: ItOptions.Graphic.FlyerDesign.FormatType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.FlyerDesign.ImageFileFormat
+                data: ItOptions.Graphic.FlyerDesign.ImageFileFormat,
               },
             ],
           },
@@ -885,15 +893,15 @@ const initialState = [
             list: [
               {
                 title: "Design Style",
-                data:ItOptions.Graphic.BookDesign.DesignStyle
+                data: ItOptions.Graphic.BookDesign.DesignStyle,
               },
               {
                 title: "Genre",
-                data:ItOptions.Graphic.BookDesign.Genre
+                data: ItOptions.Graphic.BookDesign.Genre,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.BookDesign.FileFormat
+                data: ItOptions.Graphic.BookDesign.FileFormat,
               },
             ],
           },
@@ -902,15 +910,15 @@ const initialState = [
             list: [
               {
                 title: "Design Style",
-                data:ItOptions.Graphic.AlbumCoverDesign.DesignStyle
+                data: ItOptions.Graphic.AlbumCoverDesign.DesignStyle,
               },
               {
                 title: "Musical Genre",
-                data:ItOptions.Graphic.AlbumCoverDesign.MesicalGenre
+                data: ItOptions.Graphic.AlbumCoverDesign.MesicalGenre,
               },
               {
                 title: "Album Type",
-                data:ItOptions.Graphic.AlbumCoverDesign.AlbumType
+                data: ItOptions.Graphic.AlbumCoverDesign.AlbumType,
               },
             ],
           },
@@ -919,11 +927,11 @@ const initialState = [
             list: [
               {
                 title: "Product Type",
-                data:ItOptions.Graphic.PackagingDesign.ProductType
+                data: ItOptions.Graphic.PackagingDesign.ProductType,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.PackagingDesign.FileFormat
+                data: ItOptions.Graphic.PackagingDesign.FileFormat,
               },
             ],
           },
@@ -932,11 +940,11 @@ const initialState = [
             list: [
               {
                 title: "Platform",
-                data:ItOptions.Graphic.ArFiltersLenses.Platform
+                data: ItOptions.Graphic.ArFiltersLenses.Platform,
               },
               {
                 title: "Filter Type",
-                data:ItOptions.Graphic.ArFiltersLenses.FilterType
+                data: ItOptions.Graphic.ArFiltersLenses.FilterType,
               },
             ],
           },
@@ -945,11 +953,11 @@ const initialState = [
             list: [
               {
                 title: "Main Type",
-                data:ItOptions.Graphic.WebMobileDesign.MainType
+                data: ItOptions.Graphic.WebMobileDesign.MainType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.WebMobileDesign.ImageFileFormat
+                data: ItOptions.Graphic.WebMobileDesign.ImageFileFormat,
               },
             ],
           },
@@ -958,11 +966,11 @@ const initialState = [
             list: [
               {
                 title: "Platform",
-                data:ItOptions.Graphic.SocialMediaDesign.Platform
+                data: ItOptions.Graphic.SocialMediaDesign.Platform,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.SocialMediaDesign.ImageFileFormat
+                data: ItOptions.Graphic.SocialMediaDesign.ImageFileFormat,
               },
             ],
           },
@@ -971,11 +979,11 @@ const initialState = [
             list: [
               {
                 title: "Pourpose",
-                data:ItOptions.Graphic.MenuDesign.Pourpose
+                data: ItOptions.Graphic.MenuDesign.Pourpose,
               },
               {
                 title: "Style",
-                data:ItOptions.Graphic.MenuDesign.Style
+                data: ItOptions.Graphic.MenuDesign.Style,
               },
             ],
           },
@@ -984,11 +992,11 @@ const initialState = [
             list: [
               {
                 title: "Main Type",
-                data:ItOptions.Graphic.InvitationDesign.MainType
+                data: ItOptions.Graphic.InvitationDesign.MainType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.InvitationDesign.ImageFileFormat
+                data: ItOptions.Graphic.InvitationDesign.ImageFileFormat,
               },
             ],
           },
@@ -997,11 +1005,11 @@ const initialState = [
             list: [
               {
                 title: "Illustration Type",
-                data:ItOptions.Graphic.PortraitsCaricatures.IllustrationType
+                data: ItOptions.Graphic.PortraitsCaricatures.IllustrationType,
               },
               {
                 title: "Illustration Style",
-                data:ItOptions.Graphic.PortraitsCaricatures.IllustrationStyle
+                data: ItOptions.Graphic.PortraitsCaricatures.IllustrationStyle,
               },
             ],
           },
@@ -1010,15 +1018,15 @@ const initialState = [
             list: [
               {
                 title: "Main Type",
-                data:ItOptions.Graphic.CartoonsComics.MainType
+                data: ItOptions.Graphic.CartoonsComics.MainType,
               },
               {
                 title: "Illustration Style",
-                data:ItOptions.Graphic.CartoonsComics.IllustrationStyle
+                data: ItOptions.Graphic.CartoonsComics.IllustrationStyle,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.CartoonsComics.ImageFileFormat
+                data: ItOptions.Graphic.CartoonsComics.ImageFileFormat,
               },
             ],
           },
@@ -1027,11 +1035,11 @@ const initialState = [
             list: [
               {
                 title: "Main Type",
-                data:ItOptions.Graphic.WebBanners.MainType
+                data: ItOptions.Graphic.WebBanners.MainType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.WebBanners.ImageFileFormat
+                data: ItOptions.Graphic.WebBanners.ImageFileFormat,
               },
             ],
           },
@@ -1040,11 +1048,11 @@ const initialState = [
             list: [
               {
                 title: "Editing Type",
-                data:ItOptions.Graphic.PhotoshopEditing.EditingType
+                data: ItOptions.Graphic.PhotoshopEditing.EditingType,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.PhotoshopEditing.FileFormat
+                data: ItOptions.Graphic.PhotoshopEditing.FileFormat,
               },
             ],
           },
@@ -1053,19 +1061,20 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Graphic.ArchitectureInteriorDesign.servicetype
+                data: ItOptions.Graphic.ArchitectureInteriorDesign.servicetype,
               },
               {
                 title: "Project Scale",
-                data:ItOptions.Graphic.ArchitectureInteriorDesign.ProjectScale
+                data: ItOptions.Graphic.ArchitectureInteriorDesign.ProjectScale,
               },
               {
                 title: "Building Type",
-                data:ItOptions.Graphic.ArchitectureInteriorDesign.BuildingType
+                data: ItOptions.Graphic.ArchitectureInteriorDesign.BuildingType,
               },
               {
                 title: "Image File Format",
-                data:ItOptions.Graphic.ArchitectureInteriorDesign.ImagefileFormat
+                data: ItOptions.Graphic.ArchitectureInteriorDesign
+                  .ImagefileFormat,
               },
             ],
           },
@@ -1074,15 +1083,15 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Graphic.LandscapeDesign.servicetype
+                data: ItOptions.Graphic.LandscapeDesign.servicetype,
               },
               {
                 title: "Software",
-                data:ItOptions.Graphic.LandscapeDesign.Software
+                data: ItOptions.Graphic.LandscapeDesign.Software,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.LandscapeDesign.FileFormat
+                data: ItOptions.Graphic.LandscapeDesign.FileFormat,
               },
             ],
           },
@@ -1091,15 +1100,15 @@ const initialState = [
             list: [
               {
                 title: "Purpose",
-                data:ItOptions.Graphic.CharacterModeling.Purpose
+                data: ItOptions.Graphic.CharacterModeling.Purpose,
               },
               {
                 title: "Style",
-                data:ItOptions.Graphic.CharacterModeling.Style
+                data: ItOptions.Graphic.CharacterModeling.Style,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.CharacterModeling.FileFormat
+                data: ItOptions.Graphic.CharacterModeling.FileFormat,
               },
             ],
           },
@@ -1108,19 +1117,19 @@ const initialState = [
             list: [
               {
                 title: "Service type",
-                data:ItOptions.Graphic.IndustrialproductDesign.Servicetype
+                data: ItOptions.Graphic.IndustrialproductDesign.Servicetype,
               },
               {
                 title: "Field Of expetise",
-                data:ItOptions.Graphic.IndustrialproductDesign.FieldOfexpetise
+                data: ItOptions.Graphic.IndustrialproductDesign.FieldOfexpetise,
               },
               {
                 title: "Design Software",
-                data:ItOptions.Graphic.IndustrialproductDesign.DesignSoftware
+                data: ItOptions.Graphic.IndustrialproductDesign.DesignSoftware,
               },
               {
                 title: "FileFormat",
-                data:ItOptions.Graphic.IndustrialproductDesign.FileFormat
+                data: ItOptions.Graphic.IndustrialproductDesign.FileFormat,
               },
             ],
           },
@@ -1129,15 +1138,15 @@ const initialState = [
             list: [
               {
                 title: "Booth Type",
-                data:ItOptions.Graphic.TradeBoothTrade.BoothType
+                data: ItOptions.Graphic.TradeBoothTrade.BoothType,
               },
               {
                 title: "Booth Layout",
-                data:ItOptions.Graphic.TradeBoothTrade.BoothLayout
+                data: ItOptions.Graphic.TradeBoothTrade.BoothLayout,
               },
               {
                 title: "Industry",
-                data:ItOptions.Graphic.TradeBoothTrade.Industry
+                data: ItOptions.Graphic.TradeBoothTrade.Industry,
               },
             ],
           },
@@ -1146,31 +1155,31 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Graphic.FashionDesign.ServiceType
+                data: ItOptions.Graphic.FashionDesign.ServiceType,
               },
               {
                 title: "Item Type",
-                data:ItOptions.Graphic.FashionDesign.ItemType
+                data: ItOptions.Graphic.FashionDesign.ItemType,
               },
               {
                 title: "Gender And Group",
-                data:ItOptions.Graphic.FashionDesign.GenderAndGroup
+                data: ItOptions.Graphic.FashionDesign.GenderAndGroup,
               },
               {
                 title: "Illustration Purpose",
-                data:ItOptions.Graphic.FashionDesign.IllustrationPurpose
+                data: ItOptions.Graphic.FashionDesign.IllustrationPurpose,
               },
               {
                 title: "Design Expertise",
-                data:ItOptions.Graphic.FashionDesign.DesignExpertise
+                data: ItOptions.Graphic.FashionDesign.DesignExpertise,
               },
               {
                 title: "Tailoring Method",
-                data:ItOptions.Graphic.FashionDesign.TailoringMethod
+                data: ItOptions.Graphic.FashionDesign.TailoringMethod,
               },
               {
                 title: "File Format",
-                data:ItOptions.Graphic.FashionDesign.FileFormat
+                data: ItOptions.Graphic.FashionDesign.FileFormat,
               },
             ],
           },
@@ -1179,15 +1188,15 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Graphic.JewelryDesign.ServiceType
+                data: ItOptions.Graphic.JewelryDesign.ServiceType,
               },
               {
                 title: "Software",
-                data:ItOptions.Graphic.JewelryDesign.Software
+                data: ItOptions.Graphic.JewelryDesign.Software,
               },
               {
                 title: "Jewelry Type",
-                data:ItOptions.Graphic.JewelryDesign.JewelryType
+                data: ItOptions.Graphic.JewelryDesign.JewelryType,
               },
             ],
           },
@@ -1196,23 +1205,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.Graphic.ResentationDesign.ServiceType
+                data: ItOptions.Graphic.ResentationDesign.ServiceType,
               },
               {
                 title: "Purpose",
-                data:ItOptions.Graphic.ResentationDesign.Purpose
+                data: ItOptions.Graphic.ResentationDesign.Purpose,
               },
               {
                 title: "Presentation Software",
-                data:ItOptions.Graphic.ResentationDesign.PresentationSoftware
+                data: ItOptions.Graphic.ResentationDesign.PresentationSoftware,
               },
               {
                 title: "Industry",
-                data:ItOptions.Graphic.ResentationDesign.Industry
+                data: ItOptions.Graphic.ResentationDesign.Industry,
               },
               {
                 title: "Image File format",
-                data:ItOptions.Graphic.ResentationDesign.ImageFileformat
+                data: ItOptions.Graphic.ResentationDesign.ImageFileformat,
               },
             ],
           },
@@ -1221,11 +1230,11 @@ const initialState = [
             list: [
               {
                 title: "Vehicle Type",
-                data:ItOptions.Graphic.ResentationDesign.VehicleType
+                data: ItOptions.Graphic.ResentationDesign.VehicleType,
               },
               {
                 title: "File format",
-                data:ItOptions.Graphic.ResentationDesign.Fileformat
+                data: ItOptions.Graphic.ResentationDesign.Fileformat,
               },
             ],
           },
@@ -1234,11 +1243,11 @@ const initialState = [
             list: [
               {
                 title: "Tattoo Style",
-                data:ItOptions.Graphic.TattooDesign.TattooStyle
+                data: ItOptions.Graphic.TattooDesign.TattooStyle,
               },
               {
                 title: "Color Type",
-                data:ItOptions.Graphic.TattooDesign.ColorType
+                data: ItOptions.Graphic.TattooDesign.ColorType,
               },
             ],
           },
@@ -1247,7 +1256,7 @@ const initialState = [
             list: [
               {
                 title: "Brand Style Guide",
-                data:ItOptions.Graphic.BrandStyleGuide
+                data: ItOptions.Graphic.BrandStyleGuide,
               },
             ],
           },
@@ -1256,7 +1265,7 @@ const initialState = [
             list: [
               {
                 title: "Format Type",
-                data:ItOptions.Graphic.FormatType
+                data: ItOptions.Graphic.FormatType,
               },
             ],
           },
@@ -1265,7 +1274,7 @@ const initialState = [
             list: [
               {
                 title: "Game Category",
-                data:ItOptions.Graphic.GameCategory
+                data: ItOptions.Graphic.GameCategory,
               },
             ],
           },
@@ -1274,7 +1283,7 @@ const initialState = [
             list: [
               {
                 title: "Infographic",
-                data:ItOptions.Graphic.Infographic
+                data: ItOptions.Graphic.Infographic,
               },
             ],
           },
@@ -1283,7 +1292,7 @@ const initialState = [
             list: [
               {
                 title: "Logo Design",
-                data:ItOptions.Graphic.LogoDesign
+                data: ItOptions.Graphic.LogoDesign,
               },
             ],
           },
@@ -1292,7 +1301,7 @@ const initialState = [
             list: [
               {
                 title: "Podcast Design",
-                data:ItOptions.Graphic.PodcastDesign
+                data: ItOptions.Graphic.PodcastDesign,
               },
             ],
           },
@@ -1301,7 +1310,7 @@ const initialState = [
             list: [
               {
                 title: "Postcard Design",
-                data:ItOptions.Graphic.PostcardDesign
+                data: ItOptions.Graphic.PostcardDesign,
               },
             ],
           },
@@ -1310,7 +1319,7 @@ const initialState = [
             list: [
               {
                 title: "Signage Design",
-                data:ItOptions.Graphic.SignageDesign
+                data: ItOptions.Graphic.SignageDesign,
               },
             ],
           },
@@ -1319,7 +1328,7 @@ const initialState = [
             list: [
               {
                 title: "Story Boards",
-                data:ItOptions.Graphic.StoryBoards
+                data: ItOptions.Graphic.StoryBoards,
               },
             ],
           },
@@ -1328,7 +1337,7 @@ const initialState = [
             list: [
               {
                 title: "T shirt",
-                data:ItOptions.Graphic.Tshirt
+                data: ItOptions.Graphic.Tshirt,
               },
             ],
           },
@@ -1343,23 +1352,28 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.SocialMediaMarketing.ServiceType
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .ServiceType,
               },
               {
                 title: "Database Type",
-                data:ItOptions.DigitalMarketing.SocialMediaMarketing.DatabaseType
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .DatabaseType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.SocialMediaMarketing.PlatformType
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .PlatformType,
               },
               {
                 title: "Content Type",
-                data:ItOptions.DigitalMarketing.SocialMediaMarketing.ContentType
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .ContentType,
               },
               {
                 title: "Management Tools",
-                data:ItOptions.DigitalMarketing.SocialMediaMarketing.ManagementTools
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .ManagementTools,
               },
             ],
           },
@@ -1368,15 +1382,17 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.PodcastMarketing.ServiceType
+                data: ItOptions.DigitalMarketing.PodcastMarketing.ServiceType,
               },
               {
                 title: "Podcast Category",
-                data:ItOptions.DigitalMarketing.PodcastMarketing.PodcastCategory
+                data: ItOptions.DigitalMarketing.PodcastMarketing
+                  .PodcastCategory,
               },
               {
                 title: "Podcast Aggregator",
-                data:ItOptions.DigitalMarketing.PodcastMarketing.PodcastAggregator
+                data: ItOptions.DigitalMarketing.PodcastMarketing
+                  .PodcastAggregator,
               },
             ],
           },
@@ -1385,11 +1401,13 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING.ServiceType
+                data: ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING
+                  .ServiceType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING.PlatformType
+                data: ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING
+                  .PlatformType,
               },
             ],
           },
@@ -1398,11 +1416,11 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.Seo.ServiceType
+                data: ItOptions.DigitalMarketing.Seo.ServiceType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.Seo.IndustryExpertise
+                data: ItOptions.DigitalMarketing.Seo.IndustryExpertise,
               },
             ],
           },
@@ -1411,19 +1429,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.EmailMarketing.ServiceType
+                data: ItOptions.DigitalMarketing.EmailMarketing.ServiceType,
               },
               {
                 title: "Email Platform",
-                data:ItOptions.DigitalMarketing.EmailMarketing.EmailPlatform
+                data: ItOptions.DigitalMarketing.EmailMarketing.EmailPlatform,
               },
               {
                 title: "Method",
-                data:ItOptions.DigitalMarketing.EmailMarketing.Method
+                data: ItOptions.DigitalMarketing.EmailMarketing.Method,
               },
               {
                 title: "Tools",
-                data:ItOptions.DigitalMarketing.EmailMarketing.Tools
+                data: ItOptions.DigitalMarketing.EmailMarketing.Tools,
               },
             ],
           },
@@ -1432,11 +1450,12 @@ const initialState = [
             list: [
               {
                 title: "Platform",
-                data:ItOptions.DigitalMarketing.TextMessageMarketing.Platform
+                data: ItOptions.DigitalMarketing.TextMessageMarketing.Platform,
               },
               {
                 title: "Messaging Type",
-                data:ItOptions.DigitalMarketing.TextMessageMarketing.MessagingType
+                data: ItOptions.DigitalMarketing.TextMessageMarketing
+                  .MessagingType,
               },
             ],
           },
@@ -1445,19 +1464,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.Sem.ServiceType
+                data: ItOptions.DigitalMarketing.Sem.ServiceType,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.Sem.Industry
+                data: ItOptions.DigitalMarketing.Sem.Industry,
               },
               {
                 title: "Method",
-                data:ItOptions.DigitalMarketing.Sem.Method
+                data: ItOptions.DigitalMarketing.Sem.Method,
               },
               {
                 title: "Tools",
-                data:ItOptions.DigitalMarketing.Sem.Tools
+                data: ItOptions.DigitalMarketing.Sem.Tools,
               },
             ],
           },
@@ -1466,11 +1485,11 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.Crowdfunding.ServiceType
+                data: ItOptions.DigitalMarketing.Crowdfunding.ServiceType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.Crowdfunding.PlatformType
+                data: ItOptions.DigitalMarketing.Crowdfunding.PlatformType,
               },
             ],
           },
@@ -1479,23 +1498,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.DisplayAdvertising.ServiceType
+                data: ItOptions.DigitalMarketing.DisplayAdvertising.ServiceType,
               },
               {
                 title: "Add Network",
-                data:ItOptions.DigitalMarketing.DisplayAdvertising.AdNetwork
+                data: ItOptions.DigitalMarketing.DisplayAdvertising.AdNetwork,
               },
               {
                 title: "Placement",
-                data:ItOptions.DigitalMarketing.DisplayAdvertising.Placement
+                data: ItOptions.DigitalMarketing.DisplayAdvertising.Placement,
               },
               {
                 title: "Add Format",
-                data:ItOptions.DigitalMarketing.DisplayAdvertising.AdFormat
+                data: ItOptions.DigitalMarketing.DisplayAdvertising.AdFormat,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.DisplayAdvertising.Industry
+                data: ItOptions.DigitalMarketing.DisplayAdvertising.Industry,
               },
             ],
           },
@@ -1504,23 +1523,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.Surveys.ServiceType
+                data: ItOptions.DigitalMarketing.Surveys.ServiceType,
               },
               {
                 title: "Survey Platform",
-                data:ItOptions.DigitalMarketing.Surveys.SurveyPlatform
+                data: ItOptions.DigitalMarketing.Surveys.SurveyPlatform,
               },
               {
                 title: "Survey Type",
-                data:ItOptions.DigitalMarketing.Surveys.SurveyType
+                data: ItOptions.DigitalMarketing.Surveys.SurveyType,
               },
               {
                 title: "Add Format",
-                data:ItOptions.DigitalMarketing.Surveys.AdFormat
+                data: ItOptions.DigitalMarketing.Surveys.AdFormat,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.Surveys.Industry
+                data: ItOptions.DigitalMarketing.Surveys.Industry,
               },
             ],
           },
@@ -1529,19 +1548,21 @@ const initialState = [
             list: [
               {
                 title: "Consulting",
-                data:ItOptions.DigitalMarketing.MarketingStrategy.Consulting
+                data: ItOptions.DigitalMarketing.MarketingStrategy.Consulting,
               },
               {
                 title: "Strategy Purpose",
-                data:ItOptions.DigitalMarketing.MarketingStrategy.StrategyPurpose
+                data: ItOptions.DigitalMarketing.MarketingStrategy
+                  .StrategyPurpose,
               },
               {
                 title: "Business stage",
-                data:ItOptions.DigitalMarketing.MarketingStrategy.Businessstage
+                data: ItOptions.DigitalMarketing.MarketingStrategy
+                  .Businessstage,
               },
               {
                 title: "Business Type",
-                data:ItOptions.DigitalMarketing.MarketingStrategy.BusinessType
+                data: ItOptions.DigitalMarketing.MarketingStrategy.BusinessType,
               },
             ],
           },
@@ -1550,19 +1571,21 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.ECommerceMarketing.ServiceType
+                data: ItOptions.DigitalMarketing.ECommerceMarketing.ServiceType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.ECommerceMarketing.PlatformType
+                data: ItOptions.DigitalMarketing.ECommerceMarketing
+                  .PlatformType,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.ECommerceMarketing.Industry
+                data: ItOptions.DigitalMarketing.ECommerceMarketing.Industry,
               },
               {
                 title: "Promotion Method",
-                data:ItOptions.DigitalMarketing.ECommerceMarketing.PromotionMethod
+                data: ItOptions.DigitalMarketing.ECommerceMarketing
+                  .PromotionMethod,
               },
             ],
           },
@@ -1571,15 +1594,18 @@ const initialState = [
             list: [
               {
                 title: "Strategy Research",
-                data:ItOptions.DigitalMarketing.InfluencerMarketing.StrategyResearch
+                data: ItOptions.DigitalMarketing.InfluencerMarketing
+                  .StrategyResearch,
               },
               {
                 title: "Target Audience",
-                data:ItOptions.DigitalMarketing.InfluencerMarketing.TargetAudience
+                data: ItOptions.DigitalMarketing.InfluencerMarketing
+                  .TargetAudience,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.InfluencerMarketing.PlatformType
+                data: ItOptions.DigitalMarketing.InfluencerMarketing
+                  .PlatformType,
               },
             ],
           },
@@ -1588,15 +1614,17 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.CommunityManagement.ServiceType
+                data: ItOptions.DigitalMarketing.CommunityManagement
+                  .ServiceType,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.CommunityManagement.Industry
+                data: ItOptions.DigitalMarketing.CommunityManagement.Industry,
               },
               {
                 title: "Community Presence",
-                data:ItOptions.DigitalMarketing.CommunityManagement.CommunityPresence
+                data: ItOptions.DigitalMarketing.CommunityManagement
+                  .CommunityPresence,
               },
             ],
           },
@@ -1605,15 +1633,17 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.AffilateMarkting.ServiceType
+                data: ItOptions.DigitalMarketing.AffilateMarkting.ServiceType,
               },
               {
                 title: "Affiliate Networks",
-                data:ItOptions.DigitalMarketing.AffilateMarkting.AffiliateNetworks
+                data: ItOptions.DigitalMarketing.AffilateMarkting
+                  .AffiliateNetworks,
               },
               {
                 title: "Affiliate Networks/ Programs",
-                data:ItOptions.DigitalMarketing.AffilateMarkting.AffiliateNetworksPrograms
+                data: ItOptions.DigitalMarketing.AffilateMarkting
+                  .AffiliateNetworksPrograms,
               },
             ],
           },
@@ -1622,15 +1652,16 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.MobileAppMarketing.ServiceType
+                data: ItOptions.DigitalMarketing.MobileAppMarketing.ServiceType,
               },
               {
                 title: "Application Store",
-                data:ItOptions.DigitalMarketing.MobileAppMarketing.ApplicationStore
+                data: ItOptions.DigitalMarketing.MobileAppMarketing
+                  .ApplicationStore,
               },
               {
                 title: "Industry",
-                data:ItOptions.DigitalMarketing.MobileAppMarketing.Industry
+                data: ItOptions.DigitalMarketing.MobileAppMarketing.Industry,
               },
             ],
           },
@@ -1639,23 +1670,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.DigitalMarketing.MusicPromotion.ServiceType
+                data: ItOptions.DigitalMarketing.MusicPromotion.ServiceType,
               },
               {
                 title: "Music Platform",
-                data:ItOptions.DigitalMarketing.MusicPromotion.MusicPlatform
+                data: ItOptions.DigitalMarketing.MusicPromotion.MusicPlatform,
               },
               {
                 title: "Musical Genre",
-                data:ItOptions.DigitalMarketing.MusicPromotion.MusicalGenre
+                data: ItOptions.DigitalMarketing.MusicPromotion.MusicalGenre,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.DigitalMarketing.MusicPromotion.PlatformType
+                data: ItOptions.DigitalMarketing.MusicPromotion.PlatformType,
               },
               {
                 title: "Channel",
-                data:ItOptions.DigitalMarketing.MusicPromotion.Channel
+                data: ItOptions.DigitalMarketing.MusicPromotion.Channel,
               },
             ],
           },
@@ -1664,7 +1695,7 @@ const initialState = [
             list: [
               {
                 title: "Domain Research",
-                data:ItOptions.DigitalMarketing.DomainResearch
+                data: ItOptions.DigitalMarketing.DomainResearch,
               },
             ],
           },
@@ -1673,7 +1704,7 @@ const initialState = [
             list: [
               {
                 title: "Local Seo",
-                data:ItOptions.DigitalMarketing.LocalSeo
+                data: ItOptions.DigitalMarketing.LocalSeo,
               },
             ],
           },
@@ -1682,7 +1713,7 @@ const initialState = [
             list: [
               {
                 title: "Video Marketing",
-                data:ItOptions.DigitalMarketing.VideoMarketing
+                data: ItOptions.DigitalMarketing.VideoMarketing,
               },
             ],
           },
@@ -1691,11 +1722,10 @@ const initialState = [
             list: [
               {
                 title: "Web Analytics",
-                data:ItOptions.DigitalMarketing.WebAnalytics
+                data: ItOptions.DigitalMarketing.WebAnalytics,
               },
             ],
           },
-          
         ],
       },
       {
@@ -1707,19 +1737,21 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.WebsiteBuildersCms.ServiceType
+                data: ItOptions.ProgramingTeach.WebsiteBuildersCms.ServiceType,
               },
               {
                 title: "Platform",
-                data:ItOptions.ProgramingTeach.WebsiteBuildersCms.Platform
+                data: ItOptions.ProgramingTeach.WebsiteBuildersCms.Platform,
               },
               {
                 title: "Specialization",
-                data:ItOptions.ProgramingTeach.WebsiteBuildersCms.Specialization
+                data: ItOptions.ProgramingTeach.WebsiteBuildersCms
+                  .Specialization,
               },
               {
                 title: "Supported Plugin Types",
-                data:ItOptions.ProgramingTeach.WebsiteBuildersCms.SupportedPluginTypes
+                data: ItOptions.ProgramingTeach.WebsiteBuildersCms
+                  .SupportedPluginTypes,
               },
             ],
           },
@@ -1728,19 +1760,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.Wordpress.ServiceType
+                data: ItOptions.ProgramingTeach.Wordpress.ServiceType,
               },
               {
                 title: "Specialization",
-                data:ItOptions.ProgramingTeach.Wordpress.Specialization
+                data: ItOptions.ProgramingTeach.Wordpress.Specialization,
               },
               {
                 title: "Supported Plugin Types",
-                data:ItOptions.ProgramingTeach.Wordpress.SupportedPluginTypes
+                data: ItOptions.ProgramingTeach.Wordpress.SupportedPluginTypes,
               },
               {
                 title: "Integrating Plugins",
-                data:ItOptions.ProgramingTeach.Wordpress.IntegratingPlugins
+                data: ItOptions.ProgramingTeach.Wordpress.IntegratingPlugins,
               },
             ],
           },
@@ -1749,31 +1781,32 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.GameDevelopment.ServiceType
+                data: ItOptions.ProgramingTeach.GameDevelopment.ServiceType,
               },
               {
                 title: "Game Type",
-                data:ItOptions.ProgramingTeach.GameDevelopment.GameType
+                data: ItOptions.ProgramingTeach.GameDevelopment.GameType,
               },
               {
                 title: "Platform Type",
-                data:ItOptions.ProgramingTeach.GameDevelopment.PlatformType
+                data: ItOptions.ProgramingTeach.GameDevelopment.PlatformType,
               },
               {
                 title: "Genree",
-                data:ItOptions.ProgramingTeach.GameDevelopment.Genree
+                data: ItOptions.ProgramingTeach.GameDevelopment.Genree,
               },
               {
                 title: "Plugins",
-                data:ItOptions.ProgramingTeach.GameDevelopment.Plugins
+                data: ItOptions.ProgramingTeach.GameDevelopment.Plugins,
               },
               {
                 title: "Customization Type",
-                data:ItOptions.ProgramingTeach.GameDevelopment.CustomizationType
+                data: ItOptions.ProgramingTeach.GameDevelopment
+                  .CustomizationType,
               },
               {
                 title: "Game Name",
-                data:ItOptions.ProgramingTeach.GameDevelopment.GameName
+                data: ItOptions.ProgramingTeach.GameDevelopment.GameName,
               },
             ],
           },
@@ -1782,19 +1815,22 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.DevelopmentForStreamers.ServiceType
+                data: ItOptions.ProgramingTeach.DevelopmentForStreamers
+                  .ServiceType,
               },
               {
                 title: "Software",
-                data:ItOptions.ProgramingTeach.DevelopmentForStreamers.Software
+                data: ItOptions.ProgramingTeach.DevelopmentForStreamers
+                  .Software,
               },
               {
                 title: "Platform",
-                data:ItOptions.ProgramingTeach.DevelopmentForStreamers.Platform
+                data: ItOptions.ProgramingTeach.DevelopmentForStreamers
+                  .Platform,
               },
               {
                 title: "Purpose",
-                data:ItOptions.ProgramingTeach.DevelopmentForStreamers.Purpose
+                data: ItOptions.ProgramingTeach.DevelopmentForStreamers.Purpose,
               },
             ],
           },
@@ -1803,11 +1839,13 @@ const initialState = [
             list: [
               {
                 title: "Lesson Purpose",
-                data:ItOptions.ProgramingTeach.OnlineCodingLessons.LessonPurpose
+                data: ItOptions.ProgramingTeach.OnlineCodingLessons
+                  .LessonPurpose,
               },
               {
                 title: "Development Techonlogy",
-                data:ItOptions.ProgramingTeach.OnlineCodingLessons.DevelopmentTechonlogy
+                data: ItOptions.ProgramingTeach.OnlineCodingLessons
+                  .DevelopmentTechonlogy,
               },
             ],
           },
@@ -1816,15 +1854,15 @@ const initialState = [
             list: [
               {
                 title: "Device",
-                data:ItOptions.ProgramingTeach.SupportIt.Device
+                data: ItOptions.ProgramingTeach.SupportIt.Device,
               },
               {
                 title: "Operating System",
-                data:ItOptions.ProgramingTeach.SupportIt.OperatingSystem
+                data: ItOptions.ProgramingTeach.SupportIt.OperatingSystem,
               },
               {
                 title: "Also Delivering",
-                data:ItOptions.ProgramingTeach.SupportIt.AlsoDelivering
+                data: ItOptions.ProgramingTeach.SupportIt.AlsoDelivering,
               },
             ],
           },
@@ -1833,15 +1871,15 @@ const initialState = [
             list: [
               {
                 title: "Messaging Platform",
-                data:ItOptions.ProgramingTeach.SupportIt.MessagingPlatform
+                data: ItOptions.ProgramingTeach.SupportIt.MessagingPlatform,
               },
               {
                 title: "Bot Type",
-                data:ItOptions.ProgramingTeach.SupportIt.BotType
+                data: ItOptions.ProgramingTeach.SupportIt.BotType,
               },
               {
                 title: "Development Technology",
-                data:ItOptions.ProgramingTeach.SupportIt.DevelopmentTechnology
+                data: ItOptions.ProgramingTeach.SupportIt.DevelopmentTechnology,
               },
             ],
           },
@@ -1850,11 +1888,11 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.DataAnalysisReports.ServiceType
+                data: ItOptions.ProgramingTeach.DataAnalysisReports.ServiceType,
               },
               {
                 title: "Tool",
-                data:ItOptions.ProgramingTeach.DataAnalysisReports.Tool
+                data: ItOptions.ProgramingTeach.DataAnalysisReports.Tool,
               },
             ],
           },
@@ -1863,15 +1901,15 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.ConvertFiles.ServiceType
+                data: ItOptions.ProgramingTeach.ConvertFiles.ServiceType,
               },
               {
                 title: "Convert From",
-                data:ItOptions.ProgramingTeach.ConvertFiles.ConvertFrom
+                data: ItOptions.ProgramingTeach.ConvertFiles.ConvertFrom,
               },
               {
                 title: "Convert To",
-                data:ItOptions.ProgramingTeach.ConvertFiles.ConvertTo
+                data: ItOptions.ProgramingTeach.ConvertFiles.ConvertTo,
               },
             ],
           },
@@ -1880,11 +1918,11 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.Databases.ServiceType
+                data: ItOptions.ProgramingTeach.Databases.ServiceType,
               },
               {
                 title: "Databases Type",
-                data:ItOptions.ProgramingTeach.Databases.DatabasesType
+                data: ItOptions.ProgramingTeach.Databases.DatabasesType,
               },
             ],
           },
@@ -1893,19 +1931,19 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.QaReview.ServiceType
+                data: ItOptions.ProgramingTeach.QaReview.ServiceType,
               },
               {
                 title: "Testing Application",
-                data:ItOptions.ProgramingTeach.QaReview.TestingApplication
+                data: ItOptions.ProgramingTeach.QaReview.TestingApplication,
               },
               {
                 title: "Device",
-                data:ItOptions.ProgramingTeach.QaReview.Device
+                data: ItOptions.ProgramingTeach.QaReview.Device,
               },
               {
                 title: "Expertise",
-                data:ItOptions.ProgramingTeach.QaReview.Expertise
+                data: ItOptions.ProgramingTeach.QaReview.Expertise,
               },
             ],
           },
@@ -1914,11 +1952,11 @@ const initialState = [
             list: [
               {
                 title: "Testing Platform",
-                data:ItOptions.ProgramingTeach.UserTesting.TestingPlatform
+                data: ItOptions.ProgramingTeach.UserTesting.TestingPlatform,
               },
               {
                 title: "Testing Application",
-                data:ItOptions.ProgramingTeach.UserTesting.Device
+                data: ItOptions.ProgramingTeach.UserTesting.Device,
               },
             ],
           },
@@ -1927,15 +1965,16 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.WebProgramming.ServiceType
+                data: ItOptions.ProgramingTeach.WebProgramming.ServiceType,
               },
               {
                 title: "Programming Language",
-                data:ItOptions.ProgramingTeach.WebProgramming.ProgrammingLanguage
+                data: ItOptions.ProgramingTeach.WebProgramming
+                  .ProgrammingLanguage,
               },
               {
                 title: "Expertise",
-                data:ItOptions.ProgramingTeach.WebProgramming.Expertise
+                data: ItOptions.ProgramingTeach.WebProgramming.Expertise,
               },
             ],
           },
@@ -1944,23 +1983,25 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.DesktopApplications.ServiceType
+                data: ItOptions.ProgramingTeach.DesktopApplications.ServiceType,
               },
               {
                 title: "Programming Language",
-                data:ItOptions.ProgramingTeach.DesktopApplications.ProgrammingLanguage
+                data: ItOptions.ProgramingTeach.DesktopApplications
+                  .ProgrammingLanguage,
               },
               {
                 title: "Operating System",
-                data:ItOptions.ProgramingTeach.DesktopApplications.OperatingSystem
+                data: ItOptions.ProgramingTeach.DesktopApplications
+                  .OperatingSystem,
               },
               {
                 title: "Expertise",
-                data:ItOptions.ProgramingTeach.DesktopApplications.Expertise
+                data: ItOptions.ProgramingTeach.DesktopApplications.Expertise,
               },
               {
                 title: "Application",
-                data:ItOptions.ProgramingTeach.DesktopApplications.Application
+                data: ItOptions.ProgramingTeach.DesktopApplications.Application,
               },
             ],
           },
@@ -1969,15 +2010,17 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.ECommerceDevelopment.ServiceType
+                data: ItOptions.ProgramingTeach.ECommerceDevelopment
+                  .ServiceType,
               },
               {
                 title: "Platform",
-                data:ItOptions.ProgramingTeach.ECommerceDevelopment.Platform
+                data: ItOptions.ProgramingTeach.ECommerceDevelopment.Platform,
               },
               {
                 title: "Supported Plugin Types",
-                data:ItOptions.ProgramingTeach.ECommerceDevelopment.SupportedPluginTypes
+                data: ItOptions.ProgramingTeach.ECommerceDevelopment
+                  .SupportedPluginTypes,
               },
             ],
           },
@@ -1986,27 +2029,28 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.ProgramingTeach.MobileApps.ServiceType
+                data: ItOptions.ProgramingTeach.MobileApps.ServiceType,
               },
               {
                 title: "Platform",
-                data:ItOptions.ProgramingTeach.MobileApps.Platform
+                data: ItOptions.ProgramingTeach.MobileApps.Platform,
               },
               {
                 title: "Development Technology",
-                data:ItOptions.ProgramingTeach.MobileApps.DevelopmentTechnology
+                data: ItOptions.ProgramingTeach.MobileApps
+                  .DevelopmentTechnology,
               },
               {
                 title: "Purpose",
-                data:ItOptions.ProgramingTeach.MobileApps.Purpose
+                data: ItOptions.ProgramingTeach.MobileApps.Purpose,
               },
               {
                 title: "Expertise",
-                data:ItOptions.ProgramingTeach.MobileApps.Expertise
+                data: ItOptions.ProgramingTeach.MobileApps.Expertise,
               },
             ],
           },
-          ],
+        ],
       },
       {
         title: "Video & Animation",
@@ -2017,19 +2061,23 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ServiceType
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .ServiceType,
               },
               {
                 title: "Explanier Type",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ExplanierType
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .ExplanierType,
               },
               {
                 title: "Purpose",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.Purpose
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .Purpose,
               },
               {
                 title: "Tool Expertise",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ToolExpertise
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .ToolExpertise,
               },
             ],
           },
@@ -2038,11 +2086,11 @@ const initialState = [
             list: [
               {
                 title: "Purpose",
-                data:ItOptions.VideoAnimation.AnimatedGifs.Purpose
+                data: ItOptions.VideoAnimation.AnimatedGifs.Purpose,
               },
               {
                 title: "File Format",
-                data:ItOptions.VideoAnimation.AnimatedGifs.FileFormat
+                data: ItOptions.VideoAnimation.AnimatedGifs.FileFormat,
               },
             ],
           },
@@ -2051,11 +2099,13 @@ const initialState = [
             list: [
               {
                 title: "Intro/Outro Type",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.IntroOutroType
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .IntroOutroType,
               },
               {
                 title: "Video File Format",
-                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.VideoFileFormat
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .VideoFileFormat,
               },
             ],
           },
@@ -2064,11 +2114,11 @@ const initialState = [
             list: [
               {
                 title: "Platform",
-                data:ItOptions.VideoAnimation.ShortVideoAds.Platform
+                data: ItOptions.VideoAnimation.ShortVideoAds.Platform,
               },
               {
                 title: "Video Type",
-                data:ItOptions.VideoAnimation.ShortVideoAds.VideoType
+                data: ItOptions.VideoAnimation.ShortVideoAds.VideoType,
               },
             ],
           },
@@ -2077,11 +2127,11 @@ const initialState = [
             list: [
               {
                 title: "Animation Type",
-                data:ItOptions.VideoAnimation.CharacterAnimation.AnimationType
+                data: ItOptions.VideoAnimation.CharacterAnimation.AnimationType,
               },
               {
                 title: "Industry",
-                data:ItOptions.VideoAnimation.CharacterAnimation.Industry
+                data: ItOptions.VideoAnimation.CharacterAnimation.Industry,
               },
             ],
           },
@@ -2090,15 +2140,15 @@ const initialState = [
             list: [
               {
                 title: "Industry",
-                data:ItOptions.VideoAnimation.dProductAnimation.Industry
+                data: ItOptions.VideoAnimation.dProductAnimation.Industry,
               },
               {
                 title: "Environment",
-                data:ItOptions.VideoAnimation.dProductAnimation.Environment
+                data: ItOptions.VideoAnimation.dProductAnimation.Environment,
               },
               {
                 title: "file format",
-                data:ItOptions.VideoAnimation.dProductAnimation.fileformat
+                data: ItOptions.VideoAnimation.dProductAnimation.fileformat,
               },
             ],
           },
@@ -2107,11 +2157,11 @@ const initialState = [
             list: [
               {
                 title: "Service Type",
-                data:ItOptions.VideoAnimation.LyricMusicVideos.ServiceType
+                data: ItOptions.VideoAnimation.LyricMusicVideos.ServiceType,
               },
               {
                 title: "Video Type",
-                data:ItOptions.VideoAnimation.LyricMusicVideos.VideoType
+                data: ItOptions.VideoAnimation.LyricMusicVideos.VideoType,
               },
             ],
           },
@@ -2120,11 +2170,11 @@ const initialState = [
             list: [
               {
                 title: "Animation Style",
-                data:ItOptions.VideoAnimation.AnimationForKids.AnimationStyle
+                data: ItOptions.VideoAnimation.AnimationForKids.AnimationStyle,
               },
               {
                 title: "Video Type",
-                data:ItOptions.VideoAnimation.AnimationForKids.VideoType
+                data: ItOptions.VideoAnimation.AnimationForKids.VideoType,
               },
             ],
           },
@@ -2133,11 +2183,11 @@ const initialState = [
             list: [
               {
                 title: "Column1",
-                data:ItOptions.VideoAnimation.AnimationForStreamers.Column1
+                data: ItOptions.VideoAnimation.AnimationForStreamers.Column1,
               },
               {
                 title: "Asset Type",
-                data:ItOptions.VideoAnimation.AnimationForStreamers.AssetType
+                data: ItOptions.VideoAnimation.AnimationForStreamers.AssetType,
               },
             ],
           },
@@ -2146,11 +2196,12 @@ const initialState = [
             list: [
               {
                 title: "Setting",
-                data:ItOptions.VideoAnimation.LiveActionExplainers.Setting
+                data: ItOptions.VideoAnimation.LiveActionExplainers.Setting,
               },
               {
                 title: "Video File format",
-                data:ItOptions.VideoAnimation.LiveActionExplainers.VideoFileformat
+                data: ItOptions.VideoAnimation.LiveActionExplainers
+                  .VideoFileformat,
               },
             ],
           },
@@ -2159,11 +2210,11 @@ const initialState = [
             list: [
               {
                 title: "vedio type",
-                data:ItOptions.VideoAnimation.UnboxingVideos.vediotype
+                data: ItOptions.VideoAnimation.UnboxingVideos.vediotype,
               },
               {
                 title: "product Type",
-                data:ItOptions.VideoAnimation.UnboxingVideos.productType
+                data: ItOptions.VideoAnimation.UnboxingVideos.productType,
               },
             ],
           },
@@ -2172,15 +2223,15 @@ const initialState = [
             list: [
               {
                 title: "Media type",
-                data:ItOptions.VideoAnimation.DroneVideography.Mediatype
+                data: ItOptions.VideoAnimation.DroneVideography.Mediatype,
               },
               {
                 title: "Themes",
-                data:ItOptions.VideoAnimation.DroneVideography.Themes
+                data: ItOptions.VideoAnimation.DroneVideography.Themes,
               },
               {
                 title: "Drone Type",
-                data:ItOptions.VideoAnimation.DroneVideography.DroneType
+                data: ItOptions.VideoAnimation.DroneVideography.DroneType,
               },
             ],
           },
@@ -2189,15 +2240,15 @@ const initialState = [
             list: [
               {
                 title: "file Format",
-                data:ItOptions.VideoAnimation.productPhotography.fileFormat
+                data: ItOptions.VideoAnimation.productPhotography.fileFormat,
               },
               {
                 title: "Photo Setting",
-                data:ItOptions.VideoAnimation.productPhotography.PhotoSetting
+                data: ItOptions.VideoAnimation.productPhotography.PhotoSetting,
               },
               {
                 title: "ProductType",
-                data:ItOptions.VideoAnimation.productPhotography.ProductType
+                data: ItOptions.VideoAnimation.productPhotography.ProductType,
               },
             ],
           },
@@ -2206,9 +2257,8 @@ const initialState = [
             list: [
               {
                 title: "App Website Previews",
-                data:ItOptions.VideoAnimation.AppWebsitePreviews
+                data: ItOptions.VideoAnimation.AppWebsitePreviews,
               },
-              
             ],
           },
           {
@@ -2216,9 +2266,8 @@ const initialState = [
             list: [
               {
                 title: "Elearing Video Production",
-                data:ItOptions.VideoAnimation.ElearingVideoProduction
+                data: ItOptions.VideoAnimation.ElearingVideoProduction,
               },
-              
             ],
           },
           {
@@ -2226,9 +2275,8 @@ const initialState = [
             list: [
               {
                 title: "Lottie Website Animation",
-                data:ItOptions.VideoAnimation.LottieWebsiteAnimation
+                data: ItOptions.VideoAnimation.LottieWebsiteAnimation,
               },
-              
             ],
           },
           {
@@ -2236,9 +2284,8 @@ const initialState = [
             list: [
               {
                 title: "Screen casting Videos",
-                data:ItOptions.VideoAnimation.ScreencastingVideos
+                data: ItOptions.VideoAnimation.ScreencastingVideos,
               },
-              
             ],
           },
           {
@@ -2246,9 +2293,8 @@ const initialState = [
             list: [
               {
                 title: "Slide Show Videos",
-                data:ItOptions.VideoAnimation.SlideShowVideos
+                data: ItOptions.VideoAnimation.SlideShowVideos,
               },
-              
             ],
           },
           {
@@ -2256,9 +2302,8 @@ const initialState = [
             list: [
               {
                 title: "Sub title Captions",
-                data:ItOptions.VideoAnimation.SubtitleCaptions
+                data: ItOptions.VideoAnimation.SubtitleCaptions,
               },
-              
             ],
           },
           {
@@ -2266,9 +2311,8 @@ const initialState = [
             list: [
               {
                 title: "Video Editing",
-                data:ItOptions.VideoAnimation.VideoEditing
+                data: ItOptions.VideoAnimation.VideoEditing,
               },
-              
             ],
           },
           {
@@ -2276,15 +2320,12 @@ const initialState = [
             list: [
               {
                 title: "Visual Effect",
-                data:ItOptions.VideoAnimation.VisualEffect
+                data: ItOptions.VideoAnimation.VisualEffect,
               },
-              
             ],
           },
-         
-          ],
+        ],
       },
-      
     ],
   },
   {
@@ -2553,13 +2594,233 @@ const initialState = [
     image: entertainment,
     list: [
       {
-        title:'Painter',
-        data:MainPainter
-      }
+        title: "Painter",
+        data: MainPainter,
+      },
     ],
   },
-  
-  
+  {
+    title: "Online Tution",
+    icon: OnlineTutionIcon,
+    color: "#FBB540",
+    image: onlinetution,
+    data: [
+      {
+        title: "Language Tutoring",
+        list: [
+          {
+            title: "Language Tutoring",
+            data: OnlineTutionOptions.LANGUAGETUTORING,
+          },
+        ],
+      },
+      {
+        title: "Math Tutoring",
+        list: [
+          {
+            title: "Math Tutoring",
+            data: OnlineTutionOptions.MATHTUTORING,
+          },
+        ],
+      },
+      {
+        title: "Online Music Lessons",
+        list: [
+          {
+            title: "Instrument",
+            data: OnlineTutionOptions.OnlineMusicLessons.Instrument,
+          },
+          {
+            title: "Production/Software",
+            data: OnlineTutionOptions.OnlineMusicLessons.Production_Software,
+          },
+        ],
+      },
+      {
+        title: "Online Coding Lessons",
+        list: [
+          {
+            title: "Lesson Purpose",
+            data: OnlineTutionOptions.OnlineCodingLessons.LessonPurpose,
+          },
+          {
+            title: "Development Techonlogy",
+            data: OnlineTutionOptions.OnlineCodingLessons.DevelopmentTechonlogy,
+          },
+        ],
+      },
+      {
+        title: "Section Tutoring",
+        list: [
+          {
+            title: "Section Tutoring",
+            data: OnlineTutionOptions.SCIENCETUTORING,
+          },
+        
+        ],
+      },
+      {
+        title: "Social Science Tutoring",
+        list: [
+          {
+            title: "Social Science Tutoring",
+            data: OnlineTutionOptions.SOCIALSCIENCESTUTORING,
+          },
+        
+        ],
+      },
+      {
+        title: "Business Tutoring",
+        list: [
+          {
+            title: "Business Tutoring",
+            data: OnlineTutionOptions.BUSINESSTUTORING,
+          },
+        
+        ],
+      },
+      {
+        title: "Mobile",
+        list: [
+          {
+            title: "Mobile",
+            data: OnlineTutionOptions.Mobile,
+          },
+        
+        ],
+      },
+      {
+        title: "Pc",
+        list: [
+          {
+            title: "Pc",
+            data: OnlineTutionOptions.Pc,
+          },
+        
+        ],
+      },
+      {
+        title: "Printer",
+        list: [
+          {
+            title: "Printer",
+            data: OnlineTutionOptions.Printer,
+          },
+        
+        ],
+      },
+    ],
+  },
+  {
+    title: "Parlour & Saloon",
+    icon: SaloonIcon,
+    color: "#FF5364",
+    image: parlour,
+    data: [
+      {
+        title: "Man",
+        list: [
+          {
+            title: "Hair",
+            data: ParlorOptions.Man.Hair,
+          },
+          {
+            title: "Color",
+            data: ParlorOptions.Man.Color,
+          },
+          {
+            title: "Waxing",
+            data: ParlorOptions.Man.Waxing,
+          },
+          {
+            title: "Nails",
+            data: ParlorOptions.Man.Nails,
+          },
+          {
+            title: "Facial",
+            data: ParlorOptions.Man.Facial,
+          },
+          {
+            title: "Extra",
+            data: ParlorOptions.Man.Extra,
+          },
+        ],
+      },
+      {
+        title: "Woman",
+        list: [
+          {
+            title: "Facial",
+            data: ParlorOptions.Woman.Facial,
+          },
+          {
+            title: "Manicure",
+            data: ParlorOptions.Woman.Manicure,
+          },
+          {
+            title: "Padicure",
+            data: ParlorOptions.Woman.Padicure,
+          },
+          {
+            title: "Hair",
+            data: ParlorOptions.Woman.Hair,
+          },
+          {
+            title: "HairColor",
+            data: ParlorOptions.Woman.HairColor,
+          },
+          {
+            title: "HairStraightener",
+            data: ParlorOptions.Woman.HairStraightener,
+          },
+          {
+            title: "HairSpa",
+            data: ParlorOptions.Woman.HairSpa,
+          },
+          {
+            title: "Head",
+            data: ParlorOptions.Woman.Head,
+          },
+          {
+            title: "Skin",
+            data: ParlorOptions.Woman.Skin,
+          },
+          {
+            title: "Threading",
+            data: ParlorOptions.Woman.Threading,
+          },
+          {
+            title: "Bleach",
+            data: ParlorOptions.Woman.Bleach,
+          },
+          {
+            title: "Cleanup",
+            data: ParlorOptions.Woman.Cleanup,
+          },
+          {
+            title: "Waxing",
+            data: ParlorOptions.Woman.Waxing,
+          },
+          {
+            title: "MakeUp",
+            data: ParlorOptions.Woman.MakeUp,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Labor",
+    icon: RentIcon,
+    color: "#61AFF6",
+    image: entertainment,
+    list: [
+      {
+        title: "Painter",
+        data: MainLabor,
+      },
+    ],
+  },
 ];
 const allData = (state = initialState, action) => {
   if (action.type === "SET_DATA") {

@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import OptionsViewer from "@components/become-seller/OptionsViewer";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
 
-const Options = [
+const MainLabor = [
   {
     id: 1,
     title: "Construction Work",
@@ -41,31 +37,5 @@ const Options = [
     title: "Hotel/Resturant/Party Waiter",
   },
 ];
-const MainLabor = ({ goNext, savedData }) => {
-  const [completedSection, setCompletedSection] = useState(savedData || []);
-  const router = useRouter();
-  return (
-    <div className="">
-      <OptionsViewer
-        defaultOptions={Options || []}
-        title="Labor"
-        data={completedSection || []}
-        actionButtonTitle="Next"
-        goBack={() => router.back()}
-        onSubmit={(data) => {
-          if (
-            data.selectedOptions.length < 1 &&
-            data.customOptions.length < 1
-          ) {
-            toast.error("Plaese choose at least one option!");
-          } else {
-            setCompletedSection(data);
-            goNext(data);
-          }
-        }}
-      />
-    </div>
-  );
-};
 
 export default MainLabor;

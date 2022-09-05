@@ -1,124 +1,124 @@
-import { nanoid } from "nanoid";
+import uuid from "react-native-uuid";
 
 export const ParlorOptions = {
   Man: {
     Hair: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Men's Hair Cut Normal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beard Trim",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "In Between Detailing",
       },
     ],
     Color: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gray Blending",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Permanent",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Highlighting",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Moustache",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Permanent Texture",
       },
     ],
     Waxing: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Eyebrow",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Partial Brow",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chest",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Back",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chest Back Combo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nose",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ear",
       },
     ],
     Nails: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Express Manicure",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Executive Manicure",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pxpress Pedicure",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Executive Pedicure",
       },
     ],
     Facial: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Express Facial",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Executive Facial",
       },
     ],
     Extra: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Paraffin Hand Dip",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Paraffin Hand Dip As Only Service",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Exfoliation Treatment",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ingrown Hair Removal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Acne Treatment",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dry Skin Treatment",
       },
     ],
@@ -126,413 +126,413 @@ export const ParlorOptions = {
   Woman: {
     Facial: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Herbal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gold",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fruit",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flower",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Normal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pimple",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mud Spa",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Face Massage",
       },
     ],
     Manicure: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nail Polish Remover",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nail Clippers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Emery Board And Nail Buffer",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cuticle Pusher And Nippers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Callous Cuticle Remover",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hand Nail Moisturizer",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Base Coat",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nail Polish",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clear Topcoat",
       },
     ],
     Padicure: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Foot Files",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Callous Removers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cuticle Nippers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Foot Scrubs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nail Files",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lotion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cuticle Nail Pusher",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nail Buffer",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cotton Towels",
       },
     ],
     Hair: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Straight",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "U Shape",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "V Shape",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Razer",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Baby",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Blunt",
       },
     ],
     HairColor: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Matrix Root Tuch Up",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Streax Tuch Up",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Loreal Root Tuch Up",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Inoa Root Tuch Up",
       },
     ],
     HairStraightener: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hair Smoothning ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hair Rebonding ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keratin Treatment ",
       },
     ],
     HairSpa: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Loreal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wella ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Loreal Hair",
       },
     ],
     Head: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Head Massage With Aroma Oil",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Head Massage With Coconut Oil",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Head Massage With Olive Oil",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Body Scrubbing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Body Polishing",
       },
     ],
     Skin: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Use The Correct Cleanser For Your Skin Type",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Don’t Use Too Many Products",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: " Moisturize Both Day And Night",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Don’t Touch Your Face",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hydrate Inside And Out",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Avoid Direct Heat Exposure",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Exfoliate A Couple Times Per Week",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vitamins Should Go On Your Skin,Too",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Maintain A Healthy Diet",
       },
     ],
     Threading: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Eyebrows",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Upper Lip",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Forehead",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chin Thread",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lower Lip",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Side Locks",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Face Thread",
       },
     ],
     Bleach: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Hands",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Legs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Hands",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Legs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Back/Front",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Back/Front",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Neck",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Body ",
       },
     ],
     Cleanup: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lotus",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "O3+ Seawood",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "O3+ Whitening",
       },
     ],
     Waxing: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Back",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Body",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Face",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Hands",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Full Legs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Back",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Hand",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Half Legs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lower Lips",
       },
     ],
     MakeUp: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Airbrush Bridal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HD Bridal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Traditional Bridal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Airbrush Reception",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HD Reception",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Traditional Reception",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HD Engagement",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Airbrush Engagement",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Traditional Engagement",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Airbrush Party",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HD Party",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Traditional Party",
       },
     ],

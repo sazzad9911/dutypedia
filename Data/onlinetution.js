@@ -1,692 +1,692 @@
-import { nanoid } from "nanoid";
+import uuid from "react-native-uuid";
 
 export const OnlineTutionOptions = {
   LANGUAGETUTORING: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "arabic",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "bangla",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "english",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Chinese",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hindi",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "German",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Korean",
     },
   ],
   MATHTUTORING: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Algebra I",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Algebra II",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Basic Math",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Calculus AB",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Calculus BC",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Calculus AB",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Calculus BC",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Differential Equations",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Discrete Math",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Finite Math",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Geometry",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Intermediate Statistics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Linear Algebra",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Matrix Algebra",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Multivariable Calculus",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pre-Algebra",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pre-Calculus",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Quantitative Methods",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Quantitative Reasoning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Statistics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Statistics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Trigonometry",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Vector Algebra",
     },
   ],
   OnlineMusicLessons: {
     Instrument: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Accordion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Banjo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cello",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clarinet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Drums",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flute",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Guitar",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Harmonica",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keyboards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mandolin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Percussion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Piano",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Saxaphone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trombone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trumpet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ukulele",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Violin",
       },
     ],
-    "Production/Software": [
+    "Production_Software": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Logic Pro X",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ableton",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pro Tools",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "FL Studio",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reaper",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reason",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cubase",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vocals",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Theory",
       },
     ],
   },
   OnlineCodingLessons: {
-    "Lesson Purpose": [
+    "LessonPurpose": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Programming Language",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Website Development",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Databases",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Game Development",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Data Science",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mobile Apps",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Testing & Automation",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cloud Computing",
       },
     ],
 
-    "Development Techonlogy": [
+    "DevelopmentTechonlogy": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HTML",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "CSS",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bootstrap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "JavaScript",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "TypeScript",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Angular",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "React",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ruby on Rails",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Node.js",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: ".NET",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "C/C++",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "C#",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Java",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Python",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lua",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "PHP",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Laravel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kotlin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Django",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ruby",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Go",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Scratch",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rust",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Swift",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "React Native",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flutter",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wordpress",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shopify ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "SQL",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "NoSQL",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Matlab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "VB/VBA",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Unity",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Arduino",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Unreal Engine",
       },
     ],
   },
   SCIENCETUTORING: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Anatomy and Physiology",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Physics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Physics 1",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Physics 2",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Physics C",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Chemistry",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Chemistry",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Biology",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "AP Biology",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Earth-Sciences",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Microbiology",
     },
   ],
   SOCIALSCIENCESTUTORING: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "English Literature",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Writing",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Reading",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "History",
     },
   ],
   BUSINESSTUTORING: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Accounting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Business Law",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Economics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Finance",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Macroeconomics",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Principles of Management",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tax Accounting",
     },
   ],
   Mobile: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Crack Display",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hardware Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Speaker/Voice Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Water Damage",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Touch Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Camera Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Charging Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Battery Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Country Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Sim Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Icloud Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Password Recovery",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Flash",
     },
   ],
   Pc: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Laptop/Macbook",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pc/Mac",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hard Disc/Ram",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Virus/Security",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Monitor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Keyboard",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Graphics Card",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Power Supply",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Data Recovery/Backup",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software/Opareting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Printer",
     },
   ],
   Printer: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Check-Up",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Diagnose",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "No Display Power",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Unexpect Shutdown",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Time And Date Problem",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Slow Boot",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Color Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Scanner",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Set Up",
     },
   ],
