@@ -15,8 +15,16 @@ import Input from "./../../components/Input";
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
   const [Visible, setVisible] = React.useState(false);
-  const data = route.params.data;
-  const image=route.params.image;
+  const [data, setData] = React.useState(route.params.data);
+  const image = route.params.image;
+  const [text, setText] = React.useState()
+  React.useEffect(() => {
+    setData(route.params.data)
+  },[route.params.data])
+  const deleteData=(title) => {
+    let arr=data.filter(data => data.title!=title)
+    setData(arr)
+  }
   return (
     <ScrollView>
       <ImageBackground
@@ -57,13 +65,14 @@ const SubCategories = ({ navigation, route }) => {
       </ImageBackground>
       {Array.isArray(data) ? (
         data.map((data, i) => (
-          <SubCategoryCart key={i}
+          <SubCategoryCart deleteData={deleteData}
+            key={i}
             onPress={() => {
               if (data.data) {
                 navigation.navigate("SubCategories", {
                   title: data.title,
                   data: data.data,
-                  image:data.image
+                  image: data.image,
                 });
               } else {
                 navigation.navigate("TableData", {
@@ -73,18 +82,39 @@ const SubCategories = ({ navigation, route }) => {
               }
             }}
             title={data.title}
+            data={data}
           />
         ))
       ) : (
         <></>
       )}
-      {Visible ? <Input /> : <></>}
-      <AddButton
-        onPress={() => {
-          setVisible(true);
-        }}
-        title={Visible ? "Save" : "Add New"}
-      />
+      {Visible ? <Input value={text} onChange={setText} /> : <></>}
+      {Array.isArray(data) && data[0].list ? (
+        <AddButton 
+          onPress={() => {
+            setVisible(true);
+            if(Visible){
+              let oldArr=data;
+              oldArr.push({
+                title: text,
+                deletable:true,
+                list: [
+                  {
+                    title: text,
+                    data:[],
+                  }
+                ]
+              });
+              setData(oldArr);
+              setText('')
+            }
+          }} 
+          title={Visible ? "Save" : "Add New"}
+        />
+      ) : (
+        <></>
+      )}
+      <View style={{height:10}}/>
     </ScrollView>
   );
 };

@@ -11,7 +11,7 @@ const MainCategory = (props) => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="Category" options={{
-                header:(props)=><BackHeader {...props}/>
+                headerShown: false
             }} component={Category}/>
             <Stack.Screen name="SubCategories" options={{
                 header:(props)=><SubHeader {...props}/>

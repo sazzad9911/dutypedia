@@ -3,10 +3,10 @@ import { View, TextInput } from "react-native";
 import { primaryColor } from "./../assets/colors";
 import Animated,{StretchInY} from "react-native-reanimated";
 
-const Input = ({onChange}) => {
+const Input = ({onChange,value}) => {
   return (
     <Animated.View entering={StretchInY}>
-      <TextInput onChangeText={(val)=>{
+      <TextInput value={value} onChangeText={(val)=>{
         if(onChange){
             onChange(val);
         }

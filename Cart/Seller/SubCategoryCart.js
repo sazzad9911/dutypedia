@@ -1,15 +1,16 @@
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { primaryColor,textColor } from "./../../assets/colors";
+import { primaryColor, textColor } from "./../../assets/colors";
 
-const SubCategoryCart = ({ title,onPress }) => {
+const SubCategoryCart = ({ title, onPress, deleteData, data }) => {
   return (
-    <TouchableOpacity onPress={() =>{
-      if(onPress){
-        onPress()
-      }
-    }}
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}
       style={{
         flexDirection: "row",
         marginVertical: 5,
@@ -29,12 +30,24 @@ const SubCategoryCart = ({ title,onPress }) => {
         elevation: 2,
       }}
     >
-      <Text style={{
-        color:textColor,
-        fontSize:16,
-        fontFamily: 'Poppins-Medium'
-      }}>{title}</Text>
-      <AntDesign name="right" size={24} color={textColor} />
+      <Text
+        style={{
+          color: textColor,
+          fontSize: 16,
+          fontFamily: "Poppins-Medium",
+        }}
+      >
+        {title}
+      </Text>
+      {data.deletable ? (
+        <TouchableOpacity onPress={() =>{
+          deleteData(data.title)
+        }}>
+          <AntDesign name="delete" size={24} color="red" />
+        </TouchableOpacity>
+      ) : (
+        <AntDesign name="right" size={24} color={textColor} />
+      )}
     </TouchableOpacity>
   );
 };

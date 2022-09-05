@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  TextInput,
 } from "react-native";
 import { EvilIcons, AntDesign } from "@expo/vector-icons";
 import { secondaryColor, primaryColor, textColor } from "../assets/colors";
@@ -13,9 +14,11 @@ const BackHeader = (props) => {
   const navigation = props.navigation;
   return (
     <View style={styles.box}>
-      <View style={{
-        flexDirection: "row",
-      }}>
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
         <AntDesign
           onPress={() => {
             navigation.goBack();
@@ -32,7 +35,7 @@ const BackHeader = (props) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("SearchScreen");
+          //navigation.navigate("SearchScreen");
         }}
         style={styles.input}
       >
@@ -44,14 +47,18 @@ const BackHeader = (props) => {
           size={24}
           color={textColor}
         />
-        <Text
+        <TextInput
+          value={props.value}
+          onChangeText={props.onChange}
+          placeholder={
+            props.placeholder ? props.placeholder : "Search On Dutypedia"
+          }
           style={{
             color: textColor,
             fontFamily: "Poppins-Medium",
+            width:180
           }}
-        >
-          {props.placeholder ? props.placeholder : "Search On Dutypedia"}
-        </Text>
+        ></TextInput>
       </TouchableOpacity>
     </View>
   );
@@ -69,7 +76,7 @@ export const styles = StyleSheet.create({
     color: textColor,
     fontSize: 20,
     fontFamily: "Poppins-SemiBold",
-    flex:2
+    flex: 2,
   },
   input: {
     margin: 20,
