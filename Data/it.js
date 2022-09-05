@@ -9232,7 +9232,7 @@ export const ItOptions = {
       ],
     },
     UserTesting: {
-      "Testing Platform": [
+      "TestingPlatform": [
         {
           id: uuid.v4(),
           title: "Website Testing",
@@ -9294,7 +9294,7 @@ export const ItOptions = {
       ],
     },
     WebProgramming: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "CUSTOM WEBSITE",
@@ -9321,7 +9321,7 @@ export const ItOptions = {
         },
       ],
 
-      "Programming Language": [
+      "ProgrammingLanguage": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -9420,7 +9420,7 @@ export const ItOptions = {
       ],
     },
     DesktopApplications: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "Custom Application",
@@ -9438,7 +9438,7 @@ export const ItOptions = {
           title: "Help/Consultation",
         },
       ],
-      "Programming Language": [
+      "ProgrammingLanguage": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -9596,7 +9596,7 @@ export const ItOptions = {
       ],
     },
     ECommerceDevelopment: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "FULL WEBSITE CREATION",
@@ -9690,7 +9690,7 @@ export const ItOptions = {
         },
       ],
 
-      "Supported Plugin Types": [
+      "SupportedPluginTypes": [
         {
           id: uuid.v4(),
           title: "Marketing",
@@ -9766,7 +9766,7 @@ export const ItOptions = {
       ],
     },
     MobileApps: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "CUSTOM APP",
@@ -9828,7 +9828,7 @@ export const ItOptions = {
         },
       ],
 
-      "Development Technology": [
+      "DevelopmentTechnology": [
         {
           id: uuid.v4(),
           title: "Flutter",
@@ -10026,9 +10026,9 @@ export const ItOptions = {
       ],
     },
   },
-  "Video & Animation": {
+  "VideoAnimation": {
     WhiteboardanimatedExplainers: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "2D ANIMATED EXPLAINERS",
@@ -10047,7 +10047,7 @@ export const ItOptions = {
         },
       ],
 
-      "Explanier Type": [
+      "ExplanierType": [
         {
           id: uuid.v4(),
           title: "Illustration",
@@ -10062,7 +10062,7 @@ export const ItOptions = {
         },
       ],
 
-      "Software Expertise": [
+      "SoftwareExpertise": [
         {
           id: uuid.v4(),
           title: "After Effects",
@@ -10191,7 +10191,7 @@ export const ItOptions = {
         },
       ],
 
-      "Tool Expertise": [
+      "ToolExpertise": [
         {
           id: uuid.v4(),
           title: "Manual Creation",
@@ -10322,7 +10322,7 @@ export const ItOptions = {
       ],
     },
     IntrosOutros: {
-      "Intro/Outro Type": [
+      "IntroOutroType": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10341,7 +10341,7 @@ export const ItOptions = {
         },
       ],
 
-      "Video File Format": [
+      "VideoFileFormat": [
         {
           id: uuid.v4(),
           title: "MP4",
@@ -10416,7 +10416,7 @@ export const ItOptions = {
         },
       ],
 
-      "Video Type": [
+      "VideoType": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10452,7 +10452,7 @@ export const ItOptions = {
       ],
     },
     CharacterAnimation: {
-      "Animation Type": [
+      "AnimationType": [
         {
           id: uuid.v4(),
           title: "2D",
@@ -10540,7 +10540,7 @@ export const ItOptions = {
         },
       ],
 
-      "file format": [
+      "fileformat": [
         {
           id: uuid.v4(),
           title: "MP4",
@@ -10564,7 +10564,7 @@ export const ItOptions = {
       ],
     },
     LyricMusicVideos: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "MUSIC VISUALIZATION",
@@ -10590,7 +10590,7 @@ export const ItOptions = {
           title: "ANIME MUSIC VIDEOS",
         },
       ],
-      "Video Type": [
+      "VideoType": [
         {
           id: uuid.v4(),
           title: "Animated",
@@ -10602,7 +10602,7 @@ export const ItOptions = {
       ],
     },
     AnimationForKids: {
-      "Animation Style": [
+      "AnimationStyle": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10620,7 +10620,7 @@ export const ItOptions = {
           title: "Stop Motion",
         },
       ],
-      "Video Type": [
+      "VideoType": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10674,7 +10674,7 @@ export const ItOptions = {
           title: "Periscope",
         },
       ],
-      "Asset Type": [
+      "AssetType": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10708,7 +10708,7 @@ export const ItOptions = {
           title: "Client Provides Location",
         },
       ],
-      "Video File format": [
+      "VideoFileformat": [
         {
           id: uuid.v4(),
           title: "AVI",
@@ -10740,7 +10740,7 @@ export const ItOptions = {
       ],
     },
     UnboxingVideos: {
-      "vedio type": [
+      "vediotype": [
         {
           id: uuid.v4(),
           title: "technical  review",
@@ -10754,7 +10754,7 @@ export const ItOptions = {
           title: "stop motion",
         },
       ],
-      "product Type": [
+      "productType": [
         {
           id: uuid.v4(),
           title: "Arts & Crafts",
@@ -10814,7 +10814,7 @@ export const ItOptions = {
       ],
     },
     DroneVideography: {
-      "Media type": [
+      "Mediatype": [
         {
           id: uuid.v4(),
           title: "video& photo",
@@ -10867,7 +10867,7 @@ export const ItOptions = {
         },
       ],
 
-      "Drone Type": [
+      "DroneType": [
         {
           id: uuid.v4(),
           title: "Cameradrone",
@@ -10879,7 +10879,7 @@ export const ItOptions = {
       ],
     },
     productPhotography: {
-      "file Format": [
+      "fileFormat": [
         {
           id: uuid.v4(),
           title: "JPG",
@@ -10901,7 +10901,7 @@ export const ItOptions = {
           title: "RAW",
         },
       ],
-      "Photo Setting": [
+      "PhotoSetting": [
         {
           id: uuid.v4(),
           title: "white Background",
@@ -10924,7 +10924,7 @@ export const ItOptions = {
         },
       ],
 
-      "Product Type": [
+      "ProductType": [
         {
           id: uuid.v4(),
           title: "Beauty & Health",

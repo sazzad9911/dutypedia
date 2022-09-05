@@ -1,118 +1,118 @@
-import { nanoid } from "nanoid";
+import uuid from "react-native-uuid";
 
 export const MusicAudioOptions = {
   ProducersComposers: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Composing",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Producing",
       },
     ],
     Genre: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Edm",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jazz",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reggae",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Folk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soul",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R&B",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cinematic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Classical",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Orchestral",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Metal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Blues",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Funk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "World",
       },
     ],
     Purpose: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Songs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Films & Videos",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Games",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Podcasts",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Audiobooks",
       },
     ],
@@ -120,252 +120,252 @@ export const MusicAudioOptions = {
   SessionMusicians: {
     Instrument: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Banjo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cello",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Drums",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flute",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Guitar",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keyboards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Piano",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Saxophone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trumpet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ukulele",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Violin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Harmonica",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trombone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clarinet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Percussion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mandolin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Accordion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Viola",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Harp",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sitar",
       },
     ],
     Genre: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Edm",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Folk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jazz",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gospel",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reggae",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soul",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Punk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R&B",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Opera",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Blues",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Metal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Funk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Classical",
       },
     ],
   },
   SingersConcert: {
-    "Singer Type": [
+    "SingerType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Classical",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Electronic dance music",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Indie rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jazz",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "K-pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Metal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Oldies",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rhythm & Blues",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Techno",
       },
     ],
-    "Service type": [
+    "Servicetype": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Consert",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Surprise Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weeding Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vip Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country Program",
       },
     ],
@@ -373,254 +373,254 @@ export const MusicAudioOptions = {
   VoiceOver: {
     Gender: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Female,Male",
       },
     ],
     Purpose: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Narration",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Audiobook",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Podcast",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Phone System And Ivr",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dubbing/Impersonation",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Radio",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "TV",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Game",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "E Learning",
       },
     ],
     Tone: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Angry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Authoritative",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Awkward",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Calming",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Casual",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Corporate",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cute",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dramatic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Emotional",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Energetic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Funny",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gritty",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sarcastic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Scary",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sexy",
       },
     ],
   },
   BeatMaking: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beats",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Loops & Kits",
       },
     ],
     Genre: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R&B",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Edm",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "House",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lofi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dancehall",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Future Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Drill",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reggaeton",
       },
     ],
-    "Beat Type": [
+    "BeatType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Original Beat",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Type Beat",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beat with Chorus",
       },
     ],
     "Beat Mood": [],
     "Loops & Kits": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Angry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bouncy",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dark",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Energetic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Epic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Happy",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Inspiring",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chill",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hard",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Intense",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Relaxed",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sad",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Silly",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soulful",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Any Mood",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Percussive",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Melodic",
       },
     ],
@@ -628,191 +628,191 @@ export const MusicAudioOptions = {
   OnlineMusicLessons: {
     Instrument: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Accordion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Banjo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cello",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clarinet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Drums",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flute",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Guitar",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Harmonica",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keyboards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mandolin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Percussion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Piano",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Saxaphone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trombone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trumpet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ukulele",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Violin",
       },
     ],
-    "Production/Software": [
+    "ProductionSoftware": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Logic Pro X",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ableton",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pro Tools",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "FL Studio",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reaper",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Reason",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cubase",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vocals",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Theory",
       },
     ],
   },
   SoundDesign: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sound Effects",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Foley",
       },
     ],
     Purpose: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Films",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Games",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Videos & Explainers",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Apps",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Songs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Podcasts & Audiobooks",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Branding & Intros",
       },
     ],
-    "Mixing Type": [
+    "MixingType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Stereo",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "5.1/7.1 Surround Sound",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mono",
       },
     ],
-    "Effect Type": [
+    "EffectType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Human",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Technological",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nature",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ambience",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Synthesized",
       },
     ],
@@ -820,240 +820,240 @@ export const MusicAudioOptions = {
   MusicTranscription: {
     Instruments: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Guitar",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Piano",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keyboards",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Drums",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vocals",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Saxophone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cello",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flute",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Harmonica",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trumpet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ukulele",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Violin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trombone",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Clarinet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Percussion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mandolin",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Acordion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Any Instrument",
       },
     ],
-    "File Format": [
+    "FileFormat": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pdf",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sib",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Midi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wav",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Music Xml",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tabs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mscz",
       },
     ],
   },
   SingersVocalists: {
-    "Singers Type": [
+    "SingersType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Classical",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Electronic Dance Music",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Indie rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jazz",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "K Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Metal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Oldies",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rhythm & Blues",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Techno",
       },
     ],
-    "Services Type": [
+    "ServicesType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Consert",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Surprise Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wedding Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vip Program",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Country Program",
       },
     ],
   },
   JinglesIntros: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jingles",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Intros & Outros",
       },
     ],
     Purpose: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Podcast",
       },
 
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Video Commercial",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Radio Show",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "TV Show",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "YouTube",
       },
     ],
     Style: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sang",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Spoken",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Instrumental",
       },
     ],
@@ -1061,127 +1061,127 @@ export const MusicAudioOptions = {
   DjDropsTags: {
     Genre: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Urban",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dancehall",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Old School",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "EDM",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jazz",
       },
     ],
     Tone: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Energetic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Future Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soul",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Funk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latin",
       },
     ],
   },
   RemixingMashups: {
-    "Service Type": [
+    "ServiceType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "REMIXING",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "MASHUPS",
       },
     ],
     Gener: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R&B",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "EDM",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "House",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lofi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Future Bass",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Soul",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Funk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Latin",
       },
     ],
@@ -1189,425 +1189,425 @@ export const MusicAudioOptions = {
   SynthPresets: {
     Gener: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "R&B",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "EDM",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Trap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "House",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lofi",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rap",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dancehall",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Future Bass",
       },
     ],
-    "Synthesizer Type": [
+    "SynthesizerType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "hard synth hardware",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "soft synth_ vst",
       },
     ],
 
-    "Vst Synthesizer Type": [
+    "VstSynthesizerType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "massive",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "serum",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "sylenth",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "omnisphere",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "reaktor",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "nexus2",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "spire",
       },
     ],
   },
   MusicInstrumentTeaching: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Musical note",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Trombone",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Saxophone",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Trumpet",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tuba",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "French horn",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Record",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clarinet",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Microphone",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Harp",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Recorder",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Keyboard",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Xylophone",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Maracas",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Bell",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Harmonica",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Accordion",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Bass drum",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Banjo",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Double bass",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Cello",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Violin",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Piano",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Guitar",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Bass guitar",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Conga",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Snare drum",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Drums/ Drum set",
     },
   ],
   TeachingSong: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Classical",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Country",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Electronic Dance Music ",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hip-Hop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Indie Rock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Jazz",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "K-pop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Metal",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Oldies",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rhythm & Blues",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Techno",
     },
   ],
   MixingMastering: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Editing",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mastering",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mixing",
     },
   ],
   Songwriters: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hip Hop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "EDM",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Folk",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Jazz",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Gospel",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Raggae",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Soul",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Punk",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Country",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "R&B",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Opera",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Metal",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Funk",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Latin",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Indie",
     },
   ],
   DjMixing: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hip Hop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pop",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "R&B",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "EDM",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Trap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "House",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lofi",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Dancehall",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Future Bass",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Rock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Soul",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Funk",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Latin",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Techno",
     },
   ],
   DialougeEditing: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Videos & Films",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Video Games",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Phone Systems & IVR",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Radio Ads",
     },
   ],

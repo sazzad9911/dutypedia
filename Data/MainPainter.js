@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
-import OptionsViewer from "@components/become-seller/OptionsViewer";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
 
-const Options = [
+
+const MainPainter = [
   {
     id: 1,
     title: "Paint-Interior And Exterior",
@@ -49,31 +46,5 @@ const Options = [
     title: "Commercial Service",
   },
 ];
-const MainPainter = ({ goNext, savedData }) => {
-  const [completedSection, setCompletedSection] = useState(savedData || []);
-  const router = useRouter();
-  return (
-    <div className="">
-      <OptionsViewer
-        defaultOptions={Options || []}
-        title="Painter"
-        data={[]}
-        actionButtonTitle="Next"
-        goBack={() => router.back()}
-        onSubmit={(data) => {
-          if (
-            data.selectedOptions.length < 1 &&
-            data.customOptions.length < 1
-          ) {
-            toast.error("Plaese choose at least one option!");
-          } else {
-            setCompletedSection(data);
-            goNext(data);
-          }
-        }}
-      />
-    </div>
-  );
-};
 
 export default MainPainter;

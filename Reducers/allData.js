@@ -7,7 +7,9 @@ import { BuilderIcon,
   ElectricIcon,
   EntertainmentIcon,
   HouseKeeperIcon,
-  ItIcon
+  ItIcon,
+  MusicIcon,
+  PainterIcon
  } from "../assets/icon";
 import business from "../assets/Images/business.webp";
 import { BusinessOptions } from "./../Data/business";
@@ -19,6 +21,10 @@ import { EntertainmentOptions } from './../Data/entertainment';
 import MainHouseKeeper from './../Data/MainHouseKeeper';
 import it from '../assets/Images/it.webp'
 import { ItOptions } from './../Data/it';
+import musicaudio from '../assets/Images/musicaudio.webp'
+import { MusicAudioOptions } from './../Data/musicaudio';
+import MainPainter from './../Data/MainPainter';
+
 
 
 const initialState = [
@@ -1903,11 +1909,657 @@ const initialState = [
               },
             ],
           },
-          
+          {
+            title: "User Testing",
+            list: [
+              {
+                title: "Testing Platform",
+                data:ItOptions.ProgramingTeach.UserTesting.TestingPlatform
+              },
+              {
+                title: "Testing Application",
+                data:ItOptions.ProgramingTeach.UserTesting.Device
+              },
+            ],
+          },
+          {
+            title: "Web Programming",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.ProgramingTeach.WebProgramming.ServiceType
+              },
+              {
+                title: "Programming Language",
+                data:ItOptions.ProgramingTeach.WebProgramming.ProgrammingLanguage
+              },
+              {
+                title: "Expertise",
+                data:ItOptions.ProgramingTeach.WebProgramming.Expertise
+              },
+            ],
+          },
+          {
+            title: "Desktop Applications",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.ProgramingTeach.DesktopApplications.ServiceType
+              },
+              {
+                title: "Programming Language",
+                data:ItOptions.ProgramingTeach.DesktopApplications.ProgrammingLanguage
+              },
+              {
+                title: "Operating System",
+                data:ItOptions.ProgramingTeach.DesktopApplications.OperatingSystem
+              },
+              {
+                title: "Expertise",
+                data:ItOptions.ProgramingTeach.DesktopApplications.Expertise
+              },
+              {
+                title: "Application",
+                data:ItOptions.ProgramingTeach.DesktopApplications.Application
+              },
+            ],
+          },
+          {
+            title: "ECommerce Development",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.ProgramingTeach.ECommerceDevelopment.ServiceType
+              },
+              {
+                title: "Platform",
+                data:ItOptions.ProgramingTeach.ECommerceDevelopment.Platform
+              },
+              {
+                title: "Supported Plugin Types",
+                data:ItOptions.ProgramingTeach.ECommerceDevelopment.SupportedPluginTypes
+              },
+            ],
+          },
+          {
+            title: "Mobile Apps",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.ProgramingTeach.MobileApps.ServiceType
+              },
+              {
+                title: "Platform",
+                data:ItOptions.ProgramingTeach.MobileApps.Platform
+              },
+              {
+                title: "Development Technology",
+                data:ItOptions.ProgramingTeach.MobileApps.DevelopmentTechnology
+              },
+              {
+                title: "Purpose",
+                data:ItOptions.ProgramingTeach.MobileApps.Purpose
+              },
+              {
+                title: "Expertise",
+                data:ItOptions.ProgramingTeach.MobileApps.Expertise
+              },
+            ],
+          },
+          ],
+      },
+      {
+        title: "Video & Animation",
+        image: it,
+        data: [
+          {
+            title: "Whiteboard animated Explainers",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ServiceType
+              },
+              {
+                title: "Explanier Type",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ExplanierType
+              },
+              {
+                title: "Purpose",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.Purpose
+              },
+              {
+                title: "Tool Expertise",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.ToolExpertise
+              },
+            ],
+          },
+          {
+            title: "Animated Gifs",
+            list: [
+              {
+                title: "Purpose",
+                data:ItOptions.VideoAnimation.AnimatedGifs.Purpose
+              },
+              {
+                title: "File Format",
+                data:ItOptions.VideoAnimation.AnimatedGifs.FileFormat
+              },
+            ],
+          },
+          {
+            title: "Intros Outros",
+            list: [
+              {
+                title: "Intro/Outro Type",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.IntroOutroType
+              },
+              {
+                title: "Video File Format",
+                data:ItOptions.VideoAnimation.WhiteboardanimatedExplainers.VideoFileFormat
+              },
+            ],
+          },
+          {
+            title: "Short Video Ads",
+            list: [
+              {
+                title: "Platform",
+                data:ItOptions.VideoAnimation.ShortVideoAds.Platform
+              },
+              {
+                title: "Video Type",
+                data:ItOptions.VideoAnimation.ShortVideoAds.VideoType
+              },
+            ],
+          },
+          {
+            title: "Character Animation",
+            list: [
+              {
+                title: "Animation Type",
+                data:ItOptions.VideoAnimation.CharacterAnimation.AnimationType
+              },
+              {
+                title: "Industry",
+                data:ItOptions.VideoAnimation.CharacterAnimation.Industry
+              },
+            ],
+          },
+          {
+            title: "dProduct Animation",
+            list: [
+              {
+                title: "Industry",
+                data:ItOptions.VideoAnimation.dProductAnimation.Industry
+              },
+              {
+                title: "Environment",
+                data:ItOptions.VideoAnimation.dProductAnimation.Environment
+              },
+              {
+                title: "file format",
+                data:ItOptions.VideoAnimation.dProductAnimation.fileformat
+              },
+            ],
+          },
+          {
+            title: "Lyric Music Videos",
+            list: [
+              {
+                title: "Service Type",
+                data:ItOptions.VideoAnimation.LyricMusicVideos.ServiceType
+              },
+              {
+                title: "Video Type",
+                data:ItOptions.VideoAnimation.LyricMusicVideos.VideoType
+              },
+            ],
+          },
+          {
+            title: "Animation For Kids",
+            list: [
+              {
+                title: "Animation Style",
+                data:ItOptions.VideoAnimation.AnimationForKids.AnimationStyle
+              },
+              {
+                title: "Video Type",
+                data:ItOptions.VideoAnimation.AnimationForKids.VideoType
+              },
+            ],
+          },
+          {
+            title: "Animation For Streamers",
+            list: [
+              {
+                title: "Column1",
+                data:ItOptions.VideoAnimation.AnimationForStreamers.Column1
+              },
+              {
+                title: "Asset Type",
+                data:ItOptions.VideoAnimation.AnimationForStreamers.AssetType
+              },
+            ],
+          },
+          {
+            title: "Live Action Explainers",
+            list: [
+              {
+                title: "Setting",
+                data:ItOptions.VideoAnimation.LiveActionExplainers.Setting
+              },
+              {
+                title: "Video File format",
+                data:ItOptions.VideoAnimation.LiveActionExplainers.VideoFileformat
+              },
+            ],
+          },
+          {
+            title: "Unboxing Videos",
+            list: [
+              {
+                title: "vedio type",
+                data:ItOptions.VideoAnimation.UnboxingVideos.vediotype
+              },
+              {
+                title: "product Type",
+                data:ItOptions.VideoAnimation.UnboxingVideos.productType
+              },
+            ],
+          },
+          {
+            title: "Drone Video graphy",
+            list: [
+              {
+                title: "Media type",
+                data:ItOptions.VideoAnimation.DroneVideography.Mediatype
+              },
+              {
+                title: "Themes",
+                data:ItOptions.VideoAnimation.DroneVideography.Themes
+              },
+              {
+                title: "Drone Type",
+                data:ItOptions.VideoAnimation.DroneVideography.DroneType
+              },
+            ],
+          },
+          {
+            title: "product Photography",
+            list: [
+              {
+                title: "file Format",
+                data:ItOptions.VideoAnimation.productPhotography.fileFormat
+              },
+              {
+                title: "Photo Setting",
+                data:ItOptions.VideoAnimation.productPhotography.PhotoSetting
+              },
+              {
+                title: "ProductType",
+                data:ItOptions.VideoAnimation.productPhotography.ProductType
+              },
+            ],
+          },
+          {
+            title: "App Website Previews",
+            list: [
+              {
+                title: "App Website Previews",
+                data:ItOptions.VideoAnimation.AppWebsitePreviews
+              },
+              
+            ],
+          },
+          {
+            title: "Elearing Video Production",
+            list: [
+              {
+                title: "Elearing Video Production",
+                data:ItOptions.VideoAnimation.ElearingVideoProduction
+              },
+              
+            ],
+          },
+          {
+            title: "Lottie Website Animation",
+            list: [
+              {
+                title: "Lottie Website Animation",
+                data:ItOptions.VideoAnimation.LottieWebsiteAnimation
+              },
+              
+            ],
+          },
+          {
+            title: "Screen casting Videos",
+            list: [
+              {
+                title: "Screen casting Videos",
+                data:ItOptions.VideoAnimation.ScreencastingVideos
+              },
+              
+            ],
+          },
+          {
+            title: "Slide Show Videos",
+            list: [
+              {
+                title: "Slide Show Videos",
+                data:ItOptions.VideoAnimation.SlideShowVideos
+              },
+              
+            ],
+          },
+          {
+            title: "Sub title Captions",
+            list: [
+              {
+                title: "Sub title Captions",
+                data:ItOptions.VideoAnimation.SubtitleCaptions
+              },
+              
+            ],
+          },
+          {
+            title: "Video Editing",
+            list: [
+              {
+                title: "Video Editing",
+                data:ItOptions.VideoAnimation.VideoEditing
+              },
+              
+            ],
+          },
+          {
+            title: "Visual Effect",
+            list: [
+              {
+                title: "Visual Effect",
+                data:ItOptions.VideoAnimation.VisualEffect
+              },
+              
+            ],
+          },
+         
+          ],
+      },
+      
+    ],
+  },
+  {
+    title: "Music & Audio Service",
+    icon: MusicIcon,
+    color: "#FEB944",
+    image: musicaudio,
+    data: [
+      {
+        title: "Producers Composers",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.ProducersComposers.ServiceType,
+          },
+          {
+            title: "Genre",
+            data: MusicAudioOptions.ProducersComposers.Genre,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.ProducersComposers.Purpose,
+          },
+        ],
+      },
+      {
+        title: "Session Musicians",
+        list: [
+          {
+            title: "Instrument",
+            data: MusicAudioOptions.SessionMusicians.Instrument,
+          },
+          {
+            title: "Genre",
+            data: MusicAudioOptions.SessionMusicians.Genre,
+          },
+        ],
+      },
+      {
+        title: "Singers Concert",
+        list: [
+          {
+            title: "Singer Type",
+            data: MusicAudioOptions.SingersConcert.SingerType,
+          },
+          {
+            title: "Service type",
+            data: MusicAudioOptions.SingersConcert.Servicetype,
+          },
+        ],
+      },
+      {
+        title: "Voice Over",
+        list: [
+          {
+            title: "Gender",
+            data: MusicAudioOptions.VoiceOver.Gender,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.VoiceOver.Purpose,
+          },
+          {
+            title: "Tone",
+            data: MusicAudioOptions.VoiceOver.Tone,
+          },
+        ],
+      },
+      {
+        title: "Beat Making",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.BeatMaking.ServiceType,
+          },
+          {
+            title: "Genre",
+            data: MusicAudioOptions.BeatMaking.Genre,
+          },
+          {
+            title: "Beat Type",
+            data: MusicAudioOptions.BeatMaking.BeatType,
+          },
+        ],
+      },
+      {
+        title: "Online Music Lessons",
+        list: [
+          {
+            title: "Instrument",
+            data: MusicAudioOptions.OnlineMusicLessons.Instrument,
+          },
+          {
+            title: "Production/Software",
+            data: MusicAudioOptions.OnlineMusicLessons.ProductionSoftware,
+          },
+        ],
+      },
+      {
+        title: "Sound Design",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.SoundDesign.ServiceType,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.SoundDesign.Purpose,
+          },
+          {
+            title: "Mixing Type",
+            data: MusicAudioOptions.SoundDesign.MixingType,
+          },
+          {
+            title: "Effect Type",
+            data: MusicAudioOptions.SoundDesign.EffectType,
+          },
+        ],
+      },
+      {
+        title: "Music Transcription",
+        list: [
+          {
+            title: "Instruments",
+            data: MusicAudioOptions.MusicTranscription.Instruments,
+          },
+          {
+            title: "File Format",
+            data: MusicAudioOptions.MusicTranscription.FileFormat,
+          },
+        ],
+      },
+      {
+        title: "Singers Vocalists",
+        list: [
+          {
+            title: "Singers Type",
+            data: MusicAudioOptions.SingersVocalists.SingersType,
+          },
+          {
+            title: "Services Type",
+            data: MusicAudioOptions.SingersVocalists.ServicesType,
+          },
+        ],
+      },
+      {
+        title: "Jingles Intros",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.JinglesIntros.ServiceType,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.JinglesIntros.Purpose,
+          },
+          {
+            title: "Style",
+            data: MusicAudioOptions.JinglesIntros.Style,
+          },
+        ],
+      },
+      {
+        title: "Dj Drops Tags",
+        list: [
+          {
+            title: "Genre",
+            data: MusicAudioOptions.DjDropsTags.Genre,
+          },
+          {
+            title: "Tone",
+            data: MusicAudioOptions.DjDropsTags.Tone,
+          },
+        ],
+      },
+      {
+        title: "Remixing Mashups",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.RemixingMashups.ServiceType,
+          },
+          {
+            title: "Gener",
+            data: MusicAudioOptions.RemixingMashups.Gener,
+          },
+        ],
+      },
+      {
+        title: "Synth Presets",
+        list: [
+          {
+            title: "Gener",
+            data: MusicAudioOptions.SynthPresets.Gener,
+          },
+          {
+            title: "Synthesizer Type",
+            data: MusicAudioOptions.SynthPresets.SynthesizerType,
+          },
+          {
+            title: "Vst Synthesizer Type",
+            data: MusicAudioOptions.SynthPresets.VstSynthesizerType,
+          },
+        ],
+      },
+      {
+        title: "Music Instrument Teaching",
+        list: [
+          {
+            title: "Music Instrument Teaching",
+            data: MusicAudioOptions.MusicInstrumentTeaching,
+          },
+        ],
+      },
+      {
+        title: "Teaching Song",
+        list: [
+          {
+            title: "TeachingSong",
+            data: MusicAudioOptions.TeachingSong,
+          },
+        ],
+      },
+      {
+        title: "Mixing Mastering",
+        list: [
+          {
+            title: "Mixing Mastering",
+            data: MusicAudioOptions.MixingMastering,
+          },
+        ],
+      },
+      {
+        title: "Song writers",
+        list: [
+          {
+            title: "Song writers",
+            data: MusicAudioOptions.Songwriters,
+          },
+        ],
+      },
+      {
+        title: "Dj Mixing",
+        list: [
+          {
+            title: "Dj Mixing",
+            data: MusicAudioOptions.DjMixing,
+          },
+        ],
+      },
+      {
+        title: "Dialouge Editing",
+        list: [
+          {
+            title: "Dialouge Editing",
+            data: MusicAudioOptions.DialougeEditing,
+          },
         ],
       },
     ],
   },
+  {
+    title: "Painter",
+    icon: PainterIcon,
+    color: "#D934BF",
+    image: entertainment,
+    list: [
+      {
+        title:'Painter',
+        data:MainPainter
+      }
+    ],
+  },
+  
+  
 ];
 const allData = (state = initialState, action) => {
   if (action.type === "SET_DATA") {
