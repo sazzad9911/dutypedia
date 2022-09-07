@@ -1,9 +1,9 @@
 import React from 'react';
 import {TouchableOpacity,Text} from 'react-native'
 
-const Button = ({ style, title, onPress }) => {
+const Button = ({ style, title, onPress,disabled }) => {
     return (
-      <TouchableOpacity
+      <TouchableOpacity disabled={disabled?true:false}
         onPress={() => {
           if (onPress) {
             onPress();

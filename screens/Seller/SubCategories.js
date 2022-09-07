@@ -11,20 +11,21 @@ import { textColor } from "./../../assets/colors";
 import SubCategoryCart from "./../../Cart/Seller/SubCategoryCart";
 import AddButton from "./../../components/AddButton";
 import Input from "./../../components/Input";
+import Button from './../../components/Button';
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
   const [Visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState(route.params.data);
   const image = route.params.image;
-  const [text, setText] = React.useState()
+  const [text, setText] = React.useState();
   React.useEffect(() => {
-    setData(route.params.data)
-  },[route.params.data])
-  const deleteData=(title) => {
-    let arr=data.filter(data => data.title!=title)
-    setData(arr)
-  }
+    setData(route.params.data);
+  }, [route.params.data]);
+  const deleteData = (title) => {
+    let arr = data.filter((data) => data.title != title);
+    setData(arr);
+  };
   return (
     <ScrollView>
       <ImageBackground
@@ -65,7 +66,8 @@ const SubCategories = ({ navigation, route }) => {
       </ImageBackground>
       {Array.isArray(data) ? (
         data.map((data, i) => (
-          <SubCategoryCart deleteData={deleteData}
+          <SubCategoryCart
+            deleteData={deleteData}
             key={i}
             onPress={() => {
               if (data.data) {
@@ -90,31 +92,44 @@ const SubCategories = ({ navigation, route }) => {
       )}
       {Visible ? <Input value={text} onChange={setText} /> : <></>}
       {Array.isArray(data) && data[0].list ? (
-        <AddButton 
-          onPress={() => {
-            setVisible(true);
-            if(Visible&&text){ 
-              let oldArr=data;
-              oldArr.push({
-                title: text,
-                deletable:true,
-                list: [
-                  {
-                    title: text,
-                    data:[],
-                  }
-                ]
-              });
-              setData(oldArr);
-              setText('')
-            }
-          }} 
-          title={Visible ? "Save" : "Add New"}
-        />
+        <View>
+          <AddButton
+            onPress={() => {
+              setVisible(true);
+              if (Visible && text) {
+                let oldArr = data;
+                oldArr.push({
+                  title: text,
+                  deletable: true,
+                  list: [
+                    {
+                      title: text,
+                      data: [],
+                    },
+                  ],
+                });
+                setData(oldArr);
+                setText("");
+              }
+            }}
+            title={Visible ? "Save" : "Add New"}
+          />
+          <Button onPress={()=>{
+            navigation.navigate('Pricing')
+          }} style={{
+            marginVertical:20,
+            marginHorizontal:20,
+            borderRadius:5,
+            color:'white',
+            backgroundColor:'#DA1E37',
+            borderWidth:0,
+            height:43
+          }} title='Next'/>
+        </View>
       ) : (
         <></>
       )}
-      <View style={{height:10}}/>
+      <View style={{ height: 10 }} />
     </ScrollView>
   );
 };

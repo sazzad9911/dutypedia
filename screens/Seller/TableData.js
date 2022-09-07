@@ -17,6 +17,8 @@ import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
 import uuid from "react-native-uuid";
 import { AntDesign } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { setListData } from "../../action";
 
 const optionsPerPage = [2, 3];
 
@@ -24,15 +26,29 @@ const TableData = (props) => {
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const list = props.route.params.list;
-  const title=props.route.params.title;
-  const [Visible, setVisible]= React.useState(false);
+  const title = props.route.params.title;
+  const [Visible, setVisible] = React.useState(false);
+  const dispatch = useDispatch();
+  const listData = useSelector((state) => state.listData);
+  const [selectedData, setSelectedData] = React.useState(null);
+  const [buttonPress,setButtonPress]=React.useState(false);
 
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
+  React.useEffect(() => {});
+  const storeData = (title) => {
+    if (selectedData) {
+      setSelectedData((data) => [...data, title]);
+    } else {
+      setSelectedData([title]);
+    }
+  };
   React.useEffect(() => {
-
-  })
+    if(selectedData){
+      setButtonPress(true)
+    }
+  },[selectedData])
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -42,20 +58,30 @@ const TableData = (props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {Array.isArray(list) ? (
           list.map((list, i) => (
-            <Table key={i} data={list.data} title={list.title} {...props} />
+            <Table
+              storeData={storeData}
+              key={i}
+              data={list.data}
+              title={list.title}
+              {...props}
+            />
           ))
         ) : (
           <></>
         )}
       </ScrollView>
-      <Button
+      <Button disabled={buttonPress?false:true} onPress={()=>{
+        dispatch(setListData(selectedData))
+        setButtonPress(false)
+        props.navigation.goBack()
+      }}
         style={{
           backgroundColor: "green",
-          color: "white",
           borderRadius: 5,
           marginHorizontal: 20,
           marginVertical: 10,
           height: 40,
+          color:buttonPress?'white':'gray'
         }}
         title="Save"
       />
@@ -64,17 +90,17 @@ const TableData = (props) => {
 };
 
 export default TableData;
-const Table = ({ navigation, route, title, data }) => {
+const Table = ({ navigation, route, title, data, storeData }) => {
   const [Visible, setVisible] = React.useState(false);
   const [Data, setData] = React.useState([]);
   const [text, setText] = React.useState();
   React.useEffect(() => {
     setData(data);
   }, [data]);
-  const deleteData=(title) => {
-    let arr= Data.filter(data => data.title!=title);
+  const deleteData = (title) => {
+    let arr = Data.filter((data) => data.title != title);
     setData(arr);
-  }
+  };
   return (
     <View>
       <View
@@ -125,7 +151,16 @@ const Table = ({ navigation, route, title, data }) => {
         </View>
         <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         {Array.isArray(data) ? (
-          Data.map((data, i) => <Rows deleteData={deleteData} data={data} key={i} title={data.title} />)
+          Data.map((data, i) => (
+            <Rows
+              storeData={storeData}
+              deleteData={deleteData}
+              data={data}
+              key={i}
+              title={data.title}
+              supTitle={title}
+            />
+          ))
         ) : (
           <></>
         )}
@@ -134,13 +169,18 @@ const Table = ({ navigation, route, title, data }) => {
       <AddButton
         onPress={() => {
           setVisible(true);
-          if (Visible&&text) {
+          if (Visible && text) {
             let newData = Data;
             newData.push({
               id: uuid.v4(),
               title: text,
               deletable: true,
+              selected: true,
             });
+            storeData({
+              title: title,
+              subTitle: text
+            })
             setText("");
           }
         }}
@@ -149,7 +189,7 @@ const Table = ({ navigation, route, title, data }) => {
     </View>
   );
 };
-const Rows = ({ title, data,deleteData }) => {
+const Rows = ({ title, data, deleteData,storeData,supTitle }) => {
   const [checked, setChecked] = React.useState(false);
   return (
     <View
@@ -177,13 +217,15 @@ const Rows = ({ title, data,deleteData }) => {
             width: 33,
             justifyContent: "center",
             alignItems: "center",
-            borderRadius:5,
+            borderRadius: 5,
           }}
         >
           {data.deletable ? (
-            <TouchableOpacity onPress={() =>{
-              deleteData(data.title)
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                deleteData(data.title);
+              }}
+            >
               <AntDesign name="delete" size={22} color="red" />
             </TouchableOpacity>
           ) : (
@@ -198,6 +240,10 @@ const Rows = ({ title, data,deleteData }) => {
               status={checked ? "checked" : "unchecked"}
               onPress={() => {
                 setChecked(!checked);
+                storeData({
+                  title: supTitle,
+                  subTitle:title
+                })
               }}
             />
           )}
