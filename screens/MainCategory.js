@@ -16,7 +16,9 @@ const MainCategory = (props) => {
             <Stack.Screen name="SubCategories" options={{
                 header:(props)=><SubHeader {...props}/>
             }} component={SubCategories}/>
-            
+            <Stack.Screen name="SubCategories_1" options={{
+                header:(props)=><SubHeader {...props}/>
+            }} component={SubCategories}/>
         </Stack.Navigator>
     );
 };

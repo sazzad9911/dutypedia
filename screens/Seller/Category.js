@@ -18,7 +18,7 @@ const Category = (props) => {
     return []
   }
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView style={{flex:1}}>
       <BackHeader value={search} onChange={(val)=>{
         setSearch(val)
         if(val) {

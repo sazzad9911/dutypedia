@@ -16,6 +16,12 @@ export const bottomRef=(data)=>{
         playload:data
     }
 }
+export const setListData=(data)=>{
+    return{
+        type:'SET_DATA',
+        playload:data
+    }
+}
 export const numToArray=(integer)=>{
     let number=parseInt(integer)
     let arr=[]

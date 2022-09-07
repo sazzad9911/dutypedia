@@ -24,17 +24,22 @@ const TableData = (props) => {
   const [page, setPage] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const list = props.route.params.list;
+  const title=props.route.params.title;
+  const [Visible, setVisible]= React.useState(false);
 
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
+  React.useEffect(() => {
+
+  })
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {Array.isArray(list) ? (
           list.map((list, i) => (
             <Table key={i} data={list.data} title={list.title} {...props} />
@@ -129,7 +134,7 @@ const Table = ({ navigation, route, title, data }) => {
       <AddButton
         onPress={() => {
           setVisible(true);
-          if (Visible) {
+          if (Visible&&text) {
             let newData = Data;
             newData.push({
               id: uuid.v4(),
@@ -168,11 +173,11 @@ const Rows = ({ title, data,deleteData }) => {
           style={{
             borderWidth: Platform.OS == "ios" ? 1 : 0,
             borderColor: "#e5e5e5",
-            height: 35,
-            width: 35,
+            height: 33,
+            width: 33,
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: 20,
+            borderRadius:5,
           }}
         >
           {data.deletable ? (
@@ -186,8 +191,8 @@ const Rows = ({ title, data,deleteData }) => {
               style={{
                 backgroundColor: "red",
                 transform: [
-                  { scaleX: Platform.OS == "ios" ? 0.4 : 1 },
-                  { scaleY: Platform.OS == "ios" ? 0.4 : 1 },
+                  { scaleX: Platform.OS == "ios" ? 0.2 : 1 },
+                  { scaleY: Platform.OS == "ios" ? 0.2 : 1 },
                 ],
               }}
               status={checked ? "checked" : "unchecked"}

@@ -69,7 +69,7 @@ const SubCategories = ({ navigation, route }) => {
             key={i}
             onPress={() => {
               if (data.data) {
-                navigation.navigate("SubCategories", {
+                navigation.navigate("SubCategories_1", {
                   title: data.title,
                   data: data.data,
                   image: data.image,
@@ -93,7 +93,7 @@ const SubCategories = ({ navigation, route }) => {
         <AddButton 
           onPress={() => {
             setVisible(true);
-            if(Visible){
+            if(Visible&&text){ 
               let oldArr=data;
               oldArr.push({
                 title: text,
