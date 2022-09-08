@@ -55,9 +55,11 @@ export default function App() {
     version: 3,
     colors: {
       ...Default.colors,
-      primary: "#3498db",
+      primary: "#DA1E37",
       secondary: "#f1c40f",
-      tertiary: "#a1b2c3",
+      tertiary: "#e5e5e5",
+      background: "#ffffff",
+      outline: "#e5e5e5",
     },
     typescale: {
       ...Default.typescale, 

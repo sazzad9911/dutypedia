@@ -224,7 +224,9 @@ const MainProfile = (props) => {
           Icon={() => <AntDesign name="hearto" size={24} color="black" />}
           title="Saved"
         />
-        <ProfileOption
+        <ProfileOption onPress={() => {
+          navigation.navigate("MainCategory");
+        }}
           Icon={() => <Ionicons name="business" size={24} color="black" />}
           title="Create a business account"
         />

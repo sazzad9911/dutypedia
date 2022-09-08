@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity,Text} from 'react-native'
 
-const Button = ({ style, title, onPress,disabled }) => {
+const Button = ({ style, title, onPress,disabled,Icon }) => {
     return (
       <TouchableOpacity disabled={disabled?true:false}
         onPress={() => {
@@ -22,12 +22,15 @@ const Button = ({ style, title, onPress,disabled }) => {
           style,
         ]}
       >
+     {
+      Icon?( <Icon/>):(<></>)
+     }
         <Text
           style={{
             fontSize: 13,
             fontWeight: "bold",
             color: style && style.color ? style.color : "#808080",
-            fontFamily:'Poppins-SemiBold'
+            fontFamily:'Poppins-SemiBold',
           }}
         >
           {title}
