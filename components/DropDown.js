@@ -7,17 +7,22 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 const { width, height } = Dimensions.get("window");
 import { AntDesign } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
+import { primaryColor,textColor } from './../assets/colors';
 
 const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
+  const [Visible, setVisible] = React.useState(false);
+
   React.useEffect(() => {
+    
     setValue(value);
   }, [value]);
 
@@ -37,29 +42,21 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
       justifyContent: "space-between",
     },
     container: {
-      position: "absolute",
-      top: 45,
-      left: 0,
       backgroundColor: "#f5f5f5",
       width: "100%",
       paddingHorizontal: 10,
       borderRadius: 5,
-      zIndex: 95,
     },
     text: {
       fontSize: 15,
       fontFamily: "Poppins-Medium",
       marginRight: 10,
+      color:textColor
     },
   });
-  const childRef=React.useRef()
+  const childRef = React.useRef();
   return (
-    <OutsideView
-      childRef={childRef}
-      onPressOutside={() => {
-        setFocus(false)
-      }}
-    >
+    <View>
       <View style={[styles.viewBox, style]}>
         <TouchableOpacity
           onPress={() => {
@@ -79,25 +76,69 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
             color="#707070"
           />
         </TouchableOpacity>
-        {Focus ? (
-          <Animated.View entering={FadeIn} style={styles.container}>
-            {Array.isArray(DATA) &&
-              DATA.map((doc, i) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    setValue(doc.title);
-                  }}
-                  key={i}
-                >
-                  <Text style={styles.text}>{doc.title}</Text>
-                </TouchableOpacity>
-              ))}
-          </Animated.View>
-        ) : (
-          <></>
-        )}
       </View>
-    </OutsideView>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={Focus}
+        onRequestClose={() => {
+          setFocus(!Focus);
+        }}
+      >
+        <OutsideView
+          style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.21)" }}
+          childRef={childRef}
+          onPressOutside={() => {
+            setFocus(false);
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Animated.View
+              ref={childRef}
+              entering={FadeIn}
+              style={{
+                maxHeight: 320,
+                width: "90%",
+                backgroundColor: primaryColor,
+                borderRadius: 5,
+              }}
+            >
+              <ScrollView>
+                {Array.isArray(DATA) &&
+                  DATA.map((doc, i) => (
+                    <TouchableOpacity style={{
+                      width:'100%',
+                      height:50,
+                      marginTop:2,
+                      paddingHorizontal:10,
+                      justifyContent: "center",
+                      borderBottomWidth: 1,
+                      borderBottomColor:'#e5e5e5',
+                    }}
+                      onPress={() => {
+                        setValue(doc);
+                        setFocus(false);
+                        if(onChange){
+                          onChange(doc);
+                        }
+                      }}
+                      key={i}
+                    >
+                      <Text style={styles.text}>{doc}</Text>
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
+            </Animated.View>
+          </View>
+        </OutsideView>
+      </Modal>
+    </View>
   );
 };
 

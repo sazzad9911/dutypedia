@@ -8,10 +8,15 @@ import {
   TouchableOpacity,
   Platform,
   Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { primaryColor, textColor } from "./../../assets/colors";
+import {
+  primaryColor,
+  textColor,
+  backgroundColor,
+} from "./../../assets/colors";
 import Input from "./../../components/Input";
-import SuggestionBox from "./../../components/SuggestionBox";
+import SuggestionBox, { MainOptions } from "./../../components/SuggestionBox";
 import DropDown from "./../../components/DropDown";
 const { width, height } = Dimensions.get("window");
 import { Picker } from "@react-native-picker/picker";
@@ -38,334 +43,360 @@ const Pricing = ({ navigation, route }) => {
     friction: 8,
     useNativeDriver: true,
   }).start();
-  const [HomeDelivery, setHomeDelivery] = React.useState(false);
-  const [HomeService, setHomeService] = React.useState(false);
-  const [OnlineSupport, setOnlineSupport] = React.useState(false);
   const [InputVisible, setInputVisible] = React.useState(false);
   const [text, setText] = React.useState();
+  const [Service, setService] = React.useState([
+    {
+      title: "Home Delivery Available",
+      checked: false,
+    },
+    {
+      title: "Home Service Available",
+      checked: false,
+    },
+    {
+      title: "Online Support Available",
+      checked: false,
+    },
+  ]);
+  const [selectedItem, setSelectedItem] = React.useState(null);
+  const DATA = [
+    {
+      title: "Mr",
+      value: "Mr.",
+    },
+    {
+      title: "Mrs",
+      value: "Mrs.",
+    },
+    {
+      title: "Miss",
+      value: "Miss.",
+    },
+    {
+      title: "Dr. (Doctor)",
+      value: "Dr.",
+    },
+    {
+      title: "Esq. (Esquire)",
+      value: "Dr.",
+    },
+    {
+      title: "Hon. (Honorable)",
+      value: "Hon.",
+    },
+    {
+      title: "Jr. (Junior)",
+      value: "Jr.",
+    },
+  ];
+  const [Data, setData] = React.useState([]);
+  const [buttonVisible, setButtonVisible] = React.useState(false);
+  const [timer, setTimer] = React.useState(null);
 
+  const addOne = () => {
+    setTeamNumber(TeamNumber + 1);
+    setTimer(setTimeout(addOne, 20));
+  };
+
+  const stopTimer = () => {
+    clearTimeout(timer);
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.viewBox}>
-        <Text style={styles.text}>Informations</Text>
-        <Input
-          style={{
-            marginHorizontal: 0,
-            borderWidth: 1,
-            borderColor: "#e5e5e5",
-            marginTop: 10,
-          }}
-          placeholder="Service center name"
-        />
-        <Text
-          style={[
-            styles.text,
-            {
-              marginTop: 5,
-            },
-          ]}
-        >
-          Service Provider Information
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          {/* <View style={{ zIndex: 1 }}>
+      <View>
+        <View style={styles.viewBox}>
+          <Text style={styles.text}>Informations</Text>
+          <Input
+            style={{
+              marginHorizontal: 0,
+              borderWidth: 1,
+              borderColor: "#e5e5e5",
+              marginTop: 10,
+            }}
+            placeholder="Service center name"
+          />
+          <Text
+            style={[
+              styles.text,
+              {
+                marginTop: 5,
+              },
+            ]}
+          >
+            Service Provider Information
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
             <SuggestionBox
+              value={selectedItem}
+              onChange={(val) => {
+                setData(val);
+              }}
+              DATA={DATA}
               style={{
                 width: 120,
                 marginTop: 10,
               }}
-              placeholder="Title"
             />
-          </View> */}
-          <Input
-            style={{
-              marginHorizontal: 0,
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              marginVertical: 10,
-              marginLeft: 10,
-              width: width - 170,
-            }}
-            placeholder="Name"
-          />
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              borderRadius: 5,
-              height: 45,
-              marginTop: 5,
-            }}
-          >
-            <Picker
+            <Input
               style={{
-                width: 120,
-                height: 45,
-                transform: [{ translateY: -5 }],
+                marginHorizontal: 0,
+                borderWidth: 1,
+                borderColor: "#e5e5e5",
+                marginVertical: 10,
+                marginLeft: 10,
+                width: width - 170,
               }}
-              selectedValue={selectedLanguage}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }
-            >
-              <Picker.Item label="Gender" value="" />
-              <Picker.Item label="Male" value="js" />
-              <Picker.Item label="Female" value="js" />
-              <Picker.Item label="Other" value="js" />
-            </Picker>
+              placeholder="Name"
+            />
           </View>
-          <Input
-            style={{
-              marginHorizontal: 0,
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              marginLeft: 10,
-              width: width - 170,
-              marginTop: 5,
-            }}
-            placeholder="Position"
-          />
-        </View>
-        <Text
-          style={{
-            color: textColor,
-            fontSize: 15,
-            fontFamily: "Poppins-Medium",
-            marginTop: 5,
-          }}
-        >
-          How many team/ Worker do you have?
-        </Text>
-        <View style={{ flexDirection: "row", marginTop: 5 }}>
-          <TouchableOpacity
-            onPress={() => {
-              setTeamNumber((num) => {
-                if (num > 0) {
-                  return (num = num - 1);
-                }
-                return 0;
-              });
-            }}
-            style={styles.button}
-          >
-            <FontAwesome5 name="minus" size={20} color="#707070" />
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row" }}>
+            <DropDown
+              style={{
+                marginTop: 5,
+                width: 120,
+              }}
+              placeholder="Gender"
+              DATA={["Male", "Female", "Other"]}
+            />
+
+            <Input
+              style={{
+                marginHorizontal: 0,
+                borderWidth: 1,
+                borderColor: "#e5e5e5",
+                marginLeft: 10,
+                width: width - 170,
+                marginTop: 5,
+              }}
+              placeholder="Position"
+            />
+          </View>
           <Text
             style={{
-              fontSize: 20,
-              fontFamily: "Poppins-Medium",
               color: textColor,
-              marginHorizontal: 20,
+              fontSize: 15,
+              fontFamily: "Poppins-Medium",
+              marginTop: 5,
             }}
           >
-            {TeamNumber}
+            How many team/ Worker do you have?
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setTeamNumber((num) => num + 1);
-            }}
-            style={styles.button}
-          >
-            <FontAwesome name="plus" size={20} color="#707070" />
-          </TouchableOpacity>
-        </View>
-        <Text
-          style={{
-            color: textColor,
-            fontSize: 15,
-            fontFamily: "Poppins-Medium",
-            marginTop: 10,
-          }}
-        >
-          Established/ Starting Date
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              borderRadius: 5,
-              height: 45,
-              marginTop: 10,
-            }}
-          >
-            <Picker
-              style={{
-                width: 115,
-                height: 45,
-                transform: [{ translateY: -5 }],
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
+            <TouchableOpacity
+              onPress={() => {
+                setTeamNumber((num) => {
+                  if (num > 0) {
+                    return (num = num - 1);
+                  }
+                  return 0;
+                });
               }}
-              selectedValue={Day}
-              onValueChange={(itemValue, itemIndex) => setDay(itemValue)}
+              style={styles.button}
             >
-              <Picker.Item label="Day" value="" />
-              <Picker.Item label="1" value="" />
-              <Picker.Item label="2" value="" />
-            </Picker>
+              <FontAwesome5 name="minus" size={20} color="#707070" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+                marginHorizontal: 20,
+              }}
+            >
+              {TeamNumber}
+            </Text>
+            <TouchableOpacity
+             
+              onPress={() => {
+                setTeamNumber((num) => num + 1);
+              }}
+              style={styles.button}
+            >
+              <FontAwesome name="plus" size={20} color="#707070" />
+            </TouchableOpacity>
           </View>
-          <View
+          <Text
             style={{
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              borderRadius: 5,
-              height: 45,
+              color: textColor,
+              fontSize: 15,
+              fontFamily: "Poppins-Medium",
               marginTop: 10,
-              marginLeft: 10,
             }}
           >
-            <Picker
+            Established/ Starting Date
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <DropDown
               style={{
-                width: 115,
-                height: 45,
-                transform: [{ translateY: -5 }],
+                marginTop: 10,
               }}
-              selectedValue={Month}
-              onValueChange={(itemValue, itemIndex) => setMonth(itemValue)}
-            >
-              <Picker.Item label="Month" value="" />
-              {Array.isArray(DateTime.month) &&
-                DateTime.month.map((doc, i) => (
-                  <Picker.Item key={i} label={doc} value={doc} />
-                ))}
-            </Picker>
-          </View>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: "#e5e5e5",
-              borderRadius: 5,
-              height: 45,
-              marginTop: 10,
-              marginLeft: 10,
-            }}
-          >
-            <Picker
+              placeholder="Month"
+              DATA={DateTime.day}
+            />
+            <DropDown
               style={{
-                width: 115,
-                height: 45,
-                transform: [{ translateY: -5 }],
+                marginTop: 10,
+                marginLeft: 10,
               }}
-              selectedValue={selectedLanguage}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }
-            >
-              <Picker.Item label="Year" value="" />
-              <Picker.Item label="2022" value="2022" />
-              <Picker.Item label="2021" value="2021" />
-            </Picker>
+              placeholder="Month"
+              DATA={DateTime.month}
+            />
+            <DropDown
+              style={{
+                marginTop: 10,
+                marginLeft: 10,
+              }}
+              placeholder="Year"
+              DATA={DateTime.year}
+            />
           </View>
         </View>
-      </View>
-      <Animated.View style={[styles.viewBox, { maxHeight: animatedHeight }]}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={styles.text}>Times</Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={{
-                borderWidth: Platform.OS == "ios" ? 1 : 0,
-                borderColor: "#e5e5e5",
-                height: 33,
-                width: 33,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-              }}
-            >
-              <Checkbox
-                status={checked ? "checked" : "unchecked"}
-                onPress={() => {
-                  setChecked(!checked);
+        <Animated.View style={[styles.viewBox, { maxHeight: animatedHeight }]}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={styles.text}>Times</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={{
+                  borderWidth: Platform.OS == "ios" ? 1 : 0,
+                  borderColor: "#e5e5e5",
+                  height: 33,
+                  width: 33,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 5,
+                  marginRight: Platform.OS == "ios" ? 10 : 0,
+                }}
+              >
+                <Checkbox
+                  status={checked ? "checked" : "unchecked"}
+                  onPress={() => {
+                    setChecked(!checked);
+                  }}
+                />
+              </View>
+              <Text style={styles.text}>24/7 open</Text>
+            </View>
+          </View>
+          {!checked ? (
+            <Animated.View entering={FadeIn}>
+              <Days title="Saturday" />
+              <Days title="Sunday" />
+              <Days title="Monday" />
+              <Days title="Tuesday" />
+              <Days title="Wednesday" />
+              <Days title="Thursday" />
+              <Days title="Friday" />
+            </Animated.View>
+          ) : (
+            <></>
+          )}
+        </Animated.View>
+        <View style={styles.viewBox}>
+          <Text style={styles.text}>Service</Text>
+          <Input
+            keyboardType="numeric"
+            style={{
+              borderWidth: 1,
+              marginLeft: 0,
+              width: 120,
+            }}
+            placeholder="Starting Price"
+          />
+          {Array.isArray(Service) &&
+            Service.map((doc, i) => (
+              <CheckBox
+                key={i}
+                style={{
+                  marginTop: 10,
+                }}
+                value={doc.checked}
+                title={doc.title}
+                onChange={() => {
+                  let arr = Service;
+                  setService(null);
+                  arr[i] = {
+                    title: doc.title,
+                    checked: !doc.checked,
+                  };
+                  setService(arr);
+                  //console.log(arr);
                 }}
               />
-            </View>
-            <Text style={styles.text}>24/7 open</Text>
-          </View>
-        </View>
-        {!checked ? (
-          <Animated.View entering={FadeIn}>
-            <Days title="Saturday" />
-            <Days title="Sunday" />
-            <Days title="Monday" />
-            <Days title="Tuesday" />
-            <Days title="Wednesday" />
-            <Days title="Thursday" />
-            <Days title="Friday" />
-          </Animated.View>
-        ) : (
-          <></>
-        )}
-      </Animated.View>
-      <View style={styles.viewBox}>
-        <Text style={styles.text}>Service</Text>
-        <Input
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            marginLeft: 0,
-            width: 120,
-          }}
-          placeholder="Starting Price"
-        />
-        <CheckBox
-          style={{
-            marginTop: 10,
-          }}
-          value={HomeDelivery}
-          title="Home Delivery Available"
-          onChange={() => {
-            setHomeDelivery(!HomeDelivery);
-          }}
-        />
-        <CheckBox
-          style={{
-            marginTop: 5,
-          }}
-          value={HomeService}
-          title="Home Delivery Available"
-          onChange={() => {
-            setHomeService(!HomeService);
-          }}
-        />
-        <CheckBox
-          style={{
-            marginTop: 5,
-          }}
-          value={OnlineSupport}
-          title="Home Delivery Available"
-          onChange={() => {
-            setOnlineSupport(!OnlineSupport);
-          }}
-        />
+            ))}
 
-        <Button
-          style={{
-            flexDirection: "row",
-            borderWidth: 0,
-            width: 100,
-          }}
-          Icon={() => (
-            <FontAwesome
-              style={{
-                marginRight: 10,
+          {buttonVisible && (
+            <Input
+              onChange={(val) => {
+                setButtonVisible(val);
               }}
-              name="plus"
-              size={20}
-              color="#707070"
+              style={{}}
             />
           )}
-          title="Add More"
+          <Button
+            onPress={() => {
+              setButtonVisible(true);
+              if (buttonVisible) {
+                let arr = Service;
+                arr.push({
+                  title: buttonVisible,
+                  checked: true,
+                });
+                setService(arr);
+                setButtonVisible(null);
+              }
+            }}
+            style={{
+              flexDirection: "row",
+              borderWidth: 0,
+              width: 100,
+              marginTop: 10,
+            }}
+            Icon={() => (
+              <FontAwesome
+                style={{
+                  marginRight: 10,
+                }}
+                name="plus"
+                size={20}
+                color="#707070"
+              />
+            )}
+            title={buttonVisible ? "Save" : "Add More"}
+          />
+        </View>
+        <Button
+          onPress={() => {
+            navigation.navigate("Service");
+          }}
+          style={{
+            marginHorizontal: 20,
+            marginVertical: 10,
+            borderRadius: 5,
+            backgroundColor: backgroundColor,
+            color: "white",
+            borderWidth: 0,
+          }}
+          title="Next"
+        />
+        <MainOptions
+          setValue={setSelectedItem}
+          setData={setData}
+          style={{
+            marginTop: Platform.OS == "ios" ? 145 : 152,
+            marginLeft: 20,
+            width: 120,
+          }}
+          Data={Data}
         />
       </View>
     </ScrollView>
@@ -435,6 +466,7 @@ const Days = ({ title }) => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
+            marginRight: Platform.OS == "ios" ? 10 : 0,
           }}
         >
           <Checkbox
@@ -467,7 +499,7 @@ const Days = ({ title }) => {
           >
             <Text
               style={{
-                fontSize: 15,
+                fontSize: 13,
                 fontFamily: "Poppins-Medium",
                 color: "#707070",
                 marginRight: 10,
@@ -497,6 +529,7 @@ const Days = ({ title }) => {
                     setOpeningTime(val);
                     setOpen(false);
                   }}
+                  style={{ width: 320, backgroundColor: primaryColor }}
                 />
               </View>
             </Modal>
@@ -515,12 +548,12 @@ const Days = ({ title }) => {
               borderColor: "#e5e5e5",
               borderRadius: 5,
               margin: 5,
-              flex:1
+              flex: 1,
             }}
           >
             <Text
               style={{
-                fontSize: 15,
+                fontSize: 13,
                 fontFamily: "Poppins-Medium",
                 color: "#707070",
                 marginRight: 10,
@@ -550,6 +583,7 @@ const Days = ({ title }) => {
                     setClosingTime(val);
                     setClose(false);
                   }}
+                  style={{ width: 320, backgroundColor: primaryColor }}
                 />
               </View>
             </Modal>
@@ -562,7 +596,7 @@ const Days = ({ title }) => {
   );
 };
 const CheckBox = ({ onChange, value, title, style }) => {
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(value);
   return (
     <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       <View
@@ -574,12 +608,14 @@ const CheckBox = ({ onChange, value, title, style }) => {
           justifyContent: "center",
           alignItems: "center",
           borderRadius: 5,
+          marginRight: Platform.OS == "ios" ? 10 : 0,
         }}
       >
         <Checkbox
-          status={value ? "checked" : "unchecked"}
+          status={checked ? "checked" : "unchecked"}
           onPress={() => {
             onChange();
+            setChecked(!checked);
           }}
         />
       </View>

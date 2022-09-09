@@ -255,3 +255,47 @@ export const RentIcon=`<svg width="54" height="54" viewBox="0 0 54 54" fill="non
 `
 export const add=`
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title>add-flat</title><path d="M499.75,0H255.11C114.12,0,1.29,111.71,1.29,252.7V497.36c0,5.88,3.27,14.64,9.15,14.64H255.11c141,0,255.6-118.3,255.6-259.3V8C510.71,2.17,505.63,0,499.75,0Z" fill="#0f4260"/><polygon points="412.7 225.46 285.05 225.46 285.05 97.81 221.22 97.81 221.22 225.46 93.57 225.46 93.57 289.29 221.22 289.29 221.22 416.94 285.05 416.94 285.05 289.29 412.7 289.29 412.7 225.46" fill="#fff"/></svg>`
+
+export const services=`
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><style>.cls-1{fill:#141f38;}.cls-2{fill:#d1e1e8;}.cls-3{fill:#5ecaef;}.cls-4{fill:#ff5f6e;}.cls-5{fill:#3eb38a;}</style></defs><title>notebook-network-filled</title><path class="cls-1" d="M455.35,328.73a6.57,6.57,0,0,1-6.22-8.65A201.83,201.83,0,0,0,459.49,256c0-56.42-22.63-109-63.72-147.92a6.57,6.57,0,0,1,9-9.53C448.53,140,472.62,195.94,472.62,256a214.76,214.76,0,0,1-11,68.25A6.56,6.56,0,0,1,455.35,328.73Z"/><path class="cls-1" d="M56.65,328.73a6.56,6.56,0,0,1-6.22-4.49,214.76,214.76,0,0,1-11-68.25c0-60.06,24.08-116,67.81-157.44a6.57,6.57,0,0,1,9,9.53C75.14,147,52.51,199.58,52.51,256a201.83,201.83,0,0,0,10.36,64.09,6.57,6.57,0,0,1-6.22,8.65Z"/><path class="cls-1" d="M256,472.62c-4.53,0-9.06-.13-13.53-.41a6.57,6.57,0,0,1-6.15-6.95,6.64,6.64,0,0,1,6.95-6.15,213.55,213.55,0,0,0,25.46,0,6.56,6.56,0,1,1,.79,13.1C265.06,472.48,260.53,472.62,256,472.62Z"/><path class="cls-2" d="M308.51,137.85h-105A39.38,39.38,0,0,1,164.1,98.46h0a13.13,13.13,0,0,1,13.13-13.13H334.77A13.13,13.13,0,0,1,347.9,98.46h0A39.38,39.38,0,0,1,308.51,137.85Z"/><path class="cls-1" d="M308.51,144.41h-105a46,46,0,0,1-45.95-45.95,19.71,19.71,0,0,1,19.69-19.69H334.77a19.71,19.71,0,0,1,19.69,19.69A46,46,0,0,1,308.51,144.41ZM177.23,91.9a6.57,6.57,0,0,0-6.56,6.56,32.86,32.86,0,0,0,32.82,32.82h105a32.86,32.86,0,0,0,32.82-32.82,6.57,6.57,0,0,0-6.56-6.56Z"/><path class="cls-3" d="M321.64,85.33V39.38A32.82,32.82,0,0,0,288.82,6.56H223.18a32.82,32.82,0,0,0-32.82,32.82V85.33Z"/><path class="cls-1" d="M321.64,91.9H190.36a6.56,6.56,0,0,1-6.56-6.56V39.38A39.43,39.43,0,0,1,223.18,0h65.64a39.43,39.43,0,0,1,39.38,39.38V85.33A6.56,6.56,0,0,1,321.64,91.9ZM196.92,78.77H315.08V39.38a26.28,26.28,0,0,0-26.26-26.26H223.18a26.28,26.28,0,0,0-26.26,26.26Z"/><rect class="cls-1" x="242.87" y="85.33" width="26.26" height="26.26"/><path class="cls-2" d="M151,505.44h-105A39.38,39.38,0,0,1,6.56,466.05h0a13.13,13.13,0,0,1,13.13-13.13H177.23a13.13,13.13,0,0,1,13.13,13.13h0A39.38,39.38,0,0,1,151,505.44Z"/><path class="cls-1" d="M151,512h-105A46,46,0,0,1,0,466.05a19.71,19.71,0,0,1,19.69-19.69H177.23a19.71,19.71,0,0,1,19.69,19.69A46,46,0,0,1,151,512ZM19.69,459.49a6.57,6.57,0,0,0-6.56,6.56,32.86,32.86,0,0,0,32.82,32.82H151a32.86,32.86,0,0,0,32.82-32.82,6.57,6.57,0,0,0-6.56-6.56Z"/><path class="cls-4" d="M164.1,452.92V407a32.82,32.82,0,0,0-32.82-32.82H65.64A32.82,32.82,0,0,0,32.82,407v45.95Z"/><path class="cls-1" d="M170.67,459.49H26.26V407a39.43,39.43,0,0,1,39.38-39.38h65.64A39.43,39.43,0,0,1,170.67,407ZM39.38,446.36H157.54V407a26.28,26.28,0,0,0-26.26-26.26H65.64A26.28,26.28,0,0,0,39.38,407Z"/><rect class="cls-1" x="85.33" y="452.92" width="26.26" height="26.26"/><path class="cls-2" d="M466.05,505.44H361a39.38,39.38,0,0,1-39.38-39.38h0a13.13,13.13,0,0,1,13.13-13.13H492.31a13.13,13.13,0,0,1,13.13,13.13h0A39.38,39.38,0,0,1,466.05,505.44Z"/><path class="cls-1" d="M466.05,512H361a46,46,0,0,1-45.95-45.95,19.71,19.71,0,0,1,19.69-19.69H492.31A19.71,19.71,0,0,1,512,466.05,46,46,0,0,1,466.05,512ZM334.77,459.49a6.57,6.57,0,0,0-6.56,6.56A32.86,32.86,0,0,0,361,498.87h105a32.86,32.86,0,0,0,32.82-32.82,6.57,6.57,0,0,0-6.56-6.56Z"/><path class="cls-5" d="M479.18,452.92V407a32.82,32.82,0,0,0-32.82-32.82H380.72A32.82,32.82,0,0,0,347.9,407v45.95Z"/><path class="cls-1" d="M479.18,459.49H347.9a6.56,6.56,0,0,1-6.56-6.56V407a39.43,39.43,0,0,1,39.38-39.38h65.64A39.43,39.43,0,0,1,485.74,407v45.95A6.56,6.56,0,0,1,479.18,459.49ZM354.46,446.36H472.62V407a26.28,26.28,0,0,0-26.26-26.26H380.72A26.28,26.28,0,0,0,354.46,407Z"/><rect class="cls-1" x="400.41" y="452.92" width="26.26" height="26.26"/></svg>
+`
+export const headerSvg=`
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="429" height="329" viewBox="0 0 429 329">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_174" data-name="Rectangle 174" width="429" height="329" transform="translate(-3986 281)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.432" gradientTransform="translate(0.094 -0.079) rotate(9.991)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="gray"/>
+    </radialGradient>
+    <clipPath id="clip-path-2">
+      <rect id="Rectangle_173" data-name="Rectangle 173" width="428" height="373" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <filter id="Rectangle_165" x="-2" y="-50" width="434" height="54" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Mask_Group_2" data-name="Mask Group 2" transform="translate(3986 -281)" clip-path="url(#clip-path)">
+    <g id="Group_65" data-name="Group 65" transform="translate(-3985 234)">
+      <g id="Group_63" data-name="Group 63">
+        <ellipse id="Ellipse_11" data-name="Ellipse 11" cx="301" cy="295" rx="301" ry="295" transform="matrix(0.996, 0.087, -0.087, 0.996, -171.709, -245.223)" fill="url(#radial-gradient)"/>
+        <g id="Mask_Group_1" data-name="Mask Group 1" clip-path="url(#clip-path-2)">
+          <ellipse id="Ellipse_10" data-name="Ellipse 10" cx="312" cy="307" rx="312" ry="307" transform="translate(-196 -241)" fill="rgba(218,30,55,0.69)"/>
+          <g transform="matrix(1, 0, 0, 1, -1, 47)" filter="url(#Rectangle_165)">
+            <rect id="Rectangle_165-2" data-name="Rectangle 165" width="428" height="48" transform="translate(1 -47)" fill="#fff"/>
+          </g>
+          
+          <path id="arrow-ios-back-outline" d="M20.745,28.5a1.5,1.5,0,0,1-1.17-.555l-7.245-9a1.5,1.5,0,0,1,0-1.9l7.5-9a1.5,1.5,0,1,1,2.31,1.92L15.435,18l6.48,8.04a1.5,1.5,0,0,1-1.17,2.46Z" transform="translate(5.011 4.502)" fill="#666"/>
+          <path id="arrow-ios-back-outline-2" data-name="arrow-ios-back-outline" d="M20.745,28.5a1.5,1.5,0,0,1-1.17-.555l-7.245-9a1.5,1.5,0,0,1,0-1.9l7.5-9a1.5,1.5,0,1,1,2.31,1.92L15.435,18l6.48,8.04a1.5,1.5,0,0,1-1.17,2.46Z" transform="translate(5.011 4.502)" fill="#666"/>
+          <path id="arrow-ios-back-outline-3" data-name="arrow-ios-back-outline" d="M20.745,28.5a1.5,1.5,0,0,1-1.17-.555l-7.245-9a1.5,1.5,0,0,1,0-1.9l7.5-9a1.5,1.5,0,1,1,2.31,1.92L15.435,18l6.48,8.04a1.5,1.5,0,0,1-1.17,2.46Z" transform="translate(5.011 4.502)" fill="#666"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+`

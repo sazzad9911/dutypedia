@@ -6,6 +6,8 @@ import SubHeader from './../components/SubHeader';
 import SubCategories from './Seller/SubCategories';
 import TableData from './Seller/TableData';
 import Pricing from './Seller/Pricing';
+import Service from './Seller/Service';
+import Address from './Seller/Address';
 const Stack = createStackNavigator();
 
 const MainCategory = (props) => {
@@ -23,6 +25,12 @@ const MainCategory = (props) => {
              <Stack.Screen name="Pricing" options={{
                 header:(props)=><SubHeader title='Pricing' {...props}/>
             }} component={Pricing}/>
+            <Stack.Screen name="Service" options={{
+                header:(props)=><SubHeader title='Service' {...props}/>
+            }} component={Service}/>
+             <Stack.Screen name="Address" options={{
+                header:(props)=><SubHeader title='Address' {...props}/>
+            }} component={Address}/>
         </Stack.Navigator>
     );
 };
