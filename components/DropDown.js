@@ -64,7 +64,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
           }}
           style={styles.input}
         >
-          <Text style={[styles.text, { color: "#707070" }]}>
+          <Text numberOfLines={1} style={[styles.text, { color: "#707070" }]}>
             {Value ? Value : placeholder}
           </Text>
           <AntDesign

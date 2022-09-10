@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { textColor, primaryColor, secondaryColor } from "./../assets/colors";
+import { textColor, primaryColor, secondaryColor,Color } from "./../assets/colors";
 import Cart from "../Cart/Cart";
 import Cart1 from "../Cart/Cart1";
 import Cart2 from "../Cart/Cart2";
@@ -20,12 +20,17 @@ import Animated, {
   withSpring,
   delayMS,
 } from "react-native-reanimated";
+import { useColorScheme } from 'react-native';
 
 const { width, height } = Dimensions.get("window");
 
 const Home = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
+  const colorScheme = useColorScheme();
+  const colors=new Color(false);
+  const TextColor=colors.getTextColor();
+
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [
@@ -46,7 +51,7 @@ const Home = (props) => {
           <Text
             style={{
               fontSize: 20,
-              color: textColor,
+              color: TextColor,
               marginLeft: 5,
               paddingLeft: 15,
               paddingRight: 15,

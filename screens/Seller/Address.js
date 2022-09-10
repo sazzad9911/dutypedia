@@ -1,18 +1,45 @@
 import React from "react";
-import { View, ScrollView, Text,Dimensions } from "react-native";
+import { View, ScrollView, Text, Dimensions } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { headerSvg } from "../../assets/icon";
-import { primaryColor,backgroundColor } from "./../../assets/colors";
+import { primaryColor, backgroundColor } from "./../../assets/colors";
 import Input from "./../../components/Input";
 import DropDown from "./../../components/DropDown";
-import TextArea from './../../components/TextArea';
-import Button from './../../components/Button';
+import TextArea from "./../../components/TextArea";
+import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
+import { AreaList } from "../../Data/area";
+import { DivisionList } from "../../Data/division";
+import { DistrictList } from "../../Data/district";
+
 const Address = () => {
   const DATA = ["Dhaka", "Borishal", "Slyhet"];
+  const [Division, setDivision] = React.useState();
+  const [District, setDistrict] = React.useState();
+  const [Area, setArea] = React.useState();
+  const [NewDistrictList, setDistrictList] = React.useState([]);
+  const [NewAreaList, setAreaList] = React.useState([]);
+
+  const searchDistrict = (value) => {
+    if (value) {
+      let arr = DistrictList.filter(d=>d.title ===value);
+      setDistrictList(arr[0].data);
+    } else {
+      setDistrictList([]);
+    }
+  };
+  const searchArea = (value) => {
+    if (value) {
+      let arr = AreaList.filter((d) => d.title === value);
+      setAreaList(arr[0].data);
+    } else {
+      setAreaList([]);
+    }
+  };
+
   return (
     <ScrollView>
-      <View style={{ backgroundColor: primaryColor,flex:1 }}>
+      <View style={{ backgroundColor: primaryColor, flex: 1 }}>
         <SvgXml
           style={{
             position: "absolute",
@@ -46,11 +73,15 @@ const Address = () => {
         </Text>
         <DropDown
           style={{
-            marginTop: '40%',
+            marginTop: "40%",
             marginHorizontal: 20,
           }}
-          DATA={DATA}
+          DATA={DivisionList}
           placeholder="Division"
+          onChange={(val) => {
+            setDivision(val);
+            searchDistrict(val);
+          }}
         />
         <View
           style={{
@@ -59,37 +90,47 @@ const Address = () => {
         >
           <DropDown
             style={{
-              marginTop: '10%',
+              marginTop: "10%",
               marginHorizontal: 20,
-              width:width/2-40
+              width: width / 2 - 40,
             }}
-            DATA={DATA}
+            DATA={NewDistrictList}
             placeholder="District"
+            onChange={(value) =>{
+              setDistrict(value);
+              searchArea(value)
+            }}
           />
           <DropDown
             style={{
-              marginTop: '10%',
+              marginTop: "10%",
               marginHorizontal: 20,
-              width:width/2-40,
+              width: width / 2 - 40,
             }}
-            DATA={DATA}
+            DATA={NewAreaList}
             placeholder="Area"
           />
         </View>
-        <TextArea style={{
-            marginTop:'5%',
-            marginHorizontal:20
-        }} placeholder="Address"/>
-        <Button style={{
-            marginTop:'20%',
-            marginBottom:'20%',
-            borderRadius:5,
-            backgroundColor:backgroundColor,
-            color:'white',
-            marginHorizontal:20,
-            borderWidth:0,
-            height:45
-        }} title='Continue'/>
+        <TextArea
+          style={{
+            marginTop: "5%",
+            marginHorizontal: 20,
+          }}
+          placeholder="Address"
+        />
+        <Button
+          style={{
+            marginTop: "20%",
+            marginBottom: "20%",
+            borderRadius: 5,
+            backgroundColor: backgroundColor,
+            color: "white",
+            marginHorizontal: 20,
+            borderWidth: 0,
+            height: 45,
+          }}
+          title="Continue"
+        />
       </View>
     </ScrollView>
   );

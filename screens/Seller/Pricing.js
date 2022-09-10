@@ -132,16 +132,21 @@ const Pricing = ({ navigation, route }) => {
       value: "Head of Department",
     },
   ];
+  const [visible, setVisible] = React.useState({
+    title: "",
+    visible: false,
+  });
+  const hideDialog = () =>
+    setVisible({
+      title: "Hide",
+      visible: false,
+    });
+  ///////////////////////-----------------------------------
+  const [ServiceName, setServiceName] = React.useState();
+  const [ServiceNameError, setServiceNameError] = React.useState();
+  const titleRef=React.useRef()
 
-  const addOne = () => {
-    setTeamNumber(TeamNumber + 1);
-    setTimer(setTimeout(addOne, 20));
-  };
-
-  const stopTimer = () => {
-    clearTimeout(timer);
-  };
-
+  //------------------------------------------
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <KeyboardAvoidingView
@@ -152,6 +157,20 @@ const Pricing = ({ navigation, route }) => {
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
+            returnKeyType="next"
+            onKeyPress={(e) => {
+              console.log(e)
+              //titleRef.current.focus();
+            }}
+            error={ServiceNameError}
+            onChange={(val) => {
+              if (val.length < 8) {
+                setServiceNameError("Name must be at least 8 characters");
+                return;
+              }
+              setServiceNameError(null);
+              setServiceName(val);
+            }}
             style={{
               marginHorizontal: 0,
               borderWidth: 1,
@@ -175,7 +194,7 @@ const Pricing = ({ navigation, route }) => {
               flexDirection: "row",
             }}
           >
-            <SuggestionBox
+            <SuggestionBox initialRef={titleRef}
               placeholder="Title"
               value={selectedItem}
               onChange={(val) => {
@@ -247,6 +266,11 @@ const Pricing = ({ navigation, route }) => {
             </TouchableOpacity>
             <TextInput
               keyboardType="numeric"
+              onEndEditing={() => {
+                if (!TeamNumber) {
+                  setTeamNumber("0");
+                }
+              }}
               onChangeText={(val) => {
                 setTeamNumber(val);
               }}
@@ -344,13 +368,13 @@ const Pricing = ({ navigation, route }) => {
           </View>
           {!checked ? (
             <Animated.View entering={FadeIn}>
-              <Days title="Saturday" />
-              <Days title="Sunday" />
-              <Days title="Monday" />
-              <Days title="Tuesday" />
-              <Days title="Wednesday" />
-              <Days title="Thursday" />
-              <Days title="Friday" />
+              <Days setVisible={setVisible} title="Saturday" />
+              <Days setVisible={setVisible} title="Sunday" />
+              <Days setVisible={setVisible} title="Monday" />
+              <Days setVisible={setVisible} title="Tuesday" />
+              <Days setVisible={setVisible} title="Wednesday" />
+              <Days setVisible={setVisible} title="Thursday" />
+              <Days setVisible={setVisible} title="Friday" />
             </Animated.View>
           ) : (
             <></>
@@ -509,10 +533,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  error: {
+    fontFamily: "Poppins-Light",
+    fontSize: 13,
+    marginTop: 3,
+    marginBottom: 3,
+    color: "red",
+    margin: 3,
+  },
 });
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
-import { Paragraph, Dialog, Portal } from "react-native-paper";
+import { Paragraph, Dialog, Portal, Snackbar } from "react-native-paper";
 
 const Days = ({ title }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
@@ -521,6 +553,8 @@ const Days = ({ title }) => {
   const [ClosingTime, setClosingTime] = React.useState();
   const [Open, setOpen] = React.useState(false);
   const [Close, setClose] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
   const toTime = (timestamp) => {
     let date = new Date(timestamp);
     var hours = date.getHours();
@@ -532,9 +566,6 @@ const Days = ({ title }) => {
     var strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
-  
-  const [visible, setVisible] = React.useState(false);
-  const hideDialog = () => setVisible(false);
 
   const Box = React.forwardRef((props, ref) => (
     <Checkbox
@@ -603,6 +634,13 @@ const Days = ({ title }) => {
               isVisible={Open}
               mode="time"
               onConfirm={(e) => {
+                if (ClosingTime && ClosingTime < e) {
+                  setError(`Opening time can't be earlier from closing time.`);
+                  setOpen(false);
+                  setOpeningTime(null);
+                  return;
+                }
+                setError(null);
                 setOpeningTime(e);
                 setOpen(false);
               }}
@@ -644,6 +682,13 @@ const Days = ({ title }) => {
               isVisible={Close}
               mode="time"
               onConfirm={(e) => {
+                if (OpeningTime && OpeningTime >= e) {
+                  setError(`Opening time can't be earlier from closing time.`);
+                  setClose(false);
+                  setClosingTime(null);
+                  return;
+                }
+                setError(null);
                 setClosingTime(e);
                 setClose(false);
               }}
@@ -656,12 +701,7 @@ const Days = ({ title }) => {
       ) : (
         <></>
       )}
-      <Dialog visible={visible} onDismiss={hideDialog}>
-        <Dialog.Title>This is a title</Dialog.Title>
-        <Dialog.Content>
-          <Paragraph>This is simple dialog</Paragraph>
-        </Dialog.Content>
-      </Dialog>
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 };
