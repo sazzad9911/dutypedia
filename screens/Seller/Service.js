@@ -83,6 +83,7 @@ const Service = ({navigation}) => {
             color:'white',
             borderWidth:0,
             borderRadius:5,
+            height:45,
             marginBottom:30
         }} title='Continue'/>
       </View>

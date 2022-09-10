@@ -40,6 +40,7 @@
     "react-native-detect-press-outside": "^1.0.4",
     "react-native-gesture-handler": "^2.6.0",
     "react-native-linear-gradient": "^2.6.2",
+    "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-paper": "5.0.0-rc.4",
     "react-native-reanimated": "~2.9.1",
     "react-native-safe-area-context": "^4.3.1",

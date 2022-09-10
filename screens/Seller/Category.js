@@ -48,6 +48,7 @@ const Category = (props) => {
                 props.navigation.navigate("TableData", {
                   title: data.title,
                   list: data.list,
+                  exit:true,
                 });
               }
             }}

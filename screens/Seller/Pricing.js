@@ -9,6 +9,8 @@ import {
   Platform,
   Modal,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  TextInput,
 } from "react-native";
 import {
   primaryColor,
@@ -26,11 +28,12 @@ import { Checkbox } from "react-native-paper";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Pricing = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
   const [selectedLanguage, setSelectedLanguage] = React.useState();
-  const [TeamNumber, setTeamNumber] = React.useState(0);
+  const [TeamNumber, setTeamNumber] = React.useState("0");
   const [Day, setDay] = React.useState();
   const [Month, setMonth] = React.useState();
   const [Year, setYear] = React.useState();
@@ -93,6 +96,42 @@ const Pricing = ({ navigation, route }) => {
   const [Data, setData] = React.useState([]);
   const [buttonVisible, setButtonVisible] = React.useState(false);
   const [timer, setTimer] = React.useState(null);
+  const [Positions, setPositions] = React.useState([]);
+  const [SelectedPositions, setSelectedPositions] = React.useState();
+  const PositionData = [
+    {
+      title: "Administrative Assistant",
+      value: "Administrative Assistant",
+    },
+    {
+      title: "Executive Assistant",
+      value: "Executive Assistant",
+    },
+    {
+      title: "Marketing Manager",
+      value: "Marketing Manager",
+    },
+    {
+      title: "Software Engineer",
+      value: "Software Engineer",
+    },
+    {
+      title: "Sales Manager",
+      value: "Sales Manager",
+    },
+    {
+      title: "Office Assistant",
+      value: "Office Assistant",
+    },
+    {
+      title: "General Manager",
+      value: "General Manager",
+    },
+    {
+      title: "Head of Department",
+      value: "Head of Department",
+    },
+  ];
 
   const addOne = () => {
     setTeamNumber(TeamNumber + 1);
@@ -102,9 +141,14 @@ const Pricing = ({ navigation, route }) => {
   const stopTimer = () => {
     clearTimeout(timer);
   };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
@@ -132,6 +176,7 @@ const Pricing = ({ navigation, route }) => {
             }}
           >
             <SuggestionBox
+              placeholder="Title"
               value={selectedItem}
               onChange={(val) => {
                 setData(val);
@@ -164,16 +209,18 @@ const Pricing = ({ navigation, route }) => {
               DATA={["Male", "Female", "Other"]}
             />
 
-            <Input
+            <SuggestionBox
+              placeholder="Position"
+              value={SelectedPositions}
+              onChange={(val) => {
+                setPositions(val);
+              }}
+              DATA={PositionData}
               style={{
-                marginHorizontal: 0,
-                borderWidth: 1,
-                borderColor: "#e5e5e5",
+                marginTop: 5,
                 marginLeft: 10,
                 width: width - 170,
-                marginTop: 5,
               }}
-              placeholder="Position"
             />
           </View>
           <Text
@@ -181,7 +228,7 @@ const Pricing = ({ navigation, route }) => {
               color: textColor,
               fontSize: 15,
               fontFamily: "Poppins-Medium",
-              marginTop: 5,
+              marginTop: 10,
             }}
           >
             How many team/ Worker do you have?
@@ -189,31 +236,39 @@ const Pricing = ({ navigation, route }) => {
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <TouchableOpacity
               onPress={() => {
-                setTeamNumber((num) => {
-                  if (num > 0) {
-                    return (num = num - 1);
-                  }
-                  return 0;
-                });
+                let num = parseInt(TeamNumber);
+                if (num > 0) {
+                  setTeamNumber(`${num - 1}`);
+                }
               }}
               style={styles.button}
             >
               <FontAwesome5 name="minus" size={20} color="#707070" />
             </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "Poppins-Medium",
-                color: textColor,
-                marginHorizontal: 20,
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(val) => {
+                setTeamNumber(val);
               }}
-            >
-              {TeamNumber}
-            </Text>
+              style={{
+                fontSize: 15,
+                fontFamily: "Poppins-Medium",
+                marginHorizontal: 20,
+                borderBottomWidth: 1,
+                borderBottomColor: "#e5e5e5",
+                height: 40,
+                width: 70,
+                padding: 0,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+              value={TeamNumber}
+            />
             <TouchableOpacity
-             
               onPress={() => {
-                setTeamNumber((num) => num + 1);
+                let num = parseInt(TeamNumber) + 1;
+                setTeamNumber(`${num}`);
               }}
               style={styles.button}
             >
@@ -235,7 +290,7 @@ const Pricing = ({ navigation, route }) => {
               style={{
                 marginTop: 10,
               }}
-              placeholder="Month"
+              placeholder="Date"
               DATA={DateTime.day}
             />
             <DropDown
@@ -252,7 +307,7 @@ const Pricing = ({ navigation, route }) => {
                 marginLeft: 10,
               }}
               placeholder="Year"
-              DATA={DateTime.year}
+              DATA={DateTime.year()}
             />
           </View>
         </View>
@@ -302,7 +357,7 @@ const Pricing = ({ navigation, route }) => {
           )}
         </Animated.View>
         <View style={styles.viewBox}>
-          <Text style={styles.text}>Service</Text>
+          <Text style={styles.text}>Service Fee</Text>
           <Input
             keyboardType="numeric"
             style={{
@@ -312,6 +367,16 @@ const Pricing = ({ navigation, route }) => {
             }}
             placeholder="Starting Price"
           />
+          <Text
+            style={[
+              styles.text,
+              {
+                marginTop: 10,
+              },
+            ]}
+          >
+            Choose your facilities
+          </Text>
           {Array.isArray(Service) &&
             Service.map((doc, i) => (
               <CheckBox
@@ -385,6 +450,7 @@ const Pricing = ({ navigation, route }) => {
             backgroundColor: backgroundColor,
             color: "white",
             borderWidth: 0,
+            height: 45,
           }}
           title="Next"
         />
@@ -398,7 +464,17 @@ const Pricing = ({ navigation, route }) => {
           }}
           Data={Data}
         />
-      </View>
+        <MainOptions
+          setValue={setSelectedPositions}
+          setData={setPositions}
+          style={{
+            marginTop: Platform.OS == "ios" ? 203 : 210,
+            marginLeft: 150,
+            width: width - 170,
+          }}
+          Data={Positions}
+        />
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
@@ -436,6 +512,8 @@ const styles = StyleSheet.create({
 });
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
+import { Paragraph, Dialog, Portal } from "react-native-paper";
+
 const Days = ({ title }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [day, setDay] = React.useState(false);
@@ -454,9 +532,26 @@ const Days = ({ title }) => {
     var strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
+  
+  const [visible, setVisible] = React.useState(false);
+  const hideDialog = () => setVisible(false);
+
+  const Box = React.forwardRef((props, ref) => (
+    <Checkbox
+      {...props}
+      innerRef={ref}
+      status={day ? "checked" : "unchecked"}
+      onPress={() => {
+        setDay(!day);
+      }}
+    />
+  ));
   return (
     <View style={{ marginBottom: 10 }}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <TouchableOpacity
+        onPress={() => {}}
+        style={{ flexDirection: "row", alignItems: "center" }}
+      >
         <View
           style={{
             borderWidth: Platform.OS == "ios" ? 1 : 0,
@@ -469,15 +564,10 @@ const Days = ({ title }) => {
             marginRight: Platform.OS == "ios" ? 10 : 0,
           }}
         >
-          <Checkbox
-            status={day ? "checked" : "unchecked"}
-            onPress={() => {
-              setDay(!day);
-            }}
-          />
+          <Box />
         </View>
         <Text style={styles.text}>{title}</Text>
-      </View>
+      </TouchableOpacity>
       {day ? (
         <Animated.View entering={FadeIn} style={{ flexDirection: "row" }}>
           <TouchableOpacity
@@ -508,31 +598,18 @@ const Days = ({ title }) => {
               {OpeningTime ? toTime(OpeningTime) : "Opening Time"}
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
-            <Modal
-              transparent={true}
-              visible={Open}
-              onRequestClose={() => setOpen(!Open)}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="time"
-                  is24Hour={false}
-                  onChange={(e, val) => {
-                    setOpeningTime(val);
-                    setOpen(false);
-                  }}
-                  style={{ width: 320, backgroundColor: primaryColor }}
-                />
-              </View>
-            </Modal>
+            <DateTimePickerModal
+              buttonTextColorIOS={backgroundColor}
+              isVisible={Open}
+              mode="time"
+              onConfirm={(e) => {
+                setOpeningTime(e);
+                setOpen(false);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -562,36 +639,29 @@ const Days = ({ title }) => {
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
-            <Modal
-              transparent={true}
-              visible={Close}
-              onRequestClose={() => setClose(!Close)}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="time"
-                  is24Hour={false}
-                  onChange={(e, val) => {
-                    setClosingTime(val);
-                    setClose(false);
-                  }}
-                  style={{ width: 320, backgroundColor: primaryColor }}
-                />
-              </View>
-            </Modal>
+            <DateTimePickerModal
+              buttonTextColorIOS={backgroundColor}
+              isVisible={Close}
+              mode="time"
+              onConfirm={(e) => {
+                setClosingTime(e);
+                setClose(false);
+              }}
+              onCancel={() => {
+                setClose(false);
+              }}
+            />
           </TouchableOpacity>
         </Animated.View>
       ) : (
         <></>
       )}
+      <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog.Title>This is a title</Dialog.Title>
+        <Dialog.Content>
+          <Paragraph>This is simple dialog</Paragraph>
+        </Dialog.Content>
+      </Dialog>
     </View>
   );
 };

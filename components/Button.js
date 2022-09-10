@@ -29,7 +29,7 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
           style={{
             fontSize: 13,
             fontWeight: "bold",
-            color: style && style.color ? style.color : "#808080",
+            color: disabled?'#707070':style && style.color ? style.color : "#808080",
             fontFamily:'Poppins-SemiBold',
           }}
         >

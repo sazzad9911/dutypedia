@@ -27,7 +27,7 @@ const Address = () => {
             fontSize: 37,
             fontFamily: "Poppins-Light",
             color: "white",
-            marginTop: 20,
+            marginTop: 25,
             marginLeft: 20,
           }}
         >
@@ -46,7 +46,7 @@ const Address = () => {
         </Text>
         <DropDown
           style={{
-            marginTop: 140,
+            marginTop: '40%',
             marginHorizontal: 20,
           }}
           DATA={DATA}
@@ -59,7 +59,7 @@ const Address = () => {
         >
           <DropDown
             style={{
-              marginTop: 20,
+              marginTop: '10%',
               marginHorizontal: 20,
               width:width/2-40
             }}
@@ -68,7 +68,7 @@ const Address = () => {
           />
           <DropDown
             style={{
-              marginTop: 20,
+              marginTop: '10%',
               marginHorizontal: 20,
               width:width/2-40,
             }}
@@ -77,17 +77,18 @@ const Address = () => {
           />
         </View>
         <TextArea style={{
-            marginTop:20,
+            marginTop:'5%',
             marginHorizontal:20
         }} placeholder="Address"/>
         <Button style={{
-            marginTop:50,
-            marginBottom:20,
+            marginTop:'20%',
+            marginBottom:'20%',
             borderRadius:5,
             backgroundColor:backgroundColor,
             color:'white',
             marginHorizontal:20,
-            borderWidth:0
+            borderWidth:0,
+            height:45
         }} title='Continue'/>
       </View>
     </ScrollView>

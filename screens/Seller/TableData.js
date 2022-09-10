@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { DataTable } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
-import { primaryColor } from "./../../assets/colors";
+import { primaryColor,backgroundColor } from "./../../assets/colors";
 import AddButton from "./../../components/AddButton";
 import Input from "./../../components/Input";
 import Button from "./../../components/Button";
@@ -32,7 +32,8 @@ const TableData = (props) => {
   const listData = useSelector((state) => state.listData);
   const [selectedData, setSelectedData] = React.useState(null);
   const [buttonPress,setButtonPress]=React.useState(false);
-
+  const exit=props.route.params.exit;
+  const navigation = props.navigation
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
@@ -69,6 +70,20 @@ const TableData = (props) => {
         ) : (
           <></>
         )}
+        {
+          exit?(<Button disabled={true} onPress={()=>{
+            navigation.navigate('Pricing')
+          }} style={{
+            marginTop:20,
+            marginBottom:10,
+            borderRadius:5,
+            backgroundColor:backgroundColor,
+            color:'white',
+            marginHorizontal:20,
+            borderWidth:0,
+            height:45
+        }} title='Next'/>):(<></>)
+        }
       </ScrollView>
       <Button disabled={buttonPress?false:true} onPress={()=>{
         dispatch(setListData(selectedData))

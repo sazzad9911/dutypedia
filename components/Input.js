@@ -7,7 +7,7 @@ const Input = ({onChange,value,style,placeholder,keyboardType}) => {
   const [Focus,setFocus]= React.useState(false)
   return (
     <Animated.View entering={StretchInY}>
-      <TextInput keyboardType={keyboardType} value={value} onChangeText={(val)=>{
+      <TextInput  keyboardType={keyboardType} value={value} onChangeText={(val)=>{
         if(onChange){
             onChange(val);
         }
@@ -29,6 +29,7 @@ const Input = ({onChange,value,style,placeholder,keyboardType}) => {
           height: 45,
           paddingHorizontal: 10,
           fontFamily: "Poppins-Light",
+          fontSize:15
         },style,{borderColor:!Focus?'#e5e5e5':'#DA1E37'}]}
       />
     </Animated.View>

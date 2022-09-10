@@ -49,7 +49,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
     },
     text: {
       fontSize: 15,
-      fontFamily: "Poppins-Medium",
+      fontFamily: "Poppins-Light",
       marginRight: 10,
       color:textColor
     },

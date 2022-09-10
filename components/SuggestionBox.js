@@ -50,7 +50,10 @@ const SuggestionBox = ({ style, value, onChange, placeholder, DATA }) => {
 
   return (
     <View style={[styles.viewBox, style]}>
-      <TextInput
+      <TextInput style={{
+        fontFamily: 'Poppins-Light',
+        
+      }}
         onEndEditing={() => {
           setFocus(false);
         }}
