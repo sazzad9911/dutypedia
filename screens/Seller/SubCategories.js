@@ -13,7 +13,11 @@ import AddButton from "./../../components/AddButton";
 import Input from "./../../components/Input";
 import Button from "./../../components/Button";
 import { useSelector, useDispatch } from "react-redux";
-import { setArrayReplaceData, setArrayReplaceData2,setListData } from "../../action";
+import {
+  setArrayReplaceData,
+  setArrayReplaceData2,
+  setListData,
+} from "../../action";
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
@@ -93,7 +97,9 @@ const SubCategories = ({ navigation, route }) => {
       </ImageBackground>
       {Array.isArray(data) ? (
         data.map((data, i) => (
-          <SubCategoryCart id={id} nextId={i}
+          <SubCategoryCart
+            id={id}
+            nextId={i}
             deleteData={deleteData}
             key={i}
             onPress={() => {
@@ -119,7 +125,7 @@ const SubCategories = ({ navigation, route }) => {
                     list: data.list,
                     id: id,
                     nextId: nextId,
-                    lastId:i,
+                    lastId: i,
                   });
                 }
               }
@@ -131,8 +137,8 @@ const SubCategories = ({ navigation, route }) => {
       ) : (
         <></>
       )}
-      {Visible ? <Input value={text} onChange={setText} /> : <></>}
-      {Array.isArray(data) && data[0].list ? (
+      {Visible && <Input value={text} onChange={setText} />}
+      {Array.isArray(data) && data[0].list && (
         <View>
           <AddButton
             onPress={() => {
@@ -163,24 +169,25 @@ const SubCategories = ({ navigation, route }) => {
             }}
             title={Visible ? "Save" : "Add New"}
           />
-          <Button
-            onPress={() => {
-              navigation.navigate("Pricing");
-            }}
-            style={{
-              marginVertical: 20,
-              marginHorizontal: 20,
-              borderRadius: 5,
-              color: "white",
-              backgroundColor: "#DA1E37",
-              borderWidth: 0,
-              height: 43,
-            }}
-            title="Next"
-          />
         </View>
-      ) : (
-        <></>
+      )}
+      {route.name === "SubCategories" && (
+        <Button
+          disabled={listData&&listData.length>0?false:true}
+          onPress={() => {
+            navigation.navigate("Pricing");
+          }}
+          style={{
+            marginVertical: 20,
+            marginHorizontal: 20,
+            borderRadius: 5,
+            color: "white",
+            backgroundColor: "#DA1E37",
+            borderWidth: 0,
+            height: 43,
+          }}
+          title="Next"
+        />
       )}
       <View style={{ height: 10 }} />
     </ScrollView>

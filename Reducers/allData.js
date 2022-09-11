@@ -2872,6 +2872,9 @@ const allData = (state = initialState, action) => {
     initialState[id].list[listId].data=action.playload;
     return state=initialState
   }
+  if(action.type==='SET_DATA'){
+    return state=action.playload
+  }
   return state;
 };
 export default allData;

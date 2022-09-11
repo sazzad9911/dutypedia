@@ -35,6 +35,7 @@ const TableData = (props) => {
   const [Visible, setVisible] = React.useState(false);
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
+  const allData = useSelector((state) => state.allData);
   const [selectedData, setSelectedData] = React.useState(null);
   const [buttonPress, setButtonPress] = React.useState(false);
   const exit = props.route.params.exit;
@@ -42,6 +43,7 @@ const TableData = (props) => {
   const id = props.route.params.id;
   const nextId = props.route.params.nextId;
   const lastId = props.route.params.lastId;
+  const [data, setData] = React.useState(allData[id]);
 
   React.useEffect(() => {
     setPage(0);
@@ -107,7 +109,12 @@ const TableData = (props) => {
           onPress={() => {
             //dispatch(setListData(!listData));
             setButtonPress(false);
-            props.navigation.goBack();
+            props.navigation.navigate("SubCategories", {
+              title: data.title,
+              data: data.data,
+              image: data.image,
+              id: id,
+            });
           }}
           style={{
             backgroundColor: "green",
@@ -144,8 +151,8 @@ const Table = ({
   const nextId = route.params.nextId;
   const lastId = route.params.lastId;
   const listId = tableId;
+  const [ObjectId, setObjectId] =React.useState('yyfyf')
 
-  React.useEffect(() => {}, [listData.length]);
   const deleteData = (title) => {
     let arr = Data.filter((data) => data.title != title);
     if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
@@ -155,14 +162,18 @@ const Table = ({
     } else if (!isNaN(id) && !isNaN(listId)) {
       dispatch(setListReplace3(arr, id, listId));
     }
-    let newArr=listData.filter(d=>d.data.title!=title);
+    let newArr = listData.filter((d) => d.data.title != title);
     dispatch(setListData(newArr));
     setData(arr);
-    setButtonPress(true);
   };
   const selectData = (title, selected, index) => {
-    setButtonPress(true);
-    if (!selected && listData.length > 0) {
+    setObjectId(title)
+    if(ObjectId.match(title)) {
+      setButtonPress(val=>(!val))
+    }else {
+      setButtonPress(true)
+    }
+    if (!selected &&listData&& listData.length > 0) {
       let newArr = listData.filter((d) => d.data.title != title);
       dispatch(setListData(newArr));
       return;
@@ -181,6 +192,7 @@ const Table = ({
       };
       //console.log(newData);
       arr.push(newData);
+      dispatch(setListData([]));
       dispatch(setListData(arr));
     } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
       let newData = {
@@ -195,6 +207,7 @@ const Table = ({
 
       arr.push(newData);
       //console.log(arr);
+      dispatch(setListData([]));
       dispatch(setListData(arr));
     } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
       let newData = {
@@ -207,6 +220,7 @@ const Table = ({
       };
       //console.log(newData);
       arr.push(newData);
+      dispatch(setListData([]));
       dispatch(setListData(arr));
     }
   };
@@ -270,6 +284,7 @@ const Table = ({
               title={data.title}
               supTitle={title}
               id={id}
+              setButtonPress={setButtonPress}
             />
           ))
         ) : (
@@ -308,6 +323,7 @@ const Table = ({
                 },
               };
               arr.push(list);
+              dispatch(setListData([]));
               dispatch(setListData(arr));
             } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
               let arr = listData;
@@ -323,6 +339,7 @@ const Table = ({
                 },
               };
               arr.push(list);
+              dispatch(setListData([]));
               dispatch(setListData(arr));
             } else if (!isNaN(id) && !isNaN(listId)) {
               let arr = listData;
@@ -337,6 +354,7 @@ const Table = ({
                 },
               };
               arr.push(list);
+              dispatch(setListData([]));
               dispatch(setListData(arr));
             }
             setButtonPress(true);
@@ -349,6 +367,7 @@ const Table = ({
     </View>
   );
 };
+import { Observable } from "object-observer";
 const Rows = ({
   title,
   data,
@@ -357,13 +376,21 @@ const Rows = ({
   supTitle,
   selectData,
   id,
+  setButtonPress,
 }) => {
-  const [checked, setChecked] = React.useState(data.selected ? true : false);
+  const [checked, setChecked] = React.useState(false);
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
   React.useEffect(() => {
     //console.log(listData);
+
+    let arr = listData.filter((d) => d.data.title.match(title));
+    //console.log(arr)
+    if (arr && arr.length > 0) {
+      setChecked(true);
+    }
   });
+  
   return (
     <View
       style={{

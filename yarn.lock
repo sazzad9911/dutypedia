@@ -5569,6 +5569,11 @@ object-keys@^1.1.1:
   resolved "https://registry.npmjs.org/object-keys/-/object-keys-1.1.1.tgz"
   integrity sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==
 
+object-observer@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/object-observer/-/object-observer-5.1.0.tgz#2bdda7f349140246c3a6a7b32d5f30afbbd3e765"
+  integrity sha512-sezzv01caddopHFRzMxy5vid/mcSCefvbHg+kYl5sRqtHXn8wQCaC+58OyZ5XwT9ZNS79r2gLBvc7B5rPNC2kg==
+
 object-visit@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/object-visit/-/object-visit-1.0.1.tgz"

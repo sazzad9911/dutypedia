@@ -4,7 +4,7 @@ export const setBottomSheet=(data)=>{
         playload:data
     }
 }
-export const setAllData=(data,i)=>{
+export const setAllData=(data)=>{
     return{
         type:'SET_DATA',
         playload:data
