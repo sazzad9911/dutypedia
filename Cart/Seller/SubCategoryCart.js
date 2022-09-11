@@ -2,8 +2,24 @@ import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { primaryColor, textColor } from "./../../assets/colors";
+import { useSelector, useDispatch } from "react-redux";
 
-const SubCategoryCart = ({ title, onPress, deleteData, data }) => {
+const SubCategoryCart = ({ title, onPress, deleteData, data, id, nextId }) => {
+  const [Selected, setSelected] = React.useState(false);
+  const allData = useSelector((state) => state.allData);
+  const listData= useSelector((state) => state.listData)
+
+  React.useEffect(() => {
+    //console.log(listData);
+  if (listData && listData.length > 0) {
+      let arr=listData.filter(d=>d.title===title);
+      if(arr.length > 0) {
+        setSelected(true);
+      }else {
+        setSelected(false);
+      }
+    }
+  }, [listData.length]);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -15,7 +31,7 @@ const SubCategoryCart = ({ title, onPress, deleteData, data }) => {
         flexDirection: "row",
         marginVertical: 5,
         marginHorizontal: 20,
-        backgroundColor: primaryColor,
+        backgroundColor: Selected ? "#C2F3A9" : primaryColor,
         paddingHorizontal: 20,
         paddingVertical: 10,
         justifyContent: "space-between",
@@ -40,9 +56,11 @@ const SubCategoryCart = ({ title, onPress, deleteData, data }) => {
         {title}
       </Text>
       {data.deletable ? (
-        <TouchableOpacity onPress={() =>{
-          deleteData(data.title)
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            deleteData(data.title);
+          }}
+        >
           <AntDesign name="delete" size={24} color="red" />
         </TouchableOpacity>
       ) : (

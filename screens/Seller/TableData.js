@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { DataTable } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
-import { primaryColor,backgroundColor } from "./../../assets/colors";
+import { primaryColor, backgroundColor } from "./../../assets/colors";
 import AddButton from "./../../components/AddButton";
 import Input from "./../../components/Input";
 import Button from "./../../components/Button";
@@ -18,7 +18,12 @@ const { width, height } = Dimensions.get("window");
 import uuid from "react-native-uuid";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
-import { setListData } from "../../action";
+import {
+  setListData,
+  setListReplace1,
+  setListReplace2,
+  setListReplace3,
+} from "../../action";
 
 const optionsPerPage = [2, 3];
 
@@ -31,9 +36,13 @@ const TableData = (props) => {
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
   const [selectedData, setSelectedData] = React.useState(null);
-  const [buttonPress,setButtonPress]=React.useState(false);
-  const exit=props.route.params.exit;
-  const navigation = props.navigation
+  const [buttonPress, setButtonPress] = React.useState(false);
+  const exit = props.route.params.exit;
+  const navigation = props.navigation;
+  const id = props.route.params.id;
+  const nextId = props.route.params.nextId;
+  const lastId = props.route.params.lastId;
+
   React.useEffect(() => {
     setPage(0);
   }, [itemsPerPage]);
@@ -45,11 +54,7 @@ const TableData = (props) => {
       setSelectedData([title]);
     }
   };
-  React.useEffect(() => {
-    if(selectedData){
-      setButtonPress(true)
-    }
-  },[selectedData])
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -65,56 +70,145 @@ const TableData = (props) => {
               data={list.data}
               title={list.title}
               {...props}
+              tableId={i}
+              setButtonPress={setButtonPress}
             />
           ))
         ) : (
           <></>
         )}
-        {
-          exit?(<Button disabled={true} onPress={()=>{
-            navigation.navigate('Pricing')
-          }} style={{
-            marginTop:20,
-            marginBottom:10,
-            borderRadius:5,
-            backgroundColor:backgroundColor,
-            color:'white',
-            marginHorizontal:20,
-            borderWidth:0,
-            height:45
-        }} title='Next'/>):(<></>)
-        }
+        {exit ? (
+          <Button
+            disabled={buttonPress ? false : true}
+            onPress={() => {
+              navigation.navigate("Pricing");
+            }}
+            style={{
+              marginTop: 20,
+              marginBottom: 10,
+              borderRadius: 5,
+              backgroundColor: backgroundColor,
+              color: buttonPress ? "white" : "gray",
+              marginHorizontal: 20,
+              borderWidth: 0,
+              height: 45,
+            }}
+            title="Next"
+          />
+        ) : (
+          <></>
+        )}
       </ScrollView>
-      <Button disabled={buttonPress?false:true} onPress={()=>{
-        dispatch(setListData(selectedData))
-        setButtonPress(false)
-        props.navigation.goBack()
-      }}
-        style={{
-          backgroundColor: "green",
-          borderRadius: 5,
-          marginHorizontal: 20,
-          marginVertical: 10,
-          height: 40,
-          color:buttonPress?'white':'gray'
-        }}
-        title="Save"
-      />
+      {exit ? (
+        <></>
+      ) : (
+        <Button
+          disabled={buttonPress ? false : true}
+          onPress={() => {
+            //dispatch(setListData(!listData));
+            setButtonPress(false);
+            props.navigation.goBack();
+          }}
+          style={{
+            backgroundColor: "green",
+            borderRadius: 5,
+            marginHorizontal: 20,
+            marginVertical: 10,
+            height: 40,
+            color: buttonPress ? "white" : "gray",
+          }}
+          title="Save"
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
 
 export default TableData;
-const Table = ({ navigation, route, title, data, storeData }) => {
+const Table = ({
+  navigation,
+  route,
+  title,
+  data,
+  storeData,
+  tableId,
+  setButtonPress,
+}) => {
   const [Visible, setVisible] = React.useState(false);
-  const [Data, setData] = React.useState([]);
+  const [Data, setData] = React.useState(data);
   const [text, setText] = React.useState();
-  React.useEffect(() => {
-    setData(data);
-  }, [data]);
+  const dispatch = useDispatch();
+  const listData = useSelector((state) => state.listData);
+  const allData = useSelector((state) => state.allData);
+  const id = route.params.id;
+  const nextId = route.params.nextId;
+  const lastId = route.params.lastId;
+  const listId = tableId;
+
+  React.useEffect(() => {}, [listData.length]);
   const deleteData = (title) => {
     let arr = Data.filter((data) => data.title != title);
+    if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
+      dispatch(setListReplace1(arr, id, nextId, lastLid, listId));
+    } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
+      dispatch(setListReplace2(arr, id, nextId, listId));
+    } else if (!isNaN(id) && !isNaN(listId)) {
+      dispatch(setListReplace3(arr, id, listId));
+    }
+    let newArr=listData.filter(d=>d.data.title!=title);
+    dispatch(setListData(newArr));
     setData(arr);
+    setButtonPress(true);
+  };
+  const selectData = (title, selected, index) => {
+    setButtonPress(true);
+    if (!selected && listData.length > 0) {
+      let newArr = listData.filter((d) => d.data.title != title);
+      dispatch(setListData(newArr));
+      return;
+    }
+    let arr = listData;
+    if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
+      let newData = {
+        mainTitle: allData[id].title,
+        title: allData[id].data[nextId].title,
+        subTitle: allData[id].data[nextId].data[lastId].title,
+        data: {
+          id: uuid.v4(),
+          title: title,
+          selected: selected,
+        },
+      };
+      //console.log(newData);
+      arr.push(newData);
+      dispatch(setListData(arr));
+    } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
+      let newData = {
+        mainTitle: allData[id].title,
+        title: allData[id].data[nextId].title,
+        data: {
+          id: uuid.v4(),
+          title: title,
+          selected: selected,
+        },
+      };
+
+      arr.push(newData);
+      //console.log(arr);
+      dispatch(setListData(arr));
+    } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
+      let newData = {
+        mainTitle: allData[id].title,
+        data: {
+          id: uuid.v4(),
+          title: title,
+          selected: selected,
+        },
+      };
+      //console.log(newData);
+      arr.push(newData);
+      dispatch(setListData(arr));
+    }
   };
   return (
     <View>
@@ -168,12 +262,14 @@ const Table = ({ navigation, route, title, data, storeData }) => {
         {Array.isArray(data) ? (
           Data.map((data, i) => (
             <Rows
+              selectData={selectData}
               storeData={storeData}
               deleteData={deleteData}
               data={data}
               key={i}
               title={data.title}
               supTitle={title}
+              id={id}
             />
           ))
         ) : (
@@ -192,10 +288,59 @@ const Table = ({ navigation, route, title, data, storeData }) => {
               deletable: true,
               selected: true,
             });
-            storeData({
-              title: title,
-              subTitle: text
-            })
+            if (
+              !isNaN(id) &&
+              !isNaN(listId) &&
+              !isNaN(nextId) &&
+              !isNaN(lastId)
+            ) {
+              dispatch(setListReplace1(newData, id, nextId, lastLid, listId));
+              let arr = listData;
+              let list = {
+                mainTitle: allData[id].title,
+                title: allData[id].data[nextId].title,
+                subTitle: allData[id].data[nextId].data[lastId].title,
+                data: {
+                  id: uuid.v4(),
+                  title: text,
+                  deletable: true,
+                  selected: true,
+                },
+              };
+              arr.push(list);
+              dispatch(setListData(arr));
+            } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
+              let arr = listData;
+              dispatch(setListReplace2(newData, id, nextId, listId));
+              let list = {
+                mainTitle: allData[id].title,
+                title: allData[id].data[nextId].title,
+                data: {
+                  id: uuid.v4(),
+                  title: text,
+                  deletable: true,
+                  selected: true,
+                },
+              };
+              arr.push(list);
+              dispatch(setListData(arr));
+            } else if (!isNaN(id) && !isNaN(listId)) {
+              let arr = listData;
+              dispatch(setListReplace3(newData, id, listId));
+              let list = {
+                mainTitle: allData[id].title,
+                data: {
+                  id: uuid.v4(),
+                  title: text,
+                  deletable: true,
+                  selected: true,
+                },
+              };
+              arr.push(list);
+              dispatch(setListData(arr));
+            }
+            setButtonPress(true);
+            setData(newData);
             setText("");
           }
         }}
@@ -204,8 +349,21 @@ const Table = ({ navigation, route, title, data, storeData }) => {
     </View>
   );
 };
-const Rows = ({ title, data, deleteData,storeData,supTitle }) => {
-  const [checked, setChecked] = React.useState(false);
+const Rows = ({
+  title,
+  data,
+  deleteData,
+  storeData,
+  supTitle,
+  selectData,
+  id,
+}) => {
+  const [checked, setChecked] = React.useState(data.selected ? true : false);
+  const dispatch = useDispatch();
+  const listData = useSelector((state) => state.listData);
+  React.useEffect(() => {
+    //console.log(listData);
+  });
   return (
     <View
       style={{
@@ -254,11 +412,8 @@ const Rows = ({ title, data, deleteData,storeData,supTitle }) => {
               }}
               status={checked ? "checked" : "unchecked"}
               onPress={() => {
+                selectData(data.title, !checked, id);
                 setChecked(!checked);
-                storeData({
-                  title: supTitle,
-                  subTitle:title
-                })
               }}
             />
           )}

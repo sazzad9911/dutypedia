@@ -1,6 +1,6 @@
-const initialState=null
+const initialState=[];
 const listData=(state= initialState, action)=>{
-    if(action.playload=='SET_DATA'){
+    if(action.type=='SET_DATA'){
         return state=action.playload
     }
     return state

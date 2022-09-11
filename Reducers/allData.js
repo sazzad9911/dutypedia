@@ -13,7 +13,7 @@ import {
   PainterIcon,
   OnlineTutionIcon,
   SaloonIcon,
-  RentIcon
+  RentIcon,
 } from "../assets/icon";
 import business from "../assets/Images/business.webp";
 import { BusinessOptions } from "./../Data/business";
@@ -30,12 +30,11 @@ import { MusicAudioOptions } from "./../Data/musicaudio";
 import MainPainter from "./../Data/MainPainter";
 import { OnlineTutionOptions } from "./../Data/onlinetution";
 import onlinetution from "../assets/Images/onlinetution.webp";
-import parlour from "../assets/Images/parlour.webp"
-import { ParlorOptions } from './../Data/parlor';
-import MainLabor from './../Data/MainLabor';
+import parlour from "../assets/Images/parlour.webp";
+import { ParlorOptions } from "./../Data/parlor";
+import MainLabor from "./../Data/MainLabor";
 
-
-const initialState = [
+export const initialState = [
   {
     title: "Builder Services",
     icon: BuilderIcon,
@@ -72,9 +71,25 @@ const initialState = [
       {
         title: "Jewellary Items",
         list: [
-          {
-            title: "Jewellary Items",
-            data: BuilderOptions.jewellaryitems,
+          { 
+            title: "Jewelry Items",
+            data: BuilderOptions.jewellaryitems.JewelryItems,
+          },
+          { 
+            title: "Goldsmith Services",
+            data: BuilderOptions.jewellaryitems.GoldsmithServices,
+          },
+          { 
+            title: "Gold Type",
+            data: BuilderOptions.jewellaryitems.GoldType,
+          },
+          { 
+            title: "Types Of Diamonds",
+            data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
+          },
+          { 
+            title: "Types Of Diamonds",
+            data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
           },
         ],
       },
@@ -100,8 +115,16 @@ const initialState = [
         title: "Tailor Service",
         list: [
           {
-            title: "Tailor Service",
-            data: BuilderOptions.tailorservice,
+            title: "Ladies Dress",
+            data: BuilderOptions.tailorservice.LadiesDress,
+          },
+          {
+            title: "Jeans Dress",
+            data: BuilderOptions.tailorservice.JeansDress,
+          },
+          {
+            title: "Baby Dress",
+            data: BuilderOptions.tailorservice.BabyDress,
           },
         ],
       },
@@ -2656,7 +2679,6 @@ const initialState = [
             title: "Section Tutoring",
             data: OnlineTutionOptions.SCIENCETUTORING,
           },
-        
         ],
       },
       {
@@ -2666,7 +2688,6 @@ const initialState = [
             title: "Social Science Tutoring",
             data: OnlineTutionOptions.SOCIALSCIENCESTUTORING,
           },
-        
         ],
       },
       {
@@ -2676,7 +2697,6 @@ const initialState = [
             title: "Business Tutoring",
             data: OnlineTutionOptions.BUSINESSTUTORING,
           },
-        
         ],
       },
       {
@@ -2686,7 +2706,6 @@ const initialState = [
             title: "Mobile",
             data: OnlineTutionOptions.Mobile,
           },
-        
         ],
       },
       {
@@ -2696,7 +2715,6 @@ const initialState = [
             title: "Pc",
             data: OnlineTutionOptions.Pc,
           },
-        
         ],
       },
       {
@@ -2706,7 +2724,6 @@ const initialState = [
             title: "Printer",
             data: OnlineTutionOptions.Printer,
           },
-        
         ],
       },
     ],
@@ -2823,8 +2840,37 @@ const initialState = [
   },
 ];
 const allData = (state = initialState, action) => {
-  if (action.type === "SET_DATA") {
-    return (state = action.playload);
+  if (action.type === "SET_ARRAY_REPLACE") {
+    let index = action.index;
+    initialState[index].data=action.playload;
+    return state=initialState
+  }
+  if (action.type === "SET_ARRAY_REPLACE_2") {
+    let index = action.index;
+    let nextId=action.nextId;
+    initialState[index].data[nextId].data=action.playload;
+    return state=initialState
+  }
+  if(action.type === "SET_LIST_REPLACE_1"){
+    let id=action.id;
+    let nextId=action.nextId;
+    let lastId=action.lastId;
+    let listId=action.listId;
+    initialState[id].data[nextId].data[lastId].list[listId].data=action.playload;
+    return state=initialState
+  }
+  if(action.type === "SET_LIST_REPLACE_2"){
+    let id=action.id;
+    let nextId=action.nextId;
+    let listId=action.listId;
+    initialState[id].data[nextId].list[listId].data=action.playload;
+    return state=initialState
+  }
+  if(action.type === "SET_LIST_REPLACE_3"){
+    let id=action.id;
+    let listId=action.listId;
+    initialState[id].list[listId].data=action.playload;
+    return state=initialState
   }
   return state;
 };

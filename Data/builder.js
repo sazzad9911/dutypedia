@@ -408,7 +408,7 @@ export const BuilderOptions = {
     },
   ],
   jewellaryitems: {
-    "Jewelry Items": [
+    "JewelryItems": [
       {
         id: uuid.v4(),
         title: "Mangtika",
@@ -446,7 +446,7 @@ export const BuilderOptions = {
         title: "Anklet & Toe Rings",
       },
     ],
-    "Goldsmith Services": [
+    "GoldsmithServices": [
       {
         id: uuid.v4(),
         title: "Ring Sizing Includes Rhodium Plating",
@@ -481,7 +481,7 @@ export const BuilderOptions = {
         title: "Replace Earring Backing",
       },
     ],
-    "Gold Type": [
+    "GoldType": [
       {
         id: uuid.v4(),
         title: "14k",
@@ -499,7 +499,7 @@ export const BuilderOptions = {
         title: "24k",
       },
     ],
-    "Types Of Diamonds": [
+    "TypesOfDiamonds": [
       {
         id: uuid.v4(),
         title: "White Diamonds",
@@ -535,7 +535,7 @@ export const BuilderOptions = {
     ],
   },
   tailorservice: {
-    "Ladies Dress": [
+    "LadiesDress": [
       {
         id: uuid.v4(),
         title: "3 Piece",
@@ -565,7 +565,7 @@ export const BuilderOptions = {
         title: "Ladies Shirt",
       },
     ],
-    "Jeans Dress": [
+    "JeansDress": [
       {
         id: uuid.v4(),
         title: "Shirt",
@@ -596,7 +596,7 @@ export const BuilderOptions = {
         title: "T-Shirt",
       },
     ],
-    "Baby Dress": [
+    "BabyDress": [
       {
         id: uuid.v4(),
         title: "Frock",

@@ -11,7 +11,9 @@ import { textColor } from "./../../assets/colors";
 import SubCategoryCart from "./../../Cart/Seller/SubCategoryCart";
 import AddButton from "./../../components/AddButton";
 import Input from "./../../components/Input";
-import Button from './../../components/Button';
+import Button from "./../../components/Button";
+import { useSelector, useDispatch } from "react-redux";
+import { setArrayReplaceData, setArrayReplaceData2,setListData } from "../../action";
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
@@ -19,12 +21,37 @@ const SubCategories = ({ navigation, route }) => {
   const [data, setData] = React.useState(route.params.data);
   const image = route.params.image;
   const [text, setText] = React.useState();
+  const id = route.params.id;
+  const nextId = route.params.nextId;
+  const allData = useSelector((state) => state.allData);
+  const dispatch = useDispatch();
+  const listData = useSelector((state) => state.listData);
+
   React.useEffect(() => {
-    setData(route.params.data);
-  }, [route.params.data]);
+    if (route.name == "SubCategories") {
+      setData(allData[id].data);
+      //console.log(allData[id].data[allData[id].data.length - 1]);
+    } else {
+      setData(allData[id].data[nextId].data);
+      //console.log(
+      // allData[id].data[nextId].data[allData[id].data[nextId].data.length - 1]
+      //);
+    }
+  }, [allData[id].data.length]);
+
   const deleteData = (title) => {
-    let arr = data.filter((data) => data.title != title);
-    setData(arr);
+    if (route.name === "SubCategories") {
+      let arr = allData[id].data.filter((data) => data.title != title);
+      dispatch(setArrayReplaceData(arr, id));
+      setData(arr);
+    } else {
+      let arr = allData[id].data[nextId].data.filter(
+        (data) => data.title != title
+      );
+      dispatch(setArrayReplaceData2(arr, id, nextId));
+      setData(arr);
+    }
+    //dispatch(setListData(!listData))
   };
   return (
     <ScrollView>
@@ -66,7 +93,7 @@ const SubCategories = ({ navigation, route }) => {
       </ImageBackground>
       {Array.isArray(data) ? (
         data.map((data, i) => (
-          <SubCategoryCart
+          <SubCategoryCart id={id} nextId={i}
             deleteData={deleteData}
             key={i}
             onPress={() => {
@@ -75,12 +102,26 @@ const SubCategories = ({ navigation, route }) => {
                   title: data.title,
                   data: data.data,
                   image: data.image,
+                  id: id,
+                  nextId: i,
                 });
               } else {
-                navigation.navigate("TableData", {
-                  title: data.title,
-                  list: data.list,
-                });
+                if (route.name === "SubCategories") {
+                  navigation.navigate("TableData", {
+                    title: data.title,
+                    list: data.list,
+                    id: id,
+                    nextId: i,
+                  });
+                } else {
+                  navigation.navigate("TableData", {
+                    title: data.title,
+                    list: data.list,
+                    id: id,
+                    nextId: nextId,
+                    lastId:i,
+                  });
+                }
               }
             }}
             title={data.title}
@@ -108,23 +149,35 @@ const SubCategories = ({ navigation, route }) => {
                     },
                   ],
                 });
-                setData(oldArr);
-                setText("");
+                if (route.name === "SubCategories") {
+                  dispatch(setArrayReplaceData(oldArr, id));
+                  setData(oldArr);
+                  setText("");
+                } else {
+                  dispatch(setArrayReplaceData2(oldArr, id, nextId));
+                  setData(oldArr);
+                  setText("");
+                }
+                //dispatch(setListData(oldArr))
               }
             }}
             title={Visible ? "Save" : "Add New"}
           />
-          <Button onPress={()=>{
-            navigation.navigate('Pricing')
-          }} style={{
-            marginVertical:20,
-            marginHorizontal:20,
-            borderRadius:5,
-            color:'white',
-            backgroundColor:'#DA1E37',
-            borderWidth:0,
-            height:43
-          }} title='Next'/>
+          <Button
+            onPress={() => {
+              navigation.navigate("Pricing");
+            }}
+            style={{
+              marginVertical: 20,
+              marginHorizontal: 20,
+              borderRadius: 5,
+              color: "white",
+              backgroundColor: "#DA1E37",
+              borderWidth: 0,
+              height: 43,
+            }}
+            title="Next"
+          />
         </View>
       ) : (
         <></>

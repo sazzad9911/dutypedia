@@ -43,12 +43,14 @@ const Category = (props) => {
                   title: data.title,
                   data: data.data,
                   image: data.image,
+                  id:i
                 });
               } else {
                 props.navigation.navigate("TableData", {
                   title: data.title,
                   list: data.list,
-                  exit:true,
+                  exit:true, 
+                  id:i
                 });
               }
             }}
