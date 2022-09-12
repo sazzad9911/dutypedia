@@ -13,16 +13,15 @@ import Animated, { FadeIn } from "react-native-reanimated";
 const { width, height } = Dimensions.get("window");
 import { AntDesign } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
-import { primaryColor,textColor } from './../assets/colors';
+import { primaryColor, textColor } from "./../assets/colors";
 
-const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
+const DropDown = ({ style, value, onChange, placeholder, DATA, error }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
   const [Visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
-    
     setValue(value);
   }, [value]);
 
@@ -51,7 +50,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
       fontSize: 15,
       fontFamily: "Poppins-Light",
       marginRight: 10,
-      color:textColor
+      color: textColor,
     },
   });
   const childRef = React.useRef();
@@ -76,6 +75,18 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
             color="#707070"
           />
         </TouchableOpacity>
+        {error && (
+          <Text
+            style={{
+              marginLeft: 2,
+              fontSize: 12,
+              fontFamily: "Poppins-Light",
+              color: "red",
+            }}
+          >
+            {error}
+          </Text>
+        )}
       </View>
       <Modal
         transparent={true}
@@ -112,19 +123,20 @@ const DropDown = ({ style, value, onChange, placeholder, DATA }) => {
               <ScrollView>
                 {Array.isArray(DATA) &&
                   DATA.map((doc, i) => (
-                    <TouchableOpacity style={{
-                      width:'100%',
-                      height:50,
-                      marginTop:2,
-                      paddingHorizontal:10,
-                      justifyContent: "center",
-                      borderBottomWidth: 1,
-                      borderBottomColor:'#e5e5e5',
-                    }}
+                    <TouchableOpacity
+                      style={{
+                        width: "100%",
+                        height: 50,
+                        marginTop: 2,
+                        paddingHorizontal: 10,
+                        justifyContent: "center",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#e5e5e5",
+                      }}
                       onPress={() => {
                         setValue(doc);
                         setFocus(false);
-                        if(onChange){
+                        if (onChange) {
                           onChange(doc);
                         }
                       }}

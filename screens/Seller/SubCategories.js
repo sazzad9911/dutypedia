@@ -21,6 +21,7 @@ import {
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
+  const params = route.params;
   const [Visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState(route.params.data);
   const image = route.params.image;
@@ -33,26 +34,24 @@ const SubCategories = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (route.name == "SubCategories") {
-      setData(allData[id].data);
+      //setData(allData[id].data);
       //console.log(allData[id].data[allData[id].data.length - 1]);
     } else {
-      setData(allData[id].data[nextId].data);
+      //setData(allData[id].data[nextId].data);
       //console.log(
       // allData[id].data[nextId].data[allData[id].data[nextId].data.length - 1]
       //);
     }
-  }, [allData[id].data.length]);
+  }, []);
 
   const deleteData = (title) => {
     if (route.name === "SubCategories") {
-      let arr = allData[id].data.filter((data) => data.title != title);
-      dispatch(setArrayReplaceData(arr, id));
+      let arr = data.filter((data) => data.title != title);
+      //dispatch(setArrayReplaceData(arr, id));
       setData(arr);
     } else {
-      let arr = allData[id].data[nextId].data.filter(
-        (data) => data.title != title
-      );
-      dispatch(setArrayReplaceData2(arr, id, nextId));
+      let arr = data.filter((data) => data.title != title);
+      //dispatch(setArrayReplaceData2(arr, id, nextId));
       setData(arr);
     }
     //dispatch(setListData(!listData))
@@ -110,6 +109,8 @@ const SubCategories = ({ navigation, route }) => {
                   image: data.image,
                   id: id,
                   nextId: i,
+                  mainTitle: params.mainTitle,
+                  title: data.title,
                 });
               } else {
                 if (route.name === "SubCategories") {
@@ -118,6 +119,8 @@ const SubCategories = ({ navigation, route }) => {
                     list: data.list,
                     id: id,
                     nextId: i,
+                    mainTitle: params.mainTitle,
+                    title: data.title,
                   });
                 } else {
                   navigation.navigate("TableData", {
@@ -126,6 +129,9 @@ const SubCategories = ({ navigation, route }) => {
                     id: id,
                     nextId: nextId,
                     lastId: i,
+                    mainTitle: params.mainTitle,
+                    title: params.title,
+                    subTitle:data.title,
                   });
                 }
               }
@@ -156,11 +162,11 @@ const SubCategories = ({ navigation, route }) => {
                   ],
                 });
                 if (route.name === "SubCategories") {
-                  dispatch(setArrayReplaceData(oldArr, id));
+                  // dispatch(setArrayReplaceData(oldArr, id));
                   setData(oldArr);
                   setText("");
                 } else {
-                  dispatch(setArrayReplaceData2(oldArr, id, nextId));
+                  // dispatch(setArrayReplaceData2(oldArr, id, nextId));
                   setData(oldArr);
                   setText("");
                 }
@@ -173,7 +179,7 @@ const SubCategories = ({ navigation, route }) => {
       )}
       {route.name === "SubCategories" && (
         <Button
-          disabled={listData&&listData.length>0?false:true}
+          disabled={listData && listData.length > 0 ? false : true}
           onPress={() => {
             navigation.navigate("Pricing");
           }}

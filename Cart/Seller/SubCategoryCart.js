@@ -10,15 +10,19 @@ const SubCategoryCart = ({ title, onPress, deleteData, data, id, nextId }) => {
   const listData= useSelector((state) => state.listData)
 
   React.useEffect(() => {
-    console.log('reloader')
+    //console.log('reloader')
   if (listData) {
-      let arr=listData.filter(d=>d.title.match(title));
+      let arr=listData.filter(d=>{
+        if(d.title.match(title) || d.subTitle&&d.subTitle.match(title)){
+          return d
+        }
+      });
       if(arr.length > 0) { 
         setSelected(true);
-        console.log(true);
+        //console.log(true);
       }else {
         setSelected(false);
-        console.log(false);
+        //console.log(false);
       }
     }
   }, [listData.length]);

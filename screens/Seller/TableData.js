@@ -23,13 +23,15 @@ import {
   setListReplace1,
   setListReplace2,
   setListReplace3,
+  addListData,
+  deleteListData,
 } from "../../action";
+import {AllData} from '../../Data/AllData'
 
 const optionsPerPage = [2, 3];
 
 const TableData = (props) => {
   const [page, setPage] = React.useState(0);
-  const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
   const list = props.route.params.list;
   const title = props.route.params.title;
   const [Visible, setVisible] = React.useState(false);
@@ -43,19 +45,12 @@ const TableData = (props) => {
   const id = props.route.params.id;
   const nextId = props.route.params.nextId;
   const lastId = props.route.params.lastId;
-  const [data, setData] = React.useState(allData[id]);
+  const [data, setData] = React.useState(AllData[id]);
 
-  React.useEffect(() => {
-    setPage(0);
-  }, [itemsPerPage]);
-  React.useEffect(() => {});
-  const storeData = (title) => {
-    if (selectedData) {
-      setSelectedData((data) => [...data, title]);
-    } else {
-      setSelectedData([title]);
-    }
-  };
+  // React.useEffect(() => {
+  //   console.log(AllData)
+    
+  // }, []);
 
   return (
     <KeyboardAvoidingView
@@ -67,7 +62,6 @@ const TableData = (props) => {
         {Array.isArray(list) ? (
           list.map((list, i) => (
             <Table
-              storeData={storeData}
               key={i}
               data={list.data}
               title={list.title}
@@ -132,15 +126,7 @@ const TableData = (props) => {
 };
 
 export default TableData;
-const Table = ({
-  navigation,
-  route,
-  title,
-  data,
-  storeData,
-  tableId,
-  setButtonPress,
-}) => {
+const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [Data, setData] = React.useState(data);
   const [text, setText] = React.useState();
@@ -151,77 +137,65 @@ const Table = ({
   const nextId = route.params.nextId;
   const lastId = route.params.lastId;
   const listId = tableId;
-  const [ObjectId, setObjectId] =React.useState('yyfyf')
+  const mainTitle = route.params.mainTitle;
+  const subTitle = route.params.subTitle;
+  const titleS = route.params.title;
 
-  const deleteData = (title) => {
-    let arr = Data.filter((data) => data.title != title);
-    if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
-      dispatch(setListReplace1(arr, id, nextId, lastLid, listId));
-    } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
-      dispatch(setListReplace2(arr, id, nextId, listId));
-    } else if (!isNaN(id) && !isNaN(listId)) {
-      dispatch(setListReplace3(arr, id, listId));
+  const [ObjectId, setObjectId] = React.useState("yyfyf");
+
+  const deleteData = (d) => {
+    setButtonPress(true);
+    dispatch(deleteListData(d.title));
+    const index = data.indexOf(d);
+    if (index > -1) {
+      data.splice(index, 1);
     }
-    let newArr = listData.filter((d) => d.data.title != title);
-    dispatch(setListData(newArr));
-    setData(arr);
   };
-  const selectData = (title, selected, index) => {
-    setObjectId(title)
-    if(ObjectId.match(title)) {
-      setButtonPress(val=>(!val))
-    }else {
-      setButtonPress(true)
+  const selectData = (title, selected) => {
+    setObjectId(title);
+    if (ObjectId.match(title)) {
+      setButtonPress((val) => !val);
+    } else {
+      setButtonPress(true);
     }
-    if (!selected &&listData&& listData.length > 0) {
-      let newArr = listData.filter((d) => d.data.title != title);
-      dispatch(setListData(newArr));
+    if (!selected) {
+      dispatch(deleteListData(title));
       return;
     }
-    let arr = listData;
+
     if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
       let newData = {
-        mainTitle: allData[id].title,
-        title: allData[id].data[nextId].title,
-        subTitle: allData[id].data[nextId].data[lastId].title,
+        mainTitle: mainTitle,
+        title: titleS,
+        subTitle: subTitle,
         data: {
           id: uuid.v4(),
           title: title,
           selected: selected,
         },
       };
-      //console.log(newData);
-      arr.push(newData);
-      dispatch(setListData([]));
-      dispatch(setListData(arr));
+      dispatch(addListData(newData));
     } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
       let newData = {
-        mainTitle: allData[id].title,
-        title: allData[id].data[nextId].title,
+        mainTitle: mainTitle,
+        title: titleS,
         data: {
           id: uuid.v4(),
           title: title,
           selected: selected,
         },
       };
-
-      arr.push(newData);
-      //console.log(arr);
-      dispatch(setListData([]));
-      dispatch(setListData(arr));
+      dispatch(addListData(newData));
     } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
       let newData = {
-        mainTitle: allData[id].title,
+        mainTitle: mainTitle,
         data: {
           id: uuid.v4(),
           title: title,
           selected: selected,
         },
       };
-      //console.log(newData);
-      arr.push(newData);
-      dispatch(setListData([]));
-      dispatch(setListData(arr));
+      dispatch(addListData(newData));
     }
   };
   return (
@@ -274,10 +248,9 @@ const Table = ({
         </View>
         <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         {Array.isArray(data) ? (
-          Data.map((data, i) => (
+          data.map((data, i) => (
             <Rows
               selectData={selectData}
-              storeData={storeData}
               deleteData={deleteData}
               data={data}
               key={i}
@@ -296,25 +269,31 @@ const Table = ({
         onPress={() => {
           setVisible(true);
           if (Visible && text) {
-            let newData = Data;
-            newData.push({
+            setButtonPress(true);
+            data.push({
               id: uuid.v4(),
               title: text,
               deletable: true,
               selected: true,
             });
+            // setData(d=>[...d,{
+            //   id: uuid.v4(),
+            //   title: text,
+            //   deletable: true,
+            //   selected: true,
+            // }]);
             if (
               !isNaN(id) &&
               !isNaN(listId) &&
               !isNaN(nextId) &&
               !isNaN(lastId)
             ) {
-              dispatch(setListReplace1(newData, id, nextId, lastLid, listId));
-              let arr = listData;
+              //dispatch(setListReplace1(newData, id, nextId, lastLid, listId));
+              // let arr = listData;
               let list = {
-                mainTitle: allData[id].title,
-                title: allData[id].data[nextId].title,
-                subTitle: allData[id].data[nextId].data[lastId].title,
+                mainTitle: mainTitle,
+                title: titleS,
+                subTitle: subTitle,
                 data: {
                   id: uuid.v4(),
                   title: text,
@@ -322,15 +301,13 @@ const Table = ({
                   selected: true,
                 },
               };
-              arr.push(list);
-              dispatch(setListData([]));
-              dispatch(setListData(arr));
+              dispatch(addListData(list));
             } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
-              let arr = listData;
-              dispatch(setListReplace2(newData, id, nextId, listId));
+              // let arr = listData;
+              // dispatch(setListReplace2(newData, id, nextId, listId));
               let list = {
-                mainTitle: allData[id].title,
-                title: allData[id].data[nextId].title,
+                mainTitle: mainTitle,
+                title: titleS,
                 data: {
                   id: uuid.v4(),
                   title: text,
@@ -338,14 +315,12 @@ const Table = ({
                   selected: true,
                 },
               };
-              arr.push(list);
-              dispatch(setListData([]));
-              dispatch(setListData(arr));
+              dispatch(addListData(list));
             } else if (!isNaN(id) && !isNaN(listId)) {
-              let arr = listData;
-              dispatch(setListReplace3(newData, id, listId));
+              // let arr = listData;
+              // dispatch(setListReplace3(newData, id, listId));
               let list = {
-                mainTitle: allData[id].title,
+                mainTitle: mainTitle,
                 data: {
                   id: uuid.v4(),
                   title: text,
@@ -353,12 +328,8 @@ const Table = ({
                   selected: true,
                 },
               };
-              arr.push(list);
-              dispatch(setListData([]));
-              dispatch(setListData(arr));
+              dispatch(addListData(list));
             }
-            setButtonPress(true);
-            setData(newData);
             setText("");
           }
         }}
@@ -372,7 +343,6 @@ const Rows = ({
   title,
   data,
   deleteData,
-  storeData,
   supTitle,
   selectData,
   id,
@@ -390,7 +360,7 @@ const Rows = ({
       setChecked(true);
     }
   });
-  
+
   return (
     <View
       style={{
@@ -423,7 +393,7 @@ const Rows = ({
           {data.deletable ? (
             <TouchableOpacity
               onPress={() => {
-                deleteData(data.title);
+                deleteData(data);
               }}
             >
               <AntDesign name="delete" size={22} color="red" />
@@ -439,7 +409,7 @@ const Rows = ({
               }}
               status={checked ? "checked" : "unchecked"}
               onPress={() => {
-                selectData(data.title, !checked, id);
+                selectData(data.title, !checked);
                 setChecked(!checked);
               }}
             />

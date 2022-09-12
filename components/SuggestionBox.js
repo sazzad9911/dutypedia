@@ -11,7 +11,7 @@ import {
 import Animated, { FadeIn } from "react-native-reanimated";
 const { width, height } = Dimensions.get("window");
 
-const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef }) => {
+const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef,error }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
@@ -77,6 +77,14 @@ const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef })
         style={[styles.input]}
         placeholder={placeholder ? placeholder : "Type here"}
       />
+     {error&&(
+      <Text style={{
+        fontSize:12,
+        fontFamily:'Poppins-Light',
+        color:'red',
+        marginLeft:2
+      }}>{error}</Text>
+     )}
     </View>
   );
 };

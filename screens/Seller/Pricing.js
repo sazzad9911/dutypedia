@@ -31,13 +31,7 @@ import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Pricing = ({ navigation, route }) => {
-  const [CenterName, setCenterName] = React.useState();
   const [selectedLanguage, setSelectedLanguage] = React.useState();
-  const [TeamNumber, setTeamNumber] = React.useState("0");
-  const [Day, setDay] = React.useState();
-  const [Month, setMonth] = React.useState();
-  const [Year, setYear] = React.useState();
-  const [checked, setChecked] = React.useState(false);
   const [bounceValue, setBounceValue] = React.useState(new Animated.Value(300));
   const animatedHeight = Animated.spring(bounceValue, {
     toValue: 6000,
@@ -48,20 +42,6 @@ const Pricing = ({ navigation, route }) => {
   }).start();
   const [InputVisible, setInputVisible] = React.useState(false);
   const [text, setText] = React.useState();
-  const [Service, setService] = React.useState([
-    {
-      title: "Home Delivery Available",
-      checked: false,
-    },
-    {
-      title: "Home Service Available",
-      checked: false,
-    },
-    {
-      title: "Online Support Available",
-      checked: false,
-    },
-  ]);
   const [selectedItem, setSelectedItem] = React.useState(null);
   const DATA = [
     {
@@ -144,8 +124,111 @@ const Pricing = ({ navigation, route }) => {
   ///////////////////////-----------------------------------
   const [ServiceName, setServiceName] = React.useState();
   const [ServiceNameError, setServiceNameError] = React.useState();
-  const titleRef=React.useRef()
+  const titleRef = React.useRef();
+  const [Title, setTitle] = React.useState();
+  const [TitleError, setTitleError] = React.useState();
+  const [Name, setName] = React.useState();
+  const [NameError, setNameError] = React.useState();
+  const [Gender, setGender] = React.useState();
+  const [GenderError, setGenderError] = React.useState();
+  const [Position, setPosition] = React.useState();
+  const [PositionError, setPositionError] = React.useState();
+  const [TeamNumber, setTeamNumber] = React.useState("0");
+  const [TeamNumberError, setTeamNumberError] = React.useState();
+  const [Day, setDay] = React.useState();
+  const [DayError, setDayError] = React.useState();
+  const [Month, setMonth] = React.useState();
+  const [MonthError, setMonthError] = React.useState();
+  const [Year, setYear] = React.useState();
+  const [YearError, setYearError] = React.useState();
+  const [Times, setTimes] = React.useState([]);
+  const [TimesError, setTimesError] = React.useState([]);
+  const [StartingPrice, setStartingPrice] = React.useState();
+  const [StartingPriceError, setStartingPriceError] = React.useState();
+  const [Service, setService] = React.useState([
+    {
+      title: "Home Delivery Available",
+      checked: false,
+    },
+    {
+      title: "Home Service Available",
+      checked: false,
+    },
+    {
+      title: "Online Support Available",
+      checked: false,
+    },
+  ]);
+  const [ServiceCounter, setServiceCounter] = React.useState(0);
+  const [ServiceError, setServiceError] = React.useState();
+  const [checked, setChecked] = React.useState(false);
+  const [TimeError, setTimeError] = React.useState();
 
+  React.useEffect(() => {
+    Service.forEach((doc, i) => {
+      if (doc.checked) {
+        setServiceCounter((d) => (d + 1));
+      }
+    });
+  }, [Service.length]);
+  const CheckValidity = () => {
+    setServiceNameError(null);
+    setTitleError(null);
+    setNameError(null);
+    setGenderError(null);
+    setPositionError(null);
+    setTeamNumberError(null);
+    setDayError(null);
+    setMonthError(null);
+    setYearError(null);
+    setTimeError(null);
+    setServiceError(null);
+    setStartingPriceError(null)
+    if (!ServiceName) {
+      setServiceNameError("This field is required");
+      return;
+    }
+    if (!Title) {
+      setTitleError("This field is required");
+      return;
+    }
+    if (!Name) {
+      setNameError("This field is required");
+      return;
+    }
+    if (!Gender) {
+      setGenderError("This field is required");
+      return;
+    }
+    if (!Position) {
+      setPositionError("This field is required");
+      return;
+    }
+    if (parseInt(TeamNumber) <= 0) {
+      setTeamNumberError("You must have at least one team");
+      return;
+    }
+    if (!Day || !Month || !Year) {
+      setDayError("*required");
+      setMonthError("*required");
+      setYearError("*required");
+      return;
+    }
+    if (!checked && Times.length == 0) {
+      setTimeError("Please select any time");
+      return;
+    }
+    if (!StartingPrice) {
+      setStartingPriceError("This field is required");
+      return;
+    }
+    if (ServiceCounter == 0) {
+      setServiceError("Please select any facilities");
+      return;
+    }
+
+    navigation.navigate("Service");
+  };
   //------------------------------------------
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -159,7 +242,7 @@ const Pricing = ({ navigation, route }) => {
           <Input
             returnKeyType="next"
             onKeyPress={(e) => {
-              console.log(e)
+              //console.log(e);
               //titleRef.current.focus();
             }}
             error={ServiceNameError}
@@ -194,11 +277,14 @@ const Pricing = ({ navigation, route }) => {
               flexDirection: "row",
             }}
           >
-            <SuggestionBox initialRef={titleRef}
+            <SuggestionBox
+              initialRef={titleRef}
               placeholder="Title"
               value={selectedItem}
+              error={TitleError}
               onChange={(val) => {
                 setData(val);
+                setTitle(val);
               }}
               DATA={DATA}
               style={{
@@ -207,6 +293,10 @@ const Pricing = ({ navigation, route }) => {
               }}
             />
             <Input
+              onChange={(val) => {
+                setName(val);
+              }}
+              error={NameError}
               style={{
                 marginHorizontal: 0,
                 borderWidth: 1,
@@ -220,6 +310,10 @@ const Pricing = ({ navigation, route }) => {
           </View>
           <View style={{ flexDirection: "row" }}>
             <DropDown
+              onChange={(val) => {
+                setGender(val);
+              }}
+              error={GenderError}
               style={{
                 marginTop: 5,
                 width: 120,
@@ -229,10 +323,12 @@ const Pricing = ({ navigation, route }) => {
             />
 
             <SuggestionBox
+              error={PositionError}
               placeholder="Position"
               value={SelectedPositions}
               onChange={(val) => {
                 setPositions(val);
+                setPosition(val);
               }}
               DATA={PositionData}
               style={{
@@ -299,6 +395,19 @@ const Pricing = ({ navigation, route }) => {
               <FontAwesome name="plus" size={20} color="#707070" />
             </TouchableOpacity>
           </View>
+          {TeamNumberError && (
+            <Text
+              style={{
+                fontSize: 12,
+                marginLeft: 2,
+                fontFamily: "Poppins-Light",
+                color: "red",
+                marginTop: 3,
+              }}
+            >
+              {TeamNumberError}
+            </Text>
+          )}
           <Text
             style={{
               color: textColor,
@@ -311,6 +420,10 @@ const Pricing = ({ navigation, route }) => {
           </Text>
           <View style={{ flexDirection: "row" }}>
             <DropDown
+              error={DayError}
+              onChange={(val) => {
+                setDay(val);
+              }}
               style={{
                 marginTop: 10,
               }}
@@ -318,6 +431,10 @@ const Pricing = ({ navigation, route }) => {
               DATA={DateTime.day}
             />
             <DropDown
+              error={MonthError}
+              onChange={(val) => {
+                setMonth(val);
+              }}
               style={{
                 marginTop: 10,
                 marginLeft: 10,
@@ -326,6 +443,10 @@ const Pricing = ({ navigation, route }) => {
               DATA={DateTime.month}
             />
             <DropDown
+              error={YearError}
+              onChange={(val) => {
+                setYear(val);
+              }}
               style={{
                 marginTop: 10,
                 marginLeft: 10,
@@ -368,21 +489,101 @@ const Pricing = ({ navigation, route }) => {
           </View>
           {!checked ? (
             <Animated.View entering={FadeIn}>
-              <Days setVisible={setVisible} title="Saturday" />
-              <Days setVisible={setVisible} title="Sunday" />
-              <Days setVisible={setVisible} title="Monday" />
-              <Days setVisible={setVisible} title="Tuesday" />
-              <Days setVisible={setVisible} title="Wednesday" />
-              <Days setVisible={setVisible} title="Thursday" />
-              <Days setVisible={setVisible} title="Friday" />
+              <Days
+                error={TimesError[0]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[0] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Saturday"
+              />
+              <Days
+                error={TimesError[1]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[1] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Sunday"
+              />
+              <Days
+                error={TimesError[2]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[2] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Monday"
+              />
+              <Days
+                error={TimesError[3]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[3] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Tuesday"
+              />
+              <Days
+                error={TimesError[4]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[4] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Wednesday"
+              />
+              <Days
+                error={TimesError[5]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[5] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Thursday"
+              />
+              <Days
+                error={TimesError[6]}
+                onChange={(val) => {
+                  let arr = Times;
+                  arr[6] = val;
+                  setTimes(arr);
+                }}
+                setVisible={setVisible}
+                title="Friday"
+              />
             </Animated.View>
           ) : (
             <></>
+          )}
+          {TimeError && (
+            <Text
+              style={{
+                fontSize: 12,
+                marginLeft: 2,
+                fontFamily: "Poppins-Light",
+                color: "red",
+                marginTop: 3,
+              }}
+            >
+              {TimeError}
+            </Text>
           )}
         </Animated.View>
         <View style={styles.viewBox}>
           <Text style={styles.text}>Service Fee</Text>
           <Input
+            error={StartingPriceError}
+            onChange={(val) => {
+              setStartingPrice(val);
+            }}
             keyboardType="numeric"
             style={{
               borderWidth: 1,
@@ -422,7 +623,19 @@ const Pricing = ({ navigation, route }) => {
                 }}
               />
             ))}
-
+          {ServiceError && (
+            <Text
+              style={{
+                fontSize: 12,
+                marginLeft: 2,
+                fontFamily: "Poppins-Light",
+                color: "red",
+                marginTop: 3,
+              }}
+            >
+              {ServiceError}
+            </Text>
+          )}
           {buttonVisible && (
             <Input
               onChange={(val) => {
@@ -465,7 +678,7 @@ const Pricing = ({ navigation, route }) => {
         </View>
         <Button
           onPress={() => {
-            navigation.navigate("Service");
+            CheckValidity();
           }}
           style={{
             marginHorizontal: 20,
@@ -546,14 +759,17 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
 import { Paragraph, Dialog, Portal, Snackbar } from "react-native-paper";
 
-const Days = ({ title }) => {
+const Days = ({ title, error, onChange }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [day, setDay] = React.useState(false);
   const [OpeningTime, setOpeningTime] = React.useState();
   const [ClosingTime, setClosingTime] = React.useState();
   const [Open, setOpen] = React.useState(false);
   const [Close, setClose] = React.useState(false);
-  const [error, setError] = React.useState(null);
+  const [Error, setError] = React.useState(null);
+  React.useEffect(() => {
+    setError(error);
+  }, [error]);
 
   const toTime = (timestamp) => {
     let date = new Date(timestamp);
@@ -643,6 +859,13 @@ const Days = ({ title }) => {
                 setError(null);
                 setOpeningTime(e);
                 setOpen(false);
+                if (onChange) {
+                  onChange({
+                    title: title,
+                    openingTime: e,
+                    closingTime: ClosingTime,
+                  });
+                }
               }}
               onCancel={() => {
                 setOpen(false);
@@ -691,6 +914,13 @@ const Days = ({ title }) => {
                 setError(null);
                 setClosingTime(e);
                 setClose(false);
+                if (onChange) {
+                  onChange({
+                    title: title,
+                    openingTime: OpeningTime,
+                    closingTime: e,
+                  });
+                }
               }}
               onCancel={() => {
                 setClose(false);
@@ -701,7 +931,7 @@ const Days = ({ title }) => {
       ) : (
         <></>
       )}
-      {error && <Text style={styles.error}>{error}</Text>}
+      {Error && <Text style={styles.error}>{Error}</Text>}
     </View>
   );
 };

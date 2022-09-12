@@ -3,18 +3,41 @@ import { ScrollView, KeyboardAvoidingView } from "react-native";
 import MainCategoryCart from "./../../Cart/Seller/MainCategoryCart";
 import { useSelector, useDispatch } from "react-redux";
 import BackHeader from "./../../components/BackHeader";
-import { initialState } from "../../Reducers/allData";
-import { setAllData } from "../../action";
+import { setListData } from "../../action";
 
 const Category = (props) => {
   const Data = useSelector((state) => state.allData);
   const [search, setSearch] = React.useState();
   const [allData, setAllData] = React.useState([]);
   const dispatch = useDispatch();
+  const [count, setCount] = React.useState(0);
+
   React.useEffect(() => {
-    setAllData(Data);
-    //console.log(initialState)
-  }, [Data]);
+    //setAllData(Data);
+    // console.log(Data.length)
+    if (Data.length > 0) {
+      setAllData(Data);
+    }
+  }, [Data.length]);
+
+  React.useEffect(() => {
+    // Interval to update count
+    const interval = setInterval(() => {
+      setCount((count) => count + 1);
+    }, 1000);
+    // Subscribe for the focus Listener
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      dispatch(setListData([]));
+      //setAllData(Data);
+      setCount(0);
+    });
+    return () => {
+      // Clear setInterval in case of screen unmount
+      clearTimeout(interval);
+      // Unsubscribe for the focus Listener
+      unsubscribe;
+    };
+  }, [props.navigation]);
   const fromArray = (title, arr) => {
     if (arr) {
       return arr.filter((d) => d.title.match(title));
@@ -57,6 +80,7 @@ const Category = (props) => {
                   data: data.data,
                   image: data.image,
                   id: i,
+                  mainTitle: data.title,
                 });
               } else {
                 props.navigation.navigate("TableData", {
@@ -64,6 +88,7 @@ const Category = (props) => {
                   list: data.list,
                   exit: true,
                   id: i,
+                  mainTitle: data.title,
                 });
               }
             }}

@@ -34,7 +34,7 @@ import parlour from "../assets/Images/parlour.webp";
 import { ParlorOptions } from "./../Data/parlor";
 import MainLabor from "./../Data/MainLabor";
 
-export const initialState = [
+const initialState = [
   {
     title: "Builder Services",
     icon: BuilderIcon,

@@ -10,6 +10,18 @@ export const setAllData=(data)=>{
         playload:data
     }
 }
+export const addListData=(data)=>{
+    return{
+        type:'ADD_DATA',
+        playload:data
+    }
+}
+export const deleteListData=(id)=>{
+    return{
+        type:'DELETE_DATA',
+        playload:id
+    }
+}
 export const setArrayReplaceData=(data,i)=>{
     return{
         type:'SET_ARRAY_REPLACE',
