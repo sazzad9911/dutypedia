@@ -29,6 +29,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import OutsideView from "react-native-detect-press-outside";
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -121,7 +122,7 @@ const Pricing = ({ navigation, route }) => {
       title: "Hide",
       visible: false,
     });
-    const [change,setChange]=React.useState(false)
+  const [change, setChange] = React.useState(false);
   ///////////////////////-----------------------------------
   const [ServiceName, setServiceName] = React.useState();
   const [ServiceNameError, setServiceNameError] = React.useState();
@@ -164,15 +165,17 @@ const Pricing = ({ navigation, route }) => {
   const [ServiceError, setServiceError] = React.useState();
   const [checked, setChecked] = React.useState(false);
   const [TimeError, setTimeError] = React.useState();
+  const scrollRef = React.useRef();
 
   React.useEffect(() => {
-    setServiceCounter(0)
+    setServiceCounter(0);
     Service.forEach((doc, i) => {
       if (doc.checked) {
-        setServiceCounter((d) => (d + 1));
+        setServiceCounter((d) => d + 1);
       }
     });
-  }, [Service.length+change]);
+  }, [Service.length + change]);
+
   const CheckValidity = () => {
     setServiceNameError(null);
     setTitleError(null);
@@ -185,39 +188,47 @@ const Pricing = ({ navigation, route }) => {
     setYearError(null);
     setTimeError(null);
     setServiceError(null);
-    setStartingPriceError(null)
+    setStartingPriceError(null);
     if (!ServiceName) {
       setServiceNameError("This field is required");
+      scrollTo(0);
       return;
     }
     if (!Title) {
       setTitleError("This field is required");
+      scrollTo(0);
       return;
     }
     if (!Name) {
       setNameError("This field is required");
+      scrollTo(0);
       return;
     }
     if (!Gender) {
       setGenderError("This field is required");
+      scrollTo(0);
       return;
     }
     if (!Position) {
       setPositionError("This field is required");
+      scrollTo(0);
       return;
     }
     if (parseInt(TeamNumber) <= 0) {
       setTeamNumberError("You must have at least one team");
+      scrollTo(50);
       return;
     }
     if (!Day || !Month || !Year) {
       setDayError("*required");
       setMonthError("*required");
       setYearError("*required");
+      scrollTo(100);
       return;
     }
     if (!checked && Times.length == 0) {
       setTimeError("Please select any time");
+      scrollTo(150);
       return;
     }
     if (!StartingPrice) {
@@ -233,7 +244,7 @@ const Pricing = ({ navigation, route }) => {
   };
   //------------------------------------------
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
@@ -621,7 +632,7 @@ const Pricing = ({ navigation, route }) => {
                     checked: !doc.checked,
                   };
                   setService(arr);
-                  setChange(!change)
+                  setChange(!change);
                   //console.log(arr);
                 }}
               />
@@ -695,25 +706,26 @@ const Pricing = ({ navigation, route }) => {
           title="Next"
         />
         <MainOptions
-          setValue={setSelectedItem}
-          setData={setData}
-          style={{
-            marginTop: Platform.OS == "ios" ? 145 : 152,
-            marginLeft: 20,
-            width: 120,
-          }}
-          Data={Data}
-        />
-        <MainOptions
-          setValue={setSelectedPositions}
-          setData={setPositions}
-          style={{
-            marginTop: Platform.OS == "ios" ? 203 : 210,
-            marginLeft: 150,
-            width: width - 170,
-          }}
-          Data={Positions}
-        />
+            setValue={setSelectedItem}
+            setData={setData}
+            style={{
+              marginTop: Platform.OS == "ios" ? 145 : 152,
+              marginLeft: 20,
+              width: 120,
+            }}
+            Data={Data}
+          />
+       
+          <MainOptions
+            setValue={setSelectedPositions}
+            setData={setPositions}
+            style={{
+              marginTop: Platform.OS == "ios" ? 203 : 210,
+              marginLeft: 150,
+              width: width - 170,
+            }}
+            Data={Positions}
+          />
       </KeyboardAvoidingView>
     </ScrollView>
   );

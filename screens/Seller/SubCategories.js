@@ -58,12 +58,12 @@ const SubCategories = ({ navigation, route }) => {
     //dispatch(setListData(!listData))
   };
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
-      <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
         <ImageBackground
           source={image}
           style={{
@@ -100,55 +100,57 @@ const SubCategories = ({ navigation, route }) => {
             </Text>
           </View>
         </ImageBackground>
-        {Array.isArray(data) ? (
-          data.map((data, i) => (
-            <SubCategoryCart
-              id={id}
-              nextId={i}
-              deleteData={deleteData}
-              key={i}
-              onPress={() => {
-                if (data.data) {
-                  navigation.navigate("SubCategories_1", {
-                    title: data.title,
-                    data: data.data,
-                    image: data.image,
-                    id: id,
-                    nextId: i,
-                    mainTitle: params.mainTitle,
-                    title: data.title,
-                  });
-                } else {
-                  if (route.name === "SubCategories") {
-                    navigation.navigate("TableData", {
+        <View>
+          {Array.isArray(data) ? (
+            data.map((data, i) => (
+              <SubCategoryCart
+                id={id}
+                nextId={i}
+                deleteData={deleteData}
+                key={i}
+                onPress={() => {
+                  if (data.data) {
+                    navigation.navigate("SubCategories_1", {
                       title: data.title,
-                      list: data.list,
+                      data: data.data,
+                      image: data.image,
                       id: id,
                       nextId: i,
                       mainTitle: params.mainTitle,
                       title: data.title,
                     });
                   } else {
-                    navigation.navigate("TableData", {
-                      title: data.title,
-                      list: data.list,
-                      id: id,
-                      nextId: nextId,
-                      lastId: i,
-                      mainTitle: params.mainTitle,
-                      title: params.title,
-                      subTitle: data.title,
-                    });
+                    if (route.name === "SubCategories") {
+                      navigation.navigate("TableData", {
+                        title: data.title,
+                        list: data.list,
+                        id: id,
+                        nextId: i,
+                        mainTitle: params.mainTitle,
+                        title: data.title,
+                      });
+                    } else {
+                      navigation.navigate("TableData", {
+                        title: data.title,
+                        list: data.list,
+                        id: id,
+                        nextId: nextId,
+                        lastId: i,
+                        mainTitle: params.mainTitle,
+                        title: params.title,
+                        subTitle: data.title,
+                      });
+                    }
                   }
-                }
-              }}
-              title={data.title}
-              data={data}
-            />
-          ))
-        ) : (
-          <></>
-        )}
+                }}
+                title={data.title}
+                data={data}
+              />
+            ))
+          ) : (
+            <></>
+          )}
+        </View>
         {Visible && <Input value={text} onChange={setText} />}
         {Array.isArray(data) && data[0].list && (
           <View>
@@ -183,11 +185,14 @@ const SubCategories = ({ navigation, route }) => {
             />
           </View>
         )}
-        {Array.isArray(data) && data[0].list && (
-          <Button
+        <Button
             disabled={listData && listData.length > 0 ? false : true}
             onPress={() => {
-              navigation.navigate("Pricing");
+              if(route.name === "SubCategories"){
+                navigation.navigate("Pricing");
+              }else{
+                navigation.goBack()
+              }
             }}
             style={{
               marginVertical: 20,
@@ -198,12 +203,11 @@ const SubCategories = ({ navigation, route }) => {
               borderWidth: 0,
               height: 43,
             }}
-            title="Next"
+            title={route.name=='SubCategories_1'?'Done':"Next"}
           />
-        )}
         <View style={{ height: 10 }} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

@@ -10,8 +10,17 @@ import {
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 const { width, height } = Dimensions.get("window");
+import OutsideView from "react-native-detect-press-outside";
 
-const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef,error }) => {
+const SuggestionBox = ({
+  style,
+  value,
+  onChange,
+  placeholder,
+  DATA,
+  initialRef,
+  error,
+}) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
@@ -50,14 +59,14 @@ const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef,er
 
   return (
     <View style={[styles.viewBox, style]}>
-      <TextInput ref={initialRef} style={{
-        fontFamily: 'Poppins-Light',
-        
-      }}
+      <TextInput
+        ref={initialRef}
+        style={{
+          fontFamily: "Poppins-Light",
+        }}
         onEndEditing={() => {
           setFocus(false);
-         
-        }} 
+        }}
         onFocus={() => {
           setFocus(true);
           setData(DATA);
@@ -77,41 +86,54 @@ const SuggestionBox = ({ style, value, onChange, placeholder, DATA,initialRef,er
         style={[styles.input]}
         placeholder={placeholder ? placeholder : "Type here"}
       />
-     {error&&(
-      <Text style={{
-        fontSize:12,
-        fontFamily:'Poppins-Light',
-        color:'red',
-        marginLeft:2
-      }}>{error}</Text>
-     )}
+      {error && (
+        <Text
+          style={{
+            fontSize: 12,
+            fontFamily: "Poppins-Light",
+            color: "red",
+            marginLeft: 2,
+          }}
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
 
 export default SuggestionBox;
 export const MainOptions = ({ Data, style, setData, setValue }) => {
+  const [NewData, setNewData]= React.useState(Data)
+  React.useEffect(() => {
+    setNewData(Data)
+  },[Data])
   return (
-    <Animated.View entering={FadeIn} style={[styless.container, style]}>
-      <ScrollView>
-        {Array.isArray(Data) &&
-          Data.map((doc, i) => (
-            <TouchableOpacity style={{
-              paddingVertical:5
-            }}
-              onPress={() => {
-                if (setValue && setData) {
-                  setValue(doc.value);
-                  setData(null);
-                }
-              }}
-              key={i}
-            >
-              <Text style={styless.text}>{doc.title}</Text>
-            </TouchableOpacity>
-          ))}
-      </ScrollView>
-    </Animated.View>
+    <OutsideView onOutsideClick={() =>{
+      setNewData([])
+    }} style={[styless.container, style]}>
+      <Animated.View entering={FadeIn} style={{flex:1}}>
+        <ScrollView>
+          {Array.isArray(NewData) &&
+            NewData.map((doc, i) => (
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 5,
+                }}
+                onPress={() => {
+                  if (setValue && setData) {
+                    setValue(doc.value);
+                    setData(null);
+                  }
+                }}
+                key={i}
+              >
+                <Text style={styless.text}>{doc.title}</Text>
+              </TouchableOpacity>
+            ))}
+        </ScrollView>
+      </Animated.View>
+    </OutsideView>
   );
 };
 const styless = StyleSheet.create({
@@ -134,7 +156,7 @@ const styless = StyleSheet.create({
     borderRadius: 5,
     zIndex: 100,
     position: "absolute",
-    minHeight:0
+    minHeight: 0,
   },
   text: {
     fontSize: 15,
