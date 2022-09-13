@@ -5,6 +5,7 @@ import {
   ImageBackground,
   Text,
   StyleSheet,
+  KeyboardAvoidingView,
 } from "react-native";
 import builder from "../../assets/Images/builder.webp";
 import { textColor } from "./../../assets/colors";
@@ -57,146 +58,152 @@ const SubCategories = ({ navigation, route }) => {
     //dispatch(setListData(!listData))
   };
   return (
-    <ScrollView>
-      <ImageBackground
-        source={image}
-        style={{
-          height: 250,
-          marginBottom: 5,
-        }}
-      >
-        <View
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView>
+        <ImageBackground
+          source={image}
           style={{
-            flex: 1,
-            backgroundColor: "rgba(255, 255, 255, 0.628)",
-            justifyContent: "center",
+            height: 250,
+            marginBottom: 5,
           }}
         >
-          <Text
-            style={[
-              styles.text,
-              {
-                marginLeft: 20,
-              },
-            ]}
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(255, 255, 255, 0.628)",
+              justifyContent: "center",
+            }}
           >
-            Choose
-          </Text>
-          <Text
-            style={[
-              styles.text,
-              {
-                marginLeft: 80,
-              },
-            ]}
-          >
-            Your Services
-          </Text>
-        </View>
-      </ImageBackground>
-      {Array.isArray(data) ? (
-        data.map((data, i) => (
-          <SubCategoryCart
-            id={id}
-            nextId={i}
-            deleteData={deleteData}
-            key={i}
-            onPress={() => {
-              if (data.data) {
-                navigation.navigate("SubCategories_1", {
-                  title: data.title,
-                  data: data.data,
-                  image: data.image,
-                  id: id,
-                  nextId: i,
-                  mainTitle: params.mainTitle,
-                  title: data.title,
-                });
-              } else {
-                if (route.name === "SubCategories") {
-                  navigation.navigate("TableData", {
+            <Text
+              style={[
+                styles.text,
+                {
+                  marginLeft: 20,
+                },
+              ]}
+            >
+              Choose
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                {
+                  marginLeft: 80,
+                },
+              ]}
+            >
+              Your Services
+            </Text>
+          </View>
+        </ImageBackground>
+        {Array.isArray(data) ? (
+          data.map((data, i) => (
+            <SubCategoryCart
+              id={id}
+              nextId={i}
+              deleteData={deleteData}
+              key={i}
+              onPress={() => {
+                if (data.data) {
+                  navigation.navigate("SubCategories_1", {
                     title: data.title,
-                    list: data.list,
+                    data: data.data,
+                    image: data.image,
                     id: id,
                     nextId: i,
                     mainTitle: params.mainTitle,
                     title: data.title,
                   });
                 } else {
-                  navigation.navigate("TableData", {
-                    title: data.title,
-                    list: data.list,
-                    id: id,
-                    nextId: nextId,
-                    lastId: i,
-                    mainTitle: params.mainTitle,
-                    title: params.title,
-                    subTitle:data.title,
+                  if (route.name === "SubCategories") {
+                    navigation.navigate("TableData", {
+                      title: data.title,
+                      list: data.list,
+                      id: id,
+                      nextId: i,
+                      mainTitle: params.mainTitle,
+                      title: data.title,
+                    });
+                  } else {
+                    navigation.navigate("TableData", {
+                      title: data.title,
+                      list: data.list,
+                      id: id,
+                      nextId: nextId,
+                      lastId: i,
+                      mainTitle: params.mainTitle,
+                      title: params.title,
+                      subTitle: data.title,
+                    });
+                  }
+                }
+              }}
+              title={data.title}
+              data={data}
+            />
+          ))
+        ) : (
+          <></>
+        )}
+        {Visible && <Input value={text} onChange={setText} />}
+        {Array.isArray(data) && data[0].list && (
+          <View>
+            <AddButton
+              onPress={() => {
+                setVisible(true);
+                if (Visible && text) {
+                  let oldArr = data;
+                  oldArr.push({
+                    title: text,
+                    deletable: true,
+                    list: [
+                      {
+                        title: text,
+                        data: [],
+                      },
+                    ],
                   });
+                  if (route.name === "SubCategories") {
+                    // dispatch(setArrayReplaceData(oldArr, id));
+                    setData(oldArr);
+                    setText("");
+                  } else {
+                    // dispatch(setArrayReplaceData2(oldArr, id, nextId));
+                    setData(oldArr);
+                    setText("");
+                  }
+                  //dispatch(setListData(oldArr))
                 }
-              }
-            }}
-            title={data.title}
-            data={data}
-          />
-        ))
-      ) : (
-        <></>
-      )}
-      {Visible && <Input value={text} onChange={setText} />}
-      {Array.isArray(data) && data[0].list && (
-        <View>
-          <AddButton
+              }}
+              title={Visible ? "Save" : "Add New"}
+            />
+          </View>
+        )}
+        {Array.isArray(data) && data[0].list && (
+          <Button
+            disabled={listData && listData.length > 0 ? false : true}
             onPress={() => {
-              setVisible(true);
-              if (Visible && text) {
-                let oldArr = data;
-                oldArr.push({
-                  title: text,
-                  deletable: true,
-                  list: [
-                    {
-                      title: text,
-                      data: [],
-                    },
-                  ],
-                });
-                if (route.name === "SubCategories") {
-                  // dispatch(setArrayReplaceData(oldArr, id));
-                  setData(oldArr);
-                  setText("");
-                } else {
-                  // dispatch(setArrayReplaceData2(oldArr, id, nextId));
-                  setData(oldArr);
-                  setText("");
-                }
-                //dispatch(setListData(oldArr))
-              }
+              navigation.navigate("Pricing");
             }}
-            title={Visible ? "Save" : "Add New"}
+            style={{
+              marginVertical: 20,
+              marginHorizontal: 20,
+              borderRadius: 5,
+              color: "white",
+              backgroundColor: "#DA1E37",
+              borderWidth: 0,
+              height: 43,
+            }}
+            title="Next"
           />
-        </View>
-      )}
-      {route.name === "SubCategories" && (
-        <Button
-          disabled={listData && listData.length > 0 ? false : true}
-          onPress={() => {
-            navigation.navigate("Pricing");
-          }}
-          style={{
-            marginVertical: 20,
-            marginHorizontal: 20,
-            borderRadius: 5,
-            color: "white",
-            backgroundColor: "#DA1E37",
-            borderWidth: 0,
-            height: 43,
-          }}
-          title="Next"
-        />
-      )}
-      <View style={{ height: 10 }} />
-    </ScrollView>
+        )}
+        <View style={{ height: 10 }} />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

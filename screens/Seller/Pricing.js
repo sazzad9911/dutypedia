@@ -121,6 +121,7 @@ const Pricing = ({ navigation, route }) => {
       title: "Hide",
       visible: false,
     });
+    const [change,setChange]=React.useState(false)
   ///////////////////////-----------------------------------
   const [ServiceName, setServiceName] = React.useState();
   const [ServiceNameError, setServiceNameError] = React.useState();
@@ -165,12 +166,13 @@ const Pricing = ({ navigation, route }) => {
   const [TimeError, setTimeError] = React.useState();
 
   React.useEffect(() => {
+    setServiceCounter(0)
     Service.forEach((doc, i) => {
       if (doc.checked) {
         setServiceCounter((d) => (d + 1));
       }
     });
-  }, [Service.length]);
+  }, [Service.length+change]);
   const CheckValidity = () => {
     setServiceNameError(null);
     setTitleError(null);
@@ -619,6 +621,7 @@ const Pricing = ({ navigation, route }) => {
                     checked: !doc.checked,
                   };
                   setService(arr);
+                  setChange(!change)
                   //console.log(arr);
                 }}
               />

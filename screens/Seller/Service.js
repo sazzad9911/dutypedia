@@ -12,16 +12,59 @@ import { SvgXml } from "react-native-svg";
 //import { services } from "../../assets/icon";
 //import Services from '../../assets/Images/Services.svg'
 import Screenshot from "../../assets/Images/Screenshot.png";
-import { primaryColor,backgroundColor } from "./../../assets/colors";
+import { primaryColor, backgroundColor } from "./../../assets/colors";
 import Input from "./../../components/Input";
 import TextArea from "./../../components/TextArea";
 import { AntDesign } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
-import Button from './../../components/Button';
+import Button from "./../../components/Button";
 
-const Service = ({navigation}) => {
+const Service = ({ navigation }) => {
+  const [CenterName, setCenterName] = React.useState();
+  const [CenterNameError, setCenterNameError] = React.useState();
+  const [Speciality, setSpeciality] = React.useState();
+  const [SpecialityError, setSpecialityError] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [DescriptionError, setDescriptionError] = React.useState();
+  const [About, setAbout] = React.useState();
+  const [AboutError, setAboutError] = React.useState();
+  const [FirstImage, setFirstImage] = React.useState();
+  const [SecondImage, setSecondImage] = React.useState();
+  const [ThirdImage, setThirdImage] = React.useState();
+  const [ForthImage, setForthImage] = React.useState();
+  const [ImageError, setImageError] = React.useState();
+
+  const checkValidity = () => {
+    setCenterNameError(null);
+    setSpecialityError(null);
+    setDescriptionError(null);
+    setAboutError(null);
+    setImageError(null)
+
+    if (!CenterName) {
+      setCenterNameError("This field is required");
+      return;
+    }
+    if (!Speciality) {
+      setSpecialityError("This field is required");
+      return;
+    }
+    if (!Description) {
+      setDescriptionError("This field is required");
+      return;
+    }
+    if (!About) {
+      setAboutError("This field is required");
+      return;
+    }
+    if (!FirstImage && !SecondImage && !ThirdImage && !ForthImage) {
+      setImageError("*Minimum one picture is required");
+      return;
+    }
+    navigation.navigate("Address");
+  };
   return (
     <ScrollView>
       <View
@@ -49,6 +92,10 @@ const Service = ({navigation}) => {
           Describe your services
         </Text>
         <Input
+          error={CenterNameError}
+          onChange={(val) => {
+            setCenterName(val);
+          }}
           style={{
             marginHorizontal: 0,
             borderWidth: 1,
@@ -56,36 +103,76 @@ const Service = ({navigation}) => {
           placeholder="Service center name"
         />
         <Input
+          error={SpecialityError}
+          onChange={(val) => {
+            setSpeciality(val);
+          }}
           style={{
             marginHorizontal: 0,
             borderWidth: 1,
           }}
           placeholder="Speciality"
         />
-        <TextArea placeholder="Service Description" />
-        <TextArea placeholder="About Company" />
+        <TextArea
+          error={DescriptionError}
+          onChange={(val) => {
+            setDescription(val);
+          }}
+          placeholder="Service Description"
+        />
+        <TextArea
+          error={AboutError}
+          onChange={(val) => {
+            setAbout(val);
+          }}
+          placeholder="About Company"
+        />
         <View
           style={{
             flexDirection: "row",
-            marginTop: 5
+            marginTop: 5,
           }}
         >
-          <ImageButton style={{ marginLeft: 5 }} />
-          <ImageButton style={{ marginLeft: 10 }} />
-          <ImageButton style={{ marginLeft: 10 }} />
-          <ImageButton style={{ marginLeft: 10 }} />
+          <ImageButton onChange={value =>{
+            setFirstImage(value);
+          }} style={{ marginLeft: 5 }} />
+          <ImageButton onChange={value =>{
+            setSecondImage(value);
+          }} style={{ marginLeft: 10 }} />
+          <ImageButton onChange={value =>{
+            setThirdImage(value);
+          }} style={{ marginLeft: 10 }} />
+          <ImageButton onChange={value =>{
+            setForthImage(value);
+          }} style={{ marginLeft: 10 }} />
         </View>
-        <Button onPress={() =>{
-            navigation.navigate('Address')
-        }} style={{
-            marginTop:10,
-            backgroundColor:backgroundColor,
-            color:'white',
-            borderWidth:0,
-            borderRadius:5,
-            height:45,
-            marginBottom:30
-        }} title='Continue'/>
+        {ImageError && (
+          <Text
+            style={{
+              marginLeft: 2,
+              fontSize: 12,
+              fontFamily: "Poppins-Light",
+              color: "red",
+            }}
+          >
+            {ImageError}
+          </Text>
+        )}
+        <Button
+          onPress={() => {
+            checkValidity();
+          }}
+          style={{
+            marginTop: 10,
+            backgroundColor: backgroundColor,
+            color: "white",
+            borderWidth: 0,
+            borderRadius: 5,
+            height: 45,
+            marginBottom: 30,
+          }}
+          title="Continue"
+        />
       </View>
     </ScrollView>
   );
@@ -93,7 +180,7 @@ const Service = ({navigation}) => {
 
 export default Service;
 
-const ImageButton = ({ style }) => {
+const ImageButton = ({ style,onChange }) => {
   const [image, setImage] = React.useState(null);
 
   const pickImage = async () => {
@@ -109,6 +196,9 @@ const ImageButton = ({ style }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
+      if(onChange){
+        onChange(result)
+      }
     }
   };
   const styles = StyleSheet.create({
@@ -125,33 +215,41 @@ const ImageButton = ({ style }) => {
   });
   if (image) {
     return (
-      <View style={{
-        marginLeft:7
-      }}>
-        <TouchableOpacity onPress={() =>{
+      <View
+        style={{
+          marginLeft: 7,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
             setImage(null);
-        }} style={{
+          }}
+          style={{
             position: "absolute",
             right: -5,
-            top:-5,
-            zIndex:1,
-            backgroundColor:'white',
+            top: -5,
+            zIndex: 1,
+            backgroundColor: "white",
             borderRadius: 20,
-            height:24,
-            width:24,
+            height: 24,
+            width: 24,
             justifyContent: "center",
-            alignItems: "center"
-        }} >
-        <EvilIcons name="close-o" size={24} color="red" />
+            alignItems: "center",
+          }}
+        >
+          <EvilIcons name="close-o" size={24} color="red" />
         </TouchableOpacity>
         <Image style={styles.view} source={{ uri: image }} />
       </View>
     );
   }
   return (
-    <TouchableOpacity onPress={() =>{
-        pickImage()
-    }} style={[styles.view, style]}>
+    <TouchableOpacity
+      onPress={() => {
+        pickImage();
+      }}
+      style={[styles.view, style]}
+    >
       <AntDesign name="plus" size={24} color="#707070" />
     </TouchableOpacity>
   );

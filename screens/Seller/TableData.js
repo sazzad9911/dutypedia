@@ -103,12 +103,13 @@ const TableData = (props) => {
           onPress={() => {
             //dispatch(setListData(!listData));
             setButtonPress(false);
-            props.navigation.navigate("SubCategories", {
-              title: data.title,
-              data: data.data,
-              image: data.image,
-              id: id,
-            });
+            // props.navigation.navigate("SubCategories_1", {
+            //   title: data.title,
+            //   data: data.data,
+            //   image: data.image,
+            //   id: id,
+            // });
+            navigation.goBack();
           }}
           style={{
             backgroundColor: "green",

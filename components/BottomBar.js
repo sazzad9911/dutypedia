@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text,Keyboard } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { primaryColor, secondaryColor } from "./../assets/colors";
+import { primaryColor, secondaryColor,backgroundColor } from "./../assets/colors";
 import { Badge } from "react-native-paper";
 import  Animated,{FadeIn}  from 'react-native-reanimated';
 
@@ -36,7 +36,7 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 0 ? (
-          <Ionicons name="home" size={24} color="#808080" />
+          <Ionicons name="home" size={24} color={backgroundColor} />
         ) : (
           <Ionicons name="home-outline" size={24} color="#808080" />
         )}
@@ -50,7 +50,7 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 1 ? (
-          <Ionicons name="search-sharp" size={24} color="#808080" />
+          <Ionicons name="search-sharp" size={24} color={backgroundColor} />
         ) : (
           <Ionicons name="search-outline" size={24} color="#808080" />
         )}
@@ -64,7 +64,7 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 2 ? (
-          <Ionicons name="paper-plane-sharp" size={24} color="#808080" />
+          <Ionicons name="paper-plane-sharp" size={24} color={backgroundColor} />
         ) : (
           <Ionicons name="paper-plane-outline" size={24} color="#808080" />
         )}
@@ -84,7 +84,7 @@ const BottomBar = (props) => {
           zIndex:10,
         }}>3</Badge>
         {route == 3 ? (
-          <Ionicons name="notifications-sharp" size={24} color="#808080" />
+          <Ionicons name="notifications-sharp" size={24} color={backgroundColor} />
         ) : (
           <Ionicons name="notifications-outline" size={24} color="#808080" />
         )}
@@ -103,7 +103,7 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 4 ? (
-          <Ionicons name="person-circle-sharp" size={24} color="#808080" />
+          <Ionicons name="person-circle-sharp" size={24} color={backgroundColor} />
         ) : (
           <Ionicons name="person-circle-outline" size={24} color="#808080" />
         )}

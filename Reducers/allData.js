@@ -71,23 +71,23 @@ const initialState = [
       {
         title: "Jewellary Items",
         list: [
-          { 
+          {
             title: "Jewelry Items",
             data: BuilderOptions.jewellaryitems.JewelryItems,
           },
-          { 
+          {
             title: "Goldsmith Services",
             data: BuilderOptions.jewellaryitems.GoldsmithServices,
           },
-          { 
+          {
             title: "Gold Type",
             data: BuilderOptions.jewellaryitems.GoldType,
           },
-          { 
+          {
             title: "Types Of Diamonds",
             data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
           },
-          { 
+          {
             title: "Types Of Diamonds",
             data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
           },
@@ -330,7 +330,12 @@ const initialState = [
       },
       {
         title: "Market Research",
-        list: [],
+        list: [
+          {
+            title: "Market Research",
+            data:[]
+          }
+        ],
       },
       {
         title: "Presentations",
@@ -2736,91 +2741,193 @@ const initialState = [
     data: [
       {
         title: "Man",
-        list: [
+        image: parlour,
+        data: [
           {
-            title: "Hair",
-            data: ParlorOptions.Man.Hair,
+            title: "Hair Shaping & Styling",
+            list: [
+              {
+                title: "Hair Shaping & Styling",
+                data: ParlorOptions.Man.Hair,
+              },
+            ],
           },
           {
-            title: "Color",
-            data: ParlorOptions.Man.Color,
+            title: "Color/Texturizing",
+            list: [
+              {
+                title: "Color/Texturizing",
+                data:ParlorOptions.Man.Color
+              }
+            ],
           },
           {
-            title: "Waxing",
-            data: ParlorOptions.Man.Waxing,
+            title: "Waxing Service",
+            list: [
+              {
+                title: "Waxing Service",
+                data:ParlorOptions.Man.Waxing
+              }
+            ],
           },
           {
             title: "Nails",
-            data: ParlorOptions.Man.Nails,
+            list: [
+              {
+                title: "Nails",
+                data:ParlorOptions.Man.Nails
+              }
+            ],
           },
           {
             title: "Facial",
-            data: ParlorOptions.Man.Facial,
+            list: [
+              {
+                title: "Facial",
+                data:ParlorOptions.Man.Facial
+              }
+            ],
           },
           {
             title: "Extra",
-            data: ParlorOptions.Man.Extra,
+            list: [
+              {
+                title: "Extra",
+                data:ParlorOptions.Man.Extra
+              }
+            ],
           },
         ],
       },
       {
         title: "Woman",
-        list: [
+        image: parlour,
+        data: [
           {
-            title: "Facial",
-            data: ParlorOptions.Woman.Facial,
+            title: "Facial Treatment",
+            list:[
+              {
+                title: "Facial Treatment",
+                data:ParlorOptions.Woman.Facial,
+              }
+            ] 
           },
           {
             title: "Manicure",
-            data: ParlorOptions.Woman.Manicure,
+            list:[
+              {
+                title: "Manicure",
+                data:ParlorOptions.Woman.Manicure,
+              }
+            ] 
           },
           {
             title: "Padicure",
-            data: ParlorOptions.Woman.Padicure,
+            list:[
+              {
+                title: "Padicure",
+                data:ParlorOptions.Woman.Padicure,
+              }
+            ] 
           },
           {
-            title: "Hair",
-            data: ParlorOptions.Woman.Hair,
+            title: "Hair Cut",
+            list:[
+              {
+                title: "Hair Cut",
+                data:ParlorOptions.Woman.Hair,
+              }
+            ] 
           },
           {
-            title: "HairColor",
-            data: ParlorOptions.Woman.HairColor,
+            title: "Hair Color",
+            list:[
+              {
+                title: "Hair Color",
+                data:ParlorOptions.Woman.HairColor,
+              }
+            ] 
           },
           {
-            title: "HairStraightener",
-            data: ParlorOptions.Woman.HairStraightener,
+            title: "Hair Straightener",
+            list:[
+              {
+                title: "Hair Straightener",
+                data:ParlorOptions.Woman.HairStraightener,
+              }
+            ] 
           },
           {
-            title: "HairSpa",
-            data: ParlorOptions.Woman.HairSpa,
+            title: "Hair Spa",
+            list:[
+              {
+                title: "Hair Spa",
+                data:ParlorOptions.Woman.HairSpa,
+              }
+            ] 
           },
           {
-            title: "Head",
-            data: ParlorOptions.Woman.Head,
+            title: "Head Massage & Body Polishing",
+            list:[
+              {
+                title: "Head Massage & Body Polishing",
+                data:ParlorOptions.Woman.Head,
+              }
+            ] 
           },
           {
-            title: "Skin",
-            data: ParlorOptions.Woman.Skin,
+            title: "Skin Treatment",
+            list:[
+              {
+                title: "Skin Treatment",
+                data:ParlorOptions.Woman.Skin,
+              }
+            ] 
           },
           {
             title: "Threading",
-            data: ParlorOptions.Woman.Threading,
+            list:[
+              {
+                title: "Threading",
+                data:ParlorOptions.Woman.Threading,
+              }
+            ] 
           },
           {
-            title: "Bleach",
-            data: ParlorOptions.Woman.Bleach,
+            title: "Bleach & Datan",
+            list:[
+              {
+                title: "Bleach & Datan",
+                data:ParlorOptions.Woman.Bleach,
+              }
+            ] 
           },
           {
             title: "Cleanup",
-            data: ParlorOptions.Woman.Cleanup,
+            list:[
+              {
+                title: "Cleanup",
+                data:ParlorOptions.Woman.Cleanup,
+              }
+            ] 
           },
           {
             title: "Waxing",
-            data: ParlorOptions.Woman.Waxing,
+            list:[
+              {
+                title: "Waxing",
+                data:ParlorOptions.Woman.Waxing,
+              }
+            ] 
           },
           {
-            title: "MakeUp",
-            data: ParlorOptions.Woman.MakeUp,
+            title: "Make Up",
+            list:[
+              {
+                title: "Make Up",
+                data:ParlorOptions.Woman.MakeUp,
+              }
+            ] 
           },
         ],
       },
@@ -2842,38 +2949,39 @@ const initialState = [
 const allData = (state = initialState, action) => {
   if (action.type === "SET_ARRAY_REPLACE") {
     let index = action.index;
-    initialState[index].data=action.playload;
-    return state=initialState
+    initialState[index].data = action.playload;
+    return (state = initialState);
   }
   if (action.type === "SET_ARRAY_REPLACE_2") {
     let index = action.index;
-    let nextId=action.nextId;
-    initialState[index].data[nextId].data=action.playload;
-    return state=initialState
+    let nextId = action.nextId;
+    initialState[index].data[nextId].data = action.playload;
+    return (state = initialState);
   }
-  if(action.type === "SET_LIST_REPLACE_1"){
-    let id=action.id;
-    let nextId=action.nextId;
-    let lastId=action.lastId;
-    let listId=action.listId;
-    initialState[id].data[nextId].data[lastId].list[listId].data=action.playload;
-    return state=initialState
+  if (action.type === "SET_LIST_REPLACE_1") {
+    let id = action.id;
+    let nextId = action.nextId;
+    let lastId = action.lastId;
+    let listId = action.listId;
+    initialState[id].data[nextId].data[lastId].list[listId].data =
+      action.playload;
+    return (state = initialState);
   }
-  if(action.type === "SET_LIST_REPLACE_2"){
-    let id=action.id;
-    let nextId=action.nextId;
-    let listId=action.listId;
-    initialState[id].data[nextId].list[listId].data=action.playload;
-    return state=initialState
+  if (action.type === "SET_LIST_REPLACE_2") {
+    let id = action.id;
+    let nextId = action.nextId;
+    let listId = action.listId;
+    initialState[id].data[nextId].list[listId].data = action.playload;
+    return (state = initialState);
   }
-  if(action.type === "SET_LIST_REPLACE_3"){
-    let id=action.id;
-    let listId=action.listId;
-    initialState[id].list[listId].data=action.playload;
-    return state=initialState
+  if (action.type === "SET_LIST_REPLACE_3") {
+    let id = action.id;
+    let listId = action.listId;
+    initialState[id].list[listId].data = action.playload;
+    return (state = initialState);
   }
-  if(action.type==='SET_DATA'){
-    return state=action.playload
+  if (action.type === "SET_DATA") {
+    return (state = action.playload);
   }
   return state;
 };
