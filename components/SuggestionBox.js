@@ -22,6 +22,7 @@ const SuggestionBox = ({
   error,
   returnKeyType,
   onSubmitEditing,
+  onSelect
 }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
@@ -74,7 +75,7 @@ const SuggestionBox = ({
         }}
         onEndEditing={() => {
           setFocus(false);
-        }}
+        }} 
         onFocus={() => {
           setFocus(true);
           setData(DATA);
@@ -89,6 +90,9 @@ const SuggestionBox = ({
             onChange(arr);
           } else {
             onChange(null);
+          }
+          if(onSelect) {
+            onSelect(val);
           }
         }}
         style={[styles.input]}

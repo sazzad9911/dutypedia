@@ -18,14 +18,21 @@ const { width, height } = Dimensions.get("window");
 import { AreaList } from "../../Data/area";
 import { DivisionList } from "../../Data/division";
 import { DistrictList } from "../../Data/district";
+import {useSelector,useDispatch} from 'react-redux';
 
-const Address = () => {
+const Address = ({ navigation }) => {
   const DATA = ["Dhaka", "Borishal", "Slyhet"];
   const [Division, setDivision] = React.useState();
   const [District, setDistrict] = React.useState();
   const [Area, setArea] = React.useState();
   const [NewDistrictList, setDistrictList] = React.useState([]);
   const [NewAreaList, setAreaList] = React.useState([]);
+  const [DivisionError, setDivisionError] = React.useState();
+  const [DistrictError, setDistrictError] = React.useState();
+  const [AreaError, setAreaError] = React.useState();
+  const [address, setAddress] = React.useState();
+  const [AddressError, setAddressError] = React.useState();
+  const dispatch = useDispatch();
 
   const searchDistrict = (value) => {
     if (value) {
@@ -43,14 +50,40 @@ const Address = () => {
       setAreaList([]);
     }
   };
-
+  const checkValidity = () => {
+    setDivisionError(null);
+    setDistrictError(null);
+    setAreaError(null);
+    setAddressError(null);
+    if (!Division) {
+      setDivisionError("This field is required");
+      return;
+    }
+    if (!District) {
+      setDistrictError("This field is required");
+      return;
+    }
+    if (!Area) {
+      setAreaError("This field is required");
+      return;
+    }
+    if (!address) {
+      setAddressError("This field is required");
+      return;
+    }
+    dispatch({type: 'DIVISION',playload:Division})
+    dispatch({type:'DISTRICT',playload:District})
+    dispatch({type:'AREA',playload:Area})
+    dispatch({type:'ADDRESS',playload:address})
+    navigation.navigate("Review");
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ backgroundColor: primaryColor, flex: 1 }}>
           <SvgXml
             style={{
@@ -84,6 +117,7 @@ const Address = () => {
             Step to Go
           </Text>
           <DropDown
+            error={DivisionError}
             style={{
               marginTop: "40%",
               marginHorizontal: 20,
@@ -101,6 +135,7 @@ const Address = () => {
             }}
           >
             <DropDown
+              error={DistrictError}
               style={{
                 marginTop: "10%",
                 marginHorizontal: 20,
@@ -112,8 +147,13 @@ const Address = () => {
                 setDistrict(value);
                 searchArea(value);
               }}
+              message="Please select division first."
             />
             <DropDown
+              error={AreaError}
+              onChange={(val) => {
+                setArea(val);
+              }}
               style={{
                 marginTop: "10%",
                 marginHorizontal: 20,
@@ -121,16 +161,26 @@ const Address = () => {
               }}
               DATA={NewAreaList}
               placeholder="Area"
+              message="Please select division & district first."
             />
           </View>
-          <TextArea
-            style={{
-              marginTop: "5%",
-              marginHorizontal: 20,
-            }}
-            placeholder="Address"
-          />
+          <View style={{ marginHorizontal: 20 }}>
+            <TextArea
+              value={address}
+              onChange={(val) => {
+                setAddress(val);
+              }}
+              error={AddressError}
+              style={{
+                marginTop: "5%",
+              }}
+              placeholder="Address"
+            />
+          </View>
           <Button
+            onPress={() => {
+              checkValidity();
+            }}
             style={{
               marginTop: "20%",
               marginBottom: "20%",

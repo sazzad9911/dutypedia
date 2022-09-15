@@ -15,7 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
 import { primaryColor, textColor } from "./../assets/colors";
 
-const DropDown = ({ style, value, onChange, placeholder, DATA, error }) => {
+const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,message }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
@@ -24,6 +24,13 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error }) => {
   React.useEffect(() => {
     setValue(value);
   }, [value]);
+  React.useEffect(()=>{
+    if(visible){
+      setFocus(true)
+    }else{
+      setFocus(false);
+    }
+  },[visible])
 
   const styles = StyleSheet.create({
     viewBox: {
@@ -51,6 +58,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error }) => {
       fontFamily: "Poppins-Light",
       marginRight: 10,
       color: textColor,
+      flex:1
     },
   });
   const childRef = React.useRef();
@@ -145,6 +153,13 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error }) => {
                       <Text style={styles.text}>{doc}</Text>
                     </TouchableOpacity>
                   ))}
+                  {Array.isArray(DATA) &&DATA.length==0 &&(
+                    <Text style={{
+                      margin:10,
+                      fontSize:15,
+                      fontFamily: "Poppins-Light",
+                    }}>{message?message:'Something went wrong'}</Text>
+                  )}
               </ScrollView>
             </Animated.View>
           </View>

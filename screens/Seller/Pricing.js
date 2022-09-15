@@ -31,6 +31,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import OutsideView from "react-native-detect-press-outside";
+import {useSelector, useDispatch} from 'react-redux';
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -172,6 +173,8 @@ const Pricing = ({ navigation, route }) => {
   const nameRef = React.useRef();
   const positionRef = React.useRef();
   const priceRef = React.useRef();
+  const [genderRef,setGenderRef] = React.useState(false)
+  const dispatch= useDispatch()
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -249,7 +252,20 @@ const Pricing = ({ navigation, route }) => {
       setServiceError("Please select any facilities");
       return;
     }
-
+    dispatch({type: 'SERVICE_CENTER_NAME',playload:ServiceName});
+    dispatch({type: 'TITLE',playload:Title});
+    dispatch({type: 'NAME',playload:Name});
+    dispatch({type: 'GENDER',playload:Gender});
+    dispatch({type: 'POSITION',playload:Position});
+    dispatch({type: 'TEAM_NUMBER',playload:TeamNumber});
+    dispatch({type: 'START_DATE',playload:{
+      day:Day,
+      month:Month,
+      year:Year,
+    }});
+    dispatch({type: 'WORKING_TIME',playload:Times.length==0?true:Times});
+    dispatch({type: 'PRICE',playload:StartingPrice})
+    dispatch({type: 'FACILITIES',playload:Service})
     navigation.navigate("Service");
   };
   //------------------------------------------
@@ -318,6 +334,8 @@ const Pricing = ({ navigation, route }) => {
               error={TitleError}
               onChange={(val) => {
                 setData(val);
+              }} 
+              onSelect={(val) => {
                 setTitle(val);
               }}
               DATA={DATA}
@@ -352,16 +370,17 @@ const Pricing = ({ navigation, route }) => {
               placeholder="Name"
               returnKeyType="next"
               onSubmitEditing={() => {
-                if (positionRef.current) {
-                  positionRef.current.focus();
-                }
+                setGenderRef(true);
               }}
             />
           </View>
           <View style={{ flexDirection: "row" }}>
-            <DropDown
+            <DropDown visible={genderRef}
               onChange={(val) => {
                 setGender(val);
+                if(positionRef.current){
+                  positionRef.current.focus();
+                }
               }}
               error={GenderError}
               style={{
@@ -378,6 +397,8 @@ const Pricing = ({ navigation, route }) => {
               value={SelectedPositions}
               onChange={(val) => {
                 setPositions(val);
+              }}
+              onSelect={(val) => {
                 setPosition(val);
               }}
               DATA={PositionData}
@@ -389,7 +410,7 @@ const Pricing = ({ navigation, route }) => {
               returnKeyType="next"
               onSubmitEditing={() => {
                 if (priceRef.current) {
-                  priceRef.current.focus();
+                  //priceRef.current.focus();
                 }
               }}
             />
@@ -759,7 +780,10 @@ const Pricing = ({ navigation, route }) => {
           title="Next"
         />
         <MainOptions
-          setValue={setSelectedItem}
+          setValue={(value) =>{
+            setSelectedItem(value)
+            setTitle(value)
+          }}
           setData={setData}
           style={{
             marginTop: Platform.OS == "ios" ? 145 : 152,
@@ -770,7 +794,10 @@ const Pricing = ({ navigation, route }) => {
         />
 
         <MainOptions
-          setValue={setSelectedPositions}
+          setValue={(value)=>{
+            setSelectedPositions(value)
+            setPosition(value)
+          }}
           setData={setPositions}
           style={{
             marginTop: Platform.OS == "ios" ? 203 : 210,

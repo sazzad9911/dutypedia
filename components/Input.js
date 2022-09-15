@@ -1,6 +1,6 @@
 import React from "react";
 import { View, TextInput, Text } from "react-native";
-import { primaryColor } from "./../assets/colors";
+import { primaryColor, textColor } from "./../assets/colors";
 import Animated, { StretchInY } from "react-native-reanimated";
 
 const Input = ({
@@ -14,6 +14,7 @@ const Input = ({
   onSubmitEditing,
   onFocus,
   innerRef,
+  level,
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -26,8 +27,8 @@ const Input = ({
         ref={innerRef}
         returnKeyType={returnKeyType}
         onSubmitEditing={() => {
-          if(onSubmitEditing){
-            onSubmitEditing()
+          if (onSubmitEditing) {
+            onSubmitEditing();
           }
         }}
         keyboardType={keyboardType}
@@ -79,6 +80,21 @@ const Input = ({
           ]}
         >
           {Error}
+        </Text>
+      )}
+      {level && (
+        <Text
+          style={{
+            position: "absolute",
+            top: -5,
+            right: 20,
+            backgroundColor: primaryColor,
+            fontFamily: "Poppins-Light",
+            color: textColor,
+            fontSize: 13,
+          }}
+        >
+         {level}
         </Text>
       )}
     </Animated.View>

@@ -6,14 +6,26 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
-import { primaryColor, backgroundColor } from "../assets/colors";
+import { primaryColor, backgroundColor, textColor } from "../assets/colors";
+import Animated,{ FadeIn} from 'react-native-reanimated';
 
-const TextArea = ({ placeholder, style, rows, error,onChange }) => {
+const TextArea = ({
+  placeholder,
+  style,
+  rows,
+  error,
+  onChange,
+  level,
+  returnKeyType,
+  onSubmitEditing,
+  innerRef
+}) => {
   const [Focus, setFocus] = React.useState(false);
   const ref = React.useRef();
   const { width, height } = Dimensions.get("window");
+ 
   return (
-    <View>
+    <Animated.View entering={FadeIn}>
       <TouchableOpacity
         style={[
           {
@@ -29,10 +41,20 @@ const TextArea = ({ placeholder, style, rows, error,onChange }) => {
           style,
         ]}
         onPress={() => {
-          ref.current.focus();
+          if(innerRef){
+            innerRef.current.focus();
+          }else{
+            ref.current.focus();
+          }
         }}
       >
-        <TextInput
+        <TextInput ref={innerRef?innerRef:ref}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={() => {
+            if (onSubmitEditing) {
+              onSubmitEditing();
+            }
+          }}
           style={{
             fontFamily: "Poppins-Light",
             fontSize: 14,
@@ -43,12 +65,11 @@ const TextArea = ({ placeholder, style, rows, error,onChange }) => {
           onEndEditing={() => {
             setFocus(false);
           }}
-          ref={ref}
           rows={rows ? rows : 4}
           placeholder={placeholder}
-          onChangeText={(value) =>{
-            if(onChange){
-                onChange(value);
+          onChangeText={(value) => {
+            if (onChange) {
+              onChange(value);
             }
           }}
         />
@@ -65,7 +86,22 @@ const TextArea = ({ placeholder, style, rows, error,onChange }) => {
           {error}
         </Text>
       )}
-    </View>
+      {level && (
+        <Text
+          style={{
+            position: "absolute",
+            top: -5,
+            right: 20,
+            backgroundColor: primaryColor,
+            fontFamily: "Poppins-Light",
+            color: textColor,
+            fontSize: 13,
+          }}
+        >
+          {level}
+        </Text>
+      )}
+    </Animated.View>
   );
 };
 

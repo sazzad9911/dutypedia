@@ -22,6 +22,7 @@ const { width, height } = Dimensions.get("window");
 import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
 import Button from "./../../components/Button";
+import {useSelector,useDispatch} from 'react-redux'
 
 const Service = ({ navigation }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -37,6 +38,12 @@ const Service = ({ navigation }) => {
   const [ThirdImage, setThirdImage] = React.useState();
   const [ForthImage, setForthImage] = React.useState();
   const [ImageError, setImageError] = React.useState();
+  //referencial permissions
+  const nameRef = React.useRef();
+  const specialityRef = React.useRef();
+  const descriptionRef = React.useRef();
+  const aboutRef = React.useRef();
+  const dispatch = useDispatch();
 
   const checkValidity = () => {
     setCenterNameError(null);
@@ -61,10 +68,18 @@ const Service = ({ navigation }) => {
       setAboutError("This field is required");
       return;
     }
-    if (!FirstImage && !SecondImage && !ThirdImage && !ForthImage) {
-      setImageError("*Minimum one picture is required");
+    if (!FirstImage || !SecondImage || !ThirdImage || !ForthImage) {
+      setImageError("*All picture must be upload");
       return;
     }
+    dispatch({type: "SERVICE_TITLE", playload:CenterName})
+    dispatch({type: "SPECIALITY",playload:Speciality})
+    dispatch({type: "DESCRIPTION", playload:Description})
+    dispatch({type: "ABOUT",playload:About})
+    dispatch({type: "FIRST_IMAGE", playload:FirstImage})
+    dispatch({type: "SECOND_IMAGE", playload:SecondImage})
+    dispatch({type: "THIRD_IMAGE",playload:ThirdImage})
+    dispatch({type: "FOURTH_IMAGE",playload:ForthImage})
     navigation.navigate("Address");
   };
   return (
@@ -99,20 +114,45 @@ const Service = ({ navigation }) => {
             Describe your services
           </Text>
           <Input
+            returnKeyType="next"
+            level="Max 50 character"
             error={CenterNameError}
             onChange={(val) => {
-              setCenterName(val);
+              setCenterNameError(null);
+              if (val.length <= 50) {
+                setCenterName(val);
+              } else {
+                setCenterNameError("*Max is 50 character.");
+              }
+            }}
+            onSubmitEditing={() => {
+              if (specialityRef.current) {
+                specialityRef.current.focus();
+              }
             }}
             style={{
               marginHorizontal: 0,
               borderWidth: 1,
             }}
-            placeholder="Service center name"
+            placeholder="Service title"
           />
           <Input
+            innerRef={specialityRef}
+            returnKeyType="next"
+            level="Max 100 character"
             error={SpecialityError}
             onChange={(val) => {
-              setSpeciality(val);
+              setSpecialityError(null);
+              if (val.length <= 100) {
+                setSpeciality(val);
+              } else {
+                setSpecialityError("*Character must be between 100");
+              }
+            }}
+            onSubmitEditing={() => {
+              if (descriptionRef.current) {
+                descriptionRef.current.focus();
+              }
             }}
             style={{
               marginHorizontal: 0,
@@ -121,16 +161,37 @@ const Service = ({ navigation }) => {
             placeholder="Speciality"
           />
           <TextArea
+            innerRef={descriptionRef}
+            returnKeyType="next"
+            level="Max 2000 characters"
             error={DescriptionError}
             onChange={(val) => {
-              setDescription(val);
+              setDescriptionError(null);
+              if (val.length <= 2000) {
+                setDescription(val);
+              } else {
+                setDescriptionError("*Character must be between 2000");
+              }
+            }}
+            onSubmitEditing={() => {
+              if (aboutRef.current) {
+                aboutRef.current.focus();
+              }
             }}
             placeholder="Service Description"
           />
           <TextArea
+            innerRef={aboutRef}
+            returnKeyType="done"
+            level="Max 2000 characters"
             error={AboutError}
             onChange={(val) => {
-              setAbout(val);
+              setAboutError(null);
+              if (val.length <= 2000) {
+                setAbout(val);
+              } else {
+                setAboutError("Character should be between 2000");
+              }
             }}
             placeholder="About Company"
           />
