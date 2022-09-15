@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, KeyboardAvoidingView } from "react-native";
+import { ScrollView, KeyboardAvoidingView,Platform } from "react-native";
 import MainCategoryCart from "./../../Cart/Seller/MainCategoryCart";
 import { useSelector, useDispatch } from "react-redux";
 import BackHeader from "./../../components/BackHeader";
@@ -27,6 +27,7 @@ const Category = (props) => {
     }, 1000);
     // Subscribe for the focus Listener
     const unsubscribe = props.navigation.addListener("focus", () => {
+      dispatch({ type: "SET_LENGTH", playload: 0 });
       dispatch(setListData([]));
       //setAllData(Data);
       setCount(0);
@@ -45,7 +46,8 @@ const Category = (props) => {
     return [];
   };
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
+    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <BackHeader
         value={search}
         onChange={(val) => {

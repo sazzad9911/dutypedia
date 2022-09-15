@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   TextInput,
+  Animated as Animation,
 } from "react-native";
 import {
   primaryColor,
@@ -126,7 +127,6 @@ const Pricing = ({ navigation, route }) => {
   ///////////////////////-----------------------------------
   const [ServiceName, setServiceName] = React.useState();
   const [ServiceNameError, setServiceNameError] = React.useState();
-  const titleRef = React.useRef();
   const [Title, setTitle] = React.useState();
   const [TitleError, setTitleError] = React.useState();
   const [Name, setName] = React.useState();
@@ -165,7 +165,13 @@ const Pricing = ({ navigation, route }) => {
   const [ServiceError, setServiceError] = React.useState();
   const [checked, setChecked] = React.useState(false);
   const [TimeError, setTimeError] = React.useState();
-  const scrollRef = React.useRef();
+  //reference values================
+  const [Ref, setRef] = React.useState();
+  const serviceNameRef = React.useRef();
+  const titleRef = React.useRef();
+  const nameRef = React.useRef();
+  const positionRef = React.useRef();
+  const priceRef = React.useRef();
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -175,7 +181,11 @@ const Pricing = ({ navigation, route }) => {
       }
     });
   }, [Service.length + change]);
-
+  const scrollingTo = (position) => {
+    if (Ref.scrollTo) {
+      Ref.scrollTo({ x: 0, y: position, animated: true });
+    }
+  };
   const CheckValidity = () => {
     setServiceNameError(null);
     setTitleError(null);
@@ -191,44 +201,44 @@ const Pricing = ({ navigation, route }) => {
     setStartingPriceError(null);
     if (!ServiceName) {
       setServiceNameError("This field is required");
-      scrollTo(0);
+      scrollingTo(0);
       return;
     }
     if (!Title) {
       setTitleError("This field is required");
-      scrollTo(0);
+      scrollingTo(0);
       return;
     }
     if (!Name) {
       setNameError("This field is required");
-      scrollTo(0);
+      scrollingTo(0);
       return;
     }
     if (!Gender) {
       setGenderError("This field is required");
-      scrollTo(0);
+      scrollingTo(0);
       return;
     }
     if (!Position) {
       setPositionError("This field is required");
-      scrollTo(0);
+      scrollingTo(0);
       return;
     }
     if (parseInt(TeamNumber) <= 0) {
       setTeamNumberError("You must have at least one team");
-      scrollTo(50);
+      scrollingTo(50);
       return;
     }
     if (!Day || !Month || !Year) {
       setDayError("*required");
       setMonthError("*required");
       setYearError("*required");
-      scrollTo(100);
+      scrollingTo(100);
       return;
     }
     if (!checked && Times.length == 0) {
       setTimeError("Please select any time");
-      scrollTo(150);
+      scrollingTo(250);
       return;
     }
     if (!StartingPrice) {
@@ -243,20 +253,27 @@ const Pricing = ({ navigation, route }) => {
     navigation.navigate("Service");
   };
   //------------------------------------------
+
   return (
-    <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
-      <KeyboardAvoidingView
+    <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
       >
+    <Animation.ScrollView
+      ref={(ref) => setRef(ref)}
+      scrollToOverflowEnabled={true}
+      showsVerticalScrollIndicator={false}
+    >
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
+            innerRef={serviceNameRef}
             returnKeyType="next"
-            onKeyPress={(e) => {
-              //console.log(e);
-              //titleRef.current.focus();
+            onSubmitEditing={() => {
+              if (titleRef.current) {
+                titleRef.current.focus();
+              }
             }}
             error={ServiceNameError}
             onChange={(val) => {
@@ -266,6 +283,10 @@ const Pricing = ({ navigation, route }) => {
               }
               setServiceNameError(null);
               setServiceName(val);
+            }}
+            onFocus={() => {
+              setData([]);
+              setPositions([]);
             }}
             style={{
               marginHorizontal: 0,
@@ -291,7 +312,7 @@ const Pricing = ({ navigation, route }) => {
             }}
           >
             <SuggestionBox
-              initialRef={titleRef}
+              innerRef={titleRef}
               placeholder="Title"
               value={selectedItem}
               error={TitleError}
@@ -304,10 +325,20 @@ const Pricing = ({ navigation, route }) => {
                 width: 120,
                 marginTop: 10,
               }}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                if (nameRef.current) {
+                  nameRef.current.focus();
+                }
+              }}
             />
-            <Input
+            <Input innerRef={nameRef}
               onChange={(val) => {
                 setName(val);
+              }}
+              onFocus={() => {
+                setData([]);
+                setPositions([]);
               }}
               error={NameError}
               style={{
@@ -319,6 +350,12 @@ const Pricing = ({ navigation, route }) => {
                 width: width - 170,
               }}
               placeholder="Name"
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                if (positionRef.current) {
+                  positionRef.current.focus();
+                }
+              }}
             />
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -335,7 +372,7 @@ const Pricing = ({ navigation, route }) => {
               DATA={["Male", "Female", "Other"]}
             />
 
-            <SuggestionBox
+            <SuggestionBox innerRef={positionRef}
               error={PositionError}
               placeholder="Position"
               value={SelectedPositions}
@@ -348,6 +385,12 @@ const Pricing = ({ navigation, route }) => {
                 marginTop: 5,
                 marginLeft: 10,
                 width: width - 170,
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                if (priceRef.current) {
+                  priceRef.current.focus();
+                }
               }}
             />
           </View>
@@ -364,6 +407,8 @@ const Pricing = ({ navigation, route }) => {
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <TouchableOpacity
               onPress={() => {
+                setData([]);
+                setPositions([]);
                 let num = parseInt(TeamNumber);
                 if (num > 0) {
                   setTeamNumber(`${num - 1}`);
@@ -380,8 +425,14 @@ const Pricing = ({ navigation, route }) => {
                   setTeamNumber("0");
                 }
               }}
+              onFocus={() => {
+                setData([]);
+                setPositions([]);
+              }}
               onChangeText={(val) => {
                 setTeamNumber(val);
+                setData([]);
+                setPositions([]);
               }}
               style={{
                 fontSize: 15,
@@ -400,6 +451,8 @@ const Pricing = ({ navigation, route }) => {
             />
             <TouchableOpacity
               onPress={() => {
+                setData([]);
+                setPositions([]);
                 let num = parseInt(TeamNumber) + 1;
                 setTeamNumber(`${num}`);
               }}
@@ -592,7 +645,7 @@ const Pricing = ({ navigation, route }) => {
         </Animated.View>
         <View style={styles.viewBox}>
           <Text style={styles.text}>Service Fee</Text>
-          <Input
+          <Input innerRef={priceRef}
             error={StartingPriceError}
             onChange={(val) => {
               setStartingPrice(val);
@@ -706,28 +759,28 @@ const Pricing = ({ navigation, route }) => {
           title="Next"
         />
         <MainOptions
-            setValue={setSelectedItem}
-            setData={setData}
-            style={{
-              marginTop: Platform.OS == "ios" ? 145 : 152,
-              marginLeft: 20,
-              width: 120,
-            }}
-            Data={Data}
-          />
-       
-          <MainOptions
-            setValue={setSelectedPositions}
-            setData={setPositions}
-            style={{
-              marginTop: Platform.OS == "ios" ? 203 : 210,
-              marginLeft: 150,
-              width: width - 170,
-            }}
-            Data={Positions}
-          />
-      </KeyboardAvoidingView>
-    </ScrollView>
+          setValue={setSelectedItem}
+          setData={setData}
+          style={{
+            marginTop: Platform.OS == "ios" ? 145 : 152,
+            marginLeft: 20,
+            width: 120,
+          }}
+          Data={Data}
+        />
+
+        <MainOptions
+          setValue={setSelectedPositions}
+          setData={setPositions}
+          style={{
+            marginTop: Platform.OS == "ios" ? 203 : 210,
+            marginLeft: 150,
+            width: width - 170,
+          }}
+          Data={Positions}
+        />
+    </Animation.ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

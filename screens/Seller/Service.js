@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 //import { services } from "../../assets/icon";
@@ -41,7 +43,7 @@ const Service = ({ navigation }) => {
     setSpecialityError(null);
     setDescriptionError(null);
     setAboutError(null);
-    setImageError(null)
+    setImageError(null);
 
     if (!CenterName) {
       setCenterNameError("This field is required");
@@ -66,121 +68,139 @@ const Service = ({ navigation }) => {
     navigation.navigate("Address");
   };
   return (
-    <ScrollView>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingHorizontal: 20,
-        }}
-      >
-        <Image
-          style={{
-            width: 200,
-            height: 200,
-            alignSelf: "center",
-          }}
-          source={Screenshot}
-        />
-        <Text
-          style={{
-            fontSize: 20,
-            fontFamily: "Poppins-Medium",
-            marginVertical: 20,
-            color: "#707070",
-          }}
-        >
-          Describe your services
-        </Text>
-        <Input
-          error={CenterNameError}
-          onChange={(val) => {
-            setCenterName(val);
-          }}
-          style={{
-            marginHorizontal: 0,
-            borderWidth: 1,
-          }}
-          placeholder="Service center name"
-        />
-        <Input
-          error={SpecialityError}
-          onChange={(val) => {
-            setSpeciality(val);
-          }}
-          style={{
-            marginHorizontal: 0,
-            borderWidth: 1,
-          }}
-          placeholder="Speciality"
-        />
-        <TextArea
-          error={DescriptionError}
-          onChange={(val) => {
-            setDescription(val);
-          }}
-          placeholder="Service Description"
-        />
-        <TextArea
-          error={AboutError}
-          onChange={(val) => {
-            setAbout(val);
-          }}
-          placeholder="About Company"
-        />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView>
         <View
           style={{
-            flexDirection: "row",
-            marginTop: 5,
+            backgroundColor: primaryColor,
+            paddingHorizontal: 20,
           }}
         >
-          <ImageButton onChange={value =>{
-            setFirstImage(value);
-          }} style={{ marginLeft: 5 }} />
-          <ImageButton onChange={value =>{
-            setSecondImage(value);
-          }} style={{ marginLeft: 10 }} />
-          <ImageButton onChange={value =>{
-            setThirdImage(value);
-          }} style={{ marginLeft: 10 }} />
-          <ImageButton onChange={value =>{
-            setForthImage(value);
-          }} style={{ marginLeft: 10 }} />
-        </View>
-        {ImageError && (
+          <Image
+            style={{
+              width: 200,
+              height: 200,
+              alignSelf: "center",
+            }}
+            source={Screenshot}
+          />
           <Text
             style={{
-              marginLeft: 2,
-              fontSize: 12,
-              fontFamily: "Poppins-Light",
-              color: "red",
+              fontSize: 20,
+              fontFamily: "Poppins-Medium",
+              marginVertical: 20,
+              color: "#707070",
             }}
           >
-            {ImageError}
+            Describe your services
           </Text>
-        )}
-        <Button
-          onPress={() => {
-            checkValidity();
-          }}
-          style={{
-            marginTop: 10,
-            backgroundColor: backgroundColor,
-            color: "white",
-            borderWidth: 0,
-            borderRadius: 5,
-            height: 45,
-            marginBottom: 30,
-          }}
-          title="Continue"
-        />
-      </View>
-    </ScrollView>
+          <Input
+            error={CenterNameError}
+            onChange={(val) => {
+              setCenterName(val);
+            }}
+            style={{
+              marginHorizontal: 0,
+              borderWidth: 1,
+            }}
+            placeholder="Service center name"
+          />
+          <Input
+            error={SpecialityError}
+            onChange={(val) => {
+              setSpeciality(val);
+            }}
+            style={{
+              marginHorizontal: 0,
+              borderWidth: 1,
+            }}
+            placeholder="Speciality"
+          />
+          <TextArea
+            error={DescriptionError}
+            onChange={(val) => {
+              setDescription(val);
+            }}
+            placeholder="Service Description"
+          />
+          <TextArea
+            error={AboutError}
+            onChange={(val) => {
+              setAbout(val);
+            }}
+            placeholder="About Company"
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 5,
+            }}
+          >
+            <ImageButton
+              onChange={(value) => {
+                setFirstImage(value);
+              }}
+              style={{ marginLeft: 5 }}
+            />
+            <ImageButton
+              onChange={(value) => {
+                setSecondImage(value);
+              }}
+              style={{ marginLeft: 10 }}
+            />
+            <ImageButton
+              onChange={(value) => {
+                setThirdImage(value);
+              }}
+              style={{ marginLeft: 10 }}
+            />
+            <ImageButton
+              onChange={(value) => {
+                setForthImage(value);
+              }}
+              style={{ marginLeft: 10 }}
+            />
+          </View>
+          {ImageError && (
+            <Text
+              style={{
+                marginLeft: 2,
+                fontSize: 12,
+                fontFamily: "Poppins-Light",
+                color: "red",
+              }}
+            >
+              {ImageError}
+            </Text>
+          )}
+          <Button
+            onPress={() => {
+              checkValidity();
+            }}
+            style={{
+              marginTop: 10,
+              backgroundColor: backgroundColor,
+              color: "white",
+              borderWidth: 0,
+              borderRadius: 5,
+              height: 45,
+              marginBottom: 30,
+            }}
+            title="Continue"
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 export default Service;
 
-const ImageButton = ({ style,onChange }) => {
+const ImageButton = ({ style, onChange }) => {
   const [image, setImage] = React.useState(null);
 
   const pickImage = async () => {
@@ -196,8 +216,8 @@ const ImageButton = ({ style,onChange }) => {
 
     if (!result.cancelled) {
       setImage(result.uri);
-      if(onChange){
-        onChange(result)
+      if (onChange) {
+        onChange(result);
       }
     }
   };

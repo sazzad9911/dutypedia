@@ -17,7 +17,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -25,36 +25,37 @@ import { primaryColor, textColor } from "./../assets/colors";
 import SearchFilter from "./../components/SearchFilter";
 import { useSelector, useDispatch } from "react-redux";
 import { setBottomSheet } from "./../action";
-import bottomRef from '../action';
-import AllReviewHeader from './../components/AllReviewHeader';
-import Appointment from './Appointment';
-import OtherProfile from './OtherProfile'
-import OtherProfileHeader from '../components/OtherProfileHeader';
-import MainCategory from './MainCategory';
-import BackHeader from './../components/BackHeader';
+import bottomRef from "../action";
+import AllReviewHeader from "./../components/AllReviewHeader";
+import Appointment from "./Appointment";
+import OtherProfile from "./OtherProfile";
+import OtherProfileHeader from "../components/OtherProfileHeader";
+import MainCategory from "./MainCategory";
+import BackHeader from "./../components/BackHeader";
 
 const Tab = createBottomTabNavigator();
 
 const TabRoute = () => {
   const bottomSheetRef = React.useRef();
-  const bottomSheet= useSelector(state=>state.bottomSheet)
-  const dispatch=useDispatch()
-  const [visible, setVisible]= React.useState(false)
-  
+  const bottomSheet = useSelector((state) => state.bottomSheet);
+  const dispatch = useDispatch();
+  const [visible, setVisible] = React.useState(false);
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-    >
-      <Tab.Navigator tabBar={(props) => {
-        if(bottomSheetRef && bottomSheetRef.current && props.state.index!=5){
-          bottomSheetRef.current.close()
-        }
-        return(
-          <BottomBar {...props} /> 
-        )
-      }}>
+    <View
+      style={{ flex: 1 }}>
+      <Tab.Navigator
+        tabBar={(props) => {
+          if (
+            bottomSheetRef &&
+            bottomSheetRef.current &&
+            props.state.index != 5
+          ) {
+            bottomSheetRef.current.close();
+          }
+          return <BottomBar {...props} />;
+        }}
+      >
         <Tab.Screen
           options={{ header: (props) => <Header {...props} /> }}
           name="Home"
@@ -86,24 +87,30 @@ const TabRoute = () => {
         <Tab.Screen
           options={{ headerShown: false }}
           name="SearchScreen"
-         component={SearchScreen}
+          component={SearchScreen}
         />
         <Tab.Screen
-          options={{ header:(props)=><AllReviewHeader title="Appointment" {...props}/> }}
+          options={{
+            header: (props) => (
+              <AllReviewHeader title="Appointment" {...props} />
+            ),
+          }}
           name="Appointment"
-         component={Appointment}
+          component={Appointment}
         />
-         <Tab.Screen
-              options={{ header: (props) => <OtherProfileHeader {...props} /> }}
-              name="OtherProfile"
-              component={OtherProfile}
-            />
-          <Tab.Screen options={{headerShown: false}}
+        <Tab.Screen
+          options={{ header: (props) => <OtherProfileHeader {...props} /> }}
+          name="OtherProfile"
+          component={OtherProfile}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
           name="MainCategory"
-          component={MainCategory}/>
+          component={MainCategory}
+        />
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -120,6 +127,28 @@ const Bottom = (props) => {
     dispatch(setBottomSheet(index));
   }, []);
   const handleClosePress = () => props.bottomSheetRef.current.close();
+  const [isEnabled, setIsEnabled] = React.useState(false);
+  const [Online, setOnline] = React.useState(false);
+  const [V,setV]= React.useState()
+  const [O,setO]= React.useState()
+
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+  };
+  const toggleSwitch2 = () => {
+    setOnline((previousState) => !previousState);
+  };
+  React.useEffect(() => {
+    if(!isEnabled&&!Online){
+      setDisabled(true);
+      return
+    }
+    if(V!=isEnabled || O!=Online){
+      setDisabled(false);
+    }else{
+      setDisabled(true);
+    }
+  },[isEnabled+Online])
   return (
     <BottomSheet
       ref={props.bottomSheetRef}
@@ -150,7 +179,7 @@ const Bottom = (props) => {
               left: 10,
             }}
           >
-           <Ionicons name="chevron-back-outline" size={24} color={textColor} />
+            <Ionicons name="chevron-back-outline" size={24} color={textColor} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -168,7 +197,7 @@ const Bottom = (props) => {
         <Text
           style={{
             fontSize: 14,
-            fontFamily: 'Poppins-Medium',
+            fontFamily: "Poppins-Medium",
             justifySelf: "center",
             textAlign: "center",
           }}
@@ -178,6 +207,8 @@ const Bottom = (props) => {
       </View>
       <BottomSheetScrollView>
         <SearchFilter
+          toggleSwitch={toggleSwitch}
+          toggleSwitch2={toggleSwitch2}
           visible={visible}
           setVisible={setVisible}
           disabled={setDisabled}
@@ -188,16 +219,21 @@ const Bottom = (props) => {
       ) : (
         <TouchableOpacity
           disabled={disabled}
-          style={styles.button}
+          style={[styles.button,{
+            backgroundColor:disabled?'#707070':'green',
+            opacity:disabled?.8:1
+          }]}
           onPress={() => {
             setDisabled(true);
             handleClosePress();
+            setO(isEnabled)
+            setV(Online)
           }}
         >
           <Text
             style={{
               color: "white",
-              opacity: disabled ? 0.4 : 1,
+              
             }}
           >
             Done

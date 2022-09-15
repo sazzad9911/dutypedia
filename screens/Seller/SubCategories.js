@@ -6,6 +6,8 @@ import {
   Text,
   StyleSheet,
   KeyboardAvoidingView,
+  Platform,
+  Modal,
 } from "react-native";
 import builder from "../../assets/Images/builder.webp";
 import { textColor } from "./../../assets/colors";
@@ -19,6 +21,7 @@ import {
   setArrayReplaceData2,
   setListData,
 } from "../../action";
+import InputModal from "./InputModal";
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
@@ -32,6 +35,7 @@ const SubCategories = ({ navigation, route }) => {
   const allData = useSelector((state) => state.allData);
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
+  const [ModalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     if (route.name == "SubCategories") {
@@ -58,12 +62,12 @@ const SubCategories = ({ navigation, route }) => {
     //dispatch(setListData(!listData))
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-      >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={image}
           style={{
@@ -156,58 +160,73 @@ const SubCategories = ({ navigation, route }) => {
           <View>
             <AddButton
               onPress={() => {
-                setVisible(true);
-                if (Visible && text) {
-                  let oldArr = data;
-                  oldArr.push({
-                    title: text,
-                    deletable: true,
-                    list: [
-                      {
-                        title: text,
-                        data: [],
-                      },
-                    ],
-                  });
-                  if (route.name === "SubCategories") {
-                    // dispatch(setArrayReplaceData(oldArr, id));
-                    setData(oldArr);
-                    setText("");
-                  } else {
-                    // dispatch(setArrayReplaceData2(oldArr, id, nextId));
-                    setData(oldArr);
-                    setText("");
-                  }
-                  //dispatch(setListData(oldArr))
-                }
+                setModalVisible(true);
               }}
-              title={Visible ? "Save" : "Add New"}
+              title={"Add New"}
             />
           </View>
         )}
-        <Button
-            disabled={listData && listData.length > 0 ? false : true}
-            onPress={() => {
-              if(route.name === "SubCategories"){
-                navigation.navigate("Pricing");
-              }else{
-                navigation.goBack()
-              }
-            }}
-            style={{
-              marginVertical: 20,
-              marginHorizontal: 20,
-              borderRadius: 5,
-              color: "white",
-              backgroundColor: "#DA1E37",
-              borderWidth: 0,
-              height: 43,
-            }}
-            title={route.name=='SubCategories_1'?'Done':"Next"}
-          />
+
         <View style={{ height: 10 }} />
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </ScrollView>
+      <Button
+        disabled={listData && listData.length > 0 ? false : true}
+        onPress={() => {
+          if (route.name === "SubCategories") {
+            navigation.navigate("Pricing");
+          } else {
+            navigation.goBack();
+          }
+        }}
+        style={{
+          marginVertical: 20,
+          marginHorizontal: 20,
+          borderRadius: 5,
+          color: "white",
+          backgroundColor:
+            listData && listData.length > 0 ? "#DA1E37" : "#707070",
+          borderWidth: 0,
+          height: 43,
+        }}
+        title={route.name == "SubCategories_1" ? "Done" : "Next"}
+      />
+      <Modal
+        animationType="fade"
+        visible={ModalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          setModalVisible(!ModalVisible);
+        }}
+      >
+        <InputModal
+          onChange={(value) => {
+            setText(value);
+            let oldArr = data;
+            oldArr.push({
+              title: value,
+              deletable: true,
+              list: [
+                {
+                  title: value,
+                  data: [],
+                },
+              ],
+            });
+            if (route.name === "SubCategories") {
+              // dispatch(setArrayReplaceData(oldArr, id));
+              setData(oldArr);
+              setText("");
+            } else {
+              // dispatch(setArrayReplaceData2(oldArr, id, nextId));
+              setData(oldArr);
+              setText("");
+            }
+            //dispatch(setListData(oldArr))
+          }}
+          Close={setModalVisible}
+        />
+      </Modal>
+    </KeyboardAvoidingView>
   );
 };
 

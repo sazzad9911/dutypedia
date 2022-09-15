@@ -19,20 +19,26 @@ import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 const SearchFilter = (props) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [Online, setOnline] = React.useState(false);
+ 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
-    props.disabled(false);
+    props.toggleSwitch()
   };
   const toggleSwitch2 = () => {
     setOnline((previousState) => !previousState);
-    props.disabled(false);
+    props.toggleSwitch2()
   };
+  
   //const [visible, setVisible] = useState(false);
   const [Category, setCategory] = React.useState("Select");
   const [SellerLevel, setSellerLevel] = React.useState();
   const [SellerLocation, setSellerLocation] = React.useState();
   const [type, setType] = React.useState("category");
   const [data, setData] = useState();
+  const [PriceRangeUp, setPriceRangeUp] = React.useState();
+  const [PriceRangeDown, setPriceRangeDown] = React.useState();
+
+ 
   const category = [
     {
       label: "Select Category",
@@ -142,7 +148,7 @@ const SearchFilter = (props) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
       <Animated.View
         entering={SlideInLeft}
@@ -163,9 +169,10 @@ const SearchFilter = (props) => {
             </Text>
           </View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
-            <Text style={[{ flex: 7 },styles.text]}>Online Seller</Text>
+            <Text style={[{ flex: 7 }, styles.text]}>Online Seller</Text>
             <View style={styles.container}>
-              <Switch style={{
+              <Switch
+                style={{
                   transform: [
                     { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
                     { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
@@ -231,9 +238,12 @@ const SearchFilter = (props) => {
             style={[styles.box1, { flexDirection: "row" }]}
           >
             <Text
-              style={[{
-                flex: 9,
-              },styles.text]}
+              style={[
+                {
+                  flex: 9,
+                },
+                styles.text,
+              ]}
             >
               Category
             </Text>
@@ -246,39 +256,41 @@ const SearchFilter = (props) => {
               }}
             >
               <Text
-                style={[{
-                  marginRight: 20,
-                  flex: 2,
-                },styles.text]}
+                style={[
+                  {
+                    marginRight: 20,
+                    flex: 2,
+                  },
+                  styles.text,
+                ]}
               >
                 {Category}
               </Text>
-              <AntDesign
-                style={{
-                  
-                }}
-                name="right"
-                size={16}
-                color="black"
-              />
+              <AntDesign style={{}} name="right" size={16} color="black" />
             </View>
           </TouchableOpacity>
           <View style={styles.box}>
-            <Text
-              style={styles.textHeader}
-            >
-              Filter
-            </Text>
+            <Text style={styles.textHeader}>Filter</Text>
           </View>
           <View style={[styles.box1, { flexDirection: "row" }]}>
             <Text
-              style={[{
-                flex: 4,
-              },styles.text]}
+              style={[
+                {
+                  flex: 4,
+                },
+                styles.text,
+              ]}
             >
               Price Rang
             </Text>
-            <TextInput placeholder="৳" style={styles.input}></TextInput>
+            <TextInput
+              value={PriceRangeUp}
+              onChangeText={(value) => {
+                setPriceRangeUp(value);
+              }}
+              placeholder="৳"
+              style={styles.input}
+            ></TextInput>
             <View
               style={{
                 alignItems: "center",
@@ -286,15 +298,25 @@ const SearchFilter = (props) => {
               }}
             >
               <Text
-                style={[{
-                  marginLeft: 10,
-                  marginRight: 10,
-                },styles.text]}
+                style={[
+                  {
+                    marginLeft: 10,
+                    marginRight: 10,
+                  },
+                  styles.text,
+                ]}
               >
                 To
               </Text>
             </View>
-            <TextInput placeholder="৳" style={styles.input}></TextInput>
+            <TextInput
+              value={PriceRangeDown}
+              onChangeText={(value) => {
+                setPriceRangeDown(value);
+              }}
+              placeholder="৳"
+              style={styles.input}
+            ></TextInput>
           </View>
           <View style={styles.gap}></View>
           <TouchableOpacity
@@ -306,9 +328,12 @@ const SearchFilter = (props) => {
             style={[styles.box1, { flexDirection: "row" }]}
           >
             <Text
-              style={[{
-                flex: 9,
-              },styles.text]}
+              style={[
+                {
+                  flex: 9,
+                },
+                styles.text,
+              ]}
             >
               Seller Level
             </Text>

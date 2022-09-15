@@ -18,8 +18,10 @@ const SuggestionBox = ({
   onChange,
   placeholder,
   DATA,
-  initialRef,
+  innerRef,
   error,
+  returnKeyType,
+  onSubmitEditing,
 }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
@@ -60,7 +62,13 @@ const SuggestionBox = ({
   return (
     <View style={[styles.viewBox, style]}>
       <TextInput
-        ref={initialRef}
+        returnKeyType={returnKeyType}
+        onSubmitEditing={() => {
+          if (onSubmitEditing) {
+            onSubmitEditing();
+          }
+        }}
+        ref={innerRef}
         style={{
           fontFamily: "Poppins-Light",
         }}
@@ -104,36 +112,28 @@ const SuggestionBox = ({
 
 export default SuggestionBox;
 export const MainOptions = ({ Data, style, setData, setValue }) => {
-  const [NewData, setNewData]= React.useState(Data)
-  React.useEffect(() => {
-    setNewData(Data)
-  },[Data])
   return (
-    <OutsideView onOutsideClick={() =>{
-      setNewData([])
-    }} style={[styless.container, style]}>
-      <Animated.View entering={FadeIn} style={{flex:1}}>
-        <ScrollView>
-          {Array.isArray(NewData) &&
-            NewData.map((doc, i) => (
-              <TouchableOpacity
-                style={{
-                  paddingVertical: 5,
-                }}
-                onPress={() => {
-                  if (setValue && setData) {
-                    setValue(doc.value);
-                    setData(null);
-                  }
-                }}
-                key={i}
-              >
-                <Text style={styless.text}>{doc.title}</Text>
-              </TouchableOpacity>
-            ))}
-        </ScrollView>
-      </Animated.View>
-    </OutsideView>
+    <Animated.View entering={FadeIn} style={[styless.container, style]}>
+      <ScrollView>
+        {Array.isArray(Data) &&
+          Data.map((doc, i) => (
+            <TouchableOpacity
+              style={{
+                paddingVertical: 5,
+              }}
+              onPress={() => {
+                if (setValue && setData) {
+                  setValue(doc.value);
+                  setData(null);
+                }
+              }}
+              key={i}
+            >
+              <Text style={styless.text}>{doc.title}</Text>
+            </TouchableOpacity>
+          ))}
+      </ScrollView>
+    </Animated.View>
   );
 };
 const styless = StyleSheet.create({

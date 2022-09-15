@@ -18,6 +18,7 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
             justifyContent: "center",
             alignItems: "center",
             borderColor: "#b5b5b5",
+            opacity:disabled?.8:1
           },
           style,
         ]}
@@ -29,7 +30,7 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
           style={{
             fontSize: 13,
             fontWeight: "bold",
-            color: disabled?'#707070':style && style.color ? style.color : "#808080",
+            color:style.color?style.color:'white',
             fontFamily:'Poppins-SemiBold',
           }}
         >

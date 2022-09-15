@@ -7,6 +7,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Modal
 } from "react-native";
 import { DataTable } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
@@ -26,7 +27,7 @@ import {
   addListData,
   deleteListData,
 } from "../../action";
-import {AllData} from '../../Data/AllData'
+import { AllData } from "../../Data/AllData";
 
 const optionsPerPage = [2, 3];
 
@@ -46,11 +47,15 @@ const TableData = (props) => {
   const nextId = props.route.params.nextId;
   const lastId = props.route.params.lastId;
   const [data, setData] = React.useState(AllData[id]);
+  const length = useSelector((state) => state.length);
 
-  // React.useEffect(() => {
-  //   console.log(AllData)
-    
-  // }, []);
+  React.useEffect(() => {
+    if (listData.length != length) {
+      setButtonPress(true);
+    } else {
+      setButtonPress(false);
+    }
+  }, [listData.length]);
 
   return (
     <KeyboardAvoidingView
@@ -73,31 +78,29 @@ const TableData = (props) => {
         ) : (
           <></>
         )}
-        {exit ? (
+        {exit && (
           <Button
             disabled={buttonPress ? false : true}
             onPress={() => {
               navigation.navigate("Pricing");
+              setButtonPress(false);
+              dispatch({ type: "SET_LENGTH", playload: listData.length });
             }}
             style={{
               marginTop: 20,
               marginBottom: 10,
               borderRadius: 5,
-              backgroundColor: backgroundColor,
-              color: buttonPress ? "white" : "gray",
+              backgroundColor:buttonPress? backgroundColor:'#707070',
+              color:  "white",
               marginHorizontal: 20,
               borderWidth: 0,
               height: 45,
             }}
             title="Next"
           />
-        ) : (
-          <></>
         )}
       </ScrollView>
-      {exit ? (
-        <></>
-      ) : (
+      {!exit && (
         <Button
           disabled={buttonPress ? false : true}
           onPress={() => {
@@ -109,15 +112,16 @@ const TableData = (props) => {
             //   image: data.image,
             //   id: id,
             // });
+            dispatch({ type: "SET_LENGTH", playload: listData.length });
             navigation.goBack();
           }}
           style={{
-            backgroundColor: "green",
+            backgroundColor:buttonPress ? "green":'#707070',
             borderRadius: 5,
             marginHorizontal: 20,
             marginVertical: 10,
             height: 40,
-            color: buttonPress ? "white" : "gray",
+            color: "white",
           }}
           title="Save"
         />
@@ -142,7 +146,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
   const subTitle = route.params.subTitle;
   const titleS = route.params.title;
 
-  const [ObjectId, setObjectId] = React.useState("yyfyf");
+  const [ObjectId, setObjectId] = React.useState([]);
 
   const deleteData = (d) => {
     setButtonPress(true);
@@ -153,12 +157,6 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
     }
   };
   const selectData = (title, selected) => {
-    setObjectId(title);
-    if (ObjectId.match(title)) {
-      setButtonPress((val) => !val);
-    } else {
-      setButtonPress(true);
-    }
     if (!selected) {
       dispatch(deleteListData(title));
       return;
@@ -187,7 +185,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
         },
       };
       dispatch(addListData(newData));
-    } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
+    } else if (!isNaN(id) && !isNaN(listId)) {
       let newData = {
         mainTitle: mainTitle,
         data: {
@@ -265,15 +263,27 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
           <></>
         )}
       </View>
-      {Visible ? <Input value={text} onChange={setText} /> : <></>}
       <AddButton
         onPress={() => {
           setVisible(true);
-          if (Visible && text) {
+        }}
+        title={ "Add New"}
+      />
+      <Modal
+        animationType="fade"
+        visible={Visible}
+        transparent={true}
+        onRequestClose={() => {
+          setVisible(!Visible);
+        }}
+      >
+        <InputModal
+          onChange={(value) => {
+            setText(value);
             setButtonPress(true);
             data.push({
               id: uuid.v4(),
-              title: text,
+              title: value,
               deletable: true,
               selected: true,
             });
@@ -297,7 +307,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
                 subTitle: subTitle,
                 data: {
                   id: uuid.v4(),
-                  title: text,
+                  title: value,
                   deletable: true,
                   selected: true,
                 },
@@ -311,7 +321,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
                 title: titleS,
                 data: {
                   id: uuid.v4(),
-                  title: text,
+                  title: value,
                   deletable: true,
                   selected: true,
                 },
@@ -324,7 +334,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
                 mainTitle: mainTitle,
                 data: {
                   id: uuid.v4(),
-                  title: text,
+                  title: value,
                   deletable: true,
                   selected: true,
                 },
@@ -332,14 +342,15 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
               dispatch(addListData(list));
             }
             setText("");
-          }
-        }}
-        title={Visible ? "Save" : "Add New"}
-      />
+          }}
+          Close={setVisible}
+        />
+      </Modal>
     </View>
   );
 };
 import { Observable } from "object-observer";
+import InputModal from './InputModal';
 const Rows = ({
   title,
   data,
@@ -389,6 +400,8 @@ const Rows = ({
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
+            marginTop:Platform.OS == "ios" ?3: 0,
+            marginBottom: Platform.OS == "ios" ?3: 0,
           }}
         >
           {data.deletable ? (

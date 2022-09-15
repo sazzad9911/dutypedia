@@ -1,5 +1,12 @@
 import React from "react";
-import { View, ScrollView, Text, Dimensions } from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  Dimensions,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import { headerSvg } from "../../assets/icon";
 import { primaryColor, backgroundColor } from "./../../assets/colors";
@@ -22,7 +29,7 @@ const Address = () => {
 
   const searchDistrict = (value) => {
     if (value) {
-      let arr = DistrictList.filter(d=>d.title ===value);
+      let arr = DistrictList.filter((d) => d.title === value);
       setDistrictList(arr[0].data);
     } else {
       setDistrictList([]);
@@ -38,101 +45,107 @@ const Address = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={{ backgroundColor: primaryColor, flex: 1 }}>
-        <SvgXml
-          style={{
-            position: "absolute",
-            top: -50,
-            left: -2,
-          }}
-          xml={headerSvg}
-          width="100%"
-        />
-        <Text
-          style={{
-            fontSize: 37,
-            fontFamily: "Poppins-Light",
-            color: "white",
-            marginTop: 25,
-            marginLeft: 20,
-          }}
-        >
-          One More
-        </Text>
-        <Text
-          style={{
-            fontSize: 37,
-            fontFamily: "Poppins-Light",
-            color: "white",
-            marginTop: 20,
-            marginLeft: 80,
-          }}
-        >
-          Step to Go
-        </Text>
-        <DropDown
-          style={{
-            marginTop: "40%",
-            marginHorizontal: 20,
-          }}
-          DATA={DivisionList}
-          placeholder="Division"
-          onChange={(val) => {
-            setDivision(val);
-            searchDistrict(val);
-          }}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView>
+        <View style={{ backgroundColor: primaryColor, flex: 1 }}>
+          <SvgXml
+            style={{
+              position: "absolute",
+              top: -50,
+              left: -2,
+            }}
+            xml={headerSvg}
+            width="100%"
+          />
+          <Text
+            style={{
+              fontSize: 37,
+              fontFamily: "Poppins-Light",
+              color: "white",
+              marginTop: 25,
+              marginLeft: 20,
+            }}
+          >
+            One More
+          </Text>
+          <Text
+            style={{
+              fontSize: 37,
+              fontFamily: "Poppins-Light",
+              color: "white",
+              marginTop: 20,
+              marginLeft: 80,
+            }}
+          >
+            Step to Go
+          </Text>
           <DropDown
             style={{
-              marginTop: "10%",
+              marginTop: "40%",
               marginHorizontal: 20,
-              width: width / 2 - 40,
             }}
-            DATA={NewDistrictList}
-            placeholder="District"
-            onChange={(value) =>{
-              setDistrict(value);
-              searchArea(value)
+            DATA={DivisionList}
+            placeholder="Division"
+            onChange={(val) => {
+              setDivision(val);
+              searchDistrict(val);
             }}
           />
-          <DropDown
+          <View
             style={{
-              marginTop: "10%",
-              marginHorizontal: 20,
-              width: width / 2 - 40,
+              flexDirection: "row",
             }}
-            DATA={NewAreaList}
-            placeholder="Area"
+          >
+            <DropDown
+              style={{
+                marginTop: "10%",
+                marginHorizontal: 20,
+                width: width / 2 - 40,
+              }}
+              DATA={NewDistrictList}
+              placeholder="District"
+              onChange={(value) => {
+                setDistrict(value);
+                searchArea(value);
+              }}
+            />
+            <DropDown
+              style={{
+                marginTop: "10%",
+                marginHorizontal: 20,
+                width: width / 2 - 40,
+              }}
+              DATA={NewAreaList}
+              placeholder="Area"
+            />
+          </View>
+          <TextArea
+            style={{
+              marginTop: "5%",
+              marginHorizontal: 20,
+            }}
+            placeholder="Address"
+          />
+          <Button
+            style={{
+              marginTop: "20%",
+              marginBottom: "20%",
+              borderRadius: 5,
+              backgroundColor: backgroundColor,
+              color: "white",
+              marginHorizontal: 20,
+              borderWidth: 0,
+              height: 45,
+            }}
+            title="Continue"
           />
         </View>
-        <TextArea
-          style={{
-            marginTop: "5%",
-            marginHorizontal: 20,
-          }}
-          placeholder="Address"
-        />
-        <Button
-          style={{
-            marginTop: "20%",
-            marginBottom: "20%",
-            borderRadius: 5,
-            backgroundColor: backgroundColor,
-            color: "white",
-            marginHorizontal: 20,
-            borderWidth: 0,
-            height: 45,
-          }}
-          title="Continue"
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
