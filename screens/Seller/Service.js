@@ -113,7 +113,7 @@ const Service = ({ navigation }) => {
           >
             Describe your services
           </Text>
-          <Input
+          <Input value={CenterName}
             returnKeyType="next"
             level="Max 50 character"
             error={CenterNameError}
@@ -136,7 +136,8 @@ const Service = ({ navigation }) => {
             }}
             placeholder="Service title"
           />
-          <Input
+          <View style={{height:10}}/>
+          <Input value={Speciality}
             innerRef={specialityRef}
             returnKeyType="next"
             level="Max 100 character"
@@ -160,7 +161,8 @@ const Service = ({ navigation }) => {
             }}
             placeholder="Speciality"
           />
-          <TextArea
+          <View style={{height:10}}/>
+          <TextArea value={Description}
             innerRef={descriptionRef}
             returnKeyType="next"
             level="Max 2000 characters"
@@ -180,7 +182,8 @@ const Service = ({ navigation }) => {
             }}
             placeholder="Service Description"
           />
-          <TextArea
+          <View style={{height:10}}/>
+          <TextArea value={About}
             innerRef={aboutRef}
             returnKeyType="done"
             level="Max 2000 characters"

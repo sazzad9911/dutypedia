@@ -48,7 +48,7 @@ const TextArea = ({
           }
         }}
       >
-        <TextInput ref={innerRef?innerRef:ref}
+        <TextInput multiline={true} ref={innerRef?innerRef:ref}
           returnKeyType={returnKeyType}
           onSubmitEditing={() => {
             if (onSubmitEditing) {

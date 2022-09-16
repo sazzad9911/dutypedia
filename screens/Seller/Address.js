@@ -67,10 +67,6 @@ const Address = ({ navigation }) => {
       setAreaError("This field is required");
       return;
     }
-    if (!address) {
-      setAddressError("This field is required");
-      return;
-    }
     dispatch({type: 'DIVISION',playload:Division})
     dispatch({type:'DISTRICT',playload:District})
     dispatch({type:'AREA',playload:Area})

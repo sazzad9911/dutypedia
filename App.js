@@ -32,6 +32,7 @@ import Pricing from './screens/Seller/Pricing';
 import Service from './screens/Seller/Service';
 import Address from './screens/Seller/Address';
 import Review from './screens/Seller/Review';
+import AllServiceList from './screens/Seller/AllServiceList';
 
 export default function App() {
   const MyTheme = {
@@ -159,6 +160,13 @@ export default function App() {
                   header: (props) => <SubHeader title="Review" {...props} />,
                 }}
                 component={Review}
+              />
+              <Stack.Screen
+                name="Service List"
+                options={{
+                  header: (props) => <SubHeader title="Service List" {...props} />,
+                }}
+                component={AllServiceList}
               />
             </Stack.Navigator>
           </NavigationContainer>

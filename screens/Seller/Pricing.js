@@ -1030,7 +1030,7 @@ const Days = ({ title, error, onChange }) => {
     </View>
   );
 };
-const CheckBox = ({ onChange, value, title, style }) => {
+export const CheckBox = ({ onChange, value, title, style }) => {
   const [checked, setChecked] = React.useState(value);
   return (
     <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>

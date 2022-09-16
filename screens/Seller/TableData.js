@@ -69,7 +69,7 @@ const TableData = (props) => {
             <Table
               key={i}
               data={list.data}
-              title={list.title}
+              tableName={list.title}
               {...props}
               tableId={i}
               setButtonPress={setButtonPress}
@@ -131,7 +131,7 @@ const TableData = (props) => {
 };
 
 export default TableData;
-const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
+const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [Data, setData] = React.useState(data);
   const [text, setText] = React.useState();
@@ -167,6 +167,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
         mainTitle: mainTitle,
         title: titleS,
         subTitle: subTitle,
+        tableName:tableName,
         data: {
           id: uuid.v4(),
           title: title,
@@ -178,6 +179,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
       let newData = {
         mainTitle: mainTitle,
         title: titleS,
+        tableName:tableName,
         data: {
           id: uuid.v4(),
           title: title,
@@ -188,6 +190,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
     } else if (!isNaN(id) && !isNaN(listId)) {
       let newData = {
         mainTitle: mainTitle,
+        tableName:tableName,
         data: {
           id: uuid.v4(),
           title: title,
@@ -224,7 +227,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
                 fontSize: Platform.OS == "ios" ? 16 : 15,
               }}
             >
-              {title}
+              {tableName}
             </Text>
           </View>
           <View
@@ -254,7 +257,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
               data={data}
               key={i}
               title={data.title}
-              supTitle={title}
+              supTitle={tableName}
               id={id}
               setButtonPress={setButtonPress}
             />
@@ -305,6 +308,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
                 mainTitle: mainTitle,
                 title: titleS,
                 subTitle: subTitle,
+                tableName:tableName,
                 data: {
                   id: uuid.v4(),
                   title: value,
@@ -319,6 +323,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
               let list = {
                 mainTitle: mainTitle,
                 title: titleS,
+                tableName:tableName,
                 data: {
                   id: uuid.v4(),
                   title: value,
@@ -332,6 +337,7 @@ const Table = ({ navigation, route, title, data, tableId, setButtonPress }) => {
               // dispatch(setListReplace3(newData, id, listId));
               let list = {
                 mainTitle: mainTitle,
+                tableName:tableName,
                 data: {
                   id: uuid.v4(),
                   title: value,
