@@ -767,6 +767,7 @@ const ServiceTable = ({ item, i, name }) => {
         listData.forEach((item) => {
           if (item.subTitle && item.subTitle==item) {
             arr.push(item.tableName)
+            console.log(item.tableName)
           }
         });
       } else {
@@ -833,6 +834,7 @@ const Rows = ({ title, item, name }) => {
   const listData = useSelector((state) => state.listData);
 
   React.useEffect(() => {
+    console.log(item)
     if (!listData) {
       return;
     }
@@ -846,7 +848,7 @@ const Rows = ({ title, item, name }) => {
         doc.subTitle.match(title) &&
         doc.title.match(name)
       ) {
-        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        word = word + `${count != 0 ? ", " : ""}${doc.data.title}`;
         count++;
       } else if (
         doc.title &&
