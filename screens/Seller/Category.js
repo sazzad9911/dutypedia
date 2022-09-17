@@ -4,11 +4,12 @@ import MainCategoryCart from "./../../Cart/Seller/MainCategoryCart";
 import { useSelector, useDispatch } from "react-redux";
 import BackHeader from "./../../components/BackHeader";
 import { setListData } from "../../action";
+import {AllData }from '../../Data/AllData'
 
 const Category = (props) => {
   const Data = useSelector((state) => state.allData);
   const [search, setSearch] = React.useState();
-  const [allData, setAllData] = React.useState([]);
+  const [allData, setAllData] = React.useState(AllData);
   const dispatch = useDispatch();
   const [count, setCount] = React.useState(0);
 
@@ -16,7 +17,7 @@ const Category = (props) => {
     //setAllData(Data);
     // console.log(Data.length)
     if (Data.length > 0) {
-      setAllData(Data);
+      //setAllData(Data);
     }
   }, [Data.length]);
 

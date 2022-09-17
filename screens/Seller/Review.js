@@ -37,6 +37,7 @@ import ReviewCart from "./../../Cart/ReviewCart";
 import RelatedService from "./../../Cart/RelatedService";
 import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "../../screens/Seller/Pricing";
+import { SliderBox } from "react-native-image-slider-box";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -52,6 +53,7 @@ const Review = (props) => {
   const [ActiveService, setActiveService] = React.useState();
   const [SubServiceList, setSubServiceList] = React.useState([]);
   const [ButtonPress, setButtonPress] = React.useState(false);
+  const [Images, setImages] = React.useState([]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -68,40 +70,51 @@ const Review = (props) => {
   };
   React.useEffect(() => {
     //console.log(listData);
-    (async () => {
-      if (Array.isArray(listData)) {
-        listData.map((item) => {
-          setServiceList((val) => [...val, item.title]);
-        });
-        await setServiceList((val) => uniq(val));
-        setActiveService(ServiceList[0]);
+    if (businessForm) {
+      setImages([
+        businessForm.firstImage,
+        businessForm.secondImage,
+        businessForm.thirdImage,
+        businessForm.forthImage,
+      ]);
+    }
+    if (Array.isArray(listData)) {
+      let array=[]
+      listData.map((item, i) => {
+        if (item.title) {
+          if (i == 0) {
+            setActiveService(item.title);
+          }
+          array.push(item.title);
+        } else {
+          if (i == 0) {
+            setServiceList([]);
+            setActiveService(item.mainTitle);
+          }
+        }
+      });
+      if (array.length > 0) {
+        setServiceList(uniq(array));
       }
-    })();
+    }
   }, []);
   React.useEffect(() => {
     setSubServiceList([]);
     if (Array.isArray(listData)) {
+      let arr =[]
       listData.map((item) => {
-        if (item.title && item.title.match(ActiveService)) {
-          setSubServiceList((val) => [...val, {
-            title: item.subTitle,
-            tableName:item.tableName
-          }]);
+        if (item.title && item.subTitle && item.title.match(ActiveService)) {
+          arr.push(item.subTitle);
+        } else {
+          setSubServiceList([]);
         }
       });
-      setSubServiceList((val) => uniqObject(val));
+      if (arr.length > 0) {
+        setSubServiceList(uniq(arr));
+      }
     }
   }, [ActiveService]);
-  function uniq(a) {
-    return a.sort().filter(function (item, pos, ary) {
-      return !pos || item != ary[pos - 1];
-    });
-  }
-  function uniqObject(a) {
-    return a.sort().filter(function (item, pos, ary) {
-      return !pos || item.tableName != ary[pos - 1].tableName;
-    });
-  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -349,36 +362,21 @@ const Review = (props) => {
           )}
           title="Address"
         />
-        <ScrollView
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 1,
-          }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ width: 10 }} />
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              backgroundColor: textColor,
-              color: "white",
-              marginVertical: 10,
-            }}
-            title="Bargaining"
-          />
-          <View style={{ width: 10 }} />
-        </ScrollView>
+        
         <View style={{ backgroundColor: primaryColor }}>
-          <Image
-            style={{
-              width: "100%",
-              height: 230,
-            }}
-            source={{
-              uri: "https://cdn.pixabay.com/photo/2017/01/14/10/56/people-1979261__340.jpg",
+          <SliderBox
+            images={Images}
+            sliderBoxHeight={250}
+            dotColor="#232F6D"
+            inactiveDotColor="#ffffff"
+            dotStyle={{
+              width: 15,
+              height: 15,
+              borderRadius: 10,
+              marginHorizontal: 0,
+              padding: 0,
+              margin: 0,
+              backgroundColor: "rgba(128, 128, 128, 0.92)",
             }}
           />
           <Text
@@ -476,7 +474,7 @@ const Review = (props) => {
               marginLeft: 20,
             }}
           >
-            {Array.isArray(ServiceList) &&
+            {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
               ServiceList.map((item, i) => (
                 <Button
                   onPress={() => {
@@ -490,7 +488,15 @@ const Review = (props) => {
                   }
                   title={item}
                 />
-              ))}
+              ))
+            ) : (
+              <Button
+                style={
+                  styles.activeButton
+                }
+                title={ActiveService}
+              />
+            )}
           </View>
           <View
             style={{
@@ -501,16 +507,20 @@ const Review = (props) => {
             }}
           />
           <View style={{ flex: 2, marginRight: 20 }}>
-            {Array.isArray(SubServiceList) &&
+            {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
               SubServiceList.map((item, i) => (
-                <ServiceTable key={i} item={item.title} i={i} tableName={item.tableName}/>
-              ))}
+                <ServiceTable key={i} item={item} i={i} name={ActiveService} />
+              ))
+            ) : (
+              <ServiceTable name={ActiveService} />
+            )}
           </View>
         </View>
         <View style={{ backgroundColor: primaryColor }}>
-          <Button onPress={()=>{
-            navigation.navigate('Service List')
-          }}
+          <Button
+            onPress={() => {
+              navigation.navigate("Service List");
+            }}
             style={{
               alignSelf: "flex-end",
               width: 120,
@@ -745,22 +755,32 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-const ServiceTable = ({ item, i, tableName}) => {
+const ServiceTable = ({ item, i, name }) => {
   const listData = useSelector((state) => state.listData);
   const [Data, setData] = React.useState([]);
+  const [TableName, setTableName] = React.useState();
   React.useEffect(() => {
     if (listData) {
-      let arr = listData.filter(
-        (d, j) => d.subTitle == item && tableName == d.tableName && j < 8
-      );
-      setData(arr)
-      console.log('------------------------------------------')
-      console.log(arr)
-      console.log('-------------------------------------')
-      console.log(listData)
-    
+      setData([]);
+      let arr =[]
+      if (item) {
+        listData.forEach((item) => {
+          if (item.subTitle && item.subTitle==item) {
+            arr.push(item.tableName)
+          }
+        });
+      } else {
+        listData.forEach((item) => {
+          if (item.title && item.title==name) {
+            arr.push(item.tableName)
+          }
+        });
+      }
+      if (arr.length > 0) {
+        setData(uniq(arr));
+      }
     }
-  }, [item]);
+  }, [name]);
   return (
     <View
       style={{
@@ -777,33 +797,85 @@ const ServiceTable = ({ item, i, tableName}) => {
       >
         {item}
       </Text>
-      <Text
-        style={{
-          fontFamily: "Poppins-Medium",
-          fontSize: 14,
-          color: "#707070",
-        }}
-      >
-        {tableName}
-      </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "Poppins-Light",
-            fontSize: 13,
-          }}
-        >
-          {Array.isArray(Data) &&
-            Data.map((data, j) => {
-              return `${j != 0 ? ", " : ""}${data.data.title}`;
-            })}
-        </Text>
-      </View>
+      {Data.length > 0 ? (
+        Data.map((item, i) => (
+          <View key={i}>
+            <Text
+              style={{
+                fontFamily: "Poppins-Medium",
+                fontSize: 14,
+                color: "#707070",
+              }}
+            >
+              {item}
+            </Text>
+            <Rows item={item} name={name} />
+          </View>
+        ))
+      ) : (
+        <View>
+          <Text
+            style={{
+              fontFamily: "Poppins-Medium",
+              fontSize: 14,
+              color: "#707070",
+            }}
+          >
+            {TableName}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
+const Rows = ({ title, item, name }) => {
+  const [text, setText] = React.useState();
+  const listData = useSelector((state) => state.listData);
+
+  React.useEffect(() => {
+    if (!listData) {
+      return;
+    }
+    let count = 0;
+    let word = "";
+    listData.map((doc, j) => {
+      if (
+        doc.subTitle &&
+        doc.title &&
+        doc.tableName.match(item) &&
+        doc.subTitle.match(title) &&
+        doc.title.match(name)
+      ) {
+        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        count++;
+      } else if (
+        doc.title &&
+        doc.title.match(name) &&
+        doc.tableName.match(item)
+      ) {
+        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        count++;
+      } else if (doc.mainTitle && doc.mainTitle.match(name)) {
+        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        count++;
+      }
+    });
+    setText(word);
+  }, [item + title + listData]);
+
+  return (
+    <Text
+      style={{
+        fontSize: 13,
+        fontFamily: "Poppins-Light",
+      }}
+    >
+      {text}
+    </Text>
+  );
+};
+function uniq(a) {
+  return a.sort().filter(function (item, pos, ary) {
+    return !pos || item != ary[pos - 1];
+  });
+}

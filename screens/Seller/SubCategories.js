@@ -38,6 +38,7 @@ const SubCategories = ({ navigation, route }) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
+    console.log(listData)
     if (route.name == "SubCategories") {
       //setData(allData[id].data);
       //console.log(allData[id].data[allData[id].data.length - 1]);

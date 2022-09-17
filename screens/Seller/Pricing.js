@@ -31,7 +31,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import OutsideView from "react-native-detect-press-outside";
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+import InputModal from "./InputModal";
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -173,8 +174,9 @@ const Pricing = ({ navigation, route }) => {
   const nameRef = React.useRef();
   const positionRef = React.useRef();
   const priceRef = React.useRef();
-  const [genderRef,setGenderRef] = React.useState(false)
-  const dispatch= useDispatch()
+  const [genderRef, setGenderRef] = React.useState(false);
+  const dispatch = useDispatch();
+  const [ModalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -252,35 +254,41 @@ const Pricing = ({ navigation, route }) => {
       setServiceError("Please select any facilities");
       return;
     }
-    dispatch({type: 'SERVICE_CENTER_NAME',playload:ServiceName});
-    dispatch({type: 'TITLE',playload:Title});
-    dispatch({type: 'NAME',playload:Name});
-    dispatch({type: 'GENDER',playload:Gender});
-    dispatch({type: 'POSITION',playload:Position});
-    dispatch({type: 'TEAM_NUMBER',playload:TeamNumber});
-    dispatch({type: 'START_DATE',playload:{
-      day:Day,
-      month:Month,
-      year:Year,
-    }});
-    dispatch({type: 'WORKING_TIME',playload:Times.length==0?true:Times});
-    dispatch({type: 'PRICE',playload:StartingPrice})
-    dispatch({type: 'FACILITIES',playload:Service})
+    dispatch({ type: "SERVICE_CENTER_NAME", playload: ServiceName });
+    dispatch({ type: "TITLE", playload: Title });
+    dispatch({ type: "NAME", playload: Name });
+    dispatch({ type: "GENDER", playload: Gender });
+    dispatch({ type: "POSITION", playload: Position });
+    dispatch({ type: "TEAM_NUMBER", playload: TeamNumber });
+    dispatch({
+      type: "START_DATE",
+      playload: {
+        day: Day,
+        month: Month,
+        year: Year,
+      },
+    });
+    dispatch({
+      type: "WORKING_TIME",
+      playload: Times.length == 0 ? true : Times,
+    });
+    dispatch({ type: "PRICE", playload: StartingPrice });
+    dispatch({ type: "FACILITIES", playload: Service });
     navigation.navigate("Service");
   };
   //------------------------------------------
 
   return (
     <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-      >
-    <Animation.ScrollView
-      ref={(ref) => setRef(ref)}
-      scrollToOverflowEnabled={true}
-      showsVerticalScrollIndicator={false}
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
+      <Animation.ScrollView
+        ref={(ref) => setRef(ref)}
+        scrollToOverflowEnabled={true}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
@@ -334,7 +342,7 @@ const Pricing = ({ navigation, route }) => {
               error={TitleError}
               onChange={(val) => {
                 setData(val);
-              }} 
+              }}
               onSelect={(val) => {
                 setTitle(val);
               }}
@@ -350,7 +358,8 @@ const Pricing = ({ navigation, route }) => {
                 }
               }}
             />
-            <Input innerRef={nameRef}
+            <Input
+              innerRef={nameRef}
               onChange={(val) => {
                 setName(val);
               }}
@@ -375,10 +384,11 @@ const Pricing = ({ navigation, route }) => {
             />
           </View>
           <View style={{ flexDirection: "row" }}>
-            <DropDown visible={genderRef}
+            <DropDown
+              visible={genderRef}
               onChange={(val) => {
                 setGender(val);
-                if(positionRef.current){
+                if (positionRef.current) {
                   positionRef.current.focus();
                 }
               }}
@@ -391,7 +401,8 @@ const Pricing = ({ navigation, route }) => {
               DATA={["Male", "Female", "Other"]}
             />
 
-            <SuggestionBox innerRef={positionRef}
+            <SuggestionBox
+              innerRef={positionRef}
               error={PositionError}
               placeholder="Position"
               value={SelectedPositions}
@@ -666,7 +677,8 @@ const Pricing = ({ navigation, route }) => {
         </Animated.View>
         <View style={styles.viewBox}>
           <Text style={styles.text}>Service Fee</Text>
-          <Input innerRef={priceRef}
+          <Input
+            innerRef={priceRef}
             error={StartingPriceError}
             onChange={(val) => {
               setStartingPrice(val);
@@ -735,21 +747,13 @@ const Pricing = ({ navigation, route }) => {
           <Button
             onPress={() => {
               setButtonVisible(true);
-              if (buttonVisible) {
-                let arr = Service;
-                arr.push({
-                  title: buttonVisible,
-                  checked: true,
-                });
-                setService(arr);
-                setButtonVisible(null);
-              }
             }}
             style={{
               flexDirection: "row",
               borderWidth: 0,
               width: 100,
               marginTop: 10,
+              color: textColor,
             }}
             Icon={() => (
               <FontAwesome
@@ -761,7 +765,7 @@ const Pricing = ({ navigation, route }) => {
                 color="#707070"
               />
             )}
-            title={buttonVisible ? "Save" : "Add More"}
+            title={"Add More"}
           />
         </View>
         <Button
@@ -780,9 +784,9 @@ const Pricing = ({ navigation, route }) => {
           title="Next"
         />
         <MainOptions
-          setValue={(value) =>{
-            setSelectedItem(value)
-            setTitle(value)
+          setValue={(value) => {
+            setSelectedItem(value);
+            setTitle(value);
           }}
           setData={setData}
           style={{
@@ -794,9 +798,9 @@ const Pricing = ({ navigation, route }) => {
         />
 
         <MainOptions
-          setValue={(value)=>{
-            setSelectedPositions(value)
-            setPosition(value)
+          setValue={(value) => {
+            setSelectedPositions(value);
+            setPosition(value);
           }}
           setData={setPositions}
           style={{
@@ -806,7 +810,25 @@ const Pricing = ({ navigation, route }) => {
           }}
           Data={Positions}
         />
-    </Animation.ScrollView>
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={buttonVisible}
+          onRequestClose={() => setButtonVisible((val) => !val)}
+        >
+          <InputModal
+            onChange={(val) => {
+              let arr = Service;
+              arr.push({
+                title: val,
+                checked: true,
+              });
+              setService(arr);
+            }}
+            Close={setButtonVisible}
+          />
+        </Modal>
+      </Animation.ScrollView>
     </KeyboardAvoidingView>
   );
 };

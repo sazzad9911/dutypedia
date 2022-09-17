@@ -7,7 +7,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Modal
+  Modal,
 } from "react-native";
 import { DataTable } from "react-native-paper";
 import { Checkbox } from "react-native-paper";
@@ -48,14 +48,15 @@ const TableData = (props) => {
   const lastId = props.route.params.lastId;
   const [data, setData] = React.useState(AllData[id]);
   const length = useSelector((state) => state.length);
+  const [newSelectedData, setNewSelectedData] = React.useState([]);
 
   React.useEffect(() => {
-    if (listData.length != length) {
+    if (newSelectedData.length != 0) {
       setButtonPress(true);
     } else {
       setButtonPress(false);
     }
-  }, [listData.length]);
+  }, [newSelectedData.length]);
 
   return (
     <KeyboardAvoidingView
@@ -73,6 +74,8 @@ const TableData = (props) => {
               {...props}
               tableId={i}
               setButtonPress={setButtonPress}
+              setSelectedData={setNewSelectedData}
+              SelectedData={newSelectedData}
             />
           ))
         ) : (
@@ -84,14 +87,20 @@ const TableData = (props) => {
             onPress={() => {
               navigation.navigate("Pricing");
               setButtonPress(false);
-              dispatch({ type: "SET_LENGTH", playload: listData.length });
+              dispatch({
+                type: "SET_LENGTH",
+                playload: newSelectedData.length,
+              });
+              newSelectedData.forEach((doc) => {
+                dispatch(addListData(doc));
+              });
             }}
             style={{
               marginTop: 20,
               marginBottom: 10,
               borderRadius: 5,
-              backgroundColor:buttonPress? backgroundColor:'#707070',
-              color:  "white",
+              backgroundColor: buttonPress ? backgroundColor : "#707070",
+              color: "white",
               marginHorizontal: 20,
               borderWidth: 0,
               height: 45,
@@ -112,11 +121,14 @@ const TableData = (props) => {
             //   image: data.image,
             //   id: id,
             // });
-            dispatch({ type: "SET_LENGTH", playload: listData.length });
+            dispatch({ type: "SET_LENGTH", playload: newSelectedData.length });
+            newSelectedData.forEach((doc) => {
+              dispatch(addListData(doc));
+            });
             navigation.goBack();
           }}
           style={{
-            backgroundColor:buttonPress ? "green":'#707070',
+            backgroundColor: buttonPress ? "green" : "#707070",
             borderRadius: 5,
             marginHorizontal: 20,
             marginVertical: 10,
@@ -131,7 +143,16 @@ const TableData = (props) => {
 };
 
 export default TableData;
-const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) => {
+const Table = ({
+  navigation,
+  route,
+  tableName,
+  data,
+  tableId,
+  setButtonPress,
+  setSelectedData,
+  SelectedData,
+}) => {
   const [Visible, setVisible] = React.useState(false);
   const [Data, setData] = React.useState(data);
   const [text, setText] = React.useState();
@@ -150,54 +171,56 @@ const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) 
 
   const deleteData = (d) => {
     setButtonPress(true);
-    dispatch(deleteListData(d.title));
+    let arr = SelectedData.filter((de) => de.data.title != d);
+    setSelectedData(arr);
     const index = data.indexOf(d);
     if (index > -1) {
       data.splice(index, 1);
     }
   };
   const selectData = (title, selected) => {
-    if (!selected) {
-      dispatch(deleteListData(title));
+    if (!selected && SelectedData.length > 0) {
+      let arr = SelectedData.filter((d) => d.data.title != title);
+      setSelectedData(arr);
       return;
     }
 
     if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId) && !isNaN(lastId)) {
       let newData = {
-        mainTitle: mainTitle,
-        title: titleS,
-        subTitle: subTitle,
-        tableName:tableName,
+        mainTitle: `${mainTitle}`,
+        title: `${titleS}`,
+        subTitle: `${subTitle}`,
+        tableName: `${tableName}`,
         data: {
           id: uuid.v4(),
-          title: title,
+          title: `${title}`,
           selected: selected,
         },
       };
-      dispatch(addListData(newData));
+      setSelectedData((data) => [...data, newData]);
     } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
       let newData = {
-        mainTitle: mainTitle,
-        title: titleS,
-        tableName:tableName,
+        mainTitle: `${mainTitle}`,
+        title: `${titleS}`,
+        tableName: `${tableName}`,
         data: {
           id: uuid.v4(),
-          title: title,
+          title: `${title}`,
           selected: selected,
         },
       };
-      dispatch(addListData(newData));
+      setSelectedData((data) => [...data, newData]);
     } else if (!isNaN(id) && !isNaN(listId)) {
       let newData = {
-        mainTitle: mainTitle,
-        tableName:tableName,
+        mainTitle: `${mainTitle}`,
+        tableName: `${tableName}`,
         data: {
           id: uuid.v4(),
-          title: title,
+          title: `${title}`,
           selected: selected,
         },
       };
-      dispatch(addListData(newData));
+      setSelectedData((data) => [...data, newData]);
     }
   };
   return (
@@ -270,7 +293,7 @@ const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) 
         onPress={() => {
           setVisible(true);
         }}
-        title={ "Add New"}
+        title={"Add New"}
       />
       <Modal
         animationType="fade"
@@ -305,47 +328,46 @@ const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) 
               //dispatch(setListReplace1(newData, id, nextId, lastLid, listId));
               // let arr = listData;
               let list = {
-                mainTitle: mainTitle,
-                title: titleS,
-                subTitle: subTitle,
-                tableName:tableName,
+                mainTitle: `${mainTitle}`,
+                title: `${titleS}`,
+                subTitle: `${subTitle}`,
+                tableName: `${tableName}`,
                 data: {
                   id: uuid.v4(),
-                  title: value,
-                  deletable: true,
-                  selected: true,
+                  title: `${value}`,
+                  selected: selected,
                 },
               };
-              dispatch(addListData(list));
+              setSelectedData((data) => [...data, list]);
             } else if (!isNaN(id) && !isNaN(listId) && !isNaN(nextId)) {
               // let arr = listData;
               // dispatch(setListReplace2(newData, id, nextId, listId));
               let list = {
-                mainTitle: mainTitle,
-                title: titleS,
-                tableName:tableName,
+                mainTitle: `${mainTitle}`,
+                title: `${titleS}`,
+                tableName: `${tableName}`,
                 data: {
                   id: uuid.v4(),
-                  title: value,
+                  title: `${value}`,
                   deletable: true,
                   selected: true,
                 },
               };
-              dispatch(addListData(list));
+              setSelectedData((data) => [...data, list]);
             } else if (!isNaN(id) && !isNaN(listId)) {
               // let arr = listData;
               // dispatch(setListReplace3(newData, id, listId));
               let list = {
-                mainTitle: mainTitle,
-                tableName:tableName,
+                mainTitle: `${mainTitle}`,
+                tableName: `${tableName}`,
                 data: {
                   id: uuid.v4(),
-                  title: value,
+                  title: `${value}`,
                   deletable: true,
                   selected: true,
                 },
               };
-              dispatch(addListData(list));
+              setSelectedData((data) => [...data, list]);
             }
             setText("");
           }}
@@ -356,7 +378,7 @@ const Table = ({ navigation, route, tableName, data, tableId, setButtonPress }) 
   );
 };
 import { Observable } from "object-observer";
-import InputModal from './InputModal';
+import InputModal from "./InputModal";
 const Rows = ({
   title,
   data,
@@ -372,7 +394,7 @@ const Rows = ({
   React.useEffect(() => {
     //console.log(listData);
 
-    let arr = listData.filter((d) => d.data.title.match(title));
+    let arr = listData.filter((d) => d.data.title==title);
     //console.log(arr)
     if (arr && arr.length > 0) {
       setChecked(true);
@@ -406,8 +428,8 @@ const Rows = ({
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
-            marginTop:Platform.OS == "ios" ?3: 0,
-            marginBottom: Platform.OS == "ios" ?3: 0,
+            marginTop: Platform.OS == "ios" ? 3 : 0,
+            marginBottom: Platform.OS == "ios" ? 3 : 0,
           }}
         >
           {data.deletable ? (

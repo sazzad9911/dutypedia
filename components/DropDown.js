@@ -129,6 +129,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,mes
               }}
             >
               <ScrollView>
+              <View style={{height:10}}/>
                 {Array.isArray(DATA) &&
                   DATA.map((doc, i) => (
                     <TouchableOpacity

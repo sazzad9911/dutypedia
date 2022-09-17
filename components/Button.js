@@ -26,7 +26,7 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
      {
       Icon?( <Icon/>):(<></>)
      }
-        <Text
+        <Text numberOfLines={1}
           style={{
             fontSize: 13,
             fontWeight: "bold",
