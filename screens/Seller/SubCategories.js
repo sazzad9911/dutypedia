@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
+  FlatList
 } from "react-native";
 import builder from "../../assets/Images/builder.webp";
 import { textColor } from "./../../assets/colors";
@@ -38,7 +39,7 @@ const SubCategories = ({ navigation, route }) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
-    console.log(listData)
+    //console.log(listData)
     if (route.name == "SubCategories") {
       //setData(allData[id].data);
       //console.log(allData[id].data[allData[id].data.length - 1]);

@@ -49,6 +49,7 @@ const TableData = (props) => {
   const [data, setData] = React.useState(AllData[id]);
   const length = useSelector((state) => state.length);
   const [newSelectedData, setNewSelectedData] = React.useState([]);
+  const [Uncheck, setUncheck] = React.useState([]);
 
   React.useEffect(() => {
     if (newSelectedData.length != 0) {
@@ -76,6 +77,7 @@ const TableData = (props) => {
               setButtonPress={setButtonPress}
               setSelectedData={setNewSelectedData}
               SelectedData={newSelectedData}
+              setUncheck={setUncheck}
             />
           ))
         ) : (
@@ -91,8 +93,12 @@ const TableData = (props) => {
                 type: "SET_LENGTH",
                 playload: newSelectedData.length,
               });
+              //dispatch(setListData(newSelectedData));
               newSelectedData.forEach((doc) => {
                 dispatch(addListData(doc));
+              });
+              Uncheck.forEach((doc) => {
+                dispatch(deleteListData(doc));
               });
             }}
             style={{
@@ -122,8 +128,12 @@ const TableData = (props) => {
             //   id: id,
             // });
             dispatch({ type: "SET_LENGTH", playload: newSelectedData.length });
+            //dispatch(setListData([]));
             newSelectedData.forEach((doc) => {
               dispatch(addListData(doc));
+            });
+            Uncheck.forEach((doc) => {
+              dispatch(deleteListData(doc));
             });
             navigation.goBack();
           }}
@@ -152,6 +162,7 @@ const Table = ({
   setButtonPress,
   setSelectedData,
   SelectedData,
+  setUncheck,
 }) => {
   const [Visible, setVisible] = React.useState(false);
   const [Data, setData] = React.useState(data);
@@ -171,16 +182,20 @@ const Table = ({
 
   const deleteData = (d) => {
     setButtonPress(true);
-    let arr = SelectedData.filter((de) => de.data.title != d);
+    let arr = SelectedData.filter((de) => de.data.id != d.id);
     setSelectedData(arr);
+    setUncheck((val) => [...val, d.id]);
     const index = data.indexOf(d);
     if (index > -1) {
       data.splice(index, 1);
     }
   };
-  const selectData = (title, selected) => {
+  const selectData = (title, selected,newId) => {
+    if (!selected) {
+      setUncheck((val) => [...val, newId]);
+    }
     if (!selected && SelectedData.length > 0) {
-      let arr = SelectedData.filter((d) => d.data.title != title);
+      let arr = SelectedData.filter((d) => d.data.id != newId);
       setSelectedData(arr);
       return;
     }
@@ -192,7 +207,7 @@ const Table = ({
         subTitle: `${subTitle}`,
         tableName: `${tableName}`,
         data: {
-          id: uuid.v4(),
+          id: newId,
           title: `${title}`,
           selected: selected,
         },
@@ -204,7 +219,7 @@ const Table = ({
         title: `${titleS}`,
         tableName: `${tableName}`,
         data: {
-          id: uuid.v4(),
+          id: newId,
           title: `${title}`,
           selected: selected,
         },
@@ -215,7 +230,7 @@ const Table = ({
         mainTitle: `${mainTitle}`,
         tableName: `${tableName}`,
         data: {
-          id: uuid.v4(),
+          id: newId,
           title: `${title}`,
           selected: selected,
         },
@@ -283,6 +298,7 @@ const Table = ({
               supTitle={tableName}
               id={id}
               setButtonPress={setButtonPress}
+              SelectedData={SelectedData}
             />
           ))
         ) : (
@@ -307,8 +323,9 @@ const Table = ({
           onChange={(value) => {
             setText(value);
             setButtonPress(true);
+            let dataId=uuid.v4();
             data.push({
-              id: uuid.v4(),
+              id: dataId,
               title: value,
               deletable: true,
               selected: true,
@@ -333,9 +350,9 @@ const Table = ({
                 subTitle: `${subTitle}`,
                 tableName: `${tableName}`,
                 data: {
-                  id: uuid.v4(),
+                  id: dataId,
                   title: `${value}`,
-                  selected: selected,
+                  selected: true,
                 },
               };
               setSelectedData((data) => [...data, list]);
@@ -347,7 +364,7 @@ const Table = ({
                 title: `${titleS}`,
                 tableName: `${tableName}`,
                 data: {
-                  id: uuid.v4(),
+                  id: dataId,
                   title: `${value}`,
                   deletable: true,
                   selected: true,
@@ -361,7 +378,7 @@ const Table = ({
                 mainTitle: `${mainTitle}`,
                 tableName: `${tableName}`,
                 data: {
-                  id: uuid.v4(),
+                  id: dataId,
                   title: `${value}`,
                   deletable: true,
                   selected: true,
@@ -387,19 +404,21 @@ const Rows = ({
   selectData,
   id,
   setButtonPress,
+  SelectedData,
 }) => {
   const [checked, setChecked] = React.useState(false);
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
+  const [Data, setData] = React.useState(listData);
   React.useEffect(() => {
-    //console.log(listData);
-
-    let arr = listData.filter((d) => d.data.title==title);
+    let arr = listData.filter(
+      (d) => d.data.id == data.id
+    );
     //console.log(arr)
     if (arr && arr.length > 0) {
       setChecked(true);
     }
-  });
+  }, [listData.length]);
 
   return (
     <View
@@ -451,7 +470,7 @@ const Rows = ({
               }}
               status={checked ? "checked" : "unchecked"}
               onPress={() => {
-                selectData(data.title, !checked);
+                selectData(data.title, !checked,data.id);
                 setChecked(!checked);
               }}
             />

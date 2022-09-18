@@ -16,10 +16,8 @@ const Category = (props) => {
   React.useEffect(() => {
     //setAllData(Data);
     // console.log(Data.length)
-    if (Data.length > 0) {
-      //setAllData(Data);
-    }
-  }, [Data.length]);
+  
+  }, []);
 
   React.useEffect(() => {
     // Interval to update count
@@ -29,8 +27,9 @@ const Category = (props) => {
     // Subscribe for the focus Listener
     const unsubscribe = props.navigation.addListener("focus", () => {
       dispatch({ type: "SET_LENGTH", playload: 0 });
-      dispatch(setListData([]));
-      dispatch({ type: "SET_DATA", playload:null})
+      let arr=[]
+      dispatch(setListData(arr));
+      dispatch({ type: "SET_NEW_DATA", playload:null})
       //setAllData(Data); 
       setCount(0);
     });

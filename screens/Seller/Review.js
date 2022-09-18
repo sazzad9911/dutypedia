@@ -461,55 +461,75 @@ const Review = (props) => {
           </Text>
           <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         </View>
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            flexDirection: "row",
-            minHeight: 200,
-          }}
-        >
-          <View
-            style={{
-              flex: 1.2,
-              marginLeft: 20,
+        <View style={{ backgroundColor: primaryColor,height:200 }}>   
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  flex: 1.2,
+                  marginLeft: 20,
+                  height: 200,
+                }}
+              >
+                {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                  ServiceList.map((item, i) => (
+                    <Button
+                      onPress={() => {
+                        setActiveService(item);
+                      }}
+                      key={i}
+                      style={
+                        ActiveService == item
+                          ? styles.activeButton
+                          : styles.inactiveButton
+                      }
+                      title={item}
+                    />
+                  ))
+                ) : (
+                  <Button style={styles.activeButton} title={ActiveService} />
+                )}
+              </View>
+              <View
+                style={{
+                  width: 1,
+                  backgroundColor: "#e5e5e5",
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+              />
+              <View style={{ flex: 2, marginRight: 20 }}>
+                {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
+                  SubServiceList.map((item, i) => (
+                    <ServiceTable
+                      key={i}
+                      item={item}
+                      i={i}
+                      name={ActiveService}
+                    />
+                  ))
+                ) : (
+                  <ServiceTable name={ActiveService} />
+                )}
+              </View>
+            </View>
+            <LinearGradient style={{
+              position: "absolute",
+              zIndex:100,
+              top:0, left:0,
+              height:200,
+              width:width-40
             }}
+            colors={[
+              'rgba(255, 255, 255, 0.073)',
+              "rgba(255, 255, 255, 0.141)",
+              "#ffff",
+            ]}
           >
-            {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-              ServiceList.map((item, i) => (
-                <Button
-                  onPress={() => {
-                    setActiveService(item);
-                  }}
-                  key={i}
-                  style={
-                    ActiveService == item
-                      ? styles.activeButton
-                      : styles.inactiveButton
-                  }
-                  title={item}
-                />
-              ))
-            ) : (
-              <Button style={styles.activeButton} title={ActiveService} />
-            )}
-          </View>
-          <View
-            style={{
-              width: 1,
-              backgroundColor: "#e5e5e5",
-              marginLeft: 10,
-              marginRight: 10,
-            }}
-          />
-          <View style={{ flex: 2, marginRight: 20 }}>
-            {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
-              SubServiceList.map((item, i) => (
-                <ServiceTable key={i} item={item} i={i} name={ActiveService} />
-              ))
-            ) : (
-              <ServiceTable name={ActiveService} />
-            )}
-          </View>
+          </LinearGradient>
         </View>
         <View style={{ backgroundColor: primaryColor }}>
           <Button
@@ -750,7 +770,7 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-const ServiceTable = ({ item, i, name }) => {
+const ServiceTable = ({ item, i, name, }) => {
   const listData = useSelector((state) => state.listData);
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
@@ -759,10 +779,9 @@ const ServiceTable = ({ item, i, name }) => {
       setData([]);
       let arr = [];
       if (item) {
-        listData.forEach((item) => {
-          if (item.subTitle && item.subTitle == item) {
-            arr.push(item.tableName);
-            console.log(item.tableName);
+        listData.forEach((data) => {
+          if (data.subTitle && data.subTitle == item) {
+            arr.push(data.tableName);
           }
         });
       } else {
@@ -817,8 +836,9 @@ const ServiceTable = ({ item, i, name }) => {
               color: "#707070",
             }}
           >
-            {TableName}
+            {name}
           </Text>
+          <Rows name={name}/>
         </View>
       )}
     </View>
@@ -829,26 +849,22 @@ const Rows = ({ title, item, name }) => {
   const listData = useSelector((state) => state.listData);
 
   React.useEffect(() => {
-    console.log(item);
+    //console.log(item);
     if (!listData) {
       return;
     }
     let count = 0;
     let word = "";
     listData.map((doc, j) => {
-      if (
-        doc.subTitle &&
-        doc.title &&
+      if (doc.title&&
         doc.tableName.match(item) &&
-        doc.subTitle.match(title) &&
         doc.title.match(name)
       ) {
         word = word + `${count != 0 ? ", " : ""}${doc.data.title}`;
         count++;
       } else if (
         doc.title &&
-        doc.title.match(name) &&
-        doc.tableName.match(item)
+        doc.title.match(name)
       ) {
         word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
         count++;

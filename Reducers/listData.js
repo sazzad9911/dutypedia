@@ -7,7 +7,7 @@ const listData=(state= initialState, action)=>{
         return [...state, action.playload]
     }
     if(action.type=='DELETE_DATA'){
-        return state.filter(data=>data.data.title!=action.playload)
+        return state.filter(data=>data.data.id!=action.playload)
     }
     return state
 }

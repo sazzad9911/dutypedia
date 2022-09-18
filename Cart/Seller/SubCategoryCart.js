@@ -10,7 +10,7 @@ const SubCategoryCart = ({ title, onPress, deleteData, data, id, nextId }) => {
   const listData= useSelector((state) => state.listData)
 
   React.useEffect(() => {
-    //console.log('reloader')
+    
   if (listData) {
       let arr=listData.filter(d=>{
         if(d.title.match(title) || d.subTitle&&d.subTitle.match(title)){
@@ -25,7 +25,7 @@ const SubCategoryCart = ({ title, onPress, deleteData, data, id, nextId }) => {
         //console.log(false);
       }
     }
-  }, [listData.length]);
+  }, [listData&& listData.length]);
   return (
     <TouchableOpacity
       onPress={() => {

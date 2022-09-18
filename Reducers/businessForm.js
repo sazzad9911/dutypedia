@@ -67,7 +67,7 @@ const businessForm=(state= initialState, action)=>{
     if(action.type=='ADDRESS'){
         return {...state,'address':action.playload}
     }
-    if(action.type=='SET_DATA'){
+    if(action.type=='SET_NEW_DATA'){
         return state=action.playload
     }
     return state
