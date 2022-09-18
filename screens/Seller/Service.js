@@ -38,12 +38,40 @@ const Service = ({ navigation }) => {
   const [ThirdImage, setThirdImage] = React.useState();
   const [ForthImage, setForthImage] = React.useState();
   const [ImageError, setImageError] = React.useState();
+  const businessForm= useSelector((state) => state.businessForm);
   //referencial permissions
   const nameRef = React.useRef();
   const specialityRef = React.useRef();
   const descriptionRef = React.useRef();
   const aboutRef = React.useRef();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if(businessForm && businessForm.serviceTitle){
+      setCenterName(businessForm.serviceTitle)
+    }
+    if(businessForm && businessForm.speciality){
+      setSpeciality(businessForm.speciality)
+    }
+    if(businessForm && businessForm.description){
+      setDescription(businessForm.description)
+    }
+    if(businessForm && businessForm.about){
+      setAbout(businessForm.about)
+    }
+    if(businessForm&& businessForm.firstImage){
+      setFirstImage(businessForm.firstImage)
+    }
+    if(businessForm&&businessForm.secondImage){
+      setSecondImage(businessForm.secondImage)
+    }
+    if(businessForm&&businessForm.thirdImage){
+      setThirdImage(businessForm.thirdImage)
+    }
+    if(businessForm&&businessForm.forthImage){
+      setForthImage(businessForm.forthImage)
+    }
+  },[businessForm])
 
   const checkValidity = () => {
     setCenterNameError(null);
@@ -204,25 +232,25 @@ const Service = ({ navigation }) => {
               marginTop: 5,
             }}
           >
-            <ImageButton
+            <ImageButton value={FirstImage}
               onChange={(value) => {
                 setFirstImage(value);
               }}
               style={{ marginLeft: 5 }}
             />
-            <ImageButton
+            <ImageButton value={SecondImage}
               onChange={(value) => {
                 setSecondImage(value);
               }}
               style={{ marginLeft: 10 }}
             />
-            <ImageButton
+            <ImageButton value={ThirdImage}
               onChange={(value) => {
                 setThirdImage(value);
               }}
               style={{ marginLeft: 10 }}
             />
-            <ImageButton
+            <ImageButton value={ForthImage}
               onChange={(value) => {
                 setForthImage(value);
               }}
@@ -264,9 +292,13 @@ const Service = ({ navigation }) => {
 
 export default Service;
 
-const ImageButton = ({ style, onChange }) => {
+const ImageButton = ({ style, onChange,value }) => {
   const [image, setImage] = React.useState(null);
-
+  React.useEffect(() => {
+    if(value){
+      setImage(value.uri);
+    }
+  },[value]);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

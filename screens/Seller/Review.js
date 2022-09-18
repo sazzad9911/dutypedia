@@ -79,7 +79,7 @@ const Review = (props) => {
       ]);
     }
     if (Array.isArray(listData)) {
-      let array=[]
+      let array = [];
       listData.map((item, i) => {
         if (item.title) {
           if (i == 0) {
@@ -101,7 +101,7 @@ const Review = (props) => {
   React.useEffect(() => {
     setSubServiceList([]);
     if (Array.isArray(listData)) {
-      let arr =[]
+      let arr = [];
       listData.map((item) => {
         if (item.title && item.subTitle && item.title.match(ActiveService)) {
           arr.push(item.subTitle);
@@ -362,7 +362,7 @@ const Review = (props) => {
           )}
           title="Address"
         />
-        
+
         <View style={{ backgroundColor: primaryColor }}>
           <SliderBox
             images={Images}
@@ -490,12 +490,7 @@ const Review = (props) => {
                 />
               ))
             ) : (
-              <Button
-                style={
-                  styles.activeButton
-                }
-                title={ActiveService}
-              />
+              <Button style={styles.activeButton} title={ActiveService} />
             )}
           </View>
           <View
@@ -762,18 +757,18 @@ const ServiceTable = ({ item, i, name }) => {
   React.useEffect(() => {
     if (listData) {
       setData([]);
-      let arr =[]
+      let arr = [];
       if (item) {
         listData.forEach((item) => {
-          if (item.subTitle && item.subTitle==item) {
-            arr.push(item.tableName)
-            console.log(item.tableName)
+          if (item.subTitle && item.subTitle == item) {
+            arr.push(item.tableName);
+            console.log(item.tableName);
           }
         });
       } else {
         listData.forEach((item) => {
-          if (item.title && item.title==name) {
-            arr.push(item.tableName)
+          if (item.title && item.title == name) {
+            arr.push(item.tableName);
           }
         });
       }
@@ -834,7 +829,7 @@ const Rows = ({ title, item, name }) => {
   const listData = useSelector((state) => state.listData);
 
   React.useEffect(() => {
-    console.log(item)
+    console.log(item);
     if (!listData) {
       return;
     }

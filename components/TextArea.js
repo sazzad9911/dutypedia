@@ -18,12 +18,17 @@ const TextArea = ({
   level,
   returnKeyType,
   onSubmitEditing,
-  innerRef
+  innerRef,
+  value
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const ref = React.useRef();
   const { width, height } = Dimensions.get("window");
- 
+  const [Data, setData]= React.useState()
+
+  React.useEffect(() => {
+    setData(value);
+  },[value])
   return (
     <Animated.View entering={FadeIn}>
       <TouchableOpacity
@@ -48,7 +53,7 @@ const TextArea = ({
           }
         }}
       >
-        <TextInput multiline={true} ref={innerRef?innerRef:ref}
+        <TextInput value={Data} multiline={true} ref={innerRef?innerRef:ref}
           returnKeyType={returnKeyType}
           onSubmitEditing={() => {
             if (onSubmitEditing) {
@@ -68,6 +73,7 @@ const TextArea = ({
           rows={rows ? rows : 4}
           placeholder={placeholder}
           onChangeText={(value) => {
+            setData(value)
             if (onChange) {
               onChange(value);
             }

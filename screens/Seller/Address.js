@@ -33,6 +33,7 @@ const Address = ({ navigation }) => {
   const [address, setAddress] = React.useState();
   const [AddressError, setAddressError] = React.useState();
   const dispatch = useDispatch();
+  const businessForm = useSelector((state) => state.businessForm);
 
   const searchDistrict = (value) => {
     if (value) {
@@ -50,6 +51,21 @@ const Address = ({ navigation }) => {
       setAreaList([]);
     }
   };
+  React.useEffect(() => {
+    if(businessForm&&businessForm.division){
+      setDivision(businessForm.division)
+    }
+    if(businessForm&&businessForm.district){
+      setDistrict(businessForm.district)
+    }
+    if(businessForm&&businessForm.area){
+      setArea(businessForm.area)
+    }
+    if(businessForm&&businessForm.address){
+      setAddress(businessForm.address)
+    }
+
+  },[businessForm])
   const checkValidity = () => {
     setDivisionError(null);
     setDistrictError(null);
@@ -112,7 +128,7 @@ const Address = ({ navigation }) => {
           >
             Step to Go
           </Text>
-          <DropDown
+          <DropDown value={Division}
             error={DivisionError}
             style={{
               marginTop: "40%",
@@ -130,7 +146,7 @@ const Address = ({ navigation }) => {
               flexDirection: "row",
             }}
           >
-            <DropDown
+            <DropDown value={District}
               error={DistrictError}
               style={{
                 marginTop: "10%",
@@ -145,7 +161,7 @@ const Address = ({ navigation }) => {
               }}
               message="Please select division first."
             />
-            <DropDown
+            <DropDown value={Area}
               error={AreaError}
               onChange={(val) => {
                 setArea(val);

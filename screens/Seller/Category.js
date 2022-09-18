@@ -30,7 +30,8 @@ const Category = (props) => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       dispatch({ type: "SET_LENGTH", playload: 0 });
       dispatch(setListData([]));
-      //setAllData(Data);
+      dispatch({ type: "SET_DATA", playload:null})
+      //setAllData(Data); 
       setCount(0);
     });
     return () => {

@@ -177,6 +177,7 @@ const Pricing = ({ navigation, route }) => {
   const [genderRef, setGenderRef] = React.useState(false);
   const dispatch = useDispatch();
   const [ModalVisible, setModalVisible] = React.useState(false);
+  const businessForm = useSelector((state) => state.businessForm);
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -191,6 +192,46 @@ const Pricing = ({ navigation, route }) => {
       Ref.scrollTo({ x: 0, y: position, animated: true });
     }
   };
+  React.useEffect(() => {
+    if (businessForm && businessForm.serviceCenterName) {
+      setServiceName(businessForm.serviceCenterName);
+    }
+    if (businessForm && businessForm.title) {
+      setTitle(businessForm.title);
+      setSelectedItem(businessForm.title);
+    }
+    if (businessForm && businessForm.name) {
+      setName(businessForm.name);
+    }
+    if (businessForm && businessForm.gender) {
+      setGender(businessForm.gender);
+    }
+    if (businessForm && businessForm.position) {
+      setPosition(businessForm.position);
+      setSelectedPositions(businessForm.position);
+    }
+    if (businessForm && businessForm.teamNumber) {
+      setTeamNumber(businessForm.teamNumber);
+    }
+    if (businessForm && businessForm.startDate) {
+      setDay(businessForm.startDate.day);
+      setMonth(businessForm.startDate.month);
+      setYear(businessForm.startDate.year);
+    }
+    if (businessForm && businessForm.workingTime) {
+      setTimes(businessForm.workingTime);
+      if (businessForm.workingTime == true) {
+        setChecked(true);
+      }
+    }
+    if (businessForm && businessForm.price) {
+      setStartingPrice(businessForm.price);
+    }
+    if (businessForm && businessForm.facilities) {
+      setService(businessForm.facilities);
+      setServiceCounter(businessForm.facilities.length);
+    }
+  }, [businessForm]);
   const CheckValidity = () => {
     setServiceNameError(null);
     setTitleError(null);
@@ -292,6 +333,7 @@ const Pricing = ({ navigation, route }) => {
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
+            value={ServiceName}
             innerRef={serviceNameRef}
             returnKeyType="next"
             onSubmitEditing={() => {
@@ -359,6 +401,7 @@ const Pricing = ({ navigation, route }) => {
               }}
             />
             <Input
+              value={Name}
               innerRef={nameRef}
               onChange={(val) => {
                 setName(val);
@@ -385,6 +428,7 @@ const Pricing = ({ navigation, route }) => {
           </View>
           <View style={{ flexDirection: "row" }}>
             <DropDown
+              value={Gender}
               visible={genderRef}
               onChange={(val) => {
                 setGender(val);
@@ -451,6 +495,7 @@ const Pricing = ({ navigation, route }) => {
               <FontAwesome5 name="minus" size={20} color="#707070" />
             </TouchableOpacity>
             <TextInput
+              value={TeamNumber}
               keyboardType="numeric"
               onEndEditing={() => {
                 if (!TeamNumber) {
@@ -518,6 +563,7 @@ const Pricing = ({ navigation, route }) => {
           </Text>
           <View style={{ flexDirection: "row" }}>
             <DropDown
+              value={Day}
               error={DayError}
               onChange={(val) => {
                 setDay(val);
@@ -529,6 +575,7 @@ const Pricing = ({ navigation, route }) => {
               DATA={DateTime.day}
             />
             <DropDown
+              value={Month}
               error={MonthError}
               onChange={(val) => {
                 setMonth(val);
@@ -541,6 +588,7 @@ const Pricing = ({ navigation, route }) => {
               DATA={DateTime.month}
             />
             <DropDown
+              value={Year}
               error={YearError}
               onChange={(val) => {
                 setYear(val);
@@ -588,6 +636,7 @@ const Pricing = ({ navigation, route }) => {
           {!checked ? (
             <Animated.View entering={FadeIn}>
               <Days
+                value={Times}
                 error={TimesError[0]}
                 onChange={(val) => {
                   let arr = Times;
@@ -598,6 +647,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Saturday"
               />
               <Days
+                value={Times}
                 error={TimesError[1]}
                 onChange={(val) => {
                   let arr = Times;
@@ -608,6 +658,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Sunday"
               />
               <Days
+                value={Times}
                 error={TimesError[2]}
                 onChange={(val) => {
                   let arr = Times;
@@ -618,6 +669,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Monday"
               />
               <Days
+                value={Times}
                 error={TimesError[3]}
                 onChange={(val) => {
                   let arr = Times;
@@ -628,6 +680,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Tuesday"
               />
               <Days
+                value={Times}
                 error={TimesError[4]}
                 onChange={(val) => {
                   let arr = Times;
@@ -638,6 +691,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Wednesday"
               />
               <Days
+                value={Times}
                 error={TimesError[5]}
                 onChange={(val) => {
                   let arr = Times;
@@ -648,6 +702,7 @@ const Pricing = ({ navigation, route }) => {
                 title="Thursday"
               />
               <Days
+                value={Times}
                 error={TimesError[6]}
                 onChange={(val) => {
                   let arr = Times;
@@ -678,6 +733,7 @@ const Pricing = ({ navigation, route }) => {
         <View style={styles.viewBox}>
           <Text style={styles.text}>Service Fee</Text>
           <Input
+            value={StartingPrice}
             innerRef={priceRef}
             error={StartingPriceError}
             onChange={(val) => {
@@ -876,7 +932,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
 import { Paragraph, Dialog, Portal, Snackbar } from "react-native-paper";
 
-const Days = ({ title, error, onChange }) => {
+const Days = ({ title, error, onChange, value }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [day, setDay] = React.useState(false);
   const [OpeningTime, setOpeningTime] = React.useState();
@@ -887,7 +943,16 @@ const Days = ({ title, error, onChange }) => {
   React.useEffect(() => {
     setError(error);
   }, [error]);
-
+  React.useEffect(() => {
+    if (Array.isArray(value)) {
+      let arr = value.filter((item) => item.title == title);
+      if (arr.length > 0) {
+        setDay(true);
+        setOpeningTime(arr[0].openingTime)
+        setClosingTime(arr[0].closingTime)
+      }
+    }
+  }, [value]);
   const toTime = (timestamp) => {
     let date = new Date(timestamp);
     var hours = date.getHours();
@@ -963,6 +1028,7 @@ const Days = ({ title, error, onChange }) => {
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
             <DateTimePickerModal
+              date={OpeningTime?OpeningTime: new Date()}
               buttonTextColorIOS={backgroundColor}
               isVisible={Open}
               mode="time"
@@ -1017,7 +1083,7 @@ const Days = ({ title, error, onChange }) => {
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
-            <DateTimePickerModal
+            <DateTimePickerModal date={ClosingTime?ClosingTime:new Date()}
               buttonTextColorIOS={backgroundColor}
               isVisible={Close}
               mode="time"
@@ -1053,7 +1119,10 @@ const Days = ({ title, error, onChange }) => {
   );
 };
 export const CheckBox = ({ onChange, value, title, style }) => {
-  const [checked, setChecked] = React.useState(value);
+  const [checked, setChecked] = React.useState(false);
+  React.useEffect(() => {
+    setChecked(value)
+  },[value])
   return (
     <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       <View
