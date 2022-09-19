@@ -33,6 +33,9 @@ import onlinetution from "../assets/Images/onlinetution.webp";
 import parlour from "../assets/Images/parlour.webp";
 import { ParlorOptions } from "./../Data/parlor";
 import MainLabor from "./../Data/MainLabor";
+import head from "../assets/Images/head.webp";
+import { lawyer } from "./../assets/icon";
+import { LawyerOptions } from '../Data/lawyer';
 
 const initialState = [
   {
@@ -82,10 +85,6 @@ const initialState = [
           {
             title: "Gold Type",
             data: BuilderOptions.jewellaryitems.GoldType,
-          },
-          {
-            title: "Types Of Diamonds",
-            data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
           },
           {
             title: "Types Of Diamonds",
@@ -187,10 +186,6 @@ const initialState = [
       {
         title: "Customer Care",
         list: [
-          {
-            title: "Service Type",
-            data: BusinessOptions.CustomerCare.ServiceType,
-          },
           {
             title: "Timezone",
             data: BusinessOptions.CustomerCare.Timezone,
@@ -333,8 +328,8 @@ const initialState = [
         list: [
           {
             title: "Market Research",
-            data:[]
-          }
+            data: [],
+          },
         ],
       },
       {
@@ -356,7 +351,12 @@ const initialState = [
       },
       {
         title: "Printer",
-        list: [],
+        list: [
+          {
+            title: "Printer",
+            data: [],
+          },
+        ],
       },
       {
         title: "Project Management",
@@ -770,7 +770,7 @@ const initialState = [
               },
               {
                 title: "Analysis Type",
-                data: ItOptions.Data.DataProcessing.AnalysisType,
+                data: ItOptions.Data.DataAnalytics.AnalysisType,
               },
               {
                 title: "Expertise",
@@ -1229,7 +1229,7 @@ const initialState = [
             ],
           },
           {
-            title: "Resentation Design",
+            title: "Presentation Design",
             list: [
               {
                 title: "Service Type",
@@ -1258,11 +1258,11 @@ const initialState = [
             list: [
               {
                 title: "Vehicle Type",
-                data: ItOptions.Graphic.ResentationDesign.VehicleType,
+                data: ItOptions.Graphic.CarWraps.VehicleType,
               },
               {
                 title: "File format",
-                data: ItOptions.Graphic.ResentationDesign.Fileformat,
+                data: ItOptions.Graphic.CarWraps.Fileformat,
               },
             ],
           },
@@ -1285,15 +1285,6 @@ const initialState = [
               {
                 title: "Brand Style Guide",
                 data: ItOptions.Graphic.BrandStyleGuide,
-              },
-            ],
-          },
-          {
-            title: "Format Type",
-            list: [
-              {
-                title: "Format Type",
-                data: ItOptions.Graphic.FormatType,
               },
             ],
           },
@@ -1384,25 +1375,20 @@ const initialState = [
                   .ServiceType,
               },
               {
-                title: "Database Type",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .DatabaseType,
-              },
-              {
                 title: "Platform Type",
                 data: ItOptions.DigitalMarketing.SocialMediaMarketing
                   .PlatformType,
               },
-              {
-                title: "Content Type",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .ContentType,
-              },
-              {
-                title: "Management Tools",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .ManagementTools,
-              },
+              // {
+              //   title: "Content Type",
+              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
+              //     .ContentType,
+              // },
+              // {
+              //   title: "Management Tools",
+              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
+              //     .ManagementTools,
+              // },
             ],
           },
           {
@@ -1447,7 +1433,7 @@ const initialState = [
                 data: ItOptions.DigitalMarketing.Seo.ServiceType,
               },
               {
-                title: "Platform Type",
+                title: "Industry Expertise",
                 data: ItOptions.DigitalMarketing.Seo.IndustryExpertise,
               },
             ],
@@ -1560,14 +1546,6 @@ const initialState = [
               {
                 title: "Survey Type",
                 data: ItOptions.DigitalMarketing.Surveys.SurveyType,
-              },
-              {
-                title: "Add Format",
-                data: ItOptions.DigitalMarketing.Surveys.AdFormat,
-              },
-              {
-                title: "Industry",
-                data: ItOptions.DigitalMarketing.Surveys.Industry,
               },
             ],
           },
@@ -1899,15 +1877,15 @@ const initialState = [
             list: [
               {
                 title: "Messaging Platform",
-                data: ItOptions.ProgramingTeach.SupportIt.MessagingPlatform,
+                data: ItOptions.ProgramingTeach.Chatbots.MessagingPlatform,
               },
               {
                 title: "Bot Type",
-                data: ItOptions.ProgramingTeach.SupportIt.BotType,
+                data: ItOptions.ProgramingTeach.Chatbots.BotType,
               },
               {
                 title: "Development Technology",
-                data: ItOptions.ProgramingTeach.SupportIt.DevelopmentTechnology,
+                data: ItOptions.ProgramingTeach.Chatbots.DevelopmentTechnology,
               },
             ],
           },
@@ -1960,6 +1938,10 @@ const initialState = [
               {
                 title: "Service Type",
                 data: ItOptions.ProgramingTeach.QaReview.ServiceType,
+              },
+              {
+                title: "Development Technology",
+                data: ItOptions.ProgramingTeach.QaReview.DevelopmentTechnology,
               },
               {
                 title: "Testing Application",
@@ -2107,6 +2089,11 @@ const initialState = [
                 data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
                   .ToolExpertise,
               },
+              {
+                title: "Software Expertise",
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .SoftwareExpertise,
+              },
             ],
           },
           {
@@ -2127,13 +2114,11 @@ const initialState = [
             list: [
               {
                 title: "Intro/Outro Type",
-                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
-                  .IntroOutroType,
+                data: ItOptions.VideoAnimation.IntrosOutros.IntroOutroType,
               },
               {
                 title: "Video File Format",
-                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
-                  .VideoFileFormat,
+                data: ItOptions.VideoAnimation.IntrosOutros.VideoFileFormat,
               },
             ],
           },
@@ -2164,7 +2149,7 @@ const initialState = [
             ],
           },
           {
-            title: "dProduct Animation",
+            title: "3D Product Animation",
             list: [
               {
                 title: "Industry",
@@ -2357,11 +2342,96 @@ const initialState = [
     ],
   },
   {
+    title: "Lawyer Service",
+    icon: lawyer,
+    color: "#FF4155",
+    image: head,
+    list: [
+      {
+        title: "Bankruptcy Lawyers",
+        data: LawyerOptions.Bankruptcy,
+      },
+      {
+        title: "Business Lawyers",
+        data: LawyerOptions.Business,
+      },
+      {
+        title: "Civil Lawyers",
+        data: LawyerOptions.Civil,
+      },
+      {
+        title: "Constitutional Lawyers",
+        data: LawyerOptions.Constitutional,
+      },
+      {
+        title: "Criminal Defense Lawyers",
+        data: LawyerOptions.Criminal,
+      },
+      {
+        title: "Environmental Lawyers",
+        data: LawyerOptions.Environmental,
+      },
+      {
+        title: "Estate Lawyers",
+        data: LawyerOptions.Estate,
+      },
+      {
+        title: "Family Lawyers",
+        data: LawyerOptions.Family,
+      },
+      {
+        title: "Immigration Lawyers",
+        data: LawyerOptions.Immigration,
+      },
+      {
+        title: "Intellectual Lawyers",
+        data: LawyerOptions.Intellectual,
+      },
+      {
+        title: "Labor Lawyers",
+        data: LawyerOptions.Labor,
+      },
+      {
+        title: "Medical Malpractice Lawyers",
+        data: LawyerOptions.Medical,
+      },
+      {
+        title: "Personal Injury Lawyers",
+        data: LawyerOptions.Personal,
+      },
+      {
+        title: "Real State Lawyers",
+        data: LawyerOptions.Real,
+      },
+      {
+        title: "Tax Lawyers",
+        data: LawyerOptions.Tax,
+      },
+    ],
+  },
+  {
     title: "Music & Audio Service",
     icon: MusicIcon,
     color: "#FEB944",
     image: musicaudio,
     data: [
+      {
+        title: "Producers Composers",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.ProducersComposers.ServiceType,
+          },
+          {
+            title: "Genre",
+            data: MusicAudioOptions.ProducersComposers.Genre,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.ProducersComposers.Purpose,
+          },
+        ],
+      },
       {
         title: "Producers Composers",
         list: [
@@ -2436,6 +2506,14 @@ const initialState = [
           {
             title: "Beat Type",
             data: MusicAudioOptions.BeatMaking.BeatType,
+          },
+          {
+            title: "Beat Mood",
+            data: MusicAudioOptions.BeatMaking.BeatMood,
+          },
+          {
+            title: "Loops & Kits",
+            data: MusicAudioOptions.BeatMaking.LoopsKits,
           },
         ],
       },
@@ -2678,10 +2756,10 @@ const initialState = [
         ],
       },
       {
-        title: "Section Tutoring",
+        title: "Science Tutoring",
         list: [
           {
-            title: "Section Tutoring",
+            title: "Science Tutoring",
             data: OnlineTutionOptions.SCIENCETUTORING,
           },
         ],
@@ -2704,33 +2782,33 @@ const initialState = [
           },
         ],
       },
-      {
-        title: "Mobile",
-        list: [
-          {
-            title: "Mobile",
-            data: OnlineTutionOptions.Mobile,
-          },
-        ],
-      },
-      {
-        title: "Pc",
-        list: [
-          {
-            title: "Pc",
-            data: OnlineTutionOptions.Pc,
-          },
-        ],
-      },
-      {
-        title: "Printer",
-        list: [
-          {
-            title: "Printer",
-            data: OnlineTutionOptions.Printer,
-          },
-        ],
-      },
+      // {
+      //   title: "Mobile",
+      //   list: [
+      //     {
+      //       title: "Mobile",
+      //       data: OnlineTutionOptions.Mobile,
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Pc",
+      //   list: [
+      //     {
+      //       title: "Pc",
+      //       data: OnlineTutionOptions.Pc,
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Printer",
+      //   list: [
+      //     {
+      //       title: "Printer",
+      //       data: OnlineTutionOptions.Printer,
+      //     },
+      //   ],
+      // },
     ],
   },
   {
@@ -2757,8 +2835,8 @@ const initialState = [
             list: [
               {
                 title: "Color/Texturizing",
-                data:ParlorOptions.Man.Color
-              }
+                data: ParlorOptions.Man.Color,
+              },
             ],
           },
           {
@@ -2766,8 +2844,8 @@ const initialState = [
             list: [
               {
                 title: "Waxing Service",
-                data:ParlorOptions.Man.Waxing
-              }
+                data: ParlorOptions.Man.Waxing,
+              },
             ],
           },
           {
@@ -2775,8 +2853,8 @@ const initialState = [
             list: [
               {
                 title: "Nails",
-                data:ParlorOptions.Man.Nails
-              }
+                data: ParlorOptions.Man.Nails,
+              },
             ],
           },
           {
@@ -2784,8 +2862,8 @@ const initialState = [
             list: [
               {
                 title: "Facial",
-                data:ParlorOptions.Man.Facial
-              }
+                data: ParlorOptions.Man.Facial,
+              },
             ],
           },
           {
@@ -2793,8 +2871,8 @@ const initialState = [
             list: [
               {
                 title: "Extra",
-                data:ParlorOptions.Man.Extra
-              }
+                data: ParlorOptions.Man.Extra,
+              },
             ],
           },
         ],
@@ -2805,129 +2883,129 @@ const initialState = [
         data: [
           {
             title: "Facial Treatment",
-            list:[
+            list: [
               {
                 title: "Facial Treatment",
-                data:ParlorOptions.Woman.Facial,
-              }
-            ] 
+                data: ParlorOptions.Woman.Facial,
+              },
+            ],
           },
           {
             title: "Manicure",
-            list:[
+            list: [
               {
                 title: "Manicure",
-                data:ParlorOptions.Woman.Manicure,
-              }
-            ] 
+                data: ParlorOptions.Woman.Manicure,
+              },
+            ],
           },
           {
             title: "Padicure",
-            list:[
+            list: [
               {
                 title: "Padicure",
-                data:ParlorOptions.Woman.Padicure,
-              }
-            ] 
+                data: ParlorOptions.Woman.Padicure,
+              },
+            ],
           },
           {
             title: "Hair Cut",
-            list:[
+            list: [
               {
                 title: "Hair Cut",
-                data:ParlorOptions.Woman.Hair,
-              }
-            ] 
+                data: ParlorOptions.Woman.Hair,
+              },
+            ],
           },
           {
             title: "Hair Color",
-            list:[
+            list: [
               {
                 title: "Hair Color",
-                data:ParlorOptions.Woman.HairColor,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairColor,
+              },
+            ],
           },
           {
             title: "Hair Straightener",
-            list:[
+            list: [
               {
                 title: "Hair Straightener",
-                data:ParlorOptions.Woman.HairStraightener,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairStraightener,
+              },
+            ],
           },
           {
             title: "Hair Spa",
-            list:[
+            list: [
               {
                 title: "Hair Spa",
-                data:ParlorOptions.Woman.HairSpa,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairSpa,
+              },
+            ],
           },
           {
             title: "Head Massage & Body Polishing",
-            list:[
+            list: [
               {
                 title: "Head Massage & Body Polishing",
-                data:ParlorOptions.Woman.Head,
-              }
-            ] 
+                data: ParlorOptions.Woman.Head,
+              },
+            ],
           },
           {
             title: "Skin Treatment",
-            list:[
+            list: [
               {
                 title: "Skin Treatment",
-                data:ParlorOptions.Woman.Skin,
-              }
-            ] 
+                data: ParlorOptions.Woman.Skin,
+              },
+            ],
           },
           {
             title: "Threading",
-            list:[
+            list: [
               {
                 title: "Threading",
-                data:ParlorOptions.Woman.Threading,
-              }
-            ] 
+                data: ParlorOptions.Woman.Threading,
+              },
+            ],
           },
           {
             title: "Bleach & Datan",
-            list:[
+            list: [
               {
                 title: "Bleach & Datan",
-                data:ParlorOptions.Woman.Bleach,
-              }
-            ] 
+                data: ParlorOptions.Woman.Bleach,
+              },
+            ],
           },
           {
             title: "Cleanup",
-            list:[
+            list: [
               {
                 title: "Cleanup",
-                data:ParlorOptions.Woman.Cleanup,
-              }
-            ] 
+                data: ParlorOptions.Woman.Cleanup,
+              },
+            ],
           },
           {
             title: "Waxing",
-            list:[
+            list: [
               {
                 title: "Waxing",
-                data:ParlorOptions.Woman.Waxing,
-              }
-            ] 
+                data: ParlorOptions.Woman.Waxing,
+              },
+            ],
           },
           {
             title: "Make Up",
-            list:[
+            list: [
               {
                 title: "Make Up",
-                data:ParlorOptions.Woman.MakeUp,
-              }
-            ] 
+                data: ParlorOptions.Woman.MakeUp,
+              },
+            ],
           },
         ],
       },

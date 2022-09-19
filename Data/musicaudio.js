@@ -553,8 +553,8 @@ export const MusicAudioOptions = {
         title: "Beat with Chorus",
       },
     ],
-    "Beat Mood": [],
-    "Loops & Kits": [
+    "BeatMood": [],
+    "LoopsKits": [
       {
         id: uuid.v4(),
         title: "Angry",

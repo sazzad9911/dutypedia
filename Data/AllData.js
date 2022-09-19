@@ -33,7 +33,10 @@ import onlinetution from "../assets/Images/onlinetution.webp";
 import parlour from "../assets/Images/parlour.webp";
 import { ParlorOptions } from "./../Data/parlor";
 import MainLabor from "./../Data/MainLabor";
-import head from '../assets/Images/head.webp'
+import head from '../assets/Images/head.webp';
+import { lawyer } from './../assets/icon';
+import { LawyerOptions } from './lawyer';
+
 export const AllData = [
   {
     title: "Builder Services",
@@ -82,10 +85,6 @@ export const AllData = [
           {
             title: "Gold Type",
             data: BuilderOptions.jewellaryitems.GoldType,
-          },
-          {
-            title: "Types Of Diamonds",
-            data: BuilderOptions.jewellaryitems.TypesOfDiamonds,
           },
           {
             title: "Types Of Diamonds",
@@ -187,10 +186,6 @@ export const AllData = [
       {
         title: "Customer Care",
         list: [
-          {
-            title: "Service Type",
-            data: BusinessOptions.CustomerCare.ServiceType,
-          },
           {
             title: "Timezone",
             data: BusinessOptions.CustomerCare.Timezone,
@@ -356,7 +351,12 @@ export const AllData = [
       },
       {
         title: "Printer",
-        list: [],
+        list: [
+          {
+            title: "Printer",
+            data:[]
+          }
+        ],
       },
       {
         title: "Project Management",
@@ -770,7 +770,7 @@ export const AllData = [
               },
               {
                 title: "Analysis Type",
-                data: ItOptions.Data.DataProcessing.AnalysisType,
+                data: ItOptions.Data.DataAnalytics.AnalysisType,
               },
               {
                 title: "Expertise",
@@ -1229,7 +1229,7 @@ export const AllData = [
             ],
           },
           {
-            title: "Resentation Design",
+            title: "Presentation Design",
             list: [
               {
                 title: "Service Type",
@@ -1258,11 +1258,11 @@ export const AllData = [
             list: [
               {
                 title: "Vehicle Type",
-                data: ItOptions.Graphic.ResentationDesign.VehicleType,
+                data: ItOptions.Graphic.CarWraps.VehicleType,
               },
               {
                 title: "File format",
-                data: ItOptions.Graphic.ResentationDesign.Fileformat,
+                data: ItOptions.Graphic.CarWraps.Fileformat,
               },
             ],
           },
@@ -1285,15 +1285,6 @@ export const AllData = [
               {
                 title: "Brand Style Guide",
                 data: ItOptions.Graphic.BrandStyleGuide,
-              },
-            ],
-          },
-          {
-            title: "Format Type",
-            list: [
-              {
-                title: "Format Type",
-                data: ItOptions.Graphic.FormatType,
               },
             ],
           },
@@ -1384,25 +1375,20 @@ export const AllData = [
                   .ServiceType,
               },
               {
-                title: "Database Type",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .DatabaseType,
-              },
-              {
                 title: "Platform Type",
                 data: ItOptions.DigitalMarketing.SocialMediaMarketing
                   .PlatformType,
               },
-              {
-                title: "Content Type",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .ContentType,
-              },
-              {
-                title: "Management Tools",
-                data: ItOptions.DigitalMarketing.SocialMediaMarketing
-                  .ManagementTools,
-              },
+              // {
+              //   title: "Content Type",
+              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
+              //     .ContentType,
+              // },
+              // {
+              //   title: "Management Tools",
+              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
+              //     .ManagementTools,
+              // },
             ],
           },
           {
@@ -1447,7 +1433,7 @@ export const AllData = [
                 data: ItOptions.DigitalMarketing.Seo.ServiceType,
               },
               {
-                title: "Platform Type",
+                title: "Industry Expertise",
                 data: ItOptions.DigitalMarketing.Seo.IndustryExpertise,
               },
             ],
@@ -1560,14 +1546,6 @@ export const AllData = [
               {
                 title: "Survey Type",
                 data: ItOptions.DigitalMarketing.Surveys.SurveyType,
-              },
-              {
-                title: "Add Format",
-                data: ItOptions.DigitalMarketing.Surveys.AdFormat,
-              },
-              {
-                title: "Industry",
-                data: ItOptions.DigitalMarketing.Surveys.Industry,
               },
             ],
           },
@@ -1899,15 +1877,15 @@ export const AllData = [
             list: [
               {
                 title: "Messaging Platform",
-                data: ItOptions.ProgramingTeach.SupportIt.MessagingPlatform,
+                data: ItOptions.ProgramingTeach.Chatbots.MessagingPlatform,
               },
               {
                 title: "Bot Type",
-                data: ItOptions.ProgramingTeach.SupportIt.BotType,
+                data: ItOptions.ProgramingTeach.Chatbots.BotType,
               },
               {
                 title: "Development Technology",
-                data: ItOptions.ProgramingTeach.SupportIt.DevelopmentTechnology,
+                data: ItOptions.ProgramingTeach.Chatbots.DevelopmentTechnology,
               },
             ],
           },
@@ -1960,6 +1938,10 @@ export const AllData = [
               {
                 title: "Service Type",
                 data: ItOptions.ProgramingTeach.QaReview.ServiceType,
+              },
+              {
+                title: "Development Technology",
+                data: ItOptions.ProgramingTeach.QaReview.DevelopmentTechnology,
               },
               {
                 title: "Testing Application",
@@ -2107,6 +2089,11 @@ export const AllData = [
                 data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
                   .ToolExpertise,
               },
+              {
+                title: "Software Expertise",
+                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                  .SoftwareExpertise,
+              },
             ],
           },
           {
@@ -2127,12 +2114,12 @@ export const AllData = [
             list: [
               {
                 title: "Intro/Outro Type",
-                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                data: ItOptions.VideoAnimation.IntrosOutros
                   .IntroOutroType,
               },
               {
                 title: "Video File Format",
-                data: ItOptions.VideoAnimation.WhiteboardanimatedExplainers
+                data: ItOptions.VideoAnimation.IntrosOutros
                   .VideoFileFormat,
               },
             ],
@@ -2164,7 +2151,7 @@ export const AllData = [
             ],
           },
           {
-            title: "dProduct Animation",
+            title: "3D Product Animation",
             list: [
               {
                 title: "Industry",
@@ -2358,13 +2345,69 @@ export const AllData = [
   },
   {
     title: "Lawyer Service",
-    icon: head,
+    icon: lawyer,
     color: "#FF4155",
-    image: entertainment,
+    image: head,
     list: [
       {
-        title: "House Keeper",
-        data: MainHouseKeeper,
+        title: "Bankruptcy Lawyers",
+        data: LawyerOptions.Bankruptcy,
+      },
+      {
+        title: "Business Lawyers",
+        data: LawyerOptions.Business,
+      },
+      {
+        title: "Civil Lawyers",
+        data: LawyerOptions.Civil,
+      },
+      {
+        title: "Constitutional Lawyers",
+        data: LawyerOptions.Constitutional,
+      },
+      {
+        title: "Criminal Defense Lawyers",
+        data: LawyerOptions.Criminal,
+      },
+      {
+        title: "Environmental Lawyers",
+        data: LawyerOptions.Environmental,
+      },
+      {
+        title: "Estate Lawyers",
+        data: LawyerOptions.Estate,
+      },
+      {
+        title: "Family Lawyers",
+        data: LawyerOptions.Family,
+      },
+      {
+        title: "Immigration Lawyers",
+        data: LawyerOptions.Immigration,
+      },
+      {
+        title: "Intellectual Lawyers",
+        data: LawyerOptions.Intellectual,
+      },
+      {
+        title: "Labor Lawyers",
+        data: LawyerOptions.Labor,
+      },
+      {
+        title: "Medical Malpractice Lawyers",
+        data: LawyerOptions.Medical,
+      },
+      {
+        title: "Personal Injury Lawyers",
+        data: LawyerOptions.Personal,
+      },
+      {
+        title: "Real State Lawyers",
+        data: LawyerOptions.Real,
+      },
+      {
+        title: "Tax Lawyers",
+        data: LawyerOptions.Tax,
       },
     ],
   },
@@ -2374,6 +2417,23 @@ export const AllData = [
     color: "#FEB944",
     image: musicaudio,
     data: [
+      {
+        title: "Producers Composers",
+        list: [
+          {
+            title: "Service Type",
+            data: MusicAudioOptions.ProducersComposers.ServiceType,
+          },
+          {
+            title: "Genre",
+            data: MusicAudioOptions.ProducersComposers.Genre,
+          },
+          {
+            title: "Purpose",
+            data: MusicAudioOptions.ProducersComposers.Purpose,
+          },
+        ],
+      },
       {
         title: "Producers Composers",
         list: [
@@ -2448,6 +2508,14 @@ export const AllData = [
           {
             title: "Beat Type",
             data: MusicAudioOptions.BeatMaking.BeatType,
+          },
+          {
+            title: "Beat Mood",
+            data: MusicAudioOptions.BeatMaking.BeatMood,
+          },
+          {
+            title: "Loops & Kits",
+            data: MusicAudioOptions.BeatMaking.LoopsKits,
           },
         ],
       },
@@ -2690,10 +2758,10 @@ export const AllData = [
         ],
       },
       {
-        title: "Section Tutoring",
+        title: "Science Tutoring",
         list: [
           {
-            title: "Section Tutoring",
+            title: "Science Tutoring",
             data: OnlineTutionOptions.SCIENCETUTORING,
           },
         ],
@@ -2716,33 +2784,33 @@ export const AllData = [
           },
         ],
       },
-      {
-        title: "Mobile",
-        list: [
-          {
-            title: "Mobile",
-            data: OnlineTutionOptions.Mobile,
-          },
-        ],
-      },
-      {
-        title: "Pc",
-        list: [
-          {
-            title: "Pc",
-            data: OnlineTutionOptions.Pc,
-          },
-        ],
-      },
-      {
-        title: "Printer",
-        list: [
-          {
-            title: "Printer",
-            data: OnlineTutionOptions.Printer,
-          },
-        ],
-      },
+      // {
+      //   title: "Mobile",
+      //   list: [
+      //     {
+      //       title: "Mobile",
+      //       data: OnlineTutionOptions.Mobile,
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Pc",
+      //   list: [
+      //     {
+      //       title: "Pc",
+      //       data: OnlineTutionOptions.Pc,
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "Printer",
+      //   list: [
+      //     {
+      //       title: "Printer",
+      //       data: OnlineTutionOptions.Printer,
+      //     },
+      //   ],
+      // },
     ],
   },
   {

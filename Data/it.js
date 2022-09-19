@@ -1332,7 +1332,7 @@ export const ItOptions = {
           title: "Stationery",
         },
       ],
-      "ImageFileFormat ": [
+      "ImageFileFormat": [
         {
           id: uuid.v4(),
           title: "AI",
@@ -4934,7 +4934,7 @@ export const ItOptions = {
       ],
     },
     Seo: {
-      "ServiceType ": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "Keyword Research",
@@ -8655,7 +8655,7 @@ export const ItOptions = {
         },
       ],
 
-      "Development Technology": [
+      "DevelopmentTechnology": [
         {
           id: uuid.v4(),
           title: "Beep Boop",
@@ -8731,7 +8731,7 @@ export const ItOptions = {
       ],
     },
     DataAnalysisReports: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "Modeling",
@@ -8885,7 +8885,7 @@ export const ItOptions = {
       ],
     },
     Databases: {
-      "Service Type": [
+      "ServiceType": [
         {
           id: uuid.v4(),
           title: "Optimization & Design",
@@ -8899,7 +8899,7 @@ export const ItOptions = {
           title: "Help/Consultation",
         },
       ],
-      "Databases Type": [
+      "DatabasesType": [
         {
           id: uuid.v4(),
           title: "Access",
@@ -9476,7 +9476,7 @@ export const ItOptions = {
           title: "Kotlin",
         },
       ],
-      "Operating System": [
+      "OperatingSystem": [
         {
           id: uuid.v4(),
           title: "Not Defined",
@@ -10282,7 +10282,7 @@ export const ItOptions = {
         },
       ],
 
-      "File Format": [
+      "FileFormat": [
         {
           id: uuid.v4(),
           title: "GIF",

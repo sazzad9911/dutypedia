@@ -138,7 +138,6 @@ const Table = (props) => {
           <View
             style={{
               padding: 10,
-              justifyContent: "center",
               width: width / 2 - 30,
               marginRight: 10,
             }}

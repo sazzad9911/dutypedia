@@ -22,11 +22,10 @@ import {
 } from "./../../assets/colors.js";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import ProfileOption from "./../../components/ProfileOption";
 import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "./../../components/Button";
@@ -38,6 +37,7 @@ import RelatedService from "./../../Cart/RelatedService";
 import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "../../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
+import { Badge } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -461,75 +461,83 @@ const Review = (props) => {
           </Text>
           <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         </View>
-        <View style={{ backgroundColor: primaryColor,height:200 }}>   
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            height: 140,
+            overflowY: "hidden",
+            overflow: "hidden",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
             <View
               style={{
-                flexDirection: "row",
+                flex: 1.2,
+                marginLeft: 20,
+                height: 200,
               }}
             >
-              <View
-                style={{
-                  flex: 1.2,
-                  marginLeft: 20,
-                  height: 200,
-                }}
-              >
-                {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                  ServiceList.map((item, i) => (
-                    <Button
-                      onPress={() => {
-                        setActiveService(item);
-                      }}
-                      key={i}
-                      style={
-                        ActiveService == item
-                          ? styles.activeButton
-                          : styles.inactiveButton
-                      }
-                      title={item}
-                    />
-                  ))
-                ) : (
-                  <Button style={styles.activeButton} title={ActiveService} />
-                )}
-              </View>
-              <View
-                style={{
-                  width: 1,
-                  backgroundColor: "#e5e5e5",
-                  marginLeft: 10,
-                  marginRight: 10,
-                }}
-              />
-              <View style={{ flex: 2, marginRight: 20 }}>
-                {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
-                  SubServiceList.map((item, i) => (
-                    <ServiceTable
-                      key={i}
-                      item={item}
-                      i={i}
-                      name={ActiveService}
-                    />
-                  ))
-                ) : (
-                  <ServiceTable name={ActiveService} />
-                )}
-              </View>
+              {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                ServiceList.map((item, i) => (
+                  <Button
+                    onPress={() => {
+                      setActiveService(item);
+                    }}
+                    key={i}
+                    style={
+                      ActiveService == item
+                        ? styles.activeButton
+                        : styles.inactiveButton
+                    }
+                    title={item}
+                  />
+                ))
+              ) : (
+                <Button style={styles.activeButton} title={ActiveService} />
+              )}
             </View>
-            <LinearGradient style={{
+            <View
+              style={{
+                width: 1,
+                backgroundColor: "#e5e5e5",
+                marginLeft: 10,
+                marginRight: 10,
+              }}
+            />
+            <View style={{ flex: 2, marginRight: 20 }}>
+              {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
+                SubServiceList.map((item, i) => (
+                  <ServiceTable
+                    key={i}
+                    item={item}
+                    i={i}
+                    name={ActiveService}
+                  />
+                ))
+              ) : (
+                <ServiceTable name={ActiveService} />
+              )}
+            </View>
+          </View>
+          <LinearGradient
+            style={{
               position: "absolute",
-              zIndex:100,
-              top:0, left:0,
-              height:200,
-              width:width-40
+              zIndex: 100,
+              bottom: 0,
+              left: 0,
+              height: 20,
+              width: width,
             }}
             colors={[
-              'rgba(255, 255, 255, 0.073)',
-              "rgba(255, 255, 255, 0.141)",
+              "rgba(255, 255, 255, 0.252)",
+              "rgba(255, 255, 255, 0.343)",
               "#ffff",
             ]}
-          >
-          </LinearGradient>
+          ></LinearGradient>
         </View>
         <View style={{ backgroundColor: primaryColor }}>
           <Button
@@ -770,7 +778,7 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-const ServiceTable = ({ item, i, name, }) => {
+const ServiceTable = ({ item, i, name }) => {
   const listData = useSelector((state) => state.listData);
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
@@ -838,7 +846,7 @@ const ServiceTable = ({ item, i, name, }) => {
           >
             {name}
           </Text>
-          <Rows name={name}/>
+          <Rows name={name} />
         </View>
       )}
     </View>
@@ -856,16 +864,10 @@ const Rows = ({ title, item, name }) => {
     let count = 0;
     let word = "";
     listData.map((doc, j) => {
-      if (doc.title&&
-        doc.tableName.match(item) &&
-        doc.title.match(name)
-      ) {
+      if (doc.title && doc.tableName.match(item) && doc.title.match(name)) {
         word = word + `${count != 0 ? ", " : ""}${doc.data.title}`;
         count++;
-      } else if (
-        doc.title &&
-        doc.title.match(name)
-      ) {
+      } else if (doc.title && doc.title.match(name)) {
         word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
         count++;
       } else if (doc.mainTitle && doc.mainTitle.match(name)) {
@@ -892,3 +894,81 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
+const ProfileOption = (props) => {
+  const businessForm = useSelector((state) => state.businessForm);
+  const [Data, setData] = React.useState(null);
+  const [Visible, setVisible] = React.useState(false);
+  React.useEffect(() => {
+    if (props.title == "Address") {
+      setData({
+        division: businessForm.division,
+        district: businessForm.district,
+        area: businessForm.area,
+        address: businessForm.address,
+      });
+    }
+  }, [props.title]);
+  return (
+    <TouchableOpacity style={ props.style}
+      onPress={() => {
+        setVisible((val) => !val);
+        if (props.onPress) {
+          props.onPress();
+        }
+      }}
+      
+    >
+      <View style={[styler.box]}>
+        <props.Icon style={styler.icon} />
+        <Text style={styler.text}>{props.title}</Text>
+        {props.badge ? <Badge style={{}}>2</Badge> : <></>}
+        <MaterialIcons
+          style={styler.icon}
+          name="keyboard-arrow-down"
+          size={24}
+          color="black"
+        />
+      </View>
+      {Visible && Data && props.title == "Address" ? (
+        <View style={{ 
+          backgroundColor: primaryColor,
+          paddingHorizontal: 20,
+          paddingVertical:5
+           }}>
+          <Text style={styler.text2}>City: {Data.division}</Text>
+          <Text style={styler.text2}>District: {Data.district}</Text>
+          <Text style={styler.text2}>Area: {Data.area}</Text>
+          {Data.address&&(<Text style={styler.text2}>{Data.address}</Text>)}
+        </View>
+      ) : (
+        <></>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+const styler = StyleSheet.create({
+  box: {
+    padding: 10,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    backgroundColor: primaryColor,
+    marginVertical: 0,
+    marginTop: 5,
+    alignItems: "center",
+  },
+  icon: {
+    flex: 1,
+  },
+  text: {
+    flex: 10,
+    marginLeft: 10,
+    fontSize: 16,
+    fontFamily: "Poppins-Medium",
+  },
+  text2:{
+    fontSize:15,
+    fontFamily: "Poppins-Medium",
+    color: "#707070"
+  }
+});

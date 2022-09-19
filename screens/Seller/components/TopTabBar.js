@@ -35,17 +35,24 @@ const TopTabBar = (props) => {
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
         {Array.isArray(Services) &&
           Services.map((doc, i) => (
-            <View key={i} style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-              <Button i={i}  {...props}  title={doc} />
-              <View style={{
-                height: 20,
-                width: 2,
-                backgroundColor: "#e5e5e5",
-              }}/>
+            <View
+              key={i}
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button i={i} {...props} title={doc} />
+              {i != Services.length - 1 && (
+                <View
+                  style={{
+                    height: 20,
+                    width: 2,
+                    backgroundColor: "#e5e5e5",
+                  }}
+                />
+              )}
             </View>
           ))}
       </ScrollView>
