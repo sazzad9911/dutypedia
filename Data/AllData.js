@@ -33,6 +33,7 @@ import onlinetution from "../assets/Images/onlinetution.webp";
 import parlour from "../assets/Images/parlour.webp";
 import { ParlorOptions } from "./../Data/parlor";
 import MainLabor from "./../Data/MainLabor";
+import head from '../assets/Images/head.webp'
 export const AllData = [
   {
     title: "Builder Services",
@@ -2352,6 +2353,18 @@ export const AllData = [
             ],
           },
         ],
+      },
+    ],
+  },
+  {
+    title: "Lawyer Service",
+    icon: head,
+    color: "#FF4155",
+    image: entertainment,
+    list: [
+      {
+        title: "House Keeper",
+        data: MainHouseKeeper,
       },
     ],
   },
