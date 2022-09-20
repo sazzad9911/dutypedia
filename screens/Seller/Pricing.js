@@ -903,7 +903,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Poppins-Medium",
     fontSize: 16,
-    flex: 1
+    
   },
   button: {
     backgroundColor: primaryColor,
@@ -1125,7 +1125,7 @@ export const CheckBox = ({ onChange, value, title, style }) => {
     setChecked(value)
   },[value])
   return (
-    <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
+    <View style={[{ flexDirection: "row", alignItems: "center"}, style]}>
       <View
         style={{
           borderWidth: Platform.OS == "ios" ? 1 : 0,
@@ -1146,7 +1146,9 @@ export const CheckBox = ({ onChange, value, title, style }) => {
           }}
         />
       </View>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text,{
+        flex: 1,
+      }]}>{title}</Text>
     </View>
   );
 };

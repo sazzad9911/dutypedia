@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from "react-redux";
 const TopTabBar = (props) => {
   const listData = useSelector((state) => state.listData);
   const [Services, setServices] = React.useState([]);
+  const [layout,setLayout] = React.useState()
+  const [scrollRef, setScrollRef]= React.useState()
 
   React.useEffect(() => {
     if (props.state.routeNames) {
@@ -22,6 +24,11 @@ const TopTabBar = (props) => {
       return !pos || item != ary[pos - 1];
     });
   }
+  React.useEffect(() => {
+    if(layout&&scrollRef){
+      scrollRef.scrollTo({x: props.state.index*100,animated: true})
+    }
+  },[props.state.index])
   return (
     <View
       style={{
@@ -32,10 +39,10 @@ const TopTabBar = (props) => {
         borderTopColor: "#e5e5e5",
       }}
     >
-      <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+      <ScrollView ref={ref=>setScrollRef(ref)} showsHorizontalScrollIndicator={false} horizontal={true}>
         {Array.isArray(Services) &&
           Services.map((doc, i) => (
-            <View
+            <View onLayout={e=>setLayout(e.nativeEvent.layout)}
               key={i}
               style={{
                 flexDirection: "row",
