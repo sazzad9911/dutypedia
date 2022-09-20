@@ -499,6 +499,10 @@ const Review = (props) => {
               ) : (
                 <Button style={styles.activeButton} title={ActiveService} />
               )}
+              <Button onPress={()=>{
+                setActiveService('Extra Facilities')
+              }} style={ActiveService=='Extra Facilities'?styles.activeButton:styles.inactiveButton} 
+              title={'Extra Facilities'} />
             </View>
             <View
               style={{
@@ -518,8 +522,26 @@ const Review = (props) => {
                     name={ActiveService}
                   />
                 ))
-              ) : (
+              ) :ActiveService!='Extra Facilities'? (
                 <ServiceTable name={ActiveService} />
+              ):(<></>)}
+              {ActiveService=='Extra Facilities'&&(
+                <View>
+                <Text style={{
+                  fontSize:15,
+                  fontFamily: "Poppins-Medium",
+                  color:'#707070'
+                }}>Extra Facilities</Text>
+                {Array.isArray(businessForm.facilities)&&
+                businessForm.facilities.map((doc,i)=>(
+                  doc.checked&&(
+                    <Text style={{
+                      fontSize:13,
+                      fontFamily: "Poppins-Light",
+                    }} key={i}>{doc.title}</Text>
+                  )
+                ))}
+                </View>
               )}
             </View>
           </View>
@@ -567,7 +589,7 @@ const Review = (props) => {
           style={{ height: 50, backgroundColor: primaryColor, marginTop: -1 }}
         />
       </ScrollView>
-      <View>
+      <View style={{backgroundColor:primaryColor}}> 
         <CheckBox
           onChange={() => {
             setButtonPress(!ButtonPress);
@@ -809,6 +831,7 @@ const ServiceTable = ({ item, i, name }) => {
       style={{
         paddingBottom: 5,
         borderColor: "#e5e5e5",
+        minHeight:10
       }}
       key={i}
     >
@@ -816,6 +839,7 @@ const ServiceTable = ({ item, i, name }) => {
         style={{
           fontFamily: "Poppins-Medium",
           fontSize: 15,
+          margin:0
         }}
       >
         {item}

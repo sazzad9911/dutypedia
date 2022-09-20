@@ -86,3 +86,8 @@ export const numToArray=(integer)=>{
     }
     return arr
 }
+export const shortAZ=(data)=>{
+    data.sort((a,b)=>{
+        return a.title>b.title
+    })
+}

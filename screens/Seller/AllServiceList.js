@@ -28,17 +28,14 @@ const AllServiceList = () => {
   }, [listData]);
 
   if (Array.isArray(Services) && Services.length == 0) {
-    return (
-      <Tab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
-        <Tab.Screen name={Name} component={ComponentScreen} />
-      </Tab.Navigator>
-    );
+    return null;
   }
   return (
     <Tab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
       {Services.map((doc, i) => (
         <Tab.Screen key={i} name={doc} component={ComponentScreen} />
       ))}
+      <Tab.Screen name={'Extra Facilities'} component={ExtraFacilities} />
     </Tab.Navigator>
   );
 };
@@ -209,3 +206,23 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
+const ExtraFacilities = () => {
+  const businessForm = useSelector((state) => state.businessForm);
+  return (
+    <ScrollView>
+      <View style={styles.view}>
+        <Text style={styles.text}>Lists</Text>
+        <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+        {Array.isArray(businessForm.facilities) &&
+          businessForm.facilities.map(
+            (doc, i) => doc.checked && <Text style={{
+              fontSize:13,
+              fontFamily: "Poppins-Light",
+              color:textColor,
+              marginTop:5
+            }} key={i}>{doc.title}</Text>
+          )}
+      </View>
+    </ScrollView>
+  );
+};

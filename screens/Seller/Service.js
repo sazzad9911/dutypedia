@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Platform,
   KeyboardAvoidingView,
+  Keyboard
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 //import { services } from "../../assets/icon";
@@ -215,6 +216,9 @@ const Service = ({ navigation }) => {
             innerRef={aboutRef}
             returnKeyType="done"
             level="Max 2000 characters"
+            onSubmitEditing={() => {
+              Keyboard.dismiss();
+            }}
             error={AboutError}
             onChange={(val) => {
               setAboutError(null);

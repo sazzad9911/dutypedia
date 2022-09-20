@@ -288,7 +288,7 @@ const Table = ({
         </View>
         <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         {Array.isArray(data) ? (
-          data.map((data, i) => (
+          data.sort((a,b)=>a.title>b.title).map((data, i) => (
             <Rows
               selectData={selectData}
               deleteData={deleteData}

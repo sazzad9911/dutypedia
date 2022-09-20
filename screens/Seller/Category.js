@@ -5,10 +5,16 @@ import { useSelector, useDispatch } from "react-redux";
 import BackHeader from "./../../components/BackHeader";
 import { setListData } from "../../action";
 import {AllData }from '../../Data/AllData'
+import { shortAZ } from './../../action';
 
 const Category = (props) => {
   const Data = useSelector((state) => state.allData);
   const [search, setSearch] = React.useState();
+  React.useEffect(() => {
+    AllData.sort(function (a, b) {
+      return a.title>b.title
+    })
+  },[])
   const [allData, setAllData] = React.useState(AllData);
   const dispatch = useDispatch();
   const [count, setCount] = React.useState(0);

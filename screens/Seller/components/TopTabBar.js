@@ -46,7 +46,7 @@ const TopTabBar = (props) => {
               <Button i={i} {...props} title={doc} />
               {i != Services.length - 1 && (
                 <View
-                  style={{
+                  style={{ 
                     height: 20,
                     width: 2,
                     backgroundColor: "#e5e5e5",

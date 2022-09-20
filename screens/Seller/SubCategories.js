@@ -108,7 +108,7 @@ const SubCategories = ({ navigation, route }) => {
         </ImageBackground>
         <View>
           {Array.isArray(data) ? (
-            data.map((data, i) => (
+            data.sort((a,b)=>a.title>b.title).map((data, i) => (
               <SubCategoryCart
                 id={id}
                 nextId={i}

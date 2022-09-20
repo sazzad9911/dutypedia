@@ -903,6 +903,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Poppins-Medium",
     fontSize: 16,
+    flex: 1
   },
   button: {
     backgroundColor: primaryColor,
