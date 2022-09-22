@@ -4495,6 +4495,24 @@ export const ItOptions = {
         title: "Face Masks",
       },
     ],
+    CatalogDesign: [
+      {
+        id: uuid.v4(),
+        title: "Catalog",
+      },
+      {
+        id: uuid.v4(),
+        title: "Magazine",
+      },
+      {
+        id: uuid.v4(),
+        title: "Not Defined",
+      },
+      {
+        id: uuid.v4(),
+        title: "Sell Sheet",
+      },
+    ],
   },
   "DigitalMarketing": {
     SocialMediaMarketing: {

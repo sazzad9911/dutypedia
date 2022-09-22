@@ -1,592 +1,592 @@
-import { nanoid } from "nanoid";
+import uuid from "uuid";
 
 export const LifeStyleOptions = {
   Ac: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clogged Air Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Blower",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Circuit Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clogged Ac Drain",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Dirty Outside AC Unit",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Refrigerant Recharge",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Expansion Valve",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Capacitor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Freon Leak",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Coil Leak",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan Motor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Compressor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuse",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condensate Pump",
     },
   ],
   Bicycle: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fram And Fork For Visible Damage",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Adjust The Gears",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tyres Checked For Wear And Damge",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Inflate Tyres To Correct Pressure",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Nuts And Bolt Tightened And Correct Torque Setting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Adjust Headset",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Break/Break Pad",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lubricate Brakes",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Lubricate Chain And Casstte",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Chain For Wear",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Chainset And Change Ring For Wear",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clean Chain And Re-lubricate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Clean Cassette And Re-lubricate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Wheel Are True And Adjust",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Bottom Bracket For Movement",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Strip Down To Frame And Forks/Clean And Then Rebuild",
     },
   ],
   Car: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Oil And Oil Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Air Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Spark Plugs",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pollen Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuel Filter",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check And All Top Up All Under Bonnet Fluid Levels",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tyre Condition And Pressure",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condition Of Brake Components",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Steering Components",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Forte Treatments",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fuel Lines",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Horn/Service",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Windscreen Washers And Wipers",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Check Battery/Service",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Exhaust System",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Transfer Box And Axile Oil",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Gear Box Oil Level",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Wheel Bearing",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Cv Joints And Gaiters",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Suspenson And Components",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Seatbelts",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Road Test Vehicle",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Air Con Cleaner And Aircon Cleaner",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Tracking/Wheel Alignment",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Diagnostic Plug In",
     },
 
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Wheel Balancing",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Puncture Repair",
     },
   ],
   Camera: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "DSLR",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Digital",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Film Camera",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Shutter Jam/Other",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "View Finder Malfunction",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Light Seal Replacement",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Cleaning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Focus Ring",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leans Aperture",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Battery Cap",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leather",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Flash Problem",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
   ],
   Refrigerator: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Control Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Evaporator",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Ice Maker",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Freezer",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Sealed System",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Compressor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Condenser Coil Cleaning",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Water Dispenser",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fridge Door",
     },
   ],
   Mobile: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Display Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Crack Display",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hardware Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Speaker/Voice Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Water Damage",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Touch Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Camera Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Charging Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Battery Issu",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Country Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Sim Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Icloud Lock",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Password Recovery",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Flash",
     },
   ],
   Pc: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Laptop/Macbook",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Pc/Mac",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Hard Disc/Ram",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Virus/Security",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Monitor",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Keyboard",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Graphics Card",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Power Supply",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Fan",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Data Recovery/Backup",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Software/Opareting",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Networking",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Printer",
     },
   ],
   Printer: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "All Brand",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Check-Up",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Diagnose",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "No Display Power",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Unexpect Shutdown",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Time And Date Problem",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Slow Boot",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Color Change",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Mother Board",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Scanner",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Formate",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Full Set Up",
     },
   ],
   LifeCoaching: [
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Career",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Dating & Relationships",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Personal Growth",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Parenting & Family",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Spiritual",
     },
     {
-      id: nanoid(),
+      id: uuid.v4(),
       title: "Leadership",
     },
   ],
   FitnessLessons: {
     "Trainning Type": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pilates",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Strength Training",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cardiovascular",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Yoga",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Toning",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "HIIT",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Low Impact",
       },
     ],
     Difficulty: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beginner",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Intermediate",
       },
     ],
@@ -594,115 +594,115 @@ export const LifeStyleOptions = {
   PersonalStylists: {
     Purpose: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Office / Business",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Casual / Weekend",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dating / Social Life",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weddings / Formal Events",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Party",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Photoshoots",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fashion",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "STYLE",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Classic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Edge",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Playful",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Modern/Trendy",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sexy",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Streetwear",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bohemian/Indie",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vintage/Retro",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Minimalistic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Alternative",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Casual",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tailored",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chic",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Punk",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rock",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sport Elegant",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hip Hop",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Goth",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Black-Tie",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hipster",
       },
     ],
@@ -710,693 +710,693 @@ export const LifeStyleOptions = {
   CookingLessons: {
     breakfast: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Two Fresh Eggs any style",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sausage",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Fries",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Toast- 2 Slices",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Parata- 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "LChapatti- 2 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhaji",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Aloo dum",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Sujir Halwa",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bread Basket- 6 Rolls of Bread",
       },
     ],
     Beverages: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Variety of Juice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Coffee",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Tea",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hot Chocolate",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Milk",
       },
     ],
     Snacks: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kids Special Noodles",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Samosa 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Spring roll 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Butterfly Prawn 4 Pcs with dip",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Vegetable Singara 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Kabab Roll with choice of beef or chickens",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Nugget 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chen Kiev 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Finger 6 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Fries",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Cutlet 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Cutlet 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn on Toast 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mini Chicken Shashlic 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jhal muri / Chanachur 3 Persons",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "French Toast 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Keema Chop 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shammi Kabab 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pantarash 2 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Finger- served with French Fries and Mayonnaise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhaja Pora- vegetable pakora /beguni /peyaju 16 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cheese Singara Platter 10 Pcs",
       },
     ],
-    "Dinner & Lunch": [
+    "DinnerLunch": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Charcoal Choice",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "BBQ Chicken 1 Pc",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Sheek Kabab 1 Pc",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bangladeshi Delicacies(Serves 3 /4 Persons)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Korma",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Butter Chicken",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shorshe Chicken",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Jhal Frazee",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Korma",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Handi Kabab",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Acchar Beef",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shammi Kabab 4 Pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beef Jalli Kabab 4 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mutton Rezala",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Curry 4pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Do Piaza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Jhol Torkari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Fish Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn Do piazza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chingri Macher Malaikari",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Prawn Bhuna",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bhorta (Choose any – Begun Bhorta, Alu Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal Bhorta, Egg Bhorta, Chingri Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Shutki Bhorta, Mach Bhorta, Sheem Bhorta,",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Barbati Bhorta, Patal Bhorta, Tomato Bhorta)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Mixed Vegetable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seasonal Vegetable Curry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chinese Style Vegetable",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Daal Chorchori",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seasonal Salad",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Rice One Person",
       },
     ],
     Dessert: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Firni",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Gurer Payesh",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Brownie",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Caramel Pudding (serves 6)",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Caramel Pudding (serves 12)",
       },
     ],
     Soups: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken Corn Soup",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Thai Soup",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chicken/ Beef Noodle Soup",
       },
     ],
     Sandwich: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Homemade Chicken Sandwich 2 pcs",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Club Sandwich with Chicken & Vegetable",
       },
     ],
     Pizzas: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chef’s special Beef Pizza",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Chef’s Special Chicken Pizza",
       },
     ],
     Pasta: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Special Chicken Pasta",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Special Beef pasta",
       },
     ],
     Events: [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cake",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Biriyani",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Noodles",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Nayasam",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Pudding",
       },
     ],
   },
   CraftLessons: {
-    "Craft Type": [
+    "CraftType": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Scrapbooking",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Stamping",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Embroidery",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Knitting & Crochet",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Origami",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Upcycling",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Floral Design",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wood​",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ceramics & Pottery",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Needlework",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Jewelry",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "DIY",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Painting & Drawing​",
       },
     ],
-    Difficulty: [
+    'Difficulty': [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Beginner",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Intermediate​",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Expert",
       },
     ],
   },
   Gym: {
-    "Compound Chest Exercises": [
+    "CompoundChestExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Barbell Bench Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Incline Barbell Bench Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dumbbell Bench Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Incline Dumbbell Bench Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weighted Dips for Chest",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Decline Bench Press",
       },
     ],
 
-    "Compound Back Exercises": [
+    "CompoundBackExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Barbell Deadlift",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bent-Over Barbell Row",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weighted Pull-ups",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Wide-Grip Pull-up",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Standing T-Bar Row",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Close-Grip Pulldow",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seated Cable Row",
       },
     ],
 
-    "Compound Ab Exercises": [
+    "CompoundAbExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cable Crunch",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hanging Dumbbell Knee Raise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Landmine",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Captain’s Chair Leg Raise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Ab-Wheel Rollout",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Plank",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weighted Decline Sit-up",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bicycle",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Flag",
       },
     ],
 
-    "Compound Shoulder Exercises": [
+    "CompoundShoulderExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Standing Barbell Overhead Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seated Dumbbell Overhead Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Arnold Shoulder Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Bent-Over Reverse Fly",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Lateral Raise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Front Dumbbell Raise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Handstand Push-ups ",
       },
     ],
 
-    "Compound Leg Exercises": [
+    "CompoundLegExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Barbell Squat",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Standing Calf Raise",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Calf Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Romanian Deadlift",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Leg Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Hack Squat",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dumbbell Lunge",
       },
     ],
 
-    "Compound Bicep Exercises": [
+    "CompoundBicepExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seated Hammer Curl",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Standing Barbell Curl",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Inverted Rows",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Zottman Curl",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weighted Chin-ups",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Incline-Bench Curl",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Preacher EZ-Bar Curl ",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Standing Cable Curl",
       },
     ],
 
-    "Compound Tricep Exercises": [
+    "CompoundTricepExercises": [
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Close-Grip Bench Press",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Skullcrusher",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Weighted Dips",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Cable Push-Down",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Dumbbell Kickback",
       },
       {
-        id: nanoid(),
+        id: uuid.v4(),
         title: "Seated Overhead Dumbbell Extension",
       },
     ],

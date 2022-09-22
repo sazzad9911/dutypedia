@@ -38,6 +38,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "../../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
+import ProfileOption from './../../components/ProfileOption';
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -346,7 +347,9 @@ const Review = (props) => {
           )}
           title="Company Calender"
         />
-        <ProfileOption
+        <ProfileOption onPress={() => {
+          navigation.navigate('Vendor Address')
+        }}
           style={{
             marginBottom: 5,
           }}
@@ -918,58 +921,6 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
-const ProfileOption = (props) => {
-  const businessForm = useSelector((state) => state.businessForm);
-  const [Data, setData] = React.useState(null);
-  const [Visible, setVisible] = React.useState(false);
-  React.useEffect(() => {
-    if (props.title == "Address") {
-      setData({
-        division: businessForm.division,
-        district: businessForm.district,
-        area: businessForm.area,
-        address: businessForm.address,
-      });
-    }
-  }, [props.title]);
-  return (
-    <TouchableOpacity style={ props.style}
-      onPress={() => {
-        setVisible((val) => !val);
-        if (props.onPress) {
-          props.onPress();
-        }
-      }}
-      
-    >
-      <View style={[styler.box]}>
-        <props.Icon style={styler.icon} />
-        <Text style={styler.text}>{props.title}</Text>
-        {props.badge ? <Badge style={{}}>2</Badge> : <></>}
-        <MaterialIcons
-          style={styler.icon}
-          name="keyboard-arrow-down"
-          size={24}
-          color="black"
-        />
-      </View>
-      {Visible && Data && props.title == "Address" ? (
-        <View style={{ 
-          backgroundColor: primaryColor,
-          paddingHorizontal: 20,
-          paddingVertical:5
-           }}>
-          <Text style={styler.text2}>City: {Data.division}</Text>
-          <Text style={styler.text2}>District: {Data.district}</Text>
-          <Text style={styler.text2}>Area: {Data.area}</Text>
-          {Data.address&&(<Text style={styler.text2}>{Data.address}</Text>)}
-        </View>
-      ) : (
-        <></>
-      )}
-    </TouchableOpacity>
-  );
-};
 
 const styler = StyleSheet.create({
   box: {

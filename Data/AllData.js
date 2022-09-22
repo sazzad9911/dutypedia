@@ -33,9 +33,11 @@ import onlinetution from "../assets/Images/onlinetution.webp";
 import parlour from "../assets/Images/parlour.webp";
 import { ParlorOptions } from "./../Data/parlor";
 import MainLabor from "./../Data/MainLabor";
-import head from '../assets/Images/head.webp';
-import { lawyer } from './../assets/icon';
-import { LawyerOptions } from './lawyer';
+import head from "../assets/Images/head.webp";
+import { lawyer, lifeStyle } from "./../assets/icon";
+import { LawyerOptions } from "./lawyer";
+import lifestyle from "../assets/Images/lifestyle.webp";
+import { LifeStyleOptions } from "../Data/lifestyle";
 
 export const AllData = [
   {
@@ -328,8 +330,8 @@ export const AllData = [
         list: [
           {
             title: "Market Research",
-            data:[]
-          }
+            data: [],
+          },
         ],
       },
       {
@@ -354,8 +356,8 @@ export const AllData = [
         list: [
           {
             title: "Printer",
-            data:[]
-          }
+            data: [],
+          },
         ],
       },
       {
@@ -964,7 +966,7 @@ export const AllData = [
             ],
           },
           {
-            title: "Ar Filters Lenses",
+            title: "Ar Filters & Lenses",
             list: [
               {
                 title: "Platform",
@@ -1085,7 +1087,7 @@ export const AllData = [
             ],
           },
           {
-            title: "Architecture InteriorDesign",
+            title: "Architecture & Interior Design",
             list: [
               {
                 title: "Service Type",
@@ -1360,6 +1362,15 @@ export const AllData = [
               },
             ],
           },
+          {
+            title: "Catalog Design",
+            list: [
+              {
+                title: "Catalog Design",
+                data: ItOptions.Graphic.CatalogDesign,
+              },
+            ],
+          },
         ],
       },
       {
@@ -1573,7 +1584,7 @@ export const AllData = [
             ],
           },
           {
-            title: "ECommerce Marketing",
+            title: "E-Commerce Marketing",
             list: [
               {
                 title: "Service Type",
@@ -1672,7 +1683,7 @@ export const AllData = [
             ],
           },
           {
-            title: "MusicPromotion",
+            title: "Music Promotion",
             list: [
               {
                 title: "Service Type",
@@ -1697,7 +1708,7 @@ export const AllData = [
             ],
           },
           {
-            title: "DomainResearch",
+            title: "Domain Research",
             list: [
               {
                 title: "Domain Research",
@@ -1706,7 +1717,7 @@ export const AllData = [
             ],
           },
           {
-            title: "LocalSeo",
+            title: "Local Seo",
             list: [
               {
                 title: "Local Seo",
@@ -2016,7 +2027,7 @@ export const AllData = [
             ],
           },
           {
-            title: "ECommerce Development",
+            title: "E-Commerce Development",
             list: [
               {
                 title: "Service Type",
@@ -2114,13 +2125,11 @@ export const AllData = [
             list: [
               {
                 title: "Intro/Outro Type",
-                data: ItOptions.VideoAnimation.IntrosOutros
-                  .IntroOutroType,
+                data: ItOptions.VideoAnimation.IntrosOutros.IntroOutroType,
               },
               {
                 title: "Video File Format",
-                data: ItOptions.VideoAnimation.IntrosOutros
-                  .VideoFileFormat,
+                data: ItOptions.VideoAnimation.IntrosOutros.VideoFileFormat,
               },
             ],
           },
@@ -2168,7 +2177,7 @@ export const AllData = [
             ],
           },
           {
-            title: "Lyric Music Videos",
+            title: "Lyric & Music Videos",
             list: [
               {
                 title: "Service Type",
@@ -2348,66 +2357,141 @@ export const AllData = [
     icon: lawyer,
     color: "#FF4155",
     image: head,
-    list: [
+    data: [
       {
         title: "Bankruptcy Lawyers",
-        data: LawyerOptions.Bankruptcy,
+        list: [
+          {
+            title: "Bankruptcy Lawyers",
+            data: LawyerOptions.Bankruptcy,
+          },
+        ],
       },
       {
         title: "Business Lawyers",
-        data: LawyerOptions.Business,
+        list: [
+          {
+            title: "Business Lawyers",
+            data: LawyerOptions.Business,
+          },
+        ],
       },
       {
-        title: "Civil Lawyers",
-        data: LawyerOptions.Civil,
+        title: "Civil Lawyers Service",
+        list: [
+          {
+            title: "Civil Lawyers",
+            data: LawyerOptions.Civil,
+          },
+        ],
       },
       {
         title: "Constitutional Lawyers",
-        data: LawyerOptions.Constitutional,
+        list: [
+          {
+            title: "Constitutional Lawyers",
+            data: LawyerOptions.Constitutional,
+          },
+        ],
       },
       {
         title: "Criminal Defense Lawyers",
-        data: LawyerOptions.Criminal,
+        list: [
+          {
+            title: "Criminal Defense Lawyers",
+            data: LawyerOptions.Criminal,
+          },
+        ],
       },
       {
         title: "Environmental Lawyers",
-        data: LawyerOptions.Environmental,
+        list: [
+          {
+            title: "Environmental Lawyers",
+            data: LawyerOptions.Environmental,
+          },
+        ],
       },
       {
-        title: "Estate Lawyers",
-        data: LawyerOptions.Estate,
+        title: "Estate Planning Lawyers",
+        list: [
+          {
+            title: "Estate Lawyers",
+            data: LawyerOptions.Estate,
+          },
+        ],
       },
       {
         title: "Family Lawyers",
-        data: LawyerOptions.Family,
+        list: [
+          {
+            title: "Family Lawyers",
+            data: LawyerOptions.Family,
+          },
+        ],
       },
       {
         title: "Immigration Lawyers",
-        data: LawyerOptions.Immigration,
+        list: [
+          {
+            title: "Immigration Lawyers",
+            data: LawyerOptions.Immigration,
+          },
+        ],
       },
       {
-        title: "Intellectual Lawyers",
-        data: LawyerOptions.Intellectual,
+        title: "Intellectual Property Lawyers",
+        list: [
+          {
+            title: "Intellectual Lawyers",
+            data: LawyerOptions.Intellectual,
+          },
+        ],
       },
       {
         title: "Labor Lawyers",
-        data: LawyerOptions.Labor,
+        list: [
+          {
+            title: "Labor Lawyers",
+            data: LawyerOptions.Labor,
+          },
+        ],
       },
       {
         title: "Medical Malpractice Lawyers",
-        data: LawyerOptions.Medical,
+        list: [
+          {
+            title: "Medical Malpractice Lawyers",
+            data: LawyerOptions.Medical,
+          },
+        ],
       },
       {
         title: "Personal Injury Lawyers",
-        data: LawyerOptions.Personal,
+        list: [
+          {
+            title: "Personal Injury Lawyers",
+            data: LawyerOptions.Personal,
+          },
+        ],
       },
       {
         title: "Real State Lawyers",
-        data: LawyerOptions.Real,
+        list: [
+          {
+            title: "Real State Lawyers",
+            data: LawyerOptions.Real,
+          },
+        ],
       },
       {
         title: "Tax Lawyers",
-        data: LawyerOptions.Tax,
+        list: [
+          {
+            title: "Tax Lawyers",
+            data: LawyerOptions.Tax,
+          },
+        ],
       },
     ],
   },
@@ -2418,24 +2502,7 @@ export const AllData = [
     image: musicaudio,
     data: [
       {
-        title: "Producers Composers",
-        list: [
-          {
-            title: "Service Type",
-            data: MusicAudioOptions.ProducersComposers.ServiceType,
-          },
-          {
-            title: "Genre",
-            data: MusicAudioOptions.ProducersComposers.Genre,
-          },
-          {
-            title: "Purpose",
-            data: MusicAudioOptions.ProducersComposers.Purpose,
-          },
-        ],
-      },
-      {
-        title: "Producers Composers",
+        title: "Producers & Composers",
         list: [
           {
             title: "Service Type",
@@ -2567,7 +2634,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Singers Vocalists",
+        title: "Singers & Vocalists",
         list: [
           {
             title: "Singers Type",
@@ -2580,7 +2647,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Jingles Intros",
+        title: "Jingles & Intros",
         list: [
           {
             title: "Service Type",
@@ -2597,7 +2664,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Dj Drops Tags",
+        title: "Dj Drops & Tags",
         list: [
           {
             title: "Genre",
@@ -2610,7 +2677,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Remixing Mashups",
+        title: "Remixing & Mashups",
         list: [
           {
             title: "Service Type",
@@ -2658,7 +2725,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Mixing Mastering",
+        title: "Mixing & Mastering",
         list: [
           {
             title: "Mixing Mastering",
@@ -2690,6 +2757,24 @@ export const AllData = [
           {
             title: "Dialouge Editing",
             data: MusicAudioOptions.DialougeEditing,
+          },
+        ],
+      },
+      {
+        title: "Audio Ads Production",
+        list: [
+          {
+            title: "Audio Ads Production",
+            data: [],
+          },
+        ],
+      },
+      {
+        title: "Audiobook Production",
+        list: [
+          {
+            title: "Audiobook Production",
+            data: [],
           },
         ],
       },
@@ -2784,6 +2869,15 @@ export const AllData = [
           },
         ],
       },
+      {
+        title: "Cooking Lessons",
+        list: [
+          {
+            title: "Cooking Lessons",
+            data:[]
+          }
+        ],
+      },
       // {
       //   title: "Mobile",
       //   list: [
@@ -2837,8 +2931,8 @@ export const AllData = [
             list: [
               {
                 title: "Color/Texturizing",
-                data:ParlorOptions.Man.Color
-              }
+                data: ParlorOptions.Man.Color,
+              },
             ],
           },
           {
@@ -2846,8 +2940,8 @@ export const AllData = [
             list: [
               {
                 title: "Waxing Service",
-                data:ParlorOptions.Man.Waxing
-              }
+                data: ParlorOptions.Man.Waxing,
+              },
             ],
           },
           {
@@ -2855,8 +2949,8 @@ export const AllData = [
             list: [
               {
                 title: "Nails",
-                data:ParlorOptions.Man.Nails
-              }
+                data: ParlorOptions.Man.Nails,
+              },
             ],
           },
           {
@@ -2864,8 +2958,8 @@ export const AllData = [
             list: [
               {
                 title: "Facial",
-                data:ParlorOptions.Man.Facial
-              }
+                data: ParlorOptions.Man.Facial,
+              },
             ],
           },
           {
@@ -2873,8 +2967,8 @@ export const AllData = [
             list: [
               {
                 title: "Extra",
-                data:ParlorOptions.Man.Extra
-              }
+                data: ParlorOptions.Man.Extra,
+              },
             ],
           },
         ],
@@ -2885,129 +2979,129 @@ export const AllData = [
         data: [
           {
             title: "Facial Treatment",
-            list:[
+            list: [
               {
                 title: "Facial Treatment",
-                data:ParlorOptions.Woman.Facial,
-              }
-            ] 
+                data: ParlorOptions.Woman.Facial,
+              },
+            ],
           },
           {
             title: "Manicure",
-            list:[
+            list: [
               {
                 title: "Manicure",
-                data:ParlorOptions.Woman.Manicure,
-              }
-            ] 
+                data: ParlorOptions.Woman.Manicure,
+              },
+            ],
           },
           {
             title: "Padicure",
-            list:[
+            list: [
               {
                 title: "Padicure",
-                data:ParlorOptions.Woman.Padicure,
-              }
-            ] 
+                data: ParlorOptions.Woman.Padicure,
+              },
+            ],
           },
           {
             title: "Hair Cut",
-            list:[
+            list: [
               {
                 title: "Hair Cut",
-                data:ParlorOptions.Woman.Hair,
-              }
-            ] 
+                data: ParlorOptions.Woman.Hair,
+              },
+            ],
           },
           {
             title: "Hair Color",
-            list:[
+            list: [
               {
                 title: "Hair Color",
-                data:ParlorOptions.Woman.HairColor,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairColor,
+              },
+            ],
           },
           {
             title: "Hair Straightener",
-            list:[
+            list: [
               {
                 title: "Hair Straightener",
-                data:ParlorOptions.Woman.HairStraightener,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairStraightener,
+              },
+            ],
           },
           {
             title: "Hair Spa",
-            list:[
+            list: [
               {
                 title: "Hair Spa",
-                data:ParlorOptions.Woman.HairSpa,
-              }
-            ] 
+                data: ParlorOptions.Woman.HairSpa,
+              },
+            ],
           },
           {
             title: "Head Massage & Body Polishing",
-            list:[
+            list: [
               {
                 title: "Head Massage & Body Polishing",
-                data:ParlorOptions.Woman.Head,
-              }
-            ] 
+                data: ParlorOptions.Woman.Head,
+              },
+            ],
           },
           {
             title: "Skin Treatment",
-            list:[
+            list: [
               {
                 title: "Skin Treatment",
-                data:ParlorOptions.Woman.Skin,
-              }
-            ] 
+                data: ParlorOptions.Woman.Skin,
+              },
+            ],
           },
           {
             title: "Threading",
-            list:[
+            list: [
               {
                 title: "Threading",
-                data:ParlorOptions.Woman.Threading,
-              }
-            ] 
+                data: ParlorOptions.Woman.Threading,
+              },
+            ],
           },
           {
             title: "Bleach & Datan",
-            list:[
+            list: [
               {
                 title: "Bleach & Datan",
-                data:ParlorOptions.Woman.Bleach,
-              }
-            ] 
+                data: ParlorOptions.Woman.Bleach,
+              },
+            ],
           },
           {
             title: "Cleanup",
-            list:[
+            list: [
               {
                 title: "Cleanup",
-                data:ParlorOptions.Woman.Cleanup,
-              }
-            ] 
+                data: ParlorOptions.Woman.Cleanup,
+              },
+            ],
           },
           {
             title: "Waxing",
-            list:[
+            list: [
               {
                 title: "Waxing",
-                data:ParlorOptions.Woman.Waxing,
-              }
-            ] 
+                data: ParlorOptions.Woman.Waxing,
+              },
+            ],
           },
           {
             title: "Make Up",
-            list:[
+            list: [
               {
                 title: "Make Up",
-                data:ParlorOptions.Woman.MakeUp,
-              }
-            ] 
+                data: ParlorOptions.Woman.MakeUp,
+              },
+            ],
           },
         ],
       },
@@ -3022,6 +3116,123 @@ export const AllData = [
       {
         title: "Painter",
         data: MainLabor,
+      },
+    ],
+  },
+  {
+    title: "Life Style",
+    icon: lifeStyle,
+    color: "#FF9C68",
+    image: lifestyle,
+    data: [
+      {
+        title: "Cooking Lessons",
+        list: [
+          {
+            title: "Breakfast",
+            data: LifeStyleOptions.CookingLessons.breakfast,
+          },
+          {
+            title: "Beverages",
+            data: LifeStyleOptions.CookingLessons.Beverages,
+          },
+          {
+            title: "Snacks",
+            data: LifeStyleOptions.CookingLessons.Snacks,
+          },
+          {
+            title: "Dinner & Lunch",
+            data: LifeStyleOptions.CookingLessons.DinnerLunch,
+          },
+          {
+            title: "Dessert",
+            data: LifeStyleOptions.CookingLessons.Dessert,
+          },
+          {
+            title: "Soups",
+            data: LifeStyleOptions.CookingLessons.Soups,
+          },
+          {
+            title: "Sandwich",
+            data: LifeStyleOptions.CookingLessons.Sandwich,
+          },
+          {
+            title: "Pizzas",
+            data: LifeStyleOptions.CookingLessons.Pizzas,
+          },
+          {
+            title: "Pasta",
+            data: LifeStyleOptions.CookingLessons.Pasta,
+          },
+          {
+            title: "Events",
+            data: LifeStyleOptions.CookingLessons.Events,
+          },
+        ],
+      },
+      {
+        title: "Craft Lessons",
+        list: [
+          {
+            title: "Craft Type",
+            data: LifeStyleOptions.CraftLessons.CraftType,
+          },
+          {
+            title: "Difficulty",
+            data: LifeStyleOptions.CraftLessons.Difficulty,
+          },
+        ],
+      },
+      {
+        title: "Gym",
+        list: [
+          {
+            title: "Compound Chest Exercises",
+            data: LifeStyleOptions.Gym.CompoundChestExercises,
+          },
+          {
+            title: "Compound Back Exercises",
+            data: LifeStyleOptions.Gym.CompoundBackExercises,
+          },
+          {
+            title: "Compound Ab Exercises",
+            data: LifeStyleOptions.Gym.CompoundAbExercises,
+          },
+          {
+            title: "Compound Shoulder Exercises",
+            data: LifeStyleOptions.Gym.CompoundShoulderExercises,
+          },
+          {
+            title: "Compound Leg Exercises",
+            data: LifeStyleOptions.Gym.CompoundLegExercises,
+          },
+          {
+            title: "Compound Bicep Exercises",
+            data: LifeStyleOptions.Gym.CompoundBicepExercises,
+          },
+          {
+            title: "Compound Tricep Exercises",
+            data: LifeStyleOptions.Gym.CompoundTricepExercises,
+          },
+        ],
+      },
+      {
+        title: "Life Coaching",
+        list: [
+          {
+            title: "Life Coaching",
+            data: LifeStyleOptions.LifeCoaching,
+          },
+        ],
+      },
+      {
+        title: "Personal Stylists",
+        list: [
+          {
+            title: "Purpose",
+            data: LifeStyleOptions.PersonalStylists.Purpose,
+          },
+        ],
       },
     ],
   },

@@ -252,6 +252,7 @@ const OtherProfile = (props) => {
               <Button
                 style={{
                   flex: 4,
+                  color: textColor
                 }}
                 title="Appointment"
               />
@@ -334,6 +335,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
+              color:textColor
             }}
             title="Fixed"
           />
@@ -343,6 +345,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
+              color:textColor
             }}
             title="Package"
           />
@@ -352,6 +355,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
+              color:textColor
             }}
             title="Installment"
           />
@@ -361,6 +365,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
+              color:textColor
             }}
             title="Subscription"
           />
