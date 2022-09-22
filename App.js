@@ -33,6 +33,8 @@ import Service from './screens/Seller/Service';
 import Address from './screens/Seller/Address';
 import Review from './screens/Seller/Review';
 import AllServiceList from './screens/Seller/AllServiceList';
+import CompanyCalendar from './screens/Seller/CompanyCalendar';
+import VendorAddress from './screens/Seller/VendorAddress';
 
 export default function App() {
   const MyTheme = {
@@ -167,6 +169,20 @@ export default function App() {
                   header: (props) => <SubHeader title="Service List" {...props} />,
                 }}
                 component={AllServiceList}
+              />
+              <Stack.Screen
+                name="Company Calender"
+                options={{
+                  header: (props) => <SubHeader title="Company Calender" {...props} />,
+                }}
+                component={CompanyCalendar}
+              />
+              <Stack.Screen
+                name="Vendor Address"
+                options={{
+                  header: (props) => <SubHeader title="Vendor Address" {...props} />,
+                }}
+                component={VendorAddress}
               />
             </Stack.Navigator>
           </NavigationContainer>
