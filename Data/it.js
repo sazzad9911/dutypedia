@@ -4792,7 +4792,7 @@ export const ItOptions = {
           title: "Analytics & Tracking ",
         },
       ],
-      "PlatformType ": [
+      "PlatformType": [
         {
           id: uuid.v4(),
           title: "Facebook",

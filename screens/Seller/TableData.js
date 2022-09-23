@@ -428,7 +428,7 @@ const Rows = ({
         height: 40,
       }}
     >
-      <Text
+      <Text numberOfLines={2}
         style={{
           flex: 3,
           fontSize: Platform.OS == "ios" ? 16 : 14,

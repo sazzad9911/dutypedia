@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
-  FlatList
+  FlatList,
 } from "react-native";
 import builder from "../../assets/Images/builder.webp";
 import { textColor } from "./../../assets/colors";
@@ -106,9 +106,10 @@ const SubCategories = ({ navigation, route }) => {
             </Text>
           </View>
         </ImageBackground>
-        <View>
-          {Array.isArray(data) ? (
-            data.sort((a,b)=>a.title>b.title).map((data, i) => (
+        {Array.isArray(data) ? (
+          data
+            .sort((a, b) => a.title > b.title)
+            .map((data, i) => (
               <SubCategoryCart
                 id={id}
                 nextId={i}
@@ -153,10 +154,9 @@ const SubCategories = ({ navigation, route }) => {
                 data={data}
               />
             ))
-          ) : (
-            <></>
-          )}
-        </View>
+        ) : (
+          <></>
+        )}
         {Visible && <Input value={text} onChange={setText} />}
         {Array.isArray(data) && data[0].list && (
           <View>

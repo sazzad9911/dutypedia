@@ -550,7 +550,7 @@ export const LifeStyleOptions = {
     },
   ],
   FitnessLessons: {
-    "Trainning Type": [
+    "TrainningType": [
       {
         id: uuid.v4(),
         title: "Pilates",
@@ -735,11 +735,7 @@ export const LifeStyleOptions = {
       },
       {
         id: uuid.v4(),
-        title: "Bhaji",
-      },
-      {
-        id: uuid.v4(),
-        title: "Aloo dum",
+        title: "Aloor dum",
       },
       {
         id: uuid.v4(),

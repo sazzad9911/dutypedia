@@ -60,7 +60,7 @@ const Category = (props) => {
         onChange={(val) => {
           setSearch(val);
           if (val) {
-            let arr = Data.filter((d) => {
+            let arr = AllData.filter((d) => {
               if (
                 d.title.match(val) ||
                 (d.data && fromArray(val, d.data).length > 0) ||
@@ -74,7 +74,7 @@ const Category = (props) => {
             });
             setAllData(arr);
           } else {
-            setAllData(Data);
+            setAllData(AllData);
           }
         }}
         {...props}

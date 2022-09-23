@@ -38,7 +38,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "../../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
-import ProfileOption from './../../components/ProfileOption';
+import ProfileOption from "./../../components/ProfileOption";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -347,9 +347,10 @@ const Review = (props) => {
           )}
           title="Company Calender"
         />
-        <ProfileOption onPress={() => {
-          navigation.navigate('Vendor Address')
-        }}
+        <ProfileOption
+          onPress={() => {
+            navigation.navigate("Vendor Address");
+          }}
           style={{
             marginBottom: 5,
           }}
@@ -437,13 +438,19 @@ const Review = (props) => {
                     fontFamily: "Poppins-Medium",
                     color: "green",
                     marginTop: -5,
-                    marginBottom: 10,
                   }}
                 >
                   Read {NewLines == 4 ? "More" : "Less"}
                 </Text>
               )}
           </TouchableOpacity>
+          <Text style={{
+            alignSelf:'flex-end',
+            marginRight:20,
+            fontSize:18,
+            fontFamily: "Poppins-Medium",
+            color:'black'
+          }}>From {businessForm&&businessForm.price?businessForm.price:''}৳</Text>
         </View>
         <View
           style={{
@@ -502,10 +509,17 @@ const Review = (props) => {
               ) : (
                 <Button style={styles.activeButton} title={ActiveService} />
               )}
-              <Button onPress={()=>{
-                setActiveService('Extra Facilities')
-              }} style={ActiveService=='Extra Facilities'?styles.activeButton:styles.inactiveButton} 
-              title={'Extra Facilities'} />
+              <Button
+                onPress={() => {
+                  setActiveService("Extra Facilities");
+                }}
+                style={
+                  ActiveService == "Extra Facilities"
+                    ? styles.activeButton
+                    : styles.inactiveButton
+                }
+                title={"Extra Facilities"}
+              />
             </View>
             <View
               style={{
@@ -525,25 +539,37 @@ const Review = (props) => {
                     name={ActiveService}
                   />
                 ))
-              ) :ActiveService!='Extra Facilities'? (
+              ) : ActiveService != "Extra Facilities" ? (
                 <ServiceTable name={ActiveService} />
-              ):(<></>)}
-              {ActiveService=='Extra Facilities'&&(
+              ) : (
+                <></>
+              )}
+              {ActiveService == "Extra Facilities" && (
                 <View>
-                <Text style={{
-                  fontSize:15,
-                  fontFamily: "Poppins-Medium",
-                  color:'#707070'
-                }}>Extra Facilities</Text>
-                {Array.isArray(businessForm.facilities)&&
-                businessForm.facilities.map((doc,i)=>(
-                  doc.checked&&(
-                    <Text style={{
-                      fontSize:13,
-                      fontFamily: "Poppins-Light",
-                    }} key={i}>{doc.title}</Text>
-                  )
-                ))}
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "Poppins-Medium",
+                      color: "#707070",
+                    }}
+                  >
+                    Extra Facilities
+                  </Text>
+                  {Array.isArray(businessForm.facilities) &&
+                    businessForm.facilities.map(
+                      (doc, i) =>
+                        doc.checked && (
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              fontFamily: "Poppins-Light",
+                            }}
+                            key={i}
+                          >
+                            {doc.title}
+                          </Text>
+                        )
+                    )}
                 </View>
               )}
             </View>
@@ -565,19 +591,25 @@ const Review = (props) => {
           ></LinearGradient>
         </View>
         <View style={{ backgroundColor: primaryColor }}>
-          <Button
-            onPress={() => {
-              navigation.navigate("Service List");
-            }}
-            style={{
-              alignSelf: "flex-end",
-              width: 120,
-              color: textColor,
-              borderWidth: 0,
-              height: 30,
-            }}
-            title="Show All"
-          />
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate("Service List")
+          }} style={{
+             flexDirection: "row",
+             minWidth:10,
+             alignSelf: "flex-end",
+             alignItems: "center",marginRight:20}}>
+            <Text style={{
+              fontSize:14,
+              fontFamily:'Poppins-Medium',
+              color: "#707070",
+              marginRight:5
+            }}>Show All</Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={22}
+              color="#707070"
+            />
+          </TouchableOpacity>
           <View
             style={{
               height: 1,
@@ -589,10 +621,10 @@ const Review = (props) => {
           />
         </View>
         <View
-          style={{ height: 50, backgroundColor: primaryColor, marginTop: -1 }}
+          style={{ height: 30, backgroundColor: primaryColor, marginTop: -1 }}
         />
       </ScrollView>
-      <View style={{backgroundColor:primaryColor}}> 
+      <View style={{ backgroundColor: primaryColor }}>
         <CheckBox
           onChange={() => {
             setButtonPress(!ButtonPress);
@@ -834,7 +866,7 @@ const ServiceTable = ({ item, i, name }) => {
       style={{
         paddingBottom: 5,
         borderColor: "#e5e5e5",
-        minHeight:10
+        minHeight: 10,
       }}
       key={i}
     >
@@ -842,7 +874,7 @@ const ServiceTable = ({ item, i, name }) => {
         style={{
           fontFamily: "Poppins-Medium",
           fontSize: 15,
-          margin:0
+          margin: 0,
         }}
       >
         {item}
@@ -941,9 +973,9 @@ const styler = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins-Medium",
   },
-  text2:{
-    fontSize:15,
+  text2: {
+    fontSize: 15,
     fontFamily: "Poppins-Medium",
-    color: "#707070"
-  }
+    color: "#707070",
+  },
 });

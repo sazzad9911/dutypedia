@@ -321,7 +321,7 @@ export const CookerOptions = {
       },
       {
         id: uuid.v4(),
-        title: "Acchar Beef",
+        title: "Acchari Beef",
       },
       {
         id: uuid.v4(),
@@ -365,19 +365,7 @@ export const CookerOptions = {
       },
       {
         id: uuid.v4(),
-        title: "Bhorta (Choose any – Begun Bhorta, Alu Bhorta,",
-      },
-      {
-        id: uuid.v4(),
-        title: "Daal Bhorta, Egg Bhorta, Chingri Bhorta,",
-      },
-      {
-        id: uuid.v4(),
-        title: "Shutki Bhorta, Mach Bhorta, Sheem Bhorta,",
-      },
-      {
-        id: uuid.v4(),
-        title: "Barbati Bhorta, Patal Bhorta, Tomato Bhorta)",
+        title: 'Bhorta (Choose any – Begun Bhorta, Alu Bhorta, Daal Bhorta, Egg Bhorta,Chingri Bhorta, Shutki Bhorta,Mach Bhorta,Sheem Bhorta, Barbati Bhorta, Patal Bhorta, Tomato Bhorta)',
       },
       {
         id: uuid.v4(),

@@ -33,10 +33,15 @@ const TopTabBar = (props) => {
     <View
       style={{
         backgroundColor: primaryColor,
-        borderBottomWidth: 1,
-        borderBottomColor: "#e5e5e5",
         borderTopWidth: 1,
         borderTopColor: "#e5e5e5",
+        shadowOffset: {
+          height:2,width:2
+        },
+        shadowOpacity:.4,
+        shadowRadius:3,
+        shadowColor:'#707070',
+        elevation:3
       }}
     >
       <ScrollView ref={ref=>setScrollRef(ref)} showsHorizontalScrollIndicator={false} horizontal={true}>

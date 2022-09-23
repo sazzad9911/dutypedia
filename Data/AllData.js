@@ -1390,16 +1390,16 @@ export const AllData = [
                 data: ItOptions.DigitalMarketing.SocialMediaMarketing
                   .PlatformType,
               },
-              // {
-              //   title: "Content Type",
-              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
-              //     .ContentType,
-              // },
-              // {
-              //   title: "Management Tools",
-              //   data: ItOptions.DigitalMarketing.SocialMediaMarketing
-              //     .ManagementTools,
-              // },
+              {
+                title: "Content Type",
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .ContentType,
+              },
+              {
+                title: "Management Tools",
+                data: ItOptions.DigitalMarketing.SocialMediaMarketing
+                  .ManagementTools,
+              },
             ],
           },
           {
@@ -1429,7 +1429,7 @@ export const AllData = [
                 data: ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING
                   .ServiceType,
               },
-              {
+              { 
                 title: "Platform Type",
                 data: ItOptions.DigitalMarketing.SOCIALMEDIAADVERTISING
                   .PlatformType,
@@ -2778,6 +2778,24 @@ export const AllData = [
           },
         ],
       },
+      {
+        title: "Podcust Editing",
+        list: [
+          {
+            title: "Podcust Editing",
+            data: [],
+          },
+        ],
+      },
+      {
+        title: "Vocal Tuning",
+        list: [
+          {
+            title: "Vocal Tuning",
+            data: [],
+          },
+        ],
+      },
     ],
   },
   {
@@ -3231,6 +3249,19 @@ export const AllData = [
           {
             title: "Purpose",
             data: LifeStyleOptions.PersonalStylists.Purpose,
+          },
+        ],
+      },
+      {
+        title: "Fitness Lessons",
+        list: [
+          {
+            title: "Trainning Type",
+            data: LifeStyleOptions.FitnessLessons.TrainningType,
+          },
+          {
+            title: "Difficulty",
+            data: LifeStyleOptions.FitnessLessons.Difficulty,
           },
         ],
       },
