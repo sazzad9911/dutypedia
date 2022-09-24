@@ -63,13 +63,72 @@ const SubCategories = ({ navigation, route }) => {
     }
     //dispatch(setListData(!listData))
   };
+  const addData = (value,i) => {
+    setText(value);
+    let oldArr = data;
+    oldArr.push({
+      title: value,
+      deletable: true,
+      list: [
+        {
+          title: value,
+          data: [],
+        },
+      ],
+    });
+    if (route.name === "SubCategories") {
+      // dispatch(setArrayReplaceData(oldArr, id));
+      setData(oldArr);
+      setText("");
+    } else {
+      // dispatch(setArrayReplaceData2(oldArr, id, nextId));
+      setData(oldArr);
+      setText("");
+    }
+    //dispatch(setListData(oldArr))
+  };
+  const action = (data,i) => {
+    if (data.data) {
+      navigation.navigate("SubCategories_1", {
+        title: data.title,
+        data: data.data,
+        image: data.image,
+        id: id,
+        nextId: i,
+        mainTitle: params.mainTitle,
+        title: data.title,
+      });
+    } else {
+      if (route.name === "SubCategories") {
+        navigation.navigate("TableData", {
+          title: data.title,
+          list: data.list,
+          id: id,
+          nextId: i,
+          mainTitle: params.mainTitle,
+          title: data.title,
+        });
+      } else {
+        navigation.navigate("TableData", {
+          title: data.title,
+          list: data.list,
+          id: id,
+          nextId: nextId,
+          lastId: i,
+          mainTitle: params.mainTitle,
+          title: params.title,
+          subTitle: data.title,
+        });
+      }
+    }
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{flex:0}} showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={image}
           style={{
@@ -115,41 +174,7 @@ const SubCategories = ({ navigation, route }) => {
                 nextId={i}
                 deleteData={deleteData}
                 key={i}
-                onPress={() => {
-                  if (data.data) {
-                    navigation.navigate("SubCategories_1", {
-                      title: data.title,
-                      data: data.data,
-                      image: data.image,
-                      id: id,
-                      nextId: i,
-                      mainTitle: params.mainTitle,
-                      title: data.title,
-                    });
-                  } else {
-                    if (route.name === "SubCategories") {
-                      navigation.navigate("TableData", {
-                        title: data.title,
-                        list: data.list,
-                        id: id,
-                        nextId: i,
-                        mainTitle: params.mainTitle,
-                        title: data.title,
-                      });
-                    } else {
-                      navigation.navigate("TableData", {
-                        title: data.title,
-                        list: data.list,
-                        id: id,
-                        nextId: nextId,
-                        lastId: i,
-                        mainTitle: params.mainTitle,
-                        title: params.title,
-                        subTitle: data.title,
-                      });
-                    }
-                  }
-                }}
+                onPress={() => action(data,i)}
                 title={data.title}
                 data={data}
               />
@@ -201,30 +226,7 @@ const SubCategories = ({ navigation, route }) => {
         }}
       >
         <InputModal
-          onChange={(value) => {
-            setText(value);
-            let oldArr = data;
-            oldArr.push({
-              title: value,
-              deletable: true,
-              list: [
-                {
-                  title: value,
-                  data: [],
-                },
-              ],
-            });
-            if (route.name === "SubCategories") {
-              // dispatch(setArrayReplaceData(oldArr, id));
-              setData(oldArr);
-              setText("");
-            } else {
-              // dispatch(setArrayReplaceData2(oldArr, id, nextId));
-              setData(oldArr);
-              setText("");
-            }
-            //dispatch(setListData(oldArr))
-          }}
+          onChange={(value) => addData(value)}
           Close={setModalVisible}
         />
       </Modal>

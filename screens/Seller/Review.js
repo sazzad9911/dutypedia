@@ -10,6 +10,7 @@ import {
   FlatList,
   StatusBar,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,6 +40,8 @@ import { CheckBox } from "../../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
 import ProfileOption from "./../../components/ProfileOption";
+import { fileFromURL } from './../../action';
+import {uploadFile } from '../../Class/upload'
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -55,6 +58,8 @@ const Review = (props) => {
   const [SubServiceList, setSubServiceList] = React.useState([]);
   const [ButtonPress, setButtonPress] = React.useState(false);
   const [Images, setImages] = React.useState([]);
+  const newUser= useSelector((state) => state.user);
+  const [Loading, setLoading]= React.useState(false);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -71,6 +76,7 @@ const Review = (props) => {
   };
   React.useEffect(() => {
     //console.log(listData);
+    
     if (businessForm) {
       setImages([
         businessForm.firstImage,
@@ -115,7 +121,35 @@ const Review = (props) => {
       }
     }
   }, [ActiveService]);
-
+  const confirm = async() => {
+    if(!newUser){
+      console.log('Invalid user')
+      return
+    }
+    let res={}
+    let blobImages=[]
+    let imageLinks = []
+    const formData=new FormData();
+    await Array.isArray(Images)&&
+    Images.forEach((image,i)=>{
+      blobImages.push(fileFromURL(image))
+    })
+    const result=await uploadFile(blobImages,newUser.token)
+    if(result){
+      res={
+        code:true,
+        message:'Files upload successful'
+      }
+      console.log(result)
+      return res
+    }
+    res={
+      code:false,
+      message:'Files upload failed'
+    }
+    console.log(result)
+    return res
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -444,13 +478,17 @@ const Review = (props) => {
                 </Text>
               )}
           </TouchableOpacity>
-          <Text style={{
-            alignSelf:'flex-end',
-            marginRight:20,
-            fontSize:18,
-            fontFamily: "Poppins-Medium",
-            color:'black'
-          }}>From {businessForm&&businessForm.price?businessForm.price:''}৳</Text>
+          <Text
+            style={{
+              alignSelf: "flex-end",
+              marginRight: 20,
+              fontSize: 18,
+              fontFamily: "Poppins-Medium",
+              color: "black",
+            }}
+          >
+            From {businessForm && businessForm.price ? businessForm.price : ""}৳
+          </Text>
         </View>
         <View
           style={{
@@ -579,9 +617,9 @@ const Review = (props) => {
               position: "absolute",
               zIndex: 100,
               bottom: 0,
-              left: 0,
               height: 20,
-              width: width,
+              flex:(width/3.2)*2,
+              left:(width/3.2)*1.2
             }}
             colors={[
               "rgba(255, 255, 255, 0.252)",
@@ -591,19 +629,28 @@ const Review = (props) => {
           ></LinearGradient>
         </View>
         <View style={{ backgroundColor: primaryColor }}>
-          <TouchableOpacity onPress={()=>{
-            navigation.navigate("Service List")
-          }} style={{
-             flexDirection: "row",
-             minWidth:10,
-             alignSelf: "flex-end",
-             alignItems: "center",marginRight:20}}>
-            <Text style={{
-              fontSize:14,
-              fontFamily:'Poppins-Medium',
-              color: "#707070",
-              marginRight:5
-            }}>Show All</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Service List");
+            }}
+            style={{
+              flexDirection: "row",
+              minWidth: 10,
+              alignSelf: "flex-end",
+              alignItems: "center",
+              marginRight: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                color: "#707070",
+                marginRight: 5,
+              }}
+            >
+              Show All
+            </Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={22}
@@ -636,6 +683,15 @@ const Review = (props) => {
           title="I agree with all the terms and conditions"
         />
         <Button
+          onPress={() => {
+            confirm().then((res) =>{
+              if(res.code){
+                Alert.alert('Success!', res.message);
+              }else{
+                Alert.alert('Error!', res.message);
+              }
+            })
+          }}
           disabled={ButtonPress ? false : true}
           style={{
             height: 45,
