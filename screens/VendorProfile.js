@@ -11,7 +11,6 @@ import {
   StatusBar,
   SafeAreaView,
   Alert,
-  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,7 +20,7 @@ import {
   assentColor,
   secondaryColor,
   textColor,
-} from "./../../assets/colors.js";
+} from "../assets/colors.js";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -30,23 +29,23 @@ import * as ImagePicker from "expo-image-picker";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Button from "./../../components/Button";
-import RatingView from "./../../components/RatingView";
-import { brain, flag, info, star, user, verified } from "../../assets/icon";
+import Button from "../components/Button";
+import RatingView from "../components/RatingView";
+import { brain, flag, info, star, user, verified } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
-import ReviewCart from "./../../Cart/ReviewCart";
-import RelatedService from "./../../Cart/RelatedService";
+import ReviewCart from "../Cart/ReviewCart";
+import RelatedService from "../Cart/RelatedService";
 import { useSelector, useDispatch } from "react-redux";
-import { CheckBox } from "../../screens/Seller/Pricing";
+import { CheckBox } from "../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
-import ProfileOption from "./../../components/ProfileOption";
-import { fileFromURL } from "./../../action";
-import { uploadFile } from "../../Class/upload";
-import { createService,getService } from "../../Class/service";
+import ProfileOption from "../components/ProfileOption";
+import { fileFromURL } from '../action';
+import {uploadFile } from '../Class/upload'
+import {getService} from '../Class/service'
 
 const { width, height } = Dimensions.get("window");
-const Review = (props) => {
+const VendorProfile = (props) => {
   const window = Dimensions.get("window");
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -60,10 +59,10 @@ const Review = (props) => {
   const [SubServiceList, setSubServiceList] = React.useState([]);
   const [ButtonPress, setButtonPress] = React.useState(false);
   const [Images, setImages] = React.useState([]);
-  const newUser = useSelector((state) => state.user);
-  const [Loading, setLoading] = React.useState(false);
+  const newUser= useSelector((state) => state.user);
+  const [Loading, setLoading]= React.useState(false);
   const dispatch = useDispatch();
-
+  const vendorInfo = useSelector((state) => state.vendorInfo);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -77,15 +76,12 @@ const Review = (props) => {
       return result;
     }
     return null;
-  };
+  }; 
   React.useEffect(() => {
-    //console.log(listData);
-    if (businessForm) {
+    //console.log(vendorInfo);
+    
+    if (vendorInfo) {
       setImages([
-        businessForm.firstImage,
-        businessForm.secondImage,
-        businessForm.thirdImage,
-        businessForm.forthImage,
       ]);
     }
     if (Array.isArray(listData)) {
@@ -124,37 +120,34 @@ const Review = (props) => {
       }
     }
   }, [ActiveService]);
-  const confirm = async () => {
-    if (!newUser) {
-      console.log("Invalid user");
-      return;
+  const confirm = async() => {
+    if(!newUser){
+      console.log('Invalid user')
+      return
     }
-    let blobImages = [];
-    let imageLinks = [];
-    const formData = new FormData();
-    (await Array.isArray(Images)) &&
-      Images.forEach((image, i) => {
-        blobImages.push(fileFromURL(image));
-      });
-    const result = await uploadFile(blobImages, newUser.token);
-    if (result) {
-      const res = await createService(
-        businessForm,
-        listData,
-        result,
-        newUser.token,
-        image ? fileFromURL({ uri: image }) : "",
-        backgroundImage ? fileFromURL({ uri: backgroundImage }) : ""
-      );
-      if (res) {
-        return { code: true, message: "Profile created successfully" };
+    let res={}
+    let blobImages=[]
+    let imageLinks = []
+    const formData=new FormData();
+    await Array.isArray(Images)&&
+    Images.forEach((image,i)=>{
+      blobImages.push(fileFromURL(image))
+    })
+    const result=await uploadFile(blobImages,newUser.token)
+    if(result){
+      res={
+        code:true,
+        message:'Files upload successful'
       }
+      console.log(result)
+      return res
     }
-
-    return {
-      code: false,
-      message: "Files upload failed",
-    };
+    res={
+      code:false,
+      message:'Files upload failed'
+    }
+    console.log(result)
+    return res
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -212,9 +205,7 @@ const Review = (props) => {
             }}
           >
             <Text style={styles.headLine}>
-              {businessForm && businessForm.serviceCenterName
-                ? businessForm.serviceCenterName
-                : ""}
+            {vendorInfo?.service.serviceCenterName}
             </Text>
             <Text
               style={{
@@ -223,8 +214,9 @@ const Review = (props) => {
                 fontFamily: "Poppins-SemiBold",
               }}
             >
-              {businessForm && businessForm.name ? businessForm.name : "-"}(
-              {businessForm && businessForm.gender ? businessForm.gender : ""})
+              {vendorInfo?.service.providerInfo.title+' '}
+              {vendorInfo?vendorInfo.service.providerInfo.name:''}(
+              {vendorInfo?.service.providerInfo.gender})
             </Text>
             <Text
               style={{
@@ -233,9 +225,7 @@ const Review = (props) => {
               }}
             >
               Position of{" "}
-              {businessForm && businessForm.position
-                ? businessForm.position
-                : ""}
+              {vendorInfo?.service.providerInfo.position}
             </Text>
           </View>
           <View
@@ -263,7 +253,7 @@ const Review = (props) => {
             style={[
               styles.cameraIcon,
               {
-                top: 10,
+                top: 40,
                 right: 10,
                 height: 30,
                 width: 30,
@@ -286,27 +276,15 @@ const Review = (props) => {
         </View>
         <BarOption
           icon={brain}
-          title={`Specialty in ${
-            businessForm && businessForm.speciality
-              ? businessForm.speciality
-              : ""
-          }`}
+          title={`Specialty in ${vendorInfo?.service.speciality}`}
         />
         <BarOption
           icon={user}
-          title={`Worker and Team (${
-            businessForm && businessForm.teamNumber
-              ? businessForm.teamNumber
-              : ""
-          } member)`}
+          title={`Worker and Team (${vendorInfo?.service.worker} member)`}
         />
         <BarOption
           icon={flag}
-          title={`Since ${
-            businessForm && businessForm.startDate
-              ? businessForm.startDate.year
-              : ""
-          }`}
+          title={`Since ${new Date(vendorInfo?.service.startDate).getFullYear()}`}
         />
         <View
           style={{
@@ -360,12 +338,10 @@ const Review = (props) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {businessForm && businessForm.about ? businessForm.about : ""}
+                {vendorInfo?.service.about}
               </Text>
               <View>
-                {businessForm &&
-                  businessForm.about &&
-                  businessForm.about.length > 200 && (
+                {vendorInfo?.service.about.length > 200 && (
                     <Text
                       style={{
                         color: "tomato",
@@ -406,8 +382,18 @@ const Review = (props) => {
           )}
           title="Address"
         />
-
         <View style={{ backgroundColor: primaryColor }}>
+        <ScrollView horizontal={true}>
+        <View style={{width:20}}/>
+        <Button style={{
+            color:'white',
+            backgroundColor:'black',
+            borderWidth:0,
+            marginVertical:10,
+            height:30
+        }} title='Bargaining'/>
+        <View style={{width:20}}/>
+        </ScrollView>
           <SliderBox
             images={Images}
             sliderBoxHeight={250}
@@ -624,8 +610,8 @@ const Review = (props) => {
               zIndex: 100,
               bottom: 0,
               height: 20,
-              flex: (width / 3.2) * 2,
-              left: (width / 3.2) * 1.2,
+              flex:(width/3.2)*2,
+              left:(width/3.2)*1.2
             }}
             colors={[
               "rgba(255, 255, 255, 0.252)",
@@ -677,58 +663,11 @@ const Review = (props) => {
           style={{ height: 30, backgroundColor: primaryColor, marginTop: -1 }}
         />
       </ScrollView>
-      <View style={{ backgroundColor: primaryColor }}>
-        <CheckBox
-          onChange={() => {
-            setButtonPress(!ButtonPress);
-          }}
-          style={{
-            marginHorizontal: 20,
-            marginTop: 10,
-          }}
-          title="I agree with all the terms and conditions"
-        />
-        <Button
-          onPress={() => {
-            setLoading(true);
-            confirm().then((res) => {
-              setLoading(false);
-              if (res.code) {
-                getService(newUser.token).then((data)=>{
-                  if(data){
-                    dispatch({type:'SET_VENDOR_INFO',playload:data})
-                    navigation.navigate("MainProfile")
-                  }else{
-                    Alert.alert("Opps!","Server problem occurs. Please try again")
-                  }
-                })
-              } else {
-                Alert.alert("Error!", res.message);
-              }
-            });
-          }}
-          disabled={ButtonPress ? false : true}
-          style={{
-            height: 45,
-            marginHorizontal: 20,
-            marginVertical: 10,
-            borderRadius: 5,
-            backgroundColor: ButtonPress ? backgroundColor : "#707070",
-            borderWidth: 0,
-          }}
-          title="Confirm"
-        />
-      </View>
-      <Modal visible={Loading} onRequestClose={() =>{}}>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>Loading...</Text>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
 
-export default Review;
+export default VendorProfile;
 const styles = StyleSheet.create({
   backgroundContainer: {
     minHeight: 200,

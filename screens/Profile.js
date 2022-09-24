@@ -30,19 +30,40 @@ import Receive from "./Appointment/Receive";
 import Send from "./Appointment/Send";
 import Support from "./Support";
 import ImageViewer from "./ImageViewer";
-import Header from './../components/Header';
+import Header from "./../components/Header";
+import { useSelector } from "react-redux";
+import VendorProfile from "./VendorProfile";
+import Menu from "./Vendor/Menu";
 
 const Stack = createStackNavigator();
 
 const Profile = ({ navigation }) => {
+  const vendorInfo = useSelector((state) => state.vendorInfo);
   return (
     <Stack.Navigator>
+      {vendorInfo ? (
+        <Stack.Screen
+          name="MainProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={Menu}
+        />
+      ) : (
+        <Stack.Screen
+          name="MainProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={MainProfile}
+        />
+      )}
       <Stack.Screen
-        name="MainProfile"
+        name="VendorProfile"
         options={{
           headerShown: false,
         }}
-        component={MainProfile}
+        component={VendorProfile}
       />
       <Stack.Screen
         name="ManageOrder"
@@ -160,7 +181,7 @@ const MainProfile = (props) => {
     }
   };
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.container}>
           <TouchableOpacity
@@ -224,9 +245,10 @@ const MainProfile = (props) => {
           Icon={() => <AntDesign name="hearto" size={24} color="black" />}
           title="Saved"
         />
-        <ProfileOption onPress={() => {
-          navigation.navigate("MainCategory");
-        }}
+        <ProfileOption
+          onPress={() => {
+            navigation.navigate("MainCategory");
+          }}
           Icon={() => <Ionicons name="business" size={24} color="black" />}
           title="Create a business account"
         />

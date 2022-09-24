@@ -1,9 +1,11 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text,Keyboard } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons,Entypo } from "@expo/vector-icons";
 import { primaryColor, secondaryColor,backgroundColor } from "./../assets/colors";
 import { Badge } from "react-native-paper";
 import  Animated,{FadeIn}  from 'react-native-reanimated';
+import {dashboard,order} from '../assets/icon'
+import {SvgXml} from 'react-native-svg'
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
@@ -36,11 +38,11 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 0 ? (
-          <Ionicons name="home" size={24} color={backgroundColor} />
+          <SvgXml xml={dashboard} height="24" width="24"/>
         ) : (
-          <Ionicons name="home-outline" size={24} color="#808080" />
+          <SvgXml xml={dashboard} height="24" width="24"/>
         )}
-        <Text style={styles.text}>Home</Text>
+        <Text style={styles.text}>Dashboard</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -50,11 +52,11 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 1 ? (
-          <Ionicons name="search-sharp" size={24} color={backgroundColor} />
+          <SvgXml xml={order} height="24" width="24"/>
         ) : (
-          <Ionicons name="search-outline" size={24} color="#808080" />
+          <SvgXml xml={order} height="24" width="24"/>
         )}
-        <Text style={styles.text}>Search</Text>
+        <Text style={styles.text}>Order</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -103,11 +105,11 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 4 ? (
-          <Ionicons name="person-circle-sharp" size={24} color={backgroundColor} />
+          <Ionicons name="menu" size={28} color={backgroundColor} />
         ) : (
-          <Ionicons name="person-circle-outline" size={24} color="#808080" />
+          <Ionicons name="menu-outline" size={28} color="#808080" />
         )}
-        <Text style={styles.text}>Profile</Text>
+        <Text style={styles.text}>Menu</Text>
       </TouchableOpacity>
     </Animated.View>
   );

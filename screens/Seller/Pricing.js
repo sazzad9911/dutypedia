@@ -33,6 +33,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import OutsideView from "react-native-detect-press-outside";
 import { useSelector, useDispatch } from "react-redux";
 import InputModal from "./InputModal";
+//import {localOptionsToServer} from '../../Class/dataConverter'
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -151,14 +152,17 @@ const Pricing = ({ navigation, route }) => {
   const [StartingPriceError, setStartingPriceError] = React.useState();
   const [Service, setService] = React.useState([
     {
+      id:1,
       title: "Home Delivery Available",
       checked: false,
     },
     {
+      id:2,
       title: "Home Service Available",
       checked: false,
     },
     {
+      id:3,
       title: "Online Support Available",
       checked: false,
     },
@@ -178,6 +182,13 @@ const Pricing = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const [ModalVisible, setModalVisible] = React.useState(false);
   const businessForm = useSelector((state) => state.businessForm);
+  const listData = useSelector((state) => state.listData);
+
+  React.useEffect(() => {
+    // if(listData){
+    //   localOptionsToServer(listData)
+    // }
+  },[])
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -878,6 +889,7 @@ const Pricing = ({ navigation, route }) => {
               arr.push({
                 title: val,
                 checked: true,
+                id:arr.length+2
               });
               setService(arr);
             }}

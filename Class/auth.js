@@ -20,4 +20,8 @@ const checkUser = async () => {
   const res = await getJson("user");
   return res;
 };
-export { userLogin, checkUser };
+const logOut = async () => {
+  const res = await storeJson("user",null)
+  return res;
+}
+export { userLogin, checkUser,logOut };

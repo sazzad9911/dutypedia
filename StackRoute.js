@@ -35,17 +35,27 @@ import VendorAddress from "./screens/Seller/VendorAddress";
 import Login from "./screens/Login";
 import { checkUser } from "./Class/auth";
 import { useSelector, useDispatch } from "react-redux";
+import { getService } from "./Class/service";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
+  const vendorInfo = useSelector((state) => state.vendorInfo);
+  const [load, setLoad] = React.useState(false);
   const dispatch = useDispatch();
   React.useEffect(() => {
     checkUser()
       .then((res) => {
-        console.log(res)
+        //console.log(res)
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
+          getService(res.token).then((result) => {
+            setLoad(!load);
+            if (result) {
+              dispatch({ type: "SET_VENDOR_INFO", playload: result });
+            }
+          });
         } else {
+          setLoad(!load);
           dispatch({ type: "SET_USER", playload: [] });
         }
       })
@@ -61,7 +71,7 @@ export default function StackRoute() {
     },
   };
 
-  if (!user) {
+  if (!user && !load) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading.....</Text>
@@ -79,7 +89,7 @@ export default function StackRoute() {
           },
         })}
       >
-        {Array.isArray(user) && (
+        {Array.isArray(user) && load ? (
           <Stack.Screen
             options={{
               headerShown: false,
@@ -90,17 +100,19 @@ export default function StackRoute() {
             name="LogIn"
             component={Login}
           />
+        ) : (
+          <Stack.Screen
+            options={{
+              headerShown: false,
+              presentation: "modal",
+              animationTypeForReplace: "push",
+              animation: "slide_from_right",
+            }}
+            name="Dashboard"
+            component={TabRoute}
+          />
         )}
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            presentation: "modal",
-            animationTypeForReplace: "push",
-            animation: "slide_from_right",
-          }}
-          name="Dashboard"
-          component={TabRoute}
-        />
+
         <Stack.Screen
           options={{
             header: (props) => <ChatHead {...props} />,
