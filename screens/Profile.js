@@ -31,9 +31,10 @@ import Send from "./Appointment/Send";
 import Support from "./Support";
 import ImageViewer from "./ImageViewer";
 import Header from "./../components/Header";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import VendorProfile from "./VendorProfile";
 import Menu from "./Vendor/Menu";
+import {logOut} from '../Class/auth'
 
 const Stack = createStackNavigator();
 
@@ -152,6 +153,8 @@ const MainProfile = (props) => {
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const navigation = props.navigation;
+  const vendorInfo = useSelector((state) => state.vendorInfo);
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -218,7 +221,7 @@ const MainProfile = (props) => {
           <Text style={styles.headLine}>Easin Arafat</Text>
           <Text style={styles.text}>@Easinarafat</Text>
         </View>
-        <ProfileOption
+        <ProfileOption 
           badge={true}
           onPress={() => {
             navigation.navigate("ManageOrder");
@@ -234,7 +237,11 @@ const MainProfile = (props) => {
           Icon={() => <AntDesign name="calendar" size={24} color="black" />}
           title="Appointment"
         />
-        <ProfileOption
+        <ProfileOption onPress={() =>{
+          logOut()
+          dispatch({ type: "SET_USER", playload: [] });
+          dispatch({type:'SET_VENDOR_INFO',playload:false})
+        }}
           Icon={() => <AntDesign name="wallet" size={24} color="black" />}
           title="Account Balance"
         />

@@ -71,3 +71,17 @@ export const getService=async(token)=>{
  }
   return false;
 }
+export const getGigs=async(token,id) => {
+    const myHeaders=new Headers()
+    //const formData=new FormData()
+    myHeaders.append("Authorization", `Bearer ${token}`)
+    const options={
+        method: 'GET',
+        headers: myHeaders,
+    }
+  const result = await fetch(`${url}/server/services/get/gigs/${id}/STARTING`,options)
+ if(result){
+    return result.json()
+ }
+  return false;
+}

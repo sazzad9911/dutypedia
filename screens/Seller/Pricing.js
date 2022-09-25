@@ -33,7 +33,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import OutsideView from "react-native-detect-press-outside";
 import { useSelector, useDispatch } from "react-redux";
 import InputModal from "./InputModal";
-//import {localOptionsToServer} from '../../Class/dataConverter'
+import {localOptionsToServer} from '../../Class/dataConverter'
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -185,9 +185,14 @@ const Pricing = ({ navigation, route }) => {
   const listData = useSelector((state) => state.listData);
 
   React.useEffect(() => {
-    // if(listData){
-    //   localOptionsToServer(listData)
-    // }
+    if(listData){
+      try{
+        let data=localOptionsToServer(listData)
+        //console.log(data);
+      }catch (e) {
+        console.log(e);
+      }
+    }
   },[])
 
   React.useEffect(() => {

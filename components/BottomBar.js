@@ -1,17 +1,37 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text,Keyboard } from "react-native";
-import { Ionicons,Entypo } from "@expo/vector-icons";
-import { primaryColor, secondaryColor,backgroundColor } from "./../assets/colors";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Keyboard,
+} from "react-native";
+import { Ionicons, Entypo } from "@expo/vector-icons";
+import {
+  primaryColor,
+  secondaryColor,
+  backgroundColor,
+} from "./../assets/colors";
 import { Badge } from "react-native-paper";
-import  Animated,{FadeIn}  from 'react-native-reanimated';
-import {dashboard,order} from '../assets/icon'
-import {SvgXml} from 'react-native-svg'
+import Animated, { FadeIn } from "react-native-reanimated";
+import { dashboard, order } from "../assets/icon";
+import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
   const [route, setRoute] = React.useState(props.state.index);
   const [keyboardStatus, setKeyboardStatus] = React.useState(false);
-
+  const vendorInfo = useSelector((state) => state.vendorInfo);
+  const [User,setUser]= React.useState(false)
+  React.useEffect(() => {
+    if(vendorInfo){
+      setUser(true);
+    }else{
+      setUser(false);
+    }
+    //console.log(vendorInfo)
+  },[])
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -25,8 +45,8 @@ const BottomBar = (props) => {
       hideSubscription.remove();
     };
   }, []);
-  if(keyboardStatus){
-    return(<></>)
+  if (keyboardStatus) {
+    return <></>;
   }
   return (
     <Animated.View entering={FadeIn} style={styles.box}>
@@ -37,12 +57,25 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {route == 0 ? (
-          <SvgXml xml={dashboard} height="24" width="24"/>
+        {vendorInfo ? (
+          <>
+            {route == 0 ? (
+              <SvgXml xml={dashboard} height="24" width="24" />
+            ) : (
+              <SvgXml xml={dashboard} height="24" width="24" />
+            )}
+            <Text style={styles.text}>Dashboard</Text>
+          </>
         ) : (
-          <SvgXml xml={dashboard} height="24" width="24"/>
+          <>
+            {route == 0 ? (
+              <Ionicons name="home" size={24} color={backgroundColor} />
+            ) : (
+              <Ionicons name="home-outline" size={24} color="#808080" />
+            )}
+            <Text style={styles.text}>Home</Text>
+          </>
         )}
-        <Text style={styles.text}>Dashboard</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -51,12 +84,25 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {route == 1 ? (
-          <SvgXml xml={order} height="24" width="24"/>
+        {vendorInfo ? (
+          <>
+            {route == 1 ? (
+              <SvgXml xml={order} height="24" width="24" />
+            ) : (
+              <SvgXml xml={order} height="24" width="24" />
+            )}
+            <Text style={styles.text}>Order</Text>
+          </>
         ) : (
-          <SvgXml xml={order} height="24" width="24"/>
+          <>
+            {route == 1 ? (
+              <Ionicons name="search-sharp" size={24} color={backgroundColor} />
+            ) : (
+              <Ionicons name="search-outline" size={24} color="#808080" />
+            )}
+            <Text style={styles.text}>Search</Text>
+          </>
         )}
-        <Text style={styles.text}>Order</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -66,7 +112,11 @@ const BottomBar = (props) => {
         style={styles.button}
       >
         {route == 2 ? (
-          <Ionicons name="paper-plane-sharp" size={24} color={backgroundColor} />
+          <Ionicons
+            name="paper-plane-sharp"
+            size={24}
+            color={backgroundColor}
+          />
         ) : (
           <Ionicons name="paper-plane-outline" size={24} color="#808080" />
         )}
@@ -79,14 +129,22 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        <Badge style={{
-          position: "absolute",
-          top: -5,
-          left: 25,
-          zIndex:10,
-        }}>3</Badge>
+        <Badge
+          style={{
+            position: "absolute",
+            top: -5,
+            left: 25,
+            zIndex: 10,
+          }}
+        >
+          3
+        </Badge>
         {route == 3 ? (
-          <Ionicons name="notifications-sharp" size={24} color={backgroundColor} />
+          <Ionicons
+            name="notifications-sharp"
+            size={24}
+            color={backgroundColor}
+          />
         ) : (
           <Ionicons name="notifications-outline" size={24} color="#808080" />
         )}
@@ -104,12 +162,25 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {route == 4 ? (
-          <Ionicons name="menu" size={28} color={backgroundColor} />
+        {vendorInfo ? (
+          <>
+            {route == 4 ? (
+              <Ionicons name="menu" size={28} color={backgroundColor} />
+            ) : (
+              <Ionicons name="menu-outline" size={28} color="#808080" />
+            )}
+            <Text style={styles.text}>Menu</Text>
+          </>
         ) : (
-          <Ionicons name="menu-outline" size={28} color="#808080" />
+          <>
+            {route == 4 ? (
+              <Ionicons name="person-circle" size={24} color={backgroundColor}/>
+            ) : (
+              <Ionicons name="person-circle-outline" size={24} color="#808080"/>
+            )}
+            <Text style={styles.text}>Profile</Text>
+          </>
         )}
-        <Text style={styles.text}>Menu</Text>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -138,6 +209,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13,
     color: "#808080",
-    fontFamily: 'Poppins-Light'
+    fontFamily: "Poppins-Light",
   },
 });

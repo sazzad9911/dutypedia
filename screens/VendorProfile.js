@@ -40,9 +40,9 @@ import { CheckBox } from "../screens/Seller/Pricing";
 import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
 import ProfileOption from "../components/ProfileOption";
-import { fileFromURL } from '../action';
-import {uploadFile } from '../Class/upload'
-import {getService} from '../Class/service'
+import { fileFromURL } from "../action";
+import { uploadFile } from "../Class/upload";
+import { getService, getGigs } from "../Class/service";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -58,11 +58,16 @@ const VendorProfile = (props) => {
   const [ActiveService, setActiveService] = React.useState();
   const [SubServiceList, setSubServiceList] = React.useState([]);
   const [ButtonPress, setButtonPress] = React.useState(false);
+  //new
   const [Images, setImages] = React.useState([]);
-  const newUser= useSelector((state) => state.user);
-  const [Loading, setLoading]= React.useState(false);
+  const newUser = useSelector((state) => state.user);
+  const [Loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const [Price, setPrice] = React.useState();
+  const [Title, setTitle] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [Facilities, setFacilities] = React.useState([]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -76,14 +81,10 @@ const VendorProfile = (props) => {
       return result;
     }
     return null;
-  }; 
+  };
   React.useEffect(() => {
     //console.log(vendorInfo);
-    
-    if (vendorInfo) {
-      setImages([
-      ]);
-    }
+
     if (Array.isArray(listData)) {
       let array = [];
       listData.map((item, i) => {
@@ -120,35 +121,55 @@ const VendorProfile = (props) => {
       }
     }
   }, [ActiveService]);
-  const confirm = async() => {
-    if(!newUser){
-      console.log('Invalid user')
-      return
+  const confirm = async () => {
+    if (!newUser) {
+      console.log("Invalid user");
+      return;
     }
-    let res={}
-    let blobImages=[]
-    let imageLinks = []
-    const formData=new FormData();
-    await Array.isArray(Images)&&
-    Images.forEach((image,i)=>{
-      blobImages.push(fileFromURL(image))
-    })
-    const result=await uploadFile(blobImages,newUser.token)
-    if(result){
-      res={
-        code:true,
-        message:'Files upload successful'
-      }
-      console.log(result)
-      return res
+    let res = {};
+    let blobImages = [];
+    let imageLinks = [];
+    const formData = new FormData();
+    (await Array.isArray(Images)) &&
+      Images.forEach((image, i) => {
+        blobImages.push(fileFromURL(image));
+      });
+    const result = await uploadFile(blobImages, newUser.token);
+    if (result) {
+      res = {
+        code: true,
+        message: "Files upload successful",
+      };
+      console.log(result);
+      return res;
     }
-    res={
-      code:false,
-      message:'Files upload failed'
-    }
-    console.log(result)
-    return res
+    res = {
+      code: false,
+      message: "Files upload failed",
+    };
+    console.log(result);
+    return res;
   };
+  React.useEffect(() => {
+    if (vendorInfo) {
+      getGigs(newUser.token, vendorInfo.service.id).then((res) => {
+        if (res && res.gigs) {
+          setImages(res.gigs[0].images);
+          setPrice(res.gigs[0].price);
+          setTitle(res.gigs[0].title);
+          setDescription(res.gigs[0].description);
+          setFacilities(res.gigs[0].facilites.selectedOptions);
+        }
+      });
+    }
+  }, []);
+  if (!Images) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading....</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -205,7 +226,7 @@ const VendorProfile = (props) => {
             }}
           >
             <Text style={styles.headLine}>
-            {vendorInfo?.service.serviceCenterName}
+              {vendorInfo?.service.serviceCenterName}
             </Text>
             <Text
               style={{
@@ -214,8 +235,8 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-SemiBold",
               }}
             >
-              {vendorInfo?.service.providerInfo.title+' '}
-              {vendorInfo?vendorInfo.service.providerInfo.name:''}(
+              {vendorInfo?.service.providerInfo.title + " "}
+              {vendorInfo ? vendorInfo.service.providerInfo.name : ""}(
               {vendorInfo?.service.providerInfo.gender})
             </Text>
             <Text
@@ -224,8 +245,7 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-SemiBold",
               }}
             >
-              Position of{" "}
-              {vendorInfo?.service.providerInfo.position}
+              Position of {vendorInfo?.service.providerInfo.position}
             </Text>
           </View>
           <View
@@ -284,7 +304,9 @@ const VendorProfile = (props) => {
         />
         <BarOption
           icon={flag}
-          title={`Since ${new Date(vendorInfo?.service.startDate).getFullYear()}`}
+          title={`Since ${new Date(
+            vendorInfo?.service.startDate
+          ).getFullYear()}`}
         />
         <View
           style={{
@@ -342,17 +364,17 @@ const VendorProfile = (props) => {
               </Text>
               <View>
                 {vendorInfo?.service.about.length > 200 && (
-                    <Text
-                      style={{
-                        color: "tomato",
-                        fontFamily: "Poppins-SemiBold",
-                        fontSize: 14,
-                        marginTop: 1,
-                      }}
-                    >
-                      {Lines === 2 ? "READ MORE" : "READ LESS"}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      color: "tomato",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: 14,
+                      marginTop: 1,
+                    }}
+                  >
+                    {Lines === 2 ? "READ MORE" : "READ LESS"}
+                  </Text>
+                )}
               </View>
             </TouchableOpacity>
           </View>
@@ -383,17 +405,20 @@ const VendorProfile = (props) => {
           title="Address"
         />
         <View style={{ backgroundColor: primaryColor }}>
-        <ScrollView horizontal={true}>
-        <View style={{width:20}}/>
-        <Button style={{
-            color:'white',
-            backgroundColor:'black',
-            borderWidth:0,
-            marginVertical:10,
-            height:30
-        }} title='Bargaining'/>
-        <View style={{width:20}}/>
-        </ScrollView>
+          <ScrollView horizontal={true}>
+            <View style={{ width: 20 }} />
+            <Button
+              style={{
+                color: "white",
+                backgroundColor: "black",
+                borderWidth: 0,
+                marginVertical: 10,
+                height: 30,
+              }}
+              title="Bargaining"
+            />
+            <View style={{ width: 20 }} />
+          </ScrollView>
           <SliderBox
             images={Images}
             sliderBoxHeight={250}
@@ -418,9 +443,7 @@ const VendorProfile = (props) => {
               fontFamily: "Poppins-Medium",
             }}
           >
-            {businessForm && businessForm.serviceTitle
-              ? businessForm.serviceTitle
-              : ""}
+            {Title}
           </Text>
 
           <TouchableOpacity
@@ -431,13 +454,7 @@ const VendorProfile = (props) => {
                 setNewLines(4);
               }
             }}
-            disabled={
-              businessForm &&
-              businessForm.description &&
-              businessForm.description.length > 230
-                ? false
-                : true
-            }
+            disabled={Description > 230 ? false : true}
           >
             <Text
               numberOfLines={NewLines}
@@ -450,25 +467,21 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-Light",
               }}
             >
-              {businessForm && businessForm.description
-                ? businessForm.description
-                : ""}
+              {Description}
             </Text>
-            {businessForm &&
-              businessForm.description &&
-              businessForm.description.length > 230 && (
-                <Text
-                  style={{
-                    marginHorizontal: 20,
-                    fontSize: 14,
-                    fontFamily: "Poppins-Medium",
-                    color: "green",
-                    marginTop: -5,
-                  }}
-                >
-                  Read {NewLines == 4 ? "More" : "Less"}
-                </Text>
-              )}
+            {Description > 230 && (
+              <Text
+                style={{
+                  marginHorizontal: 20,
+                  fontSize: 14,
+                  fontFamily: "Poppins-Medium",
+                  color: "green",
+                  marginTop: -5,
+                }}
+              >
+                Read {NewLines == 4 ? "More" : "Less"}
+              </Text>
+            )}
           </TouchableOpacity>
           <Text
             style={{
@@ -479,7 +492,7 @@ const VendorProfile = (props) => {
               color: "black",
             }}
           >
-            From {businessForm && businessForm.price ? businessForm.price : ""}৳
+            From {Price}৳
           </Text>
         </View>
         <View
@@ -585,21 +598,18 @@ const VendorProfile = (props) => {
                   >
                     Extra Facilities
                   </Text>
-                  {Array.isArray(businessForm.facilities) &&
-                    businessForm.facilities.map(
-                      (doc, i) =>
-                        doc.checked && (
-                          <Text
-                            style={{
-                              fontSize: 13,
-                              fontFamily: "Poppins-Light",
-                            }}
-                            key={i}
-                          >
-                            {doc.title}
-                          </Text>
-                        )
-                    )}
+                  {Array.isArray(Facilities) &&
+                    Facilities.map((doc, i) => (
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontFamily: "Poppins-Light",
+                        }}
+                        key={i}
+                      >
+                        {doc.title}
+                      </Text>
+                    ))}
                 </View>
               )}
             </View>
@@ -610,8 +620,8 @@ const VendorProfile = (props) => {
               zIndex: 100,
               bottom: 0,
               height: 20,
-              flex:(width/3.2)*2,
-              left:(width/3.2)*1.2
+              flex: (width / 3.2) * 2,
+              left: (width / 3.2) * 1.2,
             }}
             colors={[
               "rgba(255, 255, 255, 0.252)",

@@ -9,7 +9,7 @@ import {
 import { Text } from "react-native";
 import { Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -27,27 +27,27 @@ import {
   support,
 } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
-import {logOut} from '../../Class/auth'
+import { logOut } from "../../Class/auth";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const dispatch = useDispatch();
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: "#fbfbfb" }}>
       <StatusBar barStyle="dark-content" backgroundColor={primaryColor} />
-      <View
-        style={{
-          flexDirection: "row",
-          marginVertical: 20,
-          marginHorizontal: 20,
-          alignItems: "center",
-          marginTop:35
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("VendorProfile");
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("VendorProfile");
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: 20,
+            marginHorizontal: 20,
+            alignItems: "center",
+            marginTop: 35,
           }}
         >
           <View
@@ -63,60 +63,61 @@ const Menu = ({ navigation }) => {
           >
             <FontAwesome name="user" size={55} color="#983C85" />
           </View>
-        </TouchableOpacity>
-        <View
-          style={{
-            flex: 5,
-            marginLeft: 15,
-          }}
-        >
-          <Text
-            numberOfLines={1}
+
+          <View
             style={{
-              fontFamily: "Poppins-Medium",
-              fontSize: 20,
-              margin: 0,
-              color: textColor,
+              flex: 5,
+              marginLeft: 15,
             }}
           >
-            {vendorInfo &&
-            vendorInfo.service &&
-            vendorInfo.service.serviceCenterName
-              ? vendorInfo.service.serviceCenterName
-              : "Easin Arafat It Service"}
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Poppins-Medium",
-              fontSize: 15,
-              color: textColor,
-              marginTop: -5,
-            }}
-          >
-            {vendorInfo &&
-            vendorInfo.service &&
-            vendorInfo.service.providerInfo &&
-            vendorInfo.service.providerInfo.title
-              ? vendorInfo.service.providerInfo.title
-              : "Mr" + " "}
-            {vendorInfo &&
-            vendorInfo.service &&
-            vendorInfo.service.providerInfo &&
-            vendorInfo.service.providerInfo.name
-              ? vendorInfo.service.providerInfo.name
-              : "Easin Arafat"}
-          </Text>
-          <Text
-            style={{
-              fontSize: 12,
-              fontFamily: "Poppins-Light",
-              color: "#707070",
-            }}
-          >
-            See Your Profile
-          </Text>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontFamily: "Poppins-Medium",
+                fontSize: 20,
+                margin: 0,
+                color: textColor,
+              }}
+            >
+              {vendorInfo &&
+              vendorInfo.service &&
+              vendorInfo.service.serviceCenterName
+                ? vendorInfo.service.serviceCenterName
+                : "Easin Arafat It Service"}
+            </Text>
+            <Text
+              style={{
+                fontFamily: "Poppins-Medium",
+                fontSize: 15,
+                color: textColor,
+                marginTop: -5,
+              }}
+            >
+              {vendorInfo &&
+              vendorInfo.service &&
+              vendorInfo.service.providerInfo &&
+              vendorInfo.service.providerInfo.title
+                ? vendorInfo.service.providerInfo.title
+                : "Mr" + " "}
+              {vendorInfo &&
+              vendorInfo.service &&
+              vendorInfo.service.providerInfo &&
+              vendorInfo.service.providerInfo.name
+                ? vendorInfo.service.providerInfo.name
+                : "Easin Arafat"}
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: "Poppins-Light",
+                color: "#707070",
+              }}
+            >
+              See Your Profile
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={{ height: 20 }} />
       <View
         style={{
@@ -126,11 +127,12 @@ const Menu = ({ navigation }) => {
           marginRight: 10,
         }}
       >
-        <Cart onPress={()=>{
-            logOut()
+        <Cart
+          onPress={() => {
+            logOut();
             dispatch({ type: "SET_USER", playload: [] });
-            //dispatch({type:'SET_VENDOR_INFO',playload:null})
-        }}
+            dispatch({ type: "SET_VENDOR_INFO", playload: false });
+          }}
           title="Manage Order"
           Icon={() => <SvgXml xml={manageOrder} height="30" width="30" />}
         />
@@ -217,13 +219,15 @@ const Menu = ({ navigation }) => {
 };
 
 export default Menu;
-const Cart = ({ title, Icon,onPress }) => {
+const Cart = ({ title, Icon, onPress }) => {
   return (
-    <TouchableOpacity onPress={() =>{
-        if(onPress){
-            onPress();
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
         }
-    }}>
+      }}
+    >
       <View
         style={{
           width: width / 2 - 30,
@@ -234,10 +238,10 @@ const Cart = ({ title, Icon,onPress }) => {
             width: 2,
             height: 2,
           },
-          shadowOpacity: 0.4,
-          shadowRadius: 3,
-          shadowColor: "blue",
-          elevation: 3,
+          shadowOpacity: 0.1,
+          shadowRadius: 1,
+          shadowColor: "#1E2CDA",
+          elevation: 1,
           padding: 10,
           margin: 10,
           paddingLeft: 15,

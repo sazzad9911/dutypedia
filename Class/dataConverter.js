@@ -13,26 +13,28 @@ const localOptionsToServer=async(data)=>{
         })
         arr=await uniq(arr)
         await arr.map((s,i)=>{
-            let newOptions={}
-            newOptions.`${s}`=titleDigging(s,data)
-            options={...options,newOptions}
+            options={}
+            options[s]= titleDigging(s,data)
         })
+        //return options
     }else if(data[0].mainTitle&&data[0].title){
         options=[]
        await data.map(d=>{
         options.push({
             title:d.title,
-            selectedOptions:optionDiggingWithTableNameAndTitle(d.title,d.tableName,data)
+            selectedOptions: optionDiggingWithTableNameAndTitle(d.title,d.tableName,data)
         })
       })
+      //return options
     }else{
-        await options={
+        options={
             title:data[0].mainTitle,
-            selectedOptions:optionDiggingWithTableNameAndMainTitle(data[0].mainTitle,data[0].tableName,data)
+            selectedOptions:await optionDiggingWithTableNameAndMainTitle(data[0].mainTitle,data[0].tableName,data)
         }
+        //return options
     }
     console.log(options)
-    return options
+    
 }
 const titleDigging=async(title,data)=>{
     let arr=[]
@@ -41,7 +43,7 @@ const titleDigging=async(title,data)=>{
             arr.push({
                 title:d.subTitle,
                 multiple:true,
-                multiFormData:tableDiggingWithTitle(d.title,d.tableName,data)
+                multiFormData: tableDiggingWithTitle(d.title,d.tableName,data)
             })
         }
     })
@@ -53,7 +55,7 @@ const tableDiggingWithTitle=async(title,tableName,data)=>{
         if(d.title==title&&d.tableName==tableName){
             arr.push({
                 title:d.tableName,
-                selectedOptions:optionDiggingWithTableNameAndSubTitle(d.subTitle,d.tableName,data)
+                selectedOptions: optionDiggingWithTableNameAndSubTitle(d.subTitle,d.tableName,data)
             })
         }
     })

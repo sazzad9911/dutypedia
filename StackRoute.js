@@ -41,6 +41,7 @@ export default function StackRoute() {
   const user = useSelector((state) => state.user);
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const [load, setLoad] = React.useState(false);
+  const [Vendor,setVendor] = React.useState(false);
   const dispatch = useDispatch();
   React.useEffect(() => {
     checkUser()
@@ -49,9 +50,14 @@ export default function StackRoute() {
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
           getService(res.token).then((result) => {
-            setLoad(!load);
-            if (result) {
+            if (result && !result.msg) {
               dispatch({ type: "SET_VENDOR_INFO", playload: result });
+              console.log('ok')
+              setLoad(!load);
+            }else{
+              dispatch({ type: "SET_VENDOR_INFO", playload: false });
+              setLoad(!load);
+              console.log('not ok')
             }
           });
         } else {
