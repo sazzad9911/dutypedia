@@ -5,20 +5,23 @@ import { AntDesign } from "@expo/vector-icons";
 
 const SubHeader = (props) => {
   const navigation = props.navigation;
-  const params=props.route.params;
+  const params=props.route?props.route.params:null;
 
   return (
     <View
-      style={{
+      style={[{
         backgroundColor: primaryColor,
         flexDirection: "row",
         alignItems: "center",
         paddingTop: Platform.OS == "ios" ? 28 : 35,
         paddingBottom: 10,
-      }}
+      },props.style]}
     >
       <AntDesign
         onPress={() => {
+          if(props.onPress){
+            return props.onPress()
+          }
           navigation.goBack();
         }}
         style={{

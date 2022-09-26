@@ -12,6 +12,7 @@ import { secondaryColor, primaryColor, textColor } from "../assets/colors";
 
 const BackHeader = (props) => {
   const navigation = props.navigation;
+  const ref= React.useRef();
   return (
     <View style={styles.box}>
       <View
@@ -31,11 +32,14 @@ const BackHeader = (props) => {
           size={25}
           color="black"
         />
-        <Text style={styles.text}>Dutypedia</Text>
+        <Text style={styles.text}>{props.title?props.title:'Dutypedia'}</Text>
       </View>
       <TouchableOpacity
         onPress={() => {
           //navigation.navigate("SearchScreen");
+          if(ref){
+            ref.current.focus();
+          }
         }}
         style={styles.input}
       >
@@ -47,7 +51,7 @@ const BackHeader = (props) => {
           size={24}
           color={textColor}
         />
-        <TextInput
+        <TextInput ref={ref}
           value={props.value}
           onChangeText={props.onChange}
           placeholder={
@@ -56,7 +60,7 @@ const BackHeader = (props) => {
           style={{
             color: textColor,
             fontFamily: "Poppins-Medium",
-            width:180
+            width:props.inputWidth? props.inputWidth:180
           }}
         ></TextInput>
       </TouchableOpacity>

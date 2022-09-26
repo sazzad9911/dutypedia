@@ -140,7 +140,9 @@ const Menu = ({ navigation }) => {
           title="Appointment"
           Icon={() => <SvgXml xml={appointment} height="30" width="30" />}
         />
-        <Cart
+        <Cart onPress={()=>{
+          navigation.navigate('Expenses')
+        }}
           title="Expenses"
           Icon={() => (
             <Image

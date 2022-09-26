@@ -38,6 +38,7 @@ import { getService } from "./Class/service";
 import AllService from './screens/Vendor/AllService';
 import VendorCalender from './screens/Vendor/VendorCalender';
 import VendorAddress from './screens/Vendor/VendorAddress';
+import Expenses from './screens/Vendor/Expenses';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -225,7 +226,15 @@ export default function StackRoute() {
           }}
           component={VendorAddress}
         />
+         <Stack.Screen
+          name="Expenses"
+          options={{
+            headerShown: false,
+          }}
+          component={Expenses}
+        />
       </Stack.Navigator>
+      
     </NavigationContainer>
   );
 }
