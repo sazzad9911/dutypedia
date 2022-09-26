@@ -146,6 +146,7 @@ const Review = (props) => {
         image ? fileFromURL({ uri: image }) : "",
         backgroundImage ? fileFromURL({ uri: backgroundImage }) : ""
       );
+      console.log(res)
       if (res) {
         return { code: true, message: "Profile created successfully" };
       }
@@ -697,7 +698,7 @@ const Review = (props) => {
                 getService(newUser.token).then((data)=>{
                   if(data){
                     dispatch({type:'SET_VENDOR_INFO',playload:data})
-                    navigation.navigate("MainProfile")
+                    navigation.navigate("Profile")
                   }else{
                     Alert.alert("Opps!","Server problem occurs. Please try again")
                   }

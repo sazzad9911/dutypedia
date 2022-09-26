@@ -7,6 +7,7 @@ import length from './Reducers/length';
 import businessForm from './Reducers/businessForm';
 import user from './Reducers/user';
 import vendorInfo from './Reducers/vendorInfo';
+import newListData from './Reducers/newListData';
 
 const combine=combineReducers({
     bottomSheet:bottomSheet,
@@ -17,6 +18,7 @@ const combine=combineReducers({
     businessForm:businessForm,
     user:user,
     vendorInfo: vendorInfo,
+    newListData: newListData,
 })
 const store=createStore(combine)
 export default store

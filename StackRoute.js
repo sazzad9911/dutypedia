@@ -31,11 +31,13 @@ import Address from "./screens/Seller/Address";
 import Review from "./screens/Seller/Review";
 import AllServiceList from "./screens/Seller/AllServiceList";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";
-import VendorAddress from "./screens/Seller/VendorAddress";
 import Login from "./screens/Login";
 import { checkUser } from "./Class/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { getService } from "./Class/service";
+import AllService from './screens/Vendor/AllService';
+import VendorCalender from './screens/Vendor/VendorCalender';
+import VendorAddress from './screens/Vendor/VendorAddress';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -192,6 +194,13 @@ export default function StackRoute() {
           component={AllServiceList}
         />
         <Stack.Screen
+          name="Service List_1"
+          options={{
+            header: (props) => <SubHeader title="Service List" {...props} />,
+          }}
+          component={AllService}
+        />
+        <Stack.Screen
           name="Company Calender"
           options={{
             header: (props) => (
@@ -201,9 +210,18 @@ export default function StackRoute() {
           component={CompanyCalendar}
         />
         <Stack.Screen
+          name="Vendor Calender"
+          options={{
+            header: (props) => (
+              <SubHeader title="Company Calender" {...props} />
+            ),
+          }}
+          component={VendorCalender}
+        />
+        <Stack.Screen
           name="Vendor Address"
           options={{
-            header: (props) => <SubHeader title="Vendor Address" {...props} />,
+            header: (props) => <SubHeader title="Address" {...props} />,
           }}
           component={VendorAddress}
         />

@@ -43,6 +43,7 @@ import ProfileOption from "../components/ProfileOption";
 import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { getService, getGigs } from "../Class/service";
+import { serverToLocal } from "../Class/dataConverter";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -68,6 +69,7 @@ const VendorProfile = (props) => {
   const [Title, setTitle] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Facilities, setFacilities] = React.useState([]);
+  const [NewDataList, setNewDataList] = React.useState([]); 
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -84,10 +86,9 @@ const VendorProfile = (props) => {
   };
   React.useEffect(() => {
     //console.log(vendorInfo);
-
-    if (Array.isArray(listData)) {
+    if (Array.isArray(NewDataList)) {
       let array = [];
-      listData.map((item, i) => {
+      NewDataList.map((item, i) => {
         if (item.title) {
           if (i == 0) {
             setActiveService(item.title);
@@ -104,12 +105,12 @@ const VendorProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, []);
+  }, [NewDataList.length]);
   React.useEffect(() => {
     setSubServiceList([]);
-    if (Array.isArray(listData)) {
+    if (Array.isArray(NewDataList)) {
       let arr = [];
-      listData.map((item) => {
+      NewDataList.map((item) => {
         if (item.title && item.subTitle && item.title.match(ActiveService)) {
           arr.push(item.subTitle);
         } else {
@@ -159,11 +160,28 @@ const VendorProfile = (props) => {
           setTitle(res.gigs[0].title);
           setDescription(res.gigs[0].description);
           setFacilities(res.gigs[0].facilites.selectedOptions);
+          try {
+            dispatch({
+              type: "SET_NEW_LIST_DATA",
+              playload: serverToLocal(
+                res.gigs[0].services.options,
+                res.gigs[0].services.category
+              )
+            });
+            setNewDataList(
+              serverToLocal(
+                res.gigs[0].services.options,
+                res.gigs[0].services.category
+              )
+            );
+          } catch (e) {
+            console.log(e.message);
+          }
         }
       });
     }
   }, []);
-  if (!Images) {
+  if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading....</Text>
@@ -379,7 +397,11 @@ const VendorProfile = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <ProfileOption
+        <ProfileOption onPress={() =>{
+          navigation.navigate('Vendor Calender',{
+            
+          })
+        }}
           Icon={() => (
             <AntDesign name="calendar" size={24} color={assentColor} />
           )}
@@ -580,10 +602,11 @@ const VendorProfile = (props) => {
                     item={item}
                     i={i}
                     name={ActiveService}
+                    NewDataList={NewDataList}
                   />
                 ))
               ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable name={ActiveService} />
+                <ServiceTable NewDataList={NewDataList} name={ActiveService} />
               ) : (
                 <></>
               )}
@@ -633,7 +656,10 @@ const VendorProfile = (props) => {
         <View style={{ backgroundColor: primaryColor }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Service List");
+              navigation.navigate("Service List_1",{
+                NewDataList:NewDataList,
+                facilites:Facilities
+              });
             }}
             style={{
               flexDirection: "row",
@@ -741,8 +767,9 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 89,
+    height: 89,
+    borderRadius:5
   },
   starIcon: {
     marginRight: 3,
@@ -860,22 +887,21 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-const ServiceTable = ({ item, i, name }) => {
-  const listData = useSelector((state) => state.listData);
+const ServiceTable = ({ item, i, name, NewDataList }) => {
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
   React.useEffect(() => {
-    if (listData) {
+    if (NewDataList) {
       setData([]);
       let arr = [];
       if (item) {
-        listData.forEach((data) => {
+        NewDataList.forEach((data) => {
           if (data.subTitle && data.subTitle == item) {
             arr.push(data.tableName);
           }
         });
       } else {
-        listData.forEach((item) => {
+        NewDataList.forEach((item) => {
           if (item.title && item.title == name) {
             arr.push(item.tableName);
           }
@@ -916,7 +942,7 @@ const ServiceTable = ({ item, i, name }) => {
             >
               {item}
             </Text>
-            <Rows item={item} name={name} />
+            <Rows item={item} name={name} NewDataList={NewDataList} />
           </View>
         ))
       ) : (
@@ -930,24 +956,23 @@ const ServiceTable = ({ item, i, name }) => {
           >
             {name}
           </Text>
-          <Rows name={name} />
+          <Rows NewDataList={NewDataList} name={name} />
         </View>
       )}
     </View>
   );
 };
-const Rows = ({ title, item, name }) => {
+const Rows = ({ title, item, name, NewDataList }) => {
   const [text, setText] = React.useState();
-  const listData = useSelector((state) => state.listData);
 
   React.useEffect(() => {
     //console.log(item);
-    if (!listData) {
+    if (!NewDataList) {
       return;
     }
     let count = 0;
     let word = "";
-    listData.map((doc, j) => {
+    NewDataList.map((doc, j) => {
       if (doc.title && doc.tableName.match(item) && doc.title.match(name)) {
         word = word + `${count != 0 ? ", " : ""}${doc.data.title}`;
         count++;
@@ -960,7 +985,7 @@ const Rows = ({ title, item, name }) => {
       }
     });
     setText(word);
-  }, [item + title + listData]);
+  }, [item + title + NewDataList]);
 
   return (
     <Text

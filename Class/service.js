@@ -1,14 +1,26 @@
 import {url} from '../action'
 import axios from 'axios'
+import {localOptionsToServer} from '../Class/dataConverter'
 
 export const createService=async(businessForm,listData,images,token,img1,img2)=>{
     const myHeaders=new Headers()
     //const formData=new FormData()
+    let working=[]
+    Array.isArray(businessForm.workingTime)
+    &&businessForm.workingTime.forEach(doc=>{
+        working.push({
+            day:doc.title,
+            open:doc.openingTime,
+            close:doc.closingTime,
+        })
+    })
     myHeaders.append("Authorization", `Bearer ${token}`)
     const formData={
         "data":{
             "optionData":{
                 "category":listData[0].mainTitle,
+                "type":listData[0].subTitle?3:listData[0].title?2:1,
+                "options":localOptionsToServer(listData)
             },
             "dashboard":listData[0].mainTitle,
             "uploadServiceData":{
@@ -25,7 +37,7 @@ export const createService=async(businessForm,listData,images,token,img1,img2)=>
                 "position":businessForm.position,
                 "worker":businessForm.teamNumber,
                 "startDate":businessForm.startDate,
-                "workingTime":Array.isArray(businessForm.workingTime)?businessForm.workingTime:[],
+                "workingTime":working,
                 "t47":false,
                 "startingPrice":businessForm.price,
                 "facilities":{
@@ -52,9 +64,10 @@ export const createService=async(businessForm,listData,images,token,img1,img2)=>
         body:formData
     }
   const result = await fetch(`${url}/server/services/create`,options)
- if(result){
+ if(result&&!result.msg){
     return true
  }
+ console.log(result)
   return false;
 }
 export const getService=async(token)=>{

@@ -35,7 +35,7 @@ const Menu = ({ navigation }) => {
 
   return (
     <ScrollView style={{ backgroundColor: "#fbfbfb" }}>
-      <StatusBar barStyle="dark-content" backgroundColor={primaryColor} />
+      <View style={{height:33}}/>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("VendorProfile");

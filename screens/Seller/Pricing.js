@@ -184,16 +184,6 @@ const Pricing = ({ navigation, route }) => {
   const businessForm = useSelector((state) => state.businessForm);
   const listData = useSelector((state) => state.listData);
 
-  React.useEffect(() => {
-    if(listData){
-      try{
-        let data=localOptionsToServer(listData)
-        //console.log(data);
-      }catch (e) {
-        console.log(e);
-      }
-    }
-  },[])
 
   React.useEffect(() => {
     setServiceCounter(0);
