@@ -32,6 +32,7 @@ import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
 import MainCategory from "./MainCategory";
 import BackHeader from "./../components/BackHeader";
+import {checkVendor} from '../Class/auth'
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +41,15 @@ const TabRoute = () => {
   const bottomSheet = useSelector((state) => state.bottomSheet);
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
+  const user= useSelector((state) => state.user);
+  const vendorInfo= useSelector((state) => state.vendorInfo);
+  React.useEffect(() => {
+    checkVendor().then((res) => {
+      if(res) {
+        dispatch({ type: "SET_VENDOR",playload:res})
+      }
+    })
+  },[])
 
   return (
     <View

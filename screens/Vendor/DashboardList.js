@@ -9,6 +9,7 @@ import Button from './../../components/Button';
 const { height, width } = Dimensions.get("window");
 import {useSelector,useDispatch} from 'react-redux';
 import {getGigs} from '../../Class/service'
+import {vendorLogin} from '../../Class/auth'
 
 const DashboardList = ({navigation}) => {
     const vendorInfo =useSelector(state=>state.vendorInfo)
@@ -48,6 +49,7 @@ const DashboardList = ({navigation}) => {
           {Data?(
             Data.map((doc,i)=>(
                 <Cart onChange={data=>{
+                    vendorLogin(data)
                     dispatch({type: 'SET_VENDOR',playload:data})
                     navigation.navigate("Profile")
                 }} key={i} data={doc} />
