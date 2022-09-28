@@ -31,18 +31,21 @@ import Send from "./Appointment/Send";
 import Support from "./Support";
 import ImageViewer from "./ImageViewer";
 import Header from "./../components/Header";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import VendorProfile from "./VendorProfile";
 import Menu from "./Vendor/Menu";
-import {logOut} from '../Class/auth'
+import { logOut,logoutVendor } from "../Class/auth";
+import { dashboard, logout } from "../assets/icon";
+import { SvgXml } from "react-native-svg";
 
 const Stack = createStackNavigator();
 
 const Profile = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const vendor = useSelector((state) => state.vendor);
   return (
     <Stack.Navigator>
-      {vendorInfo ? (
+      {vendor ? (
         <Stack.Screen
           name="MainProfile"
           options={{
@@ -155,6 +158,14 @@ const MainProfile = (props) => {
   const navigation = props.navigation;
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const [LogOut, setLogOut]= React.useState(false);
+
+  React.useEffect(() => {
+    if(user&&!Array.isArray(user)){
+      setLogOut(false)
+    }
+  }, [user]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -165,7 +176,7 @@ const MainProfile = (props) => {
       quality: 1,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -183,6 +194,13 @@ const MainProfile = (props) => {
       setBackgroundImage(result.uri);
     }
   };
+  if (LogOut) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading.....</Text>
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
@@ -218,10 +236,12 @@ const MainProfile = (props) => {
               <EvilIcons name="camera" size={24} color="red" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.headLine}>Easin Arafat</Text>
-          <Text style={styles.text}>@Easinarafat</Text>
+          <Text style={styles.headLine}>
+            {user ? user.user.firstName + " " + user.user.lastName : "-"}
+          </Text>
+          <Text style={styles.text}>@{user ? user.user.username : ""}</Text>
         </View>
-        <ProfileOption 
+        <ProfileOption
           badge={true}
           onPress={() => {
             navigation.navigate("ManageOrder");
@@ -237,11 +257,10 @@ const MainProfile = (props) => {
           Icon={() => <AntDesign name="calendar" size={24} color="black" />}
           title="Appointment"
         />
-        <ProfileOption onPress={() =>{
-          logOut()
-          dispatch({ type: "SET_USER", playload: [] });
-          dispatch({type:'SET_VENDOR_INFO',playload:false})
-        }}
+        <ProfileOption
+          onPress={() => {
+            
+          }}
           Icon={() => <AntDesign name="wallet" size={24} color="black" />}
           title="Account Balance"
         />
@@ -258,6 +277,29 @@ const MainProfile = (props) => {
           }}
           Icon={() => <Ionicons name="business" size={24} color="black" />}
           title="Create a business account"
+        />
+        {vendorInfo && (
+          <ProfileOption
+            onPress={() => {
+              navigation.navigate("DashboardList");
+            }}
+            Icon={() => <SvgXml xml={dashboard} height="24" width="24" />}
+            title="Login To Business Account"
+          />
+        )}
+        <ProfileOption
+          onPress={() => {
+            setLogOut(true);
+            logOut();
+            logoutVendor();
+            dispatch({type:'SET_VENDOR',playload:false});
+            dispatch({ type: "SET_USER", playload: [] });
+            dispatch({ type: "SET_VENDOR_INFO", playload: false });
+          }}
+          Icon={() => (
+            <Ionicons name="log-out-outline" size={24} color="black" />
+          )}
+          title="Log Out"
         />
         <ProfileOption
           onPress={() => {

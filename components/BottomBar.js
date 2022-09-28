@@ -17,21 +17,23 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { dashboard, order } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
+import { checkVendor } from './../Class/auth';
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
   const [route, setRoute] = React.useState(props.state.index);
   const [keyboardStatus, setKeyboardStatus] = React.useState(false);
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const vendor= useSelector((state) => state.vendor);
   const [User,setUser]= React.useState(false)
   React.useEffect(() => {
-    if(vendorInfo){
+    if(vendor){
       setUser(true);
     }else{
       setUser(false);
     }
     //console.log(vendorInfo)
-  },[])
+  },[vendor])
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -57,7 +59,7 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {vendorInfo ? (
+        {vendor ? (
           <>
             {route == 0 ? (
               <SvgXml xml={dashboard} height="24" width="24" />
@@ -84,7 +86,7 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {vendorInfo ? (
+        {vendor ? (
           <>
             {route == 1 ? (
               <SvgXml xml={order} height="24" width="24" />
@@ -162,7 +164,7 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        {vendorInfo ? (
+        {vendor ? (
           <>
             {route == 4 ? (
               <Ionicons name="menu" size={28} color={backgroundColor} />

@@ -69,7 +69,8 @@ const VendorProfile = (props) => {
   const [Title, setTitle] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Facilities, setFacilities] = React.useState([]);
-  const [NewDataList, setNewDataList] = React.useState([]); 
+  const [NewDataList, setNewDataList] = React.useState([]);
+  const vendor = useSelector((state) => state.vendor);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -152,35 +153,31 @@ const VendorProfile = (props) => {
     return res;
   };
   React.useEffect(() => {
-    if (vendorInfo) {
-      getGigs(newUser.token, vendorInfo.service.id).then((res) => {
-        if (res && res.gigs) {
-          setImages(res.gigs[0].images);
-          setPrice(res.gigs[0].price);
-          setTitle(res.gigs[0].title);
-          setDescription(res.gigs[0].description);
-          setFacilities(res.gigs[0].facilites.selectedOptions);
-          try {
-            dispatch({
-              type: "SET_NEW_LIST_DATA",
-              playload: serverToLocal(
-                res.gigs[0].services.options,
-                res.gigs[0].services.category
-              )
-            });
-            setNewDataList(
-              serverToLocal(
-                res.gigs[0].services.options,
-                res.gigs[0].services.category
-              )
-            );
-          } catch (e) {
-            console.log(e.message);
-          }
-        }
-      });
+    if (vendor) {
+      setImages(vendor.images);
+      setPrice(vendor.price);
+      setTitle(vendor.title);
+      setDescription(vendor.description);
+      setFacilities(vendor.facilites.selectedOptions);
+      try {
+        dispatch({
+          type: "SET_NEW_LIST_DATA",
+          playload: serverToLocal(
+            vendor.services.options,
+            vendor.services.category
+          ),
+        });
+        setNewDataList(
+          serverToLocal(
+            vendor.services.options,
+            vendor.services.category
+          )
+        );
+      } catch (e) {
+        console.log(e.message);
+      }
     }
-  }, []);
+  }, [vendor]);
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -244,7 +241,7 @@ const VendorProfile = (props) => {
             }}
           >
             <Text style={styles.headLine}>
-              {vendorInfo?.service.serviceCenterName}
+              {vendor?.service.serviceCenterName}
             </Text>
             <Text
               style={{
@@ -253,9 +250,9 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-SemiBold",
               }}
             >
-              {vendorInfo?.service.providerInfo.title + " "}
-              {vendorInfo ? vendorInfo.service.providerInfo.name : ""}(
-              {vendorInfo?.service.providerInfo.gender})
+              {vendor?.service.providerInfo.title + " "}
+              {vendor ? vendor.service.providerInfo.name : ""}(
+              {vendor?.service.providerInfo.gender})
             </Text>
             <Text
               style={{
@@ -263,7 +260,7 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-SemiBold",
               }}
             >
-              Position of {vendorInfo?.service.providerInfo.position}
+              Position of {vendor?.service.providerInfo.position}
             </Text>
           </View>
           <View
@@ -397,11 +394,10 @@ const VendorProfile = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <ProfileOption onPress={() =>{
-          navigation.navigate('Vendor Calender',{
-            
-          })
-        }}
+        <ProfileOption
+          onPress={() => {
+            navigation.navigate("Vendor Calender", {});
+          }}
           Icon={() => (
             <AntDesign name="calendar" size={24} color={assentColor} />
           )}
@@ -656,9 +652,9 @@ const VendorProfile = (props) => {
         <View style={{ backgroundColor: primaryColor }}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Service List_1",{
-                NewDataList:NewDataList,
-                facilites:Facilities
+              navigation.navigate("Service List_1", {
+                NewDataList: NewDataList,
+                facilites: Facilities,
               });
             }}
             style={{
@@ -769,7 +765,7 @@ const styles = StyleSheet.create({
   image: {
     width: 89,
     height: 89,
-    borderRadius:5
+    borderRadius: 5,
   },
   starIcon: {
     marginRight: 3,

@@ -27,15 +27,17 @@ import {
   support,
 } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
-import { logOut } from "../../Class/auth";
+import { logOut,logoutVendor } from "../../Class/auth";
+import Button from "./../../components/Button";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const vendor = useSelector((state) => state.vendor);
   const dispatch = useDispatch();
 
   return (
     <ScrollView style={{ backgroundColor: "#fbfbfb" }}>
-      <View style={{height:33}}/>
+      <View style={{ height: 33 }} />
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("VendorProfile");
@@ -79,10 +81,8 @@ const Menu = ({ navigation }) => {
                 color: textColor,
               }}
             >
-              {vendorInfo &&
-              vendorInfo.service &&
-              vendorInfo.service.serviceCenterName
-                ? vendorInfo.service.serviceCenterName
+              {vendor && vendor.service && vendor.service.serviceCenterName
+                ? vendor.service.serviceCenterName
                 : "Easin Arafat It Service"}
             </Text>
             <Text
@@ -93,17 +93,17 @@ const Menu = ({ navigation }) => {
                 marginTop: -5,
               }}
             >
-              {vendorInfo &&
-              vendorInfo.service &&
-              vendorInfo.service.providerInfo &&
-              vendorInfo.service.providerInfo.title
-                ? vendorInfo.service.providerInfo.title
+              {vendor &&
+              vendor.service &&
+              vendor.service.providerInfo &&
+              vendor.service.providerInfo.title
+                ? vendor.service.providerInfo.title
                 : "Mr" + " "}
-              {vendorInfo &&
-              vendorInfo.service &&
-              vendorInfo.service.providerInfo &&
-              vendorInfo.service.providerInfo.name
-                ? vendorInfo.service.providerInfo.name
+              {vendor &&
+              vendor.service &&
+              vendor.service.providerInfo &&
+              vendor.service.providerInfo.name
+                ? vendor.service.providerInfo.name
                 : "Easin Arafat"}
             </Text>
             <Text
@@ -128,11 +128,7 @@ const Menu = ({ navigation }) => {
         }}
       >
         <Cart
-          onPress={() => {
-            logOut();
-            dispatch({ type: "SET_USER", playload: [] });
-            dispatch({ type: "SET_VENDOR_INFO", playload: false });
-          }}
+          onPress={() => {}}
           title="Manage Order"
           Icon={() => <SvgXml xml={manageOrder} height="30" width="30" />}
         />
@@ -140,9 +136,10 @@ const Menu = ({ navigation }) => {
           title="Appointment"
           Icon={() => <SvgXml xml={appointment} height="30" width="30" />}
         />
-        <Cart onPress={()=>{
-          navigation.navigate('Expenses')
-        }}
+        <Cart
+          onPress={() => {
+            navigation.navigate("Expenses");
+          }}
           title="Expenses"
           Icon={() => (
             <Image
@@ -216,6 +213,21 @@ const Menu = ({ navigation }) => {
           )}
         />
       </View>
+      <Button style={{
+        borderWidth:0,
+        marginHorizontal: 20,
+        marginVertical:10,
+        height:45,
+        backgroundColor:primaryColor,
+        color:textColor,
+        borderRadius:5
+      }}
+        onPress={() => {
+          logoutVendor();
+          dispatch({ type: "SET_VENDOR", playload: false });
+        }}
+        title="Logout From Dashboard"
+      />
     </ScrollView>
   );
 };

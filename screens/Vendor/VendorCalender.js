@@ -8,16 +8,17 @@ import { useSelector, useDispatch } from "react-redux";
 
 const VendorCalender = () => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const vendor = useSelector(state=>state.vendor);
   const [Times, setTimes] = React.useState(false);
   React.useEffect(() => {
     if (
-      vendorInfo &&
-      vendorInfo.service &&
-      vendorInfo.service.workingTime.length == 0
+      vendor &&
+      vendor.service &&
+      vendor.service.workingTime.length == 0
     ) {
       setTimes(true);
     }
-  }, [vendorInfo]);
+  }, [vendor]);
   const days = [
     "Saturday",
     "Sunday",
@@ -55,8 +56,8 @@ const VendorCalender = () => {
       <View
         style={{ height: 1, backgroundColor: "#e5e5e5", marginHorizontal: 20 }}
       />
-      {vendorInfo &&
-        vendorInfo.service.workingTime.map((doc, i) => (
+      {vendor &&
+        vendor.service.workingTime.map((doc, i) => (
           <Cart key={i} value={doc} />
         ))}
       {Times && days.map((times, i) => <Cart key={i} day={times} />)}

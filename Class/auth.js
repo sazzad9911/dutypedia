@@ -24,4 +24,32 @@ const logOut = async () => {
   const res = await storeJson("user",null)
   return res;
 }
-export { userLogin, checkUser,logOut };
+const vendorLogin = async (token, id,cuid) => {
+  const myHeaders = new Headers();
+  //const formData=new FormData()
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  const options = {
+    method: "GET",
+    headers: myHeaders,
+  };
+  const result = await fetch(
+    `${url}/server/services/get/gigs/${id}/STARTING`,
+    options
+  );
+  if (result) {
+    result=result.json()
+    result=result.gigs.filter(d=>d.id==cuid)[0];
+    const res = await storeJson("vendor",result)
+    return result;
+  }
+  return false;
+};
+ const checkVendor=async() => {
+  const res=await getJson("vendor");
+  return res;
+}
+const logoutVendor=async() => {
+  const res=await storeJson("vendor",null);
+  return res;
+}
+export { userLogin, checkUser,logOut,checkVendor,logoutVendor,vendorLogin };

@@ -40,6 +40,7 @@ import VendorCalender from './screens/Vendor/VendorCalender';
 import VendorAddress from './screens/Vendor/VendorAddress';
 import Expenses from './screens/Vendor/Expenses';
 import {AddExpenses} from './screens/Vendor/Expenses';
+import DashboardList from './screens/Vendor/DashboardList';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -237,9 +238,16 @@ export default function StackRoute() {
         <Stack.Screen
           name="AddExpenses"
           options={{
-            header:(props)=><SubHeader title="Address" {...props} />
+            header:(props)=><SubHeader title="Add Expenses" {...props} />
           }}
           component={AddExpenses}
+        />
+        <Stack.Screen
+          name="DashboardList"
+          options={{
+            header:(props)=><SubHeader title="Dutypedia Business Account" {...props} />
+          }}
+          component={DashboardList}
         />
       </Stack.Navigator>
       
