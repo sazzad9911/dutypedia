@@ -295,6 +295,11 @@ const MainProfile = (props) => {
             dispatch({type:'SET_VENDOR',playload:false});
             dispatch({ type: "SET_USER", playload: [] });
             dispatch({ type: "SET_VENDOR_INFO", playload: false });
+            try {
+              navigation.navigate('LogIn')
+            }catch (e) {
+              console.log(e.message)
+            }
           }}
           Icon={() => (
             <Ionicons name="log-out-outline" size={24} color="black" />

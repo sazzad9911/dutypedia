@@ -154,23 +154,25 @@ const VendorProfile = (props) => {
   };
   React.useEffect(() => {
     if (vendor) {
-      setImages(vendor.images);
-      setPrice(vendor.price);
-      setTitle(vendor.title);
-      setDescription(vendor.description);
-      setFacilities(vendor.facilites.selectedOptions);
+      setImages(vendor.service.gigs[0].images);
+      setPrice(vendor.service.gigs[0].price);
+      setTitle(vendor.service.gigs[0].title);
+      setDescription(vendor.service.gigs[0].description);
+      setFacilities(vendor.service.gigs[0].facilites.selectedOptions);
+      
       try {
+        
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
-            vendor.services.options,
-            vendor.services.category
+            vendor.service.gigs[0].services.options,
+            vendor.service.gigs[0].services.category
           ),
         });
         setNewDataList(
           serverToLocal(
-            vendor.services.options,
-            vendor.services.category
+            vendor.service.gigs[0].services.options,
+            vendor.service.gigs[0].services.category
           )
         );
       } catch (e) {
@@ -311,16 +313,16 @@ const VendorProfile = (props) => {
         </View>
         <BarOption
           icon={brain}
-          title={`Specialty in ${vendorInfo?.service.speciality}`}
+          title={`Specialty in ${vendor?.service.speciality}`}
         />
         <BarOption
           icon={user}
-          title={`Worker and Team (${vendorInfo?.service.worker} member)`}
+          title={`Worker and Team (${vendor?.service.worker} member)`}
         />
         <BarOption
           icon={flag}
           title={`Since ${new Date(
-            vendorInfo?.service.startDate
+            vendor?.service.startDate
           ).getFullYear()}`}
         />
         <View
@@ -375,10 +377,10 @@ const VendorProfile = (props) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {vendorInfo?.service.about}
+                {vendor?.service.about}
               </Text>
               <View>
-                {vendorInfo?.service.about.length > 200 && (
+                {vendor?.service.about.length > 200 && (
                   <Text
                     style={{
                       color: "tomato",

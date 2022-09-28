@@ -3,11 +3,10 @@ import axios from "axios";
 import { localOptionsToServer } from "../Class/dataConverter";
 import DateTime from "./../screens/Seller/DateTime";
 
-
-const timePick=(date)=>{
-  date=new Date(date)
-  return `${date.getHours()}:${date.getMinutes()}`
-}
+const timePick = (date) => {
+  date = new Date(date);
+  return `${date.getHours()}:${date.getMinutes()}`;
+};
 
 export const createService = async (
   businessForm,
@@ -119,18 +118,19 @@ export const createService = async (
     headers: myHeaders,
     body: formData,
   };
- let result=await axios
+  let result = await axios
     .post(`${url}/server/services/create`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }).catch(err =>{
-        console.warn(err.response.data.msg);
     })
-    if(result){
-        return result.data
-    }
-    return false;
+    .catch((err) => {
+      console.warn(err.response.data.msg);
+    });
+  if (result) {
+    return result.data;
+  }
+  return false;
 };
 export const getService = async (token) => {
   const myHeaders = new Headers();
@@ -162,4 +162,10 @@ export const getGigs = async (token, id) => {
     return result.json();
   }
   return false;
+};
+export const getDashboard = async (token) => {
+  let res = await axios.get(`${url}/server/auth/dashboards`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
 };

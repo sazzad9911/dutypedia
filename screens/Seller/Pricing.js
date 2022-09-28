@@ -349,12 +349,13 @@ const Pricing = ({ navigation, route }) => {
             }}
             error={ServiceNameError}
             onChange={(val) => {
+              setServiceName(val);
               if (val.length < 8) {
                 setServiceNameError("Name must be at least 8 characters");
                 return;
               }
               setServiceNameError(null);
-              setServiceName(val);
+              
             }}
             onFocus={() => {
               setData([]);

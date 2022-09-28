@@ -34,7 +34,7 @@ import CompanyCalendar from "./screens/Seller/CompanyCalendar";
 import Login from "./screens/Login";
 import { checkUser } from "./Class/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { getService } from "./Class/service";
+import { getService,getDashboard } from "./Class/service";
 import AllService from './screens/Vendor/AllService';
 import VendorCalender from './screens/Vendor/VendorCalender';
 import VendorAddress from './screens/Vendor/VendorAddress';
@@ -54,15 +54,13 @@ export default function StackRoute() {
         //console.log(res)
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
-          getService(res.token).then((result) => {
-            if (result && !result.msg) {
-              dispatch({ type: "SET_VENDOR_INFO", playload: result });
-              console.log('ok')
+          getDashboard(res.token).then((result) => {
+            if (result && result.data &&result.data.dashboards) {
+              dispatch({ type: "SET_VENDOR_INFO", playload: result.data.dashboards });
               setLoad(!load);
             }else{
               dispatch({ type: "SET_VENDOR_INFO", playload: false });
               setLoad(!load);
-              console.log('not ok')
             }
           });
         } else {

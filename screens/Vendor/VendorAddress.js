@@ -16,7 +16,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
 const VendorAddress = () => {
-  const vendorInfo = useSelector((state) => state.vendorInfo);
+  const vendor = useSelector((state) => state.vendor);
   return (
     <View style={{ flex: 1 }}>
       <SvgXml
@@ -46,17 +46,17 @@ const VendorAddress = () => {
         >
           <Options
             title={"City"}
-            subTitle={vendorInfo ? vendorInfo.location.region : ""}
+            subTitle={vendor ? vendor.location.region : ""}
           />
           <Options
             title={"District"}
-            subTitle={vendorInfo ? vendorInfo.location.city : ""}
+            subTitle={vendor ? vendor.location.city : ""}
           />
           <Options
             title={"Area"}
-            subTitle={vendorInfo ? vendorInfo.location.area : ""}
+            subTitle={vendor ? vendor.location.area : ""}
           />
-          {vendorInfo && vendorInfo.location.address && (
+          {vendor && vendor.location.address && (
             <View
               style={{
                 flexDirection: "row",
@@ -73,7 +73,7 @@ const VendorAddress = () => {
                   color: textColor,
                 }}
               >
-                {vendorInfo.location.address}
+                {vendor.location.address}
               </Text>
               <TouchableOpacity>
                 <FontAwesome5 name="edit" size={20} color={textColor} />
