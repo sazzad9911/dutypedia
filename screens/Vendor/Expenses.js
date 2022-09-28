@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
+  Animated,
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -16,42 +17,177 @@ import { AntDesign } from "@expo/vector-icons";
 import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
 import { Entypo } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
-import Animated, { StretchInY } from "react-native-reanimated";
-import uuid from 'react-native-uuid';
+import {
+  StretchInY,
+  FadeIn,
+  Easing,
+  useAnimatedScrollHandler,
+  Extrapolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  SlideInLeft,
+  SlideInRight,
+} from "react-native-reanimated";
+import uuid from "react-native-uuid";
+import { dateConverter } from "../../action";
 
 const Expenses = (props) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
+  const [ScrollRef, setScrollRef] = React.useState(true);
   const [Data, setData] = React.useState([
     {
       name: "Rent",
       amount: "5000",
       date: "12-09-2022",
-      id:uuid.v4(),
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
+    },
+    {
+      name: "Rent",
+      amount: "5000",
+      date: "12-09-2022",
+      id: uuid.v4(),
     },
   ]);
+  const lastContentOffset = useSharedValue(0);
+  const isScrolling = useSharedValue(false);
+  const [Position, setPosition] = React.useState(false);
+  const navigation = props.navigation;
+  //animated header
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 200);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, -200],
+  });
+
+  // const scrollHandler = useAnimatedScrollHandler({
+  //   onScroll: (event) => {
+  //     if (
+  //       lastContentOffset.value > event.contentOffset.y &&
+  //       isScrolling.value
+  //     ) {
+  //       translateY.value = 0;
+  //       console.log("scrolling up");
+  //     } else if (
+  //       lastContentOffset.value < event.contentOffset.y &&
+  //       isScrolling.value
+  //     ) {
+  //       translateY.value = -100;
+  //       console.log("scrolling down");
+  //     }
+  //     lastContentOffset.value = event.contentOffset.y;
+  //   },
+  //   onBeginDrag: (e) => {
+  //     isScrolling.value = true;
+  //   },
+  //   onEndDrag: (e) => {
+  //     isScrolling.value = false;
+  //   },
+  // });
+  const onChange = (val) => {
+    return setData((d) => [...d, val]);
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <BackHeader
-        placeholder="Search"
-        {...props}
-        inputWidth={80}
-        title="Expenses"
-      />
-      <DropDown
-        DATA={["All", "Price"]}
-        style={{
-          marginHorizontal: 20,
+      
+      <ScrollView
+        style={{ flexGrow: 0 }}
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}
-        placeholder="Filter By"
-      />
-      <ScrollView>
+        showsVerticalScrollIndicator={false}
+      >
+      <View style={{height:190}}/>
         <TouchableOpacity
           onPress={() => {
-            setModalVisible(true);
+            navigation.navigate("AddExpenses", {
+              onChange: onChange,
+              value: null,
+            });
           }}
         >
           <View
@@ -82,16 +218,25 @@ const Expenses = (props) => {
             alignItems: "center",
             marginVertical: 10,
             backgroundColor: backgroundColor,
-            borderRadius: 5,
+            borderTopLeftRadius: 5,
+            borderTopRightRadius: 5,
           }}
         >
           <Text style={styles.text}>Date</Text>
           <Text style={styles.text}>Name Of Expenses</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
-        {Data&&Data.map((doc,i)=>(
-            <Cart value={doc} key={i} setData={setData} Data={Data} i={i} />
-        ))}
+        {Data &&
+          Data.map((doc, i) => (
+            <Cart
+              {...props}
+              value={doc}
+              key={i}
+              setData={setData}
+              Data={Data}
+              i={i}
+            />
+          ))}
         <View
           style={{
             flexDirection: "row",
@@ -104,18 +249,42 @@ const Expenses = (props) => {
           }}
         >
           <Text style={styles.text}>Total :</Text>
+          <Text style={styles.text}></Text>
           <Text style={styles.text}>{total(Data)}৳</Text>
         </View>
       </ScrollView>
-      <Modal
-        animationType="fade"
-        visible={ModalVisible}
-        onRequestClose={() => setModalVisible(false)}
+      <Animated.View
+        style={[
+          { transform: [{ translateY: translateY }],
+          zIndex:200,
+          backgroundColor:'#f5f5f5',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          },
+        ]}
       >
-        <AddExpenses onChange={val=>{
-            setData(d=>[...d,val])
-        }} setModalVisible={setModalVisible} />
-      </Modal>
+        <View style={{
+          height:200,
+          
+          backgroundColor:'#fbfbfb'
+        }}>
+          <BackHeader
+            placeholder="Search"
+            {...props}
+            inputWidth={80}
+            title="Expenses"
+          />
+          <DropDown
+            DATA={["All", "Price"]}
+            style={{
+              marginHorizontal: 20,
+            }}
+            placeholder="Filter By"
+          />
+        </View>
+      </Animated.View>
     </KeyboardAvoidingView>
   );
 };
@@ -148,38 +317,44 @@ import SubHeader from "./../../components/SubHeader";
 import Input from "./../../components/Input";
 import Button from "./../../components/Button";
 import DateTime from "./../Seller/DateTime";
+import AlertModal from "./components/AlertModal";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const Cart = ({value,setData,Data,i}) => {
+const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
-  const [ModalVisible, setModalVisible]= React.useState(false);
+  const [ModalVisible, setModalVisible] = React.useState(false);
+  const [AlertVisible, setAlertVisible] = React.useState(false);
 
-  const Delete=() => {
-    setData(val=>{
-        return val.filter(d=>d.id!=value.id);
-    })
-  }
-  const edit=(val) => {
-    let options={
-        id:value.id,
-        name:val.name,
-        amount:val.amount,
-        date:val.date
-    }
-    setData(val=>{
-        val.forEach((d,i)=>{
-            if(d.id==value.id){
-                val[i]=options
-            }
-        })
-        return val
-    })
-  }
+  const Delete = () => {
+    setData((val) => {
+      return val.filter((d) => d.id != value.id);
+    });
+  };
+  const edit = (val) => {
+    let options = {
+      id: value.id,
+      name: val.name,
+      amount: val.amount,
+      date: val.date,
+    };
+    return setData((val) => {
+      val.forEach((d, i) => {
+        if (d.id == value.id) {
+          val[i] = options;
+        }
+      });
+      return val;
+    });
+  };
   return (
     <View
       style={{
         flexDirection: "row",
         marginHorizontal: 20,
         marginVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#e5e5e5",
+        paddingBottom: 10,
       }}
     >
       <Text style={styles.text2}>{Data[i].date}</Text>
@@ -207,28 +382,53 @@ const Cart = ({value,setData,Data,i}) => {
           />
         }
       >
-        <Menu.Item onPress={() => {
-            setModalVisible(true)
-            setVisible(!Visible)
-        }} title="Edit" />
-        <Menu.Item onPress={() => {
-            Delete()
-        }} title="Delete" />
+        <Menu.Item
+          onPress={() => {
+            navigation.navigate("AddExpenses", {
+              onChange: edit,
+              value: value,
+            });
+            setVisible(!Visible);
+          }}
+          title="Edit"
+        />
+        <Menu.Item
+          onPress={() => {
+            //Delete();
+            setAlertVisible(true);
+            setVisible(!Visible);
+          }}
+          title="Delete"
+        />
       </Menu>
       <Modal
-        animationType="fade"
-        visible={ModalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        animationType={"fade"}
+        transparent={true}
+        visible={AlertVisible}
+        onRequestClose={() => setAlertVisible(false)}
       >
-        <AddExpenses value={value} onChange={val=>{
-            edit(val)
-        }} setModalVisible={setModalVisible} />
+        <AlertModal
+          title="Hey"
+          subTitle={"Are you sure want to delete this?"}
+          onChange={(e) => {
+            if (e == "ok") {
+              Delete();
+              setAlertVisible(false);
+            } else {
+              setAlertVisible(false);
+            }
+          }}
+        />
       </Modal>
     </View>
   );
 };
-const AddExpenses = ({ setModalVisible, onChange,value }) => {
-  const [Day, setDay] = React.useState();
+//setModalVisible, onChange, value,
+export const AddExpenses = (props) => {
+  const onChange = props.route.params.onChange;
+  const value = props.route.params.value;
+  let date = new Date();
+  const [Day, setDay] = React.useState(dateConverter(date));
   const [Month, setMonth] = React.useState();
   const [Year, setYear] = React.useState();
   const [DayError, setDayError] = React.useState();
@@ -236,31 +436,25 @@ const AddExpenses = ({ setModalVisible, onChange,value }) => {
   const [YearError, setYearError] = React.useState();
   const [Name, setName] = React.useState();
   const [Amount, setAmount] = React.useState();
+  const [Visible, setVisible] = React.useState(false);
+  const navigation = props.navigation;
 
   React.useEffect(() => {
-    if(value){
-        setName(value.name);
-        setAmount(value.amount);
-        let newDate=value.date.split('-');
-        setDay(newDate[0])
-        setMonth(DateTime.month[parseInt(newDate[1])-1])
-        setYear(newDate[2])
+    if (value) {
+      setName(value.name);
+      setAmount(value.amount);
+      let newDate = value.date.split("-");
+      setDay(value.date);
+      setMonth(DateTime.month[parseInt(newDate[1]) - 1]);
+      setYear(newDate[2]);
     }
-  },[value])
+  }, [value]);
 
   return (
     <View style={{ flex: 1 }}>
-      <SubHeader
-        onPress={() => {
-          setModalVisible(false);
-        }}
-        style={{
-          paddingTop: 10,
-        }}
-        title="Create New Expenses List"
-      />
       <ScrollView>
-        <Input value={Name}
+        <Input
+          value={Name}
           onChange={(val) => {
             setName(val);
           }}
@@ -272,7 +466,8 @@ const AddExpenses = ({ setModalVisible, onChange,value }) => {
           ]}
           placeholder="Name Of Expenses"
         />
-        <Input value={Amount}
+        <Input
+          value={Amount}
           onChange={(val) => {
             setAmount(val);
           }}
@@ -298,43 +493,28 @@ const AddExpenses = ({ setModalVisible, onChange,value }) => {
             justifyContent: "space-between",
           }}
         >
-          <DropDown
-            value={Day}
-            error={DayError}
-            onChange={(val) => {
-              setDay(val);
+          <Button
+            onPress={() => {
+              setVisible(true);
             }}
             style={{
+              borderRadius: 5,
+              borderColor: "#e5e5e5",
+              height: 42,
               marginTop: 10,
+              color: textColor,
+              width: 100,
             }}
-            placeholder="Date"
-            DATA={DateTime.day}
+            title={Day}
           />
-          <DropDown
-            value={Month}
-            error={MonthError}
-            onChange={(val) => {
-              setMonth(val);
+          <DateTimePickerModal
+            isVisible={Visible}
+            mode="date"
+            onConfirm={(date) => {
+              setDay(dateConverter(date));
+              setVisible(false);
             }}
-            style={{
-              marginTop: 10,
-              marginLeft: 10,
-            }}
-            placeholder="Month"
-            DATA={DateTime.month}
-          />
-          <DropDown
-            value={Year}
-            error={YearError}
-            onChange={(val) => {
-              setYear(val);
-            }}
-            style={{
-              marginTop: 10,
-              marginLeft: 10,
-            }}
-            placeholder="Year"
-            DATA={DateTime.year()}
+            onCancel={() => setVisible(false)}
           />
         </View>
         <Button
@@ -343,21 +523,20 @@ const AddExpenses = ({ setModalVisible, onChange,value }) => {
               onChange({
                 name: Name,
                 amount: Amount,
-                date: `${Day}-${DateTime.month.indexOf(Month)+1}-${Year}`,
-                id:uuid.v4(),
+                date: Day,
+                id: uuid.v4(),
               });
             }
-            setModalVisible(false);
+            navigation.goBack();
+            // setModalVisible(false);
           }}
-          disabled={Day && Month && Year && Name && Amount ? false : true}
+          disabled={Day && Name && Amount ? false : true}
           style={{
             marginHorizontal: 20,
             marginVertical: 20,
             borderRadius: 5,
             backgroundColor:
-              Day && Month && Year && Name && Amount
-                ? backgroundColor
-                : "#707070",
+              Day && Name && Amount ? backgroundColor : "#707070",
             borderWidth: 0,
             height: 45,
             marginTop: 25,
@@ -421,11 +600,10 @@ const InstructionCart = ({ title }) => {
     </TouchableOpacity>
   );
 };
-const total=(arr)=>{
-    let amount=0;
-    arr.forEach(doc=>{
-        
-        amount+=parseInt(doc.amount);
-    })
-    return amount;
-}
+const total = (arr) => {
+  let amount = 0;
+  arr.forEach((doc) => {
+    amount += parseInt(doc.amount);
+  });
+  return amount;
+};

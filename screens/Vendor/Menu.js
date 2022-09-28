@@ -237,8 +237,8 @@ const Cart = ({ title, Icon, onPress }) => {
           backgroundColor: primaryColor,
           borderRadius: 5,
           shadowOffset: {
-            width: 2,
-            height: 2,
+            width: 1,
+            height: 1,
           },
           shadowOpacity: 0.1,
           shadowRadius: 1,

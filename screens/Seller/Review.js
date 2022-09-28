@@ -138,23 +138,33 @@ const Review = (props) => {
       });
     const result = await uploadFile(blobImages, newUser.token);
     if (result) {
-      const res = await createService(
+      //setLoading(false)
+     const res= await createService(
         businessForm,
         listData,
         result,
         newUser.token,
         image ? fileFromURL({ uri: image }) : "",
         backgroundImage ? fileFromURL({ uri: backgroundImage }) : ""
-      );
-      console.log(res)
-      if (res) {
-        return { code: true, message: "Profile created successfully" };
+      )
+      if(res){
+        return {
+          code: true,
+          message: "Service created",
+          res: res
+        };
       }
+      return {
+        code: false,
+        message: "Problem in creating service",
+        res: res
+      };
     }
-
+    //console.log(result)
     return {
       code: false,
       message: "Files upload failed",
+      res: result
     };
   };
   return (
@@ -696,7 +706,7 @@ const Review = (props) => {
               setLoading(false);
               if (res.code) {
                 getService(newUser.token).then((data)=>{
-                  if(data){
+                  if(data&& !data.msg){
                     dispatch({type:'SET_VENDOR_INFO',playload:data})
                     navigation.navigate("Profile")
                   }else{

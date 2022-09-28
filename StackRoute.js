@@ -39,6 +39,7 @@ import AllService from './screens/Vendor/AllService';
 import VendorCalender from './screens/Vendor/VendorCalender';
 import VendorAddress from './screens/Vendor/VendorAddress';
 import Expenses from './screens/Vendor/Expenses';
+import {AddExpenses} from './screens/Vendor/Expenses';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -232,6 +233,13 @@ export default function StackRoute() {
             headerShown: false,
           }}
           component={Expenses}
+        />
+        <Stack.Screen
+          name="AddExpenses"
+          options={{
+            header:(props)=><SubHeader title="Address" {...props} />
+          }}
+          component={AddExpenses}
         />
       </Stack.Navigator>
       
