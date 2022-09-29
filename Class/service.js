@@ -80,11 +80,11 @@ export const createService = async (
       uploadServiceData: {
         about: businessForm.about.toString(),
         speciality: businessForm.speciality,
-        title: businessForm.serviceTitle,
+        title: businessForm.serviceCenterName, 
         description: businessForm.description.toString(),
       },
       selectServiceData: {
-        serviceName: businessForm.serviceCenterName,
+        serviceName: businessForm.serviceTitle,
         providerTitle: businessForm.title,
         providerName: businessForm.name,
         gender: businessForm.gender,

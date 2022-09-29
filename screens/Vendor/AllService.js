@@ -12,16 +12,19 @@ const AllService = (props) => {
   const [Name, setName] = React.useState(params.NewDataList.length>0?params.NewDataList[0]:'Name');
   const newListData =useSelector((state) => state.newListData);
   React.useEffect(() => {
-    //console.log(params.facilites)
+    //console.log(newListData)
     let arr = [];
     if (newListData) {
         newListData.map((item, i) => {
         if (item.title) {
           arr.push(item.title);
         } else {
-          //setName(item.mainTitle);
+          setName(item.mainTitle);
         }
       });
+    }
+    if(!newListData[0].title) {
+      arr.push(newListData[0].mainTitle);
     }
     if (arr.length > 0) {
       setServices(uniq(arr));

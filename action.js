@@ -94,6 +94,9 @@ export const shortAZ = (data) => {
 export const url = `http://185.211.6.223`;
 
 export function fileFromURL(inputURI) {
+  if(inputURI==null){
+    return null;
+  }
   let localUri = inputURI.uri;
   let filename = localUri.split("/").pop();
 

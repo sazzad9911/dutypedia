@@ -262,13 +262,14 @@ const Cart = ({ title, Icon, onPress }) => {
           paddingRight: 15,
         }}
       >
-        <View style={{ height: 10 }} />
+        <View style={{ height: 10 ,flex:1}} />
         <Icon />
-        <Text
+        <Text numberOfLines={1}
           style={{
             fontSize: 14,
             fontFamily: "Poppins-Medium",
             marginTop: 5,
+            flex:1
           }}
         >
           {title}

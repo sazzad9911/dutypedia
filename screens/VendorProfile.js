@@ -86,7 +86,7 @@ const VendorProfile = (props) => {
     return null;
   };
   React.useEffect(() => {
-    //console.log(vendorInfo);
+    console.log(NewDataList);
     if (Array.isArray(NewDataList)) {
       let array = [];
       NewDataList.map((item, i) => {
@@ -109,10 +109,11 @@ const VendorProfile = (props) => {
   }, [NewDataList.length]);
   React.useEffect(() => {
     setSubServiceList([]);
+    
     if (Array.isArray(NewDataList)) {
       let arr = [];
       NewDataList.map((item) => {
-        if (item.title && item.subTitle && item.title.match(ActiveService)) {
+        if (item.title && item.title.match(ActiveService)) {
           arr.push(item.subTitle);
         } else {
           setSubServiceList([]);
@@ -154,11 +155,14 @@ const VendorProfile = (props) => {
   };
   React.useEffect(() => {
     if (vendor) {
+      //console.log(vendor.service.id)
       setImages(vendor.service.gigs[0].images);
       setPrice(vendor.service.gigs[0].price);
       setTitle(vendor.service.gigs[0].title);
       setDescription(vendor.service.gigs[0].description);
       setFacilities(vendor.service.gigs[0].facilites.selectedOptions);
+      setImage(vendor.service.profilePhoto)
+      setBackgroundImage(vendor.service.wallPhoto)
       
       try {
         
@@ -180,6 +184,7 @@ const VendorProfile = (props) => {
       }
     }
   }, [vendor]);
+  
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -570,7 +575,9 @@ const VendorProfile = (props) => {
                   />
                 ))
               ) : (
-                <Button style={styles.activeButton} title={ActiveService} />
+                <Button onPress={()=>{
+                  setActiveService(NewDataList[0].mainTitle);
+                }} style={NewDataList[0].mainTitle==ActiveService?styles.activeButton:styles.inactiveButton} title={NewDataList[0].mainTitle} />
               )}
               <Button
                 onPress={() => {

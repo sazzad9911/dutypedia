@@ -5,7 +5,7 @@ import Button from "./../components/Button";
 const { width, height } = Dimensions.get("window");
 import { userLogin } from "../Class/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { getService } from "../Class/service";
+import { getService,getDashboard } from "../Class/service";
 
 const Login = () => {
   const [Email, setEmail] = React.useState();
@@ -30,16 +30,17 @@ const Login = () => {
         //console.log(res);
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
-          getService(res.token).then((result) => {
-            if (result && !result.msg) {
-              dispatch({ type: "SET_VENDOR_INFO", playload: result });
-            } else {
+          getDashboard(res.token).then((result) => {
+            if (result && result.data &&result.data.dashboards) {
+              dispatch({ type: "SET_VENDOR_INFO", playload: result.data.dashboards });
+              //setLoad(!load);
+            }else{
               dispatch({ type: "SET_VENDOR_INFO", playload: false });
+              //setLoad(!load);
             }
           });
         }
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.warn(err.message);
       });
   };

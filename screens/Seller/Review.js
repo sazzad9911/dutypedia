@@ -43,12 +43,12 @@ import { Badge } from "react-native-paper";
 import ProfileOption from "./../../components/ProfileOption";
 import { fileFromURL } from "./../../action";
 import { uploadFile } from "../../Class/upload";
-import { createService,getService } from "../../Class/service";
+import { createService, getService, getDashboard } from "../../Class/service";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
   const window = Dimensions.get("window");
-  const [image, setImage] = React.useState(null);
+  const [profileImage, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [Lines, setLines] = React.useState(2);
   const navigation = props.navigation;
@@ -63,7 +63,6 @@ const Review = (props) => {
   const newUser = useSelector((state) => state.user);
   const [Loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
-
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -139,32 +138,48 @@ const Review = (props) => {
     const result = await uploadFile(blobImages, newUser.token);
     if (result) {
       //setLoading(false)
-     const res= await createService(
+      let Img1=[]
+      if(profileImage){
+        Img1.push(fileFromURL(profileImage));
+      }else{
+        Img1=null;
+      }
+      let Img2=[]
+      if(backgroundImage){
+        Img2.push(fileFromURL(backgroundImage))
+      }else{
+        Img2=null;
+      }
+      
+      
+      let img1=await uploadFile(Img1,newUser.token);
+      let img2=await uploadFile(Img2,newUser.token);
+      const res = await createService(
         businessForm,
         listData,
         result,
         newUser.token,
-        image ? fileFromURL({ uri: image }) : "",
-        backgroundImage ? fileFromURL({ uri: backgroundImage }) : ""
-      )
-      if(res){
+        Array.isArray(img1)?img1[0]:null,
+        Array.isArray(img2)?img2[0]:null
+      );
+      if (res) {
         return {
           code: true,
           message: "Service created",
-          res: res
+          res: res,
         };
       }
       return {
         code: false,
         message: "Problem in creating service",
-        res: res
+        res: res,
       };
     }
     //console.log(result)
     return {
       code: false,
       message: "Files upload failed",
-      res: result
+      res: result,
     };
   };
   return (
@@ -178,7 +193,7 @@ const Review = (props) => {
         <View style={styles.container}>
           {backgroundImage ? (
             <Image
-              source={{ uri: backgroundImage }}
+              source={{ uri: backgroundImage.uri }}
               style={styles.backgroundContainer}
             />
           ) : (
@@ -189,8 +204,8 @@ const Review = (props) => {
           )}
 
           <View style={styles.profile}>
-            {image ? (
-              <Image style={styles.image} source={{ uri: image }} />
+            {profileImage ? (
+              <Image style={styles.image} source={{ uri: profileImage.uri }} />
             ) : (
               <FontAwesome name="user" size={80} color="#983C85" />
             )}
@@ -206,7 +221,7 @@ const Review = (props) => {
                 onPress={() => {
                   pickImage().then((result) => {
                     if (result) {
-                      setImage(result.uri);
+                      setImage(result);
                     }
                   });
                 }}
@@ -285,7 +300,7 @@ const Review = (props) => {
               onPress={() => {
                 pickImage().then((result) => {
                   if (result) {
-                    setBackgroundImage(result.uri);
+                    setBackgroundImage(result);
                   }
                 });
               }}
@@ -705,16 +720,20 @@ const Review = (props) => {
             confirm().then((res) => {
               setLoading(false);
               if (res.code) {
-                getService(newUser.token).then((data)=>{
-                  if(data&& !data.msg){
-                    dispatch({type:'SET_VENDOR_INFO',playload:data})
-                    navigation.navigate("Profile")
-                  }else{
-                    Alert.alert("Opps!","Server problem occurs. Please try again")
+                getDashboard(newUser.token).then((result) => {
+                  if (result && result.data && result.data.dashboards) {
+                    dispatch({
+                      type: "SET_VENDOR_INFO",
+                      playload: result.data.dashboards.reverse(),
+                    });
+                    navigation.replace("DashboardList")
+                  } else {
+                    Alert.alert(
+                      "Opps!",
+                      "Server problem occurs. Please try again"
+                    );
                   }
-                })
-              } else {
-                Alert.alert("Error!", res.message);
+                });
               }
             });
           }}
@@ -730,8 +749,10 @@ const Review = (props) => {
           title="Confirm"
         />
       </View>
-      <Modal visible={Loading} onRequestClose={() =>{}}>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Modal visible={Loading} onRequestClose={() => {}}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <Text>Loading...</Text>
         </View>
       </Modal>
@@ -803,8 +824,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 89,
+    height: 89,
   },
   starIcon: {
     marginRight: 3,

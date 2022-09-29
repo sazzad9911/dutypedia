@@ -24,21 +24,62 @@ const DashboardList = ({ navigation }) => {
   const user = useSelector((state) => state.user);
   const [Data, setData] = React.useState();
   const dispatch = useDispatch();
+  const [Loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (Array.isArray(vendorInfo)) {
-      setData(vendorInfo)
-    }else{
-      setData([])
+      setData(vendorInfo);
+    } else {
+      setData([]);
     }
   }, [vendorInfo]);
 
+  if (Loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+  const click = (id) => {
+    setLoading(true);
+    vendorLogin(user.token, id).then((res) => {
+      if (res) {
+        //console.log(res)
+        setLoading(false);
+        dispatch({ type: "SET_VENDOR", playload: res });
+        navigation.navigate("Profile");
+      } else {
+        setLoading(false);
+        Alert.alert("Problem in log into dashboard");
+      }
+    });
+  };
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <ScrollView>
+      <View
+        style={{
+          paddingTop: 33,
+          alignItems: "center",
+          height: 100,
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "Poppins-Medium",
+          }}
+        >
+          Dutypedia Business Account
+        </Text>
+      </View>
       <SvgXml
         style={{
           marginTop: height / 10,
@@ -48,47 +89,42 @@ const DashboardList = ({ navigation }) => {
         height="120"
         width="120"
       />
-      <View style={{ height: 90, marginTop: 30 }}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View style={{ width: 10 }} />
-          {Data ? (
-            Data.map((doc, i) => (
-              <Cart
-                onChange={(id) => {
-                  vendorLogin(user.token, id).then((res) => {
-                    if (res) {
-                      //console.log(res)
-                      dispatch({ type: "SET_VENDOR", playload: res });
-                      navigation.navigate("Profile");
-                    }else{
-                      Alert.alert("Problem in logo into dashboard")
-                    }
-                  });
-                }}
-                key={i}
-                data={doc}
-              />
-            ))
-          ) : (
-            <Text>Loading...</Text>
-          )}
-          <View style={{ width: 10 }} />
-        </ScrollView>
-      </View>
+      <View style={{ height: 50 }} />
+      <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+        <View style={{ width: 10 }} />
+        {Data ? (
+          Data.map((doc, i) => (
+            <Cart key={i} onChange={click} data={doc} />
+          ))
+        ) : (
+          <Text>Loading...</Text>
+        )}
+        <View style={{ width: 10 }} />
+      </ScrollView>
+      <View style={{ height: height - (height / 10 + 380) }} />
       <Button
         onPress={() => {
           navigation.navigate("MainCategory");
         }}
         style={{
-          position: "absolute",
-          bottom: 20,
           borderWidth: 0,
           color: textColor,
           alignSelf: "center",
         }}
         title={"Create an another business account"}
       />
-    </View>
+      {/* <Button
+        onPress={() => {
+          navigation.goBack()
+        }}
+        style={{
+          borderWidth: 1,
+          color: textColor,
+          alignSelf: "center",
+        }}
+        title={"Back"}
+      /> */}
+    </ScrollView>
   );
 };
 
@@ -148,12 +184,13 @@ const Cart = ({ data, onChange }) => {
             <FontAwesome name="user" size={35} color={backgroundColor} />
           )}
         </View>
-        <View>
+        <View style={{ flex: 1 }}>
           <Text
             numberOfLines={1}
             style={{
               fontSize: 15,
               fontFamily: "Poppins-Medium",
+              flex: 1,
             }}
           >
             {title ? title : "Sazzad It Center"}

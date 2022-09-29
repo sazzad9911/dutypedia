@@ -243,7 +243,7 @@ export default function StackRoute() {
         <Stack.Screen
           name="DashboardList"
           options={{
-            header:(props)=><SubHeader title="Dutypedia Business Account" {...props} />
+            headerShown: false,
           }}
           component={DashboardList}
         />

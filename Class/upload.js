@@ -2,6 +2,10 @@ import { url } from "../action";
 import axios from "axios";
 
 const uploadFile = async (files, token) => {
+    //console.log(files);
+    if(!Array.isArray(files)){
+        return null;
+    }
     const myHeaders=new Headers()
     const formData=new FormData()
     myHeaders.append("Authorization", `Bearer ${token}`)
