@@ -54,7 +54,8 @@ const DashboardList = ({ navigation }) => {
         //console.log(res)
         setLoading(false);
         dispatch({ type: "SET_VENDOR", playload: res });
-        navigation.navigate("Profile");
+        //navigation.navigate("Profile");
+        navigation.goBack()
       } else {
         setLoading(false);
         Alert.alert("Problem in log into dashboard");
@@ -101,7 +102,7 @@ const DashboardList = ({ navigation }) => {
         )}
         <View style={{ width: 10 }} />
       </ScrollView>
-      <View style={{ height: height - (height / 10 + 380) }} />
+      <View style={{ height: height - (height / 10 + 470) }} />
       <Button
         onPress={() => {
           navigation.navigate("MainCategory");

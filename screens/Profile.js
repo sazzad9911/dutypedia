@@ -37,6 +37,7 @@ import Menu from "./Vendor/Menu";
 import { logOut,logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
+import DashboardList from './Vendor/DashboardList';
 
 const Stack = createStackNavigator();
 
@@ -146,6 +147,13 @@ const Profile = ({ navigation }) => {
         }}
         component={ImageViewer}
       />
+      <Stack.Screen
+          name="DashboardList"
+          options={{
+            headerShown: false,
+          }}
+          component={DashboardList}
+        />
     </Stack.Navigator>
   );
 };

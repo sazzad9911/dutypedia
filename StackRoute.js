@@ -240,13 +240,7 @@ export default function StackRoute() {
           }}
           component={AddExpenses}
         />
-        <Stack.Screen
-          name="DashboardList"
-          options={{
-            headerShown: false,
-          }}
-          component={DashboardList}
-        />
+        
       </Stack.Navigator>
       
     </NavigationContainer>
