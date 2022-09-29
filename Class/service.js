@@ -112,7 +112,8 @@ export const createService = async (
     profilePhotoUrl: img1,
     wallPhotoUrl: img2,
   };
-
+//console.log('----------------------------------------------------');
+//console.log(formData)
   const options = {
     method: "POST",
     headers: myHeaders,

@@ -152,7 +152,9 @@ const Menu = ({ navigation }) => {
             />
           )}
         />
-        <Cart
+        <Cart onPress={()=>{
+          navigation.navigate('Notice')
+        }}
           title="Notice"
           Icon={() => (
             <Image

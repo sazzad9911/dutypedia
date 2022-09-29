@@ -38,6 +38,7 @@ import { logOut,logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import DashboardList from './Vendor/DashboardList';
+import Notice,{AddNotice} from './Vendor/Notice';
 
 const Stack = createStackNavigator();
 
@@ -153,6 +154,20 @@ const Profile = ({ navigation }) => {
             headerShown: false,
           }}
           component={DashboardList}
+        />
+        <Stack.Screen
+          name="Notice"
+          options={{
+            headerShown: false,
+          }}
+          component={Notice}
+        />
+        <Stack.Screen
+          name="AddNotice"
+          options={{
+            header:(props)=><SubHeader title="Add Notice" {...props} />
+          }}
+          component={AddNotice}
         />
     </Stack.Navigator>
   );

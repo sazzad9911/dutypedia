@@ -44,6 +44,8 @@ import ProfileOption from "./../../components/ProfileOption";
 import { fileFromURL } from "./../../action";
 import { uploadFile } from "../../Class/upload";
 import { createService, getService, getDashboard } from "../../Class/service";
+import { StackActions } from '@react-navigation/native';
+import {localOptionsToServer} from '../../Class/dataConverter'
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -78,7 +80,8 @@ const Review = (props) => {
     return null;
   };
   React.useEffect(() => {
-    //console.log(listData);
+   // console.log('-------------------------')
+    //console.log(localOptionsToServer(listData));
     if (businessForm) {
       setImages([
         businessForm.firstImage,
@@ -718,7 +721,7 @@ const Review = (props) => {
           onPress={() => {
             setLoading(true);
             confirm().then((res) => {
-              setLoading(false);
+              
               if (res.code) {
                 getDashboard(newUser.token).then((result) => {
                   if (result && result.data && result.data.dashboards) {
@@ -726,8 +729,10 @@ const Review = (props) => {
                       type: "SET_VENDOR_INFO",
                       playload: result.data.dashboards.reverse(),
                     });
-                    navigation.replace("DashboardList")
+                    setLoading(false);
+                    navigation.navigate("DashboardList")
                   } else {
+                    setLoading(false);
                     Alert.alert(
                       "Opps!",
                       "Server problem occurs. Please try again"

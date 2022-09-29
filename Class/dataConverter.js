@@ -64,13 +64,18 @@ const titleDigging = (title, data) => {
 };
 const tableDiggingWithTitle = (title,subTitle, data) => {
   let arr = [];
-  data.map((d) => {
-    if(d.title==title&&d.subTitle==subTitle){
-      arr.push({
-        title:d.tableName,
-        selectedOptions:optionDiggingWithTableNameAndSubTitle(title,subTitle,d.tableName,data)
-      })
+  let tableName=[];
+  data.map((d, i)=>{
+    if(d.title==title && d.subTitle==subTitle){
+      tableName.push(d.tableName);
     }
+  })
+  tableName= uniq(tableName)
+  tableName.map((d) => {
+    arr.push({
+      title:d,
+      selectedOptions:optionDiggingWithTableNameAndSubTitle(title,subTitle,d,data)
+    })
   });
   return arr;
 };

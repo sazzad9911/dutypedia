@@ -18,6 +18,7 @@ const BackHeader = (props) => {
       <View
         style={{
           flexDirection: "row",
+          width:'100%'
         }}
       >
         <AntDesign
@@ -25,7 +26,6 @@ const BackHeader = (props) => {
             navigation.goBack();
           }}
           style={{
-            flex: 1,
             marginLeft: 20,
           }}
           name="left"
@@ -80,7 +80,9 @@ export const styles = StyleSheet.create({
     color: textColor,
     fontSize: 20,
     fontFamily: "Poppins-SemiBold",
-    flex: 2,
+    flex:1,
+    textAlign: "center",
+    marginLeft:-44
   },
   input: {
     margin: 20,

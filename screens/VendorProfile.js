@@ -86,7 +86,7 @@ const VendorProfile = (props) => {
     return null;
   };
   React.useEffect(() => {
-    console.log(NewDataList);
+    console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
       let array = [];
       NewDataList.map((item, i) => {
@@ -143,19 +143,19 @@ const VendorProfile = (props) => {
         code: true,
         message: "Files upload successful",
       };
-      console.log(result);
+      //console.log(result);
       return res;
     }
     res = {
       code: false,
       message: "Files upload failed",
     };
-    console.log(result);
+    //console.log(result);
     return res;
   };
   React.useEffect(() => {
     if (vendor) {
-      //console.log(vendor.service.id)
+      //console.log(vendor.service.gigs[0].services.options.Data)
       setImages(vendor.service.gigs[0].images);
       setPrice(vendor.service.gigs[0].price);
       setTitle(vendor.service.gigs[0].title);
@@ -248,7 +248,7 @@ const VendorProfile = (props) => {
             }}
           >
             <Text style={styles.headLine}>
-              {vendor?.service.serviceCenterName}
+              {Title}
             </Text>
             <Text
               style={{
@@ -468,7 +468,7 @@ const VendorProfile = (props) => {
               fontFamily: "Poppins-Medium",
             }}
           >
-            {Title}
+            {vendor?.service.serviceCenterName}
           </Text>
 
           <TouchableOpacity
