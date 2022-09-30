@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
 import { Entypo } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
@@ -42,36 +42,11 @@ const Notice = (props) => {
   const navigation = props.navigation;
   //animated header
   const scrollY = new Animated.Value(0);
-  const diffClamp = Animated.diffClamp(scrollY, 0, 200);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 150);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, -200],
+    inputRange: [0, 150],
+    outputRange: [0, -150],
   });
-
-  // const scrollHandler = useAnimatedScrollHandler({
-  //   onScroll: (event) => {
-  //     if (
-  //       lastContentOffset.value > event.contentOffset.y &&
-  //       isScrolling.value
-  //     ) {
-  //       translateY.value = 0;
-  //       console.log("scrolling up");
-  //     } else if (
-  //       lastContentOffset.value < event.contentOffset.y &&
-  //       isScrolling.value
-  //     ) {
-  //       translateY.value = -100;
-  //       console.log("scrolling down");
-  //     }
-  //     lastContentOffset.value = event.contentOffset.y;
-  //   },
-  //   onBeginDrag: (e) => {
-  //     isScrolling.value = true;
-  //   },
-  //   onEndDrag: (e) => {
-  //     isScrolling.value = false;
-  //   },
-  // });
   const onChange = (val) => {
     return setData((d) => [...d, val]);
   };
@@ -123,10 +98,10 @@ const Notice = (props) => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ height: 190 }} />
+        <View style={{ height: 150 }} />
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("AddExpenses", {
+            navigation.navigate("AddNotice", {
               onChange: onChange,
               value: null,
             });
@@ -162,11 +137,13 @@ const Notice = (props) => {
             backgroundColor: backgroundColor,
             borderTopLeftRadius: 5,
             borderTopRightRadius: 5,
+            paddingHorizontal: 10,
           }}
         >
+          <Text style={styles.text}>Id/ Record</Text>
           <Text style={styles.text}>Date</Text>
-          <Text style={styles.text}>Name Of Expenses</Text>
-          <Text style={styles.text}>Amount</Text>
+          <Text style={styles.text}>Notice</Text>
+          <Text style={styles.text}></Text>
         </View>
         {Data &&
           Data.map((doc, i) => (
@@ -179,21 +156,6 @@ const Notice = (props) => {
               i={i}
             />
           ))}
-        <View
-          style={{
-            flexDirection: "row",
-            marginHorizontal: 20,
-            marginVertical: 20,
-            backgroundColor: backgroundColor,
-            borderRadius: 5,
-            paddingHorizontal: 5,
-            paddingVertical: 5,
-          }}
-        >
-          <Text style={styles.text}>Total :</Text>
-          <Text style={styles.text}></Text>
-          <Text style={styles.text}>{total(Data)}৳</Text>
-        </View>
       </ScrollView>
       <Animated.View
         style={[
@@ -210,7 +172,7 @@ const Notice = (props) => {
       >
         <View
           style={{
-            height: 200,
+            height: 150,
 
             backgroundColor: "#fbfbfb",
           }}
@@ -221,13 +183,13 @@ const Notice = (props) => {
             inputWidth={80}
             title="Notice"
           />
-          <DropDown
+          {/* <DropDown
             DATA={["All", "Price"]}
             style={{
               marginHorizontal: 20,
             }}
             placeholder="Filter By"
-          />
+          /> */}
         </View>
       </Animated.View>
     </KeyboardAvoidingView>
@@ -242,6 +204,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     color: "white",
+    marginVertical: 10,
   },
   text2: {
     fontSize: 15,
@@ -255,6 +218,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
   },
+  text3:{
+    fontSize:15,
+    fontFamily: "Poppins-Medium",
+    color: textColor,
+  }
 });
 
 import { Menu } from "react-native-paper";
@@ -265,34 +233,13 @@ import DateTime from "./../Seller/DateTime";
 import AlertModal from "./components/AlertModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import TextArea from "./../../components/TextArea";
-import SuggestionBox,{MainOptions} from "./../../components/SuggestionBox";
+import SuggestionBox, { MainOptions } from "./../../components/SuggestionBox";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
   const [ModalVisible, setModalVisible] = React.useState(false);
-  const [AlertVisible, setAlertVisible] = React.useState(false);
 
-  const Delete = () => {
-    setData((val) => {
-      return val.filter((d) => d.id != value.id);
-    });
-  };
-  const edit = (val) => {
-    let options = {
-      id: value.id,
-      name: val.name,
-      amount: val.amount,
-      date: val.date,
-    };
-    return setData((val) => {
-      val.forEach((d, i) => {
-        if (d.id == value.id) {
-          val[i] = options;
-        }
-      });
-      return val;
-    });
-  };
+  
   return (
     <View
       style={{
@@ -302,71 +249,51 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
         borderBottomWidth: 1,
         borderBottomColor: "#e5e5e5",
         paddingBottom: 10,
+        alignItems: "center",
       }}
     >
-      <Text style={styles.text2}>{Data[i].date}</Text>
-      <View style={{ width: 1, backgroundColor: "#e5e5e5" }} />
-      <Text style={styles.text2}>{Data[i].name}</Text>
-      <View style={{ width: 1, backgroundColor: "#e5e5e5" }} />
-      <Text style={styles.text2}>{Data[i].amount}</Text>
-
-      <Menu
-        contentStyle={{
-          backgroundColor: primaryColor,
+      <Text numberOfLines={1} style={styles.text2}>
+        {Data[i].record}
+      </Text>
+      <View
+        style={{
+          width: 1,
+          backgroundColor: "#e5e5e5",
+          height: 20,
+          marginHorizontal: 5,
         }}
-        visible={Visible}
-        onDismiss={() => {
-          setVisible(!Visible);
+      />
+      <Text numberOfLines={1} style={styles.text2}>
+        {Data[i].date}
+      </Text>
+      <View
+        style={{
+          width: 1,
+          backgroundColor: "#e5e5e5",
+          height: 20,
+          marginHorizontal: 5,
         }}
-        anchor={
-          <Entypo
-            onPress={() => {
-              setVisible(!Visible);
-            }}
-            name="dots-three-vertical"
-            size={22}
-            color={textColor}
-          />
-        }
-      >
-        <Menu.Item
-          onPress={() => {
-            navigation.navigate("AddExpenses", {
-              onChange: edit,
-              value: value,
-            });
-            setVisible(!Visible);
-          }}
-          title="Edit"
-        />
-        <Menu.Item
-          onPress={() => {
-            //Delete();
-            setAlertVisible(true);
-            setVisible(!Visible);
-          }}
-          title="Delete"
-        />
-      </Menu>
-      <Modal
-        animationType={"fade"}
-        transparent={true}
-        visible={AlertVisible}
-        onRequestClose={() => setAlertVisible(false)}
-      >
-        <AlertModal
-          title="Hey"
-          subTitle={"Are you sure want to delete this?"}
-          onChange={(e) => {
-            if (e == "ok") {
-              Delete();
-              setAlertVisible(false);
-            } else {
-              setAlertVisible(false);
-            }
-          }}
-        />
-      </Modal>
+      />
+      <Text numberOfLines={1} style={styles.text2}>
+        {Data[i].description}
+      </Text>
+      <Button
+        onPress={() => {
+          navigation.navigate("ViewCart", {
+            value: value,
+            setData: setData,
+          });
+        }}
+        style={{
+          borderRadius: 5,
+          color: "white",
+          backgroundColor: backgroundColor,
+          borderWidth: 0,
+          height: 40,
+          marginLeft: 5,
+        }}
+        title="View"
+      />
     </View>
   );
 };
@@ -376,13 +303,6 @@ export const AddNotice = (props) => {
   const value = props.route.params.value;
   let date = new Date();
   const [Day, setDay] = React.useState(dateConverter(date));
-  const [Month, setMonth] = React.useState();
-  const [Year, setYear] = React.useState();
-  const [DayError, setDayError] = React.useState();
-  const [MonthError, setMonthError] = React.useState();
-  const [YearError, setYearError] = React.useState();
-  const [Name, setName] = React.useState();
-  const [Amount, setAmount] = React.useState();
   const [Visible, setVisible] = React.useState(false);
   const navigation = props.navigation;
   const DATA = [
@@ -419,21 +339,31 @@ export const AddNotice = (props) => {
       value: "Head of Department",
     },
   ];
-  const [Data,setData]= React.useState([])
+  const [Data, setData] = React.useState([]);
+  const [Position, setPosition] = React.useState();
+  const [Record, setRecord] = React.useState();
+  const [Subject, setSubject] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [Name, setName] = React.useState();
+
   React.useEffect(() => {
     if (value) {
-      setName(value.name);
-      setAmount(value.amount);
-      let newDate = value.date.split("-");
       setDay(value.date);
-      setMonth(DateTime.month[parseInt(newDate[1]) - 1]);
-      setYear(newDate[2]);
+      setName(value.name);
+      setRecord(value.record);
+      setDescription(value.description);
+      setPosition(value.position);
+      setSubject(value.subject);
     }
   }, [value]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView style={{ flex: 1 }}>
         <Text
           style={{
             color: textColor,
@@ -477,9 +407,9 @@ export const AddNotice = (props) => {
           />
         </View>
         <Input
-          value={Name}
+          value={Record}
           onChange={(val) => {
-            setName(val);
+            setRecord(val);
           }}
           style={[
             styles.input,
@@ -490,15 +420,20 @@ export const AddNotice = (props) => {
           placeholder="Id/ Record Number"
         />
         <Input
-          value={Amount}
+          value={Subject}
           onChange={(val) => {
-            setAmount(val);
+            setSubject(val);
           }}
           style={styles.input}
           placeholder="Subject"
         />
         <View style={{ paddingHorizontal: 20 }}>
-          <TextArea placeholder="Describe your notice" />
+          <TextArea value={Description}
+            onChange={(val) => {
+              setDescription(val);
+            }}
+            placeholder="Describe your notice"
+          />
         </View>
         <View>
           <Text
@@ -513,9 +448,9 @@ export const AddNotice = (props) => {
             Your Personal Information
           </Text>
           <Input
-            value={Amount}
+            value={Name}
             onChange={(val) => {
-              setAmount(val);
+              setName(val);
             }}
             style={{
               padding: 0,
@@ -524,16 +459,19 @@ export const AddNotice = (props) => {
             }}
             placeholder="Your Name"
           />
-          <View style={{
-            marginLeft:20
-          }}>
+          <View
+            style={{
+              marginLeft: 20,
+            }}
+          >
             <SuggestionBox
+              value={Position}
               placeholder="Position"
               onChange={(val) => {
-                //setData(val);
+                setData(val);
               }}
               onSelect={(val) => {
-                //setTitle(val);
+                setPosition(val);
               }}
               DATA={DATA}
               style={{
@@ -544,50 +482,61 @@ export const AddNotice = (props) => {
             />
           </View>
         </View>
-        <Button
+        <Button 
           onPress={() => {
             if (onChange) {
-              onChange({
+              try{
+                onChange({
                 name: Name,
-                amount: Amount,
                 date: Day,
                 id: uuid.v4(),
+                record: Record,
+                subject: Subject,
+                description: Description,
+                position: Position,
               });
+              }catch (e) {
+                console.log(e.message)
+              }
             }
             navigation.goBack();
             // setModalVisible(false);
           }}
-          disabled={Day && Name && Amount ? false : true}
+          disabled={
+            Day && Name && Subject && Position && Description && Record
+              ? false
+              : true
+          }
           style={{
             marginHorizontal: 20,
             marginVertical: 20,
             borderRadius: 5,
             backgroundColor:
-              Day && Name && Amount ? backgroundColor : "#707070",
+              Day && Name && Subject && Position && Description && Record
+                ? backgroundColor
+                : "#707070",
             borderWidth: 0,
             height: 45,
             marginTop: 25,
           }}
           title="Save"
         />
-        <InstructionCart title={"Expencess Name?"} />
-        <InstructionCart title={"Ammount?"} />
-        <InstructionCart title={"Date?"} />
-      </ScrollView>
-      <MainOptions
-          setValue={(value) => {
-            setSelectedItem(value);
-            setTitle(value);
+        <MainOptions
+          setValue={(val) => {
+            //setSelectedItem(value);
+            setPosition(val);
           }}
           setData={setData}
           style={{
-            marginTop: Platform.OS == "ios" ? 145 : 152,
+            marginTop: Platform.OS == "ios" ? 448 : 455,
             marginLeft: 20,
-            width: 120,
+            width: 200,
+            maxHeight: 90,
           }}
           Data={Data}
         />
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 const InstructionCart = ({ title }) => {
@@ -646,4 +595,141 @@ const total = (arr) => {
     amount += parseInt(doc.amount);
   });
   return amount;
+};
+export const ViewCart = (props) => {
+  const [AlertVisible, setAlertVisible] = React.useState(false);
+  const setData = props.route.params.setData;
+  const navigation=props.navigation;
+  const [value,setValue] =React.useState(props.route.params.value)
+
+  const Delete = () => {
+    setData((val) => {
+      return val.filter((d) => d.id != value.id);
+    });
+    navigation.goBack();
+  };
+  const Edit = (val) => {
+
+    let options = {
+      id: value.id,
+      name: val.name,
+      record: val.record,
+      date: val.date,
+      position: val.position,
+      description: val.description,
+      subject: val.subject,
+    };
+    setValue(options)
+    return setData((val) => {
+      val.forEach((d, i) => {
+        if (d.id == value.id) {
+          val[i] = options;
+        }
+      });
+      
+      return val;
+    });
+  };
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          paddingTop: 35,
+          paddingHorizontal: 20,
+          justifyContent: "space-between",
+          backgroundColor: primaryColor,
+          paddingBottom: 10,
+        }}
+      >
+        <Ionicons onPress={()=>{
+          navigation.goBack()
+        }} name="ios-chevron-back-outline" size={24} color="#707070" />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: 100,
+          }}
+        >
+          <Ionicons name="md-print" size={24} color="#707070" />
+          <AntDesign onPress={() => {
+            navigation.navigate('AddNotice',{
+              onChange:Edit,
+              value:value
+            })
+          }} name="edit" size={24} color="#707070" />
+          <AntDesign
+            onPress={() => {
+              setAlertVisible(true);
+            }}
+            name="delete"
+            size={24}
+            color="#707070"
+          />
+        </View>
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ marginHorizontal: 20 }}>
+          <Text style={[styles.text3,{
+            marginTop:10
+          }]}>Record Number</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={[styles.text3,{
+              fontSize:14,
+              fontFamily: "Poppins-Light"
+            }]}>{value.record}</Text>
+            <Text style={styles.text3}>Date: {value.date}</Text>
+          </View>
+          <View style={{height:1,backgroundColor: "#e5e5e5",marginVertical:10 }}/>
+          <Text style={{
+            fontSize:18,
+            fontFamily: "Poppins-Medium",
+            color:textColor
+          }}>SUBJECT: {value.subject}</Text>
+          <View style={{height:1,backgroundColor: "#e5e5e5",marginVertical:10 }}/>
+          <Text style={{
+            fontSize:14,
+            fontFamily: "Poppins-Medium",
+            color:textColor
+          }}>{value.description}</Text>
+          <View style={{
+            alignItems: "flex-end",
+            marginVertical:10
+          }}>
+            <Text style={styles.text3}>{value.name}</Text>
+            <Text style={{
+              fontSize:14,
+              fontFamily: "Poppins-Light",
+              color:textColor
+            }}>{value.position}</Text>
+          </View>
+        </View>
+      </ScrollView>
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={AlertVisible}
+        onRequestClose={() => setAlertVisible(false)}
+      >
+        <AlertModal
+          title="Hey"
+          subTitle={"Are you sure want to delete this?"}
+          onChange={(e) => {
+            if (e == "ok") {
+              Delete();
+              setAlertVisible(false);
+            } else {
+              setAlertVisible(false);
+            }
+          }}
+        />
+      </Modal>
+    </View>
+  );
 };

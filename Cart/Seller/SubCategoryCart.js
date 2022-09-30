@@ -13,7 +13,8 @@ const SubCategoryCart = ({ title, onPress, deleteData, data, id, nextId }) => {
     
   if (listData) {
       let arr=listData.filter(d=>{
-        if(d.title.match(title) || d.subTitle&&d.subTitle.match(title)){
+        if(d.title===title || d.subTitle&&d.subTitle===title){
+          //console.log(title);
           return d
         }
       });

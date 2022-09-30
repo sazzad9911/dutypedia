@@ -38,7 +38,8 @@ import { logOut,logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import DashboardList from './Vendor/DashboardList';
-import Notice,{AddNotice} from './Vendor/Notice';
+import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
+import Member,{AddOfflineUser} from './Vendor/Member';
 
 const Stack = createStackNavigator();
 
@@ -168,6 +169,27 @@ const Profile = ({ navigation }) => {
             header:(props)=><SubHeader title="Add Notice" {...props} />
           }}
           component={AddNotice}
+        />
+        <Stack.Screen
+          name="ViewCart"
+          options={{
+            headerShown: false,
+          }}
+          component={ViewCart}
+        />
+        <Stack.Screen
+          name="Member"
+          options={{
+            headerShown: false,
+          }}
+          component={Member}
+        />
+        <Stack.Screen
+          name="AddOfflineUser"
+          options={{
+            headerShown: false,
+          }}
+          component={AddOfflineUser}
         />
     </Stack.Navigator>
   );
