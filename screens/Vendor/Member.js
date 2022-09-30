@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Modal,
 } from "react-native";
 import { Text } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -18,16 +19,27 @@ import {
 import TopTabBar from "./../Seller/components/TopTabBar";
 import BackHeader from "./../../components/BackHeader";
 import Input from "./../../components/Input";
-import { AntDesign, FontAwesome, EvilIcons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, EvilIcons, Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import DropDown from "./../../components/DropDown";
-import Animated, {StretchInY } from "react-native-reanimated";
+import Animated, { StretchInY } from "react-native-reanimated";
 import Button from "./../../components/Button";
 import TextArea from "./../../components/TextArea";
-import {DivisionList} from '../../Data/division';
-import {DistrictList} from '../../Data/district';
-import {AreaList} from '../../Data/area'
+import { DivisionList } from "../../Data/division";
+import { DistrictList } from "../../Data/district";
+import { AreaList } from "../../Data/area";
+import { Menu } from "react-native-paper";
+import AlertModal from "./components/AlertModal";
+import {
+  createOfflineMembers,
+  getOfflineMembers,
+  deleteOfflineMember,
+  updateOfflineMembers,
+} from "../../Class/member";
+import { fileFromURL } from "../../action";
+import { uploadFile } from "../../Class/upload";
+import { useSelector, useDispatch } from "react-redux";
 
 const Member = () => {
   return (
@@ -212,16 +224,57 @@ const DutyPediaUser = (props) => {
           paddingHorizontal: 10,
         }}
       >
-        <Text style={styles.text}>S/N</Text>
-        <Text style={styles.text}>Member</Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: "white",
+            margin: 10,
+          }}
+        >
+          S/N
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: "white",
+            margin: 10,
+          }}
+        >
+          Member
+        </Text>
       </View>
     </View>
   );
 };
 const OfflineUser = (props) => {
   const navigation = props.navigation;
+  const [Reload, setReload] = React.useState(false);
+  const [Data, setData] = React.useState([]);
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const [Loader, setLoader] = React.useState(true);
+
+  const reload = () => {
+    setReload(!Reload);
+  };
+  React.useEffect(() => {
+    if (vendor && user) {
+      getOfflineMembers(user.token, vendor.service.id).then((res) => {
+        if (res) {
+          setData(res.members);
+          setLoader(false);
+          return;
+        }
+        setLoader(false);
+        console.warn(res);
+      });
+    }
+  }, [Reload + vendor + user]);
+
   return (
-    <View>
+    <ScrollView>
       <Input
         style={{
           borderWidth: 1,
@@ -236,7 +289,10 @@ const OfflineUser = (props) => {
           //   onChange: onChange,
           //   value: null,
           // });
-          navigation.navigate("AddOfflineUser");
+          navigation.navigate("AddOfflineUser", {
+            reload: reload,
+            id: null,
+          });
         }}
       >
         <View
@@ -253,7 +309,7 @@ const OfflineUser = (props) => {
               fontFamily: "Poppins-Medium",
             }}
           >
-            Add Notice
+            Add Member
           </Text>
 
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
@@ -271,25 +327,187 @@ const OfflineUser = (props) => {
           paddingHorizontal: 10,
         }}
       >
-        <Text style={styles.text}>S/N</Text>
-        <Text style={styles.text}>Member</Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: "white",
+            margin: 10,
+          }}
+        >
+          S/N
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: "white",
+            margin: 10,
+          }}
+        >
+          Member
+        </Text>
       </View>
+      <View>
+        {Loader ? (
+          <Text style={{ textAlign: "center" }}>Loading...</Text>
+        ) : (
+          Data.map((doc, i) => (
+            <OfflineCart {...props} i={i} doc={doc} key={i} reload={reload} />
+          ))
+        )}
+      </View>
+    </ScrollView>
+  );
+};
+const OfflineCart = ({ doc, i, navigation, reload }) => {
+  const [Visible, setVisible] = React.useState(false);
+  const [AlertVisible, setAlertVisible] = React.useState(false);
+  const user = useSelector((state) => state.user);
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 5,
+        marginHorizontal: 20,
+        backgroundColor: "#e5e5e5",
+        borderRadius: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        justifyContent: "space-between",
+      }}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            margin: 10,
+          }}
+        >
+          {i + 1 < 10 ? "0" + (i + 1) : i + 1}
+        </Text>
+        <View
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: 5,
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          {doc.profilePhoto ? (
+            <Image
+              style={{
+                height: 40,
+                width: 40,
+              }}
+              source={{ uri: doc.profilePhoto }}
+            />
+          ) : (
+            <FontAwesome name="user" size={30} color="#983C85" />
+          )}
+        </View>
+        <Text
+          numberOfLines={1}
+          style={{
+            marginLeft: 10,
+            fontSize: 15,
+            fontFamily: "Poppins-Medium",
+          }}
+        >
+          {doc.name ? doc.name : "Easin Arafat"}
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <FontAwesome name="user-circle-o" size={24} color={backgroundColor} />
+        <View style={{ width: 10 }} />
+        <Menu
+          contentStyle={{
+            backgroundColor: primaryColor,
+          }}
+          visible={Visible}
+          onDismiss={() => setVisible(!Visible)}
+          anchor={
+            <Entypo
+              onPress={() => {
+                setVisible(true);
+              }}
+              name="dots-three-vertical"
+              size={24}
+              color={backgroundColor}
+            />
+          }
+        >
+          <Menu.Item
+            onPress={() => {
+              setVisible(false);
+              navigation.navigate("AddOfflineUser", {
+                reload: reload,
+                id: doc,
+              });
+            }}
+            title="Edit"
+          />
+          <Menu.Item
+            onPress={() => {
+              setAlertVisible(true);
+              setVisible(false);
+            }}
+            title="Delete"
+          />
+        </Menu>
+      </View>
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={AlertVisible}
+        onRequestClose={() => setAlertVisible(false)}
+      >
+        <AlertModal
+          title="Hey"
+          subTitle={"Are you sure want to delete this?"}
+          onChange={(e) => {
+            if (e == "ok") {
+              //console.log(user.token);
+              //console.log(doc.id)
+              deleteOfflineMember(user.token, doc.id).then(() => {
+                reload();
+              });
+              setAlertVisible(false);
+            } else {
+              setAlertVisible(false);
+            }
+          }}
+        />
+      </Modal>
     </View>
   );
 };
-export const AddOfflineUser = () => {
+export const AddOfflineUser = (props) => {
   const [backgroundImage, setBackgroundImage] = React.useState();
   const [image, setImage] = React.useState();
   const [Visible, setVisible] = React.useState(false);
-  const [Name, setName]=React.useState()
-  const [Gender, setGender]= React.useState()
+  const [Name, setName] = React.useState();
+  const [Gender, setGender] = React.useState();
   const [Phone, setPhone] = React.useState();
-  const [Division, setDivision]= React.useState();
-  const [District, setDistrict]= React.useState();
-  const [Area, setArea]= React.useState();
-  const [Address, setAddress]= React.useState();
+  const [Division, setDivision] = React.useState();
+  const [District, setDistrict] = React.useState();
+  const [Area, setArea] = React.useState();
+  const [Address, setAddress] = React.useState();
   const [NewDistrictList, setDistrictList] = React.useState([]);
   const [NewAreaList, setAreaList] = React.useState([]);
+  const reload = props.route.params.reload;
+  const data = props.route.params.id;
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const navigation = props.navigation;
+  const [Loader, setLoader] = React.useState(false);
 
   const searchDistrict = (value) => {
     if (value) {
@@ -307,13 +525,132 @@ export const AddOfflineUser = () => {
       setAreaList([]);
     }
   };
+  React.useEffect(() => {
+    if (data) {
+      setName(data.name);
+      setGender(data.gender);
+      setPhone(data.phone);
+      if (data.profilePhoto) {
+        setImage({ uri: data.profilePhoto });
+      }
+      if (data.wallPhoto) {
+        setBackgroundImage({ uri: data.wallPhoto });
+      }
+      setDivision(data.region);
+      setDistrict(data.city);
+      setArea(data.area);
+      setAddress(data.address);
+    }
+  }, [data]);
+  const confirm = async () => {
+    setLoader(true);
+    let profilePhoto = null;
+    let wallPhoto = null;
+    if (image) {
+      let arr = [];
+      arr.push(fileFromURL(image));
+      profilePhoto = await uploadFile(arr, user.token);
+      profilePhoto = profilePhoto[0];
+    }
+    if (backgroundImage) {
+      let arr = [];
+      arr.push(fileFromURL(backgroundImage));
+      wallPhoto = await uploadFile(arr, user.token);
+      wallPhoto = wallPhoto[0];
+    }
+    await createOfflineMembers(user.token, vendor.service.id, {
+      name: Name,
+      phone: Phone,
+      gender: Gender,
+      region: Division,
+      city: District,
+      area: Area,
+      address: Address,
+      profilePhoto: profilePhoto,
+      wallPhoto: wallPhoto,
+    })
+      .then((res) => {
+        setLoader(false);
+        if (res) {
+          reload();
+          navigation.goBack();
+          return;
+        }
+        console.warn(res);
+        return;
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err);
+      });
+  };
+  const save = async () => {
+    setLoader(true);
+    let profilePhoto = null;
+    let wallPhoto = null;
+    if (image) {
+      if (!image.type) {
+        profilePhoto = image.uri;
+      } else {
+        let arr = [];
+        arr.push(fileFromURL(image));
+        profilePhoto = await uploadFile(arr, user.token);
+        profilePhoto = profilePhoto[0];
+      }
+    }
+    if (backgroundImage) {
+      if (!backgroundImage.type) {
+        wallPhoto = backgroundImage.uri;
+      } else {
+        let arr = [];
+        arr.push(fileFromURL(backgroundImage));
+        wallPhoto = await uploadFile(arr, user.token);
+        wallPhoto = wallPhoto[0];
+      }
+    }
 
+    const d = {
+      name: Name,
+      phone: Phone,
+      gender: Gender,
+      region: Division,
+      city: District,
+      area: Area,
+      address: Address,
+      profilePhoto: profilePhoto,
+      wallPhoto: wallPhoto,
+      memberId: data.id,
+      serviceId: vendor.service.id,
+    };
+    await updateOfflineMembers(user.token, d)
+      .then((res) => {
+        setLoader(false);
+        if (res) {
+          reload();
+          navigation.goBack();
+          return;
+        }
+        console.warn(res);
+        return;
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err);
+      });
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView>
       <View>
         {backgroundImage ? (
           <Image
-            source={{ uri: backgroundImage }}
+            source={{ uri: backgroundImage.uri }}
             style={styles.backgroundContainer}
           />
         ) : (
@@ -325,7 +662,7 @@ export const AddOfflineUser = () => {
 
         <View style={styles.profile}>
           {image ? (
-            <Image style={styles.image} source={{ uri: image }} />
+            <Image style={styles.image} source={{ uri: image.uri }} />
           ) : (
             <FontAwesome name="user" size={80} color="#983C85" />
           )}
@@ -341,7 +678,7 @@ export const AddOfflineUser = () => {
               onPress={() => {
                 pickImage().then((result) => {
                   if (result) {
-                    setImage(result.uri);
+                    setImage(result);
                   }
                 });
               }}
@@ -366,7 +703,7 @@ export const AddOfflineUser = () => {
             onPress={() => {
               pickImage().then((result) => {
                 if (result) {
-                  setBackgroundImage(result.uri);
+                  setBackgroundImage(result);
                 }
               });
             }}
@@ -376,54 +713,116 @@ export const AddOfflineUser = () => {
           />
         </View>
       </View>
-      <Text style={{
-        fontSize:16,
-        fontFamily: "Poppins-Medium",
-        color:textColor,
-        marginTop: 20,
-        marginBottom: 10,
-        marginHorizontal: 20,
-      }}>Member Information</Text>
-      <Input value={Name} onChange={val=>{
-        setName(val);
-      }} style={offlineStyles.input} placeholder="Member Name" />
-      <DropDown onChange={val=>{
-        setGender(val)
-      }} DATA={['Male','Female','Other']} style={offlineStyles.dropdown} placeholder="Gender" />
-      <Input value={Phone} onChange={val=>{
-        setPhone(val)
-      }} style={offlineStyles.input} placeholder="Phone Number" />
-      <Button onPress={() =>{
-        setVisible(!Visible)
-      }}
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: "Poppins-Medium",
+          color: textColor,
+          marginTop: 20,
+          marginBottom: 10,
+          marginHorizontal: 20,
+        }}
+      >
+        Member Information
+      </Text>
+      <Input
+        value={Name}
+        onChange={(val) => {
+          setName(val);
+        }}
+        style={offlineStyles.input}
+        placeholder="Member Name"
+      />
+      <DropDown
+        value={Gender}
+        onChange={(val) => {
+          setGender(val);
+        }}
+        DATA={["Male", "Female", "Other"]}
+        style={offlineStyles.dropdown}
+        placeholder="Gender"
+      />
+      <Input
+        value={Phone}
+        onChange={(val) => {
+          setPhone(val);
+        }}
+        style={offlineStyles.input}
+        placeholder="Phone Number"
+      />
+      <Button
+        onPress={() => {
+          setVisible(!Visible);
+        }}
         style={{
           color: textColor,
           marginVertical: 10,
           marginHorizontal: 20,
           borderRadius: 5,
         }}
-        title={Visible?"Less":"More"}
+        title={Visible ? "Less" : "More"}
       />
       {Visible && (
         <Animated.View entering={StretchInY}>
-          <DropDown DATA={DivisionList} onChange={val=>{
-            searchDistrict(val)
-          }} style={offlineStyles.dropdown} placeholder="Division" />
-          <DropDown onChange={val=>{
-            searchArea(val)
-          }} DATA={NewDistrictList} style={offlineStyles.dropdown} placeholder="District" />
-          <DropDown DATA={NewAreaList} style={offlineStyles.dropdown} placeholder="Area" />
-          <TextArea style={offlineStyles.dropdown} placeholder="Your Address" />
+          <DropDown
+            value={Division}
+            DATA={DivisionList}
+            onChange={(val) => {
+              searchDistrict(val);
+              setDivision(val);
+            }}
+            style={offlineStyles.dropdown}
+            placeholder="Division"
+          />
+          <DropDown
+            value={District}
+            onChange={(val) => {
+              searchArea(val);
+              setDistrict(val);
+            }}
+            DATA={NewDistrictList}
+            style={offlineStyles.dropdown}
+            placeholder="District"
+          />
+          <DropDown
+            value={Area}
+            onChange={(val) => {
+              setArea(val);
+            }}
+            DATA={NewAreaList}
+            style={offlineStyles.dropdown}
+            placeholder="Area"
+          />
+          <TextArea
+            value={Address}
+            onChange={(val) => {
+              setAddress(val);
+            }}
+            style={offlineStyles.dropdown}
+            placeholder="Your Address"
+          />
         </Animated.View>
       )}
-      <Button disabled={Name&&Gender&&Phone?false:true} style={{
-        backgroundColor:Name&&Gender&&Phone?backgroundColor:'#707070',
-        height:45,
-        borderRadius:5,
-        marginVertical: 10,
-        marginHorizontal: 20,
-        borderWidth:0
-      }} title="Add Member" />
+      <Button
+        onPress={() => {
+          if (data) {
+            save();
+          } else {
+            confirm();
+          }
+        }}
+        disabled={Name && Gender && Phone ? false : true}
+        style={{
+          backgroundColor:
+            Name && Gender && Phone ? backgroundColor : "#707070",
+          height: 45,
+          borderRadius: 5,
+          marginVertical: 10,
+          marginHorizontal: 20,
+          borderWidth: 0,
+        }}
+        title={data ? "Save Changes" : "Add Member"}
+      />
     </ScrollView>
   );
 };
@@ -448,6 +847,7 @@ const pickImage = async () => {
     quality: 1,
   });
   if (!result.cancelled) {
+    console.log(result);
     return result;
   }
   return null;
