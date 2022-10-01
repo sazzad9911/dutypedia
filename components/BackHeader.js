@@ -27,6 +27,7 @@ const BackHeader = (props) => {
           }}
           style={{
             marginLeft: 20,
+            zIndex:500
           }}
           name="left"
           size={25}

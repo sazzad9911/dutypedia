@@ -80,3 +80,28 @@ export const updateOfflineMembers=async(token,data)=>{
     console.warn(res)
     return false
 }
+export const getRandomUser=async(token)=>{
+    const res= await axios.get(`${url}/server/members/online/get-random-users`,{
+        headers:{ Authorization: `Bearer ${token}`}
+    })
+    if(res){ return res.data }
+    console.warn(res)
+    return false
+}
+export const getUserByName = async(token, name) =>{
+    const res = await axios.get(`${url}/server/members/online/get-users-by-name?name=${name}`,{
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    if(res){ return res.data }
+    console.warn(res)
+    return false
+}
+export const createOnlineUser=async(token,userId,serviceId)=>{
+   const res =await axios.post(`${url}/server/members/online/create`,{
+        userId:userId,
+        serviceId:serviceId
+    },{
+        headers: {Authorization: `Bearer ${token}`}
+    })
+    return res
+}

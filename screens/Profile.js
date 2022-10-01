@@ -39,7 +39,7 @@ import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import DashboardList from './Vendor/DashboardList';
 import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
-import Member,{AddOfflineUser} from './Vendor/Member';
+import Member,{AddOfflineUser,AddOnlineUser} from './Vendor/Member';
 
 const Stack = createStackNavigator();
 
@@ -190,6 +190,13 @@ const Profile = ({ navigation }) => {
             headerShown: false,
           }}
           component={AddOfflineUser}
+        />
+        <Stack.Screen
+          name="AddOnlineUser"
+          options={{
+            headerShown: false,
+          }}
+          component={AddOnlineUser}
         />
     </Stack.Navigator>
   );

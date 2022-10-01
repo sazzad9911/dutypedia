@@ -36,96 +36,7 @@ const Expenses = (props) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
   const [ScrollRef, setScrollRef] = React.useState(true);
   const [Data, setData] = React.useState([
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
-    {
-      name: "Rent",
-      amount: "5000",
-      date: "12-09-2022",
-      id: uuid.v4(),
-    },
+    
   ]);
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
@@ -166,22 +77,88 @@ const Expenses = (props) => {
   const onChange = (val) => {
     return setData((d) => [...d, val]);
   };
+  if (Array.isArray(Data) && Data.length == 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("AddExpenses", {
+              onChange: onChange,
+              value: null,
+            });
+          }}
+          style={{
+            width: 80,
+            height: 80,
+            backgroundColor: primaryColor,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 5,
+          }}
+        >
+          <AntDesign name="plus" size={50} color="#707070" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            marginTop: 15,
+          }}
+        >
+          Create New Notice
+        </Text>
+      </View>
+    );
+  }
   return (
-    <KeyboardAvoidingView
+    <View
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      
-      <ScrollView
-        style={{ flexGrow: 0 }}
+      <Animated.View
+        style={[
+          {
+            transform: [{ translateY: translateY }],
+            zIndex: 200,
+            backgroundColor: "#f5f5f5",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        ]}
+      >
+        <View
+          style={{
+            height: 200,
+
+            backgroundColor: "#fbfbfb",
+          }}
+        >
+          <BackHeader 
+            placeholder="Search"
+            {...props}
+            inputWidth={80}
+            title="Expenses"
+          />
+          <DropDown
+            DATA={["All", "Price"]}
+            style={{
+              marginHorizontal: 20,
+            }}
+            placeholder="Filter By"
+          />
+        </View>
+      </Animated.View>
+      <ScrollView bounces={false} 
         scrollEventThrottle={16}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}
         showsVerticalScrollIndicator={false}
       >
-      <View style={{height:190}}/>
+        <View style={{ height: 190 }} />
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("AddExpenses", {
@@ -237,55 +214,24 @@ const Expenses = (props) => {
               i={i}
             />
           ))}
-        <View
-          style={{
-            flexDirection: "row",
-            marginHorizontal: 20,
-            marginVertical: 20,
-            backgroundColor: backgroundColor,
-            borderRadius: 5,
-            paddingHorizontal: 5,
-            paddingVertical: 5,
-          }}
-        >
-          <Text style={styles.text}>Total :</Text>
-          <Text style={styles.text}></Text>
-          <Text style={styles.text}>{total(Data)}৳</Text>
-        </View>
       </ScrollView>
-      <Animated.View
-        style={[
-          { transform: [{ translateY: translateY }],
-          zIndex:200,
-          backgroundColor:'#f5f5f5',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          },
-        ]}
+      <View
+        style={{
+          flexDirection: "row",
+          marginHorizontal: 20,
+          marginVertical: 20,
+          backgroundColor: backgroundColor,
+          borderRadius: 5,
+          paddingHorizontal: 5,
+          paddingVertical: 5,
+          bottom:0
+        }}
       >
-        <View style={{
-          height:200,
-          
-          backgroundColor:'#fbfbfb'
-        }}>
-          <BackHeader
-            placeholder="Search"
-            {...props}
-            inputWidth={80}
-            title="Expenses"
-          />
-          <DropDown
-            DATA={["All", "Price"]}
-            style={{
-              marginHorizontal: 20,
-            }}
-            placeholder="Filter By"
-          />
-        </View>
-      </Animated.View>
-    </KeyboardAvoidingView>
+        <Text style={styles.text}>Total :</Text>
+        <Text style={styles.text}></Text>
+        <Text style={styles.text}>{total(Data)}৳</Text>
+      </View>
+    </View>
   );
 };
 
@@ -451,7 +397,11 @@ export const AddExpenses = (props) => {
   }, [value]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
       <ScrollView>
         <Input
           value={Name}
@@ -547,7 +497,7 @@ export const AddExpenses = (props) => {
         <InstructionCart title={"Ammount?"} />
         <InstructionCart title={"Date?"} />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 const InstructionCart = ({ title }) => {

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   Modal,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Text } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -36,10 +37,14 @@ import {
   getOfflineMembers,
   deleteOfflineMember,
   updateOfflineMembers,
+  getRandomUser,
+  getUserByName,
+  createOnlineUser,
 } from "../../Class/member";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
 import { useSelector, useDispatch } from "react-redux";
+import { Snackbar } from "react-native-paper";
 
 const Member = () => {
   return (
@@ -174,6 +179,9 @@ const styles = StyleSheet.create({
 });
 
 const DutyPediaUser = (props) => {
+  const navigation = props.navigation;
+
+  const onChange = (data) => {};
   return (
     <View>
       <Input
@@ -186,10 +194,9 @@ const DutyPediaUser = (props) => {
       />
       <TouchableOpacity
         onPress={() => {
-          //   navigation.navigate("AddNotice", {
-          //     onChange: onChange,
-          //     value: null,
-          //   });
+          navigation.navigate("AddOnlineUser", {
+            onChange: onChange,
+          });
         }}
       >
         <View
@@ -206,7 +213,7 @@ const DutyPediaUser = (props) => {
               fontFamily: "Poppins-Medium",
             }}
           >
-            Add Notice
+            Add Member
           </Text>
 
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
@@ -646,31 +653,61 @@ export const AddOfflineUser = (props) => {
     );
   }
   return (
-    <ScrollView>
-      <View>
-        {backgroundImage ? (
-          <Image
-            source={{ uri: backgroundImage.uri }}
-            style={styles.backgroundContainer}
-          />
-        ) : (
-          <LinearGradient
-            style={styles.backgroundContainer}
-            colors={["#983C85", "#983C85", "#983C53"]}
-          ></LinearGradient>
-        )}
-
-        <View style={styles.profile}>
-          {image ? (
-            <Image style={styles.image} source={{ uri: image.uri }} />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView>
+        <View>
+          {backgroundImage ? (
+            <Image
+              source={{ uri: backgroundImage.uri }}
+              style={styles.backgroundContainer}
+            />
           ) : (
-            <FontAwesome name="user" size={80} color="#983C85" />
+            <LinearGradient
+              style={styles.backgroundContainer}
+              colors={["#983C85", "#983C85", "#983C53"]}
+            ></LinearGradient>
           )}
+
+          <View style={styles.profile}>
+            {image ? (
+              <Image style={styles.image} source={{ uri: image.uri }} />
+            ) : (
+              <FontAwesome name="user" size={80} color="#983C85" />
+            )}
+            <View
+              style={[
+                styles.cameraIcon,
+                {
+                  top: -5,
+                },
+              ]}
+            >
+              <EvilIcons
+                onPress={() => {
+                  pickImage().then((result) => {
+                    if (result) {
+                      setImage(result);
+                    }
+                  });
+                }}
+                name="camera"
+                size={24}
+                color={backgroundColor}
+              />
+            </View>
+          </View>
           <View
             style={[
               styles.cameraIcon,
               {
-                top: -5,
+                top: 40,
+                right: 10,
+                height: 30,
+                width: 30,
               },
             ]}
           >
@@ -678,152 +715,129 @@ export const AddOfflineUser = (props) => {
               onPress={() => {
                 pickImage().then((result) => {
                   if (result) {
-                    setImage(result);
+                    setBackgroundImage(result);
                   }
                 });
               }}
               name="camera"
-              size={24}
+              size={30}
               color={backgroundColor}
             />
           </View>
         </View>
-        <View
-          style={[
-            styles.cameraIcon,
-            {
-              top: 40,
-              right: 10,
-              height: 30,
-              width: 30,
-            },
-          ]}
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            marginTop: 20,
+            marginBottom: 10,
+            marginHorizontal: 20,
+          }}
         >
-          <EvilIcons
-            onPress={() => {
-              pickImage().then((result) => {
-                if (result) {
-                  setBackgroundImage(result);
-                }
-              });
-            }}
-            name="camera"
-            size={30}
-            color={backgroundColor}
-          />
-        </View>
-      </View>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "Poppins-Medium",
-          color: textColor,
-          marginTop: 20,
-          marginBottom: 10,
-          marginHorizontal: 20,
-        }}
-      >
-        Member Information
-      </Text>
-      <Input
-        value={Name}
-        onChange={(val) => {
-          setName(val);
-        }}
-        style={offlineStyles.input}
-        placeholder="Member Name"
-      />
-      <DropDown
-        value={Gender}
-        onChange={(val) => {
-          setGender(val);
-        }}
-        DATA={["Male", "Female", "Other"]}
-        style={offlineStyles.dropdown}
-        placeholder="Gender"
-      />
-      <Input
-        value={Phone}
-        onChange={(val) => {
-          setPhone(val);
-        }}
-        style={offlineStyles.input}
-        placeholder="Phone Number"
-      />
-      <Button
-        onPress={() => {
-          setVisible(!Visible);
-        }}
-        style={{
-          color: textColor,
-          marginVertical: 10,
-          marginHorizontal: 20,
-          borderRadius: 5,
-        }}
-        title={Visible ? "Less" : "More"}
-      />
-      {Visible && (
-        <Animated.View entering={StretchInY}>
-          <DropDown
-            value={Division}
-            DATA={DivisionList}
-            onChange={(val) => {
-              searchDistrict(val);
-              setDivision(val);
-            }}
-            style={offlineStyles.dropdown}
-            placeholder="Division"
-          />
-          <DropDown
-            value={District}
-            onChange={(val) => {
-              searchArea(val);
-              setDistrict(val);
-            }}
-            DATA={NewDistrictList}
-            style={offlineStyles.dropdown}
-            placeholder="District"
-          />
-          <DropDown
-            value={Area}
-            onChange={(val) => {
-              setArea(val);
-            }}
-            DATA={NewAreaList}
-            style={offlineStyles.dropdown}
-            placeholder="Area"
-          />
-          <TextArea
-            value={Address}
-            onChange={(val) => {
-              setAddress(val);
-            }}
-            style={offlineStyles.dropdown}
-            placeholder="Your Address"
-          />
-        </Animated.View>
-      )}
-      <Button
-        onPress={() => {
-          if (data) {
-            save();
-          } else {
-            confirm();
-          }
-        }}
-        disabled={Name && Gender && Phone ? false : true}
-        style={{
-          backgroundColor:
-            Name && Gender && Phone ? backgroundColor : "#707070",
-          height: 45,
-          borderRadius: 5,
-          marginVertical: 10,
-          marginHorizontal: 20,
-          borderWidth: 0,
-        }}
-        title={data ? "Save Changes" : "Add Member"}
-      />
-    </ScrollView>
+          Member Information
+        </Text>
+        <Input
+          value={Name}
+          onChange={(val) => {
+            setName(val);
+          }}
+          style={offlineStyles.input}
+          placeholder="Member Name"
+        />
+        <DropDown
+          value={Gender}
+          onChange={(val) => {
+            setGender(val);
+          }}
+          DATA={["Male", "Female", "Other"]}
+          style={offlineStyles.dropdown}
+          placeholder="Gender"
+        />
+        <Input
+          value={Phone}
+          onChange={(val) => {
+            setPhone(val);
+          }}
+          keyboardType="numeric"
+          style={offlineStyles.input}
+          placeholder="Phone Number"
+        />
+        <Button
+          onPress={() => {
+            setVisible(!Visible);
+          }}
+          style={{
+            color: textColor,
+            marginVertical: 10,
+            marginHorizontal: 20,
+            borderRadius: 5,
+          }}
+          title={Visible ? "Less" : "More"}
+        />
+        {Visible && (
+          <Animated.View entering={StretchInY}>
+            <DropDown
+              value={Division}
+              DATA={DivisionList}
+              onChange={(val) => {
+                searchDistrict(val);
+                setDivision(val);
+              }}
+              style={offlineStyles.dropdown}
+              placeholder="Division"
+            />
+            <DropDown
+              value={District}
+              onChange={(val) => {
+                searchArea(val);
+                setDistrict(val);
+              }}
+              DATA={NewDistrictList}
+              style={offlineStyles.dropdown}
+              placeholder="District"
+            />
+            <DropDown
+              value={Area}
+              onChange={(val) => {
+                setArea(val);
+              }}
+              DATA={NewAreaList}
+              style={offlineStyles.dropdown}
+              placeholder="Area"
+            />
+            <TextArea
+              value={Address}
+              onChange={(val) => {
+                setAddress(val);
+              }}
+              style={offlineStyles.dropdown}
+              placeholder="Your Address"
+            />
+          </Animated.View>
+        )}
+        <Button
+          onPress={() => {
+            if (data) {
+              save();
+            } else {
+              confirm();
+            }
+          }}
+          disabled={Name && Gender && Phone ? false : true}
+          style={{
+            backgroundColor:
+              Name && Gender && Phone ? backgroundColor : "#707070",
+            height: 45,
+            borderRadius: 5,
+            marginVertical: 10,
+            marginHorizontal: 20,
+            borderWidth: 0,
+          }}
+          title={data ? "Save Changes" : "Add Member"}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 const offlineStyles = StyleSheet.create({
@@ -851,4 +865,217 @@ const pickImage = async () => {
     return result;
   }
   return null;
+};
+export const AddOnlineUser = () => {
+  const [Data, setData] = React.useState([]);
+  const user = useSelector((state) => state.user);
+  const [Loader, setLoader] = React.useState(true);
+  const [SearchValue, setSearchValue] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
+  const [Message, setMessage] = React.useState(null);
+
+  React.useEffect(() => {
+    if (user) {
+      getRandomUser(user.token).then((res) => {
+        if (res) {
+          setLoader(false);
+          //console.log(res.users)
+          return setData(res.users);
+        }
+        console.warn(res);
+      });
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    setLoader(true);
+    if (SearchValue) {
+      getUserByName(user.token, SearchValue).then((res) => {
+        setLoader(false);
+        if (res) {
+          return setData(res.users);
+        }
+        console.warn(res);
+      });
+    } else {
+      getRandomUser(user.token).then((res) => {
+        if (res) {
+          setLoader(false);
+          return setData(res.users);
+        }
+        //setLoader(false)
+        console.warn(res);
+      });
+    }
+  }, [SearchValue]);
+  const sendRequest = (id) => {
+    createOnlineUser(user.token, id, vendor.service.id)
+      .then((res) => {
+        if (res) {
+          setMessage("Request has sent successful");
+          return;
+        }
+      })
+      .catch((err) => {
+        setMessage(err.response.data.msg);
+      });
+  };
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <View style={{ height: 35, backgroundColor: primaryColor }} />
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            paddingBottom: 5,
+            shadowOffset: {
+              height: 1,
+              width: 1,
+            },
+            elevation: 1,
+            shadowRadius: 1,
+          }}
+        >
+          <Input
+            value={SearchValue}
+            onChange={(val) => {
+              setSearchValue(val);
+            }}
+            style={{
+              borderWidth: 1,
+            }}
+            placeholder="Search"
+          />
+        </View>
+        <ScrollView showsHorizontalScrollIndicator={false}>
+          {!Loader ? (
+            Data.map((doc, i) =>
+              doc.id != user.user.id ? (
+                <CartView
+                  onChange={(val) => {
+                    sendRequest(val);
+                  }}
+                  doc={doc}
+                  key={i}
+                />
+              ) : (
+                <View key={i}></View>
+              )
+            )
+          ) : (
+            <Text style={{ textAlign: "center", marginTop: 10 }}>
+              Loading...
+            </Text>
+          )}
+        </ScrollView>
+        <Snackbar
+          visible={Message}
+          onDismiss={() => setMessage(null)}
+          action={{
+            label: "Ok",
+            onPress: () => {
+              setMessage(null);
+            },
+          }}
+        >
+          {Message}
+        </Snackbar>
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+const CartView = ({ doc, onChange }) => {
+  const [Send, setSend] = React.useState(false);
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 5,
+        marginHorizontal: 20,
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#e5e5e5",
+        paddingBottom: 5,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <View
+          style={{
+            width: 50,
+            height: 50,
+            backgroundColor: "#e5e5e5",
+            borderRadius: 25,
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
+            margin: 5,
+          }}
+        >
+          {doc.profilePhoto ? (
+            <Image
+              style={{
+                height: 50,
+                width: 50,
+              }}
+              source={{ uri: doc.profilePhoto }}
+            />
+          ) : (
+            <FontAwesome name="user" size={30} color="#983C85" />
+          )}
+        </View>
+        <View>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 16,
+              fontFamily: "Poppins-Medium",
+              lineHeight: 20,
+            }}
+          >
+            {doc.firstName + " " + doc.lastName}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 13,
+              fontFamily: "Poppins-Light",
+              lineHeight: 15,
+            }}
+          >
+            @{doc.username}
+          </Text>
+        </View>
+      </View>
+      <Button
+        onPress={() => {
+          setSend(true);
+          if (onChange) {
+            onChange(doc.id);
+          }
+        }}
+        disabled={Send ? true : false}
+        style={{
+          borderRadius: 5,
+          backgroundColor: Send ? "#707070" : backgroundColor,
+          borderWidth: 0,
+        }}
+        title={Send ? "Request Sent" : "Add Member"}
+      />
+    </View>
+  );
 };
