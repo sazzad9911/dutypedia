@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Modal,
   Animated,
+  Alert
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -31,6 +32,8 @@ import {
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import { dateConverter } from "../../action";
+import { createNotice, getNotice, deleteNotice,updateNotice } from "../../Class/notice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Notice = (props) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
@@ -47,9 +50,43 @@ const Notice = (props) => {
     inputRange: [0, 150],
     outputRange: [0, -150],
   });
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [Loader, setLoader] = React.useState(true);
+
+  React.useEffect(() => {
+    if (vendor && user) {
+      getNotice(user.token, vendor.service.id).then((res) => {
+        setLoader(false);
+        if (res) {
+          setData(res.notices);
+        }
+      });
+    }
+  }, [Loader]);
+
   const onChange = (val) => {
-    return setData((d) => [...d, val]);
+    createNotice(user.token, {
+      subject: val.subject,
+      message: val.description,
+      record: val.record,
+      authorName: val.name,
+      authorPosition: val.position,
+      date: val.date,
+      serviceId: vendor.service.id,
+    }).then((res) => {
+      if (res) {
+        setLoader(!Loader);
+      }
+    });
   };
+  if(Loader) {
+    return(
+      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading..</Text>
+      </View>
+    )
+  }
   if (Array.isArray(Data) && Data.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -145,17 +182,20 @@ const Notice = (props) => {
           <Text style={styles.text}>Notice</Text>
           <Text style={styles.text}></Text>
         </View>
-        {Data &&
+        {Loader ? (
+          <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
+        ) : (
           Data.map((doc, i) => (
             <Cart
               {...props}
               value={doc}
               key={i}
-              setData={setData}
+              setData={setLoader}
               Data={Data}
               i={i}
             />
-          ))}
+          ))
+        )}
       </ScrollView>
       <Animated.View
         style={[
@@ -218,11 +258,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
   },
-  text3:{
-    fontSize:15,
+  text3: {
+    fontSize: 15,
     fontFamily: "Poppins-Medium",
     color: textColor,
-  }
+  },
 });
 
 import { Menu } from "react-native-paper";
@@ -239,7 +279,6 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
   const [ModalVisible, setModalVisible] = React.useState(false);
 
-  
   return (
     <View
       style={{
@@ -253,7 +292,7 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
       }}
     >
       <Text numberOfLines={1} style={styles.text2}>
-        {Data[i].record}
+        {value.record}
       </Text>
       <View
         style={{
@@ -264,7 +303,7 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
         }}
       />
       <Text numberOfLines={1} style={styles.text2}>
-        {Data[i].date}
+        {value.date}
       </Text>
       <View
         style={{
@@ -275,7 +314,7 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
         }}
       />
       <Text numberOfLines={1} style={styles.text2}>
-        {Data[i].description}
+        {value.message}
       </Text>
       <Button
         onPress={() => {
@@ -349,10 +388,10 @@ export const AddNotice = (props) => {
   React.useEffect(() => {
     if (value) {
       setDay(value.date);
-      setName(value.name);
+      setName(value.authorName);
       setRecord(value.record);
-      setDescription(value.description);
-      setPosition(value.position);
+      setDescription(value.message);
+      setPosition(value.authorPosition);
       setSubject(value.subject);
     }
   }, [value]);
@@ -428,7 +467,8 @@ export const AddNotice = (props) => {
           placeholder="Subject"
         />
         <View style={{ paddingHorizontal: 20 }}>
-          <TextArea value={Description}
+          <TextArea
+            value={Description}
             onChange={(val) => {
               setDescription(val);
             }}
@@ -482,21 +522,21 @@ export const AddNotice = (props) => {
             />
           </View>
         </View>
-        <Button 
+        <Button
           onPress={() => {
             if (onChange) {
-              try{
+              try {
                 onChange({
-                name: Name,
-                date: Day,
-                id: uuid.v4(),
-                record: Record,
-                subject: Subject,
-                description: Description,
-                position: Position,
-              });
-              }catch (e) {
-                console.log(e.message)
+                  name: Name,
+                  date: Day,
+                  id: uuid.v4(),
+                  record: Record,
+                  subject: Subject,
+                  description: Description,
+                  position: Position,
+                });
+              } catch (e) {
+                console.log(e.message);
               }
             }
             navigation.goBack();
@@ -599,36 +639,45 @@ const total = (arr) => {
 export const ViewCart = (props) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const setData = props.route.params.setData;
-  const navigation=props.navigation;
-  const [value,setValue] =React.useState(props.route.params.value)
+  const navigation = props.navigation;
+  const [value, setValue] = React.useState(props.route.params.value);
+  const user=useSelector((state) => state.user);
+  const vendor= useSelector((state) => state.vendor);
+
+  React.useEffect(() => {
+    //console.log(value.id)
+  },[])
 
   const Delete = () => {
-    setData((val) => {
-      return val.filter((d) => d.id != value.id);
-    });
-    navigation.goBack();
+    deleteNotice(user.token,value.id).then(res=>{
+      if(res){
+        setData(val=>(!val))
+        navigation.goBack();
+        return
+      }
+      Alert.alert("Opps!","Something went wrong")
+    })
+    
   };
   const Edit = (val) => {
-
     let options = {
-      id: value.id,
-      name: val.name,
+      noticeId: value.id,
+      authorName: val.name,
       record: val.record,
       date: val.date,
-      position: val.position,
-      description: val.description,
+      authorPosition: val.position,
+      message: val.description,
       subject: val.subject,
     };
-    setValue(options)
-    return setData((val) => {
-      val.forEach((d, i) => {
-        if (d.id == value.id) {
-          val[i] = options;
-        }
-      });
-      
-      return val;
-    });
+    //setValue(options);
+    updateNotice(user.token, options).then(res=>{
+      if(res){
+       setValue(res.data.notice)
+       setData(val=>(!val))
+      }
+    }).catch(err=>{
+      Alert.alert("Opps!", err.response.data)
+    })
   };
   return (
     <View>
@@ -642,9 +691,14 @@ export const ViewCart = (props) => {
           paddingBottom: 10,
         }}
       >
-        <Ionicons onPress={()=>{
-          navigation.goBack()
-        }} name="ios-chevron-back-outline" size={24} color="#707070" />
+        <Ionicons
+          onPress={() => {
+            navigation.goBack();
+          }}
+          name="ios-chevron-back-outline"
+          size={24}
+          color="#707070"
+        />
         <View
           style={{
             flexDirection: "row",
@@ -653,12 +707,17 @@ export const ViewCart = (props) => {
           }}
         >
           <Ionicons name="md-print" size={24} color="#707070" />
-          <AntDesign onPress={() => {
-            navigation.navigate('AddNotice',{
-              onChange:Edit,
-              value:value
-            })
-          }} name="edit" size={24} color="#707070" />
+          <AntDesign
+            onPress={() => {
+              navigation.navigate("AddNotice", {
+                onChange: Edit,
+                value: value,
+              });
+            }}
+            name="edit"
+            size={24}
+            color="#707070"
+          />
           <AntDesign
             onPress={() => {
               setAlertVisible(true);
@@ -671,43 +730,83 @@ export const ViewCart = (props) => {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ marginHorizontal: 20 }}>
-          <Text style={[styles.text3,{
-            marginTop:10
-          }]}>Record Number</Text>
+          <Text
+            style={[
+              styles.text3,
+              {
+                marginTop: 10,
+              },
+            ]}
+          >
+            Record Number
+          </Text>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
             }}
           >
-            <Text style={[styles.text3,{
-              fontSize:14,
-              fontFamily: "Poppins-Light"
-            }]}>{value.record}</Text>
+            <Text
+              style={[
+                styles.text3,
+                {
+                  fontSize: 14,
+                  fontFamily: "Poppins-Light",
+                },
+              ]}
+            >
+              {value.record}
+            </Text>
             <Text style={styles.text3}>Date: {value.date}</Text>
           </View>
-          <View style={{height:1,backgroundColor: "#e5e5e5",marginVertical:10 }}/>
-          <Text style={{
-            fontSize:18,
-            fontFamily: "Poppins-Medium",
-            color:textColor
-          }}>SUBJECT: {value.subject}</Text>
-          <View style={{height:1,backgroundColor: "#e5e5e5",marginVertical:10 }}/>
-          <Text style={{
-            fontSize:14,
-            fontFamily: "Poppins-Medium",
-            color:textColor
-          }}>{value.description}</Text>
-          <View style={{
-            alignItems: "flex-end",
-            marginVertical:10
-          }}>
-            <Text style={styles.text3}>{value.name}</Text>
-            <Text style={{
-              fontSize:14,
-              fontFamily: "Poppins-Light",
-              color:textColor
-            }}>{value.position}</Text>
+          <View
+            style={{
+              height: 1,
+              backgroundColor: "#e5e5e5",
+              marginVertical: 10,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+            }}
+          >
+            SUBJECT: {value.subject}
+          </Text>
+          <View
+            style={{
+              height: 1,
+              backgroundColor: "#e5e5e5",
+              marginVertical: 10,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+            }}
+          >
+            {value.message}
+          </Text>
+          <View
+            style={{
+              alignItems: "flex-end",
+              marginVertical: 10,
+            }}
+          >
+            <Text style={styles.text3}>{value.authorName}</Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Light",
+                color: textColor,
+              }}
+            >
+              {value.authorPosition}
+            </Text>
           </View>
         </View>
       </ScrollView>

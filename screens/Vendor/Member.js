@@ -40,11 +40,14 @@ import {
   getRandomUser,
   getUserByName,
   createOnlineUser,
+  getOnlineUser,
+  deleteOnlineMember
 } from "../../Class/member";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
 import { useSelector, useDispatch } from "react-redux";
 import { Snackbar } from "react-native-paper";
+import { Feather } from "@expo/vector-icons";
 
 const Member = () => {
   return (
@@ -180,10 +183,26 @@ const styles = StyleSheet.create({
 
 const DutyPediaUser = (props) => {
   const navigation = props.navigation;
+  const [Data, setData] = React.useState([]);
+  const [Loader, setLoader] = React.useState(true);
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
 
-  const onChange = (data) => {};
+  const onChange = (data) => {
+    setLoader(!Loader);
+  };
+  React.useEffect(() => {
+    if (vendor && user) {
+      getOnlineUser(user.token, vendor.service.id).then((res) => {
+        setLoader(false);
+        if (res) {
+          setData(res.members);
+        }
+      });
+    }
+  }, [Loader]);
   return (
-    <View>
+    <ScrollView>
       <Input
         style={{
           borderWidth: 1,
@@ -252,7 +271,111 @@ const DutyPediaUser = (props) => {
           Member
         </Text>
       </View>
-    </View>
+      {Loader ? (
+        <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
+      ) : (
+        Data.map((doc, i) => <OnlineCart doc={doc} i={i} key={i} reload={onChange} />)
+      )}
+    </ScrollView>
+  );
+};
+const OnlineCart = ({ doc, i,reload }) => {
+  const [AlertVisible, setAlertVisible] = React.useState(false);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  
+  return (
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginVertical: 5,
+        marginHorizontal: 20,
+        backgroundColor: "#e5e5e5",
+        borderRadius: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        justifyContent: "space-between",
+      }}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            margin: 10,
+          }}
+        >
+          {i + 1 < 10 ? "0" + (i + 1) : i + 1}
+        </Text>
+        <View
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: 5,
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          {doc.profilePhoto ? (
+            <Image
+              style={{
+                height: 40,
+                width: 40,
+              }}
+              source={{ uri: doc.profilePhoto }}
+            />
+          ) : (
+            <FontAwesome name="user" size={30} color="#983C85" />
+          )}
+        </View>
+        <Text
+          numberOfLines={1}
+          style={{
+            marginLeft: 10,
+            fontSize: 15,
+            fontFamily: "Poppins-Medium",
+          }}
+        >
+          {doc.name ? doc.name : "Easin Arafat"}
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <Feather name="send" size={22} color={backgroundColor} />
+        <View style={{ width: 15 }} />
+        <AntDesign onPress={()=>{
+          setAlertVisible(true)
+        }} name="delete" size={22} color={backgroundColor} />
+        <View style={{ width: 10 }} />
+      </View>
+      <Modal
+        animationType={"fade"}
+        transparent={true}
+        visible={AlertVisible}
+        onRequestClose={() => setAlertVisible(false)}
+      >
+        <AlertModal
+          title="Hey"
+          subTitle={"Are you sure want to delete this?"}
+          onChange={(e) => {
+            if (e == "ok") {
+              //console.log(user.token);
+              //console.log(doc.id)
+              deleteOnlineMember(user.token, doc.id).then(() => {
+                reload();
+              });
+              setAlertVisible(false);
+            } else {
+              setAlertVisible(false);
+            }
+          }}
+        />
+      </Modal>
+    </TouchableOpacity>
   );
 };
 const OfflineUser = (props) => {
@@ -372,7 +495,7 @@ const OfflineCart = ({ doc, i, navigation, reload }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   return (
-    <View
+    <TouchableOpacity
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -432,7 +555,6 @@ const OfflineCart = ({ doc, i, navigation, reload }) => {
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
-        <FontAwesome name="user-circle-o" size={24} color={backgroundColor} />
         <View style={{ width: 10 }} />
         <Menu
           contentStyle={{
@@ -447,7 +569,7 @@ const OfflineCart = ({ doc, i, navigation, reload }) => {
               }}
               name="dots-three-vertical"
               size={24}
-              color={backgroundColor}
+              color={"#707070"}
             />
           }
         >
@@ -467,6 +589,13 @@ const OfflineCart = ({ doc, i, navigation, reload }) => {
               setVisible(false);
             }}
             title="Delete"
+          />
+          <Menu.Item
+            onPress={() => {
+              //setAlertVisible(true);
+              //setVisible(false);
+            }}
+            title="View Profile"
           />
         </Menu>
       </View>
@@ -493,7 +622,7 @@ const OfflineCart = ({ doc, i, navigation, reload }) => {
           }}
         />
       </Modal>
-    </View>
+    </TouchableOpacity>
   );
 };
 export const AddOfflineUser = (props) => {

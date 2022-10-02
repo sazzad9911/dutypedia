@@ -105,3 +105,19 @@ export const createOnlineUser=async(token,userId,serviceId)=>{
     })
     return res
 }
+export const getOnlineUser=async(token,serviceId) => {
+    const res= await axios.get(`${url}/server/members/online?serviceId=${serviceId}`,{
+        headers: {Authorization: `Bearer ${token}`}
+    })
+    if(res){ return res.data}
+    console.warn(res.response.data.msg)
+    return false
+}
+export const deleteOnlineMember=async(token,id) => {
+    const res = await axios.delete(`${url}/server/members/online/delete/${id}`,{
+        headers:{ Authorization: `Bearer ${token}` }
+    })
+    if(res){ return res }
+    console.warn(res)
+    return false
+}

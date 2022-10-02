@@ -226,20 +226,7 @@ export default function StackRoute() {
           }}
           component={VendorAddress}
         />
-         <Stack.Screen
-          name="Expenses"
-          options={{
-            headerShown: false,
-          }}
-          component={Expenses}
-        />
-        <Stack.Screen
-          name="AddExpenses"
-          options={{
-            header:(props)=><SubHeader title="Add Expenses" {...props} />
-          }}
-          component={AddExpenses}
-        />
+        
         
       </Stack.Navigator>
       

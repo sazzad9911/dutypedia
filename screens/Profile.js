@@ -40,6 +40,7 @@ import { SvgXml } from "react-native-svg";
 import DashboardList from './Vendor/DashboardList';
 import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
 import Member,{AddOfflineUser,AddOnlineUser} from './Vendor/Member';
+import Expenses,{AddExpenses} from './Vendor/Expenses';
 
 const Stack = createStackNavigator();
 
@@ -197,6 +198,20 @@ const Profile = ({ navigation }) => {
             headerShown: false,
           }}
           component={AddOnlineUser}
+        />
+         <Stack.Screen
+          name="Expenses"
+          options={{
+            headerShown: false,
+          }}
+          component={Expenses}
+        />
+        <Stack.Screen
+          name="AddExpenses"
+          options={{
+            header:(props)=><SubHeader title="Add Expenses" {...props} />
+          }}
+          component={AddExpenses}
         />
     </Stack.Navigator>
   );
