@@ -77,8 +77,11 @@ const Notice = (props) => {
     }).then((res) => {
       if (res) {
         setLoader(!Loader);
+        navigation.goBack();
       }
-    });
+    }).catch((err) => {
+      Alert.alert("Opps!",err.response.data)
+    })
   };
   if(Loader) {
     return(
@@ -127,7 +130,7 @@ const Notice = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView
+      <ScrollView bounces={false}
         style={{ flexGrow: 0 }}
         scrollEventThrottle={16}
         onScroll={(e) => {
@@ -149,7 +152,6 @@ const Notice = (props) => {
               flexDirection: "row",
               marginHorizontal: 20,
               marginVertical: 10,
-              justifyContent: "space-between",
               marginTop: 20,
             }}
           >
@@ -161,7 +163,7 @@ const Notice = (props) => {
             >
               Add Notice
             </Text>
-
+            <View style={{width:10}}/>
             <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
           </View>
         </TouchableOpacity>
@@ -539,7 +541,7 @@ export const AddNotice = (props) => {
                 console.log(e.message);
               }
             }
-            navigation.goBack();
+            
             // setModalVisible(false);
           }}
           disabled={
@@ -674,6 +676,7 @@ export const ViewCart = (props) => {
       if(res){
        setValue(res.data.notice)
        setData(val=>(!val))
+       navigation.goBack();
       }
     }).catch(err=>{
       Alert.alert("Opps!", err.response.data)

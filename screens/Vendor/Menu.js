@@ -90,14 +90,13 @@ const Menu = ({ navigation }) => {
                 fontFamily: "Poppins-Medium",
                 fontSize: 15,
                 color: textColor,
-                marginTop: -5,
               }}
             >
               {vendor &&
               vendor.service &&
               vendor.service.providerInfo &&
               vendor.service.providerInfo.title
-                ? vendor.service.providerInfo.title
+                ? vendor.service.providerInfo.title+" "
                 : "Mr" + " "}
               {vendor &&
               vendor.service &&
@@ -249,7 +248,7 @@ const Cart = ({ title, Icon, onPress }) => {
       <View
         style={{
           width: width / 2 - 30,
-          height: 90,
+          height: 95,
           backgroundColor: primaryColor,
           borderRadius: 5,
           shadowOffset: {

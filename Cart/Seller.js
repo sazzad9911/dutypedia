@@ -68,7 +68,7 @@ function Seller(props) {
           style={{
             fontSize: 11,
             fontFamily: 'Poppins-Light',
-            marginTop: -5
+            marginTop: 0
           }}
         >
           Peciality : It

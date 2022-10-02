@@ -105,7 +105,7 @@ const DashboardList = ({ navigation }) => {
       <View style={{ height: height - (height / 10 + 470) }} />
       <Button
         onPress={() => {
-          navigation.navigate("MainCategory");
+          navigation.navigate("Category");
         }}
         style={{
           borderWidth: 0,

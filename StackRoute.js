@@ -34,19 +34,20 @@ import CompanyCalendar from "./screens/Seller/CompanyCalendar";
 import Login from "./screens/Login";
 import { checkUser } from "./Class/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { getService,getDashboard } from "./Class/service";
-import AllService from './screens/Vendor/AllService';
-import VendorCalender from './screens/Vendor/VendorCalender';
-import VendorAddress from './screens/Vendor/VendorAddress';
-import Expenses from './screens/Vendor/Expenses';
-import {AddExpenses} from './screens/Vendor/Expenses';
-import DashboardList from './screens/Vendor/DashboardList';
+import { getService, getDashboard } from "./Class/service";
+import AllService from "./screens/Vendor/AllService";
+import VendorCalender from "./screens/Vendor/VendorCalender";
+import VendorAddress from "./screens/Vendor/VendorAddress";
+import Expenses from "./screens/Vendor/Expenses";
+import { AddExpenses } from "./screens/Vendor/Expenses";
+import DashboardList from "./screens/Vendor/DashboardList";
+import Category from './screens/Seller/Category';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const [load, setLoad] = React.useState(false);
-  const [Vendor,setVendor] = React.useState(false);
+  const [Vendor, setVendor] = React.useState(false);
   const dispatch = useDispatch();
   React.useEffect(() => {
     checkUser()
@@ -55,10 +56,13 @@ export default function StackRoute() {
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
           getDashboard(res.token).then((result) => {
-            if (result && result.data &&result.data.dashboards) {
-              dispatch({ type: "SET_VENDOR_INFO", playload: result.data.dashboards });
+            if (result && result.data && result.data.dashboards) {
+              dispatch({
+                type: "SET_VENDOR_INFO",
+                playload: result.data.dashboards,
+              });
               setLoad(!load);
-            }else{
+            } else {
               dispatch({ type: "SET_VENDOR_INFO", playload: false });
               setLoad(!load);
             }
@@ -144,13 +148,19 @@ export default function StackRoute() {
           }}
           component={TableData}
         />
-
         <Stack.Screen
           name="SubCategories"
           options={{
             header: (props) => <SubHeader {...props} />,
           }}
           component={SubCategories}
+        />
+        <Stack.Screen
+          name="Category"
+          options={{
+            headerShown: false,
+          }}
+          component={Category}
         />
         <Stack.Screen
           name="SubCategories_1"
@@ -226,10 +236,7 @@ export default function StackRoute() {
           }}
           component={VendorAddress}
         />
-        
-        
       </Stack.Navigator>
-      
     </NavigationContainer>
   );
 }

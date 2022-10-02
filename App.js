@@ -33,11 +33,11 @@ export default function App() {
     },
   };
   const [fontsLoaded] = useFonts({
-    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
-    "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
-    "Poppins-Thin": require("./assets/fonts/Poppins-Thin.ttf"),
-    "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
+    "Poppins-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+    "Poppins-Light": require("./assets/fonts/Roboto-Light.ttf"),
+    "Poppins-Medium": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Poppins-Thin": require("./assets/fonts/Roboto-Thin.ttf"),
+    "Poppins-SemiBold": require("./assets/fonts/Roboto-Medium.ttf"),
   });
 
   if (!fontsLoaded) {

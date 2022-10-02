@@ -223,7 +223,6 @@ const DutyPediaUser = (props) => {
             flexDirection: "row",
             marginHorizontal: 20,
             marginVertical: 10,
-            justifyContent: "space-between",
           }}
         >
           <Text
@@ -234,7 +233,7 @@ const DutyPediaUser = (props) => {
           >
             Add Member
           </Text>
-
+          <View style={{width:10}}/>
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
         </View>
       </TouchableOpacity>
@@ -430,7 +429,6 @@ const OfflineUser = (props) => {
             flexDirection: "row",
             marginHorizontal: 20,
             marginVertical: 10,
-            justifyContent: "space-between",
           }}
         >
           <Text
@@ -441,7 +439,7 @@ const OfflineUser = (props) => {
           >
             Add Member
           </Text>
-
+          <View style={{width:10}}/>
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
         </View>
       </TouchableOpacity>

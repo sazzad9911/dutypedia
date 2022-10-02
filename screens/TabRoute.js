@@ -30,7 +30,6 @@ import AllReviewHeader from "./../components/AllReviewHeader";
 import Appointment from "./Appointment";
 import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
-import MainCategory from "./MainCategory";
 import BackHeader from "./../components/BackHeader";
 import {checkVendor} from '../Class/auth'
 
@@ -112,11 +111,6 @@ const TabRoute = () => {
           options={{ header: (props) => <OtherProfileHeader {...props} /> }}
           name="OtherProfile"
           component={OtherProfile}
-        />
-        <Tab.Screen
-          options={{ headerShown: false }}
-          name="MainCategory"
-          component={MainCategory}
         />
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />

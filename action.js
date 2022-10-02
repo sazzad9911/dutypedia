@@ -115,5 +115,13 @@ export const dateConverter=(date)=>{
   let month=date.getMonth()+1;
   month=month>9?month:'0'+month;
   let day=date.getDate()>9?date.getDate():'0'+date.getDate();
-  return `${day}-${month}-${fullYear}`
+  return `${fullYear}-${month}-${day}`
+}
+export const dateDifference =(newDate, oldDate)=>{
+  const reminding = (new Date(oldDate).getTime() - new Date(newDate).getTime()) / (1000 * 3600 * 24);
+  return reminding.toFixed(0)
+}
+export const convertDate = (date) => {
+  let data = '';
+  return data = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + (date.getDate())
 }

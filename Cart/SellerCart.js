@@ -33,7 +33,7 @@ export default function SellerCart({navigation}) {
           Become A Seller
         </Text>
         <TouchableOpacity onPress={()=>{
-          navigation.navigate('MainCategory')
+          navigation.navigate('Category')
         }}
           style={{
             marginLeft: 20,

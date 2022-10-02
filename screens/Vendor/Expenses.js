@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Modal,
   Animated,
+  Alert,
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -30,13 +31,79 @@ import {
   SlideInRight,
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
-import { dateConverter } from "../../action";
+import { dateConverter,dateDifference,convertDate } from "../../action";
+import {
+  getExpenses,
+  createExpenses,
+  deleteExpenses,
+  updateExpenses,
+} from "../../Class/expenses";
+import { useSelector, useDispatch } from "react-redux";
 
 const Expenses = (props) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
   const [ScrollRef, setScrollRef] = React.useState(true);
   const [Data, setData] = React.useState([
-    
+    {
+      id: 1,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 2,
+      name: "dfs",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 3,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 4,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 5,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 6,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 7,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 8,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 9,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
+    {
+      id: 10,
+      name: "fd",
+      amount: "877",
+      date: "40-374-22",
+    },
   ]);
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
@@ -49,6 +116,12 @@ const Expenses = (props) => {
     inputRange: [0, 200],
     outputRange: [0, -200],
   });
+  const newScrollY = new Animated.Value(0);
+  const [Loader, setLoader] = React.useState(true);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [AllData, setAllData] = React.useState([]);
+  const OPTIONS=['All','Last week','Last Month','Last 6 Month','Last year']
 
   // const scrollHandler = useAnimatedScrollHandler({
   //   onScroll: (event) => {
@@ -74,10 +147,121 @@ const Expenses = (props) => {
   //     isScrolling.value = false;
   //   },
   // });
-  const onChange = (val) => {
-    return setData((d) => [...d, val]);
+  React.useEffect(() => {
+    if (user && vendor) {
+      getExpenses(user.token, vendor.service.id)
+        .then((res) => {
+          if (res) {
+            setLoader(false);
+            setData(res.expenses);
+            setAllData(res.expenses);
+            return;
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          Alert.alert("Opps!", err.response.data.msg);
+        });
+    }
+  }, [Loader]);
+  const coverDate=(date)=> {
+    let arr=date.split('-');
+    return `${arr[2]}-${arr[1]}-${arr[0]}`;
+  }
+  function removeTime(date = new Date()) {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+  }
+  const filter = (index) => {
+    //index=0 for all,1 for week, 2 for month, 3 for 1/2 yr, 4 for 1 yr
+    if (index === 0) {
+      return AllData;
+    } else if (index === 1) {
+      let arr = AllData.filter((d) => {
+        let date = new Date();
+        date=convertDate(date)
+        console.log(dateDifference(date,d.date))
+        return d
+      });
+      return arr;
+    } else if (index === 2) {
+      let lowerDate = new Date();
+      lowerDate.setDate(lowerDate.getDate() - 7);
+      let upperDate = new Date();
+      let arr = AllData.filter((d) => {
+        let newDate = new Date(d.date);
+        if (newDate > lowerDate && newDate < upperDate) {
+          return d;
+        }
+      });
+      return arr;
+    } else if (index === 3) {
+      let lowerDate = new Date();
+      lowerDate.setDate(lowerDate.getMonth() - 1);
+      let upperDate = new Date();
+      let arr = AllData.filter((d) => {
+        let newDate = new Date(d.date);
+        if (newDate > lowerDate && newDate < upperDate) {
+          return d;
+        }
+      });
+      return arr;
+    } else if (index === 4) {
+      let lowerDate = new Date();
+      lowerDate.setDate(lowerDate.getMonth() - 6);
+      let upperDate = new Date();
+      let arr = AllData.filter((d) => {
+        let newDate = new Date(d.date);
+        if (newDate > lowerDate && newDate < upperDate) {
+          return d;
+        }
+      });
+      return arr;
+    } else if (index === 5) {
+      let lowerDate = new Date();
+      lowerDate.setDate(lowerDate.getFullYear() - 1);
+      let upperDate = new Date();
+      let arr = AllData.filter((d) => {
+        let newDate = new Date(d.date);
+        if (newDate > lowerDate && newDate < upperDate) {
+          return d;
+        }
+      });
+      return arr;
+    }
   };
-  if (Array.isArray(Data) && Data.length == 0) {
+  const onChange = (val) => {
+    setLoader(true);
+    createExpenses(user.token, {
+      amount: parseInt(val.amount),
+      title: val.name,
+      date: val.date,
+      serviceId: vendor.service.id,
+    })
+      .then((res) => {
+        setLoader(false);
+        if (res) {
+          navigation.goBack();
+          return;
+        }
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.log(err.response.data);
+        Alert.alert("Opps!", err.response.data.msg);
+      });
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+  if (Array.isArray(AllData) && AllData.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <TouchableOpacity
@@ -111,10 +295,18 @@ const Expenses = (props) => {
       </View>
     );
   }
+  const scroll = Animated.event(
+    [
+      {
+        nativeEvent: { contentOffset: { y: newScrollY } },
+      },
+    ],
+    {
+      useNativeDriver: true, // <- Native Driver used for animated events
+    }
+  );
   return (
-    <View
-      style={{ flex: 1 }}
-    >
+    <View style={{ flex: 1 }}>
       <Animated.View
         style={[
           {
@@ -135,14 +327,17 @@ const Expenses = (props) => {
             backgroundColor: "#fbfbfb",
           }}
         >
-          <BackHeader 
+          <BackHeader
             placeholder="Search"
             {...props}
             inputWidth={80}
             title="Expenses"
           />
-          <DropDown
-            DATA={["All", "Price"]}
+          <DropDown onChange={val=>{
+            let index=OPTIONS.indexOf(val);
+            setData(filter(index))
+          }}
+            DATA={OPTIONS}
             style={{
               marginHorizontal: 20,
             }}
@@ -150,10 +345,12 @@ const Expenses = (props) => {
           />
         </View>
       </Animated.View>
-      <ScrollView bounces={false} 
+      <Animated.ScrollView
+        bounces={false}
         scrollEventThrottle={16}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
+          scroll;
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -172,7 +369,6 @@ const Expenses = (props) => {
               flexDirection: "row",
               marginHorizontal: 20,
               marginVertical: 10,
-              justifyContent: "space-between",
               marginTop: 20,
             }}
           >
@@ -184,7 +380,7 @@ const Expenses = (props) => {
             >
               Add Expenses
             </Text>
-
+            <View style={{ width: 10 }} />
             <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
           </View>
         </TouchableOpacity>
@@ -197,6 +393,7 @@ const Expenses = (props) => {
             backgroundColor: backgroundColor,
             borderTopLeftRadius: 5,
             borderTopRightRadius: 5,
+            paddingVertical: 10,
           }}
         >
           <Text style={styles.text}>Date</Text>
@@ -209,22 +406,23 @@ const Expenses = (props) => {
               {...props}
               value={doc}
               key={i}
-              setData={setData}
+              setData={setLoader}
               Data={Data}
               i={i}
             />
           ))}
-      </ScrollView>
+      </Animated.ScrollView>
       <View
         style={{
           flexDirection: "row",
           marginHorizontal: 20,
-          marginVertical: 20,
+          marginVertical: 0,
           backgroundColor: backgroundColor,
           borderRadius: 5,
           paddingHorizontal: 5,
           paddingVertical: 5,
-          bottom:0
+          bottom: 0,
+          marginBottom: 10,
         }}
       >
         <Text style={styles.text}>Total :</Text>
@@ -270,27 +468,38 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
   const [ModalVisible, setModalVisible] = React.useState(false);
   const [AlertVisible, setAlertVisible] = React.useState(false);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
 
   const Delete = () => {
-    setData((val) => {
-      return val.filter((d) => d.id != value.id);
-    });
+    deleteExpenses(user.token, value.id)
+      .then((res) => {
+        if (res) {
+          setData((val) => !val);
+        }
+      })
+      .catch((err) => {
+        console.warn(err.response.data.msg);
+      });
   };
   const edit = (val) => {
     let options = {
-      id: value.id,
-      name: val.name,
-      amount: val.amount,
+      expenseId: value.id,
+      title: val.name,
+      amount: parseInt(val.amount),
       date: val.date,
+      serviceId: vendor.service.id,
     };
-    return setData((val) => {
-      val.forEach((d, i) => {
-        if (d.id == value.id) {
-          val[i] = options;
+    updateExpenses(user.token, options)
+      .then((res) => {
+        if (res) {
+          setData((val) => !val);
+          navigation.goBack();
         }
+      })
+      .catch((err) => {
+        console.warn(err.response.data.msg);
       });
-      return val;
-    });
   };
   return (
     <View
@@ -305,7 +514,7 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
     >
       <Text style={styles.text2}>{Data[i].date}</Text>
       <View style={{ width: 1, backgroundColor: "#e5e5e5" }} />
-      <Text style={styles.text2}>{Data[i].name}</Text>
+      <Text style={styles.text2}>{Data[i].title}</Text>
       <View style={{ width: 1, backgroundColor: "#e5e5e5" }} />
       <Text style={styles.text2}>{Data[i].amount}</Text>
 
@@ -387,8 +596,9 @@ export const AddExpenses = (props) => {
 
   React.useEffect(() => {
     if (value) {
-      setName(value.name);
-      setAmount(value.amount);
+      //console.log(value);
+      setName(value.title);
+      setAmount(value.amount.toString());
       let newDate = value.date.split("-");
       setDay(value.date);
       setMonth(DateTime.month[parseInt(newDate[1]) - 1]);
@@ -477,7 +687,7 @@ export const AddExpenses = (props) => {
                 id: uuid.v4(),
               });
             }
-            navigation.goBack();
+
             // setModalVisible(false);
           }}
           disabled={Day && Name && Amount ? false : true}

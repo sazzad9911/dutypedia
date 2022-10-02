@@ -3,7 +3,7 @@
 export class Color {
   primaryColor = "#ffffff";
   secondaryColor = "#fbfbfb";
-  textColor = "#333333";
+  textColor = "#000000";
   assentColor = "#808080";
   backgroundColor = "#DA1E37";
 

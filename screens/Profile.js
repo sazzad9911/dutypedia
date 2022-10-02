@@ -340,7 +340,7 @@ const MainProfile = (props) => {
         />
         <ProfileOption
           onPress={() => {
-            navigation.navigate("MainCategory");
+            navigation.navigate("Category");
           }}
           Icon={() => <Ionicons name="business" size={24} color="black" />}
           title="Create a business account"
