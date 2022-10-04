@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -31,10 +31,24 @@ import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "./../components/Button";
 import RatingView from "./../components/RatingView";
-import { brain, flag, info, star, user, verified } from "../assets/icon";
+import {
+  brain,
+  flag,
+  info,
+  star,
+  user,
+  verified,
+  appointmentIcon,
+  chatIcon,
+  callIcon,
+  calenderIcon,
+  noticeIcon,
+} from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
+import IconButton from "./../components/IconButton";
+import {Menu} from 'react-native-paper'
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -43,10 +57,12 @@ const OtherProfile = (props) => {
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [Lines, setLines] = React.useState(2);
   const navigation = props.navigation;
+  const [Visible, setVisible]= React.useState(false);
 
   return (
     <SafeAreaView>
-      <ScrollView showsVerticalScrollIndicator={false}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: "#f1f1f2",
         }}
@@ -68,7 +84,7 @@ const OtherProfile = (props) => {
             {image ? (
               <Image style={styles.image} source={{ uri: image }} />
             ) : (
-              <FontAwesome name="user" size={80} color="#983C85" />
+              <FontAwesome name="user" size={90} color="#983C85" />
             )}
           </View>
           <View
@@ -77,14 +93,14 @@ const OtherProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={styles.headLine}>
+            <Text style={[styles.headLine,{fontFamily:'Poppins-Medium'}]}>
               Easin Arafat It Consulting Center
             </Text>
             <Text
               style={{
                 marginTop: 10,
                 fontSize: 17,
-                fontFamily: 'Poppins-SemiBold'
+                fontFamily: "Poppins-Medium",
               }}
             >
               Easin Arafat (Male)
@@ -92,7 +108,7 @@ const OtherProfile = (props) => {
             <Text
               style={{
                 fontSize: 14,
-                fontFamily: 'Poppins-SemiBold'
+                fontFamily: "Poppins-Medium",
               }}
             >
               Position of Ceo
@@ -110,17 +126,110 @@ const OtherProfile = (props) => {
             width="50"
           />
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            backgroundColor: primaryColor,
+            paddingHorizontal: 20,
+          }}
+        >
+          <IconButton
+            style={{
+              borderRadius: 20,
+              height: 37,
+              width: 37,
+              margin: 10,
+            }}
+            LeftIcon={() => (
+              <SvgXml xml={appointmentIcon} height="20" width="20" />
+            )}
+          />
+          <IconButton
+            style={{
+              borderRadius: 20,
+              height: 37,
+              margin: 10,
+              width: width / 4 + 20,
+              marginLeft: 0,
+            }}
+            title="Chat"
+            LeftIcon={() => <SvgXml xml={chatIcon} height="20" width="20" />}
+          />
+          <IconButton
+            style={{
+              borderRadius: 20,
+              height: 37,
+              margin: 10,
+              width: width / 4 + 20,
+              marginLeft: 0,
+            }}
+            title="Call"
+            LeftIcon={() => <SvgXml xml={callIcon} height="20" width="20" />}
+          />
+          <Menu contentStyle={{
+            backgroundColor:primaryColor,
+          }}
+            visible={Visible}
+            onDismiss={()=> setVisible(false)}
+            anchor={
+              <TouchableOpacity onPress={() => {
+                setVisible(true);
+              }}
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: "#b5b5b5",
+                  margin: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: 0,
+                }}
+              >
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={20}
+                  color="#808080"
+                />
+              </TouchableOpacity>
+            }
+          >
+            <Menu.Item onPress={() => {
+              setVisible(false);
+            }} title="Copy URL" />
+            <Menu.Item onPress={() => {
+              setVisible(false);
+            }} title="Report" />
+          </Menu>
+        </View>
         <BarOption
           icon={brain}
           title="Specialty in Graphic Design, Software Engineer, Data Science"
         />
         <BarOption icon={user} title="Worker and Team (12 member)" />
         <BarOption icon={flag} title="Since 2020" />
+        <ProfileOption
+          Icon={() => (
+            <SvgXml xml={calenderIcon} height="20" width="20" />
+          )}
+          title="Company Calender"
+        />
+        <ProfileOption
+          style={{
+            marginBottom: 5,
+          }}
+          Icon={() => (
+            <SvgXml xml={noticeIcon} height="20" width="20" />
+          )}
+          title="Notice"
+        />
         <View
           style={{
             backgroundColor: primaryColor,
             paddingHorizontal: 20,
             paddingVertical: 10,
+            marginTop:-5
           }}
         >
           <View
@@ -134,7 +243,7 @@ const OtherProfile = (props) => {
                 marginLeft: 10,
                 color: textColor,
                 fontSize: 15,
-                fontFamily: 'Poppins-Medium'
+                fontFamily: "Poppins-SemiBold",
               }}
             >
               About
@@ -165,7 +274,7 @@ const OtherProfile = (props) => {
                 style={{
                   fontSize: 14,
                   textAlign: "justify",
-                  fontFamily: 'Poppins-Medium'
+                  fontFamily: "Poppins-Medium",
                 }}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -229,7 +338,7 @@ const OtherProfile = (props) => {
               <Text
                 style={{
                   marginLeft: 10,
-                  fontFamily: 'Poppins-Medium'
+                  fontFamily: "Poppins-Medium",
                 }}
               >
                 4.6
@@ -237,105 +346,35 @@ const OtherProfile = (props) => {
               <Text
                 style={{
                   marginLeft: 30,
-                  fontFamily: 'Poppins-Medium'
+                  fontFamily: "Poppins-Medium",
                 }}
               >
                 Profile View 10k
               </Text>
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginVertical: 10,
-              }}
-            >
-              <Button
-                style={{
-                  flex: 4,
-                  color: textColor
-                }}
-                title="Appointment"
-              />
-              <Button
-                style={{
-                  flex: 4,
-                  marginLeft: 10,
-                  backgroundColor: "green",
-                  color: "white",
-                  borderWidth: 0,
-                }}
-                title="Message"
-              />
-              <TouchableOpacity
-                style={{
-                  width: 35,
-                  height: 35,
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  borderColor: "#b5b5b5",
-                  marginLeft: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Entypo
-                  name="dots-three-horizontal"
-                  size={20}
-                  color="#808080"
-                />
-              </TouchableOpacity>
-            </View>
           </View>
         </View>
-        <ProfileOption
-          Icon={() => (
-            <AntDesign name="calendar" size={24} color={assentColor} />
-          )}
-          title="Company Calender"
-        />
-        <ProfileOption
-          style={{
-            marginBottom: 5,
-          }}
-          Icon={() => (
-            <FontAwesome5
-              style={{
-                marginRight: 5,
-              }}
-              name="clipboard-list"
-              size={24}
-              color={assentColor}
-            />
-          )}
-          title="Notice"
-        />
+
         <ScrollView
           style={{
             backgroundColor: primaryColor,
-            marginTop: 1,
+            marginTop: 0,
           }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
           <View style={{ width: 10 }} />
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              backgroundColor: textColor,
-              color: "white",
-              marginVertical: 10,
-            }}
-            title="Bargaining"
-          />
+          <IconButton style={{
+            height:35,
+            marginVertical: 10,
+          }} title="Bargaining"/>
           <Button
             style={{
               flex: 4,
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
-              color:textColor
+              color: textColor,
             }}
             title="Fixed"
           />
@@ -345,7 +384,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
-              color:textColor
+              color: textColor,
             }}
             title="Package"
           />
@@ -355,7 +394,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
-              color:textColor
+              color: textColor,
             }}
             title="Installment"
           />
@@ -365,7 +404,7 @@ const OtherProfile = (props) => {
               marginLeft: 10,
               height: 30,
               marginVertical: 10,
-              color:textColor
+              color: textColor,
             }}
             title="Subscription"
           />
@@ -388,7 +427,7 @@ const OtherProfile = (props) => {
               marginVertical: 10,
               fontSize: 14,
               color: textColor,
-              fontFamily: "Poppins-Light"
+              fontFamily: "Poppins-Light",
             }}
           >
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -404,7 +443,7 @@ const OtherProfile = (props) => {
               fontWeight: "bold",
               marginBottom: 20,
               color: textColor,
-              fontFamily: 'Poppins-Medium'
+              fontFamily: "Poppins-Medium",
             }}
           >
             From 500 ৳
@@ -460,7 +499,7 @@ const OtherProfile = (props) => {
           <Text
             style={{
               fontSize: 15,
-              fontFamily:'Poppins-SemiBold',
+              fontFamily: "Poppins-SemiBold",
               color: textColor,
               paddingHorizontal: 20,
             }}
@@ -476,7 +515,7 @@ const OtherProfile = (props) => {
           <Text
             style={{
               fontSize: 15,
-              fontFamily:'Poppins-SemiBold',
+              fontFamily: "Poppins-SemiBold",
               color: textColor,
               paddingHorizontal: 20,
             }}
@@ -511,15 +550,16 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowColor: backgroundColor,
-    width: 90,
-    height: 90,
+    width: 110,
+    height: 110,
     marginTop: -45,
     alignSelf: "center",
     backgroundColor: primaryColor,
     borderColor: backgroundColor,
-    borderRadius: 5,
+    borderRadius: 55,
     justifyContent: "center",
     alignItems: "center",
+    overflow: "hidden",
   },
   icon: {
     justifyContent: "center",
@@ -551,16 +591,16 @@ const styles = StyleSheet.create({
   },
   headLine: {
     fontSize: 20,
-    fontFamily: 'Poppins-SemiBold'
+    fontFamily: "Poppins-SemiBold",
   },
   text: {
     textAlign: "center",
     fontSize: 14,
-    fontFamily: 'Poppins-Medium'
+    fontFamily: "Poppins-Medium",
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 110,
+    height: 110,
   },
   starIcon: {
     marginRight: 3,
@@ -625,7 +665,7 @@ const BarOption = ({ icon, title }) => {
         <Text
           numberOfLines={lines}
           style={{
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: "Poppins-Medium",
             marginBottom: 5,
           }}
         >

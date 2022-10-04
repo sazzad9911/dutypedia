@@ -236,7 +236,7 @@ const VendorProfile = (props) => {
             {image ? (
               <Image style={styles.image} source={{ uri: image }} />
             ) : (
-              <FontAwesome name="user" size={80} color="#983C85" />
+              <FontAwesome name="user" size={90} color="#983C85" />
             )}
           </View>
           <View
@@ -244,7 +244,7 @@ const VendorProfile = (props) => {
               styles.cameraIcon,
               {
                 top: 212,
-                left: width / 2 + 22,
+                left: (width / 2) + 38,
                 zIndex: 1000,
                 position: "absolute",
               },
@@ -839,13 +839,13 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowColor: backgroundColor,
-    width: 90,
-    height: 90,
+    width: 110,
+    height: 110,
     marginTop: -45,
     alignSelf: "center",
     backgroundColor: primaryColor,
     borderColor: backgroundColor,
-    borderRadius: 45,
+    borderRadius: 55,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -888,8 +888,8 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   image: {
-    width: 89,
-    height: 89,
+    width: 110,
+    height: 110,
     borderRadius: 5,
   },
   starIcon: {
