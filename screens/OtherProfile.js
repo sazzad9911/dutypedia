@@ -48,7 +48,7 @@ import { SvgXml } from "react-native-svg";
 import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import IconButton from "./../components/IconButton";
-import {Menu} from 'react-native-paper'
+import { Menu } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -57,8 +57,31 @@ const OtherProfile = (props) => {
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [Lines, setLines] = React.useState(2);
   const navigation = props.navigation;
-  const [Visible, setVisible]= React.useState(false);
-
+  const [Visible, setVisible] = React.useState(false);
+  const initialState = [
+    {
+      title: "Bargaining",
+      value: true,
+    },
+    {
+      title: "Fixed",
+      value: false,
+    },
+    {
+      title: "Installment",
+      value: false,
+    },
+    {
+      title: "Subscription",
+      value: false,
+    },
+    {
+      title: "Package",
+      value: false,
+    },
+  ];
+  const [Active, setActive] = React.useState("Bargaining");
+  const [NewLines, setNewLines] = React.useState(false);
   return (
     <SafeAreaView>
       <ScrollView
@@ -93,7 +116,7 @@ const OtherProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={[styles.headLine,{fontFamily:'Poppins-Medium'}]}>
+            <Text style={[styles.headLine, { fontFamily: "Poppins-Medium" }]}>
               Easin Arafat It Consulting Center
             </Text>
             <Text
@@ -166,15 +189,17 @@ const OtherProfile = (props) => {
             title="Call"
             LeftIcon={() => <SvgXml xml={callIcon} height="20" width="20" />}
           />
-          <Menu contentStyle={{
-            backgroundColor:primaryColor,
-          }}
+          <Menu
+            contentStyle={{
+              backgroundColor: primaryColor,
+            }}
             visible={Visible}
-            onDismiss={()=> setVisible(false)}
+            onDismiss={() => setVisible(false)}
             anchor={
-              <TouchableOpacity onPress={() => {
-                setVisible(true);
-              }}
+              <TouchableOpacity
+                onPress={() => {
+                  setVisible(true);
+                }}
                 style={{
                   width: 35,
                   height: 35,
@@ -195,12 +220,18 @@ const OtherProfile = (props) => {
               </TouchableOpacity>
             }
           >
-            <Menu.Item onPress={() => {
-              setVisible(false);
-            }} title="Copy URL" />
-            <Menu.Item onPress={() => {
-              setVisible(false);
-            }} title="Report" />
+            <Menu.Item
+              onPress={() => {
+                setVisible(false);
+              }}
+              title="Copy URL"
+            />
+            <Menu.Item
+              onPress={() => {
+                setVisible(false);
+              }}
+              title="Report"
+            />
           </Menu>
         </View>
         <BarOption
@@ -210,18 +241,14 @@ const OtherProfile = (props) => {
         <BarOption icon={user} title="Worker and Team (12 member)" />
         <BarOption icon={flag} title="Since 2020" />
         <ProfileOption
-          Icon={() => (
-            <SvgXml xml={calenderIcon} height="20" width="20" />
-          )}
+          Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
           title="Company Calender"
         />
         <ProfileOption
           style={{
             marginBottom: 5,
           }}
-          Icon={() => (
-            <SvgXml xml={noticeIcon} height="20" width="20" />
-          )}
+          Icon={() => <SvgXml xml={noticeIcon} height="20" width="20" />}
           title="Notice"
         />
         <View
@@ -229,7 +256,7 @@ const OtherProfile = (props) => {
             backgroundColor: primaryColor,
             paddingHorizontal: 20,
             paddingVertical: 10,
-            marginTop:-5
+            marginTop: -5,
           }}
         >
           <View
@@ -364,63 +391,37 @@ const OtherProfile = (props) => {
           showsHorizontalScrollIndicator={false}
         >
           <View style={{ width: 10 }} />
-          <IconButton style={{
-            height:35,
-            marginVertical: 10,
-          }} title="Bargaining"/>
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              marginVertical: 10,
-              color: textColor,
-            }}
-            title="Fixed"
-          />
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              marginVertical: 10,
-              color: textColor,
-            }}
-            title="Package"
-          />
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              marginVertical: 10,
-              color: textColor,
-            }}
-            title="Installment"
-          />
-          <Button
-            style={{
-              flex: 4,
-              marginLeft: 10,
-              height: 30,
-              marginVertical: 10,
-              color: textColor,
-            }}
-            title="Subscription"
-          />
-          <View style={{ width: 10 }} />
+          {initialState &&
+            initialState.map((item, i) => (
+              <View key={i} style={{ flexDirection: "row" }}>
+                <IconButton
+                  onPress={() => {
+                    setActive(item.title);
+                  }}
+                  active={item.title == Active ? true : false}
+                  style={{
+                    height: 35,
+                    marginVertical: 10,
+                    borderRadius: 20,
+                  }}
+                  title={item.title}
+                />
+                <View style={{ width: 10 }} />
+              </View>
+            ))}
         </ScrollView>
         <View style={{ backgroundColor: primaryColor }}>
           <Image
             style={{
               width: "100%",
-              height: 230,
+              height: width - 80,
             }}
             source={{
               uri: "https://cdn.pixabay.com/photo/2017/01/14/10/56/people-1979261__340.jpg",
             }}
           />
           <Text
+            numberOfLines={NewLines ? 100 : 4}
             style={{
               marginHorizontal: 20,
               textAlign: "justify",
@@ -436,11 +437,22 @@ const OtherProfile = (props) => {
             and scrambled it to make a type specimen book. It has survived not
             only five centuries,
           </Text>
+        </View>
+        <View style={{backgroundColor:primaryColor,paddingHorizontal:20}}>
+          <Text style={{
+            fontFamily: "Poppins-Medium",
+            fontSize:16,
+            marginBottom:3
+          }}>Service List</Text>
+          <View style={{height:1,backgroundColor: "#e5e5e5"}}/>
+          
+          <View style={{height:1,backgroundColor: "#e5e5e5"}}/>
+        </View>
+        <View style={{backgroundColor: primaryColor}}>
           <Text
             style={{
               marginHorizontal: 20,
               fontSize: 17,
-              fontWeight: "bold",
               marginBottom: 20,
               color: textColor,
               fontFamily: "Poppins-Medium",
@@ -452,17 +464,18 @@ const OtherProfile = (props) => {
             style={{
               borderRadius: 5,
               marginHorizontal: 20,
-              backgroundColor: "#F1C00F",
+              backgroundColor: "#FEA31E",
               borderWidth: 0,
               marginBottom: 10,
+              color: textColor,
             }}
-            title="Continue"
+            title="Offer Now"
           />
         </View>
         <View
           style={{
             backgroundColor: primaryColor,
-            marginTop: 2,
+            marginTop: 0,
             paddingVertical: 20,
           }}
         >

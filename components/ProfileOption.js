@@ -22,13 +22,12 @@ const ProfileOption = (props) => {
         flex:1,
         paddingBottom:5,
         marginLeft:10,
-        alignItems: "center"
+        alignItems: "center",
       }}>
         <Text style={styles.text}>{props.title}</Text>
         {props.Text && <props.Text />}
         {props.badge ? <Badge style={{}}>2</Badge> : <></>}
         <MaterialIcons
-          style={styles.icon}
           name="keyboard-arrow-right"
           size={24}
           color="black"

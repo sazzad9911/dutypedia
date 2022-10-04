@@ -48,18 +48,18 @@ export default ReviewCart;
 const styles = StyleSheet.create({
   text1: {
     fontSize: 14,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
     color: "#808080",
   },
   text2: {
     fontSize: 14,
     color: "#808080",
-    fontFamily: 'Poppins-Light'
+    fontFamily: "Poppins-Light",
   },
   text3: {
     fontSize: 11,
     color: "#808080",
-    fontFamily: 'Poppins-Light'
+    fontFamily: "Poppins-Light",
   },
 });
 export const Cart = () => {
@@ -70,33 +70,37 @@ export const Cart = () => {
         marginVertical: 20,
       }}
     >
-      <Image
-        style={{
-          width: 30,
-          height: 30,
-          borderRadius: 15,
-        }}
-        source={{
-          uri: "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
-        }}
-      />
+      <View style={{ flexDirection: "row" }}>
+        <Image
+          style={{
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+          }}
+          source={{
+            uri: "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
+          }}
+        />
+        <View>
+          <Text
+            style={[
+              styles.text1,
+              {
+                marginTop: 4,
+              },
+            ]}
+          >
+            Sumaiya Alam
+          </Text>
+          <Text style={styles.text3}>Dhaka</Text>
+        </View>
+      </View>
       <View
         style={{
           marginLeft: 10,
           flex: 1,
         }}
       >
-        <Text
-          style={[
-            styles.text1,
-            {
-              marginTop: 4,
-            },
-          ]}
-        >
-          Sumaiya Alam
-        </Text>
-        <Text style={styles.text3}>Dhaka</Text>
         <Text
           style={[
             styles.text2,
@@ -116,12 +120,14 @@ export const Cart = () => {
           style={{
             flexDirection: "row",
             marginVertical: 10,
-            justifyContent: "space-between"
+            justifyContent: "space-between",
           }}
         >
-          <View style={{
-            flexDirection: "row",
-          }}>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
             {numToArray(5.2).map((doc, i) => (
               <SvgXml
                 style={{
@@ -144,9 +150,7 @@ export const Cart = () => {
               5.2
             </Text>
           </View>
-          <Text style={[styles.text2,{
-            
-          }]}>Bargaining</Text>
+          <Text style={[styles.text2, {}]}>Bargaining</Text>
         </View>
         <View
           style={{
