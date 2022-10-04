@@ -51,7 +51,7 @@ const Category = (props) => {
       return arr.filter((d) => d.title.match(title));
     }
     return [];
-  };
+  }; 
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>

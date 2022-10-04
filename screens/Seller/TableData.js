@@ -50,6 +50,8 @@ const TableData = (props) => {
   const length = useSelector((state) => state.length);
   const [newSelectedData, setNewSelectedData] = React.useState([]);
   const [Uncheck, setUncheck] = React.useState([]);
+  const route=props.route;
+  const direct = route.params&&route.params.direct?route.params.direct:false;
 
   React.useEffect(() => {
     if (newSelectedData.length != 0) {
@@ -87,7 +89,11 @@ const TableData = (props) => {
           <Button
             disabled={buttonPress ? false : true}
             onPress={() => {
-              navigation.navigate("Pricing");
+              if(direct){
+                navigation.navigate("Service",{direct:true});
+              }else{
+                navigation.navigate("Pricing");
+              }
               setButtonPress(false);
               dispatch({
                 type: "SET_LENGTH",

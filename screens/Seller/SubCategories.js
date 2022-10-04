@@ -37,6 +37,7 @@ const SubCategories = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
   const [ModalVisible, setModalVisible] = React.useState(false);
+  const direct = route.params&&route.params.direct?route.params.direct:false;
 
   React.useEffect(() => {
     //console.log(listData)
@@ -200,7 +201,11 @@ const SubCategories = ({ navigation, route }) => {
         disabled={listData && listData.length > 0 ? false : true}
         onPress={() => {
           if (route.name === "SubCategories") {
-            navigation.navigate("Pricing");
+            if(direct){
+              navigation.navigate("Service",{direct:true});
+            }else{
+              navigation.navigate("Pricing");
+            }
           } else {
             navigation.goBack();
           }

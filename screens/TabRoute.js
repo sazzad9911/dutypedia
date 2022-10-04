@@ -31,7 +31,8 @@ import Appointment from "./Appointment";
 import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
 import BackHeader from "./../components/BackHeader";
-import {checkVendor} from '../Class/auth'
+import { checkVendor } from "../Class/auth";
+import { getJson } from "../Class/storage";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,19 +41,23 @@ const TabRoute = () => {
   const bottomSheet = useSelector((state) => state.bottomSheet);
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
-  const user= useSelector((state) => state.user);
-  const vendorInfo= useSelector((state) => state.vendorInfo);
+  const user = useSelector((state) => state.user);
+  const vendorInfo = useSelector((state) => state.vendorInfo);
   React.useEffect(() => {
     checkVendor().then((res) => {
-      if(res) {
-        dispatch({ type: "SET_VENDOR",playload:res})
+      if (res) {
+        dispatch({ type: "SET_VENDOR", playload: res });
       }
-    })
-  },[])
+    });
+    getJson("serviceSettings").then((data) => {
+      if (data) {
+        dispatch({ type: "SET_SERVICE_SETTINGS", playload: data });
+      }
+    });
+  }, []);
 
   return (
-    <View
-      style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Tab.Navigator
         tabBar={(props) => {
           if (
@@ -133,8 +138,8 @@ const Bottom = (props) => {
   const handleClosePress = () => props.bottomSheetRef.current.close();
   const [isEnabled, setIsEnabled] = React.useState(false);
   const [Online, setOnline] = React.useState(false);
-  const [V,setV]= React.useState()
-  const [O,setO]= React.useState()
+  const [V, setV] = React.useState();
+  const [O, setO] = React.useState();
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
@@ -143,16 +148,16 @@ const Bottom = (props) => {
     setOnline((previousState) => !previousState);
   };
   React.useEffect(() => {
-    if(!isEnabled&&!Online){
+    if (!isEnabled && !Online) {
       setDisabled(true);
-      return
+      return;
     }
-    if(V!=isEnabled || O!=Online){
+    if (V != isEnabled || O != Online) {
       setDisabled(false);
-    }else{
+    } else {
       setDisabled(true);
     }
-  },[isEnabled+Online])
+  }, [isEnabled + Online]);
   return (
     <BottomSheet
       ref={props.bottomSheetRef}
@@ -223,21 +228,23 @@ const Bottom = (props) => {
       ) : (
         <TouchableOpacity
           disabled={disabled}
-          style={[styles.button,{
-            backgroundColor:disabled?'#707070':'green',
-            opacity:disabled?.8:1
-          }]}
+          style={[
+            styles.button,
+            {
+              backgroundColor: disabled ? "#707070" : "green",
+              opacity: disabled ? 0.8 : 1,
+            },
+          ]}
           onPress={() => {
             setDisabled(true);
             handleClosePress();
-            setO(isEnabled)
-            setV(Online)
+            setO(isEnabled);
+            setV(Online);
           }}
         >
           <Text
             style={{
               color: "white",
-              
             }}
           >
             Done

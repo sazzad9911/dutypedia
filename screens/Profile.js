@@ -41,6 +41,7 @@ import DashboardList from './Vendor/DashboardList';
 import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
 import Member,{AddOfflineUser,AddOnlineUser} from './Vendor/Member';
 import Expenses,{AddExpenses} from './Vendor/Expenses';
+import ServiceSettings from './Vendor/ServiceSettings';
 
 const Stack = createStackNavigator();
 
@@ -212,6 +213,13 @@ const Profile = ({ navigation }) => {
             header:(props)=><SubHeader title="Add Expenses" {...props} />
           }}
           component={AddExpenses}
+        />
+         <Stack.Screen
+          name="ServiceSettings"
+          options={{
+            headerShown: false,
+          }}
+          component={ServiceSettings}
         />
     </Stack.Navigator>
   );

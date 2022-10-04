@@ -31,7 +31,15 @@ import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "../components/Button";
 import RatingView from "../components/RatingView";
-import { brain, flag, info, star, user, verified } from "../assets/icon";
+import {
+  brain,
+  flag,
+  info,
+  star,
+  user,
+  verified,
+  serviceIcon,
+} from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "../Cart/ReviewCart";
 import RelatedService from "../Cart/RelatedService";
@@ -44,6 +52,15 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { getService, getGigs } from "../Class/service";
 import { serverToLocal } from "../Class/dataConverter";
+import IconButton from "./../components/IconButton";
+import Animated, {
+  SlideInRight,
+  SlideInLeft,
+  FadeIn,
+  StretchInY
+} from "react-native-reanimated";
+import { FAB } from "react-native-paper";
+import { AllData } from "../Data/AllData";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -71,6 +88,9 @@ const VendorProfile = (props) => {
   const [Facilities, setFacilities] = React.useState([]);
   const [NewDataList, setNewDataList] = React.useState([]);
   const vendor = useSelector((state) => state.vendor);
+  const serviceSettings = useSelector((state) => state.serviceSettings);
+  const [Active, setActive] = React.useState(serviceSettings[0].title);
+  const [Dashboard, setDashboard] = React.useState();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -86,7 +106,7 @@ const VendorProfile = (props) => {
     return null;
   };
   React.useEffect(() => {
-    console.log(NewDataList.length);
+    //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
       let array = [];
       NewDataList.map((item, i) => {
@@ -109,7 +129,7 @@ const VendorProfile = (props) => {
   }, [NewDataList.length]);
   React.useEffect(() => {
     setSubServiceList([]);
-    
+
     if (Array.isArray(NewDataList)) {
       let arr = [];
       NewDataList.map((item) => {
@@ -161,11 +181,10 @@ const VendorProfile = (props) => {
       setTitle(vendor.service.gigs[0].title);
       setDescription(vendor.service.gigs[0].description);
       setFacilities(vendor.service.gigs[0].facilites.selectedOptions);
-      setImage(vendor.service.profilePhoto)
-      setBackgroundImage(vendor.service.wallPhoto)
-      
+      setImage(vendor.service.profilePhoto);
+      setBackgroundImage(vendor.service.wallPhoto);
+      setDashboard(vendor.service.gigs[0].services.category);
       try {
-        
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
@@ -184,7 +203,7 @@ const VendorProfile = (props) => {
       }
     }
   }, [vendor]);
-  
+
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -219,27 +238,30 @@ const VendorProfile = (props) => {
             ) : (
               <FontAwesome name="user" size={80} color="#983C85" />
             )}
-            <View
-              style={[
-                styles.cameraIcon,
-                {
-                  top: -5,
-                },
-              ]}
-            >
-              <EvilIcons
-                onPress={() => {
-                  pickImage().then((result) => {
-                    if (result) {
-                      setImage(result.uri);
-                    }
-                  });
-                }}
-                name="camera"
-                size={24}
-                color={backgroundColor}
-              />
-            </View>
+          </View>
+          <View
+            style={[
+              styles.cameraIcon,
+              {
+                top: 212,
+                left: width / 2 + 22,
+                zIndex: 1000,
+                position: "absolute",
+              },
+            ]}
+          >
+            <EvilIcons
+              onPress={() => {
+                pickImage().then((result) => {
+                  if (result) {
+                    setImage(result.uri);
+                  }
+                });
+              }}
+              name="camera"
+              size={24}
+              color={backgroundColor}
+            />
           </View>
           <View
             style={{
@@ -247,9 +269,7 @@ const VendorProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={styles.headLine}>
-              {Title}
-            </Text>
+            <Text style={styles.headLine}>{Title}</Text>
             <Text
               style={{
                 marginTop: 10,
@@ -326,9 +346,7 @@ const VendorProfile = (props) => {
         />
         <BarOption
           icon={flag}
-          title={`Since ${new Date(
-            vendor?.service.startDate
-          ).getFullYear()}`}
+          title={`Since ${new Date(vendor?.service.startDate).getFullYear()}`}
         />
         <View
           style={{
@@ -429,281 +447,378 @@ const VendorProfile = (props) => {
           )}
           title="Address"
         />
-        <View style={{ backgroundColor: primaryColor }}>
-          <ScrollView horizontal={true}>
-            <View style={{ width: 20 }} />
-            <Button
-              style={{
-                color: "white",
-                backgroundColor: "black",
-                borderWidth: 0,
-                marginVertical: 10,
-                height: 30,
-              }}
-              title="Bargaining"
-            />
-            <View style={{ width: 20 }} />
-          </ScrollView>
-          <SliderBox
-            images={Images}
-            sliderBoxHeight={250}
-            dotColor="#232F6D"
-            inactiveDotColor="#ffffff"
-            dotStyle={{
-              width: 15,
-              height: 15,
-              borderRadius: 10,
-              marginHorizontal: 0,
-              padding: 0,
-              margin: 0,
-              backgroundColor: "rgba(128, 128, 128, 0.92)",
-            }}
-          />
-          <Text
-            style={{
-              marginHorizontal: 20,
-              fontSize: 17,
-              marginTop: 10,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            {vendor?.service.serviceCenterName}
-          </Text>
-
-          <TouchableOpacity
+        <ScrollView
+          style={{ backgroundColor: primaryColor }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={{ width: 20 }} />
+          <IconButton
             onPress={() => {
-              if (NewLines == 4) {
-                setNewLines(100);
-              } else {
-                setNewLines(4);
-              }
+              navigation.navigate("ServiceSettings");
             }}
-            disabled={Description > 230 ? false : true}
-          >
-            <Text
-              numberOfLines={NewLines}
-              style={{
-                marginHorizontal: 20,
-                textAlign: "justify",
-                marginVertical: 5,
-                fontSize: 14,
-                color: textColor,
-                fontFamily: "Poppins-Light",
-              }}
-            >
-              {Description}
-            </Text>
-            {Description > 230 && (
+            style={{
+              backgroundColor: primaryColor,
+              borderWidth: 1,
+              borderColor: "#e5e5e5",
+              color: textColor,
+              height: 30,
+              marginVertical: 10,
+            }}
+            Icon={() => <AntDesign name="setting" size={18} color="#707070" />}
+            title="Setting"
+          />
+          {Array.isArray(serviceSettings) &&
+            serviceSettings.map((doc, i) => (
+              <IconButton
+                onPress={() => {
+                  setActive(doc.title);
+                }}
+                active={Active == doc.title ? true : false}
+                disabled={!doc.value}
+                style={{
+                  height: 30,
+                  marginVertical: 10,
+                  marginLeft: 10,
+                  borderRadius: 15,
+                }}
+                title={doc.title}
+                key={i}
+              />
+            ))}
+          <View style={{ width: 20 }} />
+        </ScrollView>
+        {Active == serviceSettings[0].title ? (
+          <Animated.View entering={StretchInY}>
+            <View style={{ backgroundColor: primaryColor }}>
+              <SliderBox
+                images={Images}
+                sliderBoxHeight={width}
+                dotColor="#232F6D"
+                inactiveDotColor="#ffffff"
+                dotStyle={{
+                  width: 0,
+                  height: 0,
+                  borderRadius: 10,
+                  marginHorizontal: 0,
+                  padding: 0,
+                  margin: 0,
+                  backgroundColor: "rgba(128, 128, 128, 0.92)",
+                }}
+              />
               <Text
                 style={{
                   marginHorizontal: 20,
-                  fontSize: 14,
+                  fontSize: 17,
+                  marginTop: 10,
+                  color: textColor,
                   fontFamily: "Poppins-Medium",
-                  color: "green",
-                  marginTop: -5,
                 }}
               >
-                Read {NewLines == 4 ? "More" : "Less"}
+                {vendor ? vendor.service.serviceCenterName : "-"}
               </Text>
-            )}
-          </TouchableOpacity>
-          <Text
-            style={{
-              alignSelf: "flex-end",
-              marginRight: 20,
-              fontSize: 18,
-              fontFamily: "Poppins-Medium",
-              color: "black",
-            }}
-          >
-            From {Price}৳
-          </Text>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 20,
-            backgroundColor: primaryColor,
-            paddingVertical: 20,
-            marginTop: -1,
-            marginBottom: -1,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            Service List
-          </Text>
-          <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-        </View>
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            height: 140,
-            overflowY: "hidden",
-            overflow: "hidden",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
+
+              <TouchableOpacity
+                onPress={() => {
+                  if (NewLines == 4) {
+                    setNewLines(100);
+                  } else {
+                    setNewLines(4);
+                  }
+                }}
+                disabled={Description > 230 ? false : true}
+              >
+                <Text
+                  numberOfLines={NewLines}
+                  style={{
+                    marginHorizontal: 20,
+                    textAlign: "justify",
+                    marginVertical: 5,
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Light",
+                  }}
+                >
+                  {Description}
+                </Text>
+                {Description > 230 && (
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: 14,
+                      fontFamily: "Poppins-Medium",
+                      color: "green",
+                      marginTop: -5,
+                    }}
+                  >
+                    Read {NewLines == 4 ? "More" : "Less"}
+                  </Text>
+                )}
+              </TouchableOpacity>
+              <Text
+                style={{
+                  alignSelf: "flex-end",
+                  marginRight: 20,
+                  fontSize: 18,
+                  fontFamily: "Poppins-Medium",
+                  color: "black",
+                }}
+              >
+                From {Price}৳
+              </Text>
+            </View>
             <View
               style={{
-                flex: 1.2,
-                marginLeft: 20,
-                height: 200,
+                paddingHorizontal: 20,
+                backgroundColor: primaryColor,
+                paddingVertical: 20,
+                marginTop: -1,
+                marginBottom: -1,
               }}
             >
-              {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                ServiceList.map((item, i) => (
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Service List
+              </Text>
+              <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
+            </View>
+            <View
+              style={{
+                backgroundColor: primaryColor,
+                height: 140,
+                overflowY: "hidden",
+                overflow: "hidden",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <View
+                  style={{
+                    flex: 1.2,
+                    marginLeft: 20,
+                    height: 200,
+                  }}
+                >
+                  {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                    ServiceList.map((item, i) => (
+                      <Button
+                        onPress={() => {
+                          setActiveService(item);
+                        }}
+                        key={i}
+                        style={
+                          ActiveService == item
+                            ? styles.activeButton
+                            : styles.inactiveButton
+                        }
+                        title={item}
+                      />
+                    ))
+                  ) : (
+                    <Button
+                      onPress={() => {
+                        setActiveService(NewDataList[0].mainTitle);
+                      }}
+                      style={
+                        NewDataList[0].mainTitle == ActiveService
+                          ? styles.activeButton
+                          : styles.inactiveButton
+                      }
+                      title={NewDataList[0].mainTitle}
+                    />
+                  )}
                   <Button
                     onPress={() => {
-                      setActiveService(item);
+                      setActiveService("Extra Facilities");
                     }}
-                    key={i}
                     style={
-                      ActiveService == item
+                      ActiveService == "Extra Facilities"
                         ? styles.activeButton
                         : styles.inactiveButton
                     }
-                    title={item}
+                    title={"Extra Facilities"}
                   />
-                ))
-              ) : (
-                <Button onPress={()=>{
-                  setActiveService(NewDataList[0].mainTitle);
-                }} style={NewDataList[0].mainTitle==ActiveService?styles.activeButton:styles.inactiveButton} title={NewDataList[0].mainTitle} />
-              )}
-              <Button
-                onPress={() => {
-                  setActiveService("Extra Facilities");
-                }}
-                style={
-                  ActiveService == "Extra Facilities"
-                    ? styles.activeButton
-                    : styles.inactiveButton
-                }
-                title={"Extra Facilities"}
-              />
-            </View>
-            <View
-              style={{
-                width: 1,
-                backgroundColor: "#e5e5e5",
-                marginLeft: 10,
-                marginRight: 10,
-              }}
-            />
-            <View style={{ flex: 2, marginRight: 20 }}>
-              {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
-                SubServiceList.map((item, i) => (
-                  <ServiceTable
-                    key={i}
-                    item={item}
-                    i={i}
-                    name={ActiveService}
-                    NewDataList={NewDataList}
-                  />
-                ))
-              ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable NewDataList={NewDataList} name={ActiveService} />
-              ) : (
-                <></>
-              )}
-              {ActiveService == "Extra Facilities" && (
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontFamily: "Poppins-Medium",
-                      color: "#707070",
-                    }}
-                  >
-                    Extra Facilities
-                  </Text>
-                  {Array.isArray(Facilities) &&
-                    Facilities.map((doc, i) => (
+                </View>
+                <View
+                  style={{
+                    width: 1,
+                    backgroundColor: "#e5e5e5",
+                    marginLeft: 10,
+                    marginRight: 10,
+                  }}
+                />
+                <View style={{ flex: 2, marginRight: 20 }}>
+                  {Array.isArray(SubServiceList) &&
+                  SubServiceList.length > 0 ? (
+                    SubServiceList.map((item, i) => (
+                      <ServiceTable
+                        key={i}
+                        item={item}
+                        i={i}
+                        name={ActiveService}
+                        NewDataList={NewDataList}
+                      />
+                    ))
+                  ) : ActiveService != "Extra Facilities" ? (
+                    <ServiceTable
+                      NewDataList={NewDataList}
+                      name={ActiveService}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {ActiveService == "Extra Facilities" && (
+                    <View>
                       <Text
                         style={{
-                          fontSize: 13,
-                          fontFamily: "Poppins-Light",
+                          fontSize: 15,
+                          fontFamily: "Poppins-Medium",
+                          color: "#707070",
                         }}
-                        key={i}
                       >
-                        {doc.title}
+                        Extra Facilities
                       </Text>
-                    ))}
+                      {Array.isArray(Facilities) &&
+                        Facilities.map((doc, i) => (
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              fontFamily: "Poppins-Light",
+                            }}
+                            key={i}
+                          >
+                            {doc.title}
+                          </Text>
+                        ))}
+                    </View>
+                  )}
                 </View>
-              )}
+              </View>
+              <LinearGradient
+                style={{
+                  position: "absolute",
+                  zIndex: 100,
+                  bottom: 0,
+                  height: 20,
+                  flex: (width / 3.2) * 2,
+                  left: (width / 3.2) * 1.2,
+                }}
+                colors={[
+                  "rgba(255, 255, 255, 0.252)",
+                  "rgba(255, 255, 255, 0.343)",
+                  "#ffff",
+                ]}
+              ></LinearGradient>
             </View>
-          </View>
-          <LinearGradient
+            <View style={{ backgroundColor: primaryColor }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Service List_1", {
+                    NewDataList: NewDataList,
+                    facilites: Facilities,
+                  });
+                }}
+                style={{
+                  flexDirection: "row",
+                  minWidth: 10,
+                  alignSelf: "flex-end",
+                  alignItems: "center",
+                  marginRight: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "Poppins-Medium",
+                    color: "#707070",
+                    marginRight: 5,
+                  }}
+                >
+                  Show All
+                </Text>
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  size={22}
+                  color="#707070"
+                />
+              </TouchableOpacity>
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: "#e5e5e5",
+                  marginTop: 5,
+                  marginBottom: 10,
+                  marginHorizontal: 20,
+                }}
+              />
+            </View>
+          </Animated.View>
+        ) : (
+          <Animated.View
+            entering={StretchInY}
             style={{
-              position: "absolute",
-              zIndex: 100,
-              bottom: 0,
-              height: 20,
-              flex: (width / 3.2) * 2,
-              left: (width / 3.2) * 1.2,
-            }}
-            colors={[
-              "rgba(255, 255, 255, 0.252)",
-              "rgba(255, 255, 255, 0.343)",
-              "#ffff",
-            ]}
-          ></LinearGradient>
-        </View>
-        <View style={{ backgroundColor: primaryColor }}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Service List_1", {
-                NewDataList: NewDataList,
-                facilites: Facilities,
-              });
-            }}
-            style={{
-              flexDirection: "row",
-              minWidth: 10,
-              alignSelf: "flex-end",
+              backgroundColor: primaryColor,
+              justifyContent: "center",
               alignItems: "center",
-              marginRight: 20,
+
             }}
           >
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "Poppins-Medium",
-                color: "#707070",
-                marginRight: 5,
-              }}
-            >
-              Show All
-            </Text>
-            <MaterialIcons
-              name="keyboard-arrow-right"
-              size={22}
-              color="#707070"
-            />
-          </TouchableOpacity>
-          <View
-            style={{
-              height: 1,
-              backgroundColor: "#e5e5e5",
-              marginTop: 5,
-              marginBottom: 10,
-              marginHorizontal: 20,
-            }}
-          />
-        </View>
+            <SvgXml xml={serviceIcon} style={{marginVertical:100}} height="200" width="200" />
+          </Animated.View>
+        )}
         <View
           style={{ height: 30, backgroundColor: primaryColor, marginTop: -1 }}
         />
       </ScrollView>
+      {Active != serviceSettings[0].title && (
+        <FAB
+          color="#FFFFFF"
+          icon="plus"
+          style={{
+            position: "absolute",
+            borderRadius: 30,
+            backgroundColor: "#43B05C",
+            bottom: 20,
+            right: 20,
+            width: 50,
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            AllData.map((data, i) => {
+              if (data.title.toUpperCase().match(Dashboard.toUpperCase())) {
+                if (data.data) {
+                  navigation.navigate("SubCategories", {
+                    title: data.title,
+                    data: data.data,
+                    image: data.image,
+                    id: i,
+                    mainTitle: data.title,
+                    direct:true
+                  });
+                } else {
+                  props.navigation.navigate("TableData", {
+                    title: data.title,
+                    list: data.list,
+                    exit: true,
+                    id: i,
+                    mainTitle: data.title,
+                    direct:true
+                  });
+                }
+              }
+            });
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -730,9 +845,10 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: primaryColor,
     borderColor: backgroundColor,
-    borderRadius: 5,
+    borderRadius: 45,
     justifyContent: "center",
     alignItems: "center",
+    overflow: "hidden",
   },
   icon: {
     justifyContent: "center",
@@ -1034,3 +1150,10 @@ const styler = StyleSheet.create({
     color: "#707070",
   },
 });
+export const ServiceCart=()=>{
+  return(
+    <TouchableOpacity>
+      
+    </TouchableOpacity>
+  )
+}

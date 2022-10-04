@@ -31,7 +31,7 @@ import {
   SlideInRight,
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
-import { dateConverter,dateDifference,convertDate } from "../../action";
+import { dateConverter, dateDifference, convertDate } from "../../action";
 import {
   getExpenses,
   createExpenses,
@@ -121,7 +121,13 @@ const Expenses = (props) => {
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [AllData, setAllData] = React.useState([]);
-  const OPTIONS=['All','Last week','Last Month','Last 6 Month','Last year']
+  const OPTIONS = [
+    "All",
+    "Last week",
+    "Last Month",
+    "Last 6 Month",
+    "Last year",
+  ];
 
   // const scrollHandler = useAnimatedScrollHandler({
   //   onScroll: (event) => {
@@ -164,69 +170,48 @@ const Expenses = (props) => {
         });
     }
   }, [Loader]);
-  const coverDate=(date)=> {
-    let arr=date.split('-');
-    return `${arr[2]}-${arr[1]}-${arr[0]}`;
-  }
-  function removeTime(date = new Date()) {
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
+  const search=(value)=> {
+    let arr= AllData.filter((d) => {
+      if(d.title.toUpperCase().match(value.toUpperCase())){
+        return d
+      }
+    })
+    return arr
   }
   const filter = (index) => {
     //index=0 for all,1 for week, 2 for month, 3 for 1/2 yr, 4 for 1 yr
+    let date = new Date();
+    date = dateConverter(date);
     if (index === 0) {
       return AllData;
     } else if (index === 1) {
       let arr = AllData.filter((d) => {
-        let date = new Date();
-        date=convertDate(date)
-        console.log(dateDifference(date,d.date))
-        return d
+        let difference = dateDifference(d.date, date);
+        if (difference >= 0 && difference <= 7) {
+          return d;
+        }
       });
       return arr;
     } else if (index === 2) {
-      let lowerDate = new Date();
-      lowerDate.setDate(lowerDate.getDate() - 7);
-      let upperDate = new Date();
       let arr = AllData.filter((d) => {
-        let newDate = new Date(d.date);
-        if (newDate > lowerDate && newDate < upperDate) {
+        let difference = dateDifference(d.date, date);
+        if (difference >= 0 && difference <= 30) {
           return d;
         }
       });
       return arr;
     } else if (index === 3) {
-      let lowerDate = new Date();
-      lowerDate.setDate(lowerDate.getMonth() - 1);
-      let upperDate = new Date();
       let arr = AllData.filter((d) => {
-        let newDate = new Date(d.date);
-        if (newDate > lowerDate && newDate < upperDate) {
+        let difference = dateDifference(d.date, date);
+        if (difference >= 0 && difference <= 183) {
           return d;
         }
       });
       return arr;
     } else if (index === 4) {
-      let lowerDate = new Date();
-      lowerDate.setDate(lowerDate.getMonth() - 6);
-      let upperDate = new Date();
       let arr = AllData.filter((d) => {
-        let newDate = new Date(d.date);
-        if (newDate > lowerDate && newDate < upperDate) {
-          return d;
-        }
-      });
-      return arr;
-    } else if (index === 5) {
-      let lowerDate = new Date();
-      lowerDate.setDate(lowerDate.getFullYear() - 1);
-      let upperDate = new Date();
-      let arr = AllData.filter((d) => {
-        let newDate = new Date(d.date);
-        if (newDate > lowerDate && newDate < upperDate) {
+        let difference = dateDifference(d.date, date);
+        if (difference >= 0 && difference <= 365) {
           return d;
         }
       });
@@ -307,44 +292,6 @@ const Expenses = (props) => {
   );
   return (
     <View style={{ flex: 1 }}>
-      <Animated.View
-        style={[
-          {
-            transform: [{ translateY: translateY }],
-            zIndex: 200,
-            backgroundColor: "#f5f5f5",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        ]}
-      >
-        <View
-          style={{
-            height: 200,
-
-            backgroundColor: "#fbfbfb",
-          }}
-        >
-          <BackHeader
-            placeholder="Search"
-            {...props}
-            inputWidth={80}
-            title="Expenses"
-          />
-          <DropDown onChange={val=>{
-            let index=OPTIONS.indexOf(val);
-            setData(filter(index))
-          }}
-            DATA={OPTIONS}
-            style={{
-              marginHorizontal: 20,
-            }}
-            placeholder="Filter By"
-          />
-        </View>
-      </Animated.View>
       <Animated.ScrollView
         bounces={false}
         scrollEventThrottle={16}
@@ -429,6 +376,47 @@ const Expenses = (props) => {
         <Text style={styles.text}></Text>
         <Text style={styles.text}>{total(Data)}৳</Text>
       </View>
+      <Animated.View
+        style={[
+          {
+            transform: [{ translateY: translateY }],
+            zIndex: 200,
+            backgroundColor: "#f5f5f5",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        ]}
+      >
+        <View
+          style={{
+            height: 200,
+
+            backgroundColor: "#fbfbfb",
+          }}
+        >
+          <BackHeader onChange={(val)=>{
+            setData(search(val))
+          }}
+            placeholder="Search"
+            {...props}
+            inputWidth={80}
+            title="Expenses"
+          />
+          <DropDown
+            onChange={(val) => {
+              let index = OPTIONS.indexOf(val);
+              setData(filter(index));
+            }}
+            DATA={OPTIONS}
+            style={{
+              marginHorizontal: 20,
+            }}
+            placeholder="Filter By"
+          />
+        </View>
+      </Animated.View>
     </View>
   );
 };
