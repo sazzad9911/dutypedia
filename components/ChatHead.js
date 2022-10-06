@@ -15,7 +15,7 @@ import { Entypo } from "@expo/vector-icons";
 import { assentColor, primaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
-import { Switch } from 'react-native-paper';
+import { Switch } from 'react-native-paper'; 
 
 const ChatHead = (props) => {
   const navigation = props.navigation;

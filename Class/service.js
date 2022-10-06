@@ -80,11 +80,11 @@ export const createService = async (
       uploadServiceData: {
         about: businessForm.about.toString(),
         speciality: businessForm.speciality,
-        title: businessForm.serviceCenterName, 
+        title: businessForm.serviceTitle, 
         description: businessForm.description.toString(),
       },
       selectServiceData: {
-        serviceName: businessForm.serviceTitle,
+        serviceName: businessForm.serviceCenterName,
         providerTitle: businessForm.title,
         providerName: businessForm.name,
         gender: businessForm.gender,
@@ -133,19 +133,12 @@ export const createService = async (
   }
   return false;
 };
-export const getService = async (token) => {
-  const myHeaders = new Headers();
-  //const formData=new FormData()
-  myHeaders.append("Authorization", `Bearer ${token}`);
-  const options = {
-    method: "GET",
-    headers: myHeaders,
-  };
-  const result = await fetch(`${url}/server/services/get`, options);
-  if (result) {
-    return result.json();
-  }
-  return false;
+
+export const getService = async (token,id) => {
+  const result = await axios.get(`${url}/server/services/get/${id}`,{
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return result
 };
 export const getGigs = async (token, id) => {
   const myHeaders = new Headers();
@@ -170,3 +163,9 @@ export const getDashboard = async (token) => {
   });
   return res;
 };
+export const getServiceGigs =async(token)=>{
+  const res=await axios.get(`${url}/server/services/gigs/starting`,{
+    headers: { Authorization: `Bearer ${token}`}
+  })
+  return res;
+}

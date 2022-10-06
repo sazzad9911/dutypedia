@@ -6,7 +6,7 @@ import { Cart } from "../Cart/ReviewCart";
 
 const AllReview = () => {
   return (
-    <ScrollView
+    <ScrollView showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: secondaryColor,
       }}
@@ -41,22 +41,19 @@ const AllReview = () => {
       />
       <View style={{ backgroundColor: primaryColor, height: 20 }} />
       <View style={{
-        paddingHorizontal:20,
+        paddingHorizontal:10,
         backgroundColor:primaryColor,
       }}>
-        <Cart />
+        <Cart id={true} />
+        <Cart id={true} />
         <View
           style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
         />
-        <Cart />
+        <Cart id={true}/>
         <View
           style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
         />
-        <Cart />
-        <View
-          style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
-        />
-        <Cart />
+        <Cart id={true}/>
         <View
           style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
         />

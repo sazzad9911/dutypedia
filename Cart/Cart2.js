@@ -8,10 +8,11 @@ const { width, height } = Dimensions.get("window");
 function Cart2(props) {
   const [Love, setLove] = React.useState(false);
   const navigation = props.navigation;
+  const data= props.data?props.data:null;
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("OtherProfile")
+        navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null})
       }}
       style={{
         width: 260,
@@ -38,7 +39,7 @@ function Cart2(props) {
           borderTopLeftRadius: 5,
         }}
         source={{
-          uri: "https://media.istockphoto.com/photos/graphic-designer-at-work-picture-id1363772590?b=1&k=20&m=1363772590&s=170667a&w=0&h=u2GS9_Sd396ng762zsKCR9zonfsw83lssqpxdlh0F4g=",
+          uri: data?data.images[0]:"https://media.istockphoto.com/photos/graphic-designer-at-work-picture-id1363772590?b=1&k=20&m=1363772590&s=170667a&w=0&h=u2GS9_Sd396ng762zsKCR9zonfsw83lssqpxdlh0F4g=",
         }}
       />
       <View
@@ -55,9 +56,10 @@ function Cart2(props) {
               height: 35,
               borderRadius: 20,
               flex: 1,
+              backgroundColor:'#e5e5e5'
             }}
             source={{
-              uri: "https://img.freepik.com/free-photo/stylish-little-smiling-girl-posing-dress-isolated-white-studio-background-caucasian-blonde-female-model-human-emotions-facial-expression-childhood-standing-with-hands-crossed_155003-23028.jpg?w=2000",
+              uri:data?data.service.profilePhoto: "https://img.freepik.com/free-photo/stylish-little-smiling-girl-posing-dress-isolated-white-studio-background-caucasian-blonde-female-model-human-emotions-facial-expression-childhood-standing-with-hands-crossed_155003-23028.jpg?w=2000",
             }}
           />
           <View style={{
@@ -85,7 +87,7 @@ function Cart2(props) {
               fontSize: 13,
             }}
           >
-            Stock And Forex Market Training Center
+            {data?data.service.serviceCenterName:"Stock And Forex Market Training Center"}
           </Text>
           <Text
             numberOfLines={1}
@@ -143,7 +145,7 @@ function Cart2(props) {
               fontFamily: 'Poppins-Medium'
             }}
           >
-            View 10k
+            View {data?data.service.views:"0"}
           </Text>
         </View>
       </View>
@@ -158,7 +160,7 @@ function Cart2(props) {
           fontFamily: 'Poppins-Medium'
         }}
       >
-        I Will Make a Custom Graphics For Your Blog
+        {data?data.title:"I Will Make a Custom Graphics For Your Blog"}
       </Text>
       <View
         style={{
@@ -175,7 +177,7 @@ function Cart2(props) {
             fontFamily: 'Poppins-Medium'
           }}
         >
-          500৳
+          {data?data.price:'0'}৳
         </Text>
         <TouchableOpacity
           onPress={() => setLove(!Love)}

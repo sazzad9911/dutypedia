@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { textColor, primaryColor, secondaryColor,Color } from "./../assets/colors";
+import {
+  textColor,
+  primaryColor,
+  secondaryColor,
+  Color,
+} from "./../assets/colors";
 import Cart from "../Cart/Cart";
 import Cart1 from "../Cart/Cart1";
 import Cart2 from "../Cart/Cart2";
@@ -20,7 +25,9 @@ import Animated, {
   withSpring,
   delayMS,
 } from "react-native-reanimated";
-import { useColorScheme } from 'react-native';
+import { useColorScheme } from "react-native";
+import { useSelector } from "react-redux";
+import { getServiceGigs } from "./../Class/service";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,8 +35,8 @@ const Home = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
   const colorScheme = useColorScheme();
-  const colors=new Color(false);
-  const TextColor=colors.getTextColor();
+  const colors = new Color(false);
+  const TextColor = colors.getTextColor();
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -40,6 +47,22 @@ const Home = (props) => {
       ],
     };
   });
+  const user = useSelector((state) => state.user);
+  const [SomeSuggest, setSomeSuggest] = React.useState(null);
+
+  React.useEffect(() => {
+    if (user) {
+      getServiceGigs(user.token)
+        .then((res) => {
+          if (res.data) {
+            return setSomeSuggest(res.data.gigs);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data);
+        });
+    }
+  }, []);
 
   return (
     <Animated.View style={[{ flex: 1 }, animatedStyles]}>
@@ -55,7 +78,7 @@ const Home = (props) => {
               marginLeft: 5,
               paddingLeft: 15,
               paddingRight: 15,
-              fontFamily: 'Poppins-SemiBold'
+              fontFamily: "Poppins-SemiBold",
             }}
           >
             Category
@@ -75,7 +98,7 @@ const Home = (props) => {
         </ScrollView>
         <Text
           style={{
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: "Poppins-SemiBold",
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,
@@ -103,7 +126,7 @@ const Home = (props) => {
         >
           <Text
             style={{
-              fontFamily: 'Poppins-SemiBold',
+              fontFamily: "Poppins-SemiBold",
               marginVertical: 10,
               flex: 5,
               marginLeft: 5,
@@ -122,11 +145,11 @@ const Home = (props) => {
           >
             <Text
               style={{
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: "Poppins-SemiBold",
                 textDecorationLine: "underline",
                 marginRight: 20,
                 fontSize: 14,
-                textAlign: "right"
+                textAlign: "right",
               }}
             >
               View All
@@ -139,16 +162,20 @@ const Home = (props) => {
           horizontal={true}
         >
           <View style={{ width: 15 }} />
-          <Cart2 navigation={props.navigation} />
-          <Cart2 navigation={props.navigation} />
-          <Cart2 navigation={props.navigation} />
-          <Cart2 navigation={props.navigation} />
+          {!SomeSuggest && (
+            <View style={{height:270,justifyContent: "center",alignItems: "center" }}>
+              <Text>Loading...</Text>
+            </View>
+          )}
+          {SomeSuggest &&SomeSuggest.map((doc,i)=>(
+            <Cart2 key={i} data={doc} navigation={props.navigation} />
+          ))}
           <View style={{ width: 15 }} />
         </ScrollView>
 
         <Text
           style={{
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: "Poppins-SemiBold",
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,
@@ -174,7 +201,7 @@ const Home = (props) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
-        <View style={{ width: 15 }} />
+          <View style={{ width: 15 }} />
           <CombineCart
             num={[2, 3, 4]}
             Component={() => <Seller navigation={navigation} />}
@@ -191,7 +218,7 @@ const Home = (props) => {
         </ScrollView>
         <Text
           style={{
-           fontFamily: 'Poppins-SemiBold',
+            fontFamily: "Poppins-SemiBold",
             marginVertical: 10,
             marginLeft: 5,
             paddingLeft: 15,
@@ -214,7 +241,7 @@ const Home = (props) => {
           <Options />
         </View>
         <View style={{ height: 20 }} />
-        <SellerCart {...props}/>
+        <SellerCart {...props} />
         <View style={{ height: 10 }} />
       </ScrollView>
     </Animated.View>

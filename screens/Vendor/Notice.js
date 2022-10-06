@@ -53,6 +53,7 @@ const Notice = (props) => {
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [Loader, setLoader] = React.useState(true);
+  const [AllData, setAllData]= React.useState([])
 
   React.useEffect(() => {
     if (vendor && user) {
@@ -60,10 +61,12 @@ const Notice = (props) => {
         setLoader(false);
         if (res) {
           setData(res.notices);
+          setAllData(res.notices)
         }
       });
     }
   }, [Loader]);
+  
 
   const onChange = (val) => {
     createNotice(user.token, {
@@ -83,6 +86,13 @@ const Notice = (props) => {
       Alert.alert("Opps!",err.response.data)
     })
   };
+  const search = (val)=>{
+    return AllData.filter((d) =>{
+      if(d.record.toUpperCase().match(val.toUpperCase())){
+        return d
+      }
+    })
+  }
   if(Loader) {
     return(
       <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
@@ -90,7 +100,7 @@ const Notice = (props) => {
       </View>
     )
   }
-  if (Array.isArray(Data) && Data.length == 0) {
+  if (Array.isArray(AllData) && AllData.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <TouchableOpacity
@@ -219,7 +229,13 @@ const Notice = (props) => {
             backgroundColor: "#fbfbfb",
           }}
         >
-          <BackHeader
+          <BackHeader onChange={val=>{
+            if(!val){
+              setData(AllData)
+              return
+            }
+            setData(search(val))
+          }}
             placeholder="Search"
             {...props}
             inputWidth={80}

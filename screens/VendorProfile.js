@@ -39,6 +39,7 @@ import {
   user,
   verified,
   serviceIcon,
+  calenderIcon
 } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "../Cart/ReviewCart";
@@ -57,7 +58,7 @@ import Animated, {
   SlideInRight,
   SlideInLeft,
   FadeIn,
-  StretchInY
+  StretchInY,
 } from "react-native-reanimated";
 import { FAB } from "react-native-paper";
 import { AllData } from "../Data/AllData";
@@ -244,7 +245,7 @@ const VendorProfile = (props) => {
               styles.cameraIcon,
               {
                 top: 212,
-                left: (width / 2) + 38,
+                left: width / 2 + 38,
                 zIndex: 1000,
                 position: "absolute",
               },
@@ -269,12 +270,15 @@ const VendorProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={styles.headLine}>{Title}</Text>
+            <Text style={[styles.headLine,{
+              fontSize:22,
+              marginTop:15
+            }]}>{vendor?.service.serviceCenterName}</Text>
             <Text
               style={{
-                marginTop: 10,
+                marginTop: 2,
                 fontSize: 17,
-                fontFamily: "Poppins-SemiBold",
+                fontFamily: "Poppins-Medium",
               }}
             >
               {vendor?.service.providerInfo.title + " "}
@@ -284,7 +288,9 @@ const VendorProfile = (props) => {
             <Text
               style={{
                 fontSize: 14,
-                fontFamily: "Poppins-SemiBold",
+                fontFamily: "Poppins-Medium", 
+                marginTop:2,
+                marginBottom:10
               }}
             >
               Position of {vendor?.service.providerInfo.position}
@@ -348,11 +354,36 @@ const VendorProfile = (props) => {
           icon={flag}
           title={`Since ${new Date(vendor?.service.startDate).getFullYear()}`}
         />
+        <ProfileOption onPress={() =>{
+          navigation.navigate("Vendor Calender");
+        }}
+          Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
+          title="Company Calender"
+        />
+        <ProfileOption
+          onPress={() => {
+            navigation.navigate("Vendor Address");
+          }}
+          style={{
+            marginBottom: 0,
+          }}
+          Icon={() => (
+            <FontAwesome5
+              style={{
+                
+              }}
+              name="address-card"
+              size={20}
+              color={assentColor}
+            />
+          )}
+          title="Address"
+        />
         <View
           style={{
             backgroundColor: primaryColor,
             paddingHorizontal: 20,
-            paddingVertical: 10,
+            paddingVertical: 5,
           }}
         >
           <View
@@ -366,7 +397,7 @@ const VendorProfile = (props) => {
                 marginLeft: 10,
                 color: textColor,
                 fontSize: 15,
-                fontFamily: "Poppins-Medium",
+                fontFamily: "Poppins-SemiBold",
               }}
             >
               About
@@ -398,61 +429,30 @@ const VendorProfile = (props) => {
                   fontSize: 14,
                   textAlign: "justify",
                   fontFamily: "Poppins-Medium",
+                  lineHeight:20,
+                  marginTop:2
                 }}
               >
                 {vendor?.service.about}
               </Text>
-              <View>
-                {vendor?.service.about.length > 200 && (
-                  <Text
-                    style={{
-                      color: "tomato",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: 14,
-                      marginTop: 1,
-                    }}
-                  >
-                    {Lines === 2 ? "READ MORE" : "READ LESS"}
-                  </Text>
-                )}
-              </View>
+              
             </TouchableOpacity>
+            <View>
+              <Text style={{
+                fontSize:12,
+                fontFamily: "Poppins-Medium",
+                color:textColor,
+                marginTop:5
+              }}>Profile View 10K</Text>
+            </View>
           </View>
         </View>
-        <ProfileOption
-          onPress={() => {
-            navigation.navigate("Vendor Calender", {});
-          }}
-          Icon={() => (
-            <AntDesign name="calendar" size={24} color={assentColor} />
-          )}
-          title="Company Calender"
-        />
-        <ProfileOption
-          onPress={() => {
-            navigation.navigate("Vendor Address");
-          }}
-          style={{
-            marginBottom: 5,
-          }}
-          Icon={() => (
-            <FontAwesome5
-              style={{
-                marginRight: 5,
-              }}
-              name="address-card"
-              size={24}
-              color={assentColor}
-            />
-          )}
-          title="Address"
-        />
         <ScrollView
-          style={{ backgroundColor: primaryColor }}
+          style={{ backgroundColor: primaryColor,paddingVertical:10 }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={{ width: 20 }} />
+          <View style={{ width: 5 }} />
           <IconButton
             onPress={() => {
               navigation.navigate("ServiceSettings");
@@ -486,7 +486,7 @@ const VendorProfile = (props) => {
                 key={i}
               />
             ))}
-          <View style={{ width: 20 }} />
+          <View style={{ width: 5 }} />
         </ScrollView>
         {Active == serviceSettings[0].title ? (
           <Animated.View entering={StretchInY}>
@@ -509,13 +509,14 @@ const VendorProfile = (props) => {
               <Text
                 style={{
                   marginHorizontal: 20,
-                  fontSize: 17,
-                  marginTop: 10,
+                  fontSize: 18,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
+                  marginVertical:15,
+                  marginTop:25
                 }}
               >
-                {vendor ? vendor.service.serviceCenterName : "-"}
+                {Title}
               </Text>
 
               <TouchableOpacity
@@ -526,7 +527,7 @@ const VendorProfile = (props) => {
                     setNewLines(4);
                   }
                 }}
-                disabled={Description > 230 ? false : true}
+                disabled={Description.length > 100 ? false : true}
               >
                 <Text
                   numberOfLines={NewLines}
@@ -536,12 +537,14 @@ const VendorProfile = (props) => {
                     marginVertical: 5,
                     fontSize: 14,
                     color: textColor,
-                    fontFamily: "Poppins-Light",
+                    fontFamily: "Poppins-Medium",
+                    marginTop:0
                   }}
                 >
                   {Description}
+                  
                 </Text>
-                {Description > 230 && (
+                {/* {Description.length > 100 && (
                   <Text
                     style={{
                       marginHorizontal: 20,
@@ -553,7 +556,7 @@ const VendorProfile = (props) => {
                   >
                     Read {NewLines == 4 ? "More" : "Less"}
                   </Text>
-                )}
+                )} */}
               </TouchableOpacity>
               <Text
                 style={{
@@ -562,6 +565,7 @@ const VendorProfile = (props) => {
                   fontSize: 18,
                   fontFamily: "Poppins-Medium",
                   color: "black",
+                  marginTop:10
                 }}
               >
                 From {Price}৳
@@ -707,7 +711,7 @@ const VendorProfile = (props) => {
                   zIndex: 100,
                   bottom: 0,
                   height: 20,
-                  flex: (width / 3.2) * 2,
+                  width: (width / 3.2) * 2,
                   left: (width / 3.2) * 1.2,
                 }}
                 colors={[
@@ -717,7 +721,7 @@ const VendorProfile = (props) => {
                 ]}
               ></LinearGradient>
             </View>
-            <View style={{ backgroundColor: primaryColor }}>
+            <View style={{ backgroundColor: primaryColor}}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Service List_1", {
@@ -767,10 +771,14 @@ const VendorProfile = (props) => {
               backgroundColor: primaryColor,
               justifyContent: "center",
               alignItems: "center",
-
             }}
           >
-            <SvgXml xml={serviceIcon} style={{marginVertical:100}} height="200" width="200" />
+            <SvgXml
+              xml={serviceIcon}
+              style={{ marginVertical: 100 }}
+              height="200"
+              width="200"
+            />
           </Animated.View>
         )}
         <View
@@ -802,7 +810,7 @@ const VendorProfile = (props) => {
                     image: data.image,
                     id: i,
                     mainTitle: data.title,
-                    direct:true
+                    direct: true,
                   });
                 } else {
                   props.navigation.navigate("TableData", {
@@ -811,7 +819,7 @@ const VendorProfile = (props) => {
                     exit: true,
                     id: i,
                     mainTitle: data.title,
-                    direct:true
+                    direct: true,
                   });
                 }
               }
@@ -841,7 +849,7 @@ const styles = StyleSheet.create({
     shadowColor: backgroundColor,
     width: 110,
     height: 110,
-    marginTop: -45,
+    marginTop: -55,
     alignSelf: "center",
     backgroundColor: primaryColor,
     borderColor: backgroundColor,
@@ -880,7 +888,7 @@ const styles = StyleSheet.create({
   },
   headLine: {
     fontSize: 20,
-    fontFamily: "Poppins-SemiBold",
+    fontFamily: "Poppins-Medium",
   },
   text: {
     textAlign: "center",
@@ -992,7 +1000,7 @@ const BarOption = ({ icon, title }) => {
         <Text
           numberOfLines={lines}
           style={{
-            fontFamily: "Poppins-SemiBold",
+            fontFamily: "Poppins-Medium",
             marginBottom: 5,
           }}
         >
@@ -1008,7 +1016,7 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-const ServiceTable = ({ item, i, name, NewDataList }) => {
+export const ServiceTable = ({ item, i, name, NewDataList }) => {
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
   React.useEffect(() => {
@@ -1083,7 +1091,7 @@ const ServiceTable = ({ item, i, name, NewDataList }) => {
     </View>
   );
 };
-const Rows = ({ title, item, name, NewDataList }) => {
+export const Rows = ({ title, item, name, NewDataList }) => {
   const [text, setText] = React.useState();
 
   React.useEffect(() => {
@@ -1112,7 +1120,8 @@ const Rows = ({ title, item, name, NewDataList }) => {
     <Text
       style={{
         fontSize: 13,
-        fontFamily: "Poppins-Light",
+        fontFamily: "Poppins-Medium",
+        color:textColor
       }}
     >
       {text}
@@ -1150,10 +1159,6 @@ const styler = StyleSheet.create({
     color: "#707070",
   },
 });
-export const ServiceCart=()=>{
-  return(
-    <TouchableOpacity>
-      
-    </TouchableOpacity>
-  )
-}
+export const ServiceCart = () => {
+  return <TouchableOpacity></TouchableOpacity>;
+};

@@ -23,7 +23,7 @@ const AllService = (props) => {
         }
       });
     }
-    if(!newListData[0].title) {
+    if(Array.isArray(newListData)&& newListData.length>0&&!newListData[0].title) {
       arr.push(newListData[0].mainTitle);
     }
     if (arr.length > 0) {
@@ -200,7 +200,8 @@ const Rows = ({ title, item, name }) => {
     <Text
       style={{
         fontSize: 13,
-        fontFamily: "Poppins-Light",
+        fontFamily: "Poppins-Medium",
+        color:textColor
       }}
     >
       {text}
@@ -223,7 +224,7 @@ const ExtraFacilities = (props) => {
           facilites.map(
             (doc, i) =><Text style={{
               fontSize:13,
-              fontFamily: "Poppins-Light",
+              fontFamily: "Poppins-Medium",
               color:textColor,
               marginTop:5
             }} key={i}>{doc.title}</Text>

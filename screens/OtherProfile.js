@@ -27,7 +27,7 @@ import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "./../components/Button";
 import RatingView from "./../components/RatingView";
@@ -49,10 +49,18 @@ import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import IconButton from "./../components/IconButton";
 import { Menu } from "react-native-paper";
+import { Rows, ServiceTable } from "./VendorProfile";
+import Animated, { FadeIn } from "react-native-reanimated";
+import ServiceCart from "./../Cart/ServiceCart";
+import { getService } from "../Class/service";
+import { useSelector, useDispatch } from "react-redux";
+import { SliderBox } from "react-native-image-slider-box";
+import { serverToLocal } from "../Class/dataConverter";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
   const window = Dimensions.get("window");
+  const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
   const [Lines, setLines] = React.useState(2);
@@ -81,7 +89,107 @@ const OtherProfile = (props) => {
     },
   ];
   const [Active, setActive] = React.useState("Bargaining");
-  const [NewLines, setNewLines] = React.useState(false);
+  const [NewLines, setNewLines] = React.useState(4);
+  const [Facilities, setFacilities] = React.useState([]);
+  const [NewDataList, setNewDataList] = React.useState([]);
+  const [ServiceList, setServiceList] = React.useState([]);
+  const [ActiveService, setActiveService] = React.useState();
+  const [SubServiceList, setSubServiceList] = React.useState([]);
+  const serviceId =
+    props.route && props.route.params.serviceId
+      ? props.route.params.serviceId
+      : null;
+  // const user= useSelector((state) => state.user);
+  const [Loader, setLoader] = React.useState(true);
+  const [Data, setData] = React.useState();
+  const [Images, setImages] = React.useState([]);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (serviceId && newUser) {
+      getService(newUser.token, serviceId)
+        .then((response) => {
+          if (response.data) {
+            setLoader(false);
+            //console.log(response.data.service.gigs[0].services);
+            setData(response.data);
+            setBackgroundImage(response.data.service.wallPhoto);
+            setImage(response.data.service.profilePhoto);
+            setImages(response.data.service.gigs[0].images);
+            //setNewDataList(response.data.service.gigs[0].services.options)
+            setFacilities(
+              response.data.service.gigs[0].facilites.selectedOptions
+            );
+            try {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  response.data.service.gigs[0].services.options,
+                  response.data.service.gigs[0].services.category
+                ),
+              });
+              setNewDataList(
+                serverToLocal(
+                  response.data.service.gigs[0].services.options,
+                  response.data.service.gigs[0].services.category
+                )
+              );
+            } catch (e) {
+              console.warn(e.message);
+            }
+          }
+        })
+        .catch((error) => {
+          console.warn(error.response.data);
+        });
+    }
+  }, [serviceId + newUser]);
+  React.useEffect(() => {
+    //console.log(NewDataList.length);
+    if (Array.isArray(NewDataList)) {
+      let array = [];
+      NewDataList.map((item, i) => {
+        if (item.title) {
+          if (i == 0) {
+            setActiveService(item.title);
+          }
+          array.push(item.title);
+        } else {
+          if (i == 0) {
+            setServiceList([]);
+            setActiveService(item.mainTitle);
+          }
+        }
+      });
+      if (array.length > 0) {
+        setServiceList(uniq(array));
+      }
+    }
+  }, [NewDataList.length]);
+  React.useEffect(() => {
+    setSubServiceList([]);
+
+    if (Array.isArray(NewDataList)) {
+      let arr = [];
+      NewDataList.map((item) => {
+        if (item.title && item.title.match(ActiveService)) {
+          arr.push(item.subTitle);
+        } else {
+          setSubServiceList([]);
+        }
+      });
+      if (arr.length > 0) {
+        setSubServiceList(uniq(arr));
+      }
+    }
+  }, [ActiveService]);
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView>
       <ScrollView
@@ -99,7 +207,7 @@ const OtherProfile = (props) => {
           ) : (
             <LinearGradient
               style={styles.backgroundContainer}
-              colors={["#983C85", "#983C85", "#983C53"]}
+              colors={["#1C4802", "#1C4802", "#1C4802"]}
             ></LinearGradient>
           )}
 
@@ -107,7 +215,7 @@ const OtherProfile = (props) => {
             {image ? (
               <Image style={styles.image} source={{ uri: image }} />
             ) : (
-              <FontAwesome name="user" size={90} color="#983C85" />
+              <FontAwesome name="user" size={90} color="#1C4802" />
             )}
           </View>
           <View
@@ -116,17 +224,25 @@ const OtherProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={[styles.headLine, { fontFamily: "Poppins-Medium" }]}>
-              Easin Arafat It Consulting Center
+            <Text
+              style={[
+                styles.headLine,
+                { fontFamily: "Poppins-Medium", marginTop: 15 },
+              ]}
+            >
+              {Data
+                ? Data.service.serviceCenterName
+                : "Easin Arafat It Consulting Center"}
             </Text>
             <Text
               style={{
-                marginTop: 10,
+                marginTop: 2,
                 fontSize: 17,
                 fontFamily: "Poppins-Medium",
               }}
             >
-              Easin Arafat (Male)
+              {Data ? Data.service.providerInfo.title : ""}{" "}
+              {Data?.service.providerInfo.name}
             </Text>
             <Text
               style={{
@@ -134,7 +250,7 @@ const OtherProfile = (props) => {
                 fontFamily: "Poppins-Medium",
               }}
             >
-              Position of Ceo
+              Position of {Data?.service.providerInfo.position}
             </Text>
           </View>
           <SvgXml
@@ -142,7 +258,7 @@ const OtherProfile = (props) => {
               position: "absolute",
               right: 30,
               zIndex: 6,
-              top: 210,
+              top: 230,
             }}
             xml={verified}
             height="50"
@@ -154,23 +270,26 @@ const OtherProfile = (props) => {
             flexDirection: "row",
             backgroundColor: primaryColor,
             paddingHorizontal: 20,
+            paddingVertical: 10,
+            marginTop: -1,
+            marginBottom: -1,
           }}
         >
           <IconButton
             style={{
               borderRadius: 20,
-              height: 37,
-              width: 37,
+              height: 35,
+              width: 35,
               margin: 10,
             }}
             LeftIcon={() => (
-              <SvgXml xml={appointmentIcon} height="20" width="20" />
+              <SvgXml xml={appointmentIcon} height="18" width="18" />
             )}
           />
           <IconButton
             style={{
               borderRadius: 20,
-              height: 37,
+              height: 35,
               margin: 10,
               width: width / 4 + 20,
               marginLeft: 0,
@@ -181,7 +300,7 @@ const OtherProfile = (props) => {
           <IconButton
             style={{
               borderRadius: 20,
-              height: 37,
+              height: 35,
               margin: 10,
               width: width / 4 + 20,
               marginLeft: 0,
@@ -205,7 +324,7 @@ const OtherProfile = (props) => {
                   height: 35,
                   borderRadius: 20,
                   borderWidth: 1,
-                  borderColor: "#b5b5b5",
+                  borderColor: "#e5e5e5",
                   margin: 10,
                   justifyContent: "center",
                   alignItems: "center",
@@ -236,11 +355,20 @@ const OtherProfile = (props) => {
         </View>
         <BarOption
           icon={brain}
-          title="Specialty in Graphic Design, Software Engineer, Data Science"
+          title={`Specialty in ${Data?.service.speciality}`}
         />
-        <BarOption icon={user} title="Worker and Team (12 member)" />
-        <BarOption icon={flag} title="Since 2020" />
+        <BarOption
+          icon={user}
+          title={`Worker and Team (${Data?.service.worker} member)`}
+        />
+        <BarOption
+          icon={flag}
+          title={`Since ${Data?.service.startDate.split("-")[0]}`}
+        />
         <ProfileOption
+          onPress={() => {
+            navigation.navigate("Company Calender", { vendor: Data });
+          }}
           Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
           title="Company Calender"
         />
@@ -262,6 +390,8 @@ const OtherProfile = (props) => {
           <View
             style={{
               flexDirection: "row",
+              marginTop: -5,
+              marginBottom: -1,
             }}
           >
             <SvgXml xml={info} height="20" width="20" />
@@ -302,28 +432,11 @@ const OtherProfile = (props) => {
                   fontSize: 14,
                   textAlign: "justify",
                   fontFamily: "Poppins-Medium",
+                  lineHeight: 20,
                 }}
               >
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in
+                {Data?.service.about}
               </Text>
-              <View>
-                <Text
-                  style={{
-                    color: "tomato",
-                    fontFamily: "Poppins-SemiBold",
-                    fontSize: 14,
-                    marginTop: 1,
-                  }}
-                >
-                  {Lines === 2 ? "READ MORE" : "READ LESS"}
-                </Text>
-              </View>
             </TouchableOpacity>
             <View
               style={{
@@ -335,37 +448,38 @@ const OtherProfile = (props) => {
               <SvgXml
                 style={styles.starIcon}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
               <SvgXml
                 style={styles.starIcon}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
               <SvgXml
                 style={styles.starIcon}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
               <SvgXml
                 style={styles.starIcon}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
               <SvgXml
                 style={styles.starIcon}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
               <Text
                 style={{
                   marginLeft: 10,
                   fontFamily: "Poppins-Medium",
+                  fontSize: 13,
                 }}
               >
                 4.6
@@ -374,9 +488,10 @@ const OtherProfile = (props) => {
                 style={{
                   marginLeft: 30,
                   fontFamily: "Poppins-Medium",
+                  fontSize: 13,
                 }}
               >
-                Profile View 10k
+                Profile View {Data?.service.views}
               </Text>
             </View>
           </View>
@@ -386,11 +501,12 @@ const OtherProfile = (props) => {
           style={{
             backgroundColor: primaryColor,
             marginTop: 0,
+            paddingBottom: 5,
           }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={{ width: 10 }} />
+          <View style={{ width: 5 }} />
           {initialState &&
             initialState.map((item, i) => (
               <View key={i} style={{ flexDirection: "row" }}>
@@ -410,67 +526,322 @@ const OtherProfile = (props) => {
               </View>
             ))}
         </ScrollView>
-        <View style={{ backgroundColor: primaryColor }}>
-          <Image
+        {Active == "Bargaining" ? (
+          <Animated.View entering={FadeIn}>
+            <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
+              <SliderBox
+                images={Images}
+                sliderBoxHeight={width}
+                dotColor="#232F6D"
+                inactiveDotColor="#ffffff"
+                dotStyle={{
+                  width: 0,
+                  height: 0,
+                  borderRadius: 10,
+                  marginHorizontal: 0,
+                  padding: 0,
+                  margin: 0,
+                  backgroundColor: "rgba(128, 128, 128, 0.92)",
+                }}
+              />
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  marginTop: 20,
+                }}
+              >
+                {Data?.service.gigs[0].title}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  if (NewLines == 4) {
+                    setNewLines(100);
+                  } else {
+                    setNewLines(4);
+                  }
+                }}
+              >
+                <Text
+                  numberOfLines={NewLines}
+                  style={{
+                    marginHorizontal: 20,
+                    textAlign: "justify",
+                    marginVertical: 10,
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  {Data?.service.gigs[0].description}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{ backgroundColor: primaryColor, paddingHorizontal: 20 }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins-Medium",
+                  fontSize: 16,
+                  marginBottom: 5,
+                  marginTop: 10,
+                }}
+              >
+                Service List
+              </Text>
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: "#e5e5e5",
+                  marginBottom: 20,
+                }}
+              />
+              <View
+                style={{
+                  backgroundColor: primaryColor,
+                  height: 140,
+                  overflowY: "hidden",
+                  overflow: "hidden",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <View
+                    style={{
+                      flex: 1.2,
+                      marginLeft: 20,
+                      height: 200,
+                    }}
+                  >
+                    {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                      ServiceList.map((item, i) => (
+                        <Button
+                          onPress={() => {
+                            setActiveService(item);
+                          }}
+                          key={i}
+                          style={
+                            ActiveService == item
+                              ? styles.activeButton
+                              : styles.inactiveButton
+                          }
+                          title={item}
+                        />
+                      ))
+                    ) : (
+                      <Button
+                        onPress={() => {
+                          setActiveService(NewDataList[0].mainTitle);
+                        }}
+                        style={
+                          NewDataList.length > 0 &&
+                          NewDataList[0].mainTitle == ActiveService
+                            ? styles.activeButton
+                            : styles.inactiveButton
+                        }
+                        title={
+                          NewDataList.length > 0 && NewDataList[0].mainTitle
+                        }
+                      />
+                    )}
+                    <Button
+                      onPress={() => {
+                        setActiveService("Extra Facilities");
+                      }}
+                      style={
+                        ActiveService == "Extra Facilities"
+                          ? styles.activeButton
+                          : styles.inactiveButton
+                      }
+                      title={"Extra Facilities"}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      width: 1,
+                      backgroundColor: "#e5e5e5",
+                      marginLeft: 10,
+                      marginRight: 10,
+                    }}
+                  />
+                  <View style={{ flex: 2, marginRight: 20 }}>
+                    {Array.isArray(SubServiceList) &&
+                    SubServiceList.length > 0 ? (
+                      SubServiceList.map((item, i) => (
+                        <ServiceTable
+                          key={i}
+                          item={item}
+                          i={i}
+                          name={ActiveService}
+                          NewDataList={NewDataList}
+                        />
+                      ))
+                    ) : ActiveService != "Extra Facilities" ? (
+                      <ServiceTable
+                        NewDataList={NewDataList}
+                        name={ActiveService}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    {ActiveService == "Extra Facilities" && (
+                      <View>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            fontFamily: "Poppins-Medium",
+                            color: "#707070",
+                          }}
+                        >
+                          Extra Facilities
+                        </Text>
+                        {Array.isArray(Facilities) &&
+                          Facilities.map((doc, i) => (
+                            <Text
+                              style={{
+                                fontSize: 13,
+                                fontFamily: "Poppins-Light",
+                              }}
+                              key={i}
+                            >
+                              {doc.title}
+                            </Text>
+                          ))}
+                      </View>
+                    )}
+                  </View>
+                </View>
+                <LinearGradient
+                  style={{
+                    position: "absolute",
+                    zIndex: 100,
+                    bottom: 0,
+                    height: 20,
+                    width: (width / 3.2) * 2,
+                    left: (width / 3.2) * 1.2,
+                  }}
+                  colors={[
+                    "rgba(255, 255, 255, 0.252)",
+                    "rgba(255, 255, 255, 0.343)",
+                    "#ffff",
+                  ]}
+                ></LinearGradient>
+              </View>
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: "#e5e5e5",
+                  marginVertical: 20,
+                }}
+              />
+            </View>
+            <View style={{ backgroundColor: primaryColor }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Service List_1", {
+                    NewDataList: NewDataList,
+                    facilites: Facilities,
+                  });
+                }}
+                style={{
+                  flexDirection: "row",
+                  minWidth: 10,
+                  alignSelf: "flex-end",
+                  alignItems: "center",
+                  marginRight: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "Poppins-Medium",
+                    color: "#707070",
+                    marginRight: 5,
+                  }}
+                >
+                  Show All
+                </Text>
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  size={22}
+                  color="#707070"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{ backgroundColor: primaryColor }}>
+              <Text
+                style={{
+                  marginHorizontal: 20,
+                  fontSize: 17,
+                  marginBottom: 20,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                From 500 ৳
+              </Text>
+              <Button
+                style={{
+                  borderRadius: 5,
+                  marginHorizontal: 20,
+                  backgroundColor: "#FEA31E",
+                  borderWidth: 0,
+                  marginBottom: 10,
+                  color: textColor,
+                }}
+                title="Offer Now"
+              />
+            </View>
+          </Animated.View>
+        ) : (
+          <Animated.View
             style={{
-              width: "100%",
-              height: width - 80,
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
             }}
-            source={{
-              uri: "https://cdn.pixabay.com/photo/2017/01/14/10/56/people-1979261__340.jpg",
-            }}
-          />
-          <Text
-            numberOfLines={NewLines ? 100 : 4}
-            style={{
-              marginHorizontal: 20,
-              textAlign: "justify",
-              marginVertical: 10,
-              fontSize: 14,
-              color: textColor,
-              fontFamily: "Poppins-Light",
-            }}
+            entering={FadeIn}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries,
-          </Text>
-        </View>
-        <View style={{backgroundColor:primaryColor,paddingHorizontal:20}}>
-          <Text style={{
-            fontFamily: "Poppins-Medium",
-            fontSize:16,
-            marginBottom:3
-          }}>Service List</Text>
-          <View style={{height:1,backgroundColor: "#e5e5e5"}}/>
-          
-          <View style={{height:1,backgroundColor: "#e5e5e5"}}/>
-        </View>
-        <View style={{backgroundColor: primaryColor}}>
-          <Text
-            style={{
-              marginHorizontal: 20,
-              fontSize: 17,
-              marginBottom: 20,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-            }}
+            <ServiceCart />
+            <ServiceCart />
+            <ServiceCart />
+            <ServiceCart />
+            <ServiceCart />
+            <ServiceCart />
+          </Animated.View>
+        )}
+        <View
+          style={{
+            alignItems: "flex-end",
+            paddingRight: 20,
+            backgroundColor: primaryColor,
+          }}
+        >
+          <TouchableOpacity
+            style={{ width: 70, flexDirection: "row", alignItems: "center" }}
           >
-            From 500 ৳
-          </Text>
-          <Button
-            style={{
-              borderRadius: 5,
-              marginHorizontal: 20,
-              backgroundColor: "#FEA31E",
-              borderWidth: 0,
-              marginBottom: 10,
-              color: textColor,
-            }}
-            title="Offer Now"
-          />
+            <Text
+              style={{
+                color: textColor,
+                fontSize: 14,
+                fontFamily: "Poppins-SemiBold",
+              }}
+            >
+              Show All
+            </Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color={textColor}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -550,7 +921,7 @@ const OtherProfile = (props) => {
 export default OtherProfile;
 const styles = StyleSheet.create({
   backgroundContainer: {
-    minHeight: 200,
+    minHeight: 230,
   },
   container: {
     minHeight: 30,
@@ -565,7 +936,7 @@ const styles = StyleSheet.create({
     shadowColor: backgroundColor,
     width: 110,
     height: 110,
-    marginTop: -45,
+    marginTop: -55,
     alignSelf: "center",
     backgroundColor: primaryColor,
     borderColor: backgroundColor,
@@ -603,7 +974,7 @@ const styles = StyleSheet.create({
     right: -10,
   },
   headLine: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: "Poppins-SemiBold",
   },
   text: {
@@ -617,6 +988,27 @@ const styles = StyleSheet.create({
   },
   starIcon: {
     marginRight: 3,
+  },
+  activeButton: {
+    color: "white",
+    backgroundColor: backgroundColor,
+    borderRadius: 10,
+    borderWidth: 0,
+    marginBottom: 5,
+    alignItems: "flex-start",
+    paddingLeft: 10,
+    paddingRight: 10,
+    height: 30,
+  },
+  inactiveButton: {
+    color: textColor,
+    borderRadius: 10,
+    borderWidth: 0,
+    marginBottom: 5,
+    alignItems: "flex-start",
+    paddingLeft: 10,
+    paddingRight: 10,
+    height: 30,
   },
 });
 const Options = ({ text, Icon }) => {
@@ -694,3 +1086,8 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
+function uniq(a) {
+  return a.sort().filter(function (item, pos, ary) {
+    return !pos || item != ary[pos - 1];
+  });
+}

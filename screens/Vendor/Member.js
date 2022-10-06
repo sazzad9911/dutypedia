@@ -67,7 +67,7 @@ const Member = () => {
   );
 };
 
-export default Member;
+export default Member; 
 
 const styles = StyleSheet.create({
   text: {
@@ -187,6 +187,7 @@ const DutyPediaUser = (props) => {
   const [Loader, setLoader] = React.useState(true);
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
+  const [AllData, setAllData]= React.useState([])
 
   const onChange = (data) => {
     setLoader(!Loader);
@@ -197,13 +198,68 @@ const DutyPediaUser = (props) => {
         setLoader(false);
         if (res) {
           setData(res.members);
+          setAllData(res.members);
         }
       });
     }
   }, [Loader]);
+  const search=(val)=>{
+    let arr=AllData.filter((d) => {
+      if(d.name.toUpperCase().match(val.toUpperCase())){
+        return d
+      }
+    })
+    return arr
+  }
+  if(Loader) {
+    return(
+      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading..</Text>
+      </View>
+    )
+  }
+  if (Array.isArray(AllData) && AllData.length == 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("AddOnlineUser", {
+            onChange: onChange,
+          });
+          }}
+          style={{
+            width: 80,
+            height: 80,
+            backgroundColor: primaryColor,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 5,
+          }}
+        >
+          <AntDesign name="plus" size={50} color="#707070" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            marginTop: 15,
+          }}
+        >
+          Create New Member
+        </Text>
+      </View>
+    );
+  }
   return (
     <ScrollView>
-      <Input
+      <Input onChange={val=>{
+        if(!val){
+          setData(AllData)
+          return
+        }
+        setData(search(val))
+      }}
         style={{
           borderWidth: 1,
           marginVertical: 10,
@@ -384,6 +440,7 @@ const OfflineUser = (props) => {
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
+  const [AllData, setAllData]= React.useState([])
 
   const reload = () => {
     setReload(!Reload);
@@ -394,6 +451,7 @@ const OfflineUser = (props) => {
         if (res) {
           setData(res.members);
           setLoader(false);
+          setAllData(res.members)
           return;
         }
         setLoader(false);
@@ -401,10 +459,64 @@ const OfflineUser = (props) => {
       });
     }
   }, [Reload + vendor + user]);
-
+  const search=(val)=>{
+    let arr=AllData.filter((d) => {
+      if(d.name.toUpperCase().match(val.toUpperCase())){
+        return d
+      }
+    })
+    return arr
+  }
+  if(Loader) {
+    return(
+      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading..</Text>
+      </View>
+    )
+  }
+  if (Array.isArray(AllData) && AllData.length == 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("AddOfflineUser", {
+            reload: reload,
+            id: null,
+          });
+          }}
+          style={{
+            width: 80,
+            height: 80,
+            backgroundColor: primaryColor,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 5,
+          }}
+        >
+          <AntDesign name="plus" size={50} color="#707070" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            marginTop: 15,
+          }}
+        >
+          Create New Member
+        </Text>
+      </View>
+    );
+  }
   return (
     <ScrollView>
-      <Input
+      <Input onChange={val=>{
+        if(!val){
+          setData(AllData)
+          return
+        }
+        setData(search(val))
+      }}
         style={{
           borderWidth: 1,
           marginVertical: 10,

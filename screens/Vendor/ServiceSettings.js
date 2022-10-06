@@ -1,14 +1,15 @@
 import React from "react";
-import { View, ScrollView, Switch, Text, Platform } from "react-native";
+import { View, ScrollView, Text, Platform } from "react-native";
 import { textColor, backgroundColor, primaryColor } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { storeJson } from "../../Class/storage";
+import { Switch } from "react-native-paper";
 
 const ServiceSettings = () => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
 
   React.useEffect(() => {
-   // console.log(serviceSettings);
+    // console.log(serviceSettings);
   }, [serviceSettings]);
 
   return (
@@ -78,20 +79,24 @@ const Cart = ({ title, value, i }) => {
         >
           {title}
         </Text>
-        <Switch
-          style={{
-            height: 35,
-            transform: [
-              { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
-              { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
-            ],
-          }}
-          trackColor={{ false: "#B0BEC5", true: "#06bd0665" }}
-          thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
-          ios_backgroundColor="#B0BEC5"
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
+        <View>
+          <Switch
+            style={{
+              height: 35,
+              width:90,
+              transform: [
+                { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+              ],
+            }}
+            color="#06BD06"
+            value={isEnabled}
+            onValueChange={(val) => {
+              //setMute(val);
+              setIsEnabled(val);
+            }}
+          />
+        </View>
       </View>
       <View style={{ width: 10 }} />
     </View>

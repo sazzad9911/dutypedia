@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { primaryColor } from "./../assets/colors";
 import { Badge } from "react-native-paper";
+import {textColor } from '../assets/colors'
 
 const ProfileOption = (props) => {
   return (
@@ -20,7 +21,7 @@ const ProfileOption = (props) => {
         borderBottomWidth:1,
         borderBottomColor:'#e5e5e5',
         flex:1,
-        paddingBottom:5,
+        paddingBottom:3,
         marginLeft:10,
         alignItems: "center",
       }}>
@@ -53,7 +54,8 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 10,
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: "Poppins-SemiBold",
+    color:textColor
   },
 });
