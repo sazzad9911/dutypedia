@@ -201,7 +201,8 @@ const Rows = ({ title, item, name }) => {
       style={{
         fontSize: 13,
         fontFamily: "Poppins-Medium",
-        color:textColor
+        color:textColor,
+        lineHeight:18
       }}
     >
       {text}

@@ -37,8 +37,7 @@ const Menu = ({ navigation }) => {
 
   return (
     <ScrollView style={{ backgroundColor: "#fbfbfb" }}>
-      <View style={{ height: 33 }} />
-      <TouchableOpacity
+      <TouchableOpacity style={{marginTop:20}}
         onPress={() => {
           navigation.navigate("VendorProfile");
         }}
@@ -61,9 +60,15 @@ const Menu = ({ navigation }) => {
               borderColor: textColor,
               justifyContent: "center",
               alignItems: "center",
+              overflow: "hidden",
             }}
           >
-            <FontAwesome name="user" size={55} color="#983C85" />
+            {vendor&&vendor.service.profilePhoto&&(
+              <Image source={{ uri:vendor.service.profilePhoto}} style={{width:65,height:65}}/>
+            )}
+            {vendor&&!vendor.service.profilePhoto&&(
+              <FontAwesome name="user" size={55} color="#983C85" />
+            )}
           </View>
 
           <View

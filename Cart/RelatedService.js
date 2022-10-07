@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Platform
 } from "react-native";
 import {
   primaryColor,
@@ -29,15 +30,16 @@ const RelatedService = (props) => {
         width: 200,
         height: 280,
         borderRadius: 10,
-        shadowColor: "#d5d5d5",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
-          width: 0,
-          height: 2,
+          width: 1,
+          height: 1,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
+        shadowRadius: 6,
         elevation: 5,
         margin: 10,
+        backgroundColor:primaryColor
       }}
     >
       <View

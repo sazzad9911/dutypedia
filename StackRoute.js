@@ -42,6 +42,7 @@ import Expenses from "./screens/Vendor/Expenses";
 import { AddExpenses } from "./screens/Vendor/Expenses";
 import DashboardList from "./screens/Vendor/DashboardList";
 import Category from './screens/Seller/Category';
+import Support from './screens/Support';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -236,6 +237,13 @@ export default function StackRoute() {
           }}
           component={VendorAddress}
         />
+        <Stack.Screen
+        name="Support_1"
+        options={{
+          header: (props) => <SubHeader title="Report" {...props} />,
+        }}
+        component={Support}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -15,7 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 
-const Support = ({ navigation}) => {
+const Support = ({ navigation,route}) => {
   const ref = React.useRef();
   const [Images, setImages] = React.useState([]);
   const [Visible, setVisible] = React.useState(false);
@@ -57,6 +57,9 @@ const Support = ({ navigation}) => {
     let arr = Images.filter((img) => img.uri != data.uri);
     setImages(arr);
   };
+  React.useEffect(() => {
+    
+  },[])
   return (
     <ScrollView>
       <View
@@ -244,7 +247,7 @@ const Support = ({ navigation}) => {
           backgroundColor: "#03D303",
           color: "white",
         }}
-        title="Send Request"
+        title={route.name=='Support_1'?"Send Report":"Send Request"}
       />
       <Button onPress={() =>{
         navigation.goBack()

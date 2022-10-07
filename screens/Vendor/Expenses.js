@@ -11,6 +11,7 @@ import {
   Modal,
   Animated,
   Alert,
+  RefreshControl,
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -128,7 +129,17 @@ const Expenses = (props) => {
     "Last 6 Month",
     "Last year",
   ];
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   // const scrollHandler = useAnimatedScrollHandler({
   //   onScroll: (event) => {
   //     if (
@@ -155,6 +166,7 @@ const Expenses = (props) => {
   // });
   React.useEffect(() => {
     if (user && vendor) {
+      setLoader(true);
       getExpenses(user.token, vendor.service.id)
         .then((res) => {
           if (res) {
@@ -169,15 +181,15 @@ const Expenses = (props) => {
           Alert.alert("Opps!", err.response.data.msg);
         });
     }
-  }, [Loader]);
-  const search=(value)=> {
-    let arr= AllData.filter((d) => {
-      if(d.title.toUpperCase().match(value.toUpperCase())){
-        return d
+  }, [Refresh]);
+  const search = (value) => {
+    let arr = AllData.filter((d) => {
+      if (d.title.toUpperCase().match(value.toUpperCase())) {
+        return d;
       }
-    })
-    return arr
-  }
+    });
+    return arr;
+  };
   const filter = (index) => {
     //index=0 for all,1 for week, 2 for month, 3 for 1/2 yr, 4 for 1 yr
     let date = new Date();
@@ -290,17 +302,21 @@ const Expenses = (props) => {
       useNativeDriver: true, // <- Native Driver used for animated events
     }
   );
+
   return (
-    <View style={{ flex: 1 }}>
-      <Animated.ScrollView
-        bounces={false}
-        scrollEventThrottle={16}
-        onScroll={(e) => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-          scroll;
-        }}
-        showsVerticalScrollIndicator={false}
-      >
+    <Animated.ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      style={{ overflow: "hidden", flex: 1 }}
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+        //scroll;
+      }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View>
         <View style={{ height: 190 }} />
 
         <TouchableOpacity
@@ -358,7 +374,8 @@ const Expenses = (props) => {
               i={i}
             />
           ))}
-      </Animated.ScrollView>
+        <View style={{ height: 50 }} />
+      </View>
       <View
         style={{
           flexDirection: "row",
@@ -370,6 +387,7 @@ const Expenses = (props) => {
           paddingVertical: 5,
           bottom: 0,
           marginBottom: 10,
+          position: "absolute",
         }}
       >
         <Text style={styles.text}>Total :</Text>
@@ -380,7 +398,6 @@ const Expenses = (props) => {
         style={[
           {
             transform: [{ translateY: translateY }],
-            zIndex: 200,
             backgroundColor: "#f5f5f5",
             position: "absolute",
             top: 0,
@@ -396,9 +413,10 @@ const Expenses = (props) => {
             backgroundColor: "#fbfbfb",
           }}
         >
-          <BackHeader onChange={(val)=>{
-            setData(search(val))
-          }}
+          <BackHeader
+            onChange={(val) => {
+              setData(search(val));
+            }}
             placeholder="Search"
             {...props}
             inputWidth={80}
@@ -417,7 +435,7 @@ const Expenses = (props) => {
           />
         </View>
       </Animated.View>
-    </View>
+    </Animated.ScrollView>
   );
 };
 

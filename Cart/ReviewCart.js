@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  Platform
 } from "react-native";
 import { star } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
@@ -79,15 +80,15 @@ export const Cart = (props) => {
         marginVertical: 10,
         backgroundColor: primaryColor,
         shadowOffset: {
-          width: 0,
+          width: 2,
           height: 2,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
-        elevation: 4,
+        shadowRadius: 6,
+        elevation: 5,
         borderRadius: 10,
         padding: 15,
-        shadowColor: "#888888",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         width: props.id?(width-40):(width - 100),
         height: 200,
         margin: 10,
@@ -195,7 +196,7 @@ export const Cart = (props) => {
                 },
               ]}
             >
-              01/01/2022
+            1 day ago
             </Text>
           </View>
         </View>

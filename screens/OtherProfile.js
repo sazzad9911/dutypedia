@@ -70,22 +70,27 @@ const OtherProfile = (props) => {
     {
       title: "Bargaining",
       value: true,
+      type: "STARTING",
     },
     {
       title: "Fixed",
       value: false,
+      type: "ONETIME",
     },
     {
       title: "Installment",
       value: false,
+      type: "INSTALLMENT",
     },
     {
       title: "Subscription",
       value: false,
+      type: "SUBS",
     },
     {
       title: "Package",
       value: false,
+      type: "PACKAGE",
     },
   ];
   const [Active, setActive] = React.useState("Bargaining");
@@ -104,14 +109,17 @@ const OtherProfile = (props) => {
   const [Data, setData] = React.useState();
   const [Images, setImages] = React.useState([]);
   const dispatch = useDispatch();
+  const [ActiveServiceData,setActiveServiceData] =React.useState(null)
 
   React.useEffect(() => {
+    setLoader(true)
+    setActiveServiceData(null)
     if (serviceId && newUser) {
       getService(newUser.token, serviceId)
         .then((response) => {
           if (response.data) {
             setLoader(false);
-            //console.log(response.data.service.gigs[0].services);
+            
             setData(response.data);
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
@@ -120,6 +128,23 @@ const OtherProfile = (props) => {
             setFacilities(
               response.data.service.gigs[0].facilites.selectedOptions
             );
+            let arr=initialState;
+            response.data.service.activeServiceTypes.forEach((doc) => {
+              
+              arr=arr.map((d) => {
+                 if (d.type == doc) {
+                  //console.log(doc);
+                   return {
+                     title: d.title,
+                     value: true,
+                     type: d.type,
+                   };
+                 } else {
+                   return d;
+                 }
+               })
+            })
+            setActiveServiceData(arr)
             try {
               dispatch({
                 type: "SET_NEW_LIST_DATA",
@@ -291,7 +316,7 @@ const OtherProfile = (props) => {
               borderRadius: 20,
               height: 35,
               margin: 10,
-              width: width / 4 + 20,
+              flex:2,
               marginLeft: 0,
             }}
             title="Chat"
@@ -302,7 +327,7 @@ const OtherProfile = (props) => {
               borderRadius: 20,
               height: 35,
               margin: 10,
-              width: width / 4 + 20,
+              flex:2,
               marginLeft: 0,
             }}
             title="Call"
@@ -348,6 +373,7 @@ const OtherProfile = (props) => {
             <Menu.Item
               onPress={() => {
                 setVisible(false);
+                navigation.navigate("Support_1");
               }}
               title="Report"
             />
@@ -507,10 +533,10 @@ const OtherProfile = (props) => {
           showsHorizontalScrollIndicator={false}
         >
           <View style={{ width: 5 }} />
-          {initialState &&
-            initialState.map((item, i) => (
+          {ActiveServiceData &&
+            ActiveServiceData.map((item, i) => (
               <View key={i} style={{ flexDirection: "row" }}>
-                <IconButton
+                <IconButton disabled={!item.value}
                   onPress={() => {
                     setActive(item.title);
                   }}
@@ -546,7 +572,7 @@ const OtherProfile = (props) => {
               />
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 21,
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
                   paddingHorizontal: 20,
@@ -741,7 +767,7 @@ const OtherProfile = (props) => {
                 }}
               />
             </View>
-            <View style={{ backgroundColor: primaryColor }}>
+            <View style={{ backgroundColor: primaryColor,marginTop:-5,paddingBottom:10 }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Service List_1", {
@@ -817,7 +843,7 @@ const OtherProfile = (props) => {
             <ServiceCart />
           </Animated.View>
         )}
-        <View
+        {/* <View
           style={{
             alignItems: "flex-end",
             paddingRight: 20,
@@ -842,7 +868,7 @@ const OtherProfile = (props) => {
               color={textColor}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View
           style={{
             backgroundColor: primaryColor,

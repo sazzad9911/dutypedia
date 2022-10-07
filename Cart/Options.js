@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
+import { View, Text, Dimensions, Image, TouchableOpacity ,Platform} from "react-native";
 import { textColor, primaryColor } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 
@@ -21,14 +21,14 @@ function Options(props) {
         minWidth: width / 3,
         paddingHorizontal: 30,
         height: 45,
-        shadowColor: "#d5d5d5",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
-          width: 0,
-          height: 2,
+          width: 1,
+          height: 1,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
-        elevation: 2,
+        shadowRadius: 6,
+        elevation: 5,
         backgroundColor: Select ? "#117A65" : primaryColor,
         margin: 10,
         marginLeft: 5,

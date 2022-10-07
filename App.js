@@ -21,8 +21,8 @@ import {
   MD3LightTheme as Default,
   Provider as PaperProvider,
 } from "react-native-paper";
-import {checkUser} from './Class/auth'
-import StackRoute from './StackRoute';
+import { checkUser } from "./Class/auth";
+import StackRoute from "./StackRoute";
 
 export default function App() {
   const MyTheme = {
@@ -60,12 +60,13 @@ export default function App() {
       fontFamily: "Poppins-Medium",
     },
   };
- 
+
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <StackRoute/>
+          <StatusBar barStyle='dark-content' backgroundColor='#ffff' />
+          <StackRoute />
         </GestureHandlerRootView>
       </PaperProvider>
     </Provider>

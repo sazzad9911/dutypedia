@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
+import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
 import { textColor, primaryColor } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 
@@ -11,14 +11,14 @@ function Cart1(props) {
       style={{
         width: 250,
         height: 50,
-        shadowColor: "#d5d5d5",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
-          width: 0,
-          height: 2,
+          width: 1,
+          height: 1,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
-        elevation: 3,
+        shadowRadius: 6,
+        elevation: 5,
         backgroundColor: primaryColor,
         margin: 10,
         marginLeft: 5,

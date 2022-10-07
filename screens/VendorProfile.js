@@ -39,7 +39,7 @@ import {
   user,
   verified,
   serviceIcon,
-  calenderIcon
+  calenderIcon,
 } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "../Cart/ReviewCart";
@@ -270,10 +270,17 @@ const VendorProfile = (props) => {
               paddingVertical: 5,
             }}
           >
-            <Text style={[styles.headLine,{
-              fontSize:22,
-              marginTop:15
-            }]}>{vendor?.service.serviceCenterName}</Text>
+            <Text
+              style={[
+                styles.headLine,
+                {
+                  fontSize: 22,
+                  marginTop: 15,
+                },
+              ]}
+            >
+              {vendor?.service.serviceCenterName}
+            </Text>
             <Text
               style={{
                 marginTop: 2,
@@ -288,9 +295,9 @@ const VendorProfile = (props) => {
             <Text
               style={{
                 fontSize: 14,
-                fontFamily: "Poppins-Medium", 
-                marginTop:2,
-                marginBottom:10
+                fontFamily: "Poppins-Medium",
+                marginTop: 2,
+                marginBottom: 10,
               }}
             >
               Position of {vendor?.service.providerInfo.position}
@@ -354,9 +361,10 @@ const VendorProfile = (props) => {
           icon={flag}
           title={`Since ${new Date(vendor?.service.startDate).getFullYear()}`}
         />
-        <ProfileOption onPress={() =>{
-          navigation.navigate("Vendor Calender");
-        }}
+        <ProfileOption
+          onPress={() => {
+            navigation.navigate("Vendor Calender");
+          }}
           Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
           title="Company Calender"
         />
@@ -369,9 +377,7 @@ const VendorProfile = (props) => {
           }}
           Icon={() => (
             <FontAwesome5
-              style={{
-                
-              }}
+              style={{}}
               name="address-card"
               size={20}
               color={assentColor}
@@ -429,26 +435,29 @@ const VendorProfile = (props) => {
                   fontSize: 14,
                   textAlign: "justify",
                   fontFamily: "Poppins-Medium",
-                  lineHeight:20,
-                  marginTop:2
+                  lineHeight: 20,
+                  marginTop: 2,
                 }}
               >
                 {vendor?.service.about}
               </Text>
-              
             </TouchableOpacity>
             <View>
-              <Text style={{
-                fontSize:12,
-                fontFamily: "Poppins-Medium",
-                color:textColor,
-                marginTop:5
-              }}>Profile View 10K</Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "Poppins-Medium",
+                  color: textColor,
+                  marginTop: 5,
+                }}
+              >
+                Profile View 10K
+              </Text>
             </View>
           </View>
         </View>
         <ScrollView
-          style={{ backgroundColor: primaryColor,paddingVertical:10 }}
+          style={{ backgroundColor: primaryColor, paddingVertical: 10 }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
@@ -475,7 +484,6 @@ const VendorProfile = (props) => {
                   setActive(doc.title);
                 }}
                 active={Active == doc.title ? true : false}
-                disabled={!doc.value}
                 style={{
                   height: 30,
                   marginVertical: 10,
@@ -489,7 +497,7 @@ const VendorProfile = (props) => {
           <View style={{ width: 5 }} />
         </ScrollView>
         {Active == serviceSettings[0].title ? (
-          <Animated.View entering={StretchInY}>
+          <Animated.View style={{backgroundColor: primaryColor}} entering={StretchInY}>
             <View style={{ backgroundColor: primaryColor }}>
               <SliderBox
                 images={Images}
@@ -512,8 +520,8 @@ const VendorProfile = (props) => {
                   fontSize: 18,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
-                  marginVertical:15,
-                  marginTop:25
+                  marginVertical: 15,
+                  marginTop: 25,
                 }}
               >
                 {Title}
@@ -538,11 +546,10 @@ const VendorProfile = (props) => {
                     fontSize: 14,
                     color: textColor,
                     fontFamily: "Poppins-Medium",
-                    marginTop:0
+                    marginTop: 0,
                   }}
                 >
                   {Description}
-                  
                 </Text>
                 {/* {Description.length > 100 && (
                   <Text
@@ -565,7 +572,7 @@ const VendorProfile = (props) => {
                   fontSize: 18,
                   fontFamily: "Poppins-Medium",
                   color: "black",
-                  marginTop:10
+                  marginTop: 10,
                 }}
               >
                 From {Price}৳
@@ -721,7 +728,15 @@ const VendorProfile = (props) => {
                 ]}
               ></LinearGradient>
             </View>
-            <View style={{ backgroundColor: primaryColor}}>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "#e5e5e5",
+                marginVertical:10,
+                marginHorizontal:20
+              }}
+            />
+            <View style={{ backgroundColor: primaryColor }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Service List_1", {
@@ -753,15 +768,6 @@ const VendorProfile = (props) => {
                   color="#707070"
                 />
               </TouchableOpacity>
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: "#e5e5e5",
-                  marginTop: 5,
-                  marginBottom: 10,
-                  marginHorizontal: 20,
-                }}
-              />
             </View>
           </Animated.View>
         ) : (
@@ -1121,7 +1127,8 @@ export const Rows = ({ title, item, name, NewDataList }) => {
       style={{
         fontSize: 13,
         fontFamily: "Poppins-Medium",
-        color:textColor
+        color: textColor,
+        lineHeight:18
       }}
     >
       {text}

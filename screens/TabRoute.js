@@ -71,7 +71,7 @@ const TabRoute = () => {
         }}
       >
         <Tab.Screen
-          options={{ header: (props) => <Header {...props} /> }}
+          options={{ headerShown: false}}
           name="Home"
           component={Home}
         />

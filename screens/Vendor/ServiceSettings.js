@@ -4,13 +4,61 @@ import { textColor, backgroundColor, primaryColor } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { storeJson } from "../../Class/storage";
 import { Switch } from "react-native-paper";
+import { changeActiveService } from "../../Class/service";
+import { vendorLogin } from "../../Class/auth";
 
 const ServiceSettings = () => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
+  const initialState = [
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ];
+  const [Data, setData] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
 
   React.useEffect(() => {
     // console.log(serviceSettings);
-  }, [serviceSettings]);
+    let arr=initialState;
+    if (Array.isArray(vendor.service.activeServiceTypes)) {
+      vendor.service.activeServiceTypes.forEach((doc) => {
+        arr=arr.map((d) => {
+           if (d.type == doc) {
+             return {
+               title: d.title,
+               value: true,
+               type: d.type,
+             };
+           } else {
+             return d;
+           }
+         })
+      })
+    }
+   setData(arr)
+  }, [vendor]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -29,9 +77,15 @@ const ServiceSettings = () => {
       </View>
       <ScrollView>
         <View style={{ height: 20 }} />
-        {Array.isArray(serviceSettings) &&
-          serviceSettings.map((doc, i) => (
-            <Cart i={i} key={i} title={doc.title} value={doc.value} />
+        {Array.isArray(Data) &&
+          Data.map((doc, i) => (
+            <Cart
+              i={i}
+              key={i}
+              data={doc}
+              title={doc.title}
+              value={doc.value}
+            />
           ))}
       </ScrollView>
     </View>
@@ -39,17 +93,34 @@ const ServiceSettings = () => {
 };
 
 export default ServiceSettings;
-const Cart = ({ title, value, i }) => {
+const Cart = ({ title, value, i, data }) => {
   const [isEnabled, setIsEnabled] = React.useState(value);
   const dispatch = useDispatch();
   const serviceSettings = useSelector((state) => state.serviceSettings);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+
   const toggleSwitch = () => {
-    dispatch({
-      type: "CHECKED",
-      playload: title,
-    });
-    setIsEnabled((previousState) => !previousState);
-    storeJson("serviceSettings", serviceSettings);
+    if (user && vendor) {
+      //console.log(user.token);
+      setIsEnabled((val) => !val);
+      changeActiveService(user.token, vendor.service.id, data.type)
+        .then((res) => {
+          vendorLogin(user.token, vendor.service.id)
+            .then((res) => {
+              if (res) {
+                dispatch({ type: "SET_VENDOR", playload: res });
+              }
+            })
+            .catch((err) => {
+              console.warn(err.response.data);
+            });
+        })
+        .catch((err) => {
+          console.warn(err.response.data);
+          setIsEnabled((val) => !val);
+        });
+    }
   };
 
   return (
@@ -83,7 +154,7 @@ const Cart = ({ title, value, i }) => {
           <Switch
             style={{
               height: 35,
-              width:90,
+              width: 90,
               transform: [
                 { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
                 { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
@@ -93,7 +164,7 @@ const Cart = ({ title, value, i }) => {
             value={isEnabled}
             onValueChange={(val) => {
               //setMute(val);
-              setIsEnabled(val);
+              toggleSwitch();
             }}
           />
         </View>

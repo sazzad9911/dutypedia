@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
+import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
 import { textColor, primaryColor,assentColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -16,14 +16,14 @@ function Cart2(props) {
       }}
       style={{
         width: 260,
-        shadowColor: "#d5d5d5",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
-          width: 0,
-          height: 2,
+          width: 1,
+          height: 1,
         },
         shadowOpacity: 1,
-        shadowRadius: 5,
-        elevation: 4,
+        shadowRadius: 6,
+        elevation: 5,
         backgroundColor: primaryColor,
         margin: 10,
         marginLeft: 5,
@@ -96,7 +96,7 @@ function Cart2(props) {
               fontFamily: 'Poppins-Light'
             }}
           >
-            Specialty: It, Graphic Design, Digital Marketing, Online Tution
+            {`Specialty: ${data?.service.speciality}`}
           </Text>
         </View>
       </View>

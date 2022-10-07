@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Modal,
   Animated,
-  Alert
+  Alert,
+  RefreshControl,
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -32,7 +33,12 @@ import {
 } from "react-native-reanimated";
 import uuid from "react-native-uuid";
 import { dateConverter } from "../../action";
-import { createNotice, getNotice, deleteNotice,updateNotice } from "../../Class/notice";
+import {
+  createNotice,
+  getNotice,
+  deleteNotice,
+  updateNotice,
+} from "../../Class/notice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Notice = (props) => {
@@ -53,20 +59,33 @@ const Notice = (props) => {
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [Loader, setLoader] = React.useState(true);
-  const [AllData, setAllData]= React.useState([])
+  const [AllData, setAllData] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   React.useEffect(() => {
+    setLoader(true);
+    setData([]);
+    setAllData([]);
     if (vendor && user) {
       getNotice(user.token, vendor.service.id).then((res) => {
         setLoader(false);
         if (res) {
           setData(res.notices);
-          setAllData(res.notices)
+          setAllData(res.notices);
         }
       });
     }
-  }, [Loader]);
-  
+  }, [Refresh]);
 
   const onChange = (val) => {
     createNotice(user.token, {
@@ -77,28 +96,30 @@ const Notice = (props) => {
       authorPosition: val.position,
       date: val.date,
       serviceId: vendor.service.id,
-    }).then((res) => {
-      if (res) {
-        setLoader(!Loader);
-        navigation.goBack();
-      }
-    }).catch((err) => {
-      Alert.alert("Opps!",err.response.data)
     })
+      .then((res) => {
+        if (res) {
+          setLoader(!Loader);
+          navigation.goBack();
+        }
+      })
+      .catch((err) => {
+        Alert.alert("Opps!", err.response.data);
+      });
   };
-  const search = (val)=>{
-    return AllData.filter((d) =>{
-      if(d.record.toUpperCase().match(val.toUpperCase())){
-        return d
+  const search = (val) => {
+    return AllData.filter((d) => {
+      if (d.record.toUpperCase().match(val.toUpperCase())) {
+        return d;
       }
-    })
-  }
-  if(Loader) {
-    return(
-      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+    });
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading..</Text>
       </View>
-    )
+    );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
@@ -135,19 +156,19 @@ const Notice = (props) => {
     );
   }
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    <Animated.ScrollView
+      scrollEnabled={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      style={{ overflow: "hidden", flex: 1 }}
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+      }}
+      showsVerticalScrollIndicator={false}
     >
-      <ScrollView bounces={false}
-        style={{ flexGrow: 0 }}
-        scrollEventThrottle={16}
-        onScroll={(e) => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-        }}
-        showsVerticalScrollIndicator={false}
-      >
+      <View>
         <View style={{ height: 150 }} />
         <TouchableOpacity
           onPress={() => {
@@ -173,7 +194,7 @@ const Notice = (props) => {
             >
               Add Notice
             </Text>
-            <View style={{width:10}}/>
+            <View style={{ width: 10 }} />
             <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
           </View>
         </TouchableOpacity>
@@ -208,7 +229,7 @@ const Notice = (props) => {
             />
           ))
         )}
-      </ScrollView>
+      </View>
       <Animated.View
         style={[
           {
@@ -229,13 +250,14 @@ const Notice = (props) => {
             backgroundColor: "#fbfbfb",
           }}
         >
-          <BackHeader onChange={val=>{
-            if(!val){
-              setData(AllData)
-              return
-            }
-            setData(search(val))
-          }}
+          <BackHeader
+            onChange={(val) => {
+              if (!val) {
+                setData(AllData);
+                return;
+              }
+              setData(search(val));
+            }}
             placeholder="Search"
             {...props}
             inputWidth={80}
@@ -250,7 +272,7 @@ const Notice = (props) => {
           /> */}
         </View>
       </Animated.View>
-    </KeyboardAvoidingView>
+    </Animated.ScrollView>
   );
 };
 
@@ -557,7 +579,7 @@ export const AddNotice = (props) => {
                 console.log(e.message);
               }
             }
-            
+
             // setModalVisible(false);
           }}
           disabled={
@@ -659,23 +681,22 @@ export const ViewCart = (props) => {
   const setData = props.route.params.setData;
   const navigation = props.navigation;
   const [value, setValue] = React.useState(props.route.params.value);
-  const user=useSelector((state) => state.user);
-  const vendor= useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
 
   React.useEffect(() => {
     //console.log(value.id)
-  },[])
+  }, []);
 
   const Delete = () => {
-    deleteNotice(user.token,value.id).then(res=>{
-      if(res){
-        setData(val=>(!val))
+    deleteNotice(user.token, value.id).then((res) => {
+      if (res) {
+        setData((val) => !val);
         navigation.goBack();
-        return
+        return;
       }
-      Alert.alert("Opps!","Something went wrong")
-    })
-    
+      Alert.alert("Opps!", "Something went wrong");
+    });
   };
   const Edit = (val) => {
     let options = {
@@ -688,18 +709,20 @@ export const ViewCart = (props) => {
       subject: val.subject,
     };
     //setValue(options);
-    updateNotice(user.token, options).then(res=>{
-      if(res){
-       setValue(res.data.notice)
-       setData(val=>(!val))
-       navigation.goBack();
-      }
-    }).catch(err=>{
-      Alert.alert("Opps!", err.response.data)
-    })
+    updateNotice(user.token, options)
+      .then((res) => {
+        if (res) {
+          setValue(res.data.notice);
+          setData((val) => !val);
+          navigation.goBack();
+        }
+      })
+      .catch((err) => {
+        Alert.alert("Opps!", err.response.data);
+      });
   };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
@@ -747,7 +770,11 @@ export const ViewCart = (props) => {
           />
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        bounces={false}
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={{ marginHorizontal: 20 }}>
           <Text
             style={[

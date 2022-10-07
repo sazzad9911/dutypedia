@@ -169,3 +169,15 @@ export const getServiceGigs =async(token)=>{
   })
   return res;
 }
+export const changeActiveService=async(token,serviceId,type) => {
+  //console.log(serviceId)
+  //console.log(type)
+  //console.log(token)
+  const res= await axios.put(`${url}/server/services/toggle-active-service`,{
+    serviceType:type,
+    parentServiceId:serviceId
+  },{
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  return res
+}

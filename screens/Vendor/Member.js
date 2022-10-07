@@ -7,6 +7,7 @@ import {
   Image,
   Modal,
   KeyboardAvoidingView,
+  RefreshControl,
 } from "react-native";
 import { Text } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -41,7 +42,7 @@ import {
   getUserByName,
   createOnlineUser,
   getOnlineUser,
-  deleteOnlineMember
+  deleteOnlineMember,
 } from "../../Class/member";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
@@ -67,7 +68,7 @@ const Member = () => {
   );
 };
 
-export default Member; 
+export default Member;
 
 const styles = StyleSheet.create({
   text: {
@@ -187,12 +188,24 @@ const DutyPediaUser = (props) => {
   const [Loader, setLoader] = React.useState(true);
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [AllData, setAllData]= React.useState([])
+  const [AllData, setAllData] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   const onChange = (data) => {
     setLoader(!Loader);
   };
   React.useEffect(() => {
+    setLoader(true);
     if (vendor && user) {
       getOnlineUser(user.token, vendor.service.id).then((res) => {
         setLoader(false);
@@ -202,21 +215,21 @@ const DutyPediaUser = (props) => {
         }
       });
     }
-  }, [Loader]);
-  const search=(val)=>{
-    let arr=AllData.filter((d) => {
-      if(d.name.toUpperCase().match(val.toUpperCase())){
-        return d
+  }, [Refresh]);
+  const search = (val) => {
+    let arr = AllData.filter((d) => {
+      if (d.name.toUpperCase().match(val.toUpperCase())) {
+        return d;
       }
-    })
-    return arr
-  }
-  if(Loader) {
-    return(
-      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+    });
+    return arr;
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading..</Text>
       </View>
-    )
+    );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
@@ -224,8 +237,8 @@ const DutyPediaUser = (props) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("AddOnlineUser", {
-            onChange: onChange,
-          });
+              onChange: onChange,
+            });
           }}
           style={{
             width: 80,
@@ -252,14 +265,19 @@ const DutyPediaUser = (props) => {
     );
   }
   return (
-    <ScrollView>
-      <Input onChange={val=>{
-        if(!val){
-          setData(AllData)
-          return
-        }
-        setData(search(val))
-      }}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <Input
+        onChange={(val) => {
+          if (!val) {
+            setData(AllData);
+            return;
+          }
+          setData(search(val));
+        }}
         style={{
           borderWidth: 1,
           marginVertical: 10,
@@ -289,7 +307,7 @@ const DutyPediaUser = (props) => {
           >
             Add Member
           </Text>
-          <View style={{width:10}}/>
+          <View style={{ width: 10 }} />
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
         </View>
       </TouchableOpacity>
@@ -329,16 +347,18 @@ const DutyPediaUser = (props) => {
       {Loader ? (
         <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
       ) : (
-        Data.map((doc, i) => <OnlineCart doc={doc} i={i} key={i} reload={onChange} />)
+        Data.map((doc, i) => (
+          <OnlineCart doc={doc} i={i} key={i} reload={onChange} />
+        ))
       )}
     </ScrollView>
   );
 };
-const OnlineCart = ({ doc, i,reload }) => {
+const OnlineCart = ({ doc, i, reload }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
-  
+
   return (
     <TouchableOpacity
       style={{
@@ -402,9 +422,14 @@ const OnlineCart = ({ doc, i,reload }) => {
       <View style={{ flexDirection: "row" }}>
         <Feather name="send" size={22} color={backgroundColor} />
         <View style={{ width: 15 }} />
-        <AntDesign onPress={()=>{
-          setAlertVisible(true)
-        }} name="delete" size={22} color={backgroundColor} />
+        <AntDesign
+          onPress={() => {
+            setAlertVisible(true);
+          }}
+          name="delete"
+          size={22}
+          color={backgroundColor}
+        />
         <View style={{ width: 10 }} />
       </View>
       <Modal
@@ -440,39 +465,51 @@ const OfflineUser = (props) => {
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
-  const [AllData, setAllData]= React.useState([])
+  const [AllData, setAllData] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   const reload = () => {
     setReload(!Reload);
   };
   React.useEffect(() => {
+    setLoader(true);
     if (vendor && user) {
       getOfflineMembers(user.token, vendor.service.id).then((res) => {
         if (res) {
           setData(res.members);
           setLoader(false);
-          setAllData(res.members)
+          setAllData(res.members);
           return;
         }
         setLoader(false);
         console.warn(res);
       });
     }
-  }, [Reload + vendor + user]);
-  const search=(val)=>{
-    let arr=AllData.filter((d) => {
-      if(d.name.toUpperCase().match(val.toUpperCase())){
-        return d
+  }, [Reload + vendor + user + Refresh]);
+  const search = (val) => {
+    let arr = AllData.filter((d) => {
+      if (d.name.toUpperCase().match(val.toUpperCase())) {
+        return d;
       }
-    })
-    return arr
-  }
-  if(Loader) {
-    return(
-      <View style={{flex: 1,justifyContent: "center", alignItems: "center" }}>
+    });
+    return arr;
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading..</Text>
       </View>
-    )
+    );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
@@ -480,9 +517,9 @@ const OfflineUser = (props) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("AddOfflineUser", {
-            reload: reload,
-            id: null,
-          });
+              reload: reload,
+              id: null,
+            });
           }}
           style={{
             width: 80,
@@ -509,14 +546,19 @@ const OfflineUser = (props) => {
     );
   }
   return (
-    <ScrollView>
-      <Input onChange={val=>{
-        if(!val){
-          setData(AllData)
-          return
-        }
-        setData(search(val))
-      }}
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <Input
+        onChange={(val) => {
+          if (!val) {
+            setData(AllData);
+            return;
+          }
+          setData(search(val));
+        }}
         style={{
           borderWidth: 1,
           marginVertical: 10,
@@ -551,7 +593,7 @@ const OfflineUser = (props) => {
           >
             Add Member
           </Text>
-          <View style={{width:10}}/>
+          <View style={{ width: 10 }} />
           <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
         </View>
       </TouchableOpacity>
