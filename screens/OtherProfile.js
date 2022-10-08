@@ -52,7 +52,7 @@ import { Menu } from "react-native-paper";
 import { Rows, ServiceTable } from "./VendorProfile";
 import Animated, { FadeIn } from "react-native-reanimated";
 import ServiceCart from "./../Cart/ServiceCart";
-import { getService } from "../Class/service";
+import { getService,getOtherServices } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { SliderBox } from "react-native-image-slider-box";
 import { serverToLocal } from "../Class/dataConverter";
@@ -109,17 +109,19 @@ const OtherProfile = (props) => {
   const [Data, setData] = React.useState();
   const [Images, setImages] = React.useState([]);
   const dispatch = useDispatch();
-  const [ActiveServiceData,setActiveServiceData] =React.useState(null)
+  const [ActiveServiceData, setActiveServiceData] = React.useState(null);
+  const [FixedService, setFixedService] = React.useState(null);
+  const vendor = useSelector((state) => state.vendor);
 
   React.useEffect(() => {
-    setLoader(true)
-    setActiveServiceData(null)
+    setLoader(true);
+    setActiveServiceData(null);
     if (serviceId && newUser) {
       getService(newUser.token, serviceId)
         .then((response) => {
           if (response.data) {
             setLoader(false);
-            
+
             setData(response.data);
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
@@ -128,23 +130,22 @@ const OtherProfile = (props) => {
             setFacilities(
               response.data.service.gigs[0].facilites.selectedOptions
             );
-            let arr=initialState;
+            let arr = initialState;
             response.data.service.activeServiceTypes.forEach((doc) => {
-              
-              arr=arr.map((d) => {
-                 if (d.type == doc) {
+              arr = arr.map((d) => {
+                if (d.type == doc) {
                   //console.log(doc);
-                   return {
-                     title: d.title,
-                     value: true,
-                     type: d.type,
-                   };
-                 } else {
-                   return d;
-                 }
-               })
-            })
-            setActiveServiceData(arr)
+                  return {
+                    title: d.title,
+                    value: true,
+                    type: d.type,
+                  };
+                } else {
+                  return d;
+                }
+              });
+            });
+            setActiveServiceData(arr);
             try {
               dispatch({
                 type: "SET_NEW_LIST_DATA",
@@ -208,6 +209,18 @@ const OtherProfile = (props) => {
       }
     }
   }, [ActiveService]);
+  React.useEffect(() => {
+    if (user && vendor) {
+      getOtherServices(newUser.token, vendor.service.id, "ONETIME")
+        .then((res) => {
+          setFixedService(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          console.warn(err.response.data);
+        });
+    }
+  }, [Active]);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -316,7 +329,7 @@ const OtherProfile = (props) => {
               borderRadius: 20,
               height: 35,
               margin: 10,
-              flex:2,
+              flex: 2,
               marginLeft: 0,
             }}
             title="Chat"
@@ -327,7 +340,7 @@ const OtherProfile = (props) => {
               borderRadius: 20,
               height: 35,
               margin: 10,
-              flex:2,
+              flex: 2,
               marginLeft: 0,
             }}
             title="Call"
@@ -536,7 +549,8 @@ const OtherProfile = (props) => {
           {ActiveServiceData &&
             ActiveServiceData.map((item, i) => (
               <View key={i} style={{ flexDirection: "row" }}>
-                <IconButton disabled={!item.value}
+                <IconButton
+                  disabled={!item.value}
                   onPress={() => {
                     setActive(item.title);
                   }}
@@ -767,7 +781,13 @@ const OtherProfile = (props) => {
                 }}
               />
             </View>
-            <View style={{ backgroundColor: primaryColor,marginTop:-5,paddingBottom:10 }}>
+            <View
+              style={{
+                backgroundColor: primaryColor,
+                marginTop: -5,
+                paddingBottom: 10,
+              }}
+            >
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Service List_1", {
@@ -825,6 +845,27 @@ const OtherProfile = (props) => {
               />
             </View>
           </Animated.View>
+        ) : Active == "Fixed" ? (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+            }}
+            entering={FadeIn}
+          >
+            {FixedService &&
+              FixedService.map((doc, i) => <ServiceCart key={i} data={doc} />)}
+            {!FixedService && (
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            )}
+          </Animated.View>
         ) : (
           <Animated.View
             style={{
@@ -835,12 +876,12 @@ const OtherProfile = (props) => {
             }}
             entering={FadeIn}
           >
-            <ServiceCart />
-            <ServiceCart />
-            <ServiceCart />
-            <ServiceCart />
-            <ServiceCart />
-            <ServiceCart />
+            <SvgXml
+              xml={serviceIcon}
+              style={{ marginVertical: 100 }}
+              height="200"
+              width="200"
+            />
           </Animated.View>
         )}
         {/* <View

@@ -3,9 +3,14 @@ import { View, Dimensions, Text, Image, TouchableOpacity ,Platform} from "react-
 import { primaryColor, textColor, backgroundColor } from "../assets/colors";
 const { width, height } = Dimensions.get("window");
 
-const ServiceCart = () => {
-  return (
-    <TouchableOpacity
+const ServiceCart = ({data,onPress}) => {
+  //console.log(data);
+  return ( 
+    <TouchableOpacity onPress={()=>{
+      if(onPress){
+        onPress()
+      }
+    }}
       style={{
         shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
@@ -35,7 +40,7 @@ const ServiceCart = () => {
             height: "50%",
           }}
           source={{
-            uri: "https://t4.ftcdn.net/jpg/03/03/49/75/360_F_303497515_ZHOwfTtuo5sYpAeoqWRZnkXZNZDKZeMz.jpg",
+            uri: data?.images[0],
           }}
         />
         <View
@@ -51,7 +56,7 @@ const ServiceCart = () => {
               lineHeight: 15,
             }}
           >
-            I Will Make Custom Graphics For Your Blog
+           {data?.title}
           </Text>
           <View
             style={{
@@ -67,7 +72,7 @@ const ServiceCart = () => {
                 fontFamily: "Poppins-Medium",
               }}
             >
-              500৳
+              {data?.price}৳
             </Text>
             <Text
               style={{
@@ -75,7 +80,7 @@ const ServiceCart = () => {
                 fontFamily: "Poppins-Medium",
               }}
             >
-              View 100000k
+              View {data?.service.views}
             </Text>
           </View>
         </View>
