@@ -13,10 +13,10 @@ function Cart1(props) {
         height: 50,
         shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
         shadowOffset: {
-          width: 1,
-          height: 1,
+          width: 2,
+          height: 2,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .7,
         shadowRadius: 6,
         elevation: 5,
         backgroundColor: primaryColor,

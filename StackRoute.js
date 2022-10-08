@@ -191,13 +191,7 @@ export default function StackRoute() {
           }}
           component={Address}
         />
-        <Stack.Screen
-          name="Review"
-          options={{
-            header: (props) => <SubHeader title="Review" {...props} />,
-          }}
-          component={Review}
-        />
+        
         <Stack.Screen
           name="Service List"
           options={{

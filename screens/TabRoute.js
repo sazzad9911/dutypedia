@@ -34,6 +34,9 @@ import BackHeader from "./../components/BackHeader";
 import { checkVendor } from "../Class/auth";
 import { getJson, storeJson } from "../Class/storage";
 import Home_Next from "./Home_Next";
+import SubHeader from './../components/SubHeader';
+import AllPackageList from './Seller/AllPackageList';
+import HomeRoute from './../HomeRoute';
 
 const Tab = createBottomTabNavigator();
 
@@ -88,7 +91,7 @@ const TabRoute = () => {
           <Tab.Screen
             options={{ headerShown: false }}
             name="Home"
-            component={Home}
+            component={HomeRoute}
           />
         )}
         <Tab.Screen
@@ -127,11 +130,6 @@ const TabRoute = () => {
           }}
           name="Appointment"
           component={Appointment}
-        />
-        <Tab.Screen
-          options={{ header: (props) => <OtherProfileHeader {...props} /> }}
-          name="OtherProfile"
-          component={OtherProfile}
         />
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />

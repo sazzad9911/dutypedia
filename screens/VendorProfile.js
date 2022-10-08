@@ -11,6 +11,7 @@ import {
   StatusBar,
   SafeAreaView,
   Alert,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -66,6 +67,10 @@ import ServiceCart from "./../Cart/ServiceCart";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
+  const createLoad =
+    props.route.params && props.route.params.direct
+      ? props.route.params.direct
+      : false;
   const window = Dimensions.get("window");
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -122,6 +127,19 @@ const VendorProfile = (props) => {
     },
   ];
   const [Click, setClick] = React.useState(false);
+  const [Category, setCategory] = React.useState();
+  const [Bargaining, setBargaining] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -157,7 +175,7 @@ const VendorProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList.length]);
+  }, [NewDataList.length + Click + Refresh]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -174,7 +192,7 @@ const VendorProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService]);
+  }, [ActiveService + Active + Click + Refresh]);
   const confirm = async () => {
     if (!newUser) {
       console.log("Invalid user");
@@ -215,6 +233,7 @@ const VendorProfile = (props) => {
       setImage(vendor.service.profilePhoto);
       setBackgroundImage(vendor.service.wallPhoto);
       setDashboard(vendor.service.gigs[0].services.category);
+      setCategory(vendor.service.gigs[0].services.category);
       try {
         dispatch({
           type: "SET_NEW_LIST_DATA",
@@ -233,7 +252,7 @@ const VendorProfile = (props) => {
         console.log(e.message);
       }
     }
-  }, [vendor]);
+  }, [vendor + Bargaining + Refresh]);
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -243,10 +262,10 @@ const VendorProfile = (props) => {
           //console.log(res.data.gigs);
         })
         .catch((err) => {
-          console.warn(err.response.data);
+          console.warn(err.response);
         });
     }
-  }, [Active]);
+  }, [Active + createLoad + Refresh]);
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -257,6 +276,9 @@ const VendorProfile = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: "#f1f1f2",
@@ -318,6 +340,7 @@ const VendorProfile = (props) => {
                 {
                   fontSize: 22,
                   marginTop: 15,
+                  fontFamily: "Poppins-SemiBold",
                 },
               ]}
             >
@@ -327,7 +350,7 @@ const VendorProfile = (props) => {
               style={{
                 marginTop: 2,
                 fontSize: 17,
-                fontFamily: "Poppins-Medium",
+                fontFamily: "Poppins-SemiBold",
               }}
             >
               {vendor?.service.providerInfo.title + " "}
@@ -478,7 +501,7 @@ const VendorProfile = (props) => {
                   textAlign: "justify",
                   fontFamily: "Poppins-Medium",
                   lineHeight: 20,
-                  marginTop: 2,
+                  marginTop: 5,
                 }}
               >
                 {vendor?.service.about}
@@ -491,6 +514,7 @@ const VendorProfile = (props) => {
                   fontFamily: "Poppins-Medium",
                   color: textColor,
                   marginTop: 5,
+                  marginBottom: 10,
                 }}
               >
                 Profile View 10K
@@ -526,6 +550,7 @@ const VendorProfile = (props) => {
                   setActive(doc.title);
                   //console.log(doc.title)
                   setClick(false);
+                  setBargaining((val) => !val);
                 }}
                 active={Active == doc.title ? true : false}
                 style={{
@@ -564,9 +589,9 @@ const VendorProfile = (props) => {
               <Text
                 style={{
                   marginHorizontal: 20,
-                  fontSize: 18,
+                  fontSize: 21,
                   color: textColor,
-                  fontFamily: "Poppins-Medium",
+                  fontFamily: "Poppins-SemiBold",
                   marginVertical: 15,
                   marginTop: 25,
                 }}
@@ -594,6 +619,7 @@ const VendorProfile = (props) => {
                     color: textColor,
                     fontFamily: "Poppins-Medium",
                     marginTop: 0,
+                    lineHeight: 18,
                   }}
                 >
                   {Description}
@@ -617,7 +643,7 @@ const VendorProfile = (props) => {
                   alignSelf: "flex-end",
                   marginRight: 20,
                   fontSize: 18,
-                  fontFamily: "Poppins-Medium",
+                  fontFamily: "Poppins-SemiBold",
                   color: "black",
                   marginTop: 10,
                 }}
@@ -802,7 +828,7 @@ const VendorProfile = (props) => {
                 <Text
                   style={{
                     fontSize: 14,
-                    fontFamily: "Poppins-Medium",
+                    fontFamily: "Poppins-SemiBold",
                     color: "#707070",
                     marginRight: 5,
                   }}
@@ -825,6 +851,7 @@ const VendorProfile = (props) => {
               alignItems: "center",
               flexDirection: "row",
               flexWrap: "wrap",
+              paddingHorizontal: 10,
             }}
           >
             {!Click &&
@@ -842,17 +869,9 @@ const VendorProfile = (props) => {
                     try {
                       dispatch({
                         type: "SET_NEW_LIST_DATA",
-                        playload: serverToLocal(
-                          doc.services.options,
-                          doc.services.category
-                        ),
+                        playload: serverToLocal(doc.services, Category),
                       });
-                      setNewDataList(
-                        serverToLocal(
-                          doc.services.options,
-                          doc.services.category
-                        )
-                      );
+                      setNewDataList(serverToLocal(doc.services, Category));
                     } catch (e) {
                       console.log(e.message);
                     }
@@ -861,13 +880,22 @@ const VendorProfile = (props) => {
                   data={doc}
                 />
               ))}
+
             {!Click && !FixedService && (
-              <SvgXml
-                xml={serviceIcon}
-                style={{ marginVertical: 100 }}
-                height="200"
-                width="200"
-              />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SvgXml
+                  xml={serviceIcon}
+                  style={{ marginVertical: 100 }}
+                  height="200"
+                  width="200"
+                />
+              </View>
             )}
             {Click && (
               <View>
@@ -890,9 +918,9 @@ const VendorProfile = (props) => {
                   <Text
                     style={{
                       marginHorizontal: 20,
-                      fontSize: 18,
+                      fontSize: 21,
                       color: textColor,
-                      fontFamily: "Poppins-Medium",
+                      fontFamily: "Poppins-SemiBold",
                       marginVertical: 15,
                       marginTop: 25,
                     }}
@@ -920,6 +948,7 @@ const VendorProfile = (props) => {
                         color: textColor,
                         fontFamily: "Poppins-Medium",
                         marginTop: 0,
+                        lineHeight: 18,
                       }}
                     >
                       {Description}
@@ -1156,12 +1185,20 @@ const VendorProfile = (props) => {
               flexWrap: "wrap",
             }}
           >
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
           </Animated.View>
         )}
         <View
@@ -1392,7 +1429,7 @@ const BarOption = ({ icon, title }) => {
         <View
           style={{
             height: 1,
-            backgroundColor: "#f1f1f2",
+            backgroundColor: "#e5e5e5",
           }}
         ></View>
       </View>

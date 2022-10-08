@@ -83,15 +83,16 @@ export const Cart = (props) => {
           width: 2,
           height: 2,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .99,
         shadowRadius: 6,
         elevation: 5,
         borderRadius: 10,
         padding: 15,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#ebebeb",
         width: props.id?(width-40):(width - 100),
         height: 200,
         margin: 10,
+        marginBottom:15
       }}
     >
       <View
@@ -172,8 +173,8 @@ export const Cart = (props) => {
                 }}
                 key={i}
                 xml={star}
-                height="18"
-                width="18"
+                height="15"
+                width="15"
               />
             ))}
             <Text

@@ -30,12 +30,12 @@ const RelatedService = (props) => {
         width: 200,
         height: 280,
         borderRadius: 10,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#ebebeb",
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .9,
         shadowRadius: 6,
         elevation: 5,
         margin: 10,
@@ -73,12 +73,13 @@ const RelatedService = (props) => {
               flexDirection: "row",
             }}
           >
-            <SvgXml xml={star} height="18" width="18" />
+            <SvgXml xml={star} height="15" width="15" />
             <Text
               style={{
                 marginLeft: 5,
                 color: textColor,
-                fontFamily: 'Poppins-Medium'
+                fontFamily: 'Poppins-Medium',
+                marginTop:-2
               }}
             >
               5.0

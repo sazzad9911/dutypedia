@@ -12,12 +12,12 @@ const ServiceCart = ({data,onPress}) => {
       }
     }}
       style={{
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: Platform.OS =="ios"?"#ebebeb":"#ebebeb",
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .99,
         shadowRadius: 6,
         elevation: 5,
         borderRadius: 10,

@@ -42,6 +42,10 @@ import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
 import Member,{AddOfflineUser,AddOnlineUser} from './Vendor/Member';
 import Expenses,{AddExpenses} from './Vendor/Expenses';
 import ServiceSettings from './Vendor/ServiceSettings';
+import Review from './Seller/Review';
+import AllPackageList from './Seller/AllPackageList';
+import OtherProfile from './OtherProfile';
+import OtherProfileHeader from './../components/OtherProfileHeader';
 
 const Stack = createStackNavigator();
 
@@ -220,6 +224,25 @@ const Profile = ({ navigation }) => {
             headerShown: false,
           }}
           component={ServiceSettings}
+        />
+        <Stack.Screen
+          name="Review"
+          options={{
+            header: (props) => <SubHeader title="Review" {...props} />,
+          }}
+          component={Review}
+        />
+        <Stack.Screen
+          name="AllPackageList"
+          options={{
+            header: (props) => <SubHeader title="Fixed Price" {...props} />,
+          }}
+          component={AllPackageList}
+        />
+         <Stack.Screen
+          options={{ header: (props) => <OtherProfileHeader {...props} /> }}
+          name="OtherProfile"
+          component={OtherProfile}
         />
     </Stack.Navigator>
   );

@@ -181,11 +181,11 @@ const Service = ({ navigation, route }) => {
           direct
         )
           .then((res) => {
-            navigation.navigate("VendorProfile");
+            navigation.navigate("VendorProfile",{direct:businessForm});
             setLoader(false);
           })
           .catch((err) => {
-            console.warn(err.response.data);
+            console.warn(err.response);
             setLoader(false);
           });
       }
