@@ -181,3 +181,4 @@ export const changeActiveService=async(token,serviceId,type) => {
   })
   return res
 }
+//export const getFixedService=(token,serviceId,type)

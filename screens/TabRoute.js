@@ -32,7 +32,8 @@ import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
 import BackHeader from "./../components/BackHeader";
 import { checkVendor } from "../Class/auth";
-import { getJson } from "../Class/storage";
+import { getJson, storeJson } from "../Class/storage";
+import Home_Next from "./Home_Next";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,6 +44,7 @@ const TabRoute = () => {
   const [visible, setVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendorInfo = useSelector((state) => state.vendorInfo);
+  const interestCategory= useSelector((state) => state.interestCategory);
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
@@ -52,6 +54,12 @@ const TabRoute = () => {
     getJson("serviceSettings").then((data) => {
       if (data) {
         dispatch({ type: "SET_SERVICE_SETTINGS", playload: data });
+      }
+    });
+    getJson("interestCategory").then((data) => {
+      if (data) {
+        dispatch({ type: "SET_INTEREST_CATEGORY", playload: data });
+        //setDashboard(data);
       }
     });
   }, []);
@@ -70,11 +78,19 @@ const TabRoute = () => {
           return <BottomBar {...props} />;
         }}
       >
-        <Tab.Screen
-          options={{ headerShown: false}}
-          name="Home"
-          component={Home}
-        />
+        {interestCategory ? (
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Home_Next"
+            component={Home_Next}
+          />
+        ) : (
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Home"
+            component={Home}
+          />
+        )}
         <Tab.Screen
           options={{ lazy: false, header: (props) => <Header {...props} /> }}
           name="Search"
