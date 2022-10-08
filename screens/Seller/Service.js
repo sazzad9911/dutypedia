@@ -24,7 +24,10 @@ import * as ImagePicker from "expo-image-picker";
 import { EvilIcons } from "@expo/vector-icons";
 import Button from "./../../components/Button";
 import { useSelector, useDispatch } from "react-redux";
-import {CheckBox} from './Pricing'
+import { CheckBox } from "./Pricing";
+import { createOtherService } from "../../Class/service";
+import { fileFromURL } from "../../action";
+import { uploadFile } from "../../Class/upload";
 
 const Service = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -62,16 +65,21 @@ const Service = ({ navigation, route }) => {
   ]);
   const [FacilitiesError, setFacilitiesError] = React.useState();
   const [FacilitiesCounter, setFacilitiesCounter] = React.useState(0);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const listData = useSelector((state) => state.listData);
   //referencial permissions
   const nameRef = React.useRef();
   const specialityRef = React.useRef();
   const descriptionRef = React.useRef();
   const aboutRef = React.useRef();
   const dispatch = useDispatch();
-  const priceRef=React.useRef();
+  const priceRef = React.useRef();
   //route params are
-  const direct = route.params&&route.params.direct?route.params.direct:false;
+  const direct =
+    route.params && route.params.direct ? route.params.direct : false;
   const [change, setChange] = React.useState(false);
+  const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
     setFacilitiesCounter(0);
     Facilities.forEach((doc, i) => {
@@ -107,7 +115,7 @@ const Service = ({ navigation, route }) => {
     }
   }, [businessForm]);
 
-  const checkValidity = () => {
+  const checkValidity = async () => {
     setCenterNameError(null);
     setSpecialityError(null);
     setDescriptionError(null);
@@ -154,13 +162,44 @@ const Service = ({ navigation, route }) => {
       dispatch({ type: "PRICE", playload: Price });
       dispatch({ type: "FACILITIES", playload: Facilities });
     }
-    if(direct) {
+    if (direct) {
       //ongoing function-------------
-      console.warn("Please create function")
-      return
+      setLoader(true);
+      let blobImages = [];
+      blobImages.push(fileFromURL(FirstImage));
+      blobImages.push(fileFromURL(SecondImage));
+      blobImages.push(fileFromURL(ThirdImage));
+      blobImages.push(fileFromURL(ForthImage));
+      const result = await uploadFile(blobImages, user.token);
+      if (result) {
+        createOtherService(
+          user.token,
+          businessForm,
+          listData,
+          result,
+          vendor.service.id,
+          direct
+        )
+          .then((res) => {
+            navigation.navigate("VendorProfile");
+            setLoader(false);
+          })
+          .catch((err) => {
+            console.warn(err.response.data);
+            setLoader(false);
+          });
+      }
+      return;
     }
     navigation.navigate("Address");
   };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -208,7 +247,7 @@ const Service = ({ navigation, route }) => {
             onSubmitEditing={() => {
               if (specialityRef.current && !direct) {
                 specialityRef.current.focus();
-              }else if(descriptionRef.current&& direct){
+              } else if (descriptionRef.current && direct) {
                 descriptionRef.current.focus();
               }
             }}
@@ -218,7 +257,7 @@ const Service = ({ navigation, route }) => {
             }}
             placeholder="Service title"
           />
-          {!direct&&(<View style={{ height: 10 }} />)}
+          {!direct && <View style={{ height: 10 }} />}
           {!direct && (
             <Input
               value={Speciality}
@@ -264,7 +303,7 @@ const Service = ({ navigation, route }) => {
             onSubmitEditing={() => {
               if (aboutRef.current && !direct) {
                 aboutRef.current.focus();
-              }else if(priceRef&&priceRef.current && direct) {
+              } else if (priceRef && priceRef.current && direct) {
                 priceRef.current.focus();
               }
             }}
@@ -293,7 +332,8 @@ const Service = ({ navigation, route }) => {
             />
           )}
           {direct && (
-            <Input innerRef={priceRef}
+            <Input
+              innerRef={priceRef}
               value={Price}
               error={PriceError}
               onChange={(val) => {
@@ -361,7 +401,7 @@ const Service = ({ navigation, route }) => {
                 {
                   marginTop: 10,
                   fontFamily: "Poppins-Medium",
-                  fontSize:16,
+                  fontSize: 16,
                 },
               ]}
             >
@@ -417,7 +457,7 @@ const Service = ({ navigation, route }) => {
               height: 45,
               marginBottom: 30,
             }}
-            title={direct?"Create Service":"Continue"}
+            title={direct ? "Create Service" : "Continue"}
           />
         </View>
       </ScrollView>

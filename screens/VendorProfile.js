@@ -51,7 +51,7 @@ import { Badge } from "react-native-paper";
 import ProfileOption from "../components/ProfileOption";
 import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
-import { getService, getGigs } from "../Class/service";
+import { getService, getGigs, getOtherServices } from "../Class/service";
 import { serverToLocal } from "../Class/dataConverter";
 import IconButton from "./../components/IconButton";
 import Animated, {
@@ -62,6 +62,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { FAB } from "react-native-paper";
 import { AllData } from "../Data/AllData";
+import ServiceCart from "./../Cart/ServiceCart";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -92,6 +93,34 @@ const VendorProfile = (props) => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
   const [Active, setActive] = React.useState(serviceSettings[0].title);
   const [Dashboard, setDashboard] = React.useState();
+  const [FixedService, setFixedService] = React.useState(null);
+  const initialState = [
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ];
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -205,6 +234,18 @@ const VendorProfile = (props) => {
     }
   }, [vendor]);
 
+  React.useEffect(() => {
+    if (user && vendor) {
+      getOtherServices(newUser.token, vendor.service.id, "ONETIME")
+        .then((res) => {
+          setFixedService(res.data.gigs);
+          console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          console.warn(err.response.data);
+        });
+    }
+  }, [user]);
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -482,6 +523,7 @@ const VendorProfile = (props) => {
               <IconButton
                 onPress={() => {
                   setActive(doc.title);
+                  console.log(doc.title)
                 }}
                 active={Active == doc.title ? true : false}
                 style={{
@@ -497,7 +539,10 @@ const VendorProfile = (props) => {
           <View style={{ width: 5 }} />
         </ScrollView>
         {Active == serviceSettings[0].title ? (
-          <Animated.View style={{backgroundColor: primaryColor}} entering={StretchInY}>
+          <Animated.View
+            style={{ backgroundColor: primaryColor }}
+            entering={StretchInY}
+          >
             <View style={{ backgroundColor: primaryColor }}>
               <SliderBox
                 images={Images}
@@ -732,8 +777,8 @@ const VendorProfile = (props) => {
               style={{
                 height: 1,
                 backgroundColor: "#e5e5e5",
-                marginVertical:10,
-                marginHorizontal:20
+                marginVertical: 10,
+                marginHorizontal: 20,
               }}
             />
             <View style={{ backgroundColor: primaryColor }}>
@@ -770,6 +815,28 @@ const VendorProfile = (props) => {
               </TouchableOpacity>
             </View>
           </Animated.View>
+        ) : Active == serviceSettings[1].title ? (
+          <Animated.View
+            entering={StretchInY}
+            style={{
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
+            }}
+          >
+            {Array.isArray(FixedService) && FixedService.length > 0 ? (
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            ) : (
+              <ServiceCart />
+            )}
+          </Animated.View>
         ) : (
           <Animated.View
             entering={StretchInY}
@@ -777,21 +844,28 @@ const VendorProfile = (props) => {
               backgroundColor: primaryColor,
               justifyContent: "center",
               alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
             }}
           >
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
+            {FixedService&&FixedService.map((doc, i) => (
+              <ServiceCart key={i} data={doc} />
+            ))}
+            {!FixedService && (
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            )}
           </Animated.View>
         )}
         <View
           style={{ height: 30, backgroundColor: primaryColor, marginTop: -1 }}
         />
       </ScrollView>
-      {Active != serviceSettings[0].title && (
+      {Active == "Fixed" && (
         <FAB
           color="#FFFFFF"
           icon="plus"
@@ -816,7 +890,7 @@ const VendorProfile = (props) => {
                     image: data.image,
                     id: i,
                     mainTitle: data.title,
-                    direct: true,
+                    direct: "ONETIME",
                   });
                 } else {
                   props.navigation.navigate("TableData", {
@@ -825,7 +899,7 @@ const VendorProfile = (props) => {
                     exit: true,
                     id: i,
                     mainTitle: data.title,
-                    direct: true,
+                    direct: "ONETIME",
                   });
                 }
               }
@@ -1128,7 +1202,7 @@ export const Rows = ({ title, item, name, NewDataList }) => {
         fontSize: 13,
         fontFamily: "Poppins-Medium",
         color: textColor,
-        lineHeight:18
+        lineHeight: 18,
       }}
     >
       {text}
@@ -1166,6 +1240,6 @@ const styler = StyleSheet.create({
     color: "#707070",
   },
 });
-export const ServiceCart = () => {
+export const ServiceCarts = () => {
   return <TouchableOpacity></TouchableOpacity>;
 };

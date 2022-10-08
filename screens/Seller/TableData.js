@@ -90,7 +90,7 @@ const TableData = (props) => {
             disabled={buttonPress ? false : true}
             onPress={() => {
               if(direct){
-                navigation.navigate("Service",{direct:true});
+                navigation.navigate("Service",{direct:direct});
               }else{
                 navigation.navigate("Pricing");
               }

@@ -182,3 +182,30 @@ export const changeActiveService=async(token,serviceId,type) => {
   return res
 }
 //export const getFixedService=(token,serviceId,type)
+export const createOtherService=async(token,businessForm,listData,images,serviceId,type)=>{
+  const data={
+    title:businessForm.serviceTitle,
+    price:parseInt(businessForm.price),
+    facilites:{
+      title: "Choose Your Facilities",
+      selectedOptions: Array.isArray(businessForm.facilities)
+        ? businessForm.facilities.filter((data) => data.checked == true)
+        : [],
+    },
+    services:localOptionsToServer(listData),
+    description:businessForm.description,
+    images:images,
+    serviceId:serviceId,
+    type:type
+  }
+  const res= await axios.post(`${url}/server/services/create/gig`,data,{
+    headers: { Authorization: `Bearer ${token}`}
+  })
+  return res
+}
+export const getOtherServices=async(token,serviceId,type)=>{
+  const res= await axios.get(`${url}/server/services/get/gigs?serviceId=${serviceId}&type=${type}`,{
+    headers: { Authorization: `Bearer ${token}`}
+  })
+  return res
+}

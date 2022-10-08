@@ -202,7 +202,7 @@ const SubCategories = ({ navigation, route }) => {
         onPress={() => {
           if (route.name === "SubCategories") {
             if(direct){
-              navigation.navigate("Service",{direct:true});
+              navigation.navigate("Service",{direct:direct});
             }else{
               navigation.navigate("Pricing");
             }
