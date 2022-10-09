@@ -8,7 +8,7 @@ import ChatScreen from "./screens/ChatScreen";
 import ChatHead from "./components/ChatHead";
 import OtherProfile from "./screens/OtherProfile";
 const Stack = createStackNavigator();
-import { secondaryColor } from "./assets/colors";
+import { secondaryColor, primaryColor} from "./assets/colors";
 import SearchScreen from "./screens/SearchScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ManageOrder from "./screens/ManageOrder";
@@ -41,8 +41,9 @@ import VendorAddress from "./screens/Vendor/VendorAddress";
 import Expenses from "./screens/Vendor/Expenses";
 import { AddExpenses } from "./screens/Vendor/Expenses";
 import DashboardList from "./screens/Vendor/DashboardList";
-import Category from './screens/Seller/Category';
-import Support from './screens/Support';
+import Category from "./screens/Seller/Category";
+import Support from "./screens/Support";
+import Feed from "./screens/Feed";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -81,7 +82,7 @@ export default function StackRoute() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: secondaryColor,
+      background: primaryColor,
     },
   };
 
@@ -103,30 +104,26 @@ export default function StackRoute() {
           },
         })}
       >
-        {Array.isArray(user) && load ? (
-          <Stack.Screen
-            options={{
-              headerShown: false,
-              presentation: "modal",
-              animationTypeForReplace: "push",
-              animation: "slide_from_right",
-            }}
-            name="LogIn"
-            component={Login}
-          />
-        ) : (
-          <Stack.Screen
-            options={{
-              headerShown: false,
-              presentation: "modal",
-              animationTypeForReplace: "push",
-              animation: "slide_from_right",
-            }}
-            name="Dashboard"
-            component={TabRoute}
-          />
-        )}
-
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: "modal",
+            animationTypeForReplace: "push",
+            animation: "slide_from_right",
+          }}
+          name="Dashboard"
+          component={TabRoute}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SearchScreen_1"
+          component={SearchScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LogIn"
+          component={Login}
+        />
         <Stack.Screen
           options={{
             header: (props) => <ChatHead {...props} />,
@@ -191,7 +188,7 @@ export default function StackRoute() {
           }}
           component={Address}
         />
-        
+
         <Stack.Screen
           name="Service List"
           options={{
@@ -232,12 +229,12 @@ export default function StackRoute() {
           component={VendorAddress}
         />
         <Stack.Screen
-        name="Support_1"
-        options={{
-          header: (props) => <SubHeader title="Report" {...props} />,
-        }}
-        component={Support}
-      />
+          name="Support_1"
+          options={{
+            header: (props) => <SubHeader title="Report" {...props} />,
+          }}
+          component={Support}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

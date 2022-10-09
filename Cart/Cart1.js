@@ -2,10 +2,15 @@ import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
 import { textColor, primaryColor } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
+import {SvgXml} from 'react-native-svg'
 
 const { width, height } = Dimensions.get("window");
 function Cart1(props) {
   const [Select, setSelect] = React.useState(false);
+  const data=props.data
+  React.useEffect(() => {
+    //console.log(props.data.icon);
+  },[])
   return (
     <View
       style={{
@@ -34,14 +39,18 @@ function Cart1(props) {
           alignItems: "center",
         }}
       >
-        <Foundation
+        {data?(
+          <SvgXml xml={data.icon} height="20" width="20" />
+        ):(
+          <Foundation
           style={{
             
           }}
           name="music"
           size={24}
-          color={textColor}
+          color={"#707070"}
         />
+        )}
       </View>
       <View
         style={{
@@ -57,7 +66,7 @@ function Cart1(props) {
             fontFamily: 'Poppins-SemiBold'
           }}
         >
-          Builder Service
+          {data?data.title:"Builder Service"}
         </Text>
       </View>
       <TouchableOpacity
@@ -76,7 +85,7 @@ function Cart1(props) {
       >
         <Text
           style={{
-            color: Select ? "green" : "red",
+            color: textColor,
             fontSize:12,
             fontFamily: 'Poppins-Medium',
             margin:5

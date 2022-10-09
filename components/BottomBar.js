@@ -17,23 +17,24 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { dashboard, order } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { checkVendor } from './../Class/auth';
+import { checkVendor } from "./../Class/auth";
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
   const [route, setRoute] = React.useState(props.state.index);
   const [keyboardStatus, setKeyboardStatus] = React.useState(false);
   const vendorInfo = useSelector((state) => state.vendorInfo);
-  const vendor= useSelector((state) => state.vendor);
-  const [User,setUser]= React.useState(false)
+  const vendor = useSelector((state) => state.vendor);
+  const [User, setUser] = React.useState(false);
+  const user = useSelector((state) => state.user);
   React.useEffect(() => {
-    if(vendor){
+    if (vendor) {
       setUser(true);
-    }else{
+    } else {
       setUser(false);
     }
     //console.log(vendorInfo)
-  },[vendor])
+  }, [vendor]);
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -54,8 +55,13 @@ const BottomBar = (props) => {
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Home");
-          setRoute(0);
+          if (route === 0) {
+            navigation.navigate("Feed");
+            setRoute(0);
+          } else {
+            navigation.navigate("Home");
+            setRoute(0);
+          }
         }}
         style={styles.button}
       >
@@ -108,8 +114,12 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Message");
           setRoute(2);
+          if (Array.isArray(user)) {
+            navigation.navigate("LogIn");
+            return;
+          }
+          navigation.navigate("Message");
         }}
         style={styles.button}
       >
@@ -126,6 +136,11 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          if (Array.isArray(user)) {
+            navigation.navigate("LogIn");
+            setRoute(3);
+            return;
+          }
           navigation.navigate("Notification");
           setRoute(3);
         }}
@@ -154,6 +169,11 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          if (Array.isArray(user)) {
+            setRoute(4);
+            navigation.navigate("LogIn");
+            return;
+          }
           if (route === 4) {
             navigation.navigate("MainProfile");
             setRoute(4);
@@ -176,9 +196,17 @@ const BottomBar = (props) => {
         ) : (
           <>
             {route == 4 ? (
-              <Ionicons name="person-circle" size={24} color={backgroundColor}/>
+              <Ionicons
+                name="person-circle"
+                size={24}
+                color={backgroundColor}
+              />
             ) : (
-              <Ionicons name="person-circle-outline" size={24} color="#808080"/>
+              <Ionicons
+                name="person-circle-outline"
+                size={24}
+                color="#808080"
+              />
             )}
             <Text style={styles.text}>Profile</Text>
           </>

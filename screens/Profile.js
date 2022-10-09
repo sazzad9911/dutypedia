@@ -393,7 +393,7 @@ const MainProfile = (props) => {
             dispatch({type:'SET_VENDOR',playload:false});
             dispatch({ type: "SET_USER", playload: [] });
             dispatch({ type: "SET_VENDOR_INFO", playload: false });
-            navigation.goBack()
+            navigation.navigate("Home")
           }}
           Icon={() => (
             <Ionicons name="log-out-outline" size={24} color="black" />

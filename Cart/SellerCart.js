@@ -2,10 +2,10 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { primaryColor, textColor } from './../assets/colors';
 
-export default function SellerCart({navigation}) {
+export default function SellerCart({navigation,onPress,title,buttonTitle,style}) {
   return (
     <View
-      style={{
+      style={[{
         flexDirection: "row",
         borderRadius: 10,
         backgroundColor: "#EBE4CD",
@@ -15,7 +15,7 @@ export default function SellerCart({navigation}) {
         marginRight: 5,
         paddingTop: 10,
         paddingBottom: 10,
-      }}
+      },style]}
     >
       <View
         style={{
@@ -30,9 +30,13 @@ export default function SellerCart({navigation}) {
             fontFamily: 'Poppins-Medium'
           }}
         >
-          Become A Seller
+          {title? title:"Become A Seller"}
         </Text>
         <TouchableOpacity onPress={()=>{
+          if(onPress){
+            onPress()
+            return
+          }
           navigation.navigate('Category')
         }}
           style={{
@@ -53,7 +57,7 @@ export default function SellerCart({navigation}) {
               color:textColor
             }}
           >
-            Create An Account
+            {buttonTitle? buttonTitle:"Create An Account"}
           </Text>
         </TouchableOpacity>
       </View>

@@ -7,7 +7,7 @@ import { userLogin } from "../Class/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { getService,getDashboard } from "../Class/service";
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [Email, setEmail] = React.useState();
   const [Password, setPassword] = React.useState();
   const [EmailError, setEmailError] = React.useState();
@@ -30,6 +30,7 @@ const Login = () => {
         //console.log(res);
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
+          navigation.navigate("Home")
           getDashboard(res.token).then((result) => {
             if (result && result.data &&result.data.dashboards) {
               dispatch({ type: "SET_VENDOR_INFO", playload: result.data.dashboards });

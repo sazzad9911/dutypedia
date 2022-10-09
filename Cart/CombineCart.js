@@ -5,7 +5,7 @@ const CombineCart = ({ num, Component }) => {
   return (
     <View>
       {Array.isArray(num) && num.length > 0 ? (
-        num.map((num, i) => <Component key={i} />)
+        num.map((n, i) => <Component data={n} key={i} />)
       ) : (
         <View
           style={{

@@ -34,9 +34,12 @@ import BackHeader from "./../components/BackHeader";
 import { checkVendor } from "../Class/auth";
 import { getJson, storeJson } from "../Class/storage";
 import Home_Next from "./Home_Next";
-import SubHeader from './../components/SubHeader';
-import AllPackageList from './Seller/AllPackageList';
-import HomeRoute from './../HomeRoute';
+import SubHeader from "./../components/SubHeader";
+import AllPackageList from "./Seller/AllPackageList";
+import HomeRoute from "./../HomeRoute";
+import Feed from "./Feed";
+import {checkUser} from '../Class/auth'
+import {getService,getDashboard} from '../Class/service'
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +50,8 @@ const TabRoute = () => {
   const [visible, setVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendorInfo = useSelector((state) => state.vendorInfo);
-  const interestCategory= useSelector((state) => state.interestCategory);
+  const interestCategory = useSelector((state) => state.interestCategory);
+  const [load, setLoad] = React.useState(false);
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
@@ -66,7 +70,40 @@ const TabRoute = () => {
       }
     });
   }, []);
-
+  React.useEffect(() => {
+    checkUser()
+      .then((res) => {
+        //console.log(res)
+        if (res) {
+          dispatch({ type: "SET_USER", playload: res });
+          getDashboard(res.token).then((result) => {
+            if (result && result.data && result.data.dashboards) {
+              dispatch({
+                type: "SET_VENDOR_INFO",
+                playload: result.data.dashboards,
+              });
+              setLoad(!load);
+            } else {
+              dispatch({ type: "SET_VENDOR_INFO", playload: false });
+              setLoad(!load);
+            }
+          });
+        } else {
+          setLoad(!load);
+          dispatch({ type: "SET_USER", playload: [] });
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+  if (!user && !load) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading.....</Text>
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
@@ -81,11 +118,20 @@ const TabRoute = () => {
           return <BottomBar {...props} />;
         }}
       >
-       <Tab.Screen
+        {!Array.isArray(user)&& user && load ? (
+          <Tab.Screen
             options={{ headerShown: false }}
             name="Home"
             component={HomeRoute}
           />
+        ) : (
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Home"
+            component={Feed}
+          />
+        )}
+
         <Tab.Screen
           options={{ lazy: false, header: (props) => <Header {...props} /> }}
           name="Search"

@@ -953,6 +953,7 @@ const OtherProfile = (props) => {
               flexDirection: "row",
               flexWrap: "wrap",
               backgroundColor: primaryColor,
+              paddingLeft:10
             }}
             entering={FadeIn}
           >

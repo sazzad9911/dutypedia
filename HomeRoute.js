@@ -38,19 +38,20 @@ const HomeRoute = ({ navigation }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="NewFeed"
-        options={{
-          headerShown: false,
-        }}
-        component={Home_Next}
-      />
-      <Stack.Screen
         name="Feed"
         options={{
           headerShown: false,
         }}
         component={Home}
       />
+      <Stack.Screen
+        name="NewFeed"
+        options={{
+          headerShown: false,
+        }}
+        component={Home_Next}
+      />
+
       <Stack.Screen
         name="AllPackageList"
         options={{

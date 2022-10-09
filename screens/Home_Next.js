@@ -228,11 +228,13 @@ const Home_Next = (props) => {
               <Cart />
               <View style={{ width: 15 }} />
             </ScrollView>
+            <View style={{height:10}}/>
             <SellerCart2
               onPress={() => {
                 navigation.navigate("Category");
               }}
             />
+            <View style={{height:10}}/>
             <View
               style={{
                 flexDirection: "row",
@@ -320,9 +322,11 @@ const Home_Next = (props) => {
               <RelatedService />
               <View style={{ width: 10 }} />
             </ScrollView>
+            <View style={{height:10}}/>
             <SellerCart3 onPress={()=>{
               navigation.navigate('Category')
             }}/>
+            <View style={{height:10}}/>
             <Text
               style={{
                 fontFamily: "Poppins-SemiBold",
