@@ -5,6 +5,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
 function Cart(props) {
+  const data=props.data;
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity
@@ -27,12 +28,14 @@ function Cart(props) {
       >
         <Image
           style={{
-            height: 80,
+            height: 90,
             width: "100%",
             borderTopRightRadius: 5,
             borderTopLeftRadius: 5,
+            backgroundColor:'black',
+            opacity: .9
           }}
-          source={{
+          source={data?data.picture:{
             uri: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
           }}
         />
@@ -47,7 +50,7 @@ function Cart(props) {
             fontSize: 13,
           }}
         >
-          Builder Service
+          {data?data.title:"Builder Service"}
         </Text>
       </TouchableOpacity>
     </Animated.View>

@@ -6,7 +6,8 @@ import {
   Image,
   ScrollView,
   FlatList,
-  Platform
+  Platform,
+  Dimensions
 } from "react-native";
 import {
   primaryColor,
@@ -17,6 +18,7 @@ import {
 import { SvgXml } from "react-native-svg";
 import { star } from "../assets/icon";
 import { AntDesign } from "@expo/vector-icons";
+const { width, height } = Dimensions.get("window");
 
 const RelatedService = (props) => {
   const navigation = props.navigation;
@@ -27,7 +29,7 @@ const RelatedService = (props) => {
         navigation.push("OtherProfile");
       }}
       style={{
-        width: 200,
+        width: width/3+20,
         height: 280,
         borderRadius: 10,
         shadowColor: Platform.OS =="ios"?"#ebebeb":"#ebebeb",

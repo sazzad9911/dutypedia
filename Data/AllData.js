@@ -38,6 +38,20 @@ import { lawyer, lifeStyle } from "./../assets/icon";
 import { LawyerOptions } from "./lawyer";
 import lifestyle from "../assets/Images/lifestyle.webp";
 import { LifeStyleOptions } from "../Data/lifestyle";
+import bs from '../assets/backgrounds/bs.jpg'
+import ck from '../assets/backgrounds/ck.jpg'
+import en from '../assets/backgrounds/en.jpg'
+import ent from '../assets/backgrounds/ent.png'
+import hc from '../assets/backgrounds/hc.jpg'
+import its from '../assets/backgrounds/it.jpg'
+import law from '../assets/backgrounds/it.jpg'
+import lb from '../assets/backgrounds/lb.jpg'
+import music from '../assets/backgrounds/music.jpg'
+import ppt from '../assets/backgrounds/ppt.jpg'
+import salon from '../assets/backgrounds/salon.jpg'
+import tutor from '../assets/backgrounds/tutor.jpg'
+import life from '../assets/backgrounds/life.jpg'
+import bu from '../assets/backgrounds/bu.png'
 
 export const AllData = [
   {
@@ -45,6 +59,7 @@ export const AllData = [
     icon: BuilderIcon,
     color: "#FF9C68",
     image: builder_1,
+    picture:bu,
     data: [
       {
         title: "Bridge Builder",
@@ -136,6 +151,7 @@ export const AllData = [
     icon: BusinessServiceIcon,
     color: "blue",
     image: business,
+    picture:bs,
     data: [
       {
         title: "Branding Services",
@@ -406,6 +422,7 @@ export const AllData = [
     icon: CookerIcon,
     color: "#ED488B",
     image: builder_1,
+    picture:ck,
     data: [
       {
         title: "Dinner & lunch",
@@ -526,6 +543,7 @@ export const AllData = [
     icon: ElectricIcon,
     color: "#FFB800",
     image: electrician,
+    picture:en,
     data: [
       {
         title: "Ac",
@@ -627,6 +645,7 @@ export const AllData = [
     icon: EntertainmentIcon,
     color: "#8E4DD5",
     image: entertainment,
+    picture:ent,
     data: [
       {
         title: "Videographer Services",
@@ -692,6 +711,7 @@ export const AllData = [
     icon: HouseKeeperIcon,
     color: "#FF4155",
     image: entertainment,
+    picture:hc,
     list: [
       {
         title: "House Keeper",
@@ -704,6 +724,7 @@ export const AllData = [
     icon: ItIcon,
     color: "#2381FF",
     image: it,
+    picture:its,
     data: [
       {
         title: "Data",
@@ -2357,6 +2378,7 @@ export const AllData = [
     icon: lawyer,
     color: "#FF4155",
     image: head,
+    picture:law,
     data: [
       {
         title: "Bankruptcy Lawyers",
@@ -2500,6 +2522,7 @@ export const AllData = [
     icon: MusicIcon,
     color: "#FEB944",
     image: musicaudio,
+    picture:music,
     data: [
       {
         title: "Producers & Composers",
@@ -2803,6 +2826,7 @@ export const AllData = [
     icon: PainterIcon,
     color: "#D934BF",
     image: entertainment,
+    picture:ppt,
     list: [
       {
         title: "Painter",
@@ -2815,6 +2839,7 @@ export const AllData = [
     icon: OnlineTutionIcon,
     color: "#FBB540",
     image: onlinetution,
+    picture:tutor,
     data: [
       {
         title: "Language Tutoring",
@@ -2930,6 +2955,7 @@ export const AllData = [
     icon: SaloonIcon,
     color: "#FF5364",
     image: parlour,
+    picture:salon,
     data: [
       {
         title: "Man",
@@ -3130,6 +3156,7 @@ export const AllData = [
     icon: RentIcon,
     color: "#61AFF6",
     image: entertainment,
+    picture:lb,
     list: [
       {
         title: "Painter",
@@ -3142,6 +3169,7 @@ export const AllData = [
     icon: lifeStyle,
     color: "#FF9C68",
     image: lifestyle,
+    picture:life,
     data: [
       {
         title: "Cooking Lessons",

@@ -14,6 +14,7 @@ import SellerCart2 from "./../Cart/SellerCart2";
 import SellerCart4 from "./../Cart/SellerCart4";
 import Cart2 from "./../Cart/Cart2";
 import SellerCart from "../Cart/SellerCart";
+import { AllData } from './../Data/AllData';
 
 const Feed = ({ navigation, route }) => {
   const scrollY = new Animated.Value(0);
@@ -58,10 +59,9 @@ const Feed = ({ navigation, route }) => {
           horizontal={true}
         >
           <View style={{ width: 15 }} />
-          <Cart />
-          <Cart />
-          <Cart />
-          <Cart />
+          {AllData&& AllData.map((item,i)=>(
+            <Cart key={i} data={item}/>
+          ))}
           <View style={{ width: 15 }} />
         </ScrollView>
         <View style={{ height: 20 }} />

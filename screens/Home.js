@@ -139,10 +139,9 @@ const Home = (props) => {
           horizontal={true}
         >
           <View style={{ width: 15 }} />
-          <Cart />
-          <Cart />
-          <Cart />
-          <Cart />
+          {AllData&& AllData.map((item,i)=>(
+            <Cart key={i} data={item}/>
+          ))}
           <View style={{ width: 15 }} />
         </ScrollView>
         <Text
