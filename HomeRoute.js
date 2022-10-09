@@ -26,8 +26,9 @@ import { SvgXml } from "react-native-svg";
 import OtherProfile from "./screens/OtherProfile";
 import OtherProfileHeader from "./components/OtherProfileHeader";
 import AllPackageList from "./screens/Seller/AllPackageList";
-import Home from './screens/Home';
-import SubHeader from './components/SubHeader';
+import Home from "./screens/Home";
+import SubHeader from "./components/SubHeader";
+import Home_Next from "./screens/Home_Next";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,13 @@ const HomeRoute = ({ navigation }) => {
   const vendor = useSelector((state) => state.vendor);
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="NewFeed"
+        options={{
+          headerShown: false,
+        }}
+        component={Home_Next}
+      />
       <Stack.Screen
         name="Feed"
         options={{

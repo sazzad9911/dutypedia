@@ -81,19 +81,11 @@ const TabRoute = () => {
           return <BottomBar {...props} />;
         }}
       >
-        {interestCategory ? (
-          <Tab.Screen
-            options={{ headerShown: false }}
-            name="Home_Next"
-            component={Home_Next}
-          />
-        ) : (
-          <Tab.Screen
+       <Tab.Screen
             options={{ headerShown: false }}
             name="Home"
             component={HomeRoute}
           />
-        )}
         <Tab.Screen
           options={{ lazy: false, header: (props) => <Header {...props} /> }}
           name="Search"

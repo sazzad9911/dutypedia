@@ -38,7 +38,10 @@ import {
 } from "react-native-sticky-parallax-header";
 import { colors, screenStyles } from "../components/constants";
 import { EvilIcons } from "@expo/vector-icons";
-import SellerCart2 from './../Cart/SellerCart2';
+import SellerCart2 from "./../Cart/SellerCart2";
+import ReviewCart from "./../Cart/ReviewCart";
+import RelatedService from "./../Cart/RelatedService";
+import SellerCart3 from './../Cart/SellerCart3';
 
 const PARALLAX_HEIGHT = 50;
 const HEADER_BAR_HEIGHT = 10;
@@ -121,7 +124,6 @@ const Home_Next = (props) => {
     <View style={screenStyles.screenContainer}>
       <View style={screenStyles.stretchContainer}>
         <StickyHeaderScrollView
-          
           ref={scrollViewRef}
           containerStyle={screenStyles.stretchContainer}
           onScroll={onScroll}
@@ -226,7 +228,11 @@ const Home_Next = (props) => {
               <Cart />
               <View style={{ width: 15 }} />
             </ScrollView>
-            <SellerCart2/>
+            <SellerCart2
+              onPress={() => {
+                navigation.navigate("Category");
+              }}
+            />
             <View
               style={{
                 flexDirection: "row",
@@ -243,7 +249,7 @@ const Home_Next = (props) => {
                   paddingRight: 15,
                 }}
               >
-                Some Suggest
+                Recent Visit
               </Text>
               <TouchableOpacity
                 style={{
@@ -297,40 +303,24 @@ const Home_Next = (props) => {
                 paddingRight: 15,
               }}
             >
-              Top Seller
+              Some Suggest For You
             </Text>
             <ScrollView
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
             >
-              <View style={{ width: 15 }} />
-              <Options />
-              <Options />
-              <Options />
-              <Options />
-              <View style={{ width: 15 }} />
+              <View style={{ width: 10 }} />
+              <RelatedService />
+              <RelatedService />
+              <RelatedService />
+              <RelatedService />
+              <RelatedService />
+              <RelatedService />
+              <RelatedService />
+              <View style={{ width: 10 }} />
             </ScrollView>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-            >
-              <View style={{ width: 15 }} />
-              <CombineCart
-                num={[2, 3, 4]}
-                Component={() => <Seller navigation={navigation} />}
-              />
-              <CombineCart
-                num={[2, 3, 4]}
-                Component={() => <Seller navigation={navigation} />}
-              />
-              <CombineCart
-                num={[2, 3, 4]}
-                Component={() => <Seller navigation={navigation} />}
-              />
-              <View style={{ width: 15 }} />
-            </ScrollView>
+            <SellerCart3/>
             <Text
               style={{
                 fontFamily: "Poppins-SemiBold",
@@ -342,21 +332,19 @@ const Home_Next = (props) => {
             >
               Popular Category
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
             >
-              <Options name="New Service" />
-              <Options name="Electricity Service" />
-              <Options />
-              <Options />
-            </View>
-            <View style={{ height: 20 }} />
-            <SellerCart {...props} />
+              <View style={{ width: 15 }} />
+              <Cart />
+              <Cart />
+              <Cart />
+              <Cart />
+              <View style={{ width: 15 }} />
+            </ScrollView>
+            
             <View style={{ height: 10 }} />
           </SafeAreaView>
         </StickyHeaderScrollView>

@@ -46,11 +46,7 @@ const IconButton = ({
           style={{
             fontFamily: "Poppins-Medium",
             fontSize: 14,
-            color: active
-              ? style && style.color
-                ? style.color
-                : "white"
-              : textColor,
+            color: active? "white": style&&style.color?style.color:textColor,
           }}
         >
           {title}
@@ -58,7 +54,7 @@ const IconButton = ({
       )}
       {Icon &&title&&(<View style={{width:10}}/>)}
       {Icon && (
-        <View style={{ marginLeft: 10 }}>
+        <View style={{ marginLeft: 0 }}>
           <Icon />
         </View>
       )}
