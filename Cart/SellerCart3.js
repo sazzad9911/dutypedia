@@ -4,7 +4,7 @@ import IconButton from './../components/IconButton';
 import { AntDesign } from '@expo/vector-icons';
 const { width, height}= Dimensions.get("window");
 
-const SellerCart3 = () => {
+const SellerCart3 = ({onPress}) => {
   return (
     <View style={{
         backgroundColor:'#1C4802',
@@ -26,13 +26,18 @@ const SellerCart3 = () => {
         marginTop:10,
         marginLeft:50
       }}>Its Free</Text>
-      <IconButton style={{
+      <IconButton onPress={()=>{
+        if(onPress){
+          onPress()
+        }
+      }} style={{
         backgroundColor:'transparent',
         color: '#ffff',
         width:150,
         borderWidth:0,
+        marginLeft:width-200
       }} title="SignUp Now" Icon={()=>(
-        <AntDesign name="right" size={20} color="white" />
+        <AntDesign name="right" size={18} color="white" />
       )}/>
     </View>
   );

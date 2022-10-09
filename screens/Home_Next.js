@@ -320,7 +320,9 @@ const Home_Next = (props) => {
               <RelatedService />
               <View style={{ width: 10 }} />
             </ScrollView>
-            <SellerCart3/>
+            <SellerCart3 onPress={()=>{
+              navigation.navigate('Category')
+            }}/>
             <Text
               style={{
                 fontFamily: "Poppins-SemiBold",
