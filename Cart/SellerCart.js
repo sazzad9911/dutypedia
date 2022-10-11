@@ -1,8 +1,10 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { primaryColor, textColor } from './../assets/colors';
+import {useDispatch} from 'react-redux';
 
 export default function SellerCart({navigation,onPress,title,buttonTitle,style}) {
+  const dispatch= useDispatch()
   return (
     <View
       style={[{
@@ -33,6 +35,7 @@ export default function SellerCart({navigation,onPress,title,buttonTitle,style})
           {title? title:"Become A Seller"}
         </Text>
         <TouchableOpacity onPress={()=>{
+          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Sellercart"})
           if(onPress){
             onPress()
             return

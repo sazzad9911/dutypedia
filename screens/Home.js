@@ -25,13 +25,14 @@ import Seller from "../Cart/Seller";
 import SellerCart from "./../Cart/SellerCart";
 import CombineCart from "./../Cart/CombineCart";
 import { useColorScheme } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { getServiceGigs } from "./../Class/service";
 import Header from "./../components/Header";
 import { colors, screenStyles } from "../components/constants";
 import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { AllData } from "./../Data/AllData";
+import {setFavoriteCategories,getFavoriteCategories} from '../Class/auth'
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,6 +52,9 @@ const Home = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [Temporary, setTemporary] = React.useState([]);
+  const [PageChange, setPageChange] = React.useState(false);
+  const user= useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -58,9 +62,9 @@ const Home = (props) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setRefresh((val) => !val);
+    dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Home"})
     wait(1000).then(() => setRefreshing(false));
   }, []);
-  const user = useSelector((state) => state.user);
   const [SomeSuggest, setSomeSuggest] = React.useState(null);
 
   React.useEffect(() => {
@@ -84,23 +88,23 @@ const Home = (props) => {
       if (i + 1 < AllData.length && i + 2 < AllData.length) {
         arr.push({
           index: i,
-          num:3
+          num: 3,
         });
       } else if (i + 1 < AllData.length) {
         arr.push({
           index: i,
-          num:2
+          num: 2,
         });
       } else {
         arr.push({
           index: i,
-          num:1
+          num: 1,
         });
       }
     }
     setTemporary(arr);
   }, []);
-
+  
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -109,7 +113,10 @@ const Home = (props) => {
           <RefreshControl
             progressViewOffset={72}
             refreshing={refreshing}
-            onRefresh={onRefresh}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
           />
         }
         onScroll={(e) => {
@@ -139,9 +146,7 @@ const Home = (props) => {
           horizontal={true}
         >
           <View style={{ width: 15 }} />
-          {AllData&& AllData.map((item,i)=>(
-            <Cart key={i} data={item}/>
-          ))}
+          {AllData && AllData.map((item, i) => <Cart key={i} data={item} />)}
           <View style={{ width: 15 }} />
         </ScrollView>
         <Text
@@ -164,19 +169,26 @@ const Home = (props) => {
           <View style={{ width: 15 }} />
           {Temporary.map((item, i) =>
             item.num == 3 ? (
-              <CombineCart key={i}
-                num={[AllData[item.index], AllData[item.index + 1], AllData[item.index + 2]]}
+              <CombineCart
+                key={i}
+                num={[
+                  AllData[item.index],
+                  AllData[item.index + 1],
+                  AllData[item.index + 2],
+                ]}
                 Component={(props) => <Cart1 {...props} />}
               />
             ) : item.num == 2 ? (
-              <CombineCart key={i}
+              <CombineCart
+                key={i}
                 num={[AllData[item.index], AllData[item.index + 1]]}
-                Component={(props) => <Cart1 {...props}/>}
+                Component={(props) => <Cart1 {...props} />}
               />
             ) : (
-              <CombineCart key={i}
+              <CombineCart
+                key={i}
                 num={[AllData[item.index]]}
-                Component={() => <Cart1 {...props}/>}
+                Component={() => <Cart1 {...props} />}
               />
             )
           )}

@@ -24,9 +24,8 @@ const logOut = async () => {
   const res = await storeJson("user", null);
   return res;
 };
-const vendorLogin = async (token,id) => {
-  
-  const result = await axios.get(`${url}/server/services/get/${id}`,{
+const vendorLogin = async (token, id) => {
+  const result = await axios.get(`${url}/server/services/get/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (result) {
@@ -43,4 +42,31 @@ const logoutVendor = async () => {
   const res = await storeJson("vendor", null);
   return res;
 };
-export { userLogin, checkUser, logOut, checkVendor, logoutVendor, vendorLogin };
+const setFavoriteCategories = async (token, category) => {
+  const res = await axios.post(
+    `${url}/server/auth/toggle-favourite-category`,
+    {
+      category: category,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+const getFavoriteCategories = async (token) => {
+  const res = await axios.get(`${url}/server/auth/get-favourite-categories`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export {
+  userLogin,
+  checkUser,
+  logOut,
+  checkVendor,
+  logoutVendor,
+  vendorLogin,
+  getFavoriteCategories,
+  setFavoriteCategories,
+};

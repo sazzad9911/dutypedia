@@ -49,9 +49,9 @@ export const createService = async (
   DASHBOARD.forEach((das, i) => {
     if (
       das.length > 2 &&
-      das[0].match(text[0].toUpperCase()) &&
-      das[1].match(text[1].toUpperCase()) &&
-      das[2].match(text[2].toUpperCase())
+      das[0] == text[0].toUpperCase() &&
+      das[1] == text[1].toUpperCase() &&
+      das[2] == text[2].toUpperCase()
     ) {
       dashboard = DASHBOARD[i];
     }
@@ -80,7 +80,7 @@ export const createService = async (
       uploadServiceData: {
         about: businessForm.about.toString(),
         speciality: businessForm.speciality,
-        title: businessForm.serviceTitle, 
+        title: businessForm.serviceTitle,
         description: businessForm.description.toString(),
       },
       selectServiceData: {
@@ -112,8 +112,8 @@ export const createService = async (
     profilePhotoUrl: img1,
     wallPhotoUrl: img2,
   };
-//console.log('----------------------------------------------------');
-//console.log(formData)
+  //console.log('----------------------------------------------------');
+  //console.log(formData)
   const options = {
     method: "POST",
     headers: myHeaders,
@@ -134,11 +134,11 @@ export const createService = async (
   return false;
 };
 
-export const getService = async (token,id) => {
-  const result = await axios.get(`${url}/server/services/get/${id}`,{
-    headers: { Authorization: `Bearer ${token}` }
+export const getService = async (token, id) => {
+  const result = await axios.get(`${url}/server/services/get/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
-  return result
+  return result;
 };
 export const getGigs = async (token, id) => {
   const myHeaders = new Headers();
@@ -163,49 +163,118 @@ export const getDashboard = async (token) => {
   });
   return res;
 };
-export const getServiceGigs =async(token)=>{
-  const res=await axios.get(`${url}/server/services/gigs/starting`,{
-    headers: { Authorization: `Bearer ${token}`}
-  })
+export const getServiceGigs = async (token) => {
+  const res = await axios.get(`${url}/server/services/gigs/starting`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return res;
-}
-export const changeActiveService=async(token,serviceId,type) => {
+};
+export const changeActiveService = async (token, serviceId, type) => {
   //console.log(serviceId)
   //console.log(type)
   //console.log(token)
-  const res= await axios.put(`${url}/server/services/toggle-active-service`,{
-    serviceType:type,
-    parentServiceId:serviceId
-  },{
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  return res
-}
+  const res = await axios.put(
+    `${url}/server/services/toggle-active-service`,
+    {
+      serviceType: type,
+      parentServiceId: serviceId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
 //export const getFixedService=(token,serviceId,type)
-export const createOtherService=async(token,businessForm,listData,images,serviceId,type)=>{
-  const data={
-    title:businessForm.serviceTitle,
-    price:parseInt(businessForm.price),
-    facilites:{
+export const createOtherService = async (
+  token,
+  businessForm,
+  listData,
+  images,
+  serviceId,
+  type
+) => {
+  const data = {
+    title: businessForm.serviceTitle,
+    price: parseInt(businessForm.price),
+    facilites: {
       title: "Choose Your Facilities",
       selectedOptions: Array.isArray(businessForm.facilities)
         ? businessForm.facilities.filter((data) => data.checked == true)
         : [],
     },
-    services:localOptionsToServer(listData),
-    description:businessForm.description,
-    images:images,
-    serviceId:serviceId,
-    type:type
-  }
-  const res= await axios.post(`${url}/server/services/create/gig`,data,{
-    headers: { Authorization: `Bearer ${token}`}
-  })
-  return res
-}
-export const getOtherServices=async(token,serviceId,type)=>{
-  const res= await axios.get(`${url}/server/services/get/gigs?serviceId=${serviceId}&type=${type}`,{
-    headers: { Authorization: `Bearer ${token}`}
-  })
-  return res
-}
+    services: localOptionsToServer(listData),
+    description: businessForm.description,
+    images: images,
+    serviceId: serviceId,
+    type: type,
+  };
+  const res = await axios.post(`${url}/server/services/create/gig`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getOtherServices = async (token, serviceId, type) => {
+  const res = await axios.get(
+    `${url}/server/services/get/gigs?serviceId=${serviceId}&type=${type}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const getRelatedServices = async (token, serviceId, category) => {
+  const res = await axios.get(
+    `${url}/server/services/gigs/related?category=${category}&serviceId=${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const getUnRelatedServices = async (token, serviceId, category) => {
+  const res = await axios.get(
+    `${url}/server/services/gigs/unrelated?category=${category}&serviceId=${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const getDashboardTitle = (title) => {
+  const DASHBOARD = [
+    "BUIDLER",
+    "BUSINESS",
+    "COOKER",
+    "ELECTRICIAN",
+    "ENTERTAINMENT",
+    "HOUSEKEEPER",
+    "IT",
+    "LABOR",
+    "LAWYER",
+    "LIFESTYLE",
+    "MUSIC",
+    "ONLINETUTION",
+    "PAINTER",
+    "PARLOUR",
+  ];
+  const text = title;
+  let dashboard = "";
+  DASHBOARD.forEach((das, i) => {
+    if (
+      das.length > 2 &&
+      das[0] == text[0].toUpperCase() &&
+      das[1] == text[1].toUpperCase() &&
+      das[2] == text[2].toUpperCase()
+    ) {
+      dashboard = DASHBOARD[i];
+    }
+    if (
+      das[0].match(text[0].toUpperCase()) &&
+      das[1].match(text[1].toUpperCase())
+    ) {
+      dashboard = DASHBOARD[i];
+    }
+  });
+  return dashboard;
+};

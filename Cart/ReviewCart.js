@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { star } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
-import { primaryColor, secondaryColor } from "./../assets/colors";
+import { primaryColor, secondaryColor,textColor } from "./../assets/colors";
 import { numToArray } from "./../action";
 const { width, height } = Dimensions.get("window");
 
@@ -60,17 +60,17 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 14,
     fontFamily: "Poppins-Medium",
-    color: "#808080",
+    color: textColor,
   },
   text2: {
     fontSize: 14,
-    color: "#808080",
-    fontFamily: "Poppins-Light",
+    color: textColor,
+    fontFamily: "Poppins-Medium",
   },
   text3: {
     fontSize: 11,
-    color: "#808080",
-    fontFamily: "Poppins-Light",
+    color: textColor,
+    fontFamily: "Poppins-Medium",
   },
 });
 export const Cart = (props) => {

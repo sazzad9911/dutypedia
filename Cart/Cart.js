@@ -2,10 +2,13 @@ import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
 import { textColor, primaryColor } from "./../assets/colors";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useDispatch} from 'react-redux';
 
 const { width, height } = Dimensions.get("window");
 function Cart(props) {
   const data=props.data;
+  const dispatch = useDispatch();
+  
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity

@@ -23,10 +23,11 @@ const { width, height } = Dimensions.get("window");
 const RelatedService = (props) => {
   const navigation = props.navigation;
   const [Like, seLike] = React.useState(false);
+  const data = props.data;
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push("OtherProfile");
+        navigation.push("OtherProfile",{serviceId:data?data.service.id:null});
       }}
       style={{
         width: width/3+20,
@@ -59,7 +60,7 @@ const RelatedService = (props) => {
             borderRadius: 10,
           }}
           source={{
-            uri: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
+            uri:data?data.images[0]: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
           }}
         />
         <View
@@ -108,7 +109,7 @@ const RelatedService = (props) => {
             fontSize:13
           }}
         >
-          I will make custom graphic for your blog I will
+          {data?data.title:"I will make custom graphic for your blog I will"}
         </Text>
         <View
           style={{
@@ -140,7 +141,7 @@ const RelatedService = (props) => {
                 fontFamily: 'Poppins-Medium'
               }}
             >
-              500৳
+              {data?data.price:"0"}৳
             </Text>
           </View>
         </View>

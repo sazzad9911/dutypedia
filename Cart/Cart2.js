@@ -3,15 +3,18 @@ import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-
 import { textColor, primaryColor,assentColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import {useDispatch} from 'react-redux'
 
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
   const [Love, setLove] = React.useState(false);
   const navigation = props.navigation;
   const data= props.data?props.data:null;
+  const dispatch=useDispatch();
   return (
     <TouchableOpacity
       onPress={() => {
+        dispatch({type: 'SET_INTEREST_CATEGORY',playload:"cart2"})
         navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null})
       }}
       style={{

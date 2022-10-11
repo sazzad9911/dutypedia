@@ -97,7 +97,7 @@ const TabRoute = () => {
         console.log(err.message);
       });
   }, []);
-  if (!user && !load) {
+  if (!user || !load) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading.....</Text>

@@ -54,7 +54,12 @@ import { Menu } from "react-native-paper";
 import { Rows, ServiceTable } from "./VendorProfile";
 import Animated, { FadeIn } from "react-native-reanimated";
 import ServiceCart from "./../Cart/ServiceCart";
-import { getService, getOtherServices } from "../Class/service";
+import {
+  getService,
+  getOtherServices,
+  getRelatedServices,
+  getUnRelatedServices,
+} from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { SliderBox } from "react-native-image-slider-box";
 import { serverToLocal } from "../Class/dataConverter";
@@ -122,6 +127,8 @@ const OtherProfile = (props) => {
   const [Bargaining, setBargaining] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const [RelatedServices, setRelatedServices] = React.useState([]);
+  const [UnRelatedServices, setUnRelatedServices] = React.useState([]);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -293,6 +300,32 @@ const OtherProfile = (props) => {
         });
     }
   }, [Active]);
+  React.useEffect(() => {
+    if (newUser && Data) {
+      getRelatedServices(newUser.token, Data.service.id, Data.service.dashboard)
+        .then((response) => {
+          if (response.data) {
+            setRelatedServices(response.data.gigs);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response);
+        });
+      getUnRelatedServices(
+        newUser.token,
+        Data.service.id,
+        Data.service.dashboard
+      )
+        .then((response) => {
+          if (response.data) {
+            setUnRelatedServices(response.data.gigs);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response);
+        });
+    }
+  }, [Data]);
   const showCart = (doc) => {
     setClick(true);
     setImages(doc.images);
@@ -953,7 +986,7 @@ const OtherProfile = (props) => {
               flexDirection: "row",
               flexWrap: "wrap",
               backgroundColor: primaryColor,
-              paddingLeft:10
+              paddingLeft: 10,
             }}
             entering={FadeIn}
           >
@@ -986,12 +1019,12 @@ const OtherProfile = (props) => {
                     />
                   )
               )}
-            {Array.isArray(FixedService) && FixedService.length > 6&&!Click && (
+            {Array.isArray(FixedService) && FixedService.length > 6 && !Click && (
               <IconButton
                 onPress={() => {
                   navigation.navigate("AllPackageList", {
                     serviceId: Data.service.id,
-                    onPress:(doc)=>showCart(doc),
+                    onPress: (doc) => showCart(doc),
                   });
                 }}
                 style={{
@@ -1427,54 +1460,58 @@ const OtherProfile = (props) => {
             marginTop: 5,
           }}
         >
-          <Text
-            style={{
-              fontSize: 22,
-              fontFamily: "Poppins-SemiBold",
-              color: textColor,
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-            }}
-          >
-            Related Service
-          </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={{ width: 10 }} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-          </ScrollView>
-          <Text
-            style={{
-              fontSize: 22,
-              fontFamily: "Poppins-SemiBold",
-              color: textColor,
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-            }}
-          >
-            You Might Also Like
-          </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={{ width: 10 }} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-            <RelatedService navigation={props.navigation} />
-          </ScrollView>
+          {RelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {RelatedServices.map((doc, i) => (
+                  <RelatedService
+                    data={doc}
+                    key={i}
+                    navigation={props.navigation}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {UnRelatedServices.map((doc, i) => (
+                  <RelatedService
+                    data={doc}
+                    key={i}
+                    navigation={props.navigation}
+                  />
+                ))}
+                <View style={{ width: 10 }} />
+              </ScrollView>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

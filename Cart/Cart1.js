@@ -3,14 +3,30 @@ import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-
 import { textColor, primaryColor } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 import {SvgXml} from 'react-native-svg'
+import {useDispatch,useSelector} from 'react-redux'
+import {setFavoriteCategories} from '../Class/auth'
+import {getDashboardTitle} from '../Class/service'
 
 const { width, height } = Dimensions.get("window");
 function Cart1(props) {
   const [Select, setSelect] = React.useState(false);
-  const data=props.data
+  const dispatch=useDispatch();
+  const data=props.data;
+  const user=useSelector((state) => state.user);
+
   React.useEffect(() => {
     //console.log(props.data.icon);
   },[])
+  const confirm=(title)=>{
+    const newTitle=getDashboardTitle(title);
+    console.log(newTitle);
+    setFavoriteCategories(user.token,newTitle).then((res) => {
+      console.log('service added')
+      //dispatch({type: 'SET_INTEREST_CATEGORY',playload:"cart1"})
+    }).catch((err) => {
+      console.warn(err.response);
+    })
+  }
   return (
     <View
       style={{
@@ -70,7 +86,10 @@ function Cart1(props) {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => setSelect(!Select)}
+        onPress={() => {
+          setSelect(!Select)
+          confirm(data?data.title:" ")
+        }}
         style={{
           borderColor: textColor,
           borderRadius: 15,

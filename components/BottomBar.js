@@ -18,6 +18,7 @@ import { dashboard, order } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { checkVendor } from "./../Class/auth";
+import { useDispatch } from "react-redux";
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
@@ -27,6 +28,8 @@ const BottomBar = (props) => {
   const vendor = useSelector((state) => state.vendor);
   const [User, setUser] = React.useState(false);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
     if (vendor) {
       setUser(true);
@@ -87,6 +90,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "search" });
           navigation.navigate("Search");
           setRoute(1);
         }}
@@ -114,6 +118,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Message"})
           setRoute(2);
           if (Array.isArray(user)) {
             navigation.navigate("LogIn");
@@ -136,6 +141,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Notification"})
           if (Array.isArray(user)) {
             navigation.navigate("LogIn");
             setRoute(3);
@@ -169,6 +175,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"MainProfile"})
           if (Array.isArray(user)) {
             setRoute(4);
             navigation.navigate("LogIn");

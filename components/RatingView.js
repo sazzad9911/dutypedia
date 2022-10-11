@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import {SvgXml} from 'react-native-svg';
 import {star} from '../assets/icon'
+import {textColor} from '../assets/colors'
 
 const RatingView = ({ title, rate, style }) => {
   const [period, setPeriod] = React.useState([]);
@@ -28,7 +29,7 @@ const RatingView = ({ title, rate, style }) => {
         style={{
           fontSize: 14,
           fontFamily: 'Poppins-Medium',
-          color: "#808080",
+          color:textColor,
         }}
       >
         {title}
@@ -47,7 +48,7 @@ const RatingView = ({ title, rate, style }) => {
           style={{
             fontSize: 14,
             fontFamily: 'Poppins-Medium',
-            color: "#808080",
+            color: textColor,
             marginLeft:10
           }}
         >
