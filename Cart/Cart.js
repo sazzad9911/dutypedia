@@ -8,10 +8,15 @@ const { width, height } = Dimensions.get("window");
 function Cart(props) {
   const data=props.data;
   const dispatch = useDispatch();
+  const navigation = props.navigation;
   
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
-      <TouchableOpacity
+      <TouchableOpacity onPress={()=>{
+        if(navigation){
+          navigation.navigate('CategoryList',{title:data?data.title:null })
+        }
+      }}
         style={{
           width: width / 3 - 15,
           height: 150,

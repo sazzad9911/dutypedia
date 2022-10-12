@@ -43,11 +43,7 @@ import SellerCart2 from "./../Cart/SellerCart2";
 import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import SellerCart3 from "./../Cart/SellerCart3";
-
-const PARALLAX_HEIGHT = 50;
-const HEADER_BAR_HEIGHT = 10;
-const SNAP_START_THRESHOLD = 5;
-const SNAP_STOP_THRESHOLD = 50;
+import { AllData } from "../Data/AllData";
 
 const { width, height } = Dimensions.get("window");
 
@@ -62,10 +58,10 @@ const Home_Next = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const scrollY = new Animated.Value(0);
-  const diffClamp = Animated.diffClamp(scrollY, 0, 200);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, -200],
+    inputRange: [0, 300],
+    outputRange: [0, -300],
   });
 
   const wait = (timeout) => {
@@ -93,174 +89,35 @@ const Home_Next = (props) => {
   }, [Refresh]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView showsVerticalScrollIndicator={false} onScroll={(e) => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-          //scroll;
-        }}>
-        <View style={{ height: 100 }} />
-        <View>
-          <Text
-            style={{
-              fontSize: 20,
-              color: TextColor,
-              marginLeft: 5,
-              paddingLeft: 15,
-              paddingRight: 15,
-              fontFamily: "Poppins-SemiBold",
-            }}
-          >
-            Category
-          </Text>
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 15 }} />
-          <Cart />
-          <Cart />
-          <Cart />
-          <Cart />
-          <View style={{ width: 15 }} />
-        </ScrollView>
-        <View style={{ height: 10 }} />
-        <SellerCart2
-          onPress={() => {
-            navigation.navigate("Category");
+    <ScrollView
+      style={{ flexGrow: 1 }}
+      stickyHeaderIndices={[0]}
+      scrollEventThrottle={16}
+      stickyHeaderHiddenOnScroll={true}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            //setPageChange(true);
+            onRefresh();
           }}
         />
-        <View style={{ height: 10 }} />
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Poppins-SemiBold",
-              marginVertical: 10,
-              flex: 5,
-              marginLeft: 5,
-              fontSize: 14,
-              paddingLeft: 15,
-              paddingRight: 15,
-            }}
-          >
-            Recent Visit
-          </Text>
-          <TouchableOpacity
-            style={{
-              marginVertical: 10,
-              flex: 2,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Poppins-SemiBold",
-                textDecorationLine: "underline",
-                marginRight: 20,
-                fontSize: 14,
-                textAlign: "right",
-              }}
-            >
-              View All
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 15 }} />
-          {!SomeSuggest && (
-            <View
-              style={{
-                height: 270,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text>Loading...</Text>
-            </View>
-          )}
-          {SomeSuggest &&
-            SomeSuggest.map((doc, i) => (
-              <Cart2 key={i} data={doc} navigation={props.navigation} />
-            ))}
-          <View style={{ width: 15 }} />
-        </ScrollView>
-
-        <Text
-          style={{
-            fontFamily: "Poppins-SemiBold",
-            marginVertical: 10,
-            marginLeft: 5,
-            paddingLeft: 15,
-            paddingRight: 15,
-          }}
-        >
-          Some Suggest For You
-        </Text>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 10 }} />
-          <RelatedService />
-          <RelatedService />
-          <RelatedService />
-          <RelatedService />
-          <RelatedService />
-          <RelatedService />
-          <RelatedService />
-          <View style={{ width: 10 }} />
-        </ScrollView>
-        <View style={{ height: 10 }} />
-        <SellerCart3
-          onPress={() => {
-            navigation.navigate("Category");
-          }}
-        />
-        <View style={{ height: 10 }} />
-        <Text
-          style={{
-            fontFamily: "Poppins-SemiBold",
-            marginVertical: 10,
-            marginLeft: 5,
-            paddingLeft: 15,
-            paddingRight: 15,
-          }}
-        >
-          Popular Category
-        </Text>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 15 }} />
-          <Cart />
-          <Cart />
-          <Cart />
-          <Cart />
-          <View style={{ width: 15 }} />
-        </ScrollView>
-
-        <View style={{ height: 10 }} />
-      </ScrollView>
+      }
+      showsVerticalScrollIndicator={false}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+        //scroll;
+      }}
+    >
       <Animated.View
         style={[
           {
             transform: [{ translateY: translateY }],
-            position: "absolute",
-            top: 30,
+
+            top: 0,
             left: 0,
             right: 0,
-            backgroundColor: "#fbfbfb",
+            backgroundColor: primaryColor,
             zIndex: 500,
           },
         ]}
@@ -271,6 +128,7 @@ const Home_Next = (props) => {
             paddingVertical: 20,
             flexDirection: "row",
             justifyContent: "space-between",
+            paddingTop: 35,
           }}
         >
           <Text
@@ -299,7 +157,159 @@ const Home_Next = (props) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-    </View>
+      <View>
+        <Text
+          style={{
+            fontSize: 20,
+            color: TextColor,
+            marginLeft: 5,
+            paddingLeft: 15,
+            paddingRight: 15,
+            fontFamily: "Poppins-SemiBold",
+          }}
+        >
+          Category
+        </Text>
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 15 }} />
+        {AllData &&
+          AllData.map((item, i) => (
+            <Cart navigation={navigation} key={i} data={item} />
+          ))}
+        <View style={{ width: 15 }} />
+      </ScrollView>
+      <View style={{ height: 10 }} />
+      <SellerCart2
+        onPress={() => {
+          navigation.navigate("Category");
+        }}
+      />
+      <View style={{ height: 10 }} />
+      <View
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Poppins-SemiBold",
+            marginVertical: 10,
+            flex: 5,
+            marginLeft: 5,
+            fontSize: 14,
+            paddingLeft: 15,
+            paddingRight: 15,
+          }}
+        >
+          Recent Visit
+        </Text>
+        <TouchableOpacity
+          style={{
+            marginVertical: 10,
+            flex: 2,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Poppins-SemiBold",
+              textDecorationLine: "underline",
+              marginRight: 20,
+              fontSize: 14,
+              textAlign: "right",
+            }}
+          >
+            View All
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 15 }} />
+        {!SomeSuggest && (
+          <View
+            style={{
+              height: 270,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text>Loading...</Text>
+          </View>
+        )}
+        {SomeSuggest &&
+          SomeSuggest.map((doc, i) => (
+            <Cart2 key={i} data={doc} navigation={props.navigation} />
+          ))}
+        <View style={{ width: 15 }} />
+      </ScrollView>
+
+      <Text
+        style={{
+          fontFamily: "Poppins-SemiBold",
+          marginVertical: 10,
+          marginLeft: 5,
+          paddingLeft: 15,
+          paddingRight: 15,
+        }}
+      >
+        Some Suggest For You
+      </Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 10 }} />
+        <RelatedService />
+        <RelatedService />
+        <RelatedService />
+        <RelatedService />
+        <RelatedService />
+        <RelatedService />
+        <RelatedService />
+        <View style={{ width: 10 }} />
+      </ScrollView>
+      <View style={{ height: 10 }} />
+      <SellerCart3
+        onPress={() => {
+          navigation.navigate("Category");
+        }}
+      />
+      <View style={{ height: 10 }} />
+      <Text
+        style={{
+          fontFamily: "Poppins-SemiBold",
+          marginVertical: 10,
+          marginLeft: 5,
+          paddingLeft: 15,
+          paddingRight: 15,
+        }}
+      >
+        Popular Category
+      </Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 15 }} />
+        <Cart />
+        <Cart />
+        <Cart />
+        <Cart />
+        <View style={{ width: 15 }} />
+      </ScrollView>
+
+      <View style={{ height: 10 }} />
+    </ScrollView>
   );
 };
 
@@ -315,14 +325,11 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: "center",
     backgroundColor: colors.transparent,
-    height: HEADER_BAR_HEIGHT,
     flex: 1,
     overflow: "hidden",
     zIndex: 3,
   },
-  tabContainer: {
-    paddingTop: HEADER_BAR_HEIGHT,
-  },
+
   input: {
     margin: 20,
     backgroundColor: primaryColor,

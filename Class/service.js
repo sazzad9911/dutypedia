@@ -278,3 +278,9 @@ export const getDashboardTitle = (title) => {
   });
   return dashboard;
 };
+export const getAllGigs=async(token)=>{
+  const res= await axios.get(`${url}/server/services/get/gigs/all`,{
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  return res
+}

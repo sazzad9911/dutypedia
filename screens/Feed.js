@@ -14,7 +14,7 @@ import SellerCart2 from "./../Cart/SellerCart2";
 import SellerCart4 from "./../Cart/SellerCart4";
 import Cart2 from "./../Cart/Cart2";
 import SellerCart from "../Cart/SellerCart";
-import { AllData } from './../Data/AllData';
+import { AllData } from "./../Data/AllData";
 
 const Feed = ({ navigation, route }) => {
   const scrollY = new Animated.Value(0);
@@ -36,86 +36,35 @@ const Feed = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        bounces={false}
-        refreshControl={
-          <RefreshControl
-            progressViewOffset={72}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        onScroll={(e) => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-          //scroll;
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={{ height: 100 }} />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 15 }} />
-          {AllData&& AllData.map((item,i)=>(
-            <Cart key={i} data={item}/>
-          ))}
-          <View style={{ width: 15 }} />
-        </ScrollView>
-        <View style={{ height: 20 }} />
-        <SellerCart4
-          onPress={() => {
-            //navigation.navigate("Category");
+    <ScrollView
+      style={{ flexGrow: 1 }}
+      stickyHeaderIndices={[0]}
+      scrollEventThrottle={16}
+      stickyHeaderHiddenOnScroll={true}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            //setPageChange(true);
+            onRefresh();
           }}
         />
-        <View style={{ height: 30 }} />
-        <Text
-          style={{
-            fontSize: 18,
-            fontFamily: "Poppins-SemiBold",
-            marginHorizontal: 20,
-          }}
-        >
-          Most Trending
-        </Text>
-        <View style={{ height: 10 }} />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          <View style={{ width: 15 }} />
-          <Cart2 navigation={navigation} />
-          <Cart2 navigation={navigation} />
-          <Cart2 navigation={navigation} />
-          <Cart2 navigation={navigation} />
-          <Cart2 navigation={navigation} />
-          <Cart2 navigation={navigation} />
-          <View style={{ width: 15 }} />
-        </ScrollView>
-        <View style={{ height: 10 }} />
-        <View style={{ marginHorizontal: 20 }}>
-          <SellerCart
-            onPress={() => {
-                navigation.navigate('LogIn')
-            }}
-            title="Create An Account"
-            buttonTitle="SignUp"
-          />
-        </View>
-        <View style={{ height: 15 }} />
-      </ScrollView>
+      }
+      showsVerticalScrollIndicator={false}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+        //scroll;
+      }}
+    >
       <Animated.View
         style={[
           {
             transform: [{ translateY: translateY }],
-            position: "absolute",
-            top: 30,
+
+            top: 0,
             left: 0,
             right: 0,
-            backgroundColor: "#fbfbfb",
+            backgroundColor: primaryColor,
             zIndex: 500,
           },
         ]}
@@ -126,6 +75,7 @@ const Feed = ({ navigation, route }) => {
             paddingVertical: 20,
             flexDirection: "row",
             justifyContent: "space-between",
+            paddingTop: 35,
           }}
         >
           <Text
@@ -139,7 +89,7 @@ const Feed = ({ navigation, route }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("SearchScreen_1");
+              navigation.navigate("SearchScreen");
             }}
             style={{
               backgroundColor: "#e5e5e5",
@@ -154,7 +104,58 @@ const Feed = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-    </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 15 }} />
+        {AllData && AllData.map((item, i) => <Cart key={i} data={item} />)}
+        <View style={{ width: 15 }} />
+      </ScrollView>
+      <View style={{ height: 20 }} />
+      <SellerCart4
+        onPress={() => {
+          //navigation.navigate("Category");
+        }}
+      />
+      <View style={{ height: 30 }} />
+      <Text
+        style={{
+          fontSize: 18,
+          fontFamily: "Poppins-SemiBold",
+          marginHorizontal: 20,
+        }}
+      >
+        Most Trending
+      </Text>
+      <View style={{ height: 10 }} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={{ width: 15 }} />
+        <Cart2 navigation={navigation} />
+        <Cart2 navigation={navigation} />
+        <Cart2 navigation={navigation} />
+        <Cart2 navigation={navigation} />
+        <Cart2 navigation={navigation} />
+        <Cart2 navigation={navigation} />
+        <View style={{ width: 15 }} />
+      </ScrollView>
+      <View style={{ height: 10 }} />
+      <View style={{ marginHorizontal: 20 }}>
+        <SellerCart
+          onPress={() => {
+            navigation.navigate("LogIn");
+          }}
+          title="Create An Account"
+          buttonTitle="SignUp"
+        />
+      </View>
+      <View style={{ height: 15 }} />
+    </ScrollView>
   );
 };
 

@@ -30,6 +30,7 @@ import SubHeader from "./components/SubHeader";
 import Home_Next from "./screens/Home_Next";
 import { getFavoriteCategories } from "./Class/auth";
 import { useRoute } from "@react-navigation/native";
+import CategoryList from './screens/CategoryList';
 
 const Stack = createStackNavigator();
 
@@ -95,6 +96,11 @@ const HomeRoute = ({ navigation }) => {
         options={{ header: (props) => <OtherProfileHeader {...props} /> }}
         name="OtherProfile"
         component={OtherProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="CategoryList"
+        component={CategoryList}
       />
     </Stack.Navigator>
   );

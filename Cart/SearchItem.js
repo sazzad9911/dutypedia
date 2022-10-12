@@ -4,14 +4,18 @@ import { primaryColor,secondaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-const SearchItem = () => {
+const SearchItem = ({data,navigation}) => {
     const [Love,setLove]= React.useState(false);
   return (
-    <TouchableOpacity style={styles.box}>
+    <TouchableOpacity onPress={() => {
+      if(navigation) {
+        navigation.navigate('OtherProfile',{serviceId:data.service.id})
+      }
+    }} style={styles.box}>
       <Image
         style={styles.image}
         source={{
-          uri: "https://thumbs.dreamstime.com/b/technical-support-customer-service-business-technology-internet-concept-100232431.jpg",
+          uri:data?data.images[0]: "https://thumbs.dreamstime.com/b/technical-support-customer-service-business-technology-internet-concept-100232431.jpg",
         }}
       />
       <View style={{
@@ -85,7 +89,7 @@ const SearchItem = () => {
               fontFamily: 'Poppins-Light'
             }}
           >
-            View 10k
+            View {data?.service.views}
           </Text>
         </View>
       </View>
@@ -99,7 +103,7 @@ const SearchItem = () => {
           fontSize:14
         }}
       >
-        I Will Make a Custom Graphics For Your Blog
+        {data?data.title:"I Will Make a Custom Graphics For Your Blog"}
       </Text>
       <View
         style={{
@@ -116,7 +120,7 @@ const SearchItem = () => {
             fontFamily: "Poppins-Medium"
           }}
         >
-          500৳
+          {data?.price}৳
         </Text>
         <TouchableOpacity
           onPress={() => setLove(!Love)}
