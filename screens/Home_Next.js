@@ -157,20 +157,7 @@ const Home_Next = (props) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-      <View>
-        <Text
-          style={{
-            fontSize: 20,
-            color: TextColor,
-            marginLeft: 5,
-            paddingLeft: 15,
-            paddingRight: 15,
-            fontFamily: "Poppins-SemiBold",
-          }}
-        >
-          Category
-        </Text>
-      </View>
+      
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -201,7 +188,7 @@ const Home_Next = (props) => {
             marginVertical: 10,
             flex: 5,
             marginLeft: 5,
-            fontSize: 14,
+            fontSize: 18,
             paddingLeft: 15,
             paddingRight: 15,
           }}
@@ -258,6 +245,7 @@ const Home_Next = (props) => {
           marginLeft: 5,
           paddingLeft: 15,
           paddingRight: 15,
+          fontSize: 18,
         }}
       >
         Some Suggest For You
@@ -291,6 +279,7 @@ const Home_Next = (props) => {
           marginLeft: 5,
           paddingLeft: 15,
           paddingRight: 15,
+          fontSize: 18,
         }}
       >
         Popular Category

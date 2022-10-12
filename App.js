@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,SafeAreaView } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -66,7 +66,9 @@ export default function App() {
       <PaperProvider theme={theme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <StatusBar barStyle='dark-content' backgroundColor='#ffffff' />
+          <SafeAreaView style={{ flex: 1}}>
           <StackRoute />
+          </SafeAreaView>
         </GestureHandlerRootView>
       </PaperProvider>
     </Provider>
