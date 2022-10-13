@@ -40,6 +40,8 @@ import HomeRoute from "./../HomeRoute";
 import Feed from "./Feed";
 import {checkUser} from '../Class/auth'
 import {getService,getDashboard} from '../Class/service'
+import Dashboard from './Seller/Dashboard';
+import Order from './Seller/Order';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +53,7 @@ const TabRoute = () => {
   const user = useSelector((state) => state.user);
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const interestCategory = useSelector((state) => state.interestCategory);
+  const vendor = useSelector((state) => state.vendor);
   const [load, setLoad] = React.useState(false);
   React.useEffect(() => {
     checkVendor().then((res) => {
@@ -118,7 +121,8 @@ const TabRoute = () => {
           return <BottomBar {...props} />;
         }}
       >
-        {!Array.isArray(user)&& user && load ? (
+       {!vendor&&(
+        !Array.isArray(user)&& user && load ? (
           <Tab.Screen
             options={{ headerShown: false }}
             name="Home"
@@ -130,13 +134,27 @@ const TabRoute = () => {
             name="Home"
             component={Feed}
           />
-        )}
-
+        )
+       )}
+       {vendor&&(
         <Tab.Screen
-          options={{ lazy: false, header: (props) => <Header {...props} /> }}
+            options={{ headerShown: false }}
+            name="Home"
+            component={Dashboard}
+          />
+       )}
+        {vendor?(
+          <Tab.Screen
+          options={{ lazy: false, headerShown: false}}
           name="Search"
-          component={Search}
+          component={Order}/>
+        ):(
+          <Tab.Screen
+          options={{ lazy: false, headerShown: false}}
+          name="Search"
+          component={SearchScreen}
         />
+        )}
         <Tab.Screen
           options={{
             lazy: false,

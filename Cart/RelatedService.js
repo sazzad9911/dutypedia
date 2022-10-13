@@ -27,7 +27,9 @@ const RelatedService = (props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push("OtherProfile",{serviceId:data?data.service.id:null});
+        if(navigation){
+          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null});
+        }
       }}
       style={{
         width: width/3+20,

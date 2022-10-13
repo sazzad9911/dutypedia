@@ -44,6 +44,7 @@ import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import SellerCart3 from "./../Cart/SellerCart3";
 import { AllData } from "../Data/AllData";
+import {getTopServices,getPopularCategories} from '../Class/service'
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,7 +64,8 @@ const Home_Next = (props) => {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
-
+  const [SomeSuggestion, setSomeSuggestion]= React.useState(null);
+  const [PopularCategory, setPopularCategory]=React.useState(null);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -87,6 +89,35 @@ const Home_Next = (props) => {
         });
     }
   }, [Refresh]);
+  React.useEffect(() => {
+    if(user){
+      setSomeSuggestion(null)
+      setPopularCategory(null);
+      getTopServices(user.token).then(res=>{
+        if(res.data){
+          setSomeSuggestion(res.data.gigs);
+        }
+      }).catch(err=>{
+        console.warn(err.response);
+      })
+      getPopularCategories(user.token).then(res=>{
+        if(res.data){
+          let arr=[]
+          res.data.gigs.forEach(gig=>{
+            //console.log(gig.service.category)
+            let data=AllData.filter(d=>d.title.toUpperCase().match(gig.service.category));
+            if(data&&data.length>0){
+              arr.push(data[0])
+            }
+          })
+          //console.log(arr.length)
+          setPopularCategory(arr);
+        }
+      }).catch(err=>{
+        console.warn(err.response);
+      })
+    }
+  },[user])
 
   return (
     <ScrollView
@@ -188,7 +219,7 @@ const Home_Next = (props) => {
             marginVertical: 10,
             flex: 5,
             marginLeft: 5,
-            fontSize: 18,
+            fontSize: 20,
             paddingLeft: 15,
             paddingRight: 15,
           }}
@@ -245,7 +276,7 @@ const Home_Next = (props) => {
           marginLeft: 5,
           paddingLeft: 15,
           paddingRight: 15,
-          fontSize: 18,
+          fontSize: 20,
         }}
       >
         Some Suggest For You
@@ -256,13 +287,14 @@ const Home_Next = (props) => {
         horizontal={true}
       >
         <View style={{ width: 10 }} />
-        <RelatedService />
-        <RelatedService />
-        <RelatedService />
-        <RelatedService />
-        <RelatedService />
-        <RelatedService />
-        <RelatedService />
+        {SomeSuggestion&&SomeSuggestion.map((doc,i)=>(
+          <RelatedService data={doc} key={i} navigation={navigation} />
+        ))}
+        {!SomeSuggestion&&(
+          <View style={{height: 280,justifyContent: 'center',alignItems: "center"}}>
+          <Text style={{textAlign: 'center'}}>Loading...</Text>
+          </View>
+        )}
         <View style={{ width: 10 }} />
       </ScrollView>
       <View style={{ height: 10 }} />
@@ -279,7 +311,7 @@ const Home_Next = (props) => {
           marginLeft: 5,
           paddingLeft: 15,
           paddingRight: 15,
-          fontSize: 18,
+          fontSize: 20,
         }}
       >
         Popular Category
@@ -290,10 +322,14 @@ const Home_Next = (props) => {
         horizontal={true}
       >
         <View style={{ width: 15 }} />
-        <Cart />
-        <Cart />
-        <Cart />
-        <Cart />
+        {PopularCategory&&PopularCategory.map((doc, i)=>(
+          <Cart data={doc} key={i} navigation={navigation} />
+        ))}
+        {!PopularCategory&&(
+          <View style={{height: 150,justifyContent: 'center',alignItems: "center"}}>
+          <Text style={{textAlign: 'center'}}>Loading...</Text>
+          </View>
+        )}
         <View style={{ width: 15 }} />
       </ScrollView>
 

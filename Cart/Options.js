@@ -21,14 +21,6 @@ function Options(props) {
         minWidth: width / 3,
         paddingHorizontal: 30,
         height: 45,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 1,
-        shadowRadius: 6,
-        elevation: 5,
         backgroundColor: Select ? "#117A65" : primaryColor,
         margin: 10,
         marginLeft: 5,
@@ -36,6 +28,8 @@ function Options(props) {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        borderWidth:props.action?1:0,
+        borderColor:'#e5e5e5'
       }}
     >
       <Text

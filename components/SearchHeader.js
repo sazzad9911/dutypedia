@@ -28,8 +28,7 @@ const SearchHeader = (props) => {
       >
         <Ionicons name="ios-chevron-back" size={24} color={textColor} />
       </TouchableOpacity>
-      {props.autoFocus ? (
-        <TextInput
+      <TextInput
           value={props.search}
           onChangeText={(val) => {
             if (props.onChange) {
@@ -47,34 +46,12 @@ const SearchHeader = (props) => {
               props.onEndEditing();
             }
           }}
-          autoFocus={true}
+          autoFocus={props.autoFocus}
           style={styles.input}
           placeholder="Search here..."
         />
-      ) : (
-        <View style={styles.boxx}>
-          <TouchableOpacity
-            onPress={() => {
-              if (props.onSearchPress) {
-                props.onSearchPress();
-              }
-            }}
-            style={styles.inputx}
-          >
-            <EvilIcons
-              style={{
-                marginRight: 10,
-              }}
-              name="search"
-              size={24}
-              color="black"
-            />
-            <Text>{props.search}</Text>
-          </TouchableOpacity>
-        </View>
-      )}
 
-      {props.autoFocus ? (
+      {!props.autoFocus ? (
         <></>
       ) : (
         <TouchableOpacity
@@ -103,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 33,
 
     alignItems: "center",
-    backgroundColor: secondaryColor,
+    backgroundColor: primaryColor,
   },
   icon: {
     flex: 1,
@@ -112,7 +89,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 8,
-    backgroundColor: primaryColor,
+    backgroundColor: secondaryColor,
     height: 40,
     borderRadius: 5,
     paddingHorizontal: 5,

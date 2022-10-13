@@ -284,3 +284,15 @@ export const getAllGigs=async(token)=>{
   })
   return res
 }
+export const getTopServices=async(token)=>{
+  const res= await axios.get(`${url}/server/services/gigs/top`,{
+    headers: { Authorization: `Bearer ${token}`}
+  })
+  return res
+}
+export const getPopularCategories=async(token)=>{
+  const res= await axios.get(`${url}/server/services/gigs/favourite-categories`,{
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  return res
+}

@@ -18,7 +18,7 @@ const ProfileOption = (props) => {
       <props.Icon style={styles.icon} />
       <View style={{
         flexDirection: "row",
-        borderBottomWidth:1,
+        borderBottomWidth:props.action?0:1,
         borderBottomColor:'#e5e5e5',
         flex:1,
         paddingBottom:3,

@@ -24,12 +24,23 @@ import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 import { setBottomSheet } from "./../action";
 import Options from "./../Cart/Options";
+import ProfileOption from './../components/ProfileOption';
+import { AntDesign } from '@expo/vector-icons';
+import {AllData} from '../Data/AllData'
+import {SvgXml} from 'react-native-svg'
 
 const SearchScreen = (props) => {
   const params = props.route.params;
   const [search, setSearch] = React.useState(params ? params.search : "");
   const dispatch = useDispatch();
   const [Visible, setVisible] = React.useState(false);
+  const navigation = props.navigation;
+  const [Data, setData]= React.useState([])
+  const [allData,setAllData] =React.useState([])
+
+  React.useEffect(() => {
+    
+  },[search])
 
   return (
     <View
@@ -37,67 +48,35 @@ const SearchScreen = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <SearchHeader
-          search={search}
-          onSearchPress={() => {
-            setVisible(true);
-          }}
-          navigation={props.navigation}
-        />
-        <ScrollView showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-          style={{
-            paddingHorizontal: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: 'Poppins-SemiBold',
-              marginVertical: 10,
-            }}
-          >
-            Recent Visit
-          </Text>
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-          <SearchItem />
-        </ScrollView>
-      </View>
-      <Modal animationType="fade"
-       visible={Visible} onRequestClose={() => setVisible(!Visible)}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: secondaryColor,
-          }}
-        >
-          <SearchHeader
+       <SearchHeader
             search={search}
-            autoFocus={true}
+            autoFocus={Visible?true: false}
             onChange={(val) => {
               setSearch(val);
             }}
             onPress={() => {
-              setVisible(false);
+              if(Visible){
+                setVisible(false)
+              }else{
+                navigation.goBack()
+              }
             }}
             onEndEditing={() => {
-              setVisible(false);
+              setVisible(true);
             }}
             navigation={props.navigation}
           />
-          <ScrollView>
+          <View style={{height:10}}/>
+         {Visible?(
+          <Searches/>
+         ):(
+          <Animated.ScrollView entering={SlideInLeft} showsVerticalScrollIndicator={false}>
+          <Text style={{
+              fontFamily: "Poppins-SemiBold",
+              fontSize:20,
+              marginHorizontal:20,
+              marginVertical:20
+            }}>Top Searches</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -106,11 +85,12 @@ const SearchScreen = (props) => {
                 paddingHorizontal: 20,
               }}
             >
+            
               <Options
                 action={true}
                 onPress={() => {
                   setSearch('Lower')
-                  setVisible(false)
+                  setVisible(true)
                 }}
                 name="Lower"
               />
@@ -118,7 +98,7 @@ const SearchScreen = (props) => {
                 action={true}
                 onPress={() => {
                   setSearch('Electric Service')
-                  setVisible(false)
+                  setVisible(true)
                 }}
                 name="Electric Service"
               />
@@ -126,14 +106,26 @@ const SearchScreen = (props) => {
                 action={true}
                 onPress={() => {
                   setSearch('Cleaning Service')
-                  setVisible(false)
+                  setVisible(true)
                 }}
                 name="Cleaning Service"
               />
             </View>
-          </ScrollView>
-        </View>
-      </Modal>
+            <Text style={{
+              fontFamily: "Poppins-SemiBold",
+              fontSize:20,
+              marginHorizontal:20,
+              marginVertical:20
+            }}>Browse Categories</Text>
+            {AllData&&AllData.map((doc,i)=>(
+              <ProfileOption action={true} style={{
+                marginBottom:10,
+              }} onPress={()=>{
+                navigation.navigate('CategoryList',{title:doc?doc.title:null })
+              }} key={i} title={doc.title} Icon={() =><SvgXml xml={doc.icon} height='20' width='20'/>}/>
+            ))}
+          </Animated.ScrollView>
+         )}
     </View>
   );
 };
@@ -146,3 +138,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+const Searches=()=>{
+  return(
+    <Animated.ScrollView entering={SlideInRight} showsVerticalScrollIndicator={false}
+    contentContainerStyle={{ flexGrow: 1 }}
+    keyboardShouldPersistTaps="handled"
+    style={{
+      paddingHorizontal: 20,
+      flex:1
+    }}
+  >
+    <Text
+      style={{
+        fontSize: 20,
+        fontFamily: 'Poppins-SemiBold',
+        marginVertical: 10,
+      }}
+    >
+      Recent Visit
+    </Text>
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+    <SearchItem />
+  </Animated.ScrollView>
+  )
+}
