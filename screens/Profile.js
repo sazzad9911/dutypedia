@@ -49,6 +49,7 @@ import OtherProfile from './OtherProfile';
 import OtherProfileHeader from './../components/OtherProfileHeader';
 import { CheckBox } from "../screens/Seller/Pricing";
 import { Switch } from 'react-native-paper';
+import {storeJson } from './../Class/storage'
 
 const Stack = createStackNavigator();
 
@@ -508,6 +509,7 @@ const MainProfile = (props) => {
               height:35,
               transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
             }} color='#707070' value={isDark} onValueChange={(val)=>{
+              storeJson("theme",(!isDark))
               dispatch({type: 'SET_THEME',playload:(!isDark)})
             }} />
          </View>

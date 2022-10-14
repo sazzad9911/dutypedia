@@ -12,6 +12,7 @@ const ProfileOption = (props) => {
   const textColor=colors.getTextColor();
   const assentColor=colors.getAssentColor();
   const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
 
 
   const styles = StyleSheet.create({
@@ -19,7 +20,7 @@ const ProfileOption = (props) => {
       padding: 10,
       flexDirection: "row",
       paddingHorizontal: 20,
-      backgroundColor: primaryColor,
+      backgroundColor: secondaryColor,
       marginVertical: 0,
       alignItems: "center",
       paddingVertical:5,
@@ -60,7 +61,7 @@ const ProfileOption = (props) => {
         <MaterialIcons
           name="keyboard-arrow-right"
           size={24}
-          color="black"
+          color={assentColor}
         />
       </View>
     </TouchableOpacity>

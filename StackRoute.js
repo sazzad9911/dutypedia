@@ -44,6 +44,7 @@ import DashboardList from "./screens/Vendor/DashboardList";
 import Category from "./screens/Seller/Category";
 import Support from "./screens/Support";
 import Feed from "./screens/Feed";
+import {getJson} from "./Class/storage"
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -85,6 +86,11 @@ export default function StackRoute() {
       .catch((err) => {
         console.log(err.message);
       });
+      getJson("theme").then((data) => {
+        if(data){
+          dispatch({ type:'SET_THEME',playload: data });
+        }
+      })
   }, []);
   const MyTheme = {
     ...DefaultTheme,

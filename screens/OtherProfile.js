@@ -968,6 +968,9 @@ const OtherProfile = (props) => {
                 From {Price} ৳
               </Text>
               <Button
+                onPress={() => {
+                  navigation.navigate("OfferNow", { data: Data });
+                }}
                 style={{
                   borderRadius: 5,
                   marginHorizontal: 20,

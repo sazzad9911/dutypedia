@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import TopTabBar from "../Seller/components/TopTabBar";
 import { useSelector } from "react-redux";
-import { primaryColor, backgroundColor, textColor } from "../../assets/colors";
+import { Color } from "../../assets/colors";
 const Tab = createMaterialTopTabNavigator();
 
 const AllService = (props) => {
@@ -11,6 +11,23 @@ const AllService = (props) => {
   const params=props.route.params;
   const [Name, setName] = React.useState(params.NewDataList.length>0?params.NewDataList[0]:'Name');
   const newListData =useSelector((state) => state.newListData);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    view: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+    },
+    text: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 15,
+      color: textColor,
+    },
+  });
   React.useEffect(() => {
     //console.log(newListData)
     let arr = [];
@@ -50,6 +67,23 @@ export default AllService;
 const ComponentScreen = (props) => {
   const [Services, setServices] = React.useState([]);
   const newListData = useSelector((state) => state.newListData);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    view: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+    },
+    text: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 15,
+      color: textColor,
+    },
+  });
 
   React.useEffect(() => {
     let arr = [];
@@ -86,23 +120,31 @@ const ComponentScreen = (props) => {
     </ScrollView>
   );
 };
-const styles = StyleSheet.create({
-  view: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-  },
-  text: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 15,
-    color: textColor,
-  },
-});
+
 const Table = (props) => {
   const newListData = useSelector((state) => state.newListData);
   const [Data, setData] = React.useState([]);
   const { width, height } = Dimensions.get("window");
   const name = props.route.name;
   const title = props.title;
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+
+  const styles = StyleSheet.create({
+    view: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+    },
+    text: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 15,
+      color: textColor,
+    },
+  });
 
   React.useEffect(() => {
     if (!newListData) {
@@ -164,7 +206,23 @@ const Table = (props) => {
 const Rows = ({ title, item, name }) => {
   const [text, setText] = React.useState();
   const newListData = useSelector((state) => state.newListData);
-
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    view: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+    },
+    text: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 15,
+      color: textColor,
+    },
+  });
   React.useEffect(() => {
     if (!newListData) {
       return;
@@ -216,6 +274,23 @@ function uniq(a) {
 }
 const ExtraFacilities = (props) => {
   const facilites=props.route.params.facilites;
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    view: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+    },
+    text: {
+      fontFamily: "Poppins-Medium",
+      fontSize: 15,
+      color: textColor,
+    },
+  });
   return (
     <ScrollView>
       <View style={styles.view}>

@@ -133,6 +133,7 @@ const VendorProfile = (props) => {
   const textColor=colors.getTextColor();
   const assentColor=colors.getAssentColor();
   const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -274,7 +275,7 @@ const VendorProfile = (props) => {
     },
     container: {
       minHeight: 30,
-      backgroundColor: primaryColor,
+      backgroundColor: secondaryColor,
     },
     profile: {
       borderWidth: 1,
@@ -287,7 +288,7 @@ const VendorProfile = (props) => {
       height: 110,
       marginTop: -55,
       alignSelf: "center",
-      backgroundColor: primaryColor,
+      backgroundColor: secondaryColor,
       borderColor: backgroundColor,
       borderRadius: 55,
       justifyContent: "center",
@@ -452,6 +453,7 @@ const VendorProfile = (props) => {
                   fontSize: 22,
                   marginTop: 15,
                   fontFamily: "Poppins-SemiBold",
+                  color:textColor
                 },
               ]}
             >
@@ -462,6 +464,7 @@ const VendorProfile = (props) => {
                 marginTop: 2,
                 fontSize: 17,
                 fontFamily: "Poppins-SemiBold",
+                color:textColor
               }}
             >
               {vendor?.service.providerInfo.title + " "}
@@ -474,6 +477,7 @@ const VendorProfile = (props) => {
                 fontFamily: "Poppins-Medium",
                 marginTop: 2,
                 marginBottom: 10,
+                color: textColor,
               }}
             >
               Position of {vendor?.service.providerInfo.position}
@@ -485,7 +489,7 @@ const VendorProfile = (props) => {
               right: 20,
               zIndex: 6,
               top: 210,
-              backgroundColor: "#e5e5e5",
+              backgroundColor: secondaryColor,
               paddingHorizontal: 5,
               borderRadius: 5,
             }}
@@ -563,7 +567,7 @@ const VendorProfile = (props) => {
         />
         <View
           style={{
-            backgroundColor: primaryColor,
+            backgroundColor: secondaryColor,
             paddingHorizontal: 20,
             paddingVertical: 5,
           }}
@@ -613,6 +617,7 @@ const VendorProfile = (props) => {
                   fontFamily: "Poppins-Medium",
                   lineHeight: 20,
                   marginTop: 5,
+                  color:textColor
                 }}
               >
                 {vendor?.service.about}
@@ -634,7 +639,7 @@ const VendorProfile = (props) => {
           </View>
         </View>
         <ScrollView
-          style={{ backgroundColor: primaryColor, paddingVertical: 10 }}
+          style={{ backgroundColor: secondaryColor, paddingVertical: 10 }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
@@ -678,10 +683,10 @@ const VendorProfile = (props) => {
         </ScrollView>
         {Active == serviceSettings[0].title ? (
           <Animated.View
-            style={{ backgroundColor: primaryColor }}
+            style={{ backgroundColor: secondaryColor }} 
             entering={StretchInY}
           >
-            <View style={{ backgroundColor: primaryColor }}>
+            <View style={{ backgroundColor: secondaryColor }}>
               <SliderBox
                 images={Images}
                 sliderBoxHeight={width}
@@ -757,6 +762,7 @@ const VendorProfile = (props) => {
                   fontFamily: "Poppins-SemiBold",
                   color: "black",
                   marginTop: 10,
+                  color: textColor,
                 }}
               >
                 From {Price}৳
@@ -765,7 +771,7 @@ const VendorProfile = (props) => {
             <View
               style={{
                 paddingHorizontal: 20,
-                backgroundColor: primaryColor,
+                backgroundColor: secondaryColor,
                 paddingVertical: 20,
                 marginTop: -1,
                 marginBottom: -1,
@@ -775,6 +781,7 @@ const VendorProfile = (props) => {
                 style={{
                   fontSize: 15,
                   fontFamily: "Poppins-Medium",
+                  color:textColor
                 }}
               >
                 Service List
@@ -783,7 +790,7 @@ const VendorProfile = (props) => {
             </View>
             <View
               style={{
-                backgroundColor: primaryColor,
+                backgroundColor: secondaryColor,
                 height: 140,
                 overflowY: "hidden",
                 overflow: "hidden",
@@ -896,7 +903,7 @@ const VendorProfile = (props) => {
                   )}
                 </View>
               </View>
-              <LinearGradient
+              {/* <LinearGradient
                 style={{
                   position: "absolute",
                   zIndex: 100,
@@ -906,11 +913,11 @@ const VendorProfile = (props) => {
                   left: (width / 3.2) * 1.2,
                 }}
                 colors={[
-                  "rgba(255, 255, 255, 0.252)",
-                  "rgba(255, 255, 255, 0.343)",
-                  "#ffff",
+                  secondaryColor,
+                  secondaryColor,
+                  primaryColor,
                 ]}
-              ></LinearGradient>
+              ></LinearGradient> */}
             </View>
             <View
               style={{
@@ -920,7 +927,7 @@ const VendorProfile = (props) => {
                 marginHorizontal: 20,
               }}
             />
-            <View style={{ backgroundColor: primaryColor }}>
+            <View style={{ backgroundColor: secondaryColor }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Service List_1", {
@@ -958,7 +965,7 @@ const VendorProfile = (props) => {
           <Animated.View
             entering={StretchInY}
             style={{
-              backgroundColor: primaryColor,
+              backgroundColor: secondaryColor,
               alignItems: "center",
               flexDirection: "row",
               flexWrap: "wrap",
@@ -1010,7 +1017,7 @@ const VendorProfile = (props) => {
             )}
             {Click && (
               <View>
-                <View style={{ backgroundColor: primaryColor }}>
+                <View style={{ backgroundColor: secondaryColor }}>
                   <SliderBox
                     images={Images}
                     sliderBoxHeight={width}
@@ -1084,7 +1091,7 @@ const VendorProfile = (props) => {
                       marginRight: 20,
                       fontSize: 18,
                       fontFamily: "Poppins-Medium",
-                      color: "black",
+                      color: textColor,
                       marginTop: 10,
                     }}
                   >
@@ -1094,7 +1101,7 @@ const VendorProfile = (props) => {
                 <View
                   style={{
                     paddingHorizontal: 20,
-                    backgroundColor: primaryColor,
+                    backgroundColor: secondaryColor,
                     paddingVertical: 20,
                     marginTop: -1,
                     marginBottom: -1,
@@ -1104,6 +1111,7 @@ const VendorProfile = (props) => {
                     style={{
                       fontSize: 15,
                       fontFamily: "Poppins-Medium",
+                      color: textColor
                     }}
                   >
                     Service List
@@ -1112,7 +1120,7 @@ const VendorProfile = (props) => {
                 </View>
                 <View
                   style={{
-                    backgroundColor: primaryColor,
+                    backgroundColor: secondaryColor,
                     height: 140,
                     overflowY: "hidden",
                     overflow: "hidden",
@@ -1225,21 +1233,7 @@ const VendorProfile = (props) => {
                       )}
                     </View>
                   </View>
-                  <LinearGradient
-                    style={{
-                      position: "absolute",
-                      zIndex: 100,
-                      bottom: 0,
-                      height: 20,
-                      width: (width / 3.2) * 2,
-                      left: (width / 3.2) * 1.2,
-                    }}
-                    colors={[
-                      "rgba(255, 255, 255, 0.252)",
-                      "rgba(255, 255, 255, 0.343)",
-                      "#ffff",
-                    ]}
-                  ></LinearGradient>
+                  
                 </View>
                 <View
                   style={{
@@ -1249,7 +1243,7 @@ const VendorProfile = (props) => {
                     marginHorizontal: 20,
                   }}
                 />
-                <View style={{ backgroundColor: primaryColor }}>
+                <View style={{ backgroundColor: secondaryColor }}>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("Service List_1", {
@@ -1289,7 +1283,7 @@ const VendorProfile = (props) => {
           <Animated.View
             entering={StretchInY}
             style={{
-              backgroundColor: primaryColor,
+              backgroundColor: secondaryColor,
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "row",
@@ -1313,7 +1307,7 @@ const VendorProfile = (props) => {
           </Animated.View>
         )}
         <View
-          style={{ height: 30, backgroundColor: primaryColor, marginTop: -1 }}
+          style={{ height: 30, backgroundColor: secondaryColor, marginTop: -1 }}
         />
       </ScrollView>
       {Active == "Fixed" && (
@@ -1408,6 +1402,7 @@ const BarOption = ({ icon, title }) => {
   const textColor=colors.getTextColor();
   const assentColor=colors.getAssentColor();
   const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -1421,7 +1416,7 @@ const BarOption = ({ icon, title }) => {
       style={{
         paddingHorizontal: 20,
         flexDirection: "row",
-        backgroundColor: primaryColor,
+        backgroundColor: secondaryColor,
         paddingVertical: 5,
       }}
     >
@@ -1437,6 +1432,7 @@ const BarOption = ({ icon, title }) => {
           style={{
             fontFamily: "Poppins-Medium",
             marginBottom: 5,
+            color:textColor
           }}
         >
           {title}
@@ -1496,6 +1492,7 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
           fontFamily: "Poppins-Medium",
           fontSize: 15,
           margin: 0,
+          color: textColor,
         }}
       >
         {item}

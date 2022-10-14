@@ -31,6 +31,7 @@ import Home_Next from "./screens/Home_Next";
 import { getFavoriteCategories } from "./Class/auth";
 import { useRoute } from "@react-navigation/native";
 import CategoryList from './screens/CategoryList';
+import OfferNow from './screens/Seller/OfferNow';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,11 @@ const HomeRoute = ({ navigation }) => {
         options={{ headerShown: false }}
         name="CategoryList"
         component={CategoryList}
+      />
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader title="Offer Price" {...props} /> }}
+        name="OfferNow"
+        component={OfferNow}
       />
     </Stack.Navigator>
   );
