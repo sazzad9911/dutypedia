@@ -2,9 +2,17 @@ import React from "react";
 import { ScrollView, View, Text, TouchableOpacity } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
-import { primaryColor } from "./../../assets/colors";
+import { Color } from "./../../assets/colors";
+import {useSelector, useDispatch} from 'react-redux'
 
 const MainCategoryCart = ({ icon, title, color,navigation,onPress }) => {
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+
   return (
     <TouchableOpacity onPress={() =>{
         if(onPress){
@@ -62,13 +70,14 @@ const MainCategoryCart = ({ icon, title, color,navigation,onPress }) => {
         style={{
           flex: 3,
           marginLeft: 20,
-          fontFamily: 'Poppins-Medium'
+          fontFamily: 'Poppins-Medium',
+          color:textColor
         }}
       >
         {title}
       </Text>
       <View style={{ justifySelf: "flex-end" }}>
-        <AntDesign name="right" size={24} color="black" />
+        <AntDesign name="right" size={24} color={assentColor} />
       </View>
     </TouchableOpacity>
   );

@@ -1,8 +1,40 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
+import {Color} from '../assets/colors'
+import {useDispatch,useSelector} from 'react-redux'
 
 const ChatHeader = () => {
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    box: {
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 33,
+    },
+    text: {
+      color: textColor,
+      fontSize: 20,
+      fontWeight: "bold",
+    },
+    input: {
+      margin: 20,
+      backgroundColor: primaryColor,
+      height: 40,
+      width: "90%",
+      borderRadius: 5,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 15,
+    },
+  });
+  
   return (
     <View style={styles.box}>
       <TouchableOpacity style={styles.input}>
@@ -12,35 +44,15 @@ const ChatHeader = () => {
           }}
           name="search"
           size={24}
-          color="black"
+          color={assentColor}
         />
-        <Text>Search Chat</Text>
+        <Text style={{
+          color:textColor,
+          fontFamily: "Poppins-Medium"
+        }}>Search Chat</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 export default ChatHeader;
-const styles = StyleSheet.create({
-  box: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 33,
-  },
-  text: {
-    color: "#000000",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  input: {
-    margin: 20,
-    backgroundColor: "#ffff",
-    height: 40,
-    width: "90%",
-    borderRadius: 5,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 15,
-  },
-});

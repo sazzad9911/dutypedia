@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { primaryColor, textColor, backgroundColor } from "../assets/colors";
+import { Color } from "../assets/colors";
 import Cart from "./../Cart/Cart";
 import SellerCart2 from "./../Cart/SellerCart2";
 import SellerCart4 from "./../Cart/SellerCart4";
 import Cart2 from "./../Cart/Cart2";
 import SellerCart from "../Cart/SellerCart";
+import {useSelector, useDispatch} from 'react-redux';
 import { AllData } from "./../Data/AllData";
 
 const Feed = ({ navigation, route }) => {
@@ -25,6 +26,12 @@ const Feed = ({ navigation, route }) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -125,6 +132,7 @@ const Feed = ({ navigation, route }) => {
           fontSize: 18,
           fontFamily: "Poppins-SemiBold",
           marginHorizontal: 20,
+          color:textColor
         }}
       >
         Most Trending

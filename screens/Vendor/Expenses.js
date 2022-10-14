@@ -16,7 +16,7 @@ import {
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
 import { AntDesign } from "@expo/vector-icons";
-import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
+import { Color } from "../../assets/colors";
 import { Entypo } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 import {
@@ -131,6 +131,35 @@ const Expenses = (props) => {
   ];
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const textColor= colors.getTextColor()
+  const primaryColor =colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
+
+  const styles = StyleSheet.create({
+    text: {
+      fontSize: 15,
+      fontFamily: "Poppins-Medium",
+      flex: 1,
+      textAlign: "center",
+      color: "white",
+    },
+    text2: {
+      fontSize: 15,
+      fontFamily: "Poppins-Light",
+      flex: 1,
+      textAlign: "center",
+      color: textColor,
+    },
+    input: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+      borderWidth: 1,
+    },
+  });
+  
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -254,7 +283,7 @@ const Expenses = (props) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <Text style={{color:textColor}}>Loading...</Text>
       </View>
     );
   }
@@ -440,27 +469,6 @@ const Expenses = (props) => {
 };
 
 export default Expenses;
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 15,
-    fontFamily: "Poppins-Medium",
-    flex: 1,
-    textAlign: "center",
-    color: "white",
-  },
-  text2: {
-    fontSize: 15,
-    fontFamily: "Poppins-Light",
-    flex: 1,
-    textAlign: "center",
-    color: textColor,
-  },
-  input: {
-    marginHorizontal: 20,
-    marginVertical: 10,
-    borderWidth: 1,
-  },
-});
 
 import { Menu } from "react-native-paper";
 import SubHeader from "./../../components/SubHeader";
@@ -476,6 +484,34 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const textColor= colors.getTextColor()
+  const primaryColor =colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
+
+  const styles = StyleSheet.create({
+    text: {
+      fontSize: 15,
+      fontFamily: "Poppins-Medium",
+      flex: 1,
+      textAlign: "center",
+      color: "white",
+    },
+    text2: {
+      fontSize: 15,
+      fontFamily: "Poppins-Light",
+      flex: 1,
+      textAlign: "center",
+      color: textColor,
+    },
+    input: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+      borderWidth: 1,
+    },
+  });
 
   const Delete = () => {
     deleteExpenses(user.token, value.id)
@@ -599,6 +635,33 @@ export const AddExpenses = (props) => {
   const [Amount, setAmount] = React.useState();
   const [Visible, setVisible] = React.useState(false);
   const navigation = props.navigation;
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const textColor= colors.getTextColor()
+  const primaryColor =colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const styles = StyleSheet.create({
+    text: {
+      fontSize: 15,
+      fontFamily: "Poppins-Medium",
+      flex: 1,
+      textAlign: "center",
+      color: "white",
+    },
+    text2: {
+      fontSize: 15,
+      fontFamily: "Poppins-Light",
+      flex: 1,
+      textAlign: "center",
+      color: textColor,
+    },
+    input: {
+      marginHorizontal: 20,
+      marginVertical: 10,
+      borderWidth: 1,
+    },
+  });
 
   React.useEffect(() => {
     if (value) {
@@ -718,6 +781,12 @@ export const AddExpenses = (props) => {
 };
 const InstructionCart = ({ title }) => {
   const [Visible, setVisible] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const textColor= colors.getTextColor()
+  const primaryColor =colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {

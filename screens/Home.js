@@ -12,9 +12,6 @@ import {
   Animated,
 } from "react-native";
 import {
-  textColor,
-  primaryColor,
-  secondaryColor,
   Color,
 } from "./../assets/colors";
 import Cart from "../Cart/Cart";
@@ -39,10 +36,13 @@ const { width, height } = Dimensions.get("window");
 const Home = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
-  const colorScheme = useColorScheme();
-  const colors = new Color(false);
   const TextColor = colors.getTextColor();
-
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
@@ -55,7 +55,34 @@ const Home = (props) => {
   const [PageChange, setPageChange] = React.useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
+  const styles = StyleSheet.create({
+    content: {
+      alignSelf: "stretch",
+    },
+    headerBarContainer: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      alignItems: "center",
+      backgroundColor: colors.transparent,
+      flex: 1,
+      overflow: "hidden",
+      zIndex: 3,
+    },
+    tabContainer: {},
+    input: {
+      margin: 20,
+      backgroundColor: primaryColor,
+      height: 40,
+      width: "90%",
+      borderRadius: 5,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 0,
+    },
+  });
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -208,6 +235,7 @@ const Home = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 18,
+          color:textColor
         }}
       >
         What is Your Best Interested Category
@@ -261,6 +289,7 @@ const Home = (props) => {
             paddingLeft: 15,
             paddingRight: 15,
             fontSize: 18,
+            color:textColor
           }}
         >
           Some Suggest
@@ -278,6 +307,7 @@ const Home = (props) => {
               marginRight: 20,
               fontSize: 14,
               textAlign: "right",
+              color:textColor
             }}
           >
             View All
@@ -317,31 +347,4 @@ const Home = (props) => {
 };
 
 export default Home;
-const styles = StyleSheet.create({
-  content: {
-    alignSelf: "stretch",
-  },
-  headerBarContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    backgroundColor: colors.transparent,
-    flex: 1,
-    overflow: "hidden",
-    zIndex: 3,
-  },
-  tabContainer: {},
-  input: {
-    margin: 20,
-    backgroundColor: primaryColor,
-    height: 40,
-    width: "90%",
-    borderRadius: 5,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 0,
-  },
-});
+

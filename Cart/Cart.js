@@ -1,14 +1,19 @@
 import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { useDispatch} from 'react-redux';
+import { useDispatch,useSelector} from 'react-redux';
 
 const { width, height } = Dimensions.get("window");
 function Cart(props) {
   const data=props.data;
   const dispatch = useDispatch();
   const navigation = props.navigation;
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
   
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
@@ -20,7 +25,7 @@ function Cart(props) {
         style={{
           width: width / 3-10,
           height: 150,
-          shadowColor: Platform.OS == "ios" ? "#ebebeb" : "#DDDDDD",
+          shadowColor: primaryColor,
           shadowOffset: {
             width: 1,
             height: 1,

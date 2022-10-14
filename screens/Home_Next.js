@@ -12,9 +12,6 @@ import {
   Animated,
 } from "react-native";
 import {
-  textColor,
-  primaryColor,
-  secondaryColor,
   Color,
 } from "./../assets/colors";
 import Cart from "../Cart/Cart";
@@ -51,8 +48,12 @@ const { width, height } = Dimensions.get("window");
 const Home_Next = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
-  const colorScheme = useColorScheme();
-  const colors = new Color(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
   const TextColor = colors.getTextColor();
   const user = useSelector((state) => state.user);
   const [SomeSuggest, setSomeSuggest] = React.useState(null);
@@ -118,7 +119,35 @@ const Home_Next = (props) => {
       })
     }
   },[user])
-
+  const styles = StyleSheet.create({
+    content: {
+      alignSelf: "stretch",
+    },
+    headerBarContainer: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      alignItems: "center",
+      backgroundColor: colors.transparent,
+      flex: 1,
+      overflow: "hidden",
+      zIndex: 3,
+    },
+  
+    input: {
+      margin: 20,
+      backgroundColor: primaryColor,
+      height: 40,
+      width: "90%",
+      borderRadius: 5,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 0,
+    },
+  });
+  
   return (
     <ScrollView
       style={{ flexGrow: 1 }}
@@ -222,6 +251,7 @@ const Home_Next = (props) => {
             fontSize: 20,
             paddingLeft: 15,
             paddingRight: 15,
+            color:textColor
           }}
         >
           Recent Visit
@@ -239,6 +269,7 @@ const Home_Next = (props) => {
               marginRight: 20,
               fontSize: 14,
               textAlign: "right",
+              color:textColor
             }}
           >
             View All
@@ -259,7 +290,7 @@ const Home_Next = (props) => {
               alignItems: "center",
             }}
           >
-            <Text>Loading...</Text>
+            <Text style={{color:textColor}}>Loading...</Text>
           </View>
         )}
         {SomeSuggest &&
@@ -277,6 +308,7 @@ const Home_Next = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 20,
+          color:textColor
         }}
       >
         Some Suggest For You
@@ -292,7 +324,7 @@ const Home_Next = (props) => {
         ))}
         {!SomeSuggestion&&(
           <View style={{height: 280,justifyContent: 'center',alignItems: "center"}}>
-          <Text style={{textAlign: 'center'}}>Loading...</Text>
+          <Text style={{textAlign: 'center',color:textColor}}>Loading...</Text>
           </View>
         )}
         <View style={{ width: 10 }} />
@@ -312,6 +344,7 @@ const Home_Next = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 20,
+          color:textColor,
         }}
       >
         Popular Category
@@ -327,7 +360,7 @@ const Home_Next = (props) => {
         ))}
         {!PopularCategory&&(
           <View style={{height: 150,justifyContent: 'center',alignItems: "center"}}>
-          <Text style={{textAlign: 'center'}}>Loading...</Text>
+          <Text style={{textAlign: 'center',color:textColor}}>Loading...</Text>
           </View>
         )}
         <View style={{ width: 15 }} />
@@ -339,31 +372,3 @@ const Home_Next = (props) => {
 };
 
 export default Home_Next;
-const styles = StyleSheet.create({
-  content: {
-    alignSelf: "stretch",
-  },
-  headerBarContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    backgroundColor: colors.transparent,
-    flex: 1,
-    overflow: "hidden",
-    zIndex: 3,
-  },
-
-  input: {
-    margin: 20,
-    backgroundColor: primaryColor,
-    height: 40,
-    width: "90%",
-    borderRadius: 5,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 0,
-  },
-});

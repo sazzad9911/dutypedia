@@ -14,16 +14,11 @@ import {
 import ChatBox from "./../components/ChatBox";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  backgroundColor,
-  assentColor,
-  primaryColor,
-  secondaryColor,
-  textColor
-} from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
+import {Color} from '../assets/colors'
+import {useDispatch,useSelector} from 'react-redux'
 
 
 const ChatScreen = () => {
@@ -73,6 +68,44 @@ const ChatScreen = () => {
       { message: message, send: true, id: val.length + 1 },
     ]);
   };
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const styles = StyleSheet.create({
+    view: {
+      flexDirection: "row",
+      paddingHorizontal: 10,
+      alignItems: "center",
+      backgroundColor: primaryColor,
+      shadowOffset: {
+        width: 1,
+        height: 1,
+      },
+      shadowColor: backgroundColor,
+      shadowRadius: 3,
+      elevation: 3,
+      paddingVertical: 5,
+    },
+    icon: {
+      margin: 5,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    input: {
+      backgroundColor: secondaryColor,
+      flex: 7,
+      height: 40,
+      fontSize: 14,
+      borderRadius: 20,
+      paddingHorizontal: 10,
+      fontFamily: 'Poppins-Light'
+    },
+  });
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
@@ -98,6 +131,44 @@ export default ChatScreen;
 
 const BottomBar = (props) => {
   const [Message, setMessage] = React.useState();
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const styles = StyleSheet.create({
+    view: {
+      flexDirection: "row",
+      paddingHorizontal: 10,
+      alignItems: "center",
+      backgroundColor: primaryColor,
+      shadowOffset: {
+        width: 1,
+        height: 1,
+      },
+      shadowColor: backgroundColor,
+      shadowRadius: 3,
+      elevation: 3,
+      paddingVertical: 5,
+    },
+    icon: {
+      margin: 5,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    input: {
+      backgroundColor: secondaryColor,
+      flex: 7,
+      height: 40,
+      fontSize: 14,
+      borderRadius: 20,
+      paddingHorizontal: 10,
+      fontFamily: 'Poppins-Light'
+    },
+  });
   return (
     <View style={styles.view}>
       <TouchableOpacity style={styles.icon}>
@@ -113,6 +184,7 @@ const BottomBar = (props) => {
         }}
         style={styles.input}
         placeholder="Write message here.."
+        placeholderTextColor={assentColor}
       />
       <TouchableOpacity
         onPress={() => {
@@ -125,39 +197,9 @@ const BottomBar = (props) => {
         }}
         style={styles.icon}
       >
-        <Ionicons name="send-outline" size={20} color="black" />
+        <Ionicons name="send-outline" size={20} color={assentColor} />
       </TouchableOpacity>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  view: {
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    alignItems: "center",
-    backgroundColor: primaryColor,
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowColor: backgroundColor,
-    shadowRadius: 3,
-    elevation: 3,
-    paddingVertical: 5,
-  },
-  icon: {
-    margin: 5,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  input: {
-    backgroundColor: secondaryColor,
-    flex: 7,
-    height: 40,
-    fontSize: 14,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    fontFamily: 'Poppins-Light'
-  },
-});
+

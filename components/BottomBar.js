@@ -8,9 +8,7 @@ import {
 } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import {
-  primaryColor,
-  secondaryColor,
-  backgroundColor,
+  Color
 } from "./../assets/colors";
 import { Badge } from "react-native-paper";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -29,6 +27,12 @@ const BottomBar = (props) => {
   const [User, setUser] = React.useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   React.useEffect(() => {
     if (vendor) {
@@ -54,6 +58,32 @@ const BottomBar = (props) => {
   if (keyboardStatus) {
     return <></>;
   }
+  const styles = StyleSheet.create({
+    box: {
+      backgroundColor: primaryColor,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+      shadowOffset: {
+        height: 1,
+        width: 1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+      elevation: 1,
+    },
+    button: {
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    text: {
+      fontSize: 13,
+      color: "#808080",
+      fontFamily: "Poppins-Light",
+    },
+  });
+  
   return (
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
@@ -182,7 +212,11 @@ const BottomBar = (props) => {
             return;
           }
           if (route === 4) {
-            navigation.navigate("MainProfile");
+            try {
+              navigation.navigate("MainProfile");
+            }catch (e) {
+              console.warn(e.message)
+            }
             setRoute(4);
           } else {
             navigation.navigate("Profile");
@@ -224,28 +258,3 @@ const BottomBar = (props) => {
 };
 
 export default BottomBar;
-const styles = StyleSheet.create({
-  box: {
-    backgroundColor: primaryColor,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    shadowOffset: {
-      height: 1,
-      width: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
-  },
-  button: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 13,
-    color: "#808080",
-    fontFamily: "Poppins-Light",
-  },
-});

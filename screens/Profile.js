@@ -7,10 +7,11 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Platform
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { primaryColor, backgroundColor, assentColor } from "./../assets/colors";
+import {Color } from "./../assets/colors";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import ProfileOption from "./../components/ProfileOption";
@@ -46,6 +47,8 @@ import Review from './Seller/Review';
 import AllPackageList from './Seller/AllPackageList';
 import OtherProfile from './OtherProfile';
 import OtherProfileHeader from './../components/OtherProfileHeader';
+import { CheckBox } from "../screens/Seller/Pricing";
+import { Switch } from 'react-native-paper';
 
 const Stack = createStackNavigator();
 
@@ -258,6 +261,13 @@ const MainProfile = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [LogOut, setLogOut]= React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const secondaryColor =colors.getSecondaryColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const textColor=colors.getTextColor();
 
   React.useEffect(() => {
     if(user&&!Array.isArray(user)){
@@ -292,10 +302,82 @@ const MainProfile = (props) => {
       setBackgroundImage(result.uri);
     }
   };
+  const styles = StyleSheet.create({
+    backgroundContainer: {
+      minHeight: 200,
+    },
+    container: {
+      minHeight: 315,
+      backgroundColor: primaryColor,
+    },
+    profile: {
+      borderWidth: 1,
+      shadowOffset: {
+        width: 2,
+        height: 2,
+      },
+      shadowColor: backgroundColor,
+      width: 90,
+      height: 90,
+      marginTop: -45,
+      alignSelf: "center",
+      backgroundColor: primaryColor,
+      borderColor: backgroundColor,
+      borderRadius: 5,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    icon: {
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#ffff",
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      shadowOffset: {
+        width: 2,
+        height: 2,
+      },
+      shadowRadius: 5,
+      shadowColor: backgroundColor,
+      elevation: 5,
+      shadowOpacity: 0.1,
+    },
+    iconTop: {
+      position: "absolute",
+      right: 20,
+      top: 50,
+      zIndex: 4,
+    },
+    iconBottom: {
+      position: "absolute",
+      zIndex: 4,
+      bottom: -10,
+      right: -10,
+    },
+    headLine: {
+      fontSize: 20,
+      textAlign: "center",
+      marginTop: 10,
+      fontFamily: "Poppins-Medium",
+      color:textColor
+    }, 
+    text: {
+      textAlign: "center",
+      fontSize: 16,
+      fontFamily: "Poppins-Medium",
+      color: "#666666",
+      marginTop: -10,
+    },
+    image: {
+      width: 80,
+      height: 80,
+    },
+  });
   if (LogOut) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading.....</Text>
+        <Text style={{color:textColor}}>Loading.....</Text>
       </View>
     );
   }
@@ -344,7 +426,7 @@ const MainProfile = (props) => {
           onPress={() => {
             navigation.navigate("ManageOrder");
           }}
-          Icon={() => <Octicons name="checklist" size={24} color="black" />}
+          Icon={() => <Octicons name="checklist" size={24} color={assentColor} />}
           title="Manage Order"
         />
         <ProfileOption
@@ -352,28 +434,28 @@ const MainProfile = (props) => {
           onPress={() => {
             navigation.navigate("Appointment");
           }}
-          Icon={() => <AntDesign name="calendar" size={24} color="black" />}
+          Icon={() => <AntDesign name="calendar" size={24} color={assentColor} />}
           title="Appointment"
         />
         <ProfileOption
           onPress={() => {
             
           }}
-          Icon={() => <AntDesign name="wallet" size={24} color="black" />}
+          Icon={() => <AntDesign name="wallet" size={24} color={assentColor} />}
           title="Account Balance"
         />
         <ProfileOption
           onPress={() => {
             navigation.navigate("SaveList");
           }}
-          Icon={() => <AntDesign name="hearto" size={24} color="black" />}
+          Icon={() => <AntDesign name="hearto" size={24} color={assentColor} />}
           title="Saved"
         />
         <ProfileOption
           onPress={() => {
             navigation.navigate("Category");
           }}
-          Icon={() => <Ionicons name="business" size={24} color="black" />}
+          Icon={() => <Ionicons name="business" size={24} color={assentColor} />}
           title="Create a business account"
         />
         {vendorInfo && (
@@ -396,7 +478,7 @@ const MainProfile = (props) => {
             navigation.navigate("Home")
           }}
           Icon={() => (
-            <Ionicons name="log-out-outline" size={24} color="black" />
+            <Ionicons name="log-out-outline" size={24} color={assentColor} />
           )}
           title="Log Out"
         />
@@ -404,83 +486,36 @@ const MainProfile = (props) => {
           onPress={() => {
             navigation.navigate("Support");
           }}
-          Icon={() => <FontAwesome name="support" size={24} color="black" />}
+          Icon={() => <FontAwesome name="support" size={24} color={assentColor} />}
           title="Support"
         />
+         <View style={{
+          paddingLeft:50,
+          paddingRight:20,
+         }}>
+         <View style={{flexDirection:'row',
+         justifyContent:'space-between',
+         alignItems: 'center',
+         borderBottomWidth:1,
+         borderBottomColor: "#e5e5e5",
+         }}>
+          <Text style={{
+            color:textColor,
+            fontSize:16,
+            fontFamily: "Poppins-SemiBold",
+          }}>Dark Theme</Text>
+          <Switch style={{
+              height:35,
+              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
+            }} color='#707070' value={isDark} onValueChange={(val)=>{
+              dispatch({type: 'SET_THEME',playload:(!isDark)})
+            }} />
+         </View>
+         </View>
       </ScrollView>
     </View>
   );
 };
 
 export default Profile;
-const styles = StyleSheet.create({
-  backgroundContainer: {
-    minHeight: 200,
-  },
-  container: {
-    minHeight: 315,
-    backgroundColor: primaryColor,
-  },
-  profile: {
-    borderWidth: 1,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowColor: backgroundColor,
-    width: 90,
-    height: 90,
-    marginTop: -45,
-    alignSelf: "center",
-    backgroundColor: primaryColor,
-    borderColor: backgroundColor,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  icon: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ffff",
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowRadius: 5,
-    shadowColor: backgroundColor,
-    elevation: 5,
-    shadowOpacity: 0.1,
-  },
-  iconTop: {
-    position: "absolute",
-    right: 20,
-    top: 50,
-    zIndex: 4,
-  },
-  iconBottom: {
-    position: "absolute",
-    zIndex: 4,
-    bottom: -10,
-    right: -10,
-  },
-  headLine: {
-    fontSize: 20,
-    textAlign: "center",
-    marginTop: 10,
-    fontFamily: "Poppins-Medium",
-  },
-  text: {
-    textAlign: "center",
-    fontSize: 16,
-    fontFamily: "Poppins-Medium",
-    color: "#666666",
-    marginTop: -10,
-  },
-  image: {
-    width: 80,
-    height: 80,
-  },
-});
+

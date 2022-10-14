@@ -28,6 +28,7 @@ import ProfileOption from './../components/ProfileOption';
 import { AntDesign } from '@expo/vector-icons';
 import {AllData} from '../Data/AllData'
 import {SvgXml} from 'react-native-svg'
+import {Color} from '../assets/colors'
 
 const SearchScreen = (props) => {
   const params = props.route.params;
@@ -37,6 +38,12 @@ const SearchScreen = (props) => {
   const navigation = props.navigation;
   const [Data, setData]= React.useState([])
   const [allData,setAllData] =React.useState([])
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   React.useEffect(() => {
     
@@ -75,7 +82,8 @@ const SearchScreen = (props) => {
               fontFamily: "Poppins-SemiBold",
               fontSize:20,
               marginHorizontal:20,
-              marginVertical:20
+              marginVertical:20,
+              color:textColor
             }}>Top Searches</Text>
             <View
               style={{
@@ -115,7 +123,8 @@ const SearchScreen = (props) => {
               fontFamily: "Poppins-SemiBold",
               fontSize:20,
               marginHorizontal:20,
-              marginVertical:20
+              marginVertical:20,
+              color:textColor
             }}>Browse Categories</Text>
             {AllData&&AllData.map((doc,i)=>(
               <ProfileOption action={true} style={{

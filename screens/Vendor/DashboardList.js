@@ -12,7 +12,7 @@ import { Text } from "react-native";
 import { bigIcon } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { FontAwesome } from "@expo/vector-icons";
-import { primaryColor, backgroundColor, textColor } from "../../assets/colors";
+import { Color } from "../../assets/colors";
 import Button from "./../../components/Button";
 const { height, width } = Dimensions.get("window");
 import { useSelector, useDispatch } from "react-redux";
@@ -25,6 +25,13 @@ const DashboardList = ({ navigation }) => {
   const [Data, setData] = React.useState();
   const dispatch = useDispatch();
   const [Loading, setLoading] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
+  
 
   React.useEffect(() => {
     if (Array.isArray(vendorInfo)) {
@@ -43,7 +50,7 @@ const DashboardList = ({ navigation }) => {
           alignItems: "center",
         }}
       >
-        <Text>Loading...</Text>
+        <Text style={{color:textColor}}>Loading...</Text>
       </View>
     );
   }
@@ -76,6 +83,7 @@ const DashboardList = ({ navigation }) => {
           style={{
             fontSize: 20,
             fontFamily: "Poppins-Medium",
+            color:textColor,
           }}
         >
           Dutypedia Business Account
@@ -98,7 +106,7 @@ const DashboardList = ({ navigation }) => {
             <Cart key={i} onChange={click} data={doc} />
           ))
         ) : (
-          <Text>Loading...</Text>
+          <Text style={{color:textColor}}>Loading...</Text>
         )}
         <View style={{ width: 10 }} />
       </ScrollView>
@@ -134,6 +142,12 @@ const Cart = ({ data, onChange }) => {
   const id = data.id;
   const image = data.image;
   const title = data.name;
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -192,6 +206,7 @@ const Cart = ({ data, onChange }) => {
               fontSize: 15,
               fontFamily: "Poppins-Medium",
               flex: 1,
+              color:textColor
             }}
           >
             {title ? title : "Sazzad It Center"}

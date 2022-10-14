@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
-import { textColor, primaryColor,assentColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import {useDispatch} from 'react-redux'
+import {useDispatch,useSelector} from 'react-redux'
 
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
@@ -11,6 +11,11 @@ function Cart2(props) {
   const navigation = props.navigation;
   const data= props.data?props.data:null;
   const dispatch=useDispatch();
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -19,12 +24,12 @@ function Cart2(props) {
       }}
       style={{
         width: 260,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: primaryColor,
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .5,
         shadowRadius: 6,
         elevation: 5,
         backgroundColor: primaryColor,
@@ -88,6 +93,7 @@ function Cart2(props) {
             style={{
               fontFamily: 'Poppins-SemiBold',
               fontSize: 13,
+              color:textColor
             }}
           >
             {data?data.service.serviceCenterName:"Stock And Forex Market Training Center"}
@@ -96,7 +102,8 @@ function Cart2(props) {
             numberOfLines={1}
             style={{
               fontSize: 13,
-              fontFamily: 'Poppins-Light'
+              fontFamily: 'Poppins-Light',
+              color:textColor
             }}
           >
             {`Specialty: ${data?.service.speciality}`}
@@ -191,7 +198,7 @@ function Cart2(props) {
           {Love ? (
             <AntDesign name="heart" size={24} color="#DA1e37" />
           ) : (
-            <AntDesign name="hearto" size={24} color="black" />
+            <AntDesign name="hearto" size={24} color="#DA1e37" />
           )}
         </TouchableOpacity>
       </View>

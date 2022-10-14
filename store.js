@@ -12,6 +12,7 @@ import vendor from './Reducers/vendor';
 import serviceSettings from './Reducers/serviceSettings';
 import interestCategory from './Reducers/interestCategory';
 import storeVendorData from './Reducers/storeVendorData';
+import isDark from './Reducers/isDark';
 
 const combine=combineReducers({
     bottomSheet:bottomSheet,
@@ -27,6 +28,7 @@ const combine=combineReducers({
     serviceSettings: serviceSettings,
     interestCategory: interestCategory,
     storeVendorData: storeVendorData,
+    isDark: isDark,
 })
 const store=createStore(combine)
 export default store

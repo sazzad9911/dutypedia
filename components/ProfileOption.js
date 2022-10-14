@@ -1,11 +1,40 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { primaryColor } from "./../assets/colors";
+import {useSelector, useDispatch} from 'react-redux';
 import { Badge } from "react-native-paper";
-import {textColor } from '../assets/colors'
+import {Color } from '../assets/colors'
 
 const ProfileOption = (props) => {
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+
+
+  const styles = StyleSheet.create({
+    box: {
+      padding: 10,
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      backgroundColor: primaryColor,
+      marginVertical: 0,
+      alignItems: "center",
+      paddingVertical:5,
+    },
+    icon: {
+      flex: 1,
+    },
+    text: {
+      flex: 10,
+      fontSize: 15,
+      fontFamily: "Poppins-SemiBold",
+      color:textColor
+    },
+  });
+  
   return (
     <TouchableOpacity
       onPress={() => {
@@ -39,23 +68,3 @@ const ProfileOption = (props) => {
 };
 
 export default ProfileOption;
-const styles = StyleSheet.create({
-  box: {
-    padding: 10,
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    backgroundColor: primaryColor,
-    marginVertical: 0,
-    alignItems: "center",
-    paddingVertical:5,
-  },
-  icon: {
-    flex: 1,
-  },
-  text: {
-    flex: 10,
-    fontSize: 15,
-    fontFamily: "Poppins-SemiBold",
-    color:textColor
-  },
-});

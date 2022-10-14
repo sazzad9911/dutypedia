@@ -1,12 +1,18 @@
 import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity ,Platform} from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
+import {useSelector} from 'react-redux'
 
 const { width, height } = Dimensions.get("window");
 
 function Options(props) {
   const [Select, setSelect] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark);
+  const primaryColor=colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+
   return (
     <TouchableOpacity
       onPress={() => {

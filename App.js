@@ -23,8 +23,11 @@ import {
 } from "react-native-paper";
 import { checkUser } from "./Class/auth";
 import StackRoute from "./StackRoute";
+import {useSelector} from 'react-redux';
+import {Color} from './assets/colors'
 
 export default function App() {
+  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -64,13 +67,21 @@ export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar barStyle='dark-content' backgroundColor='#ffffff' />
+        <Views/>
+      </PaperProvider>
+    </Provider>
+  );
+}
+const Views=()=>{
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar barStyle={isDark?'light-content':'dark-content'} backgroundColor={primaryColor} />
           <SafeAreaView style={{ flex: 1}}>
           <StackRoute />
           </SafeAreaView>
         </GestureHandlerRootView>
-      </PaperProvider>
-    </Provider>
-  );
+  )
 }

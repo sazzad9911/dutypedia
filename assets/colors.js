@@ -9,16 +9,16 @@ export class Color {
 
   constructor(isDark) {
     if (isDark) {
-      this.primaryColor = "#808080";
-      this.secondaryColor = "#101010";
-      this.textColor = "#f5f5f5";
-      this.assentColor = "#808080";
+      this.primaryColor = "#2E2E2E";
+      this.secondaryColor = "#202020";
+      this.textColor = "#ffff";
+      this.assentColor = "#E2E2E2";
       this.backgroundColor = "#DA1E78";
     } else {
       this.primaryColor = "#ffffff";
-      this.secondaryColor = "#fbfbfb";
-      this.textColor = "#333333";
-      this.assentColor = "#808080";
+      this.secondaryColor = "#ffff";
+      this.textColor = "#000000";
+      this.assentColor = "#4A4A4A";
       this.backgroundColor = "#DA1E37";
     }
   }
@@ -33,6 +33,9 @@ export class Color {
   }
   getBackgroundColor() {
     return this.backgroundColor;
+  }
+  getAssentColor() {
+    return this.assentColor;
   }
 }
 

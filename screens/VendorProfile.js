@@ -16,11 +16,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  primaryColor,
-  backgroundColor,
-  assentColor,
-  secondaryColor,
-  textColor,
+  Color
 } from "../assets/colors.js";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -131,6 +127,12 @@ const VendorProfile = (props) => {
   const [Bargaining, setBargaining] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -266,10 +268,119 @@ const VendorProfile = (props) => {
         });
     }
   }, [Active + createLoad + Refresh]);
+  const styles = StyleSheet.create({
+    backgroundContainer: {
+      minHeight: 200,
+    },
+    container: {
+      minHeight: 30,
+      backgroundColor: primaryColor,
+    },
+    profile: {
+      borderWidth: 1,
+      shadowOffset: {
+        width: 2,
+        height: 2,
+      },
+      shadowColor: backgroundColor,
+      width: 110,
+      height: 110,
+      marginTop: -55,
+      alignSelf: "center",
+      backgroundColor: primaryColor,
+      borderColor: backgroundColor,
+      borderRadius: 55,
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+    },
+    icon: {
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: assentColor,
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      shadowOffset: {
+        width: 2,
+        height: 2,
+      },
+      shadowRadius: 5,
+      shadowColor: backgroundColor,
+      elevation: 5,
+      shadowOpacity: 0.1,
+    },
+    iconTop: {
+      position: "absolute",
+      right: 20,
+      top: 50,
+      zIndex: 4,
+    },
+    iconBottom: {
+      position: "absolute",
+      zIndex: 4,
+      bottom: -10,
+      right: -10,
+    },
+    headLine: {
+      fontSize: 20,
+      fontFamily: "Poppins-Medium",
+    },
+    text: {
+      textAlign: "center",
+      fontSize: 14,
+      fontFamily: "Poppins-Medium",
+    },
+    image: {
+      width: 110,
+      height: 110,
+      borderRadius: 5,
+    },
+    starIcon: {
+      marginRight: 3,
+    },
+    cameraIcon: {
+      position: "absolute",
+      top: 0,
+      right: -5,
+      backgroundColor: "white",
+      borderRadius: 30,
+      shadowOffset: { width: 2, height: 2 },
+      shadowColor: "#707070",
+      shadowOpacity: 0.4,
+      shadowRadius: 2,
+      elevation: 2,
+      height: 25,
+      width: 25,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    activeButton: {
+      color: "white",
+      backgroundColor: backgroundColor,
+      borderRadius: 10,
+      borderWidth: 0,
+      marginBottom: 5,
+      alignItems: "flex-start",
+      paddingLeft: 10,
+      paddingRight: 10,
+      height: 30,
+    },
+    inactiveButton: {
+      color: textColor,
+      borderRadius: 10,
+      borderWidth: 0,
+      marginBottom: 5,
+      alignItems: "flex-start",
+      paddingLeft: 10,
+      paddingRight: 10,
+      height: 30,
+    },
+  });
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading....</Text>
+        <Text style={{color:textColor}}>Loading....</Text>
       </View>
     );
   }
@@ -1252,116 +1363,14 @@ const VendorProfile = (props) => {
 };
 
 export default VendorProfile;
-const styles = StyleSheet.create({
-  backgroundContainer: {
-    minHeight: 200,
-  },
-  container: {
-    minHeight: 30,
-    backgroundColor: primaryColor,
-  },
-  profile: {
-    borderWidth: 1,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowColor: backgroundColor,
-    width: 110,
-    height: 110,
-    marginTop: -55,
-    alignSelf: "center",
-    backgroundColor: primaryColor,
-    borderColor: backgroundColor,
-    borderRadius: 55,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  icon: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: assentColor,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowRadius: 5,
-    shadowColor: backgroundColor,
-    elevation: 5,
-    shadowOpacity: 0.1,
-  },
-  iconTop: {
-    position: "absolute",
-    right: 20,
-    top: 50,
-    zIndex: 4,
-  },
-  iconBottom: {
-    position: "absolute",
-    zIndex: 4,
-    bottom: -10,
-    right: -10,
-  },
-  headLine: {
-    fontSize: 20,
-    fontFamily: "Poppins-Medium",
-  },
-  text: {
-    textAlign: "center",
-    fontSize: 14,
-    fontFamily: "Poppins-Medium",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    borderRadius: 5,
-  },
-  starIcon: {
-    marginRight: 3,
-  },
-  cameraIcon: {
-    position: "absolute",
-    top: 0,
-    right: -5,
-    backgroundColor: "white",
-    borderRadius: 30,
-    shadowOffset: { width: 2, height: 2 },
-    shadowColor: "#707070",
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
-    elevation: 2,
-    height: 25,
-    width: 25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  activeButton: {
-    color: "white",
-    backgroundColor: backgroundColor,
-    borderRadius: 10,
-    borderWidth: 0,
-    marginBottom: 5,
-    alignItems: "flex-start",
-    paddingLeft: 10,
-    paddingRight: 10,
-    height: 30,
-  },
-  inactiveButton: {
-    color: textColor,
-    borderRadius: 10,
-    borderWidth: 0,
-    marginBottom: 5,
-    alignItems: "flex-start",
-    paddingLeft: 10,
-    paddingRight: 10,
-    height: 30,
-  },
-});
+
 const Options = ({ text, Icon }) => {
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
   return (
     <TouchableOpacity
       style={{
@@ -1393,6 +1402,12 @@ const Options = ({ text, Icon }) => {
 };
 const BarOption = ({ icon, title }) => {
   const [lines, setLines] = React.useState(1);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -1437,6 +1452,12 @@ const BarOption = ({ icon, title }) => {
   );
 };
 export const ServiceTable = ({ item, i, name, NewDataList }) => {
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
   React.useEffect(() => {
@@ -1511,8 +1532,15 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
     </View>
   );
 };
+
 export const Rows = ({ title, item, name, NewDataList }) => {
   const [text, setText] = React.useState();
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   React.useEffect(() => {
     //console.log(item);
@@ -1555,31 +1583,7 @@ function uniq(a) {
   });
 }
 
-const styler = StyleSheet.create({
-  box: {
-    padding: 10,
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    backgroundColor: primaryColor,
-    marginVertical: 0,
-    marginTop: 5,
-    alignItems: "center",
-  },
-  icon: {
-    flex: 1,
-  },
-  text: {
-    flex: 10,
-    marginLeft: 10,
-    fontSize: 16,
-    fontFamily: "Poppins-Medium",
-  },
-  text2: {
-    fontSize: 15,
-    fontFamily: "Poppins-Medium",
-    color: "#707070",
-  },
-});
+
 export const ServiceCarts = () => {
   return <TouchableOpacity></TouchableOpacity>;
 };

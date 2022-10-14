@@ -8,7 +8,7 @@ import ChatScreen from "./screens/ChatScreen";
 import ChatHead from "./components/ChatHead";
 import OtherProfile from "./screens/OtherProfile";
 const Stack = createStackNavigator();
-import { secondaryColor, primaryColor} from "./assets/colors";
+import { Color} from "./assets/colors";
 import SearchScreen from "./screens/SearchScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ManageOrder from "./screens/ManageOrder";
@@ -51,6 +51,14 @@ export default function StackRoute() {
   const [load, setLoad] = React.useState(false);
   const [Vendor, setVendor] = React.useState(false);
   const dispatch = useDispatch();
+  const isDark= useSelector((state) => state.isDark);
+  const colors=new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor =colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
+
   React.useEffect(() => {
     checkUser()
       .then((res) => {
@@ -82,14 +90,14 @@ export default function StackRoute() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: primaryColor,
+      background: secondaryColor,
     },
   };
 
   if (!user && !load) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading.....</Text>
+        <Text style={{color:textColor}}>Loading.....</Text>
       </View>
     );
   }

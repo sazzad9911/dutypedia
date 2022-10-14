@@ -1,7 +1,8 @@
 import React from "react";
 import { View, TextInput, Text } from "react-native";
-import { primaryColor, textColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import Animated, { StretchInY } from "react-native-reanimated";
+import {useSelector, useDispatch} from 'react-redux'
 
 const Input = ({
   onChange,
@@ -21,9 +22,15 @@ const Input = ({
   React.useEffect(() => {
     setError(error);
   }, [error]);
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const backgroundColor =colors.getBackgroundColor();
+  const assentColor=colors.getAssentColor();
   return (
     <Animated.View entering={StretchInY}>
-      <TextInput
+      <TextInput placeholderTextColor={assentColor}
         ref={innerRef}
         returnKeyType={returnKeyType}
         onSubmitEditing={() => {

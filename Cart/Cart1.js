@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 import {SvgXml} from 'react-native-svg'
 import {useDispatch,useSelector} from 'react-redux'
@@ -13,6 +13,11 @@ function Cart1(props) {
   const dispatch=useDispatch();
   const data=props.data;
   const user=useSelector((state) => state.user);
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
 
   React.useEffect(() => {
     //console.log(props.data.icon);

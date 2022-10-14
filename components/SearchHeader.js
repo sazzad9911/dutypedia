@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { primaryColor, secondaryColor, textColor } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { setBottomSheet } from "./../action";
 import { EvilIcons } from "@expo/vector-icons";
@@ -15,6 +15,59 @@ import { EvilIcons } from "@expo/vector-icons";
 const SearchHeader = (props) => {
   const navigation = props.navigation;
   const dispatch = useDispatch();
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  const secondaryColor=colors.getSecondaryColor();
+
+  const styles = StyleSheet.create({
+    box: {
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      paddingTop: 33,
+  
+      alignItems: "center",
+      backgroundColor: primaryColor,
+    },
+    icon: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "flex-start",
+    },
+    input: {
+      flex: 8,
+      backgroundColor: primaryColor,
+      height: 40,
+      borderRadius: 5,
+      paddingHorizontal: 5,
+      
+    },
+    boxx: {
+      backgroundColor: primaryColor,
+      marginLeft: -10,
+      flex: 10,
+      borderRadius: 5,
+    },
+    textx: {
+      color: textColor,
+      fontSize: 20,
+      fontWeight: "bold",
+    },
+    inputx: {
+      margin: 20,
+      backgroundColor: primaryColor,
+      height: 40,
+      width: "90%",
+      borderRadius: 5,
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 15,
+      paddingLeft: 10,
+    },
+  });
   return (
     <View style={styles.box}>
       <TouchableOpacity
@@ -26,9 +79,9 @@ const SearchHeader = (props) => {
         }}
         style={styles.icon}
       >
-        <Ionicons name="ios-chevron-back" size={24} color={textColor} />
+        <Ionicons name="ios-chevron-back" size={24} color={assentColor} />
       </TouchableOpacity>
-      <TextInput
+      <TextInput placeholderTextColor={assentColor}
           value={props.search}
           onChangeText={(val) => {
             if (props.onChange) {
@@ -73,47 +126,4 @@ const SearchHeader = (props) => {
 };
 
 export default SearchHeader;
-const styles = StyleSheet.create({
-  box: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    marginTop: 33,
 
-    alignItems: "center",
-    backgroundColor: primaryColor,
-  },
-  icon: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  input: {
-    flex: 8,
-    backgroundColor: secondaryColor,
-    height: 40,
-    borderRadius: 5,
-    paddingHorizontal: 5,
-  },
-  boxx: {
-    backgroundColor: secondaryColor,
-    marginLeft: -10,
-    flex: 10,
-    borderRadius: 5,
-  },
-  textx: {
-    color: textColor,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  inputx: {
-    margin: 20,
-    backgroundColor: primaryColor,
-    height: 40,
-    width: "90%",
-    borderRadius: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 15,
-    paddingLeft: 10,
-  },
-});

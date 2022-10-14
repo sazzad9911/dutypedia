@@ -10,7 +10,7 @@ import { Text } from "react-native";
 import { Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
-import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
+import { Color } from "../../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -34,9 +34,15 @@ const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = useSelector((state) => state.vendor);
   const dispatch = useDispatch();
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
 
   return (
-    <ScrollView style={{ backgroundColor: "#fbfbfb" }}>
+    <ScrollView style={{ backgroundColor: secondaryColor }}>
       <TouchableOpacity style={{marginTop:20}}
         onPress={() => {
           navigation.navigate("VendorProfile");
@@ -242,6 +248,12 @@ const Menu = ({ navigation }) => {
 
 export default Menu;
 const Cart = ({ title, Icon, onPress }) => {
+  const isDark= useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const secondaryColor=colors.getSecondaryColor();
+  const backgroundColor=colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -277,7 +289,8 @@ const Cart = ({ title, Icon, onPress }) => {
             fontSize: 14,
             fontFamily: "Poppins-Medium",
             marginTop: 5,
-            flex:1
+            flex:1,
+            color:textColor
           }}
         >
           {title}

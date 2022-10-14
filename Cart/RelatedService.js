@@ -10,20 +10,25 @@ import {
   Dimensions
 } from "react-native";
 import {
-  primaryColor,
-  textColor,
-  secondaryColor,
-  backgroundColor,
+  Color
 } from "./../assets/colors";
 import { SvgXml } from "react-native-svg";
 import { star } from "../assets/icon";
 import { AntDesign } from "@expo/vector-icons";
+import {useDispatch,useSelector} from 'react-redux'
 const { width, height } = Dimensions.get("window");
 
 const RelatedService = (props) => {
   const navigation = props.navigation;
   const [Like, seLike] = React.useState(false);
   const data = props.data;
+  const isDark=useSelector((state) => state.isDark);
+  const colors = new Color(isDark)
+  const primaryColor =colors.getPrimaryColor();
+  const textColor=colors.getTextColor();
+  const assentColor=colors.getAssentColor();
+  const backgroundColor=colors.getBackgroundColor();
+  
   return (
     <TouchableOpacity
       onPress={() => {
@@ -35,12 +40,12 @@ const RelatedService = (props) => {
         width: width/3+20,
         height: 280,
         borderRadius: 10,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#ebebeb",
+        shadowColor: primaryColor,
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: .9,
+        shadowOpacity: .5,
         shadowRadius: 6,
         elevation: 5,
         margin: 10,
@@ -51,7 +56,7 @@ const RelatedService = (props) => {
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "white",
+          backgroundColor: primaryColor,
           borderRadius: 10
         }}
       >
@@ -98,7 +103,7 @@ const RelatedService = (props) => {
             {Like ? (
               <AntDesign name="heart" size={24} color="#DA1e37" />
             ) : (
-              <AntDesign name="hearto" size={24} color={textColor} />
+              <AntDesign name="hearto" size={24} color={backgroundColor} />
             )}
           </TouchableOpacity>
         </View>
