@@ -33,7 +33,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import OutsideView from "react-native-detect-press-outside";
 import { useSelector, useDispatch } from "react-redux";
 import InputModal from "./InputModal";
-import {localOptionsToServer} from '../../Class/dataConverter'
+import { localOptionsToServer } from "../../Class/dataConverter";
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -152,17 +152,17 @@ const Pricing = ({ navigation, route }) => {
   const [StartingPriceError, setStartingPriceError] = React.useState();
   const [Service, setService] = React.useState([
     {
-      id:1,
+      id: 1,
       title: "Home Delivery Available",
       checked: false,
     },
     {
-      id:2,
+      id: 2,
       title: "Home Service Available",
       checked: false,
     },
     {
-      id:3,
+      id: 3,
       title: "Online Support Available",
       checked: false,
     },
@@ -183,7 +183,6 @@ const Pricing = ({ navigation, route }) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
   const businessForm = useSelector((state) => state.businessForm);
   const listData = useSelector((state) => state.listData);
-
 
   React.useEffect(() => {
     setServiceCounter(0);
@@ -355,7 +354,6 @@ const Pricing = ({ navigation, route }) => {
                 return;
               }
               setServiceNameError(null);
-              
             }}
             onFocus={() => {
               setData([]);
@@ -885,7 +883,7 @@ const Pricing = ({ navigation, route }) => {
               arr.push({
                 title: val,
                 checked: true,
-                id:arr.length+2
+                id: arr.length + 2,
               });
               setService(arr);
             }}
@@ -911,7 +909,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Poppins-Medium",
     fontSize: 16,
-    
   },
   button: {
     backgroundColor: primaryColor,
@@ -957,8 +954,8 @@ const Days = ({ title, error, onChange, value }) => {
       let arr = value.filter((item) => item.title == title);
       if (arr.length > 0) {
         setDay(true);
-        setOpeningTime(arr[0].openingTime)
-        setClosingTime(arr[0].closingTime)
+        setOpeningTime(arr[0].openingTime);
+        setClosingTime(arr[0].closingTime);
       }
     }
   }, [value]);
@@ -1037,7 +1034,7 @@ const Days = ({ title, error, onChange, value }) => {
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
             <DateTimePickerModal
-              date={OpeningTime?OpeningTime: new Date()}
+              date={OpeningTime ? OpeningTime : new Date()}
               buttonTextColorIOS={backgroundColor}
               isVisible={Open}
               mode="time"
@@ -1092,7 +1089,8 @@ const Days = ({ title, error, onChange, value }) => {
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
             <MaterialCommunityIcons name="clock" size={24} color="#707070" />
-            <DateTimePickerModal date={ClosingTime?ClosingTime:new Date()}
+            <DateTimePickerModal
+              date={ClosingTime ? ClosingTime : new Date()}
               buttonTextColorIOS={backgroundColor}
               isVisible={Close}
               mode="time"
@@ -1130,10 +1128,10 @@ const Days = ({ title, error, onChange, value }) => {
 export const CheckBox = ({ onChange, value, title, style }) => {
   const [checked, setChecked] = React.useState(false);
   React.useEffect(() => {
-    setChecked(value)
-  },[value])
+    setChecked(value);
+  }, [value]);
   return (
-    <View style={[{ flexDirection: "row", alignItems: "center"}, style]}>
+    <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
       <View
         style={{
           borderWidth: Platform.OS == "ios" ? 1 : 0,
@@ -1154,9 +1152,17 @@ export const CheckBox = ({ onChange, value, title, style }) => {
           }}
         />
       </View>
-      <Text style={[styles.text,{
-        flex: 1,
-      }]}>{title}</Text>
+      <Text
+        style={[
+          styles.text,
+          {
+            flex: 1,
+            color: style && style.color ? style.color : "black",
+          },
+        ]}
+      >
+        {title}
+      </Text>
     </View>
   );
 };

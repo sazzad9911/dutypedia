@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { primaryColor, backgroundColor, textColor } from "../assets/colors";
-import Animated,{ FadeIn} from 'react-native-reanimated';
+import Animated, { FadeIn } from "react-native-reanimated";
 
 const TextArea = ({
   placeholder,
@@ -19,16 +19,17 @@ const TextArea = ({
   returnKeyType,
   onSubmitEditing,
   innerRef,
-  value
+  value,
+  placeholderTextColor,
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const ref = React.useRef();
   const { width, height } = Dimensions.get("window");
-  const [Data, setData]= React.useState()
+  const [Data, setData] = React.useState();
 
   React.useEffect(() => {
     setData(value);
-  },[value])
+  }, [value]);
   return (
     <Animated.View entering={FadeIn}>
       <TouchableOpacity
@@ -46,15 +47,19 @@ const TextArea = ({
           style,
         ]}
         onPress={() => {
-          if(innerRef){
+          if (innerRef) {
             innerRef.current.focus();
-          }else{
+          } else {
             ref.current.focus();
           }
         }}
       >
-        <TextInput value={Data} multiline={true} ref={innerRef?innerRef:ref}
+        <TextInput
+          value={Data}
+          multiline={true}
+          ref={innerRef ? innerRef : ref}
           returnKeyType={returnKeyType}
+          placeholderTextColor={placeholderTextColor}
           onSubmitEditing={() => {
             if (onSubmitEditing) {
               onSubmitEditing();
@@ -73,7 +78,7 @@ const TextArea = ({
           rows={rows ? rows : 4}
           placeholder={placeholder}
           onChangeText={(value) => {
-            setData(value)
+            setData(value);
             if (onChange) {
               onChange(value);
             }

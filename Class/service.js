@@ -203,7 +203,11 @@ export const createOtherService = async (
         ? businessForm.facilities.filter((data) => data.checked == true)
         : [],
     },
-    services: localOptionsToServer(listData),
+    services: {
+      category: getDashboardTitle(listData[0].mainTitle),
+      type: listData[0].subTitle ? 3 : listData[0].title ? 2 : 1,
+      options: localOptionsToServer(listData),
+    },
     description: businessForm.description,
     images: images,
     serviceId: serviceId,
@@ -278,21 +282,24 @@ export const getDashboardTitle = (title) => {
   });
   return dashboard;
 };
-export const getAllGigs=async(token)=>{
-  const res= await axios.get(`${url}/server/services/get/gigs/all`,{
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  return res
-}
-export const getTopServices=async(token)=>{
-  const res= await axios.get(`${url}/server/services/gigs/top`,{
-    headers: { Authorization: `Bearer ${token}`}
-  })
-  return res
-}
-export const getPopularCategories=async(token)=>{
-  const res= await axios.get(`${url}/server/services/gigs/favourite-categories`,{
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  return res
-}
+export const getAllGigs = async (token) => {
+  const res = await axios.get(`${url}/server/services/get/gigs/all`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getTopServices = async (token) => {
+  const res = await axios.get(`${url}/server/services/gigs/top`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getPopularCategories = async (token) => {
+  const res = await axios.get(
+    `${url}/server/services/gigs/favourite-categories`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
