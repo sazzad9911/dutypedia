@@ -52,6 +52,7 @@ import { CheckBox } from "../screens/Seller/Pricing";
 import { Switch } from "react-native-paper";
 import { storeJson } from "./../Class/storage";
 import { getOrders } from "../Class/service";
+import OrderDetails from "./Seller/OrderDetails";
 
 const Stack = createStackNavigator();
 
@@ -246,9 +247,9 @@ const Profile = ({ navigation }) => {
         component={AllPackageList}
       />
       <Stack.Screen
-        options={{ header: (props) => <OtherProfileHeader {...props} /> }}
-        name="OtherProfile"
-        component={OtherProfile}
+        options={{ headerShown: false }}
+        name="OrderDetails"
+        component={OrderDetails}
       />
     </Stack.Navigator>
   );

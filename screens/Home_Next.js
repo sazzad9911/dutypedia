@@ -10,10 +10,9 @@ import {
   SafeAreaView,
   StyleSheet,
   Animated,
+  ActivityIndicator,
 } from "react-native";
-import {
-  Color,
-} from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import Cart from "../Cart/Cart";
 import Cart1 from "../Cart/Cart1";
 import Cart2 from "../Cart/Cart2";
@@ -41,19 +40,20 @@ import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import SellerCart3 from "./../Cart/SellerCart3";
 import { AllData } from "../Data/AllData";
-import {getTopServices,getPopularCategories} from '../Class/service'
+import { getTopServices, getPopularCategories } from "../Class/service";
+import ActivityLoader from "./../components/ActivityLoader";
 
 const { width, height } = Dimensions.get("window");
 
 const Home_Next = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor =colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
   const TextColor = colors.getTextColor();
   const user = useSelector((state) => state.user);
   const [SomeSuggest, setSomeSuggest] = React.useState(null);
@@ -65,8 +65,8 @@ const Home_Next = (props) => {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
-  const [SomeSuggestion, setSomeSuggestion]= React.useState(null);
-  const [PopularCategory, setPopularCategory]=React.useState(null);
+  const [SomeSuggestion, setSomeSuggestion] = React.useState(null);
+  const [PopularCategory, setPopularCategory] = React.useState(null);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -91,34 +91,40 @@ const Home_Next = (props) => {
     }
   }, [Refresh]);
   React.useEffect(() => {
-    if(user){
-      setSomeSuggestion(null)
+    if (user) {
+      setSomeSuggestion(null);
       setPopularCategory(null);
-      getTopServices(user.token).then(res=>{
-        if(res.data){
-          setSomeSuggestion(res.data.gigs);
-        }
-      }).catch(err=>{
-        console.warn(err.response);
-      })
-      getPopularCategories(user.token).then(res=>{
-        if(res.data){
-          let arr=[]
-          res.data.gigs.forEach(gig=>{
-            //console.log(gig.service.category)
-            let data=AllData.filter(d=>d.title.toUpperCase().match(gig.service.category));
-            if(data&&data.length>0){
-              arr.push(data[0])
-            }
-          })
-          //console.log(arr.length)
-          setPopularCategory(arr);
-        }
-      }).catch(err=>{
-        console.warn(err.response);
-      })
+      getTopServices(user.token)
+        .then((res) => {
+          if (res.data) {
+            setSomeSuggestion(res.data.gigs);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response);
+        });
+      getPopularCategories(user.token)
+        .then((res) => {
+          if (res.data) {
+            let arr = [];
+            res.data.gigs.forEach((gig) => {
+              //console.log(gig.service.category)
+              let data = AllData.filter((d) =>
+                d.title.toUpperCase().match(gig.service.category)
+              );
+              if (data && data.length > 0) {
+                arr.push(data[0]);
+              }
+            });
+            //console.log(arr.length)
+            setPopularCategory(arr);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response);
+        });
     }
-  },[user])
+  }, [user]);
   const styles = StyleSheet.create({
     content: {
       alignSelf: "stretch",
@@ -134,7 +140,7 @@ const Home_Next = (props) => {
       overflow: "hidden",
       zIndex: 3,
     },
-  
+
     input: {
       margin: 20,
       backgroundColor: primaryColor,
@@ -147,7 +153,7 @@ const Home_Next = (props) => {
       marginTop: 0,
     },
   });
-  
+
   return (
     <ScrollView
       style={{ flexGrow: 1 }}
@@ -156,7 +162,7 @@ const Home_Next = (props) => {
       stickyHeaderHiddenOnScroll={true}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing}
+          refreshing={false}
           onRefresh={() => {
             //setPageChange(true);
             onRefresh();
@@ -217,7 +223,7 @@ const Home_Next = (props) => {
           </TouchableOpacity>
         </View>
       </Animated.View>
-      
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -251,7 +257,7 @@ const Home_Next = (props) => {
             fontSize: 20,
             paddingLeft: 15,
             paddingRight: 15,
-            color:textColor
+            color: textColor,
           }}
         >
           Recent Visit
@@ -269,7 +275,7 @@ const Home_Next = (props) => {
               marginRight: 20,
               fontSize: 14,
               textAlign: "right",
-              color:textColor
+              color: textColor,
             }}
           >
             View All
@@ -288,9 +294,10 @@ const Home_Next = (props) => {
               height: 270,
               justifyContent: "center",
               alignItems: "center",
+              width: width - 15,
             }}
           >
-            <Text style={{color:textColor}}>Loading...</Text>
+            <ActivityLoader />
           </View>
         )}
         {SomeSuggest &&
@@ -308,7 +315,7 @@ const Home_Next = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 20,
-          color:textColor
+          color: textColor,
         }}
       >
         Some Suggest For You
@@ -319,12 +326,20 @@ const Home_Next = (props) => {
         horizontal={true}
       >
         <View style={{ width: 10 }} />
-        {SomeSuggestion&&SomeSuggestion.map((doc,i)=>(
-          <RelatedService data={doc} key={i} navigation={navigation} />
-        ))}
-        {!SomeSuggestion&&(
-          <View style={{height: 280,justifyContent: 'center',alignItems: "center"}}>
-          <Text style={{textAlign: 'center',color:textColor}}>Loading...</Text>
+        {SomeSuggestion &&
+          SomeSuggestion.map((doc, i) => (
+            <RelatedService data={doc} key={i} navigation={navigation} />
+          ))}
+        {!SomeSuggestion && (
+          <View
+            style={{
+              height: 280,
+              justifyContent: "center",
+              alignItems: "center",
+              width: width - 15,
+            }}
+          >
+            <ActivityLoader />
           </View>
         )}
         <View style={{ width: 10 }} />
@@ -344,7 +359,7 @@ const Home_Next = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 20,
-          color:textColor,
+          color: textColor,
         }}
       >
         Popular Category
@@ -355,12 +370,20 @@ const Home_Next = (props) => {
         horizontal={true}
       >
         <View style={{ width: 15 }} />
-        {PopularCategory&&PopularCategory.map((doc, i)=>(
-          <Cart data={doc} key={i} navigation={navigation} />
-        ))}
-        {!PopularCategory&&(
-          <View style={{height: 150,justifyContent: 'center',alignItems: "center"}}>
-          <Text style={{textAlign: 'center',color:textColor}}>Loading...</Text>
+        {PopularCategory &&
+          PopularCategory.map((doc, i) => (
+            <Cart data={doc} key={i} navigation={navigation} />
+          ))}
+        {!PopularCategory && (
+          <View
+            style={{
+              height: 150,
+              justifyContent: "center",
+              alignItems: "center",
+              width: width - 15,
+            }}
+          >
+            <ActivityLoader />
           </View>
         )}
         <View style={{ width: 15 }} />
