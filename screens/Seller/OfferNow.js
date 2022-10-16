@@ -35,6 +35,7 @@ import {
 } from "../../assets/OfferIcons";
 import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
+import { createOrder } from "../../Class/service";
 
 const OfferNow = ({ navigation, route }) => {
   const params = route.params ? route.params : null;
@@ -57,6 +58,10 @@ const OfferNow = ({ navigation, route }) => {
   const [Document, setDocument] = React.useState();
   const [Visible, setVisible] = React.useState(false);
   const [Check, setCheck] = React.useState(false);
+  const user = useSelector((state) => state.user);
+  const [Description, setDescription] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
+  const [Loader, setLoader] = React.useState(false);
 
   React.useEffect(() => {
     //console.warn(data.service.profilePhoto);
@@ -68,7 +73,54 @@ const OfferNow = ({ navigation, route }) => {
     }
     return false;
   };
-  const validate = () => {};
+  const validate = () => {
+    if (!From) {
+      setFromDateError("Invalid date");
+      return;
+    }
+    if (!To) {
+      setToDateError("Invalid date");
+      return;
+    }
+    if (!Price) {
+      setPriceError("Invalid price");
+      return;
+    }
+    setLoader(true);
+    createOrder(
+      user.token,
+      data.service.id,
+      data.service.gigs[0].type,
+      data.service.gigs[0].price,
+      Description,
+      Price,
+      From,
+      To,
+      vendor ? "VENDOR" : "USER"
+    )
+      .then((res) => {
+        if (res) {
+          try {
+            setLoader(false);
+            navigation.navigate("MainProfile");
+          } catch (e) {
+            setLoader(false);
+            console.warn(e.message);
+          }
+        }
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err.response.data.msg);
+      });
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: textColor }}>Loading....</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View
@@ -329,6 +381,8 @@ const OfferNow = ({ navigation, route }) => {
         </View>
         <View style={{ marginHorizontal: 20 }}>
           <TextArea
+            onChange={(e) => setDescription(e)}
+            value={Description}
             placeholderTextColor={assentColor}
             style={{
               width: width - 80,
@@ -483,6 +537,9 @@ const OfferNow = ({ navigation, route }) => {
           Including The User Agreement And Privacy Policy"
         />
         <Button
+          onPress={() => {
+            validate();
+          }}
           disabled={Price && From && To && Check ? false : true}
           style={{
             color: textColor,

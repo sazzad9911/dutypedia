@@ -7,11 +7,12 @@ import {
   ScrollView,
   StyleSheet,
   Image,
-  Platform
+  Platform,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import {Color } from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import ProfileOption from "./../components/ProfileOption";
@@ -35,21 +36,22 @@ import Header from "./../components/Header";
 import { useSelector, useDispatch } from "react-redux";
 import VendorProfile from "./VendorProfile";
 import Menu from "./Vendor/Menu";
-import { logOut,logoutVendor } from "../Class/auth";
+import { logOut, logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
-import DashboardList from './Vendor/DashboardList';
-import Notice,{AddNotice,ViewCart} from './Vendor/Notice';
-import Member,{AddOfflineUser,AddOnlineUser} from './Vendor/Member';
-import Expenses,{AddExpenses} from './Vendor/Expenses';
-import ServiceSettings from './Vendor/ServiceSettings';
-import Review from './Seller/Review';
-import AllPackageList from './Seller/AllPackageList';
-import OtherProfile from './OtherProfile';
-import OtherProfileHeader from './../components/OtherProfileHeader';
+import DashboardList from "./Vendor/DashboardList";
+import Notice, { AddNotice, ViewCart } from "./Vendor/Notice";
+import Member, { AddOfflineUser, AddOnlineUser } from "./Vendor/Member";
+import Expenses, { AddExpenses } from "./Vendor/Expenses";
+import ServiceSettings from "./Vendor/ServiceSettings";
+import Review from "./Seller/Review";
+import AllPackageList from "./Seller/AllPackageList";
+import OtherProfile from "./OtherProfile";
+import OtherProfileHeader from "./../components/OtherProfileHeader";
 import { CheckBox } from "../screens/Seller/Pricing";
-import { Switch } from 'react-native-paper';
-import {storeJson } from './../Class/storage'
+import { Switch } from "react-native-paper";
+import { storeJson } from "./../Class/storage";
+import { getOrders } from "../Class/service";
 
 const Stack = createStackNavigator();
 
@@ -85,7 +87,7 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="ManageOrder"
         options={{
-          header: (props) => <SubHeader title="Manage Order" {...props} />,
+          headerShown: false,
         }}
         component={ManageOrder}
       />
@@ -160,94 +162,94 @@ const Profile = ({ navigation }) => {
         component={ImageViewer}
       />
       <Stack.Screen
-          name="DashboardList"
-          options={{
-            headerShown: false,
-          }}
-          component={DashboardList}
-        />
-        <Stack.Screen
-          name="Notice"
-          options={{
-            headerShown: false,
-          }}
-          component={Notice}
-        />
-        <Stack.Screen
-          name="AddNotice"
-          options={{
-            header:(props)=><SubHeader title="Add Notice" {...props} />
-          }}
-          component={AddNotice}
-        />
-        <Stack.Screen
-          name="ViewCart"
-          options={{
-            headerShown: false,
-          }}
-          component={ViewCart}
-        />
-        <Stack.Screen
-          name="Member"
-          options={{
-            headerShown: false,
-          }}
-          component={Member}
-        />
-        <Stack.Screen
-          name="AddOfflineUser"
-          options={{
-            headerShown: false,
-          }}
-          component={AddOfflineUser}
-        />
-        <Stack.Screen
-          name="AddOnlineUser"
-          options={{
-            headerShown: false,
-          }}
-          component={AddOnlineUser}
-        />
-         <Stack.Screen
-          name="Expenses"
-          options={{
-            headerShown: false,
-          }}
-          component={Expenses}
-        />
-        <Stack.Screen
-          name="AddExpenses"
-          options={{
-            header:(props)=><SubHeader title="Add Expenses" {...props} />
-          }}
-          component={AddExpenses}
-        />
-         <Stack.Screen
-          name="ServiceSettings"
-          options={{
-            headerShown: false,
-          }}
-          component={ServiceSettings}
-        />
-        <Stack.Screen
-          name="Review"
-          options={{
-            header: (props) => <SubHeader title="Review" {...props} />,
-          }}
-          component={Review}
-        />
-        <Stack.Screen
-          name="AllPackageList"
-          options={{
-            header: (props) => <SubHeader title="Fixed Price" {...props} />,
-          }}
-          component={AllPackageList}
-        />
-         <Stack.Screen
-          options={{ header: (props) => <OtherProfileHeader {...props} /> }}
-          name="OtherProfile"
-          component={OtherProfile}
-        />
+        name="DashboardList"
+        options={{
+          headerShown: false,
+        }}
+        component={DashboardList}
+      />
+      <Stack.Screen
+        name="Notice"
+        options={{
+          headerShown: false,
+        }}
+        component={Notice}
+      />
+      <Stack.Screen
+        name="AddNotice"
+        options={{
+          header: (props) => <SubHeader title="Add Notice" {...props} />,
+        }}
+        component={AddNotice}
+      />
+      <Stack.Screen
+        name="ViewCart"
+        options={{
+          headerShown: false,
+        }}
+        component={ViewCart}
+      />
+      <Stack.Screen
+        name="Member"
+        options={{
+          headerShown: false,
+        }}
+        component={Member}
+      />
+      <Stack.Screen
+        name="AddOfflineUser"
+        options={{
+          headerShown: false,
+        }}
+        component={AddOfflineUser}
+      />
+      <Stack.Screen
+        name="AddOnlineUser"
+        options={{
+          headerShown: false,
+        }}
+        component={AddOnlineUser}
+      />
+      <Stack.Screen
+        name="Expenses"
+        options={{
+          headerShown: false,
+        }}
+        component={Expenses}
+      />
+      <Stack.Screen
+        name="AddExpenses"
+        options={{
+          header: (props) => <SubHeader title="Add Expenses" {...props} />,
+        }}
+        component={AddExpenses}
+      />
+      <Stack.Screen
+        name="ServiceSettings"
+        options={{
+          headerShown: false,
+        }}
+        component={ServiceSettings}
+      />
+      <Stack.Screen
+        name="Review"
+        options={{
+          header: (props) => <SubHeader title="Review" {...props} />,
+        }}
+        component={Review}
+      />
+      <Stack.Screen
+        name="AllPackageList"
+        options={{
+          header: (props) => <SubHeader title="Fixed Price" {...props} />,
+        }}
+        component={AllPackageList}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <OtherProfileHeader {...props} /> }}
+        name="OtherProfile"
+        component={OtherProfile}
+      />
     </Stack.Navigator>
   );
 };
@@ -261,20 +263,50 @@ const MainProfile = (props) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const [LogOut, setLogOut]= React.useState(false);
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const secondaryColor =colors.getSecondaryColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const textColor=colors.getTextColor();
+  const [LogOut, setLogOut] = React.useState(false);
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const textColor = colors.getTextColor();
+  const [Orders, setOrders] = React.useState(null);
+  const [Loader, setLoader] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [Refresh, setRefresh] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   React.useEffect(() => {
-    if(user&&!Array.isArray(user)){
-      setLogOut(false)
+    if (user && !Array.isArray(user)) {
+      setLogOut(false);
     }
+    //console.log(user);
   }, [user]);
+  React.useEffect(() => {
+    if (user) {
+      setLoader(true);
+      getOrders(user.token, "user")
+        .then((res) => {
+          if (res.data) {
+            setLoader(false);
+            setOrders(res.data.orders);
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+    }
+  }, [user + Refresh]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -361,8 +393,8 @@ const MainProfile = (props) => {
       textAlign: "center",
       marginTop: 10,
       fontFamily: "Poppins-Medium",
-      color:textColor
-    }, 
+      color: textColor,
+    },
     text: {
       textAlign: "center",
       fontSize: 16,
@@ -375,149 +407,179 @@ const MainProfile = (props) => {
       height: 80,
     },
   });
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: textColor }}>Loading.....</Text>
+      </View>
+    );
+  }
   if (LogOut) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{color:textColor}}>Loading.....</Text>
+        <Text style={{ color: textColor }}>Loading.....</Text>
       </View>
     );
   }
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <View style={styles.container}>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            //setPageChange(true);
+            onRefresh();
+          }}
+        />
+      }
+    >
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={pickBackgroundImage}
+          style={[styles.icon, styles.iconTop]}
+        >
+          <EvilIcons name="camera" size={24} color="red" />
+        </TouchableOpacity>
+        {backgroundImage ? (
+          <Image
+            source={{ uri: backgroundImage }}
+            style={styles.backgroundContainer}
+          />
+        ) : (
+          <LinearGradient
+            style={styles.backgroundContainer}
+            colors={["#983C85", "#983C85", "#983C53"]}
+          ></LinearGradient>
+        )}
+
+        <View style={styles.profile}>
+          {image ? (
+            <Image style={styles.image} source={{ uri: image }} />
+          ) : (
+            <FontAwesome name="user" size={80} color="#983C85" />
+          )}
           <TouchableOpacity
-            onPress={pickBackgroundImage}
-            style={[styles.icon, styles.iconTop]}
+            onPress={pickImage}
+            style={[styles.icon, styles.iconBottom]}
           >
             <EvilIcons name="camera" size={24} color="red" />
           </TouchableOpacity>
-          {backgroundImage ? (
-            <Image
-              source={{ uri: backgroundImage }}
-              style={styles.backgroundContainer}
-            />
-          ) : (
-            <LinearGradient
-              style={styles.backgroundContainer}
-              colors={["#983C85", "#983C85", "#983C53"]}
-            ></LinearGradient>
-          )}
-
-          <View style={styles.profile}>
-            {image ? (
-              <Image style={styles.image} source={{ uri: image }} />
-            ) : (
-              <FontAwesome name="user" size={80} color="#983C85" />
-            )}
-            <TouchableOpacity
-              onPress={pickImage}
-              style={[styles.icon, styles.iconBottom]}
-            >
-              <EvilIcons name="camera" size={24} color="red" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.headLine}>
-            {user ? user.user.firstName + " " + user.user.lastName : "-"}
-          </Text>
-          <Text style={styles.text}>@{user ? user.user.username : ""}</Text>
         </View>
+        <Text style={styles.headLine}>
+          {user ? user.user.firstName + " " + user.user.lastName : "-"}
+        </Text>
+        <Text style={styles.text}>@{user ? user.user.username : ""}</Text>
+      </View>
+      <ProfileOption
+        badge={Orders ? Orders.length : false}
+        onPress={() => {
+          navigation.navigate("ManageOrder");
+        }}
+        Icon={() => <Octicons name="checklist" size={24} color={assentColor} />}
+        title="Manage Order"
+      />
+      <ProfileOption
+        onPress={() => {
+          navigation.navigate("Appointment");
+        }}
+        Icon={() => <AntDesign name="calendar" size={24} color={assentColor} />}
+        title="Appointment"
+      />
+      <ProfileOption
+        onPress={() => {}}
+        Icon={() => <AntDesign name="wallet" size={24} color={assentColor} />}
+        title="Account Balance"
+      />
+      <ProfileOption
+        onPress={() => {
+          navigation.navigate("SaveList");
+        }}
+        Icon={() => <AntDesign name="hearto" size={24} color={assentColor} />}
+        title="Saved"
+      />
+      <ProfileOption
+        onPress={() => {
+          navigation.navigate("Category");
+        }}
+        Icon={() => <Ionicons name="business" size={24} color={assentColor} />}
+        title="Create a business account"
+      />
+      {vendorInfo && (
         <ProfileOption
-          badge={true}
           onPress={() => {
-            navigation.navigate("ManageOrder");
+            navigation.navigate("DashboardList");
           }}
-          Icon={() => <Octicons name="checklist" size={24} color={assentColor} />}
-          title="Manage Order"
+          Icon={() => <SvgXml xml={dashboard} height="24" width="24" />}
+          title="Login To Business Account"
         />
-        <ProfileOption
-          badge={true}
-          onPress={() => {
-            navigation.navigate("Appointment");
-          }}
-          Icon={() => <AntDesign name="calendar" size={24} color={assentColor} />}
-          title="Appointment"
-        />
-        <ProfileOption
-          onPress={() => {
-            
-          }}
-          Icon={() => <AntDesign name="wallet" size={24} color={assentColor} />}
-          title="Account Balance"
-        />
-        <ProfileOption
-          onPress={() => {
-            navigation.navigate("SaveList");
-          }}
-          Icon={() => <AntDesign name="hearto" size={24} color={assentColor} />}
-          title="Saved"
-        />
-        <ProfileOption
-          onPress={() => {
-            navigation.navigate("Category");
-          }}
-          Icon={() => <Ionicons name="business" size={24} color={assentColor} />}
-          title="Create a business account"
-        />
-        {vendorInfo && (
-          <ProfileOption
-            onPress={() => {
-              navigation.navigate("DashboardList");
-            }}
-            Icon={() => <SvgXml xml={dashboard} height="24" width="24" />}
-            title="Login To Business Account"
-          />
+      )}
+      <ProfileOption
+        onPress={() => {
+          setLogOut(true);
+          logOut();
+          logoutVendor();
+          dispatch({ type: "SET_VENDOR", playload: false });
+          dispatch({ type: "SET_USER", playload: [] });
+          dispatch({ type: "SET_VENDOR_INFO", playload: false });
+          navigation.navigate("Home");
+        }}
+        Icon={() => (
+          <Ionicons name="log-out-outline" size={24} color={assentColor} />
         )}
-        <ProfileOption
-          onPress={() => {
-            setLogOut(true);
-            logOut();
-            logoutVendor();
-            dispatch({type:'SET_VENDOR',playload:false});
-            dispatch({ type: "SET_USER", playload: [] });
-            dispatch({ type: "SET_VENDOR_INFO", playload: false });
-            navigation.navigate("Home")
+        title="Log Out"
+      />
+      <ProfileOption
+        onPress={() => {
+          navigation.navigate("Support");
+        }}
+        Icon={() => (
+          <FontAwesome name="support" size={24} color={assentColor} />
+        )}
+        title="Support"
+      />
+      <View
+        style={{
+          paddingLeft: 50,
+          paddingRight: 20,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: "#e5e5e5",
           }}
-          Icon={() => (
-            <Ionicons name="log-out-outline" size={24} color={assentColor} />
-          )}
-          title="Log Out"
-        />
-        <ProfileOption
-          onPress={() => {
-            navigation.navigate("Support");
-          }}
-          Icon={() => <FontAwesome name="support" size={24} color={assentColor} />}
-          title="Support"
-        />
-         <View style={{
-          paddingLeft:50,
-          paddingRight:20,
-         }}>
-         <View style={{flexDirection:'row',
-         justifyContent:'space-between',
-         alignItems: 'center',
-         borderBottomWidth:1,
-         borderBottomColor: "#e5e5e5",
-         }}>
-          <Text style={{
-            color:textColor,
-            fontSize:16,
-            fontFamily: "Poppins-SemiBold",
-          }}>Dark Theme</Text>
-          <Switch style={{
-              height:35,
-              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
-            }} color='#707070' value={isDark} onValueChange={(val)=>{
-              storeJson("theme",(!isDark))
-              dispatch({type: 'SET_THEME',playload:(!isDark)})
-            }} />
-         </View>
-         </View>
-      </ScrollView>
-    </View>
+        >
+          <Text
+            style={{
+              color: textColor,
+              fontSize: 16,
+              fontFamily: "Poppins-SemiBold",
+            }}
+          >
+            Dark Theme
+          </Text>
+          <Switch
+            style={{
+              height: 35,
+              transform: [
+                { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+              ],
+            }}
+            color="#707070"
+            value={isDark}
+            onValueChange={(val) => {
+              storeJson("theme", !isDark);
+              dispatch({ type: "SET_THEME", playload: !isDark });
+            }}
+          />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 export default Profile;
-

@@ -303,3 +303,36 @@ export const getPopularCategories = async (token) => {
   );
   return res;
 };
+export const createOrder = async (
+  token,
+  serviceId,
+  type,
+  amount,
+  description,
+  offerPrice,
+  deliveryDateFrom,
+  deliveryDateTo,
+  orderedBy
+) => {
+  const res = await axios.post(
+    `${url}/server/orders/create`,
+    {
+      serviceId: serviceId,
+      type: type,
+      amount: amount,
+      description: description,
+      offerPrice: offerPrice,
+      deliveryDateFrom: deliveryDateFrom,
+      deliveryDateTo: deliveryDateTo,
+      orderedBy: orderedBy,
+    },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res;
+};
+export const getOrders = async (token, type) => {
+  const res = await axios.get(`${url}/server/orders/${type}/get`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
