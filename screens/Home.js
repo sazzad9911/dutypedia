@@ -11,9 +11,7 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import {
-  Color,
-} from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import Cart from "../Cart/Cart";
 import Cart1 from "../Cart/Cart1";
 import Cart2 from "../Cart/Cart2";
@@ -37,12 +35,12 @@ const Home = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
   const TextColor = colors.getTextColor();
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor =colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
@@ -157,7 +155,6 @@ const Home = (props) => {
         style={[
           {
             transform: [{ translateY: translateY }],
-
             top: 0,
             left: 0,
             right: 0,
@@ -235,7 +232,7 @@ const Home = (props) => {
           paddingLeft: 15,
           paddingRight: 15,
           fontSize: 18,
-          color:textColor
+          color: textColor,
         }}
       >
         What is Your Best Interested Category
@@ -289,7 +286,7 @@ const Home = (props) => {
             paddingLeft: 15,
             paddingRight: 15,
             fontSize: 18,
-            color:textColor
+            color: textColor,
           }}
         >
           Some Suggest
@@ -307,7 +304,7 @@ const Home = (props) => {
               marginRight: 20,
               fontSize: 14,
               textAlign: "right",
-              color:textColor
+              color: textColor,
             }}
           >
             View All
@@ -347,4 +344,3 @@ const Home = (props) => {
 };
 
 export default Home;
-

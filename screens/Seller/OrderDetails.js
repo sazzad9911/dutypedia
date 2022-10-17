@@ -6,10 +6,14 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
+import Button from "./../../components/Button";
+import Barcode from "react-native-barcode-expo";
+const { width, height } = Dimensions.get("window");
 
 const OrderDetails = ({ navigation, route }) => {
   const data = route.params && route.params.data ? route.params.data : null;
@@ -47,9 +51,50 @@ const OrderDetails = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ];
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      borderBottomWidth: 1,
+      borderBottomColor: "#F1EFEF",
+      justifyContent: "center",
+    },
+    text: {
+      fontSize: 16,
+      fontFamily: "Poppins-Medium",
+      color: textColor,
+    },
+    smallText: {
+      fontSize: 14,
+      fontFamily: "Poppins-Medium",
+      color: textColor,
+    },
+  });
+  React.useEffect(() => {
+    //console.log(data);
+  }, []);
 
+  const stringDate = (d) => {
+    const Months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    let date = new Date(d);
+    return `${date.getDay() < 10 ? date.getDay() + 1 : date.getDay()}th ${
+      Months[date.getMonth()]
+    } ${date.getFullYear()}`;
+  };
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{ height: 33 }} />
       <View
         style={{
@@ -90,9 +135,10 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             numberOfLines={1}
             style={{
-              fontSize: 18,
+              fontSize: 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
+              marginBottom: 5,
             }}
           >
             {data
@@ -133,6 +179,9 @@ const OrderDetails = ({ navigation, route }) => {
               style={{
                 textAlign: "center",
                 marginVertical: 10,
+                fontFamily: "Poppins-Medium",
+                fontSize: 16,
+                marginTop: 0,
               }}
             >
               {
@@ -146,15 +195,171 @@ const OrderDetails = ({ navigation, route }) => {
         </View>
         <View style={styles.view}></View>
       </View>
+      <View
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 20,
+          marginVertical: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+          }}
+        >
+          Order Id: {data ? data.id : "Unknown Id"}
+        </Text>
+        <View
+          style={{
+            justifyContent: "center",
+          }}
+        >
+          <Barcode height="50" value="Hello World" format="CODE128" />
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 12,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+            }}
+          >
+            4567443224255
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+              textAlign: "center",
+            }}
+          >
+            Date:{" "}
+            {data && data.createdAt
+              ? stringDate(data.createdAt)
+              : "Unavailable Date"}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+          marginTop: 20,
+        }}
+      >
+        <Text style={styles.text}>Price</Text>
+        <Text style={styles.text}>
+          Basic Price : {data ? data.amount + "৳" : "Pice is empty"}
+        </Text>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={styles.text}>Delivery Date</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: 10,
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text style={[styles.smallText, { flex: 0 }]}>
+            {data ? stringDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
+          </Text>
+          <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
+            To
+          </Text>
+          <Text style={[styles.smallText, { flex: 0 }]}>
+            {data ? stringDate(data.deliveryDateTo) : "Unavailable Date"}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={styles.text}>Payment Status</Text>
+        <View
+          style={{
+            backgroundColor: data && data.paid ? "green" : "red",
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            borderRadius: 50,
+            marginTop: 10,
+            marginBottom: 5,
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+            }}
+          >
+            {data && data.paid ? "Paid" : "Due"}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={[styles.text, { fontSize: 18 }]}>Service Status</Text>
+        <Text style={[styles.smallText, { marginTop: 5 }]}>
+          Wait for accept
+        </Text>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={[styles.text, { fontSize: 22 }]}>Introduction</Text>
+        <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
+          {data && data.description ? data.description : "No details found!"}
+        </Text>
+      </View>
+      <Button
+        style={{
+          backgroundColor: backgroundColor,
+          borderRadius: 5,
+          alignSelf: "flex-end",
+          marginVertical: 20,
+          borderWidth: 0,
+          marginRight: 20,
+        }}
+        title="Cancel Order"
+      />
     </ScrollView>
   );
 };
 export default OrderDetails;
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e5e5",
-    justifyContent: "center",
-  },
-});
