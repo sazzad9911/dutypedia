@@ -38,10 +38,10 @@ import SubHeader from "./../components/SubHeader";
 import AllPackageList from "./Seller/AllPackageList";
 import HomeRoute from "./../HomeRoute";
 import Feed from "./Feed";
-import {checkUser} from '../Class/auth'
-import {getService,getDashboard} from '../Class/service'
-import Dashboard from './Seller/Dashboard';
-import Order from './Seller/Order';
+import { checkUser } from "../Class/auth";
+import { getService, getDashboard } from "../Class/service";
+import Dashboard from "./Seller/Dashboard";
+import Order from "./Vendor/Order";
 
 const Tab = createBottomTabNavigator();
 
@@ -121,39 +121,39 @@ const TabRoute = () => {
           return <BottomBar {...props} />;
         }}
       >
-       {!vendor&&(
-        !Array.isArray(user)&& user && load ? (
+        {!vendor &&
+          (!Array.isArray(user) && user && load ? (
+            <Tab.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={HomeRoute}
+            />
+          ) : (
+            <Tab.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={Feed}
+            />
+          ))}
+        {vendor && (
           <Tab.Screen
-            options={{ headerShown: false }}
-            name="Home"
-            component={HomeRoute}
-          />
-        ) : (
-          <Tab.Screen
-            options={{ headerShown: false }}
-            name="Home"
-            component={Feed}
-          />
-        )
-       )}
-       {vendor&&(
-        <Tab.Screen
             options={{ headerShown: false }}
             name="Home"
             component={Dashboard}
           />
-       )}
-        {vendor?(
+        )}
+        {vendor ? (
           <Tab.Screen
-          options={{ lazy: false, headerShown: false}}
-          name="Search"
-          component={Order}/>
-        ):(
+            options={{ lazy: false, headerShown: false }}
+            name="Search"
+            component={Order}
+          />
+        ) : (
           <Tab.Screen
-          options={{ lazy: false, headerShown: false}}
-          name="Search"
-          component={SearchScreen}
-        />
+            options={{ lazy: false, headerShown: false }}
+            name="Search"
+            component={SearchScreen}
+          />
         )}
         <Tab.Screen
           options={{

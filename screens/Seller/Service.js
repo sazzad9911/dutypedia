@@ -181,7 +181,7 @@ const Service = ({ navigation, route }) => {
           direct
         )
           .then((res) => {
-            navigation.navigate("VendorProfile",{direct:businessForm});
+            navigation.navigate("VendorProfile", { direct: businessForm });
             setLoader(false);
           })
           .catch((err) => {
@@ -198,7 +198,7 @@ const Service = ({ navigation, route }) => {
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading...</Text>
       </View>
-    )
+    );
   }
   return (
     <KeyboardAvoidingView
@@ -424,6 +424,7 @@ const Service = ({ navigation, route }) => {
                   arr[i] = {
                     title: doc.title,
                     checked: !doc.checked,
+                    id: i + 1,
                   };
                   setFacilities(arr);
                   setChange(!change);

@@ -3,509 +3,509 @@ import uuid from "uuid";
 export const LawyerOptions = {
   Bankruptcy: [
     {
-      id: uuid.v4(),
+      id: 1,
       title: "Debt Relief ",
     },
     {
-      id: uuid.v4(),
+      id: 2,
       title: "Asset Protection",
     },
     {
-      id: uuid.v4(),
+      id: 3,
       title: "Chapter 7 Bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 4,
       title: "Chapter 13 Bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 5,
       title: "Chapter 11 Bankruptcy",
     },
   ],
   Business: [
     {
-      id: uuid.v4(),
+      id: 6,
       title: "Contracts",
     },
     {
-      id: uuid.v4(),
+      id: 7,
       title: "Business Formation",
     },
     {
-      id: uuid.v4(),
+      id: 8,
       title: "Litigation",
     },
     {
-      id: uuid.v4(),
+      id: 9,
       title: "Debt Collection",
     },
   ],
   Civil: [
     {
-      id: uuid.v4(),
+      id: 10,
       title: "Civil Law Service Aor Aboriginal Communities",
     },
     {
-      id: uuid.v4(),
+      id: 11,
       title: "Coronial Inquest Unit",
     },
     {
-      id: uuid.v4(),
+      id: 12,
       title: "DRLS (Disaster Response Legal Service)",
     },
     {
-      id: uuid.v4(),
+      id: 13,
       title: "Employment Law Services",
     },
     {
-      id: uuid.v4(),
+      id: 14,
       title: "Homeless Outreach Legal Service",
     },
     {
-      id: uuid.v4(),
+      id: 15,
       title: "Human Rights Committee",
     },
     {
-      id: uuid.v4(),
+      id: 16,
       title: "Immigration Service",
     },
     {
-      id: uuid.v4(),
+      id: 17,
       title: "Mental Health Advocacy Service",
     },
     {
-      id: uuid.v4(),
+      id: 18,
       title: "Mortgage Hardship Service",
     },
     {
-      id: uuid.v4(),
+      id: 19,
       title: "Older Person's Legal And Education Program",
     },
     {
-      id: uuid.v4(),
+      id: 20,
       title: "Refugee Service",
     },
     {
-      id: uuid.v4(),
+      id: 21,
       title: "Sexual Assault Communications Privilege Service",
     },
     {
-      id: uuid.v4(),
+      id: 22,
       title: "Social Security Service",
     },
     {
-      id: uuid.v4(),
+      id: 23,
       title: "Veterans' Advocacy Service",
     },
     {
-      id: uuid.v4(),
+      id: 24,
       title: "Work And Development Order Service",
     },
   ],
   Constitutional: [
     {
-      id: uuid.v4(),
+      id: 25,
       title: "State And Legal Structure",
     },
     {
-      id: uuid.v4(),
+      id: 26,
       title: "Human Rights",
     },
     {
-      id: uuid.v4(),
+      id: 27,
       title: "Legislative Procedure",
     },
     {
-      id: uuid.v4(),
+      id: 28,
       title: "Study Of Constitutional Law",
     },
     {
-      id: uuid.v4(),
+      id: 29,
       title: "The Rule Of Law",
     },
     {
-      id: uuid.v4(),
+      id: 30,
       title: "The Separation Of Powers",
     },
     {
-      id: uuid.v4(),
+      id: 31,
       title: "See Also",
     },
     {
-      id: uuid.v4(),
+      id: 32,
       title: "References",
     },
     {
-      id: uuid.v4(),
+      id: 33,
       title: "External Links",
     },
   ],
   Criminal: [
     {
-      id: uuid.v4(),
+      id: 34,
       title: "Assignment Of The Case",
     },
     {
-      id: uuid.v4(),
+      id: 35,
       title: "Interview About The Case",
     },
     {
-      id: uuid.v4(),
+      id: 36,
       title: "Investigation Into The Case",
     },
     {
-      id: uuid.v4(),
+      id: 37,
       title: "Analysis Of Evidence",
     },
     {
-      id: uuid.v4(),
+      id: 38,
       title: "Continued Contact With The Client",
     },
     {
-      id: uuid.v4(),
+      id: 39,
       title: "Jury Selection",
     },
     {
-      id: uuid.v4(),
+      id: 40,
       title: "Plea Bargaining",
     },
     {
-      id: uuid.v4(),
+      id: 41,
       title: "Trial Participation",
     },
     {
-      id: uuid.v4(),
+      id: 42,
       title: "Sentencing",
     },
   ],
   Environmental: [
     {
-      id: uuid.v4(),
+      id: 43,
       title: "Water Quality, Air Quality, And Pollution",
     },
     {
-      id: uuid.v4(),
+      id: 44,
       title: "Proper Disposal Of Hazardous Waste",
     },
     {
-      id: uuid.v4(),
+      id: 45,
       title: "Animal Rights And Species Protection",
     },
     {
-      id: uuid.v4(),
+      id: 46,
       title: "Farming And Agriculture Issues",
     },
     {
-      id: uuid.v4(),
+      id: 47,
       title: "Preserving Wetlands And Protecting Biodiversity",
     },
     {
-      id: uuid.v4(),
+      id: 48,
       title: "Better Waste Management Systems",
     },
     {
-      id: uuid.v4(),
+      id: 49,
       title: "Sustainability And Green Strategies For The Future",
     },
     {
-      id: uuid.v4(),
+      id: 50,
       title:
         "Green Initiatives (For Everyone From Parks To Cities To Corporations)",
     },
     {
-      id: uuid.v4(),
+      id: 51,
       title: "Improved Energy Sources And Clean Technology",
     },
     {
-      id: uuid.v4(),
+      id: 52,
       title: "National Green Standards And New Environmental Legislation",
     },
     {
-      id: uuid.v4(),
+      id: 53,
       title: "Climate Change Laws And Innovation",
     },
     {
-      id: uuid.v4(),
+      id: 54,
       title: "Native Titles For Land And Environmental Rights",
     },
     {
-      id: uuid.v4(),
+      id: 55,
       title: "Public Land Use And Sea Use",
     },
     {
-      id: uuid.v4(),
+      id: 56,
       title:
         "Resources And Laws Governing Resource Use (Oil, Natural Gas, Gold, Etc)",
     },
   ],
   Estate: [
     {
-      id: uuid.v4(),
+      id: 57,
       title: "Life Insurance",
     },
     {
-      id: uuid.v4(),
+      id: 58,
       title: "Real Estate",
     },
     {
-      id: uuid.v4(),
+      id: 59,
       title: "AutomobilesVehicles",
     },
     {
-      id: uuid.v4(),
+      id: 60,
       title: "Tangible Personal Property : Jewelry, Furniture, Arts, Etc",
     },
     {
-      id: uuid.v4(),
+      id: 61,
       title: "Bank Accunt",
     },
     {
-      id: uuid.v4(),
+      id: 62,
       title: "Certificates Of Deposite",
     },
     {
-      id: uuid.v4(),
+      id: 63,
       title: "Annuities",
     },
     {
-      id: uuid.v4(),
+      id: 64,
       title: "Pension Plan",
     },
     {
-      id: uuid.v4(),
+      id: 65,
       title: "Investment",
     },
     {
-      id: uuid.v4(),
+      id: 66,
       title: "Business Interest",
     },
     {
-      id: uuid.v4(),
+      id: 67,
       title: "Future Inheritances",
     },
     {
-      id: uuid.v4(),
+      id: 68,
       title: "Interests In Estates Or Trust",
     },
     {
-      id: uuid.v4(),
+      id: 69,
       title: "Outstanding Liabilities",
     },
     {
-      id: uuid.v4(),
+      id: 70,
       title: "Fiduciaries",
     },
   ],
   Family: [
     {
-      id: uuid.v4(),
+      id: 71,
       title: "Divorce",
     },
     {
-      id: uuid.v4(),
+      id: 72,
       title: "Adoption",
     },
     {
-      id: uuid.v4(),
+      id: 73,
       title: "Guardianship",
     },
     {
-      id: uuid.v4(),
+      id: 74,
       title: "Emancipation",
     },
   ],
   Immigration: [
     {
-      id: uuid.v4(),
+      id: 75,
       title: "Express Entry",
     },
     {
-      id: uuid.v4(),
+      id: 76,
       title: "Quebec Skilled Worker",
     },
     {
-      id: uuid.v4(),
+      id: 77,
       title: "Provincial Nomination Program",
     },
     {
-      id: uuid.v4(),
+      id: 78,
       title: "Family Class Sponsorship",
     },
     {
-      id: uuid.v4(),
+      id: 79,
       title: "Study Program",
     },
     {
-      id: uuid.v4(),
+      id: 80,
       title: "Business Enterpreneur",
     },
     {
-      id: uuid.v4(),
+      id: 81,
       title: "Lobour Visa",
     },
     {
-      id: uuid.v4(),
+      id: 82,
       title: "Citizenship ",
     },
     {
-      id: uuid.v4(),
+      id: 83,
       title: "Visa Renew",
     },
     {
-      id: uuid.v4(),
+      id: 84,
       title: "Business Visa",
     },
   ],
   Intellectual: [
     {
-      id: uuid.v4(),
+      id: 85,
       title: "Patent",
     },
     {
-      id: uuid.v4(),
+      id: 86,
       title: "Trademark",
     },
     {
-      id: uuid.v4(),
+      id: 87,
       title: "Copyrights",
     },
     {
-      id: uuid.v4(),
+      id: 88,
       title: "Trade Ecrets",
     },
   ],
   Labor: [
     {
-      id: uuid.v4(),
+      id: 89,
       title: "Union procedures",
     },
     {
-      id: uuid.v4(),
+      id: 90,
       title: "Labor Law Litigation",
     },
     {
-      id: uuid.v4(),
+      id: 91,
       title: "Lobbying",
     },
     {
-      id: uuid.v4(),
+      id: 92,
       title: "Other Employment Laws",
     },
   ],
   Medical: [
     {
-      id: uuid.v4(),
+      id: 93,
       title: "Duty Of Care",
     },
     {
-      id: uuid.v4(),
+      id: 94,
       title: "Causation",
     },
     {
-      id: uuid.v4(),
+      id: 95,
       title: "Strayed From Standard Of Care",
     },
     {
-      id: uuid.v4(),
+      id: 96,
       title: "Injuries Were The Result Of Negligence",
     },
   ],
   Personal: [
     {
-      id: uuid.v4(),
+      id: 97,
       title: "Auto Accident Injuries",
     },
     {
-      id: uuid.v4(),
+      id: 98,
       title: "Nursing Home Abuse",
     },
     {
-      id: uuid.v4(),
+      id: 99,
       title: "Premises Liability",
     },
     {
-      id: uuid.v4(),
+      id: 100,
       title: "Workers Compensation",
     },
     {
-      id: uuid.v4(),
+      id: 101,
       title: "Wrongful Death",
     },
     {
-      id: uuid.v4(),
+      id: 102,
       title: "Medical Malpractice",
     },
     {
-      id: uuid.v4(),
+      id: 103,
       title: "Product Liability",
     },
     {
-      id: uuid.v4(),
+      id: 104,
       title: "Mesothelioma And Asbestosis",
     },
     {
-      id: uuid.v4(),
+      id: 105,
       title: "Fela Injury",
     },
   ],
   Real: [
     {
-      id: uuid.v4(),
+      id: 106,
       title: "State Or Lender Requirement",
     },
     {
-      id: uuid.v4(),
+      id: 107,
       title: "Contractual Issues With The Purchase",
     },
     {
-      id: uuid.v4(),
+      id: 108,
       title: "Peace Of Mind",
     },
   ],
   Tax: [
     {
-      id: uuid.v4(),
+      id: 109,
       title: "City Tax",
       value: "debt-relief",
     },
     {
-      id: uuid.v4(),
+      id: 110,
       title: "Individual Income Taxes",
       value: "asset-protection",
     },
     {
-      id: uuid.v4(),
+      id: 111,
       title: "Corporate Income Taxes",
       value: "chapter-7-bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 112,
       title: "Payroll Taxes",
       value: "chapter-13-bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 113,
       title: "Capital Gains Taxes",
       value: "debt-relief",
     },
     {
-      id: uuid.v4(),
+      id: 114,
       title: "Sales Taxes",
       value: "asset-protection",
     },
     {
-      id: uuid.v4(),
+      id: 115,
       title: "Gross Receipts Taxes",
       value: "chapter-7-bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 116,
       title: "Value-Added Taxes",
       value: "chapter-13-bankruptcy",
     },
     {
-      id: uuid.v4(),
+      id: 117,
       title: "Excise Taxes",
       value: "chapter-13-bankruptcy",
     },

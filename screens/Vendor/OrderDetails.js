@@ -235,7 +235,7 @@ const OrderDetails = ({ navigation, route }) => {
             justifyContent: "center",
           }}
         >
-          <Barcode
+          {/* <Barcode
             style={{
               marginRight: 20,
             }}
@@ -243,7 +243,7 @@ const OrderDetails = ({ navigation, route }) => {
             width="100"
             value={data ? data.id : "Unknown"}
             format="CODE128"
-          />
+          /> */}
           <Text
             style={{
               textAlign: "center",

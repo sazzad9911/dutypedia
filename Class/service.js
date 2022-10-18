@@ -62,6 +62,7 @@ export const createService = async (
       dashboard = DASHBOARD[i];
     }
   });
+
   let month = DateTime.month.indexOf(businessForm.startDate.month) + 1;
   month = month > 9 ? month : "0" + month;
   let day =
@@ -330,9 +331,30 @@ export const createOrder = async (
   );
   return res;
 };
-export const getOrders = async (token, type) => {
-  const res = await axios.get(`${url}/server/orders/${type}/get`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getOrders = async (token, type, id) => {
+  if (id) {
+    const res = await axios.get(
+      `${url}/server/orders/${type}/get?serviceId=${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res;
+  } else {
+    const res = await axios.get(`${url}/server/orders/${type}/get`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res;
+  }
+};
+export const cancelOrder = async (token, orderId, status) => {
+  const res = await axios.put(
+    `${url}/server/orders/user/update`,
+    {
+      orderId: orderId,
+      status: status,
+    },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return res;
 };

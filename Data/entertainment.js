@@ -4,312 +4,312 @@ export const EntertainmentOptions = {
   VideographerServices: {
     Services: [
       {
-        id: uuid.v4(),
+        id: 1,
         title: "Editing",
       },
       {
-        id: uuid.v4(),
+        id: 2,
         title: "Printing",
       },
       {
-        id: uuid.v4(),
+        id: 3,
         title: "Coloring",
       },
       {
-        id: uuid.v4(),
+        id: 4,
         title: "Trailer",
       },
     ],
-    "VideoShoot": [
+    VideoShoot: [
       {
-        id: uuid.v4(),
+        id: 5,
         title: "Video -Story  Or Cinematography(Full_HD)",
       },
       {
-        id: uuid.v4(),
+        id: 6,
         title: "Indoor Shoot ",
       },
       {
-        id: uuid.v4(),
+        id: 7,
         title: "Outdoor Shoot",
       },
       {
-        id: uuid.v4(),
+        id: 8,
         title: "Full body video",
       },
     ],
   },
-  "photographer_services": {
+  photographer_services: {
     Sessions: [
       {
-        id: uuid.v4(),
+        id: 9,
         title: "Editing",
       },
       {
-        id: uuid.v4(),
+        id: 10,
         title: "Printing",
       },
       {
-        id: uuid.v4(),
+        id: 11,
         title: "Coloring",
       },
       {
-        id: uuid.v4(),
+        id: 12,
         title: "Matting and Framing",
       },
       {
-        id: uuid.v4(),
+        id: 13,
         title: "Advertising Skills",
       },
       {
-        id: uuid.v4(),
+        id: 14,
         title: "Concierge Service",
       },
     ],
 
-    "photography_style": [
+    photography_style: [
       {
-        id: uuid.v4(),
+        id: 15,
         title: "Abstract PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 16,
         title: "Adventure PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 17,
         title: "ASTROPHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 18,
         title: "BLACK AND WHITE PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 19,
         title: "BUSINESS PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 20,
         title: "CANDID PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 21,
         title: "CITYSCAPE PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 22,
         title: "COMMERCIAL PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 23,
         title: "DOCUMENTARY PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 24,
         title: "EDITORIAL PHOTOGRAPHY ",
       },
       {
-        id: uuid.v4(),
+        id: 25,
         title: " FASHION PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 26,
         title: "FAMILY PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 27,
         title: "FILM PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 28,
         title: "HOLIDAY PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 29,
         title: "Indoor PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 30,
         title: "Outdoor PHOTOGRAPHY",
       },
       {
-        id: uuid.v4(),
+        id: 31,
         title: "Wedding  PHOTOGRAPHY",
       },
     ],
   },
   picnic: {
-    "all_city_picnic_spot": [
+    all_city_picnic_spot: [
       {
-        id: uuid.v4(),
+        id: 32,
         title: "every country picnic spot",
       },
       {
-        id: uuid.v4(),
+        id: 33,
         title: "breakfast",
       },
       {
-        id: uuid.v4(),
+        id: 34,
         title: "lunch",
       },
       {
-        id: uuid.v4(),
+        id: 35,
         title: "evening snacks",
       },
       {
-        id: uuid.v4(),
+        id: 36,
         title: "picnic spot every rides",
       },
     ],
 
     Vehicles: [
       {
-        id: uuid.v4(),
+        id: 37,
         title: "hiace",
       },
       {
-        id: uuid.v4(),
+        id: 38,
         title: "bus",
       },
       {
-        id: uuid.v4(),
+        id: 39,
         title: "mini bus",
       },
       {
-        id: uuid.v4(),
+        id: 40,
         title: "private car",
       },
       {
-        id: uuid.v4(),
+        id: 41,
         title: "train",
       },
       {
-        id: uuid.v4(),
+        id: 42,
         title: "airlines",
       },
       {
-        id: uuid.v4(),
+        id: 43,
         title: "launch",
       },
     ],
   },
   Birthday: [
     {
-      id: uuid.v4(),
+      id: 44,
       title: "Balloon Decoration",
     },
     {
-      id: uuid.v4(),
+      id: 45,
       title: "Theme Based Decoration",
     },
     {
-      id: uuid.v4(),
+      id: 46,
       title: "Magician  & Musician ",
     },
     {
-      id: uuid.v4(),
+      id: 47,
       title: "DJ's & Sound System & Lighting ",
     },
     {
-      id: uuid.v4(),
+      id: 48,
       title: "Backdrop, Lighting & Drapes",
     },
     {
-      id: uuid.v4(),
+      id: 49,
       title: "Photography",
     },
     {
-      id: uuid.v4(),
+      id: 50,
       title: "Video -Story  Or Cinematography ( Full _HD )",
     },
     {
-      id: uuid.v4(),
+      id: 51,
       title: " Birthday cake",
     },
     {
-      id: uuid.v4(),
+      id: 52,
       title: "Birthday Cupcake Table Cover",
     },
     {
-      id: uuid.v4(),
+      id: 53,
       title: "Birthday Cupcake Glass & Etc.",
     },
     {
-      id: uuid.v4(),
+      id: 54,
       title: "Goody Bags and Favor Sets",
     },
     {
-      id: uuid.v4(),
+      id: 55,
       title: "Noisemakers",
     },
     {
-      id: uuid.v4(),
+      id: 56,
       title: "Live Snacks",
     },
     {
-      id: uuid.v4(),
+      id: 57,
       title: "Ice-cream",
     },
     {
-      id: uuid.v4(),
+      id: 58,
       title: "Chocolate fountain ,Candy floss",
     },
     {
-      id: uuid.v4(),
+      id: 59,
       title: "Coffee",
     },
     {
-      id: uuid.v4(),
+      id: 60,
       title: "Pop-corn & Candy floss",
     },
   ],
   wedding: [
     {
-      id: uuid.v4(),
+      id: 61,
       title: "Photography",
     },
     {
-      id: uuid.v4(),
+      id: 62,
       title: "Video -story  or Cinematography ( full _HD )",
     },
     {
-      id: uuid.v4(),
+      id: 63,
       title: "Wedding stage decor & Flower Art's",
     },
     {
-      id: uuid.v4(),
+      id: 64,
       title: "Hall Ceiling & table decor",
     },
     {
-      id: uuid.v4(),
+      id: 65,
       title: "Premium Wedding Planning",
     },
     {
-      id: uuid.v4(),
+      id: 66,
       title: "Lighting & Sound System",
     },
     {
-      id: uuid.v4(),
+      id: 67,
       title: "Band, DJ's & Kawali",
     },
     {
-      id: uuid.v4(),
+      id: 68,
       title: "Horse cart , Shahi Palki",
     },
     {
-      id: uuid.v4(),
+      id: 69,
       title: "Projection & Live -Telecast",
     },
     {
-      id: uuid.v4(),
+      id: 70,
       title: "Live Snacks",
     },
     {
-      id: uuid.v4(),
+      id: 71,
       title: "lunch/dinner all items",
     },
     {
-      id: uuid.v4(),
+      id: 72,
       title: " Shahi Palki",
     },
   ],

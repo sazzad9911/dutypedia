@@ -777,6 +777,7 @@ const Pricing = ({ navigation, route }) => {
                   arr[i] = {
                     title: doc.title,
                     checked: !doc.checked,
+                    id: i + 1,
                   };
                   setService(arr);
                   setChange(!change);

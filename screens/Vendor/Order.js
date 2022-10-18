@@ -12,15 +12,35 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { Color } from "../assets/colors";
+import { Color } from "../../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
-import { getOrders } from "../Class/service";
-import Button from "./../components/Button";
-import DropDown from "./../components/DropDown";
+import { getOrders } from "../../Class/service";
+import Button from "../../components/Button";
+import DropDown from "../../components/DropDown";
 import { SvgXml } from "react-native-svg";
-import ActivityLoader from "./../components/ActivityLoader";
+import ActivityLoader from "./../../components/ActivityLoader";
+import { createStackNavigator } from "@react-navigation/stack";
+import OrderDetails from "./OrderDetails";
+const Stack = createStackNavigator();
 
-const ManageOrder = ({ navigation, route }) => {
+const Order = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="VendorOrder"
+        component={VendorOrder}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="VendorOrderDetails"
+        component={OrderDetails}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const VendorOrder = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -68,6 +88,7 @@ const ManageOrder = ({ navigation, route }) => {
   const [AllOrders, setAllOrders] = React.useState(null);
   const user = useSelector((state) => state.user);
   const [Active, setActive] = React.useState("STARTING");
+  const vendor = useSelector((state) => state.vendor);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -79,6 +100,35 @@ const ManageOrder = ({ navigation, route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  React.useEffect(() => {
+    if (user) {
+      //setLoader(true);
+      getOrders(user.token, "vendor", vendor.service.id)
+        .then((res) => {
+          if (res.data) {
+            setLoader(false);
+            // console.log(res.data.orders);
+            //console.log(res.data.orders[0].service.serviceCenterName);
+            setAllOrders(res.data.orders);
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+    }
+  }, [user + Refresh]);
+  React.useEffect(() => {
+    if (AllOrders) {
+      let arr = [];
+      AllOrders.forEach((doc, i) => {
+        if (doc.service.gigs[0].type == Active) {
+          arr.push(doc);
+        }
+      });
+      setOrders(arr);
+    }
+  }, [Active + AllOrders]);
   const Header = () => {
     return (
       <Animated.View
@@ -159,36 +209,6 @@ const ManageOrder = ({ navigation, route }) => {
       </Animated.View>
     );
   };
-  React.useEffect(() => {
-    if (user) {
-      //setLoader(true);
-      getOrders(user.token, "user")
-        .then((res) => {
-          if (res.data) {
-            setLoader(false);
-            // console.log(res.data.orders);
-            //console.log(res.data.orders[0].service.serviceCenterName);
-            setAllOrders(res.data.orders);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [user + Refresh]);
-  React.useEffect(() => {
-    if (AllOrders) {
-      let arr = [];
-      AllOrders.forEach((doc, i) => {
-        if (doc.service.gigs[0].type == Active) {
-          arr.push(doc);
-        }
-      });
-      setOrders(arr);
-    }
-  }, [Active + AllOrders]);
-
   return (
     <ScrollView
       style={{ flexGrow: 1 }}
@@ -216,7 +236,7 @@ const ManageOrder = ({ navigation, route }) => {
         Orders.map((doc, i) => (
           <OrderCart
             onPress={() => {
-              navigation.navigate("OrderDetails", { data: doc });
+              navigation.navigate("VendorOrderDetails", { data: doc });
             }}
             key={i}
             data={doc}
@@ -232,7 +252,7 @@ const ManageOrder = ({ navigation, route }) => {
   );
 };
 
-export default ManageOrder;
+export default Order;
 
 const OrderCart = ({ data, onPress }) => {
   const isDark = useSelector((state) => state.isDark);
