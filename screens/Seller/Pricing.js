@@ -1148,7 +1148,7 @@ export const CheckBox = ({ onChange, value, title, style }) => {
         <Checkbox
           status={checked ? "checked" : "unchecked"}
           onPress={() => {
-            onChange();
+            onChange(title);
             setChecked(!checked);
           }}
         />

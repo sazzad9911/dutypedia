@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import {
   primaryColor,
   textColor,
@@ -10,8 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 const TopTabBar = (props) => {
   const listData = useSelector((state) => state.listData);
   const [Services, setServices] = React.useState([]);
-  const [layout,setLayout] = React.useState()
-  const [scrollRef, setScrollRef]= React.useState()
+  const [layout, setLayout] = React.useState();
+  const [scrollRef, setScrollRef] = React.useState();
 
   React.useEffect(() => {
     if (props.state.routeNames) {
@@ -25,29 +31,36 @@ const TopTabBar = (props) => {
     });
   }
   React.useEffect(() => {
-    if(layout&&scrollRef){
-      scrollRef.scrollTo({x: props.state.index*100,animated: true})
+    if (layout && scrollRef) {
+      scrollRef.scrollTo({ x: props.state.index * 100, animated: true });
     }
-  },[props.state.index])
+  }, [props.state.index]);
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: primaryColor,
         borderTopWidth: 1,
         borderTopColor: "#e5e5e5",
         shadowOffset: {
-          height:2,width:2
+          height: 2,
+          width: 2,
         },
-        shadowOpacity:.4,
-        shadowRadius:3,
-        shadowColor:'#707070',
-        elevation:3
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        shadowColor: "#707070",
+        elevation: 3,
+        paddingTop: props.id ? 35 : 0,
       }}
     >
-      <ScrollView ref={ref=>setScrollRef(ref)} showsHorizontalScrollIndicator={false} horizontal={true}>
+      <ScrollView
+        ref={(ref) => setScrollRef(ref)}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
         {Array.isArray(Services) &&
           Services.map((doc, i) => (
-            <View onLayout={e=>setLayout(e.nativeEvent.layout)}
+            <View
+              onLayout={(e) => setLayout(e.nativeEvent.layout)}
               key={i}
               style={{
                 flexDirection: "row",
@@ -58,7 +71,7 @@ const TopTabBar = (props) => {
               <Button i={i} {...props} title={doc} />
               {i != Services.length - 1 && (
                 <View
-                  style={{ 
+                  style={{
                     height: 20,
                     width: 2,
                     backgroundColor: "#e5e5e5",
@@ -68,7 +81,7 @@ const TopTabBar = (props) => {
             </View>
           ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

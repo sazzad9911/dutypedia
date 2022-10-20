@@ -7,9 +7,7 @@ import {
   Keyboard,
 } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
-import {
-  Color
-} from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { Badge } from "react-native-paper";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { dashboard, order } from "../assets/icon";
@@ -27,12 +25,12 @@ const BottomBar = (props) => {
   const [User, setUser] = React.useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor =colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
 
   React.useEffect(() => {
     if (vendor) {
@@ -83,7 +81,7 @@ const BottomBar = (props) => {
       fontFamily: "Poppins-Light",
     },
   });
-  
+
   return (
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
@@ -120,6 +118,14 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          if (route == 1) {
+            try {
+              navigation.navigate("VendorOrder");
+              return;
+            } catch (e) {
+              console.warn(e.message);
+            }
+          }
           dispatch({ type: "SET_INTEREST_CATEGORY", playload: "search" });
           navigation.navigate("Search");
           setRoute(1);
@@ -148,7 +154,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Message"})
+          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Message" });
           setRoute(2);
           if (Array.isArray(user)) {
             navigation.navigate("LogIn");
@@ -171,7 +177,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"Notification"})
+          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Notification" });
           if (Array.isArray(user)) {
             navigation.navigate("LogIn");
             setRoute(3);
@@ -205,7 +211,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          dispatch({type: 'SET_INTEREST_CATEGORY',playload:"MainProfile"})
+          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "MainProfile" });
           if (Array.isArray(user)) {
             setRoute(4);
             navigation.navigate("LogIn");
@@ -214,8 +220,8 @@ const BottomBar = (props) => {
           if (route === 4) {
             try {
               navigation.navigate("MainProfile");
-            }catch (e) {
-              console.warn(e.message)
+            } catch (e) {
+              console.warn(e.message);
             }
             setRoute(4);
           } else {

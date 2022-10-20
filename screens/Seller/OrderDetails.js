@@ -12,9 +12,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "./../../components/Button";
-import Barcode from "react-native-barcode-expo";
 const { width, height } = Dimensions.get("window");
 import { cancelOrder } from "../../Class/service";
+import Barcode from "./../../components/Barcode";
 
 const OrderDetails = ({ navigation, route }) => {
   const data = route.params && route.params.data ? route.params.data : null;
@@ -117,13 +117,13 @@ const OrderDetails = ({ navigation, route }) => {
             overflow: "hidden",
           }}
         >
-          {data && data.service.providerInfo.profilePhoto ? (
+          {data && data.service.profilePhoto ? (
             <Image
               style={{
-                width: 60,
-                height: 60,
+                width: 70,
+                height: 70,
               }}
-              source={{ uri: data.service.providerInfo.profilePhoto }}
+              source={{ uri: data.service.profilePhoto }}
             />
           ) : (
             <FontAwesome name="user" size={50} color={assentColor} />
@@ -235,15 +235,19 @@ const OrderDetails = ({ navigation, route }) => {
             justifyContent: "center",
           }}
         >
-          <Barcode
+          <View
             style={{
-              marginRight: 20,
+              width: 150,
+              height: 70,
+              overflow: "hidden",
             }}
-            height="50"
-            width="100"
-            value={data ? data.id : "Unknown"}
-            format="CODE128"
-          />
+          >
+            <Barcode
+              value={data ? data.id : "dsfff"}
+              options={{ format: "CODE128", background: primaryColor }}
+              rotation={0}
+            />
+          </View>
           <Text
             style={{
               textAlign: "center",

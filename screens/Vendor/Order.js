@@ -21,6 +21,7 @@ import { SvgXml } from "react-native-svg";
 import ActivityLoader from "./../../components/ActivityLoader";
 import { createStackNavigator } from "@react-navigation/stack";
 import OrderDetails from "./OrderDetails";
+import AddServiceList from "./../AddServiceList";
 const Stack = createStackNavigator();
 
 const Order = () => {
@@ -35,6 +36,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="VendorOrderDetails"
         component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddServiceList"
+        component={AddServiceList}
       />
     </Stack.Navigator>
   );
@@ -103,6 +109,7 @@ const VendorOrder = ({ navigation, route }) => {
   React.useEffect(() => {
     if (user) {
       //setLoader(true);
+      //console.log(vendor.service.id);
       getOrders(user.token, "vendor", vendor.service.id)
         .then((res) => {
           if (res.data) {
@@ -309,13 +316,13 @@ const OrderCart = ({ data, onPress }) => {
                 borderColor: "#e5e5e5",
               }}
             >
-              {data && data.service.providerInfo.profilePhoto ? (
+              {data && data.user.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
                     width: 50,
                   }}
-                  source={{ uri: data.service.providerInfo.profilePhoto }}
+                  source={{ uri: data.user.profilePhoto }}
                 />
               ) : (
                 <FontAwesome name="user" size={35} color={assentColor} />
@@ -332,33 +339,23 @@ const OrderCart = ({ data, onPress }) => {
                 numberOfLines={1}
                 style={{
                   color: textColor,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {data ? data.service.serviceCenterName : "Unknown Service Name"}{" "}
+                {data ? data.user.firstName : "Um"}{" "}
+                {data ? data.user.lastName : "Um"}
               </Text>
               <Text
                 numberOfLines={1}
                 style={{
-                  color: textColor,
-                  fontSize: 15,
-                  fontFamily: "Poppins-Medium",
-                }}
-              >
-                {data ? data.service.providerInfo.title : "Um"}{" "}
-                {data ? data.service.providerInfo.name : "Unknown Person"}
-                {`(${data ? data.service.providerInfo.gender : "Unspecified"})`}
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 15,
+                  fontSize: 14,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {data ? data.service.providerInfo.position : "Empty position"}
+                {"Id: "}
+                {data ? data.id : "Empty position"}
               </Text>
             </View>
           </View>

@@ -12,13 +12,17 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "./../../components/Button";
-import Barcode from "react-native-barcode-expo";
 const { width, height } = Dimensions.get("window");
 import { cancelOrder } from "../../Class/service";
+import Barcode from "./../../components/Barcode";
+import IconButton from "./../../components/IconButton";
+import { AntDesign } from "@expo/vector-icons";
+import { serverToLocal } from "../../Class/dataConverter";
 
 const OrderDetails = ({ navigation, route }) => {
   const data = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
+  const dispatch = useDispatch();
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
@@ -61,7 +65,7 @@ const OrderDetails = ({ navigation, route }) => {
       justifyContent: "center",
     },
     text: {
-      fontSize: 16,
+      fontSize: 20,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
@@ -71,9 +75,12 @@ const OrderDetails = ({ navigation, route }) => {
       color: textColor,
     },
   });
+  const [ListData, setListData] = React.useState(null);
+  const [Facilities, setFacilities] = React.useState(null);
   React.useEffect(() => {
-    //console.log(data);
-  }, []);
+    //console.log(ListData);
+    //console.log(Facilities);
+  }, [ListData]);
 
   const stringDate = (d) => {
     const Months = [
@@ -103,6 +110,7 @@ const OrderDetails = ({ navigation, route }) => {
           marginHorizontal: 20,
           marginVertical: 20,
           flexDirection: "row",
+          alignItems: "center",
         }}
       >
         <View
@@ -117,13 +125,13 @@ const OrderDetails = ({ navigation, route }) => {
             overflow: "hidden",
           }}
         >
-          {data && data.service.providerInfo.profilePhoto ? (
+          {data && data.user.profilePhoto ? (
             <Image
               style={{
-                width: 60,
-                height: 60,
+                width: 70,
+                height: 70,
               }}
-              source={{ uri: data.service.providerInfo.profilePhoto }}
+              source={{ uri: data.user.profilePhoto }}
             />
           ) : (
             <FontAwesome name="user" size={50} color={assentColor} />
@@ -137,20 +145,7 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             numberOfLines={1}
             style={{
-              fontSize: 20,
-              fontFamily: "Poppins-Medium",
-              color: textColor,
-              marginBottom: 5,
-            }}
-          >
-            {data
-              ? data.service.serviceCenterName
-              : "Unknown Service Center Name"}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontSize: 14,
+              fontSize: 18,
               fontFamily: "Poppins-Medium",
               color: textColor,
             }}
@@ -162,12 +157,13 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             numberOfLines={1}
             style={{
-              fontSize: 14,
+              fontSize: 16,
               fontFamily: "Poppins-Medium",
               color: textColor,
             }}
           >
-            {data ? data.service.providerInfo.position : "-"}
+            {"ID: "}
+            {data ? data.id : "-"}
           </Text>
         </View>
       </View>
@@ -201,7 +197,7 @@ const OrderDetails = ({ navigation, route }) => {
         style={{
           justifyContent: "space-between",
           alignItems: "center",
-          paddingHorizontal: 20,
+          paddingHorizontal: 10,
           marginVertical: 20,
           flexDirection: "row",
         }}
@@ -215,6 +211,56 @@ const OrderDetails = ({ navigation, route }) => {
             }}
           >
             Order Id: {data ? data.id : "Unknown Id"}
+          </Text>
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              width: 150,
+              height: 50,
+              overflow: "hidden",
+            }}
+          >
+            <Barcode
+              height="60"
+              width="150"
+              value={data ? data.id : "dsfff"}
+              options={{ format: "CODE128", background: primaryColor }}
+              rotation={0}
+            />
+          </View>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 12,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+            }}
+          >
+            {data ? data.id : "Unknown"}
+          </Text>
+        </View>
+      </View>
+      <View style={{ paddingHorizontal: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+            }}
+          >
+            Service/Item Name
           </Text>
           <Text
             style={{
@@ -232,29 +278,72 @@ const OrderDetails = ({ navigation, route }) => {
         </View>
         <View
           style={{
-            justifyContent: "center",
+            height: 1,
+            backgroundColor: "#ECECEC",
+            marginVertical: 10,
           }}
-        >
-          {/* <Barcode
-            style={{
-              marginRight: 20,
-            }}
-            height="50"
-            width="100"
-            value={data ? data.id : "Unknown"}
-            format="CODE128"
-          /> */}
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 12,
-              fontFamily: "Poppins-Medium",
-              color: textColor,
-            }}
-          >
-            {data ? data.id : "Unknown"}
-          </Text>
-        </View>
+        />
+        <Text style={[styles.smallText, { fontSize: 14, marginTop: 5 }]}>
+          Add What Service Do You Want To Sell
+        </Text>
+        <IconButton
+          onPress={() => {
+            if (data.service.gigs[0].services.category) {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  data.service.gigs[0].services.options,
+                  data.service.gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList", {
+                NewDataList: serverToLocal(
+                  data.service.gigs[0].services.options,
+                  data.service.gigs[0].services.category
+                ),
+                facilites: data.service.gigs[0].facilites.selectedOptions,
+                setListData: setListData,
+                setFacilities: setFacilities,
+                ListData: ListData,
+              });
+            } else {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  data.service.gigs[0].services,
+                  data.service.gigs[0].dashboard
+                ),
+              });
+              navigation.navigate("AddServiceList", {
+                NewDataList: serverToLocal(
+                  data.service.gigs[0].services,
+                  data.service.gigs[0].dashboard
+                ),
+                facilites: data.service.gigs[0].facilites.selectedOptions,
+                setListData: setListData,
+                setFacilities: setFacilities,
+                ListData: ListData,
+              });
+            }
+          }}
+          style={{
+            borderWidth: 1,
+            borderColor: "#e5e5e5",
+            borderRadius: 5,
+            height: 30,
+            width: 80,
+            marginVertical: 20,
+          }}
+          LeftIcon={() => <AntDesign name="plus" size={24} color={textColor} />}
+          title={"Add"}
+        />
+        <View
+          style={{
+            height: 1,
+            backgroundColor: "#ECECEC",
+            marginVertical: 10,
+          }}
+        />
       </View>
       <View
         style={{
@@ -264,12 +353,20 @@ const OrderDetails = ({ navigation, route }) => {
           borderBottomColor: "#F1EFEF",
           paddingVertical: 20,
           marginHorizontal: 20,
-          marginTop: 20,
+          marginTop: 0,
         }}
       >
-        <Text style={styles.text}>Price</Text>
-        <Text style={styles.text}>
-          Basic Price : {data ? data.amount + "৳" : "Pice is empty"}
+        <Text style={[styles.text]}>Price</Text>
+        <Text
+          style={[
+            styles.text,
+            {
+              color: "#666666",
+              fontSize: 18,
+            },
+          ]}
+        >
+          Basic Price : {data ? data.offerPrice + "৳" : "Pice is empty"}
         </Text>
       </View>
       <View
@@ -361,26 +458,43 @@ const OrderDetails = ({ navigation, route }) => {
           {data && data.description ? data.description : "No details found!"}
         </Text>
       </View>
-      <Button
-        onPress={() => {
-          cancelOrder(user.token, data.id, "CANCELLED")
-            .then(() => {
-              navigation.goBack();
-            })
-            .catch((err) => {
-              console.warn(err.response.data);
-            });
-        }}
-        style={{
-          backgroundColor: backgroundColor,
-          borderRadius: 5,
-          alignSelf: "flex-end",
-          marginVertical: 20,
-          borderWidth: 0,
-          marginRight: 20,
-        }}
-        title="Cancel Order"
-      />
+      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+        <Button
+          onPress={() => {
+            cancelOrder(user.token, data.id, "CANCELLED")
+              .then(() => {
+                navigation.goBack();
+              })
+              .catch((err) => {
+                console.warn(err.response.data);
+              });
+          }}
+          style={{
+            backgroundColor: backgroundColor,
+            borderRadius: 5,
+            alignSelf: "flex-end",
+            marginVertical: 30,
+            borderWidth: 0,
+            marginRight: 20,
+          }}
+          title="Accept"
+        />
+        <Button
+          onPress={() => {}}
+          style={{
+            backgroundColor: primaryColor,
+            borderRadius: 5,
+            alignSelf: "flex-end",
+            marginVertical: 30,
+            borderWidth: 0,
+            marginRight: 10,
+            borderColor: backgroundColor,
+            borderWidth: 1,
+            color: backgroundColor,
+          }}
+          title="Cancel"
+        />
+      </View>
     </ScrollView>
   );
 };

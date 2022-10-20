@@ -169,6 +169,7 @@ const ManageOrder = ({ navigation, route }) => {
             // console.log(res.data.orders);
             //console.log(res.data.orders[0].service.serviceCenterName);
             setAllOrders(res.data.orders);
+            //setOrders(res.data.orders);
           }
         })
         .catch((err) => {
@@ -180,12 +181,17 @@ const ManageOrder = ({ navigation, route }) => {
   React.useEffect(() => {
     if (AllOrders) {
       let arr = [];
-      AllOrders.forEach((doc, i) => {
-        if (doc.service.gigs[0].type == Active) {
-          arr.push(doc);
-        }
-      });
-      setOrders(arr);
+      if (Active == "STARTING") {
+        setOrders(AllOrders);
+      } else {
+        setOrders([]);
+      }
+      // AllOrders.forEach((doc, i) => {
+      //   if (doc.service.gigs[0].type == Active) {
+      //     arr.push(doc);
+      //   }
+      // });
+      //setOrders(arr);
     }
   }, [Active + AllOrders]);
 
@@ -289,13 +295,13 @@ const OrderCart = ({ data, onPress }) => {
                 borderColor: "#e5e5e5",
               }}
             >
-              {data && data.service.providerInfo.profilePhoto ? (
+              {data && data.service.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
                     width: 50,
                   }}
-                  source={{ uri: data.service.providerInfo.profilePhoto }}
+                  source={{ uri: data.service.profilePhoto }}
                 />
               ) : (
                 <FontAwesome name="user" size={35} color={assentColor} />

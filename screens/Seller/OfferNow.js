@@ -366,12 +366,12 @@ const OfferNow = ({ navigation, route }) => {
               onConfirm={(date) => {
                 let newDate = dateConverter(new Date(From));
                 let oldDate = dateConverter(date);
-                if (dateDifference(newDate, oldDate) > 0) {
+                if (dateDifference(newDate, oldDate) >= 0) {
                   setToDateError(null);
                   setTo(dateConverter(date));
                   setToVisible(false);
                 } else {
-                  setToDateError("Date must be upcoming");
+                  setToDateError("Please select upcoming date");
                   setToVisible(false);
                 }
               }}
