@@ -18,11 +18,47 @@ const AcceptOrder = (props) => {
   const [Service, setService] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Deliver, setDeliver] = React.useState();
+  const [Condition_1, setCondition_1] = React.useState(false);
+  const [Condition_2, setCondition_2] = React.useState(false);
+  const [Condition_3, setCondition_3] = React.useState(false);
+  const [Condition_4, setCondition_4] = React.useState(false);
+  const [ServiceError, setServiceError] = React.useState();
+  const [DeliverError, setDeliverError] = React.useState();
+  const [Confirmation_1Error, setConfirmation_1Error] = React.useState();
+  const [Confirmation_2Error, setConfirmation_2Error] = React.useState();
+  const [DescriptionError, setDescriptionError] = React.useState();
+  const ref = React.useRef();
+
+  const validate = () => {
+    setServiceError(null);
+    setDeliverError(null);
+    setConfirmation_1Error(null);
+    setConfirmation_2Error(null);
+    if (!Service) {
+      setServiceError("This field is required");
+      ref.current.scrollTo({ y: 10 });
+      return;
+    }
+    if (!Deliver) {
+      setDeliverError("This field is required");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    if (!Condition_1 || !Condition_2 || !Condition_3) {
+      setConfirmation_1Error("Be agree with all conditions");
+      ref.current.scrollTo({ y: 600 });
+      return;
+    }
+    if (!Condition_4) {
+      setConfirmation_2Error("This field is required");
+      return;
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubHeader title="Order Confirmation" {...props} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <View
           style={{
             marginHorizontal: 10,
@@ -45,6 +81,7 @@ const AcceptOrder = (props) => {
           >
             What Type Of Service/Item You Want To Give
           </Text>
+          {ServiceError && <Text style={{ color: "red" }}>{ServiceError}</Text>}
           <View style={{ height: 10 }} />
           <RadioButton
             onChange={() => {
@@ -124,6 +161,7 @@ const AcceptOrder = (props) => {
           >
             Service Deliver By
           </Text>
+          {DeliverError && <Text style={{ color: "red" }}>{DeliverError}</Text>}
           <View
             style={{
               flexDirection: "row",
@@ -162,19 +200,31 @@ const AcceptOrder = (props) => {
           >
             Before Accept Order Confirm Our Condition
           </Text>
+          {Confirmation_1Error && (
+            <Text style={{ color: "red" }}>{Confirmation_1Error}</Text>
+          )}
           <CheckBox
+            onChange={(e) => {
+              setCondition_1((val) => !val);
+            }}
             style={{
               marginTop: 10,
             }}
             title="Yes I Talked And Collect All Information What My Customer Want"
           />
           <CheckBox
+            onChange={(e) => {
+              setCondition_2((val) => !val);
+            }}
             style={{
               marginTop: 10,
             }}
             title="If I Deliver Any Service/Item In Online/Physical I Will Save All Of My Proof & Documents For Future Inquiries"
           />
           <CheckBox
+            onChange={(e) => {
+              setCondition_3((val) => !val);
+            }}
             style={{
               marginTop: 10,
             }}
@@ -188,15 +238,36 @@ const AcceptOrder = (props) => {
             borderWidth: 1,
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
-            padding:20,
-            marginHorizontal:10,
-            marginVertical:10,
+            padding: 20,
+            marginHorizontal: 10,
+            marginVertical: 10,
           }}
         >
-            <CheckBox title="Yes, I Understand And Agree To The Dutypedia Terms Of Service, Including The User Agreement And Privacy Policy"/>
-            <IconButton style={{
-                color:textColor
-            }} title="Confirm"/>
+          <CheckBox
+            onChange={(e) => {
+              setCondition_4((val) => !val);
+            }}
+            title="Yes, I Understand And Agree To The Dutypedia Terms Of Service, Including The User Agreement And Privacy Policy"
+          />
+          {Confirmation_2Error && (
+            <Text style={{ color: "red" }}>{Confirmation_2Error}</Text>
+          )}
+          <IconButton
+            onPress={() => {
+              try {
+                validate();
+              } catch (e) {
+                console.warn(e.message);
+              }
+            }}
+            style={{
+              color: textColor,
+              marginVertical: 10,
+              marginTop: 20,
+              backgroundColor: "#FEA31E",
+            }}
+            title="Confirm"
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

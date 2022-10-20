@@ -343,14 +343,13 @@ const Rows = ({ title, item, name, setData, Data }) => {
   }, [item + title + newListData]);
 
   return (
-    <View
-      style={{
-        marginTop: 3,
-      }}
-    >
+    <View>
       {List &&
         List.map((doc, i) => (
           <CheckBox
+            style={{
+              marginTop: 5,
+            }}
             key={i}
             value={
               Array.isArray(Data) &&

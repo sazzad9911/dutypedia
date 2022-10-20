@@ -80,6 +80,9 @@ const OrderDetails = ({ navigation, route }) => {
   const [ListData, setListData] = React.useState(null);
   const [Facilities, setFacilities] = React.useState([]);
   const ListSelection = useSelector((state) => state.ListSelection);
+  const [ServiceError, setServiceError] = React.useState();
+  const [FacilitiesError, setFacilitiesError] = React.useState();
+  const ref = React.useRef();
 
   const stringDate = (d) => {
     const Months = [
@@ -106,9 +109,23 @@ const OrderDetails = ({ navigation, route }) => {
       return setListData(ListSelection);
     }, [ListSelection])
   );
-
+  const validate = () => {
+    setServiceError(null);
+    setFacilitiesError(null);
+    if (ListSelection.length == 0) {
+      setServiceError("*There at list one service required");
+      ref.current.scrollTo({ y: 200 });
+      return;
+    }
+    if (Facilities.length == 0) {
+      setFacilitiesError("*There at list one facility required");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    navigation.navigate("AcceptOrder");
+  };
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
       <View style={{ height: 33 }} />
       <View
         style={{
@@ -267,6 +284,7 @@ const OrderDetails = ({ navigation, route }) => {
           >
             Service/Item Name
           </Text>
+
           <Text
             style={{
               fontSize: 14,
@@ -288,7 +306,7 @@ const OrderDetails = ({ navigation, route }) => {
             marginVertical: 10,
           }}
         />
-        <Text style={[styles.smallText, { fontSize: 14, marginTop: 5 }]}>
+        <Text style={[styles.smallText, { fontSize: 14 }]}>
           Add What Service Do You Want To Sell
         </Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -357,6 +375,7 @@ const OrderDetails = ({ navigation, route }) => {
           LeftIcon={() => <AntDesign name="plus" size={24} color={textColor} />}
           title={"Add"}
         />
+        {ServiceError && <Text style={{ color: "red" }}>{ServiceError}</Text>}
         <View
           style={{
             height: 1,
@@ -376,6 +395,7 @@ const OrderDetails = ({ navigation, route }) => {
         >
           Extra Facilities
         </Text>
+
         <View
           style={{
             flexDirection: "row",
@@ -388,24 +408,16 @@ const OrderDetails = ({ navigation, route }) => {
               <View style={{ flexDirection: "row", margin: 2 }} key={i}>
                 <CheckBox
                   value={
-                    Facilities.filter(
-                      (d) =>
-                        d.data.title == doc.data.title &&
-                        d.tableName == doc.tableName
-                    ).length > 0
+                    Facilities.filter((d) => d.title == doc.title).length > 0
                       ? true
                       : false
                   }
                   onChange={(e) => {
                     if (
-                      Facilities.filter(
-                        (d) =>
-                          d.data.title == doc.data.title &&
-                          d.tableName == doc.tableName
-                      ).length > 0
+                      Facilities.filter((d) => d.title == doc.title).length > 0
                     ) {
                       setFacilities((val) =>
-                        val.filter((d) => d.data.title != doc.data.title)
+                        val.filter((d) => d.title != doc.title)
                       );
                     } else {
                       setFacilities((val) => [...val, doc]);
@@ -424,6 +436,9 @@ const OrderDetails = ({ navigation, route }) => {
                 </Text>
               </View>
             ))}
+          {FacilitiesError && (
+            <Text style={{ color: "red" }}>{FacilitiesError}</Text>
+          )}
         </View>
       </View>
       <View
@@ -542,7 +557,11 @@ const OrderDetails = ({ navigation, route }) => {
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
           onPress={() => {
-            navigation.navigate("AcceptOrder");
+            try {
+              validate();
+            } catch (e) {
+              console.warn(e.message);
+            }
           }}
           style={{
             backgroundColor: backgroundColor,

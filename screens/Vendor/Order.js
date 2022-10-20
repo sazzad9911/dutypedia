@@ -134,12 +134,17 @@ const VendorOrder = ({ navigation, route }) => {
   React.useEffect(() => {
     if (AllOrders) {
       let arr = [];
-      AllOrders.forEach((doc, i) => {
-        if (doc.service.gigs[0].type == Active) {
-          arr.push(doc);
-        }
-      });
-      setOrders(arr);
+      if (Active == "STARTING") {
+        setOrders(AllOrders);
+      } else {
+        setOrders([]);
+      }
+      // AllOrders.forEach((doc, i) => {
+      //   if (doc.service.gigs[0].type == Active) {
+      //     arr.push(doc);
+      //   }
+      // });
+      //setOrders(arr);
     }
   }, [Active + AllOrders]);
   const Header = () => {
