@@ -22,6 +22,7 @@ import ActivityLoader from "./../../components/ActivityLoader";
 import { createStackNavigator } from "@react-navigation/stack";
 import OrderDetails from "./OrderDetails";
 import AddServiceList from "./../AddServiceList";
+import AcceptOrder from "./AcceptOrder";
 const Stack = createStackNavigator();
 
 const Order = () => {
@@ -41,6 +42,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AddServiceList"
         component={AddServiceList}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AcceptOrder"
+        component={AcceptOrder}
       />
     </Stack.Navigator>
   );
@@ -269,12 +275,14 @@ const OrderCart = ({ data, onPress }) => {
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
+  const dispatch = useDispatch();
 
   return (
     <TouchableOpacity
       onPress={() => {
         if (onPress) {
           onPress();
+          dispatch({ type: "SET_LIST_SELECTION", playload: [] });
         }
       }}
     >

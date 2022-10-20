@@ -18,6 +18,8 @@ import Barcode from "./../../components/Barcode";
 import IconButton from "./../../components/IconButton";
 import { AntDesign } from "@expo/vector-icons";
 import { serverToLocal } from "../../Class/dataConverter";
+import { useFocusEffect } from "@react-navigation/native";
+import { CheckBox } from "../Seller/Pricing";
 
 const OrderDetails = ({ navigation, route }) => {
   const data = route.params && route.params.data ? route.params.data : null;
@@ -76,11 +78,8 @@ const OrderDetails = ({ navigation, route }) => {
     },
   });
   const [ListData, setListData] = React.useState(null);
-  const [Facilities, setFacilities] = React.useState(null);
-  React.useEffect(() => {
-    //console.log(ListData);
-    //console.log(Facilities);
-  }, [ListData]);
+  const [Facilities, setFacilities] = React.useState([]);
+  const ListSelection = useSelector((state) => state.ListSelection);
 
   const stringDate = (d) => {
     const Months = [
@@ -102,6 +101,12 @@ const OrderDetails = ({ navigation, route }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      return setListData(ListSelection);
+    }, [ListSelection])
+  );
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{ height: 33 }} />
@@ -286,6 +291,21 @@ const OrderDetails = ({ navigation, route }) => {
         <Text style={[styles.smallText, { fontSize: 14, marginTop: 5 }]}>
           Add What Service Do You Want To Sell
         </Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {ListData &&
+            ListData.map((doc, i) =>
+              i == 0 ? (
+                <Text style={{ color: textColor }} key={i}>
+                  {doc.data.title}
+                </Text>
+              ) : (
+                <Text style={{ color: textColor }} key={i}>
+                  {", "}
+                  {doc.data.title}
+                </Text>
+              )
+            )}
+        </View>
         <IconButton
           onPress={() => {
             if (data.service.gigs[0].services.category) {
@@ -303,8 +323,8 @@ const OrderDetails = ({ navigation, route }) => {
                 ),
                 facilites: data.service.gigs[0].facilites.selectedOptions,
                 setListData: setListData,
-                setFacilities: setFacilities,
-                ListData: ListData,
+                name: "VendorOrderDetails",
+                data: data,
               });
             } else {
               dispatch({
@@ -321,8 +341,8 @@ const OrderDetails = ({ navigation, route }) => {
                 ),
                 facilites: data.service.gigs[0].facilites.selectedOptions,
                 setListData: setListData,
-                setFacilities: setFacilities,
-                ListData: ListData,
+                name: "VendorOrderDetails",
+                data: data,
               });
             }
           }}
@@ -344,6 +364,67 @@ const OrderDetails = ({ navigation, route }) => {
             marginVertical: 10,
           }}
         />
+      </View>
+      <View style={{ paddingHorizontal: 10 }}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            marginVertical: 10,
+          }}
+        >
+          Extra Facilities
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+          }}
+        >
+          {data &&
+            data.service.gigs[0].facilites.selectedOptions &&
+            data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
+              <View style={{ flexDirection: "row", margin: 2 }} key={i}>
+                <CheckBox
+                  value={
+                    Facilities.filter(
+                      (d) =>
+                        d.data.title == doc.data.title &&
+                        d.tableName == doc.tableName
+                    ).length > 0
+                      ? true
+                      : false
+                  }
+                  onChange={(e) => {
+                    if (
+                      Facilities.filter(
+                        (d) =>
+                          d.data.title == doc.data.title &&
+                          d.tableName == doc.tableName
+                      ).length > 0
+                    ) {
+                      setFacilities((val) =>
+                        val.filter((d) => d.data.title != doc.data.title)
+                      );
+                    } else {
+                      setFacilities((val) => [...val, doc]);
+                    }
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: "Poppins-Medium",
+                    fontSize: 14,
+                    marginTop: 5,
+                    color: textColor,
+                  }}
+                >
+                  {doc.title}
+                </Text>
+              </View>
+            ))}
+        </View>
       </View>
       <View
         style={{
@@ -461,13 +542,7 @@ const OrderDetails = ({ navigation, route }) => {
       <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
         <Button
           onPress={() => {
-            cancelOrder(user.token, data.id, "CANCELLED")
-              .then(() => {
-                navigation.goBack();
-              })
-              .catch((err) => {
-                console.warn(err.response.data);
-              });
+            navigation.navigate("AcceptOrder");
           }}
           style={{
             backgroundColor: backgroundColor,

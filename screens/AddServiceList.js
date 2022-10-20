@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import TopTabBar from "./Seller/components/TopTabBar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Color } from "../assets/colors";
 import { CheckBox } from "./Seller/Pricing";
 import Button from "./../components/Button";
@@ -23,6 +23,7 @@ const AddServiceList = (props) => {
     params.NewDataList.length > 0 ? params.NewDataList[0] : "Name"
   );
   const newListData = useSelector((state) => state.newListData);
+  const ListSelection = useSelector((state) => state.ListSelection);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const navigation = props.navigation;
@@ -30,6 +31,7 @@ const AddServiceList = (props) => {
   const textColor = colors.getTextColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
+  const dispatch = useDispatch();
   const [Data, setData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
   const styles = StyleSheet.create({
@@ -68,10 +70,14 @@ const AddServiceList = (props) => {
     }
     //console.log(Services)
   }, [newListData]);
+  React.useEffect(() => {
+    setData(ListSelection);
+  }, [ListSelection]);
 
   if (Array.isArray(Services) && Services.length == 0) {
     return null;
   }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <TopTabBar {...props} id={true} />}>
@@ -82,24 +88,28 @@ const AddServiceList = (props) => {
             component={ComponentScreen}
             initialParams={{
               setData: setData,
+              Data: ListSelection,
             }}
           />
         ))}
-        <Tab.Screen
+        {/* <Tab.Screen
           name={"Extra Facilities"}
           initialParams={{
             facilites: params.facilites,
             setData: setFacilities,
           }}
           component={ExtraFacilities}
-        />
+        /> */}
       </Tab.Navigator>
       <Button
         onPress={() => {
           try {
+            //console.log(Data);
+            dispatch({ type: "SET_LIST_SELECTION", playload: Data });
             params.setListData(Data);
-            params.setFacilities(Facilities);
-            navigation.goBack();
+
+            navigation.navigate(params.name, { data: params.data });
+            //console.log(ListSelection);
           } catch (e) {
             console.warn(e.message);
           }
@@ -165,14 +175,19 @@ const ComponentScreen = (props) => {
           <View style={styles.view} key={i}>
             <Text style={styles.text}>{doc}</Text>
             <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
-            <Table setData={params.setData} {...props} title={doc} />
+            <Table
+              Data={params.Data}
+              setData={params.setData}
+              {...props}
+              title={doc}
+            />
           </View>
         ))
       ) : (
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
           <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
-          <Table setData={params.setData} {...props} />
+          <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
     </ScrollView>
@@ -260,13 +275,14 @@ const Table = (props) => {
               name={name}
               title={title}
               item={item}
+              Data={props.Data}
             />
           </View>
         ))}
     </View>
   );
 };
-const Rows = ({ title, item, name, setData }) => {
+const Rows = ({ title, item, name, setData, Data }) => {
   const [text, setText] = React.useState();
   const newListData = useSelector((state) => state.newListData);
   const isDark = useSelector((state) => state.isDark);
@@ -275,6 +291,8 @@ const Rows = ({ title, item, name, setData }) => {
   const textColor = colors.getTextColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
+  const ListSelection = useSelector((state) => state.ListSelection);
+  const dispatch = useDispatch();
   const styles = StyleSheet.create({
     view: {
       marginHorizontal: 20,
@@ -286,6 +304,7 @@ const Rows = ({ title, item, name, setData }) => {
       color: textColor,
     },
   });
+  //console.log(Data);
   const [List, setList] = React.useState([]);
   React.useEffect(() => {
     if (!newListData) {
@@ -324,32 +343,56 @@ const Rows = ({ title, item, name, setData }) => {
   }, [item + title + newListData]);
 
   return (
-    <View>
+    <View
+      style={{
+        marginTop: 3,
+      }}
+    >
       {List &&
         List.map((doc, i) => (
           <CheckBox
+            key={i}
+            value={
+              Array.isArray(Data) &&
+              Data.filter(
+                (d) =>
+                  d.mainTitle == doc.mainTitle &&
+                  d.tableName == doc.tableName &&
+                  d.data.title == doc.data.title
+              ).length > 0
+                ? true
+                : false
+            }
             onChange={(e) => {
               try {
-                setData((val) => {
-                  let arr = val.filter((s) => s.data.title.match(e));
-                  console.log(arr);
-                  if (arr.length > 0) {
-                    return val.filter((s) => s.data.title != e);
-                  } else {
-                    return [...val, doc];
-                  }
-                });
+                let arr = Data.filter(
+                  (d) =>
+                    d.mainTitle == doc.mainTitle &&
+                    d.tableName == doc.tableName &&
+                    d.data.title == e
+                );
+                //console.log(arr);
+                if (arr.length > 0) {
+                  //console.log(e);
+                  //let newArr = Data.filter((d) => d.data.title != e);
+
+                  setData((val) => val.filter((d) => d.data.title != e));
+                } else {
+                  let arr = Data;
+                  arr.push(doc);
+                  setData(Data);
+                }
               } catch (e) {
                 console.warn(e.message);
               }
             }}
-            key={i}
             title={doc.data.title}
           />
         ))}
     </View>
   );
 };
+
 function uniq(a) {
   return a.sort().filter(function (item, pos, ary) {
     return !pos || item != ary[pos - 1];
