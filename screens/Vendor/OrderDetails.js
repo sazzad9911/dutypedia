@@ -77,12 +77,13 @@ const OrderDetails = ({ navigation, route }) => {
       color: textColor,
     },
   });
-  const [ListData, setListData] = React.useState(null);
+  const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
   const ListSelection = useSelector((state) => state.ListSelection);
   const [ServiceError, setServiceError] = React.useState();
   const [FacilitiesError, setFacilitiesError] = React.useState();
   const ref = React.useRef();
+  //console.log(data);
 
   const stringDate = (d) => {
     const Months = [
@@ -109,6 +110,22 @@ const OrderDetails = ({ navigation, route }) => {
       return setListData(ListSelection);
     }, [ListSelection])
   );
+  React.useEffect(() => {
+    //console.log(data);
+    if (data && data.selectedServices && data.selectedServices.category) {
+      setListData(
+        serverToLocal(
+          data.selectedServices.options,
+          data.selectedServices.category
+        )
+      );
+    } else if (data && data.selectedServices) {
+      setListData(serverToLocal(data.selectedServices, data.service.category));
+    }
+    if (data && data.facilites && Array.isArray(data.facilites)) {
+      setFacilities(data.facilites);
+    }
+  }, [data]);
   const validate = () => {
     setServiceError(null);
     setFacilitiesError(null);
@@ -117,12 +134,16 @@ const OrderDetails = ({ navigation, route }) => {
       ref.current.scrollTo({ y: 200 });
       return;
     }
-    if (Facilities.length == 0) {
-      setFacilitiesError("*There at list one facility required");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    navigation.navigate("AcceptOrder");
+    // if (Facilities.length == 0) {
+    //   setFacilitiesError("*There at list one facility required");
+    //   ref.current.scrollTo({ y: 400 });
+    //   return;
+    // }
+    navigation.navigate("AcceptOrder", {
+      facilities: Facilities,
+      id: data.id,
+      data: data,
+    });
   };
   return (
     <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
@@ -306,7 +327,7 @@ const OrderDetails = ({ navigation, route }) => {
             marginVertical: 10,
           }}
         />
-        <Text style={[styles.smallText, { fontSize: 14 }]}>
+        <Text style={[styles.smallText, { fontSize: 14, marginBottom: 5 }]}>
           Add What Service Do You Want To Sell
         </Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -323,58 +344,66 @@ const OrderDetails = ({ navigation, route }) => {
                 </Text>
               )
             )}
+          {ListData.length == 0 && (
+            <Text style={{ color: "#606060", fontSize: 18 }}>N/A</Text>
+          )}
         </View>
-        <IconButton
-          onPress={() => {
-            if (data.service.gigs[0].services.category) {
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  data.service.gigs[0].services.options,
-                  data.service.gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList", {
-                NewDataList: serverToLocal(
-                  data.service.gigs[0].services.options,
-                  data.service.gigs[0].services.category
-                ),
-                facilites: data.service.gigs[0].facilites.selectedOptions,
-                setListData: setListData,
-                name: "VendorOrderDetails",
-                data: data,
-              });
-            } else {
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  data.service.gigs[0].services,
-                  data.service.gigs[0].dashboard
-                ),
-              });
-              navigation.navigate("AddServiceList", {
-                NewDataList: serverToLocal(
-                  data.service.gigs[0].services,
-                  data.service.gigs[0].dashboard
-                ),
-                facilites: data.service.gigs[0].facilites.selectedOptions,
-                setListData: setListData,
-                name: "VendorOrderDetails",
-                data: data,
-              });
-            }
-          }}
-          style={{
-            borderWidth: 1,
-            borderColor: "#e5e5e5",
-            borderRadius: 5,
-            height: 30,
-            width: 80,
-            marginVertical: 20,
-          }}
-          LeftIcon={() => <AntDesign name="plus" size={24} color={textColor} />}
-          title={"Add"}
-        />
+        {data && data.status == "WAITING_FOR_ACCEPT" && (
+          <IconButton
+            onPress={() => {
+              if (data.service.gigs[0].services.category) {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    data.service.gigs[0].services.options,
+                    data.service.gigs[0].services.category
+                  ),
+                });
+                navigation.navigate("AddServiceList", {
+                  NewDataList: serverToLocal(
+                    data.service.gigs[0].services.options,
+                    data.service.gigs[0].services.category
+                  ),
+                  facilites: data.service.gigs[0].facilites.selectedOptions,
+                  setListData: setListData,
+                  name: "VendorOrderDetails",
+                  data: data,
+                });
+              } else {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    data.service.gigs[0].services,
+                    data.service.gigs[0].dashboard
+                  ),
+                });
+                navigation.navigate("AddServiceList", {
+                  NewDataList: serverToLocal(
+                    data.service.gigs[0].services,
+                    data.service.gigs[0].dashboard
+                  ),
+                  facilites: data.service.gigs[0].facilites.selectedOptions,
+                  setListData: setListData,
+                  name: "VendorOrderDetails",
+                  data: data,
+                });
+              }
+            }}
+            style={{
+              borderWidth: 1,
+              borderColor: "#e5e5e5",
+              borderRadius: 5,
+              height: 30,
+              width: 80,
+              marginVertical: 20,
+            }}
+            LeftIcon={() => (
+              <AntDesign name="plus" size={24} color={textColor} />
+            )}
+            title={"Add"}
+          />
+        )}
+
         {ServiceError && <Text style={{ color: "red" }}>{ServiceError}</Text>}
         <View
           style={{
@@ -407,6 +436,9 @@ const OrderDetails = ({ navigation, route }) => {
             data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
               <View style={{ flexDirection: "row", margin: 2 }} key={i}>
                 <CheckBox
+                  disabled={
+                    data && data.status == "WAITING_FOR_ACCEPT" ? false : true
+                  }
                   value={
                     Facilities.filter((d) => d.title == doc.title).length > 0
                       ? true
@@ -554,41 +586,52 @@ const OrderDetails = ({ navigation, route }) => {
           {data && data.description ? data.description : "No details found!"}
         </Text>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-        <Button
-          onPress={() => {
-            try {
-              validate();
-            } catch (e) {
-              console.warn(e.message);
-            }
-          }}
-          style={{
-            backgroundColor: backgroundColor,
-            borderRadius: 5,
-            alignSelf: "flex-end",
-            marginVertical: 30,
-            borderWidth: 0,
-            marginRight: 20,
-          }}
-          title="Accept"
-        />
-        <Button
-          onPress={() => {}}
-          style={{
-            backgroundColor: primaryColor,
-            borderRadius: 5,
-            alignSelf: "flex-end",
-            marginVertical: 30,
-            borderWidth: 0,
-            marginRight: 10,
-            borderColor: backgroundColor,
-            borderWidth: 1,
-            color: backgroundColor,
-          }}
-          title="Cancel"
-        />
-      </View>
+      <View style={{ height: 10 }} />
+      {data && data.status == "WAITING_FOR_ACCEPT" && (
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+          <Button
+            onPress={() => {
+              try {
+                validate();
+              } catch (e) {
+                console.warn(e.message);
+              }
+            }}
+            style={{
+              backgroundColor: backgroundColor,
+              borderRadius: 5,
+              alignSelf: "flex-end",
+              marginVertical: 30,
+              borderWidth: 0,
+              marginRight: 20,
+            }}
+            title="Accept"
+          />
+          <Button
+            onPress={() => {
+              cancelOrder(user.token, data.id, "CANCELLED", "vendor")
+                .then(() => {
+                  navigation.goBack();
+                })
+                .catch((err) => {
+                  console.warn(err.response.data);
+                });
+            }}
+            style={{
+              backgroundColor: primaryColor,
+              borderRadius: 5,
+              alignSelf: "flex-end",
+              marginVertical: 30,
+              borderWidth: 0,
+              marginRight: 10,
+              borderColor: backgroundColor,
+              borderWidth: 1,
+              color: backgroundColor,
+            }}
+            title="Cancel"
+          />
+        </View>
+      )}
     </ScrollView>
   );
 };

@@ -53,6 +53,7 @@ import { Switch } from "react-native-paper";
 import { storeJson } from "./../Class/storage";
 import { getOrders } from "../Class/service";
 import OrderDetails from "./Seller/OrderDetails";
+import AddServiceList from "./AddServiceList";
 
 const Stack = createStackNavigator();
 
@@ -250,6 +251,11 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="OrderDetails"
         component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddServiceList_1"
+        component={AddServiceList}
       />
     </Stack.Navigator>
   );

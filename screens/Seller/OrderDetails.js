@@ -15,6 +15,7 @@ import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
 import { cancelOrder } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
+import { serverToLocal } from "../../Class/dataConverter";
 
 const OrderDetails = ({ navigation, route }) => {
   const data = route.params && route.params.data ? route.params.data : null;
@@ -71,9 +72,24 @@ const OrderDetails = ({ navigation, route }) => {
       color: textColor,
     },
   });
+  const [ListData, setListData] = React.useState([]);
+  const [Facilities, setFacilities] = React.useState([]);
   React.useEffect(() => {
     //console.log(data);
-  }, []);
+    if (data && data.selectedServices && data.selectedServices.category) {
+      setListData(
+        serverToLocal(
+          data.selectedServices.options,
+          data.selectedServices.category
+        )
+      );
+    } else if (data && data.selectedServices) {
+      setListData(serverToLocal(data.selectedServices, data.service.category));
+    }
+    if (data && data.facilites && Array.isArray(data.facilites)) {
+      setFacilities(data.facilites);
+    }
+  }, [data]);
 
   const stringDate = (d) => {
     const Months = [
@@ -262,6 +278,80 @@ const OrderDetails = ({ navigation, route }) => {
       </View>
       <View
         style={{
+          borderBottomWidth: 0,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+          marginTop: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 18,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+          }}
+        >
+          Service/ Item Nam/
+        </Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
+          {ListData && ListData.length > 0 ? (
+            ListData.map((doc, i) => (
+              <Text key={i}>
+                {i == 0 ? "" : ", "}
+                {doc.data.title}
+              </Text>
+            ))
+          ) : (
+            <Text
+              style={{
+                color: "#505050",
+              }}
+            >
+              N/A
+            </Text>
+          )}
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: "#F1EFEF",
+          paddingVertical: 20,
+          marginHorizontal: 20,
+          marginTop: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 20,
+            color: textColor,
+            fontFamily: "Poppins-Medium",
+          }}
+        >
+          Facilities
+        </Text>
+        <View style={{ marginTop: 10 }}>
+          {Facilities && Facilities.length > 0 ? (
+            Facilities.map((doc, i) => (
+              <Text key={i}>
+                {i + 1 + ". "}
+                {doc.title}
+              </Text>
+            ))
+          ) : (
+            <Text
+              style={{
+                color: "#505050",
+              }}
+            >
+              N/A
+            </Text>
+          )}
+        </View>
+      </View>
+      <View
+        style={{
           justifyContent: "center",
           alignItems: "center",
           borderBottomWidth: 1,
@@ -271,9 +361,9 @@ const OrderDetails = ({ navigation, route }) => {
           marginTop: 20,
         }}
       >
-        <Text style={styles.text}>Price</Text>
+        <Text style={[styles.text, { fontSize: 20 }]}>Price</Text>
         <Text style={styles.text}>
-          Basic Price : {data ? data.amount + "৳" : "Pice is empty"}
+          Basic Price : {data ? data.offerPrice + "৳" : "Pice is empty"}
         </Text>
       </View>
       <View
@@ -286,7 +376,7 @@ const OrderDetails = ({ navigation, route }) => {
           marginHorizontal: 20,
         }}
       >
-        <Text style={styles.text}>Delivery Date</Text>
+        <Text style={[styles.text, { fontSize: 20 }]}>Delivery Date</Text>
         <View
           style={{
             flexDirection: "row",
@@ -315,7 +405,7 @@ const OrderDetails = ({ navigation, route }) => {
           marginHorizontal: 20,
         }}
       >
-        <Text style={styles.text}>Payment Status</Text>
+        <Text style={[styles.text, { fontSize: 20 }]}>Payment Status</Text>
         <View
           style={{
             backgroundColor: data && data.paid ? "green" : "red",
@@ -345,7 +435,7 @@ const OrderDetails = ({ navigation, route }) => {
           marginHorizontal: 20,
         }}
       >
-        <Text style={[styles.text, { fontSize: 18 }]}>Service Status</Text>
+        <Text style={[styles.text, { fontSize: 20 }]}>Service Status</Text>
         <Text style={[styles.smallText, { marginTop: 5 }]}>
           {data ? exporters(data.status) : "Unknown"}
         </Text>
@@ -365,26 +455,28 @@ const OrderDetails = ({ navigation, route }) => {
           {data && data.description ? data.description : "No details found!"}
         </Text>
       </View>
-      <Button
-        onPress={() => {
-          cancelOrder(user.token, data.id, "CANCELLED")
-            .then(() => {
-              navigation.goBack();
-            })
-            .catch((err) => {
-              console.warn(err.response.data);
-            });
-        }}
-        style={{
-          backgroundColor: backgroundColor,
-          borderRadius: 5,
-          alignSelf: "flex-end",
-          marginVertical: 20,
-          borderWidth: 0,
-          marginRight: 20,
-        }}
-        title="Cancel Order"
-      />
+      {data && data.status == "WAITING_FOR_ACCEPT" && (
+        <Button
+          onPress={() => {
+            cancelOrder(user.token, data.id, "CANCELLED", "user")
+              .then((res) => {
+                navigation.replace("ManageOrder", { reload: res });
+              })
+              .catch((err) => {
+                console.warn(err.response.data);
+              });
+          }}
+          style={{
+            backgroundColor: backgroundColor,
+            borderRadius: 5,
+            alignSelf: "flex-end",
+            marginVertical: 20,
+            borderWidth: 0,
+            marginRight: 20,
+          }}
+          title="Cancel Order"
+        />
+      )}
     </ScrollView>
   );
 };

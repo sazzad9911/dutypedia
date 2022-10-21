@@ -65,9 +65,11 @@ const ManageOrder = ({ navigation, route }) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
-  const [AllOrders, setAllOrders] = React.useState(null);
+  const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
   const [Active, setActive] = React.useState("STARTING");
+  const reload =
+    route.params && route.params.reload ? route.params.reload : null;
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -177,7 +179,7 @@ const ManageOrder = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user + Refresh]);
+  }, [user + Refresh + reload]);
   React.useEffect(() => {
     if (AllOrders) {
       let arr = [];
@@ -193,7 +195,7 @@ const ManageOrder = ({ navigation, route }) => {
       // });
       //setOrders(arr);
     }
-  }, [Active + AllOrders]);
+  }, [Active + AllOrders.length]);
 
   return (
     <ScrollView

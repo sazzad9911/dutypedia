@@ -175,7 +175,7 @@ const Service = ({ navigation, route }) => {
         createOtherService(
           user.token,
           businessForm,
-          listData,
+          route.params.data ? route.params.data : listData,
           result,
           vendor.service.id,
           direct

@@ -33,6 +33,7 @@ const AddServiceList = (props) => {
   const backgroundColor = colors.getBackgroundColor();
   const dispatch = useDispatch();
   const [Data, setData] = React.useState([]);
+  const [DataError, setDataError] = React.useState();
   const [Facilities, setFacilities] = React.useState([]);
   const styles = StyleSheet.create({
     view: {
@@ -101,30 +102,46 @@ const AddServiceList = (props) => {
           component={ExtraFacilities}
         /> */}
       </Tab.Navigator>
-      <Button
-        onPress={() => {
-          try {
-            //console.log(Data);
-            dispatch({ type: "SET_LIST_SELECTION", playload: Data });
-            params.setListData(Data);
-
-            navigation.navigate(params.name, { data: params.data });
-            //console.log(ListSelection);
-          } catch (e) {
-            console.warn(e.message);
-          }
-        }}
-        style={{
-          position: "absolute",
-          backgroundColor: backgroundColor,
-          zIndex: 100,
-          bottom: 20,
-          borderRadius: 5,
-          marginHorizontal: 20,
-          width: width - 40,
-        }}
-        title="Done"
-      />
+      <View>
+        {DataError && (
+          <Text style={{ color: "red", textAlign: "center" }}>{DataError}</Text>
+        )}
+        <Button
+          onPress={() => {
+            try {
+              setDataError(null);
+              //console.log(Data);
+              dispatch({ type: "SET_LIST_SELECTION", playload: Data });
+              if (params.setListData) {
+                params.setListData(Data);
+                navigation.navigate(params.name, { data: params.data });
+                //console.log(ListSelection);
+              } else {
+                if (Data.length == 0) {
+                  setDataError("You must need at least one service");
+                  return;
+                }
+                navigation.navigate("Service", {
+                  direct: params.data,
+                  data: Data,
+                });
+              }
+            } catch (e) {
+              console.warn(e.message);
+            }
+          }}
+          style={{
+            position: "absolute",
+            backgroundColor: backgroundColor,
+            zIndex: 100,
+            bottom: 20,
+            borderRadius: 5,
+            marginHorizontal: 20,
+            width: width - 40,
+          }}
+          title={!params.setListData ? "Next" : "Done"}
+        />
+      </View>
     </SafeAreaView>
   );
 };

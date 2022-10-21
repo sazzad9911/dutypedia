@@ -347,14 +347,21 @@ export const getOrders = async (token, type, id) => {
     return res;
   }
 };
-export const cancelOrder = async (token, orderId, status) => {
+export const cancelOrder = async (token, orderId, status, type) => {
   const res = await axios.put(
-    `${url}/server/orders/user/update`,
+    `${url}/server/orders/${type}/update`,
     {
       orderId: orderId,
       status: status,
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
+  return res;
+};
+export const acceptOrder = async (token, data) => {
+  //orderId, selectedServices, deliverBy, serviceType
+  const res = await axios.post(`${url}/server/orders/accept`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return res;
 };

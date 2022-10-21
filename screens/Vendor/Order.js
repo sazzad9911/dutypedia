@@ -97,10 +97,12 @@ const VendorOrder = ({ navigation, route }) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
-  const [AllOrders, setAllOrders] = React.useState(null);
+  const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
   const [Active, setActive] = React.useState("STARTING");
   const vendor = useSelector((state) => state.vendor);
+  const reload =
+    route.params && route.params.reload ? route.params.reload : null;
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -123,6 +125,7 @@ const VendorOrder = ({ navigation, route }) => {
             // console.log(res.data.orders);
             //console.log(res.data.orders[0].service.serviceCenterName);
             setAllOrders(res.data.orders);
+            setOrders(res.data.orders);
           }
         })
         .catch((err) => {
@@ -130,7 +133,7 @@ const VendorOrder = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user + Refresh]);
+  }, [user + Refresh + reload]);
   React.useEffect(() => {
     if (AllOrders) {
       let arr = [];
@@ -146,7 +149,7 @@ const VendorOrder = ({ navigation, route }) => {
       // });
       //setOrders(arr);
     }
-  }, [Active + AllOrders]);
+  }, [Active + AllOrders.length]);
   const Header = () => {
     return (
       <Animated.View

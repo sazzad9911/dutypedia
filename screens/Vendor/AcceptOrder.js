@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, ScrollView, Text } from "react-native";
+import { View, SafeAreaView, ScrollView, Text, Alert } from "react-native";
 import SubHeader from "./../../components/SubHeader";
 import RadioButton from "../../components/RadioButton";
 import { Color } from "../../assets/colors";
@@ -8,6 +8,8 @@ import Input from "./../../components/Input";
 import IconButton from "./../../components/IconButton";
 import { SvgXml } from "react-native-svg";
 import { CheckBox } from "../Seller/Pricing";
+import { acceptOrder } from "../../Class/service";
+import { localOptionsToServer } from "../../Class/dataConverter";
 
 const AcceptOrder = (props) => {
   const isDark = useSelector((state) => state.isDark);
@@ -27,7 +29,12 @@ const AcceptOrder = (props) => {
   const [Confirmation_1Error, setConfirmation_1Error] = React.useState();
   const [Confirmation_2Error, setConfirmation_2Error] = React.useState();
   const [DescriptionError, setDescriptionError] = React.useState();
+  const user = useSelector((state) => state.user);
+  const ListSelection = useSelector((state) => state.ListSelection);
   const ref = React.useRef();
+  const params = props.route.params;
+  const [Loader, setLoader] = React.useState(false);
+  const navigation = props.navigation;
 
   const validate = () => {
     setServiceError(null);
@@ -53,8 +60,41 @@ const AcceptOrder = (props) => {
       setConfirmation_2Error("This field is required");
       return;
     }
+    if (!params.facilities || !params.id) {
+      Alert.alert("Opps!", "Something went wrong. Please try again.");
+      return;
+    }
+    setLoader(true);
+    acceptOrder(user.token, {
+      orderId: params.id,
+      selectedServices: {
+        options: localOptionsToServer(ListSelection),
+        type: ListSelection[0].subTitle ? 3 : ListSelection[0].title ? 2 : 1,
+        category: params.data.service.category,
+      },
+      deliverBy: Deliver,
+      serviceType: Service,
+      otherServiceType: Description,
+      facilites: params.facilities,
+    })
+      .then((response) => {
+        setLoader(false);
+        navigation.navigate("VendorOrder", { reload: response });
+      })
+      .catch((error) => {
+        setLoader(false);
+        Alert.alert("Opps!", error.response.data.msg);
+        console.warn(error.response.data.msg);
+        //console.warn(error.response.data.msg);
+      });
   };
-
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubHeader title="Order Confirmation" {...props} />
@@ -204,6 +244,7 @@ const AcceptOrder = (props) => {
             <Text style={{ color: "red" }}>{Confirmation_1Error}</Text>
           )}
           <CheckBox
+            value={Condition_1}
             onChange={(e) => {
               setCondition_1((val) => !val);
             }}
@@ -213,6 +254,7 @@ const AcceptOrder = (props) => {
             title="Yes I Talked And Collect All Information What My Customer Want"
           />
           <CheckBox
+            value={Condition_2}
             onChange={(e) => {
               setCondition_2((val) => !val);
             }}
@@ -222,6 +264,7 @@ const AcceptOrder = (props) => {
             title="If I Deliver Any Service/Item In Online/Physical I Will Save All Of My Proof & Documents For Future Inquiries"
           />
           <CheckBox
+            value={Condition_3}
             onChange={(e) => {
               setCondition_3((val) => !val);
             }}
@@ -244,6 +287,7 @@ const AcceptOrder = (props) => {
           }}
         >
           <CheckBox
+            value={Condition_4}
             onChange={(e) => {
               setCondition_4((val) => !val);
             }}

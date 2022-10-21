@@ -15,9 +15,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  Color
-} from "../assets/colors.js";
+import { Color } from "../assets/colors.js";
 import { EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -127,13 +125,13 @@ const VendorProfile = (props) => {
   const [Bargaining, setBargaining] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -381,7 +379,7 @@ const VendorProfile = (props) => {
   if (!Price) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{color:textColor}}>Loading....</Text>
+        <Text style={{ color: textColor }}>Loading....</Text>
       </View>
     );
   }
@@ -453,7 +451,7 @@ const VendorProfile = (props) => {
                   fontSize: 22,
                   marginTop: 15,
                   fontFamily: "Poppins-SemiBold",
-                  color:textColor
+                  color: textColor,
                 },
               ]}
             >
@@ -464,7 +462,7 @@ const VendorProfile = (props) => {
                 marginTop: 2,
                 fontSize: 17,
                 fontFamily: "Poppins-SemiBold",
-                color:textColor
+                color: textColor,
               }}
             >
               {vendor?.service.providerInfo.title + " "}
@@ -617,7 +615,7 @@ const VendorProfile = (props) => {
                   fontFamily: "Poppins-Medium",
                   lineHeight: 20,
                   marginTop: 5,
-                  color:textColor
+                  color: textColor,
                 }}
               >
                 {vendor?.service.about}
@@ -683,7 +681,7 @@ const VendorProfile = (props) => {
         </ScrollView>
         {Active == serviceSettings[0].title ? (
           <Animated.View
-            style={{ backgroundColor: secondaryColor }} 
+            style={{ backgroundColor: secondaryColor }}
             entering={StretchInY}
           >
             <View style={{ backgroundColor: secondaryColor }}>
@@ -781,7 +779,7 @@ const VendorProfile = (props) => {
                 style={{
                   fontSize: 15,
                   fontFamily: "Poppins-Medium",
-                  color:textColor
+                  color: textColor,
                 }}
               >
                 Service List
@@ -1111,7 +1109,7 @@ const VendorProfile = (props) => {
                     style={{
                       fontSize: 15,
                       fontFamily: "Poppins-Medium",
-                      color: textColor
+                      color: textColor,
                     }}
                   >
                     Service List
@@ -1233,7 +1231,6 @@ const VendorProfile = (props) => {
                       )}
                     </View>
                   </View>
-                  
                 </View>
                 <View
                   style={{
@@ -1326,29 +1323,63 @@ const VendorProfile = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
-            AllData.map((data, i) => {
-              if (data.title.toUpperCase().match(Dashboard.toUpperCase())) {
-                if (data.data) {
-                  navigation.navigate("SubCategories", {
-                    title: data.title,
-                    data: data.data,
-                    image: data.image,
-                    id: i,
-                    mainTitle: data.title,
-                    direct: "ONETIME",
-                  });
-                } else {
-                  props.navigation.navigate("TableData", {
-                    title: data.title,
-                    list: data.list,
-                    exit: true,
-                    id: i,
-                    mainTitle: data.title,
-                    direct: "ONETIME",
-                  });
-                }
-              }
-            });
+            dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+            if (vendor.service.gigs[0].services.category) {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  vendor.service.gigs[0].services.options,
+                  vendor.service.gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  vendor.service.gigs[0].services.options,
+                  vendor.service.gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+              });
+            } else {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  vendor.service.gigs[0].services,
+                  vendor.service.gigs[0].dashboard
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  vendor.service.gigs[0].services,
+                  vendor.service.gigs[0].dashboard
+                ),
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+              });
+            }
+            // AllData.map((data, i) => {
+            //   if (data.title.toUpperCase().match(Dashboard.toUpperCase())) {
+            //     if (data.data) {
+            //       navigation.navigate("SubCategories", {
+            //         title: data.title,
+            //         data: data.data,
+            //         image: data.image,
+            //         id: i,
+            //         mainTitle: data.title,
+            //         direct: "ONETIME",
+            //       });
+            //     } else {
+            //       props.navigation.navigate("TableData", {
+            //         title: data.title,
+            //         list: data.list,
+            //         exit: true,
+            //         id: i,
+            //         mainTitle: data.title,
+            //         direct: "ONETIME",
+            //       });
+            //     }
+            //   }
+            // });
           }}
         />
       )}
@@ -1359,12 +1390,12 @@ const VendorProfile = (props) => {
 export default VendorProfile;
 
 const Options = ({ text, Icon }) => {
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
   return (
     <TouchableOpacity
       style={{
@@ -1396,13 +1427,13 @@ const Options = ({ text, Icon }) => {
 };
 const BarOption = ({ icon, title }) => {
   const [lines, setLines] = React.useState(1);
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -1432,7 +1463,7 @@ const BarOption = ({ icon, title }) => {
           style={{
             fontFamily: "Poppins-Medium",
             marginBottom: 5,
-            color:textColor
+            color: textColor,
           }}
         >
           {title}
@@ -1448,12 +1479,12 @@ const BarOption = ({ icon, title }) => {
   );
 };
 export const ServiceTable = ({ item, i, name, NewDataList }) => {
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
   React.useEffect(() => {
@@ -1532,12 +1563,12 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
 
 export const Rows = ({ title, item, name, NewDataList }) => {
   const [text, setText] = React.useState();
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
 
   React.useEffect(() => {
     //console.log(item);
@@ -1579,7 +1610,6 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
-
 
 export const ServiceCarts = () => {
   return <TouchableOpacity></TouchableOpacity>;

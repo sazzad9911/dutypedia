@@ -27,23 +27,24 @@ import {
   support,
 } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
-import { logOut,logoutVendor } from "../../Class/auth";
+import { logOut, logoutVendor } from "../../Class/auth";
 import Button from "./../../components/Button";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = useSelector((state) => state.vendor);
   const dispatch = useDispatch();
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const secondaryColor=colors.getSecondaryColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
 
   return (
     <ScrollView style={{ backgroundColor: secondaryColor }}>
-      <TouchableOpacity style={{marginTop:20}}
+      <TouchableOpacity
+        style={{ marginTop: 20 }}
         onPress={() => {
           navigation.navigate("VendorProfile");
         }}
@@ -69,10 +70,13 @@ const Menu = ({ navigation }) => {
               overflow: "hidden",
             }}
           >
-            {vendor&&vendor.service.profilePhoto&&(
-              <Image source={{ uri:vendor.service.profilePhoto}} style={{width:65,height:65}}/>
+            {vendor && vendor.service.profilePhoto && (
+              <Image
+                source={{ uri: vendor.service.profilePhoto }}
+                style={{ width: 65, height: 65 }}
+              />
             )}
-            {vendor&&!vendor.service.profilePhoto&&(
+            {vendor && !vendor.service.profilePhoto && (
               <FontAwesome name="user" size={55} color="#983C85" />
             )}
           </View>
@@ -107,7 +111,7 @@ const Menu = ({ navigation }) => {
               vendor.service &&
               vendor.service.providerInfo &&
               vendor.service.providerInfo.title
-                ? vendor.service.providerInfo.title+" "
+                ? vendor.service.providerInfo.title + " "
                 : "Mr" + " "}
               {vendor &&
               vendor.service &&
@@ -162,9 +166,10 @@ const Menu = ({ navigation }) => {
             />
           )}
         />
-        <Cart onPress={()=>{
-          navigation.navigate('Notice')
-        }}
+        <Cart
+          onPress={() => {
+            navigation.navigate("Notice");
+          }}
           title="Notice"
           Icon={() => (
             <Image
@@ -177,9 +182,10 @@ const Menu = ({ navigation }) => {
             />
           )}
         />
-        <Cart onPress={()=>{
-          navigation.navigate('Member')
-        }}
+        <Cart
+          onPress={() => {
+            navigation.navigate("Member");
+          }}
           title="Member"
           Icon={() => (
             <Image
@@ -227,15 +233,16 @@ const Menu = ({ navigation }) => {
           )}
         />
       </View>
-      <Button style={{
-        borderWidth:0,
-        marginHorizontal: 20,
-        marginVertical:10,
-        height:45,
-        backgroundColor:primaryColor,
-        color:textColor,
-        borderRadius:5
-      }}
+      <Button
+        style={{
+          borderWidth: 0,
+          marginHorizontal: 20,
+          marginVertical: 10,
+          height: 45,
+          backgroundColor: primaryColor,
+          color: textColor,
+          borderRadius: 5,
+        }}
         onPress={() => {
           logoutVendor();
           dispatch({ type: "SET_VENDOR", playload: false });
@@ -248,12 +255,12 @@ const Menu = ({ navigation }) => {
 
 export default Menu;
 const Cart = ({ title, Icon, onPress }) => {
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const secondaryColor=colors.getSecondaryColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -282,15 +289,16 @@ const Cart = ({ title, Icon, onPress }) => {
           paddingRight: 15,
         }}
       >
-        <View style={{ height: 10 ,flex:1}} />
+        <View style={{ height: 10, flex: 1 }} />
         <Icon />
-        <Text numberOfLines={1}
+        <Text
+          numberOfLines={1}
           style={{
             fontSize: 14,
             fontFamily: "Poppins-Medium",
             marginTop: 5,
-            flex:1,
-            color:textColor
+            flex: 1,
+            color: textColor,
           }}
         >
           {title}

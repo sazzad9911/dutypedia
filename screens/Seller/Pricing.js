@@ -1126,7 +1126,7 @@ const Days = ({ title, error, onChange, value }) => {
     </View>
   );
 };
-export const CheckBox = ({ onChange, value, title, style }) => {
+export const CheckBox = ({ onChange, value, title, style, disabled }) => {
   const [checked, setChecked] = React.useState(false);
   React.useEffect(() => {
     setChecked(value);
@@ -1146,6 +1146,7 @@ export const CheckBox = ({ onChange, value, title, style }) => {
         }}
       >
         <Checkbox
+          disabled={disabled}
           status={checked ? "checked" : "unchecked"}
           onPress={() => {
             if (onChange) {
