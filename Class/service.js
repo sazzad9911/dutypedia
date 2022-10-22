@@ -365,3 +365,12 @@ export const acceptOrder = async (token, data) => {
   });
   return res;
 };
+export const getLastOrder = async (token, serviceId) => {
+  const res = await axios.get(
+    `${url}/server/orders/last-agreement?serviceId=${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};

@@ -31,9 +31,9 @@ const RadioButton = ({ value, title, onChange, style }) => {
         }}
         style={[
           {
-            width: 30,
-            height: 30,
-            borderRadius: 30,
+            width: 25,
+            height: 25,
+            borderRadius: 20,
             borderColor: "#e5e5e5",
             borderWidth: 1,
             justifyContent: "center",
@@ -46,9 +46,9 @@ const RadioButton = ({ value, title, onChange, style }) => {
           <View
             style={{
               backgroundColor: backgroundColor,
-              height: 20,
-              width: 20,
-              borderRadius: 10,
+              height: 16,
+              width: 16,
+              borderRadius: 8,
             }}
           ></View>
         )}

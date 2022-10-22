@@ -1162,6 +1162,7 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
           {
             flex: 1,
             color: style && style.color ? style.color : "black",
+            fontSize: style && style.fontSize ? style.fontSize : 16,
           },
         ]}
       >

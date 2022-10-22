@@ -102,7 +102,7 @@ const OfferNow = ({ navigation, route }) => {
         if (res) {
           try {
             setLoader(false);
-            navigation.navigate("MainProfile");
+            navigation.navigate("ManageOrder", { reload: res });
           } catch (e) {
             setLoader(false);
             console.warn(e.message);
@@ -529,6 +529,7 @@ const OfferNow = ({ navigation, route }) => {
         }}
       >
         <CheckBox
+          value={Check}
           style={{ color: textColor }}
           onChange={() => {
             setCheck((v) => !v);

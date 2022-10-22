@@ -112,15 +112,21 @@ const OrderDetails = ({ navigation, route }) => {
   );
   React.useEffect(() => {
     //console.log(data);
-    if (data && data.selectedServices && data.selectedServices.category) {
-      setListData(
-        serverToLocal(
-          data.selectedServices.options,
-          data.selectedServices.category
-        )
-      );
-    } else if (data && data.selectedServices) {
-      setListData(serverToLocal(data.selectedServices, data.service.category));
+    try {
+      if (data && data.selectedServices && data.selectedServices.category) {
+        setListData(
+          serverToLocal(
+            data.selectedServices.options,
+            data.selectedServices.category
+          )
+        );
+      } else if (data && data.selectedServices) {
+        setListData(
+          serverToLocal(data.selectedServices, data.service.category)
+        );
+      }
+    } catch (e) {
+      console.warn(e.message);
     }
     if (data && data.facilites && Array.isArray(data.facilites)) {
       setFacilities(data.facilites);
@@ -284,7 +290,11 @@ const OrderDetails = ({ navigation, route }) => {
               color: textColor,
             }}
           >
-            {data ? data.id : "Unknown"}
+            {data
+              ? data.id.split("").map((doc, i) => {
+                  return ` ${doc}`;
+                })
+              : "Unknown"}
           </Text>
         </View>
       </View>

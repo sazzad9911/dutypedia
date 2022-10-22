@@ -103,6 +103,8 @@ const VendorOrder = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
+  const [Search, setSearch] = React.useState();
+  const [Filter, setFilter] = React.useState();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -150,7 +152,22 @@ const VendorOrder = ({ navigation, route }) => {
       //setOrders(arr);
     }
   }, [Active + AllOrders.length]);
-  const Header = () => {
+  React.useEffect(() => {
+    if (!Filter) {
+      setOrders(AllOrders);
+    } else {
+      let text = Filter;
+      text = text.split(" ").join("_");
+      let arr = AllOrders.filter((d) =>
+        d.status.toUpperCase().match(text.toUpperCase())
+      );
+      setOrders(arr);
+    }
+  }, [Filter]);
+
+  const Header = ({ onChange, value, setFilter, Filter }) => {
+    const [Search, setSearch] = React.useState(value);
+
     return (
       <Animated.View
         style={[
@@ -214,17 +231,42 @@ const VendorOrder = ({ navigation, route }) => {
             }}
           >
             <TextInput
+              onEndEditing={() => {
+                if (onChange) {
+                  onChange(Search);
+                }
+              }}
+              value={Search}
+              onChangeText={(e) => {
+                setSearch(e);
+              }}
               placeholderTextColor={assentColor}
               placeholder="Search Now"
+              returnKeyType="search"
             />
             <AntDesign name="search1" size={24} color={assentColor} />
           </View>
           <DropDown
+            value={Filter}
+            onChange={(e) => {
+              if (onChange) {
+                setFilter(e);
+              }
+            }}
             style={{
               marginLeft: 15,
             }}
-            DATA={["Paid", "Due", "Refound"]}
-            placeholder="Select"
+            DATA={[
+              "Waiting for accept",
+              "Accepted",
+              "Canceled",
+              "Refounded",
+              "Processing",
+              "Delivered",
+              "Completed",
+              "Waiting for payment",
+            ]}
+            placeholder={"Select"}
           />
         </View>
       </Animated.View>
@@ -251,7 +293,22 @@ const VendorOrder = ({ navigation, route }) => {
         //scroll;
       }}
     >
-      <Header />
+      <Header
+        Filter={Filter}
+        setFilter={setFilter}
+        value={Search}
+        onChange={(e) => {
+          setSearch(e);
+          if (!e) {
+            setOrders(AllOrders);
+          } else {
+            let arr = AllOrders.filter((d) =>
+              d.status.toUpperCase().match(e.toUpperCase())
+            );
+            setOrders(arr);
+          }
+        }}
+      />
       {Loader && <ActivityLoader />}
       {Orders &&
         Orders.map((doc, i) => (

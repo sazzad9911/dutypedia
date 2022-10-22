@@ -8,8 +8,9 @@ import Input from "./../../components/Input";
 import IconButton from "./../../components/IconButton";
 import { SvgXml } from "react-native-svg";
 import { CheckBox } from "../Seller/Pricing";
-import { acceptOrder } from "../../Class/service";
+import { acceptOrder, getLastOrder } from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
+import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
 
 const AcceptOrder = (props) => {
   const isDark = useSelector((state) => state.isDark);
@@ -33,24 +34,118 @@ const AcceptOrder = (props) => {
   const ListSelection = useSelector((state) => state.ListSelection);
   const ref = React.useRef();
   const params = props.route.params;
-  const [Loader, setLoader] = React.useState(false);
+  const [Loader, setLoader] = React.useState(true);
   const navigation = props.navigation;
+  const [DeliverMethod, setDeliverMethod] = React.useState({
+    online: [
+      "Online File Share",
+      "Deliver In Video/Voice Call",
+      "Delivered In Another Platform",
+      "Other",
+    ],
+    offline: [
+      {
+        title: "My Self",
+        options: [
+          "By Walk",
+          "By Vehicles",
+          "Customer Will Come To My Place",
+          "Other",
+        ],
+      },
+      { title: "Courier Service" },
+      { title: "Labor" },
+      { title: "Other" },
+    ],
+  });
+  const [Select, setSelect] = React.useState();
+  const [SubSelect, setSubSelect] = React.useState();
+  const [CourierServiceName, setCourierServiceName] = React.useState();
+  const [CourierServiceAddress, setCourierServiceAddress] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
+
+  React.useEffect(() => {
+    if (user && vendor) {
+      getLastOrder(user.token, vendor.service.id)
+        .then((res) => {
+          //console.log(res.data);
+          setLoader(false);
+          const data = res.data;
+          if (data) {
+            const agreement = data.agreement;
+            setService(agreement.serviceType);
+            setDeliver(agreement.deliverBy);
+            setSelect(
+              agreement.deliverMethodPhysical
+                ? agreement.deliverMethodPhysical
+                : agreement.deliverMethodOnline
+            );
+            setDescription(agreement.selfDeliverMethodOther);
+            setCourierServiceName(agreement.courierServiceName);
+            setCourierServiceAddress(agreement.courierServiceAddress);
+          }
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+    }
+  }, [user + vendor]);
 
   const validate = () => {
     setServiceError(null);
     setDeliverError(null);
     setConfirmation_1Error(null);
     setConfirmation_2Error(null);
+    //console.log(Description);
     if (!Service) {
       setServiceError("This field is required");
       ref.current.scrollTo({ y: 10 });
       return;
     }
-    if (!Deliver) {
+    if (!Deliver || !Select) {
       setDeliverError("This field is required");
       ref.current.scrollTo({ y: 400 });
       return;
     }
+    if (Select == "My Self" && !SubSelect) {
+      setDeliverError("This field is required");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    if (Select == "Courier Service" && !CourierServiceName) {
+      setDeliverError("This field is required with typing");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    if (Select == "Courier Service" && !CourierServiceAddress) {
+      setDeliverError("This field is required with typing");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    if (
+      Select != "Labor" &&
+      Select != "Courier Service" &&
+      Select != "My Self" &&
+      !Description
+    ) {
+      setDeliverError("This field is required with typing");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    if (SubSelect == "Other" && !Description) {
+      setDeliverError("This field is required with typing");
+      ref.current.scrollTo({ y: 400 });
+      return;
+    }
+    // if (
+    //   (Select == "Courier Service" && !CourierServiceName) ||
+    //   !CourierServiceAddress
+    // ) {
+    //   setDeliverError("This field is required");
+    //   ref.current.scrollTo({ y: 400 });
+    //   return;
+    // }
     if (!Condition_1 || !Condition_2 || !Condition_3) {
       setConfirmation_1Error("Be agree with all conditions");
       ref.current.scrollTo({ y: 600 });
@@ -74,8 +169,12 @@ const AcceptOrder = (props) => {
       },
       deliverBy: Deliver,
       serviceType: Service,
-      otherServiceType: Description,
+      deliverMethodPhysical: Select,
       facilites: params.facilities,
+      deliverMethodOnline: Select,
+      selfDeliverMethodOther: Description,
+      courierServiceName: CourierServiceName,
+      courierServiceAreaName: CourierServiceAddress,
     })
       .then((response) => {
         setLoader(false);
@@ -113,7 +212,7 @@ const AcceptOrder = (props) => {
         >
           <Text
             style={{
-              marginVertical: 10,
+              marginVertical: 20,
               fontFamily: "Poppins-Medium",
               fontSize: 20,
               color: textColor,
@@ -124,6 +223,7 @@ const AcceptOrder = (props) => {
           {ServiceError && <Text style={{ color: "red" }}>{ServiceError}</Text>}
           <View style={{ height: 10 }} />
           <RadioButton
+            style={{ marginTop: 0 }}
             onChange={() => {
               setService("Teaching/Tutorial");
             }}
@@ -131,6 +231,7 @@ const AcceptOrder = (props) => {
             title="Teaching/Tutorial"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Consultation");
             }}
@@ -138,6 +239,7 @@ const AcceptOrder = (props) => {
             title="Consultation"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Manufacture");
             }}
@@ -145,6 +247,7 @@ const AcceptOrder = (props) => {
             title="Manufacture"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Fixing");
             }}
@@ -152,6 +255,7 @@ const AcceptOrder = (props) => {
             title="Fixing"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Recover");
             }}
@@ -159,6 +263,7 @@ const AcceptOrder = (props) => {
             title="Recover"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Build");
             }}
@@ -166,6 +271,7 @@ const AcceptOrder = (props) => {
             title="Build"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Maintenance");
             }}
@@ -173,6 +279,7 @@ const AcceptOrder = (props) => {
             title="Maintenance"
           />
           <RadioButton
+            style={{ marginTop: 10 }}
             onChange={() => {
               setService("Other");
             }}
@@ -196,7 +303,7 @@ const AcceptOrder = (props) => {
               fontSize: 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
-              marginVertical: 10,
+              marginVertical: 20,
             }}
           >
             Service Deliver By
@@ -211,31 +318,165 @@ const AcceptOrder = (props) => {
             <IconButton
               onPress={() => {
                 setDeliver("Online");
+                setSelect(null);
+                setSubSelect(null);
+                setDescription(null);
               }}
-              active={Deliver == "Online" ? true : false}
               LeftIcon={() => <SvgXml xml={online} height="25" width="25" />}
               style={{
                 flex: 1,
                 marginRight: 10,
+                backgroundColor: Deliver == "Online" ? "#E3EBE4" : primaryColor,
+                color: textColor,
               }}
               title="Online"
             />
             <IconButton
               onPress={() => {
                 setDeliver("Physical");
+                setSelect(null);
+                setSubSelect(null);
+                setDescription(null);
               }}
-              active={Deliver == "Physical" ? true : false}
               LeftIcon={() => <SvgXml xml={offline} height="25" width="25" />}
-              style={{ flex: 1 }}
+              style={{
+                flex: 1,
+                backgroundColor:
+                  Deliver == "Physical" ? "#E3EBE4" : primaryColor,
+              }}
               title="Physical"
             />
           </View>
+          {Deliver == "Online" ? (
+            <Animated.View entering={FadeIn}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                  marginVertical: 10,
+                }}
+              >
+                Delivery Method
+              </Text>
+              {DeliverMethod.online.map((doc, i) => (
+                <View key={i}>
+                  <RadioButton
+                    style={{ marginTop: 10 }}
+                    onChange={() => {
+                      setSelect(doc);
+                      setDescription(null);
+                    }}
+                    value={Select == doc ? true : false}
+                    title={doc}
+                  />
+                  {Select == doc && (
+                    <Input
+                      value={Description}
+                      onChange={(e) => {
+                        setDescription(e);
+                      }}
+                      style={{
+                        marginVertical: 10,
+                      }}
+                      placeholder="Service Name"
+                    />
+                  )}
+                </View>
+              ))}
+            </Animated.View>
+          ) : Deliver == "Physical" ? (
+            <Animated.View entering={FadeIn}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                  marginVertical: 10,
+                }}
+              >
+                Delivery Method
+              </Text>
+              {DeliverMethod.offline.map((doc, i) => (
+                <View key={i}>
+                  <RadioButton
+                    style={{ marginTop: 10 }}
+                    onChange={() => {
+                      setSelect(doc.title);
+                      setDescription(null);
+                      setSubSelect(null);
+                    }}
+                    value={Select == doc.title ? true : false}
+                    title={doc.title}
+                  />
+                  {Select == "My Self" && doc.title == "My Self" && (
+                    <View entering={FadeIn} style={{ marginVertical: 10 }}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          flexWrap: "wrap",
+                          marginHorizontal: 30,
+                        }}
+                      >
+                        {doc.options &&
+                          doc.options.map((doc, i) => (
+                            <RadioButton
+                              style={{ marginLeft: 5, marginTop: 5 }}
+                              key={i}
+                              onChange={() => {
+                                setSubSelect(doc);
+                                setDescription(null);
+                              }}
+                              value={SubSelect == doc ? true : false}
+                              title={doc}
+                            />
+                          ))}
+                      </View>
+                      {SubSelect == "Other" && (
+                        <Input
+                          value={Description}
+                          onChange={(e) => setDescription(e)}
+                          placeholder="Type here"
+                        />
+                      )}
+                    </View>
+                  )}
+                  {Select == "Courier Service" &&
+                    doc.title == "Courier Service" && (
+                      <View style={{ marginBottom: 10 }}>
+                        <Input
+                          value={CourierServiceName}
+                          onChange={(e) => setCourierServiceName(e)}
+                          placeholder="Courier Service Name"
+                        />
+                        <Input
+                          value={CourierServiceAddress}
+                          onChange={(e) => setCourierServiceAddress(e)}
+                          placeholder="Branch or Area Name"
+                        />
+                      </View>
+                    )}
+                  {Select == "Other" && doc.title == "Other" && (
+                    <Input
+                      value={Description}
+                      onChange={(e) => {
+                        setDescription(e);
+                      }}
+                      placeholder="Type here"
+                    />
+                  )}
+                </View>
+              ))}
+            </Animated.View>
+          ) : (
+            <></>
+          )}
           <Text
             style={{
               fontFamily: "Poppins-Medium",
               fontSize: 20,
               color: textColor,
-              marginVertical: 10,
+              marginVertical: 20,
             }}
           >
             Before Accept Order Confirm Our Condition
@@ -250,6 +491,7 @@ const AcceptOrder = (props) => {
             }}
             style={{
               marginTop: 10,
+              fontSize: 14,
             }}
             title="Yes I Talked And Collect All Information What My Customer Want"
           />
@@ -260,6 +502,7 @@ const AcceptOrder = (props) => {
             }}
             style={{
               marginTop: 10,
+              fontSize: 14,
             }}
             title="If I Deliver Any Service/Item In Online/Physical I Will Save All Of My Proof & Documents For Future Inquiries"
           />
@@ -270,10 +513,11 @@ const AcceptOrder = (props) => {
             }}
             style={{
               marginTop: 10,
+              fontSize: 14,
             }}
             title="If I Do Any Fraud Or Criminal Activities Dutypedia Can Suspend Myaccount Without Any Discussion"
           />
-          <View style={{ height: 10 }} />
+          <View style={{ height: 20 }} />
         </View>
         <View
           style={{
@@ -287,6 +531,7 @@ const AcceptOrder = (props) => {
           }}
         >
           <CheckBox
+            style={{ fontSize: 14 }}
             value={Condition_4}
             onChange={(e) => {
               setCondition_4((val) => !val);

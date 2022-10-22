@@ -70,6 +70,8 @@ const ManageOrder = ({ navigation, route }) => {
   const [Active, setActive] = React.useState("STARTING");
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
+  const [Search, setSearch] = React.useState();
+  const [Filter, setFilter] = React.useState();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -81,7 +83,8 @@ const ManageOrder = ({ navigation, route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
-  const Header = () => {
+  const Header = ({ onChange, value, Filter, setFilter }) => {
+    const [Search, setSearch] = React.useState(value);
     return (
       <Animated.View
         style={[
@@ -145,16 +148,33 @@ const ManageOrder = ({ navigation, route }) => {
             }}
           >
             <TextInput
+              onEndEditing={() => {
+                onChange(Search);
+              }}
+              value={Search}
+              onChangeText={(e) => setSearch(e)}
               placeholderTextColor={assentColor}
               placeholder="Search Now"
+              returnKeyType="search"
             />
             <AntDesign name="search1" size={24} color={assentColor} />
           </View>
           <DropDown
+            value={Filter}
+            onChange={(e) => setFilter(e)}
             style={{
               marginLeft: 15,
             }}
-            DATA={["Paid", "Due", "Refound"]}
+            DATA={[
+              "Waiting for accept",
+              "Accepted",
+              "Canceled",
+              "Refounded",
+              "Processing",
+              "Delivered",
+              "Completed",
+              "Waiting for payment",
+            ]}
             placeholder="Select"
           />
         </View>
@@ -196,7 +216,30 @@ const ManageOrder = ({ navigation, route }) => {
       //setOrders(arr);
     }
   }, [Active + AllOrders.length]);
-
+  React.useEffect(() => {
+    if (!Filter) {
+      setOrders(AllOrders);
+    } else {
+      let text = Filter;
+      text = text.split(" ").join("_");
+      let arr = AllOrders.filter((d) =>
+        d.status.toUpperCase().match(text.toUpperCase())
+      );
+      setOrders(arr);
+    }
+  }, [Filter]);
+  React.useEffect(() => {
+    if (!Search) {
+      setOrders(AllOrders);
+    } else {
+      let text = Search;
+      text = text.split(" ").join("_");
+      let arr = AllOrders.filter((d) =>
+        d.status.toUpperCase().match(text.toUpperCase())
+      );
+      setOrders(arr);
+    }
+  }, [Search]);
   return (
     <ScrollView
       style={{ flexGrow: 1 }}
@@ -218,7 +261,12 @@ const ManageOrder = ({ navigation, route }) => {
         //scroll;
       }}
     >
-      <Header />
+      <Header
+        value={Search}
+        onChange={setSearch}
+        Filter={Filter}
+        setFilter={setFilter}
+      />
       {Loader && <ActivityLoader />}
       {Orders &&
         Orders.map((doc, i) => (
