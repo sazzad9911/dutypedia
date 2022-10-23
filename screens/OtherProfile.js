@@ -129,6 +129,7 @@ const OtherProfile = (props) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [RelatedServices, setRelatedServices] = React.useState([]);
   const [UnRelatedServices, setUnRelatedServices] = React.useState([]);
+  const [Gigs, setGigs] = React.useState();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -290,6 +291,7 @@ const OtherProfile = (props) => {
   }, [ActiveService + Click + Refresh]);
   React.useEffect(() => {
     if (user && Data) {
+      setFixedService([]);
       getOtherServices(newUser.token, Data.service.id, "ONETIME")
         .then((res) => {
           setFixedService(res.data.gigs);
@@ -327,6 +329,7 @@ const OtherProfile = (props) => {
     }
   }, [Data]);
   const showCart = (doc) => {
+    setGigs(doc);
     setClick(true);
     setImages(doc.images);
     //console.log(doc.services);
@@ -989,7 +992,6 @@ const OtherProfile = (props) => {
               flexDirection: "row",
               flexWrap: "wrap",
               backgroundColor: primaryColor,
-              paddingLeft: 10,
             }}
             entering={FadeIn}
           >
@@ -1002,6 +1004,7 @@ const OtherProfile = (props) => {
                       onPress={() => {
                         setClick(true);
                         setImages(doc.images);
+                        setGigs(doc);
                         //console.log(doc.services);
                         setPrice(doc.price);
                         setFacilities(doc.facilites.selectedOptions);
@@ -1343,6 +1346,12 @@ const OtherProfile = (props) => {
                     From {Price} ৳
                   </Text>
                   <Button
+                    onPress={() => {
+                      navigation.navigate("OfferNow", {
+                        data: Data,
+                        gigs: Gigs,
+                      });
+                    }}
                     style={{
                       borderRadius: 5,
                       marginHorizontal: 20,

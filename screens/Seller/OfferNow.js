@@ -36,6 +36,7 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
 import { createOrder } from "../../Class/service";
+import { serverToLocal } from "../../Class/dataConverter";
 
 const OfferNow = ({ navigation, route }) => {
   const params = route.params ? route.params : null;
@@ -62,10 +63,28 @@ const OfferNow = ({ navigation, route }) => {
   const [Description, setDescription] = React.useState();
   const vendor = useSelector((state) => state.vendor);
   const [Loader, setLoader] = React.useState(false);
+  const gigs = params.gigs;
+  const [ListData, setListData] = React.useState([]);
+  const [Facilities, setFacilities] = React.useState([]);
 
   React.useEffect(() => {
-    //console.warn(data.service.profilePhoto);
-  }, []);
+    // console.log(gigs);
+    if (gigs) {
+      setPrice(gigs.price);
+      try {
+        if (gigs.services.category) {
+          setListData(
+            serverToLocal(gigs.services.options, gigs.services.category)
+          );
+        } else {
+          setListData(serverToLocal(gigs.services, data.service.category));
+        }
+      } catch (e) {
+        console.warn(e.message);
+      }
+      setFacilities(gigs.facilites.selectedOptions);
+    }
+  }, [gigs]);
   const pickDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync();
     if (result.type === "success") {
@@ -220,59 +239,205 @@ const OfferNow = ({ navigation, route }) => {
         <View
           style={{ height: 1, backgroundColor: "#e5e5e5", marginTop: 20 }}
         />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 20,
-            marginTop: 20,
-            backgroundColor: "#e5e5e5",
-            padding: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text
-            style={{
-              color: "black",
-              fontSize: 16,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            Starting Price
-          </Text>
-          <Text
-            style={{
-              color: "black",
-              fontSize: 16,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            {data ? data.service.gigs[0].price : "-"}৳
-          </Text>
-        </View>
-        <Input
-          error={PriceError}
-          value={Price}
-          onChange={(e) => {
-            if (parseInt(e) >= data.service.gigs[0].price) {
-              setPrice(parseInt(e));
-              setPriceError(null);
-            } else {
-              setPriceError(
-                `Price can be large or equal to ${data.service.gigs[0].price}৳`
-              );
-            }
-          }}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            marginTop: 15,
-            marginLeft: 20,
-            color: textColor,
-          }}
-          placeholderTextColor={assentColor}
-          placeholder="Your Price"
-        />
+        {gigs && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginTop: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Package
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Price
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingHorizontal: 25,
+                paddingVertical: 15,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                  color: textColor,
+                }}
+              >
+                Vip
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                  color: textColor,
+                }}
+              >
+                {gigs.price}৳
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+                marginTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Service List
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                paddingHorizontal: 25,
+                paddingVertical: 5,
+              }}
+            >
+              {ListData.length > 0 ? (
+                ListData.map((doc, i) => (
+                  <Text key={i}>
+                    {i == 0 ? "" : ", "}
+                    {doc.data.title}
+                  </Text>
+                ))
+              ) : (
+                <Text>N/A</Text>
+              )}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+                marginTop: 15,
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Facilities
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                paddingHorizontal: 25,
+                paddingVertical: 5,
+                marginBottom: 5,
+              }}
+            >
+              {Facilities.length > 0 ? (
+                Facilities.map((doc, i) => (
+                  <Text key={i}>
+                    {i == 0 ? "" : ", "}
+                    {doc.title}
+                  </Text>
+                ))
+              ) : (
+                <Text>N/A</Text>
+              )}
+            </View>
+          </>
+        )}
+        {!gigs && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginTop: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Starting Price
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {data ? data.service.gigs[0].price : "-"}৳
+              </Text>
+            </View>
+            <Input
+              error={PriceError}
+              value={Price}
+              onChange={(e) => {
+                if (parseInt(e) >= data.service.gigs[0].price) {
+                  setPrice(parseInt(e));
+                  setPriceError(null);
+                } else {
+                  setPriceError(
+                    `Price can be large or equal to ${data.service.gigs[0].price}৳`
+                  );
+                }
+              }}
+              keyboardType="numeric"
+              style={{
+                borderWidth: 1,
+                marginTop: 15,
+                marginLeft: 20,
+                color: textColor,
+              }}
+              placeholderTextColor={assentColor}
+              placeholder="Your Price"
+            />
+          </>
+        )}
         <View
           style={{
             flexDirection: "row",
@@ -530,7 +695,7 @@ const OfferNow = ({ navigation, route }) => {
       >
         <CheckBox
           value={Check}
-          style={{ color: textColor }}
+          style={{ color: textColor, fontSize: 14 }}
           onChange={() => {
             setCheck((v) => !v);
           }}

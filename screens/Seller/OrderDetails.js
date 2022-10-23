@@ -373,7 +373,10 @@ const OrderDetails = ({ navigation, route }) => {
       >
         <Text style={[styles.text, { fontSize: 20 }]}>Price</Text>
         <Text style={styles.text}>
-          Basic Price : {data ? data.offerPrice + "৳" : "Pice is empty"}
+          Basic Price :{" "}
+          {data
+            ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
+            : "Pice is empty"}
         </Text>
       </View>
       <View

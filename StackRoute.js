@@ -8,7 +8,7 @@ import ChatScreen from "./screens/ChatScreen";
 import ChatHead from "./components/ChatHead";
 import OtherProfile from "./screens/OtherProfile";
 const Stack = createStackNavigator();
-import { Color} from "./assets/colors";
+import { Color } from "./assets/colors";
 import SearchScreen from "./screens/SearchScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ManageOrder from "./screens/ManageOrder";
@@ -44,7 +44,7 @@ import DashboardList from "./screens/Vendor/DashboardList";
 import Category from "./screens/Seller/Category";
 import Support from "./screens/Support";
 import Feed from "./screens/Feed";
-import {getJson} from "./Class/storage"
+import { getJson } from "./Class/storage";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -52,13 +52,13 @@ export default function StackRoute() {
   const [load, setLoad] = React.useState(false);
   const [Vendor, setVendor] = React.useState(false);
   const dispatch = useDispatch();
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor =colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
 
   React.useEffect(() => {
     checkUser()
@@ -86,11 +86,11 @@ export default function StackRoute() {
       .catch((err) => {
         console.log(err.message);
       });
-      getJson("theme").then((data) => {
-        if(data){
-          dispatch({ type:'SET_THEME',playload: data });
-        }
-      })
+    getJson("theme").then((data) => {
+      if (data) {
+        dispatch({ type: "SET_THEME", playload: data });
+      }
+    });
   }, []);
   const MyTheme = {
     ...DefaultTheme,
@@ -103,7 +103,7 @@ export default function StackRoute() {
   if (!user && !load) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{color:textColor}}>Loading.....</Text>
+        <Text style={{ color: textColor }}>Loading.....</Text>
       </View>
     );
   }

@@ -105,6 +105,7 @@ const VendorOrder = ({ navigation, route }) => {
     route.params && route.params.reload ? route.params.reload : null;
   const [Search, setSearch] = React.useState();
   const [Filter, setFilter] = React.useState();
+  const [Change, setChange] = React.useState(false);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -115,19 +116,19 @@ const VendorOrder = ({ navigation, route }) => {
     //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
     wait(1000).then(() => setRefreshing(false));
   }, []);
-
   React.useEffect(() => {
-    if (user) {
+    if (user && vendor && vendor.service) {
       //setLoader(true);
       //console.log(vendor.service.id);
       getOrders(user.token, "vendor", vendor.service.id)
         .then((res) => {
           if (res.data) {
             setLoader(false);
-            // console.log(res.data.orders);
+            //console.log(res.data.orders);
             //console.log(res.data.orders[0].service.serviceCenterName);
             setAllOrders(res.data.orders);
-            setOrders(res.data.orders);
+            setChange((val) => !val);
+            //setOrders(res.data.orders);
           }
         })
         .catch((err) => {
@@ -135,23 +136,13 @@ const VendorOrder = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user + Refresh + reload]);
+  }, [user + Refresh + reload + vendor]);
   React.useEffect(() => {
     if (AllOrders) {
-      let arr = [];
-      if (Active == "STARTING") {
-        setOrders(AllOrders);
-      } else {
-        setOrders([]);
-      }
-      // AllOrders.forEach((doc, i) => {
-      //   if (doc.service.gigs[0].type == Active) {
-      //     arr.push(doc);
-      //   }
-      // });
-      //setOrders(arr);
+      let arr = AllOrders.filter((d) => d.type == Active);
+      setOrders(arr);
     }
-  }, [Active + AllOrders.length]);
+  }, [Change + Active]);
   React.useEffect(() => {
     if (!Filter) {
       setOrders(AllOrders);

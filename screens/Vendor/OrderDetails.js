@@ -135,6 +135,14 @@ const OrderDetails = ({ navigation, route }) => {
   const validate = () => {
     setServiceError(null);
     setFacilitiesError(null);
+    if (data.type == "ONETIME") {
+      navigation.navigate("AcceptOrder", {
+        facilities: Facilities,
+        id: data.id,
+        data: data,
+      });
+      return;
+    }
     if (ListSelection.length == 0) {
       setServiceError("*There at list one service required");
       ref.current.scrollTo({ y: 200 });
@@ -358,7 +366,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text style={{ color: "#606060", fontSize: 18 }}>N/A</Text>
           )}
         </View>
-        {data && data.status == "WAITING_FOR_ACCEPT" && (
+        {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME" && (
           <IconButton
             onPress={() => {
               if (data.service.gigs[0].services.category) {
@@ -447,7 +455,11 @@ const OrderDetails = ({ navigation, route }) => {
               <View style={{ flexDirection: "row", margin: 2 }} key={i}>
                 <CheckBox
                   disabled={
-                    data && data.status == "WAITING_FOR_ACCEPT" ? false : true
+                    data &&
+                    data.status == "WAITING_FOR_ACCEPT" &&
+                    data.type != "ONETIME"
+                      ? false
+                      : true
                   }
                   value={
                     Facilities.filter((d) => d.title == doc.title).length > 0
@@ -504,7 +516,10 @@ const OrderDetails = ({ navigation, route }) => {
             },
           ]}
         >
-          Basic Price : {data ? data.offerPrice + "৳" : "Pice is empty"}
+          Basic Price :{" "}
+          {data
+            ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
+            : "Pice is empty"}
         </Text>
       </View>
       <View
@@ -620,8 +635,8 @@ const OrderDetails = ({ navigation, route }) => {
           <Button
             onPress={() => {
               cancelOrder(user.token, data.id, "CANCELLED", "vendor")
-                .then(() => {
-                  navigation.goBack();
+                .then((response) => {
+                  navigation.navigate("VendorOrder", { reload: response });
                 })
                 .catch((err) => {
                   console.warn(err.response.data);

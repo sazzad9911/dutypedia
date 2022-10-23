@@ -63,6 +63,7 @@ const AcceptOrder = (props) => {
   const [CourierServiceName, setCourierServiceName] = React.useState();
   const [CourierServiceAddress, setCourierServiceAddress] = React.useState();
   const vendor = useSelector((state) => state.vendor);
+  const [OtherService, setOtherService] = React.useState();
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -83,6 +84,7 @@ const AcceptOrder = (props) => {
             setDescription(agreement.selfDeliverMethodOther);
             setCourierServiceName(agreement.courierServiceName);
             setCourierServiceAddress(agreement.courierServiceAddress);
+            setOtherService(agreement.otherServiceType);
           }
         })
         .catch((err) => {
@@ -99,6 +101,11 @@ const AcceptOrder = (props) => {
     setConfirmation_2Error(null);
     //console.log(Description);
     if (!Service) {
+      setServiceError("This field is required");
+      ref.current.scrollTo({ y: 10 });
+      return;
+    }
+    if (Service == "Other" && !OtherService) {
       setServiceError("This field is required");
       ref.current.scrollTo({ y: 10 });
       return;
@@ -175,6 +182,7 @@ const AcceptOrder = (props) => {
       selfDeliverMethodOther: Description,
       courierServiceName: CourierServiceName,
       courierServiceAreaName: CourierServiceAddress,
+      otherServiceType: OtherService,
     })
       .then((response) => {
         setLoader(false);
@@ -288,11 +296,12 @@ const AcceptOrder = (props) => {
           />
           {Service == "Other" && (
             <Input
+              value={OtherService}
               style={{
                 marginVertical: 10,
               }}
               onChange={(e) => {
-                setDescription(e);
+                setOtherService(e);
               }}
               placeholder="Describe here"
             />

@@ -30,8 +30,11 @@ import SubHeader from "./components/SubHeader";
 import Home_Next from "./screens/Home_Next";
 import { getFavoriteCategories } from "./Class/auth";
 import { useRoute } from "@react-navigation/native";
-import CategoryList from './screens/CategoryList';
-import OfferNow from './screens/Seller/OfferNow';
+import CategoryList from "./screens/CategoryList";
+import OfferNow from "./screens/Seller/OfferNow";
+import FixedOffers from "./screens/Seller/FixedOffers";
+import ManageOrder from "./screens/ManageOrder";
+import OrderDetails from "./screens/Vendor/OrderDetails";
 
 const Stack = createStackNavigator();
 
@@ -59,7 +62,7 @@ const HomeRoute = ({ navigation }) => {
           setLoader(false);
         });
     }
-  }, [interestCategory+vendor]);
+  }, [interestCategory + vendor]);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -104,9 +107,30 @@ const HomeRoute = ({ navigation }) => {
         component={CategoryList}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader title="Offer Price" {...props} /> }}
+        options={{
+          header: (props) => <SubHeader title="Offer Price" {...props} />,
+        }}
         name="OfferNow"
         component={OfferNow}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <SubHeader title="Confirm Order" {...props} />,
+        }}
+        name="FixedOffers"
+        component={FixedOffers}
+      />
+      <Stack.Screen
+        name="ManageOrder"
+        options={{
+          headerShown: false,
+        }}
+        component={ManageOrder}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="OrderDetails"
+        component={OrderDetails}
       />
     </Stack.Navigator>
   );
