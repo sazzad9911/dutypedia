@@ -120,6 +120,17 @@ const OrderDetails = ({ navigation, route }) => {
             data.selectedServices.category
           )
         );
+      } else if (Array.isArray(data.selectedServices)) {
+        let arr = [];
+        data.selectedServices.map((doc, i) => {
+          arr.push({
+            title: "dfsfds",
+            tableName: "sdad",
+            mainTitle: "asad",
+            data: doc,
+          });
+        });
+        setListData(arr);
       } else if (data && data.selectedServices) {
         setListData(
           serverToLocal(data.selectedServices, data.service.category)
@@ -564,20 +575,32 @@ const OrderDetails = ({ navigation, route }) => {
         <Text style={styles.text}>Payment Status</Text>
         <View
           style={{
-            backgroundColor: data && data.paid ? "green" : "red",
-            paddingVertical: 5,
+            padding: 3,
+            backgroundColor:
+              data && data.paid && data.status != "REFUNDED"
+                ? "green"
+                : data && data.paid && data.status == "REFUNDED"
+                ? "#FA1ABA"
+                : backgroundColor,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 15,
             paddingHorizontal: 15,
-            borderRadius: 50,
-            marginTop: 10,
-            marginBottom: 5,
+            marginVertical: 10,
           }}
         >
           <Text
             style={{
               color: "white",
+              fontSize: 15,
+              fontFamily: "Poppins-Medium",
             }}
           >
-            {data && data.paid ? "Paid" : "Due"}
+            {data && data.paid && data.status != "REFUNDED"
+              ? "Paid"
+              : data && data.paid && data.status == "REFUNDED"
+              ? "Canceled"
+              : "Due"}
           </Text>
         </View>
       </View>

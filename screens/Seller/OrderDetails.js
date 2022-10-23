@@ -13,12 +13,18 @@ import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
-import { cancelOrder } from "../../Class/service";
+import {
+  cancelOrder,
+  getOrders,
+  makePayment,
+  orderRefound,
+} from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
+import Toast from "react-native-root-toast";
 
-const OrderDetails = ({ navigation, route }) => {
-  const data = route.params && route.params.data ? route.params.data : null;
+const OrderDetails = ({ navigation, route, onRefresh }) => {
+  const oldData = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -74,6 +80,8 @@ const OrderDetails = ({ navigation, route }) => {
   });
   const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
+  const [data, setData] = React.useState(oldData);
+  const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
     //console.log(data);
     try {
@@ -84,6 +92,17 @@ const OrderDetails = ({ navigation, route }) => {
             data.selectedServices.category
           )
         );
+      } else if (Array.isArray(data.selectedServices)) {
+        let arr = [];
+        data.selectedServices.map((doc, i) => {
+          arr.push({
+            title: "dfsfds",
+            tableName: "sdad",
+            mainTitle: "asad",
+            data: doc,
+          });
+        });
+        setListData(arr);
       } else if (data && data.selectedServices) {
         setListData(
           serverToLocal(data.selectedServices, data.service.category)
@@ -96,6 +115,17 @@ const OrderDetails = ({ navigation, route }) => {
       setFacilities(data.facilites);
     }
   }, [data]);
+  const loadData = async () => {
+    try {
+      const res = await getOrders(user.token, "user");
+      let arr = res.data.orders.filter((order) => order.id == data.id);
+      setData(arr[0]);
+      route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
 
   const stringDate = (d) => {
     const Months = [
@@ -117,6 +147,13 @@ const OrderDetails = ({ navigation, route }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{ height: 33 }} />
@@ -421,20 +458,32 @@ const OrderDetails = ({ navigation, route }) => {
         <Text style={[styles.text, { fontSize: 20 }]}>Payment Status</Text>
         <View
           style={{
-            backgroundColor: data && data.paid ? "green" : "red",
-            paddingVertical: 5,
+            padding: 3,
+            backgroundColor:
+              data && data.paid && data.status != "REFUNDED"
+                ? "green"
+                : data && data.paid && data.status == "REFUNDED"
+                ? "#FA1ABA"
+                : backgroundColor,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 15,
             paddingHorizontal: 15,
-            borderRadius: 50,
-            marginTop: 10,
-            marginBottom: 5,
+            marginVertical: 10,
           }}
         >
           <Text
             style={{
               color: "white",
+              fontSize: 15,
+              fontFamily: "Poppins-Medium",
             }}
           >
-            {data && data.paid ? "Paid" : "Due"}
+            {data && data.paid && data.status != "REFUNDED"
+              ? "Paid"
+              : data && data.paid && data.status == "REFUNDED"
+              ? "Canceled"
+              : "Due"}
           </Text>
         </View>
       </View>
@@ -468,28 +517,103 @@ const OrderDetails = ({ navigation, route }) => {
           {data && data.description ? data.description : "No details found!"}
         </Text>
       </View>
-      {data && data.status == "WAITING_FOR_ACCEPT" && (
-        <Button
-          onPress={() => {
-            cancelOrder(user.token, data.id, "CANCELLED", "user")
-              .then((res) => {
-                navigation.replace("ManageOrder", { reload: res });
-              })
-              .catch((err) => {
-                console.warn(err.response.data);
-              });
-          }}
-          style={{
-            backgroundColor: backgroundColor,
-            borderRadius: 5,
-            alignSelf: "flex-end",
-            marginVertical: 20,
-            borderWidth: 0,
-            marginRight: 20,
-          }}
-          title="Cancel Order"
-        />
-      )}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+        }}
+      >
+        {data &&
+          data.status != "REFUNDED" &&
+          data.status != "CANCELLED" &&
+          data.status != "PROCESSING" && (
+            <Button
+              onPress={() => {
+                cancelOrder(user.token, data.id, "CANCELLED", "user")
+                  .then((res) => {
+                    navigation.replace("ManageOrder", { reload: res });
+                  })
+                  .catch((err) => {
+                    console.warn(err.response.data);
+                  });
+              }}
+              style={{
+                borderColor: backgroundColor,
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                marginVertical: 20,
+                borderWidth: 0,
+                marginHorizontal: 20,
+                borderWidth: 1,
+                color: textColor,
+              }}
+              title="Cancel Order"
+            />
+          )}
+        {data && data.status == "ACCEPTED" && (
+          <Button
+            onPress={() => {
+              setLoader(true);
+              makePayment(user.token, data.id)
+                .then((res) => {
+                  if (res) {
+                    Toast.show("Payment success", {
+                      duration: Toast.durations.LONG,
+                    });
+                    loadData();
+                  }
+                })
+                .catch((err) => {
+                  Toast.show(err.response.data.msg, {
+                    duration: Toast.durations.LONG,
+                  });
+                  setLoader(false);
+                });
+            }}
+            style={{
+              backgroundColor: backgroundColor,
+              borderRadius: 5,
+              alignSelf: "flex-end",
+              marginVertical: 20,
+              borderWidth: 0,
+              marginRight: 20,
+            }}
+            title="Make Payment"
+          />
+        )}
+        {data && data.paid && data.status != "REFUNDED" && (
+          <Button
+            onPress={() => {
+              setLoader(true);
+              orderRefound(user.token, data.id)
+                .then((res) => {
+                  if (res) {
+                    Toast.show("Request success", {
+                      duration: Toast.durations.LONG,
+                    });
+                    loadData();
+                  }
+                })
+                .catch((err) => {
+                  Toast.show(err.response.data.msg, {
+                    duration: Toast.durations.LONG,
+                  });
+                  setLoader(false);
+                });
+            }}
+            style={{
+              marginHorizontal: 20,
+              borderColor: backgroundColor,
+              borderWidth: 1,
+              borderRadius: 5,
+              color: textColor,
+              width: 150,
+              marginVertical: 20,
+            }}
+            title="Cancel & Refound"
+          />
+        )}
+      </View>
     </ScrollView>
   );
 };

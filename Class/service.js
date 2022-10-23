@@ -374,3 +374,63 @@ export const getLastOrder = async (token, serviceId) => {
   );
   return res;
 };
+export const makePayment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/make-payment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const requestForTime = async (token, orderId, newTime) => {
+  const res = await axios.post(
+    `${url}/server/orders/request-new-delivery-date`,
+    {
+      orderId: orderId,
+      newDate: newTime,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const acceptTimeRequest = async (token, orderId, newTime, action) => {
+  const res = await axios.post(
+    `${url}/server/orders/accept-or-reject-delivery-date`,
+    {
+      orderId: orderId,
+      newDate: newTime,
+      action: action ? "ACCEPT" : "REJECT",
+    }
+  );
+  return res;
+};
+export const completeOrderDelivery = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/delivered`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const orderRefound = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/refunded`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};

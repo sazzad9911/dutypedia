@@ -264,7 +264,10 @@ const ManageOrder = ({ navigation, route }) => {
         Orders.map((doc, i) => (
           <OrderCart
             onPress={() => {
-              navigation.navigate("OrderDetails", { data: doc });
+              navigation.navigate("OrderDetails", {
+                data: doc,
+                onRefresh: onRefresh,
+              });
             }}
             key={i}
             data={doc}
@@ -484,7 +487,12 @@ const OrderCart = ({ data, onPress }) => {
             <View
               style={{
                 padding: 3,
-                backgroundColor: data && data.paid ? "green" : backgroundColor,
+                backgroundColor:
+                  data && data.paid && data.status != "REFUNDED"
+                    ? "green"
+                    : data && data.paid && data.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : backgroundColor,
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 15,
@@ -499,7 +507,11 @@ const OrderCart = ({ data, onPress }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {data && data.paid ? "Paid" : "Due"}
+                {data && data.paid && data.status != "REFUNDED"
+                  ? "Paid"
+                  : data && data.paid && data.status == "REFUNDED"
+                  ? "Canceled"
+                  : "Due"}
               </Text>
             </View>
           </View>

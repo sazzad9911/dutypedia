@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View,SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -23,11 +23,11 @@ import {
 } from "react-native-paper";
 import { checkUser } from "./Class/auth";
 import StackRoute from "./StackRoute";
-import {useSelector} from 'react-redux';
-import {Color} from './assets/colors'
+import { useSelector } from "react-redux";
+import { Color } from "./assets/colors";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 export default function App() {
-  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -67,21 +67,26 @@ export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
-        <Views/>
+        <RootSiblingParent>
+          <Views />
+        </RootSiblingParent>
       </PaperProvider>
     </Provider>
   );
 }
-const Views=()=>{
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
+const Views = () => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar barStyle={isDark?'light-content':'dark-content'} backgroundColor={primaryColor} />
-          <SafeAreaView style={{ flex: 1}}>
-          <StackRoute />
-          </SafeAreaView>
-        </GestureHandlerRootView>
-  )
-}
+      <StatusBar
+        barStyle={isDark ? "light-content" : "dark-content"}
+        backgroundColor={primaryColor}
+      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <StackRoute />
+      </SafeAreaView>
+    </GestureHandlerRootView>
+  );
+};
