@@ -494,7 +494,7 @@ const OfferNow = ({ navigation, route }) => {
                   setFrom(dateConverter(date));
                   setFromVisible(false);
                 } else {
-                  setFromDateError("Please select upcoming date");
+                  setFromDateError("Please select current and current date");
                   setFromVisible(false);
                 }
               }}
@@ -536,7 +536,7 @@ const OfferNow = ({ navigation, route }) => {
                   setTo(dateConverter(date));
                   setToVisible(false);
                 } else {
-                  setToDateError("Please select upcoming date");
+                  setToDateError("Please select current and current date");
                   setToVisible(false);
                 }
               }}

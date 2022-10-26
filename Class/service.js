@@ -450,7 +450,7 @@ export const orderRefound = async (token, orderId, action) => {
 };
 export const completeOrder = async (token, orderId) => {
   const res = await axios.post(
-    `${url}/server/orders/reject-refund`,
+    `${url}/server/orders/received`,
     {
       orderId: orderId,
     },

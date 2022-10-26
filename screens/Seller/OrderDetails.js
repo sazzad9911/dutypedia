@@ -85,7 +85,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
-    //console.log(data);
+    console.log(data);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -145,7 +145,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       "December",
     ];
     let date = new Date(d);
-    return `${date.getDay() < 10 ? date.getDay() + 1 : date.getDay()}th ${
+    // console.log(date.getDate());
+    return `${date.getDate()}th ${
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
@@ -193,6 +194,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         <View
           style={{
             marginLeft: 15,
+            flex: 1,
           }}
         >
           <Text
@@ -202,6 +204,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontFamily: "Poppins-Medium",
               color: textColor,
               marginBottom: 5,
+              flex: 1,
             }}
           >
             {data
@@ -484,7 +487,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             {data && data.paid && data.status != "REFUNDED"
               ? "Paid"
               : data && data.paid && data.status == "REFUNDED"
-              ? "Canceled"
+              ? "Refund"
               : "Due"}
           </Text>
         </View>
@@ -661,7 +664,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         {data &&
           data.status != "REFUNDED" &&
           data.status != "CANCELLED" &&
-          data.status != "DELIVERED" && (
+          data.status != "DELIVERED" &&
+          data.status != "COMPLETED" &&
+          !data.refundRequestByUser && (
             <Button
               onPress={() => {
                 setLoader(true);
@@ -748,9 +753,22 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             color: "green",
             fontSize: 16,
             fontFamily: "Poppins-Medium",
+            textAlign: "center",
+            marginVertical: 20,
           }}
         >
           Order Completed
+        </Text>
+      )}
+      {data.refundRequestByUser && (
+        <Text
+          style={{
+            color: backgroundColor,
+            textAlign: "center",
+            marginVertical: 20,
+          }}
+        >
+          You requested for refund
         </Text>
       )}
     </ScrollView>
@@ -768,9 +786,9 @@ const exporters = (key) => {
     case "PROCESSING":
       return "Processing";
     case "DELIVERED":
-      return "Delivery";
+      return "Delivered";
     case "REFUNDED":
-      return "Refund";
+      return "Canceled";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":

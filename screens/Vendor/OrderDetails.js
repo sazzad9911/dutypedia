@@ -114,7 +114,8 @@ const OrderDetails = ({ navigation, route }) => {
       "December",
     ];
     let date = new Date(d);
-    return `${date.getDay() < 10 ? date.getDay() + 1 : date.getDay()}th ${
+    //console.log(date.getDate());
+    return `${date.getDate()}th ${
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
@@ -320,12 +321,12 @@ const OrderDetails = ({ navigation, route }) => {
           <View
             style={{
               width: 150,
-              height: 50,
+              height: 65,
               overflow: "hidden",
             }}
           >
             <Barcode
-              height="60"
+              height="65"
               width="150"
               value={data ? data.id : "dsfff"}
               options={{ format: "CODE128", background: primaryColor }}
@@ -630,7 +631,7 @@ const OrderDetails = ({ navigation, route }) => {
             {data && data.paid && data.status != "REFUNDED"
               ? "Paid"
               : data && data.paid && data.status == "REFUNDED"
-              ? "Canceled"
+              ? "Refund"
               : "Due"}
           </Text>
         </View>
@@ -829,7 +830,8 @@ const OrderDetails = ({ navigation, route }) => {
 
         {data.status != "CANCELLED" &&
           data.status != "DELIVERED" &&
-          data.status != "REFUNDED" && (
+          data.status != "REFUNDED" &&
+          data.status != "COMPLETED" && (
             <Button
               onPress={() => {
                 cancelOrder(user.token, data.id, "CANCELLED", "vendor")
@@ -907,6 +909,19 @@ const OrderDetails = ({ navigation, route }) => {
           Order Refund
         </Text>
       )}
+      {data && data.status == "COMPLETED" && (
+        <Text
+          style={{
+            color: "green",
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            textAlign: "center",
+            marginVertical: 20,
+          }}
+        >
+          Order Completed
+        </Text>
+      )}
     </ScrollView>
   );
 };
@@ -922,9 +937,9 @@ const exporters = (key) => {
     case "PROCESSING":
       return "Processing";
     case "DELIVERED":
-      return "Delivery";
+      return "Delivered";
     case "REFUNDED":
-      return "Refound";
+      return "Canceled";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":
