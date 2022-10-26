@@ -192,6 +192,7 @@ const AcceptOrder = (props) => {
         setLoader(false);
         Alert.alert("Opps!", error.response.data.msg);
         console.warn(error.response.data.msg);
+        navigation.goBack();
         //console.warn(error.response.data.msg);
       });
   };

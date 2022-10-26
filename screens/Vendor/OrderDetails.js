@@ -13,16 +13,24 @@ import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
-import { cancelOrder } from "../../Class/service";
+import {
+  cancelOrder,
+  completeOrderDelivery,
+  getOrders,
+  requestForTime,
+  orderRefound,
+} from "../../Class/service";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
 import IconButton from "./../../components/IconButton";
 import { AntDesign } from "@expo/vector-icons";
 import { serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
+import { dateConverter } from "../../action";
 
 const OrderDetails = ({ navigation, route }) => {
-  const data = route.params && route.params.data ? route.params.data : null;
+  const newData = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const dispatch = useDispatch();
   const colors = new Color(isDark);
@@ -83,6 +91,11 @@ const OrderDetails = ({ navigation, route }) => {
   const [ServiceError, setServiceError] = React.useState();
   const [FacilitiesError, setFacilitiesError] = React.useState();
   const ref = React.useRef();
+  const [Loader, setLoader] = React.useState(false);
+  const vendor = useSelector((state) => state.vendor);
+  const [data, setData] = React.useState(newData);
+  const [Refound, setRefound] = React.useState(false);
+  const [RefoundDate, setRefoundDate] = React.useState();
   //console.log(data);
 
   const stringDate = (d) => {
@@ -111,7 +124,7 @@ const OrderDetails = ({ navigation, route }) => {
     }, [ListSelection])
   );
   React.useEffect(() => {
-    //console.log(data);
+    // console.log(data);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -170,6 +183,24 @@ const OrderDetails = ({ navigation, route }) => {
       data: data,
     });
   };
+  const loadData = async () => {
+    try {
+      const res = await getOrders(user.token, "vendor", vendor.service.id);
+      let arr = res.data.orders.filter((order) => order.id == data.id);
+      setData(arr[0]);
+      route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
       <View style={{ height: 33 }} />
@@ -635,8 +666,127 @@ const OrderDetails = ({ navigation, route }) => {
         </Text>
       </View>
       <View style={{ height: 10 }} />
-      {data && data.status == "WAITING_FOR_ACCEPT" && (
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+      <View style={{ marginHorizontal: 20 }}>
+        {data.status == "PROCESSING" &&
+          !data.requestedDeliveryDate &&
+          !data.refundRequestByUser && (
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+              }}
+            >
+              When Delivered The Order Then Click
+            </Text>
+          )}
+        {data.status == "PROCESSING" &&
+          !data.requestedDeliveryDate &&
+          !data.refundRequestByUser && (
+            <Button
+              onPress={() => {
+                try {
+                  setLoader(true);
+                  completeOrderDelivery(user.token, data.id)
+                    .then((res) => {
+                      loadData();
+                    })
+                    .catch((err) => {
+                      setLoader(false);
+                      console.warn(err.message);
+                    });
+                } catch (e) {
+                  console.warn(e.message);
+                }
+              }}
+              style={{
+                backgroundColor: backgroundColor,
+                borderRadius: 5,
+                marginVertical: 10,
+                borderWidth: 0,
+                marginRight: 20,
+                width: 120,
+              }}
+              title="Yes I Delivered"
+            />
+          )}
+      </View>
+      {data.refundRequestByUser &&
+        data.status != "DELIVERED" &&
+        data.status != "REFUNDED" && (
+          <View style={{ marginHorizontal: 20 }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              Customer request for refund
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <Button
+                onPress={() => {
+                  try {
+                    setLoader(true);
+                    orderRefound(user.token, data.id, true)
+                      .then((res) => {
+                        loadData();
+                      })
+                      .catch((err) => {
+                        setLoader(false);
+                        console.warn(err.message);
+                      });
+                  } catch (e) {
+                    console.warn(e.message);
+                  }
+                }}
+                style={{
+                  backgroundColor: backgroundColor,
+                  borderRadius: 5,
+                  marginVertical: 20,
+                  borderWidth: 0,
+                  marginRight: 20,
+                  width: 140,
+                }}
+                title="Accept Refund"
+              />
+              <Button
+                onPress={() => {
+                  try {
+                    setLoader(true);
+                    orderRefound(user.token, data.id, false)
+                      .then((res) => {
+                        loadData();
+                      })
+                      .catch((err) => {
+                        setLoader(false);
+                        console.warn(err.message);
+                      });
+                  } catch (e) {
+                    console.warn(e.message);
+                  }
+                }}
+                style={{
+                  backgroundColor: backgroundColor,
+                  borderRadius: 5,
+                  marginVertical: 20,
+                  borderWidth: 0,
+                  marginRight: 20,
+                  width: 140,
+                }}
+                title="Cancel Refund"
+              />
+            </View>
+          </View>
+        )}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          flexWrap: "wrap",
+        }}
+      >
+        {data.status === "WAITING_FOR_ACCEPT" && (
           <Button
             onPress={() => {
               try {
@@ -655,30 +805,107 @@ const OrderDetails = ({ navigation, route }) => {
             }}
             title="Accept"
           />
-          <Button
-            onPress={() => {
-              cancelOrder(user.token, data.id, "CANCELLED", "vendor")
-                .then((response) => {
-                  navigation.navigate("VendorOrder", { reload: response });
-                })
-                .catch((err) => {
-                  console.warn(err.response.data);
-                });
-            }}
-            style={{
-              backgroundColor: primaryColor,
-              borderRadius: 5,
-              alignSelf: "flex-end",
-              marginVertical: 30,
-              borderWidth: 0,
-              marginRight: 10,
-              borderColor: backgroundColor,
-              borderWidth: 1,
-              color: backgroundColor,
-            }}
-            title="Cancel"
-          />
-        </View>
+        )}
+        {data.status == "PROCESSING" &&
+          !data.requestedDeliveryDate &&
+          !data.refundRequestByUser &&
+          !data.requestedDeliveryDateAccepted && (
+            <Button
+              onPress={() => {
+                setRefound(true);
+              }}
+              style={{
+                backgroundColor: backgroundColor,
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                marginVertical: 30,
+                borderWidth: 0,
+                marginRight: 20,
+                width: 140,
+              }}
+              title="Request Extra Time"
+            />
+          )}
+
+        {data.status != "CANCELLED" &&
+          data.status != "DELIVERED" &&
+          data.status != "REFUNDED" && (
+            <Button
+              onPress={() => {
+                cancelOrder(user.token, data.id, "CANCELLED", "vendor")
+                  .then((response) => {
+                    navigation.navigate("VendorOrder", { reload: response });
+                  })
+                  .catch((err) => {
+                    console.warn(err.response.data);
+                  });
+              }}
+              style={{
+                backgroundColor: primaryColor,
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                marginVertical: 30,
+                borderWidth: 0,
+                marginRight: 10,
+                borderColor: backgroundColor,
+                borderWidth: 1,
+                color: backgroundColor,
+              }}
+              title="Cancel"
+            />
+          )}
+      </View>
+      {data && data.requestedDeliveryDate && (
+        <Text
+          style={{
+            fontSize: 16,
+            color: backgroundColor,
+            textAlign: "center",
+            marginBottom: 30,
+          }}
+        >
+          You Requested for extra time
+        </Text>
+      )}
+      <DateTimePickerModal
+        date={RefoundDate ? RefoundDate : new Date()}
+        buttonTextColorIOS={backgroundColor}
+        isVisible={Refound}
+        mode="date"
+        onConfirm={(e) => {
+          setRefoundDate(e);
+          try {
+            setRefound(false);
+            setLoader(true);
+            requestForTime(user.token, data.id, dateConverter(e))
+              .then((response) => {
+                loadData();
+              })
+              .catch((error) => {
+                setLoader(false);
+                console.warn(error.message);
+              });
+          } catch (err) {
+            console.warn(err.message);
+          }
+        }}
+        onCancel={() => {
+          setRefound(false);
+        }}
+      />
+      {data && data.status == "REFUNDED" && (
+        <Text
+          style={{
+            color: backgroundColor,
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            textAlign: "center",
+            marginHorizontal: 20,
+            marginVertical: 20,
+          }}
+        >
+          Order Refund
+        </Text>
       )}
     </ScrollView>
   );

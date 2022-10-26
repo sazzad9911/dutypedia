@@ -305,7 +305,10 @@ const VendorOrder = ({ navigation, route }) => {
         Orders.map((doc, i) => (
           <OrderCart
             onPress={() => {
-              navigation.navigate("VendorOrderDetails", { data: doc });
+              navigation.navigate("VendorOrderDetails", {
+                data: doc,
+                onRefresh: onRefresh,
+              });
             }}
             key={i}
             data={doc}

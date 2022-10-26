@@ -18,6 +18,8 @@ import {
   getOrders,
   makePayment,
   orderRefound,
+  acceptTimeRequest,
+  completeOrder,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -517,39 +519,113 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           {data && data.description ? data.description : "No details found!"}
         </Text>
       </View>
+      {data.requestedDeliveryDate &&
+        data.status != "CANCELLED" &&
+        data.status != "DELIVERED" && (
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginVertical: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              Vendor Request Delivery Date
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              Requested Delivery Date: {data.requestedDeliveryDate}
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <Button
+                onPress={() => {
+                  setLoader(true);
+                  acceptTimeRequest(
+                    user.token,
+                    data.id,
+                    data.requestedDeliveryDate,
+                    true
+                  )
+                    .then((res) => {
+                      if (res) {
+                        Toast.show("Request Accepted", {
+                          duration: Toast.durations.LONG,
+                        });
+                        loadData();
+                      }
+                    })
+                    .catch((err) => {
+                      Toast.show(err.response.data.msg, {
+                        duration: Toast.durations.LONG,
+                      });
+                      setLoader(false);
+                    });
+                }}
+                style={{
+                  backgroundColor: backgroundColor,
+                  borderRadius: 5,
+                  alignSelf: "flex-end",
+                  marginVertical: 20,
+                  borderWidth: 0,
+                  marginRight: 20,
+                }}
+                title="Accept"
+              />
+              <Button
+                onPress={() => {
+                  setLoader(true);
+                  acceptTimeRequest(
+                    user.token,
+                    data.id,
+                    data.requestedDeliveryDate,
+                    false
+                  )
+                    .then((res) => {
+                      if (res) {
+                        Toast.show("Request CANCELLED", {
+                          duration: Toast.durations.LONG,
+                        });
+                        loadData();
+                      }
+                    })
+                    .catch((err) => {
+                      Toast.show(err.response.data.msg, {
+                        duration: Toast.durations.LONG,
+                      });
+                      setLoader(false);
+                    });
+                }}
+                style={{
+                  borderColor: backgroundColor,
+                  borderRadius: 5,
+                  alignSelf: "flex-end",
+                  marginVertical: 20,
+                  borderWidth: 0,
+                  marginRight: 20,
+                  borderWidth: 1,
+                  color: textColor,
+                }}
+                title="Cancel"
+              />
+            </View>
+          </View>
+        )}
       <View
         style={{
           flexDirection: "row",
           justifyContent: "flex-end",
         }}
       >
-        {data &&
-          data.status != "REFUNDED" &&
-          data.status != "CANCELLED" &&
-          data.status != "PROCESSING" && (
-            <Button
-              onPress={() => {
-                cancelOrder(user.token, data.id, "CANCELLED", "user")
-                  .then((res) => {
-                    navigation.replace("ManageOrder", { reload: res });
-                  })
-                  .catch((err) => {
-                    console.warn(err.response.data);
-                  });
-              }}
-              style={{
-                borderColor: backgroundColor,
-                borderRadius: 5,
-                alignSelf: "flex-end",
-                marginVertical: 20,
-                borderWidth: 0,
-                marginHorizontal: 20,
-                borderWidth: 1,
-                color: textColor,
-              }}
-              title="Cancel Order"
-            />
-          )}
         {data && data.status == "ACCEPTED" && (
           <Button
             onPress={() => {
@@ -577,18 +653,70 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               marginVertical: 20,
               borderWidth: 0,
               marginRight: 20,
+              width: 120,
             }}
             title="Make Payment"
           />
         )}
-        {data && data.paid && data.status != "REFUNDED" && (
+        {data &&
+          data.status != "REFUNDED" &&
+          data.status != "CANCELLED" &&
+          data.status != "DELIVERED" && (
+            <Button
+              onPress={() => {
+                setLoader(true);
+                cancelOrder(user.token, data.id, "CANCELLED", "user")
+                  .then((res) => {
+                    Toast.show("Successfully request send", {
+                      duration: Toast.durations.LONG,
+                    });
+                    loadData();
+                  })
+                  .catch((err) => {
+                    setLoader(false);
+                    console.warn(err.response.data);
+                  });
+              }}
+              style={{
+                borderColor: backgroundColor,
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                marginVertical: 20,
+                borderWidth: 0,
+                marginHorizontal: 20,
+                borderWidth: 1,
+                color: textColor,
+                width: 120,
+              }}
+              title={data && data.paid ? "Cancel & Refund" : "Cancel Order"}
+            />
+          )}
+      </View>
+      {data && data.delivered && data.status != "COMPLETED" && (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Poppins-Medium",
+              color: textColor,
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            If you Received then Click
+          </Text>
           <Button
             onPress={() => {
               setLoader(true);
-              orderRefound(user.token, data.id)
+              completeOrder(user.token, data.id)
                 .then((res) => {
                   if (res) {
-                    Toast.show("Request success", {
+                    Toast.show("Successful", {
                       duration: Toast.durations.LONG,
                     });
                     loadData();
@@ -602,18 +730,29 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 });
             }}
             style={{
-              marginHorizontal: 20,
-              borderColor: backgroundColor,
-              borderWidth: 1,
+              backgroundColor: backgroundColor,
               borderRadius: 5,
-              color: textColor,
-              width: 150,
               marginVertical: 20,
+              borderWidth: 0,
+              marginRight: 20,
+              width: 120,
+              marginBottom: 20,
             }}
-            title="Cancel & Refound"
+            title="Yes I Received"
           />
-        )}
-      </View>
+        </View>
+      )}
+      {data && data.status == "COMPLETED" && (
+        <Text
+          style={{
+            color: "green",
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+          }}
+        >
+          Order Completed
+        </Text>
+      )}
     </ScrollView>
   );
 };
@@ -631,7 +770,7 @@ const exporters = (key) => {
     case "DELIVERED":
       return "Delivery";
     case "REFUNDED":
-      return "Refound";
+      return "Refund";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":

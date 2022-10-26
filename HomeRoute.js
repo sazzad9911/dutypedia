@@ -34,7 +34,7 @@ import CategoryList from "./screens/CategoryList";
 import OfferNow from "./screens/Seller/OfferNow";
 import FixedOffers from "./screens/Seller/FixedOffers";
 import ManageOrder from "./screens/ManageOrder";
-import OrderDetails from "./screens/Vendor/OrderDetails";
+import OrderDetails from "./screens/Seller/OrderDetails";
 
 const Stack = createStackNavigator();
 
