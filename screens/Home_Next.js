@@ -156,7 +156,7 @@ const Home_Next = (props) => {
 
   return (
     <ScrollView
-      style={{ flexGrow: 1 }}
+      style={{ flexGrow: 1,flex:1 }}
       stickyHeaderIndices={[0]}
       scrollEventThrottle={16}
       stickyHeaderHiddenOnScroll={true}
@@ -194,7 +194,7 @@ const Home_Next = (props) => {
             paddingVertical: 20,
             flexDirection: "row",
             justifyContent: "space-between",
-            paddingTop: 35,
+            
           }}
         >
           <Text

@@ -24,6 +24,7 @@ import {
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
 import Toast from "react-native-root-toast";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -68,6 +69,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       borderBottomWidth: 1,
       borderBottomColor: "#F1EFEF",
       justifyContent: "center",
+      borderTopWidth:0
     },
     text: {
       fontSize: 16,
@@ -85,7 +87,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
-    //console.log(data);
+    //console.log(data.service.id);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -159,15 +161,19 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{ height: 33 }} />
+      
       <View
         style={{
           marginHorizontal: 20,
           marginVertical: 20,
           flexDirection: "row",
+          alignItems:"center",
+          justifyContent:"center"
         }}
       >
-        <View
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null})
+        }}
           style={{
             height: 70,
             width: 70,
@@ -190,7 +196,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           ) : (
             <FontAwesome name="user" size={50} color={assentColor} />
           )}
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             marginLeft: 15,
@@ -203,8 +209,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontSize: 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
-              marginBottom: 5,
-              flex: 1,
+              marginBottom:2
             }}
           >
             {data
@@ -214,9 +219,10 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text
             numberOfLines={1}
             style={{
-              fontSize: 14,
+              fontSize: 16,
               fontFamily: "Poppins-Medium",
               color: textColor,
+              marginTop:0
             }}
           >
             {data ? data.service.providerInfo.title : "--"}{" "}
@@ -248,6 +254,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontFamily: "Poppins-Medium",
                 fontSize: 16,
                 marginTop: 0,
+                marginTop:20
               }}
             >
               {
@@ -270,7 +277,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           flexDirection: "row",
         }}
       >
-        <View>
+        <View style={{
+          alignItems:"flex-start"
+        }}>
           <Text
             style={{
               fontSize: 16,
@@ -286,6 +295,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontFamily: "Poppins-Medium",
               color: textColor,
               textAlign: "center",
+              marginTop:2,
             }}
           >
             Date:{" "}
@@ -302,11 +312,11 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View
             style={{
               width: 150,
-              height: 65,
+              height: 50,
               overflow: "hidden",
             }}
           >
-            <Barcode
+            <Barcode height="50" width="150"
               value={data ? data.id : "dsfff"}
               options={{ format: "CODE128", background: primaryColor }}
               rotation={0}
@@ -344,7 +354,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             color: textColor,
           }}
         >
-          Service/ Item Nam/
+          Service/ Item Name
         </Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
           {ListData && ListData.length > 0 ? (

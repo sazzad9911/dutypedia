@@ -27,8 +27,6 @@ const SearchHeader = (props) => {
     box: {
       flexDirection: "row",
       paddingHorizontal: 20,
-      paddingTop: 33,
-  
       alignItems: "center",
       backgroundColor: primaryColor,
     },

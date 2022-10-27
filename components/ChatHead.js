@@ -76,7 +76,7 @@ const ChatHead = (props) => {
   return (
     <View
       style={{
-        paddingTop: 33,
+     
         minHeight: 50,
         paddingVertical: 5,
         paddingHorizontal: 10,

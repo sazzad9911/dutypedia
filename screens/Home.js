@@ -169,7 +169,7 @@ const Home = (props) => {
             paddingVertical: 20,
             flexDirection: "row",
             justifyContent: "space-between",
-            paddingTop: 35,
+            
           }}
         >
           <Text

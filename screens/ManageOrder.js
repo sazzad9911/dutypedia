@@ -535,9 +535,9 @@ const exporters = (key) => {
     case "PROCESSING":
       return "Processing";
     case "DELIVERED":
-      return "Delivery";
+      return "Delivered";
     case "REFUNDED":
-      return "Refound";
+      return "Refunded";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":

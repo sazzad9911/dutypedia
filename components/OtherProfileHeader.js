@@ -11,7 +11,6 @@ const OtherProfileHeader = ({navigation}) => {
         justifyContent: "space-between",
         paddingHorizontal: 20,
         paddingBottom: 10,
-        paddingTop:Platform.OS=='ios'? 25:31,
         backgroundColor: primaryColor,
       }}
     >

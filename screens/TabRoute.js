@@ -201,7 +201,7 @@ const Bottom = (props) => {
   const dispatch = useDispatch();
 
   const snapPoints = React.useMemo(() => ["10%", "60%"], []);
-  const handleSheetChanges = React.useCallback((index: number) => {
+  const handleSheetChanges = React.useCallback((index) => {
     console.log("handleSheetChanges", index);
     dispatch(setBottomSheet(index));
   }, []);

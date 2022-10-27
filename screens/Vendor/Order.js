@@ -23,6 +23,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OrderDetails from "./OrderDetails";
 import AddServiceList from "./../AddServiceList";
 import AcceptOrder from "./AcceptOrder";
+import UserProfile from "../UserProfile";
 const Stack = createStackNavigator();
 
 const Order = () => {
@@ -47,6 +48,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AcceptOrder"
         component={AcceptOrder}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="UserProfile"
+        component={UserProfile}
       />
     </Stack.Navigator>
   );
@@ -566,9 +572,9 @@ const exporters = (key) => {
     case "PROCESSING":
       return "Processing";
     case "DELIVERED":
-      return "Delivery";
+      return "Delivered";
     case "REFUNDED":
-      return "Refound";
+      return "Refunded";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":

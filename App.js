@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+//import {  } from "expo-status-bar";
+import { StyleSheet, Text, View, SafeAreaView,StatusBar } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";

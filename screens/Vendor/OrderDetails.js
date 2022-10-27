@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Dimensions,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -126,7 +127,7 @@ const OrderDetails = ({ navigation, route }) => {
     }, [ListSelection])
   );
   React.useEffect(() => {
-    // console.log(data);
+     //console.log(data.user);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -205,7 +206,7 @@ const OrderDetails = ({ navigation, route }) => {
   }
   return (
     <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
-      <View style={{ height: 33 }} />
+      
       <View
         style={{
           marginHorizontal: 20,
@@ -214,7 +215,9 @@ const OrderDetails = ({ navigation, route }) => {
           alignItems: "center",
         }}
       >
-        <View
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate("UserProfile",{name:`${data.user.firstName+" "+data.user.lastName}`})
+        }}
           style={{
             height: 70,
             width: 70,
@@ -237,7 +240,7 @@ const OrderDetails = ({ navigation, route }) => {
           ) : (
             <FontAwesome name="user" size={50} color={assentColor} />
           )}
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             marginLeft: 15,
@@ -251,9 +254,8 @@ const OrderDetails = ({ navigation, route }) => {
               color: textColor,
             }}
           >
-            {data ? data.service.providerInfo.title : "--"}{" "}
-            {data ? data.service.providerInfo.name : "--"}{" "}
-            {data ? `(${data.service.providerInfo.gender})` : "(-)"}
+            {data ? `${data.user.firstName+" "+data.user.lastName}` : "--"}{" "}
+            {data ? `(${data.user.gender.toUpperCase()})` : "(-)"}
           </Text>
           <Text
             numberOfLines={1}
@@ -261,6 +263,7 @@ const OrderDetails = ({ navigation, route }) => {
               fontSize: 16,
               fontFamily: "Poppins-Medium",
               color: textColor,
+              marginTop:1
             }}
           >
             {"ID: "}
@@ -322,12 +325,12 @@ const OrderDetails = ({ navigation, route }) => {
           <View
             style={{
               width: 150,
-              height: 65,
+              height: 50,
               overflow: "hidden",
             }}
           >
             <Barcode
-              height="65"
+              height="50"
               width="150"
               value={data ? data.id : "dsfff"}
               options={{ format: "CODE128", background: primaryColor }}

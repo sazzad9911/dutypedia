@@ -82,7 +82,7 @@ const Feed = ({ navigation, route }) => {
             paddingVertical: 20,
             flexDirection: "row",
             justifyContent: "space-between",
-            paddingTop: 35,
+            
           }}
         >
           <Text
