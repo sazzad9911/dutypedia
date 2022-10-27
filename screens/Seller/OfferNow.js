@@ -68,7 +68,7 @@ const OfferNow = ({ navigation, route }) => {
   const [Facilities, setFacilities] = React.useState([]);
 
   React.useEffect(() => {
-    console.log(gigs);
+    //console.log(gigs);
     if (gigs) {
       setPrice(gigs.price);
       try {
