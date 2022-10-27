@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Dimensions,
+  Alert
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -27,7 +28,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
-import { dateConverter } from "../../action";
+import { convertDate, dateConverter, dateDifference } from "../../action";
 
 const OrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
@@ -808,9 +809,8 @@ const OrderDetails = ({ navigation, route }) => {
           />
         )}
         {data.status == "PROCESSING" &&
-          !data.requestedDeliveryDate &&
           !data.refundRequestByUser &&
-          !data.requestedDeliveryDateAccepted && (
+           (
             <Button
               onPress={() => {
                 setRefound(true);
@@ -875,21 +875,27 @@ const OrderDetails = ({ navigation, route }) => {
         isVisible={Refound}
         mode="date"
         onConfirm={(e) => {
-          setRefoundDate(e);
-          try {
+          if(dateDifference(data.deliveryDateTo,e)>0){
+            setRefoundDate(e);
+            try {
+              setRefound(false);
+              setLoader(true);
+              requestForTime(user.token, data.id, dateConverter(e))
+                .then((response) => {
+                  loadData();
+                })
+                .catch((error) => {
+                  setLoader(false);
+                  console.warn(error.message);
+                });
+            } catch (err) {
+              console.warn(err.message);
+            }
+          }else{
             setRefound(false);
-            setLoader(true);
-            requestForTime(user.token, data.id, dateConverter(e))
-              .then((response) => {
-                loadData();
-              })
-              .catch((error) => {
-                setLoader(false);
-                console.warn(error.message);
-              });
-          } catch (err) {
-            console.warn(err.message);
+            Alert.alert("Opps!","You need to select upcoming date from delivery")
           }
+
         }}
         onCancel={() => {
           setRefound(false);

@@ -84,104 +84,6 @@ const ManageOrder = ({ navigation, route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
-  const Header = ({ onChange, value, Filter, setFilter }) => {
-    const [Search, setSearch] = React.useState(value);
-    return (
-      <Animated.View
-        style={[
-          {
-            transform: [{ translateY: translateY }],
-            top: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: secondaryColor,
-            zIndex: 500,
-          },
-        ]}
-      >
-        <View style={{ height: 33 }} />
-        <ScrollView
-          style={{
-            marginVertical: 20,
-          }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ width: 10 }} />
-          {initialState &&
-            initialState.map((doc, i) => (
-              <Button
-                onPress={() => {
-                  setActive(doc.type);
-                }}
-                style={{
-                  color: Active == doc.type ? "white" : textColor,
-                  marginRight: 10,
-                  backgroundColor:
-                    Active == doc.type ? backgroundColor : primaryColor,
-                }}
-                active={Active == doc.type ? true : false}
-                key={i}
-                title={doc.title}
-              />
-            ))}
-          <View style={{ width: 0 }} />
-        </ScrollView>
-        <View
-          style={{
-            flexDirection: "row",
-            marginHorizontal: 10,
-            marginVertical: 0,
-            justifyContent: "space-between",
-            marginBottom: 15,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#f5f5f5",
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              flex: 2,
-              borderRadius: 5,
-              justifyContent: "space-between",
-            }}
-          >
-            <TextInput
-              onEndEditing={() => {
-                onChange(Search);
-              }}
-              value={Search}
-              onChangeText={(e) => setSearch(e)}
-              placeholderTextColor={assentColor}
-              placeholder="Search Now"
-              returnKeyType="search"
-            />
-            <AntDesign name="search1" size={24} color={assentColor} />
-          </View>
-          <DropDown
-            value={Filter}
-            onChange={(e) => setFilter(e)}
-            style={{
-              marginLeft: 15,
-            }}
-            DATA={[
-              "Waiting for accept",
-              "Accepted",
-              "Canceled",
-              "Refounded",
-              "Processing",
-              "Delivered",
-              "Completed",
-              "Waiting for payment",
-            ]}
-            placeholder="Select"
-          />
-        </View>
-      </Animated.View>
-    );
-  };
   React.useEffect(() => {
     if (user) {
       //setLoader(true);
@@ -253,12 +155,95 @@ const ManageOrder = ({ navigation, route }) => {
         //scroll;
       }}
     >
-      <Header
-        value={Search}
-        onChange={setSearch}
-        Filter={Filter}
-        setFilter={setFilter}
-      />
+     <Animated.View
+        style={[
+          {
+            transform: [{ translateY: translateY }],
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: secondaryColor,
+            zIndex: 500,
+          },
+        ]}
+      >
+        <ScrollView
+          style={{
+            marginVertical: 20,
+          }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={{ width: 10 }} />
+          {initialState &&
+            initialState.map((doc, i) => (
+              <Button
+                onPress={() => {
+                  setActive(doc.type);
+                }}
+                style={{
+                  color: Active == doc.type ? "white" : textColor,
+                  marginRight: 10,
+                  backgroundColor:
+                    Active == doc.type ? backgroundColor : primaryColor,
+                }}
+                active={Active == doc.type ? true : false}
+                key={i}
+                title={doc.title}
+              />
+            ))}
+          <View style={{ width: 0 }} />
+        </ScrollView>
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: 10,
+            marginVertical: 0,
+            justifyContent: "space-between",
+            marginBottom: 15,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "#f5f5f5",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              flex: 2,
+              borderRadius: 5,
+              justifyContent: "space-between",
+            }}
+          >
+            <TextInput
+              value={Search}
+              onChangeText={(e) => setSearch(e)}
+              placeholderTextColor={assentColor}
+              placeholder="Search Now"
+              returnKeyType="search"
+            />
+            <AntDesign name="search1" size={24} color={assentColor} />
+          </View>
+          <DropDown
+            value={Filter}
+            onChange={(e) => setFilter(e)}
+            style={{
+              marginLeft: 15,
+            }}
+            DATA={[
+              "Waiting for accept",
+              "Accepted",
+              "Canceled",
+              "Refounded",
+              "Processing",
+              "Delivered",
+              "Completed",
+              "Waiting for payment",
+            ]}
+            placeholder="Select"
+          />
+        </View>
+      </Animated.View>
       {Loader && <ActivityLoader />}
       {Orders &&
         Orders.map((doc, i) => (
@@ -498,9 +483,10 @@ const OrderCart = ({ data, onPress }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
+                flex:1
               }}
             >
-              <Text
+              <Text numberOfLines={1}
                 style={{
                   color: "white",
                   fontSize: 15,

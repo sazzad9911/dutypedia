@@ -155,12 +155,42 @@ const VendorOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Filter]);
+  React.useEffect(() => {
+    if (!Search) {
+      setOrders(AllOrders);
+    } else {
+      let text = Search;
+      text = text.split(" ").join("_");
+      let arr = AllOrders.filter((d) =>
+        d.status.toUpperCase().match(text.toUpperCase())
+      );
+      setOrders(arr);
+    }
+  }, [Search]);
 
-  const Header = ({ onChange, value, setFilter, Filter }) => {
-    const [Search, setSearch] = React.useState(value);
-
-    return (
-      <Animated.View
+  
+  return (
+    <ScrollView
+      style={{ flexGrow: 1 }}
+      stickyHeaderIndices={[0]}
+      scrollEventThrottle={16}
+      stickyHeaderHiddenOnScroll={true}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            //setPageChange(true);
+            onRefresh();
+          }}
+        />
+      }
+      showsVerticalScrollIndicator={false}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+        //scroll;
+      }}
+    >
+     <Animated.View
         style={[
           {
             transform: [{ translateY: translateY }],
@@ -172,7 +202,6 @@ const VendorOrder = ({ navigation, route }) => {
           },
         ]}
       >
-        <View style={{ height: 33 }} />
         <ScrollView
           style={{
             marginVertical: 20,
@@ -222,11 +251,6 @@ const VendorOrder = ({ navigation, route }) => {
             }}
           >
             <TextInput
-              onEndEditing={() => {
-                if (onChange) {
-                  onChange(Search);
-                }
-              }}
               value={Search}
               onChangeText={(e) => {
                 setSearch(e);
@@ -240,9 +264,7 @@ const VendorOrder = ({ navigation, route }) => {
           <DropDown
             value={Filter}
             onChange={(e) => {
-              if (onChange) {
-                setFilter(e);
-              }
+              setFilter(e);
             }}
             style={{
               marginLeft: 15,
@@ -261,45 +283,6 @@ const VendorOrder = ({ navigation, route }) => {
           />
         </View>
       </Animated.View>
-    );
-  };
-  return (
-    <ScrollView
-      style={{ flexGrow: 1 }}
-      stickyHeaderIndices={[0]}
-      scrollEventThrottle={16}
-      stickyHeaderHiddenOnScroll={true}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => {
-            //setPageChange(true);
-            onRefresh();
-          }}
-        />
-      }
-      showsVerticalScrollIndicator={false}
-      onScroll={(e) => {
-        scrollY.setValue(e.nativeEvent.contentOffset.y);
-        //scroll;
-      }}
-    >
-      <Header
-        Filter={Filter}
-        setFilter={setFilter}
-        value={Search}
-        onChange={(e) => {
-          setSearch(e);
-          if (!e) {
-            setOrders(AllOrders);
-          } else {
-            let arr = AllOrders.filter((d) =>
-              d.status.toUpperCase().match(e.toUpperCase())
-            );
-            setOrders(arr);
-          }
-        }}
-      />
       {Loader && <ActivityLoader />}
       {Orders &&
         Orders.map((doc, i) => (
@@ -531,9 +514,10 @@ const OrderCart = ({ data, onPress }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
+                flex:1
               }}
             >
-              <Text
+              <Text numberOfLines={1}
                 style={{
                   color: "white",
                   fontSize: 15,

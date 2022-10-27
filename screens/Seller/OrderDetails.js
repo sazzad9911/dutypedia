@@ -85,7 +85,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
-    console.log(data);
+    //console.log(data);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -99,7 +99,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         data.selectedServices.map((doc, i) => {
           arr.push({
             title: "dfsfds",
-            tableName: "sdad",
+            tableName: "sdad", 
             mainTitle: "asad",
             data: doc,
           });
@@ -302,7 +302,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View
             style={{
               width: 150,
-              height: 60,
+              height: 65,
               overflow: "hidden",
             }}
           >

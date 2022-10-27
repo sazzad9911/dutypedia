@@ -40,6 +40,11 @@ const BottomBar = (props) => {
     }
     //console.log(vendorInfo)
   }, [vendor]);
+  React.useEffect(()=>{
+    if(props.state.index){
+      setRoute(props.state.index)
+    }
+  },[props.state.index])
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -221,8 +226,9 @@ const BottomBar = (props) => {
             try {
               navigation.navigate("MainProfile");
             } catch (e) {
+              navigation.navigate("Profile");
               console.warn(e.message);
-            }
+            } 
             setRoute(4);
           } else {
             navigation.navigate("Profile");
