@@ -181,7 +181,7 @@ function BarcodeText(props) {
       <Text
         x={x}
         y={y}
-        fontFamily={options.font}
+        
         fontSize={options.fontSize}
         fontWeight={"bold"}
         textAnchor={textAnchor}
@@ -207,7 +207,6 @@ function Barcode({ value, options, rotation }) {
     // format: "auto",
     displayValue: true,
     fontOptions: "bold",
-    font: "monospace",
     text: "",
     textAlign: "center",
     textPosition: "bottom",

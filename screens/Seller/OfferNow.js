@@ -108,9 +108,9 @@ const OfferNow = ({ navigation, route }) => {
     setLoader(true);
     createOrder(
       user.token,
-      data.service.id,
-      data.service.gigs[0].type,
-      data.service.gigs[0].price,
+      gigs?gigs.service.id:data.service.id,
+      gigs?gigs.type:data.service.gigs[0].type,
+      gigs?gigs.price:data.service.gigs[0].price,
       Description,
       Price,
       From,
@@ -121,7 +121,7 @@ const OfferNow = ({ navigation, route }) => {
         if (res) {
           try {
             setLoader(false);
-            navigation.navigate("ManageOrder", { reload: res });
+            navigation.navigate("ManageOrder", { reload: res,active:gigs?gigs.type:data.service.gigs[0].type });
           } catch (e) {
             setLoader(false);
             console.warn(e.message);
@@ -259,40 +259,13 @@ const OfferNow = ({ navigation, route }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                Package
+                Price
               </Text>
               <Text
                 style={{
                   color: "black",
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
-                Price
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingHorizontal: 25,
-                paddingVertical: 15,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
-                }}
-              >
-                Vip
-              </Text>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
                 }}
               >
                 {gigs.price}৳
@@ -306,7 +279,7 @@ const OfferNow = ({ navigation, route }) => {
                 backgroundColor: "#e5e5e5",
                 padding: 5,
                 borderRadius: 5,
-                marginTop: 10,
+                marginTop: 20,
               }}
             >
               <Text

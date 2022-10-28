@@ -61,13 +61,14 @@ const ManageOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ];
+  const active=route.params&&route.params.active?route.params.active:null;
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
   const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
-  const [Active, setActive] = React.useState("STARTING");
+  const [Active, setActive] = React.useState(active?active:"STARTING");
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
   const [Search, setSearch] = React.useState();

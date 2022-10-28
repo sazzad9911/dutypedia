@@ -16,14 +16,7 @@ const ActivityLoader = ({}) => {
         padding: 4,
         backgroundColor: primaryColor,
         alignSelf: "center",
-        shadowOffset: {
-          height: 1,
-          width: 1,
-        },
-        shadowColor: "#d5d5d5",
-        shadowOpacity: 0.5,
-        shadowRadius: 5,
-        elevation: 2,
+        
       }}
     >
       <ActivityIndicator size="large" color={backgroundColor} />

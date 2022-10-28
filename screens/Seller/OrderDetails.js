@@ -87,7 +87,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
   React.useEffect(() => {
-    //console.log(data.service.id);
+    //console.log(user.token);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
