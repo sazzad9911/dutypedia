@@ -313,7 +313,9 @@ export const createOrder = async (
   offerPrice,
   deliveryDateFrom,
   deliveryDateTo,
-  orderedBy
+  orderedBy,
+  selectedServices,
+  facilites
 ) => {
   const res = await axios.post(
     `${url}/server/orders/create`,
@@ -326,6 +328,8 @@ export const createOrder = async (
       deliveryDateFrom: deliveryDateFrom,
       deliveryDateTo: deliveryDateTo,
       orderedBy: orderedBy,
+      selectedServices:selectedServices,
+      facilites:facilites
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );

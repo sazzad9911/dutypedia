@@ -115,7 +115,9 @@ const OfferNow = ({ navigation, route }) => {
       Price,
       From,
       To,
-      vendor ? "VENDOR" : "USER"
+      vendor ? "VENDOR" : "USER",
+      gigs?gigs.services:null,
+      gigs?gigs.facilites.selectedOptions:null
     )
       .then((res) => {
         if (res) {

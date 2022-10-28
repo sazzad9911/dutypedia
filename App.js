@@ -28,6 +28,7 @@ import { Color } from "./assets/colors";
 import { RootSiblingParent } from "react-native-root-siblings";
 
 export default function App() {
+  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -35,6 +36,16 @@ export default function App() {
       background: secondaryColor,
     },
   };
+  React.useEffect(()=>{
+    const socket = io(URL);
+    socket.on("connect",()=>{
+      console.log("connected");
+      socket.emit("join")
+    })
+    socket.on("error",(e)=>{
+      console.log(e.message)
+    })
+  },[])
   const [fontsLoaded] = useFonts({
     "Poppins-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
     "Poppins-Light": require("./assets/fonts/Roboto-Light.ttf"),

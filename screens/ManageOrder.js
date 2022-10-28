@@ -260,7 +260,7 @@ const ManageOrder = ({ navigation, route }) => {
           />
         ))}
 
-      {Orders && Orders.length == 0 && (
+      {Orders && Orders.length == 0 &&!Loader && (
         <Text style={{ color: textColor, textAlign: "center" }}>
           No data available
         </Text>
