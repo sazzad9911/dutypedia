@@ -1,21 +1,22 @@
 import React from "react";
-import { View, Text, Dimensions, TextInput } from "react-native";
+import { View, Text, Dimensions, TextInput, Alert } from "react-native";
 import { noticeVector } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { Color, textColor } from "../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
-import { getNotice } from "../Class/notice";
+import { getNotice, createNotice } from "../Class/notice";
 import { AntDesign } from "@expo/vector-icons";
 import ActivityLoader from "../components/ActivityLoader";
 import Button from "../components/Button";
 const { width, height } = Dimensions.get("window");
 import { FAB } from "react-native-paper";
 import Animated, { SlideInRight } from "react-native-reanimated";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Notice({ navigation, route }) {
   const serviceId =
     route.params && route.params.serviceId ? route.params.serviceId : null;
-  const vendor =
+  const Vendor =
     route.params && route.params.vendor ? route.params.vendor : null;
   const user = useSelector((state) => state.user);
   const isDark = useSelector((state) => state.isDark);
@@ -28,6 +29,11 @@ export default function Notice({ navigation, route }) {
   const [Loader, setLoader] = React.useState(true);
   const [SearchOpen, setSearchOpen] = React.useState(false);
   const ref = React.useRef();
+  const [Reload, setReload] = React.useState(false);
+  const vendor = useSelector((state) => state.vendor);
+  const [Data, setData] = React.useState([]);
+  const [Search, setSearch] = React.useState();
+
   React.useEffect(() => {
     if (serviceId) {
       getNotice(user.token, serviceId)
@@ -35,6 +41,7 @@ export default function Notice({ navigation, route }) {
           if (res) {
             setLoader(false);
             seAllNotice(res.notices);
+            setData(res.notices);
           }
         })
         .catch((err) => {
@@ -42,7 +49,40 @@ export default function Notice({ navigation, route }) {
           console.warn(err.response.msg);
         });
     }
-  }, [serviceId]);
+  }, [serviceId + Reload]);
+  const onChange = (val) => {
+    createNotice(user.token, {
+      subject: val.subject,
+      message: val.description,
+      record: val.record,
+      authorName: val.name,
+      authorPosition: val.position,
+      date: val.date,
+      serviceId: vendor.service.id,
+    })
+      .then((res) => {
+        if (res) {
+          setReload((val) => !val);
+          //setLoader(!Loader);
+          navigation.goBack();
+        }
+      })
+      .catch((err) => {
+        Alert.alert("Opps!", err.response.data);
+      });
+  };
+  React.useEffect(() => {
+    if (Search) {
+      let arr = AllNotice.filter((d) =>
+        d.record.toUpperCase().match(Search.toUpperCase())
+        || d.subject.toUpperCase().match(Search.toUpperCase())
+        || dateConvert(d.date).toUpperCase().match(Search.toUpperCase())
+      );
+      setData(arr);
+    } else {
+      setData(AllNotice);
+    }
+  }, [Search]);
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -86,7 +126,8 @@ export default function Notice({ navigation, route }) {
         >
           {SearchOpen && (
             <Animated.View entering={SlideInRight}>
-              <TextInput
+              <TextInput value={Search}
+                onChangeText={(e) => setSearch(e)}
                 ref={ref}
                 style={{
                   width: width / 2 - 40,
@@ -114,38 +155,55 @@ export default function Notice({ navigation, route }) {
           </View>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          paddingHorizontal: 5,
-        }}
-      >
-        <SvgXml
-          style={{ marginLeft: "5%", marginBottom: 20 }}
-          xml={noticeVector}
-          height="250"
-          width={"90%"}
-        />
-        {Loader && <ActivityLoader />}
-        {AllNotice &&
-          AllNotice.map((doc, i) => (
-            <NoticeCart navigation={navigation} key={i} data={doc} />
-          ))}
-        {AllNotice && AllNotice.length == 0 && !Loader && (
-          <Text
-            style={{
-              color: textColor,
-              fontSize: 18,
-              fontFamily: "Poppins-Medium",
-              marginTop: "30%",
-            }}
-          >
-            No Notice Found
-          </Text>
-        )}
-      </View>
-      {vendor && (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            paddingHorizontal: 5,
+          }}
+        >
+          <SvgXml
+            style={{ marginLeft: "5%", marginBottom: 20 }}
+            xml={noticeVector}
+            height="250"
+            width={"90%"}
+          />
+          {Loader && <ActivityLoader />}
+          {Data &&
+            Data.map((doc, i) => (
+              <NoticeCart
+                setData={setReload}
+                navigation={navigation}
+                key={i}
+                data={doc}
+              />
+            ))}
+          {Data && Data.length == 0 && !Loader && (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  color: textColor,
+                  fontSize: 18,
+                  fontFamily: "Poppins-Medium",
+                  marginTop: "30%",
+                  textAlign: "center",
+                }}
+              >
+                No Notice Found
+              </Text>
+            </View>
+          )}
+        </View>
+        <View style={{ height: 20 }} />
+      </ScrollView>
+      {Vendor && (
         <FAB
           color="#FFFFFF"
           icon="plus"
@@ -160,16 +218,21 @@ export default function Notice({ navigation, route }) {
             justifyContent: "center",
             alignItems: "center",
           }}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate("AddNotice", {
+              onChange: onChange,
+              value: null,
+            });
+          }}
         />
       )}
     </View>
   );
 }
 
-const NoticeCart = ({ data, navigation }) => {
+const NoticeCart = ({ data, navigation, setData }) => {
   //console.log(data)
-  const [Data, setData] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
 
   return (
     <View
@@ -227,7 +290,7 @@ const NoticeCart = ({ data, navigation }) => {
         onPress={() => {
           navigation.navigate("ViewCart", {
             value: data,
-            setData: null,
+            setData: vendor ? setData : null,
           });
         }}
         style={{

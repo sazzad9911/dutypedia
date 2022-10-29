@@ -39,6 +39,7 @@ import { io } from "socket.io-client";
 import Notice from "./screens/Notice";
 import NewHeader from "./components/NewHeader";
 import { ViewCart } from "./screens/Vendor/Notice";
+import CompanyCalendar from "./screens/Seller/CompanyCalendar";
 const URL="http://185.211.6.223"
 
 const Stack = createStackNavigator();
@@ -153,6 +154,13 @@ const HomeRoute = ({ navigation }) => {
         name="OrderDetails"
         component={OrderDetails}
       />
+      <Stack.Screen
+          name="Company Calender"
+          options={{
+           headerShown:false
+          }}
+          component={CompanyCalendar}
+        />
     </Stack.Navigator>
   );
 };
