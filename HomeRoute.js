@@ -35,6 +35,11 @@ import OfferNow from "./screens/Seller/OfferNow";
 import FixedOffers from "./screens/Seller/FixedOffers";
 import ManageOrder from "./screens/ManageOrder";
 import OrderDetails from "./screens/Seller/OrderDetails";
+import { io } from "socket.io-client";
+import Notice from "./screens/Notice";
+import NewHeader from "./components/NewHeader";
+import { ViewCart } from "./screens/Vendor/Notice";
+const URL="http://185.211.6.223"
 
 const Stack = createStackNavigator();
 
@@ -45,10 +50,16 @@ const HomeRoute = ({ navigation }) => {
   const [NewState, setNewState] = React.useState(false);
   const interestCategory = useSelector((state) => state.interestCategory);
   const [Loader, setLoader] = React.useState(true);
-
+  const dispatch=useDispatch()
+  
   React.useEffect(() => {
     //console.log(interestCategory);
     if (user) {
+      const socket = io(URL);
+      socket.emit("join",user.user.id);
+      // socket.on("getUsers",e=>{
+      //   console.log(e)
+      // })
       getFavoriteCategories(user.token)
         .then((result) => {
           if (result.data.favouriteCategories.length > 0) {
@@ -100,6 +111,16 @@ const HomeRoute = ({ navigation }) => {
         options={{ header: (props) => <OtherProfileHeader {...props} /> }}
         name="OtherProfile"
         component={OtherProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown:false}}
+        name="Notice"
+        component={Notice}
+      />
+      <Stack.Screen
+        options={{ headerShown:false}}
+        name="ViewCart"
+        component={ViewCart}
       />
       <Stack.Screen
         options={{ headerShown: false }}

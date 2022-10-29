@@ -726,7 +726,6 @@ export const ViewCart = (props) => {
       <View
         style={{
           flexDirection: "row",
-          paddingTop: 35,
           paddingHorizontal: 20,
           justifyContent: "space-between",
           backgroundColor: primaryColor,
@@ -741,34 +740,36 @@ export const ViewCart = (props) => {
           size={24}
           color="#707070"
         />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: 100,
-          }}
-        >
-          <Ionicons name="md-print" size={24} color="#707070" />
-          <AntDesign
-            onPress={() => {
-              navigation.navigate("AddNotice", {
-                onChange: Edit,
-                value: value,
-              });
+        {setData && (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: 100,
             }}
-            name="edit"
-            size={24}
-            color="#707070"
-          />
-          <AntDesign
-            onPress={() => {
-              setAlertVisible(true);
-            }}
-            name="delete"
-            size={24}
-            color="#707070"
-          />
-        </View>
+          >
+            <Ionicons name="md-print" size={24} color="#707070" />
+            <AntDesign
+              onPress={() => {
+                navigation.navigate("AddNotice", {
+                  onChange: Edit,
+                  value: value,
+                });
+              }}
+              name="edit"
+              size={24}
+              color="#707070"
+            />
+            <AntDesign
+              onPress={() => {
+                setAlertVisible(true);
+              }}
+              name="delete"
+              size={24}
+              color="#707070"
+            />
+          </View>
+        )}
       </View>
       <ScrollView
         bounces={false}

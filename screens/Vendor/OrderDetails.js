@@ -136,6 +136,10 @@ const OrderDetails = ({ navigation, route }) => {
             data.selectedServices.category
           )
         );
+        dispatch({type:"SET_LIST_SELECTION",playload:serverToLocal(
+          data.selectedServices.options,
+          data.selectedServices.category
+        )})
       } else if (Array.isArray(data.selectedServices)) {
         let arr = [];
         data.selectedServices.map((doc, i) => {
@@ -147,10 +151,12 @@ const OrderDetails = ({ navigation, route }) => {
           });
         });
         setListData(arr);
+        dispatch({type:"SET_LIST_SELECTION",playload:arr})
       } else if (data && data.selectedServices) {
         setListData(
           serverToLocal(data.selectedServices, data.service.category)
         );
+        dispatch({type:"SET_LIST_SELECTION",playload:serverToLocal(data.selectedServices, data.service.category)})
       }
     } catch (e) {
       console.warn(e.message);

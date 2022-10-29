@@ -35,6 +35,7 @@ import {
   verified,
   serviceIcon,
   calenderIcon,
+  noticeIcon
 } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "../Cart/ReviewCart";
@@ -546,6 +547,15 @@ const VendorProfile = (props) => {
           Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
           title="Company Calender"
         />
+        <ProfileOption onPress={()=>{
+          navigation.navigate("Notice",{serviceId:vendor.service.id,vendor:true})
+        }}
+          style={{
+            marginBottom: 0,
+          }}
+          Icon={() => <SvgXml xml={noticeIcon} height="20" width="20" />}
+          title="Notice"
+        /> 
         <ProfileOption
           onPress={() => {
             navigation.navigate("Vendor Address");

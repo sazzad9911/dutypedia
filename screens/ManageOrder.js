@@ -19,6 +19,8 @@ import Button from "./../components/Button";
 import DropDown from "./../components/DropDown";
 import { SvgXml } from "react-native-svg";
 import ActivityLoader from "./../components/ActivityLoader";
+import { io } from "socket.io-client";
+import { url } from "../action";
 
 const ManageOrder = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
@@ -61,14 +63,15 @@ const ManageOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ];
-  const active=route.params&&route.params.active?route.params.active:null;
+  const active =
+    route.params && route.params.active ? route.params.active : null;
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
   const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
-  const [Active, setActive] = React.useState(active?active:"STARTING");
+  const [Active, setActive] = React.useState(active ? active : "STARTING");
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
   const [Search, setSearch] = React.useState();
@@ -135,6 +138,14 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
+  React.useEffect(() => {
+    const socket =io(url)
+    socket.emit("join",user.user.id);
+    socket.emit("newOrder",{receiverId:"cl8e6a6no0321w2zntu43mt87",order:{}})
+      socket.on("newOrder", (e) => {
+        console.log(e);
+      });
+  }, []);
   return (
     <ScrollView
       style={{ flexGrow: 1 }}
@@ -156,7 +167,7 @@ const ManageOrder = ({ navigation, route }) => {
         //scroll;
       }}
     >
-     <Animated.View
+      <Animated.View
         style={[
           {
             transform: [{ translateY: translateY }],
@@ -260,7 +271,7 @@ const ManageOrder = ({ navigation, route }) => {
           />
         ))}
 
-      {Orders && Orders.length == 0 &&!Loader && (
+      {Orders && Orders.length == 0 && !Loader && (
         <Text style={{ color: textColor, textAlign: "center" }}>
           No data available
         </Text>
@@ -484,10 +495,11 @@ const OrderCart = ({ data, onPress }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
-                flex:1
+                flex: 1,
               }}
             >
-              <Text numberOfLines={1}
+              <Text
+                numberOfLines={1}
                 style={{
                   color: "white",
                   fontSize: 15,

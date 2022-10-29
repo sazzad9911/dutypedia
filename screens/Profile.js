@@ -40,7 +40,7 @@ import { logOut, logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import DashboardList from "./Vendor/DashboardList";
-import Notice, { AddNotice, ViewCart } from "./Vendor/Notice";
+import { AddNotice, ViewCart } from "./Vendor/Notice";
 import Member, { AddOfflineUser, AddOnlineUser } from "./Vendor/Member";
 import Expenses, { AddExpenses } from "./Vendor/Expenses";
 import ServiceSettings from "./Vendor/ServiceSettings";
@@ -54,6 +54,7 @@ import { storeJson } from "./../Class/storage";
 import { getOrders } from "../Class/service";
 import OrderDetails from "./Seller/OrderDetails";
 import AddServiceList from "./AddServiceList";
+import Notice from "./Notice"
 
 const Stack = createStackNavigator();
 

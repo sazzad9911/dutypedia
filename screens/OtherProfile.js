@@ -541,13 +541,15 @@ const OtherProfile = (props) => {
           Icon={() => <SvgXml xml={calenderIcon} height="20" width="20" />}
           title="Company Calender"
         />
-        <ProfileOption
+        <ProfileOption onPress={()=>{
+          navigation.navigate("Notice",{serviceId:Data.service.id})
+        }}
           style={{
             marginBottom: 5,
           }}
           Icon={() => <SvgXml xml={noticeIcon} height="20" width="20" />}
           title="Notice"
-        />
+        /> 
         <View
           style={{
             backgroundColor: primaryColor,
