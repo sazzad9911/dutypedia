@@ -218,15 +218,7 @@ export default function StackRoute() {
           component={AllService}
         />
         
-        <Stack.Screen
-          name="Vendor Calender"
-          options={{
-            header: (props) => (
-              <SubHeader title="Company Calender" {...props} />
-            ),
-          }}
-          component={VendorCalender}
-        />
+        
         <Stack.Screen
           name="Vendor Address"
           options={{

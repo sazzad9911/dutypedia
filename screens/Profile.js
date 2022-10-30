@@ -55,6 +55,7 @@ import { getOrders } from "../Class/service";
 import OrderDetails from "./Seller/OrderDetails";
 import AddServiceList from "./AddServiceList";
 import Notice from "./Notice"
+import CompanyCalendar from "./Seller/CompanyCalendar";
 
 const Stack = createStackNavigator();
 
@@ -258,6 +259,13 @@ const Profile = ({ navigation }) => {
         name="AddServiceList_1"
         component={AddServiceList}
       />
+      <Stack.Screen
+          name="Vendor Calender"
+          options={{
+            headerShown:false
+          }}
+          component={CompanyCalendar}
+        />
     </Stack.Navigator>
   );
 };

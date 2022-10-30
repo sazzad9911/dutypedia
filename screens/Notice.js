@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, Dimensions, TextInput, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { noticeVector } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { Color, textColor } from "../assets/colors";
@@ -12,6 +19,7 @@ const { width, height } = Dimensions.get("window");
 import { FAB } from "react-native-paper";
 import Animated, { SlideInRight } from "react-native-reanimated";
 import { ScrollView } from "react-native-gesture-handler";
+import OutsideView from "react-native-detect-press-outside";
 
 export default function Notice({ navigation, route }) {
   const serviceId =
@@ -28,7 +36,7 @@ export default function Notice({ navigation, route }) {
   const [AllNotice, seAllNotice] = React.useState();
   const [Loader, setLoader] = React.useState(true);
   const [SearchOpen, setSearchOpen] = React.useState(false);
-  const ref = React.useRef();
+  const [Ref, setRef] = React.useState();
   const [Reload, setReload] = React.useState(false);
   const vendor = useSelector((state) => state.vendor);
   const [Data, setData] = React.useState([]);
@@ -46,7 +54,7 @@ export default function Notice({ navigation, route }) {
         })
         .catch((err) => {
           setLoader(false);
-          console.warn(err.response.msg);
+          console.warn(err.response.data.msg);
         });
     }
   }, [serviceId + Reload]);
@@ -73,10 +81,11 @@ export default function Notice({ navigation, route }) {
   };
   React.useEffect(() => {
     if (Search) {
-      let arr = AllNotice.filter((d) =>
-        d.record.toUpperCase().match(Search.toUpperCase())
-        || d.subject.toUpperCase().match(Search.toUpperCase())
-        || dateConvert(d.date).toUpperCase().match(Search.toUpperCase())
+      let arr = AllNotice.filter(
+        (d) =>
+          d.record.toUpperCase().match(Search.toUpperCase()) ||
+          d.subject.toUpperCase().match(Search.toUpperCase()) ||
+          dateConvert(d.date).toUpperCase().match(Search.toUpperCase())
       );
       setData(arr);
     } else {
@@ -99,15 +108,13 @@ export default function Notice({ navigation, route }) {
           backgroundColor: primaryColor,
         }}
       >
-        <View style={{ flexDirection: "row" }}>
-          <AntDesign
-            onPress={() => {
-              navigation.goBack();
-            }}
-            name="left"
-            size={22}
-            color={"#C2D5F6"}
-          />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{ flexDirection: "row" }}
+        >
+          <AntDesign name="left" size={22} color={"#C2D5F6"} />
           <Text
             style={{
               color: "#C2D5F6",
@@ -117,33 +124,46 @@ export default function Notice({ navigation, route }) {
           >
             Notice
           </Text>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
           }}
         >
-          {SearchOpen && (
-            <Animated.View entering={SlideInRight}>
-              <TextInput value={Search}
-                onChangeText={(e) => setSearch(e)}
-                ref={ref}
-                style={{
-                  width: width / 2 - 40,
-                  borderColor: "#C2D5F6",
-                  borderBottomWidth: 1,
-                  height: 25,
-                }}
-                placeholder="Search"
-              />
-            </Animated.View>
+          <OutsideView
+            onPressOutside={() => {
+              console.log("eee")
+                setSearchOpen(false)
+              }}
+            >
+              {SearchOpen && (
+             <Animated.View entering={SlideInRight}>
+             <TextInput
+               autoFocus={true}
+               onBlur={() => {
+                 setSearchOpen(false);
+               }}
+               value={Search}
+               onChangeText={(e) => setSearch(e)}
+               ref={(ref) => setRef(ref)}
+               style={{
+                 width: width / 2 - 40,
+                 borderColor: "#C2D5F6",
+                 borderBottomWidth: 1,
+                 height: 25,
+               }}
+               placeholder="Search"
+             />
+           </Animated.View>
           )}
+             
+            </OutsideView>
+          
           <View style={{ backgroundColor: primaryColor, paddingRight: 20 }}>
             <AntDesign
               onPress={() => {
                 setSearchOpen((val) => !val);
-                //ref?.current.focus()
               }}
               style={{
                 marginLeft: 10,
@@ -169,7 +189,13 @@ export default function Notice({ navigation, route }) {
             height="250"
             width={"90%"}
           />
+          <View style={{
+            width:"100%",
+            alignItems:"center",
+            marginTop:"10%"
+          }}>
           {Loader && <ActivityLoader />}
+          </View>
           {Data &&
             Data.map((doc, i) => (
               <NoticeCart
@@ -238,7 +264,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
     <View
       style={{
         borderColor: "#C2D4F8",
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderRadius: 10,
         padding: 10,
         width: width / 2 - 15,
@@ -295,7 +321,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
         }}
         style={{
           borderColor: "#C2D4F8",
-          borderWidth: 1,
+          borderWidth: 0.5,
           borderRadius: 5,
           color: "#C2D4F8",
           marginVertical: 5,

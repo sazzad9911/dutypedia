@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, TouchableOpacity,Alert } from "react-native";
 import { Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -12,35 +12,25 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { calenderVector } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
+import { Button, Menu } from "react-native-paper";
+import { CheckBox, Days } from "./Pricing";
+import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
+import IconButton from "../../components/IconButton";
+import { updateData } from "../../Class/update";
+import { vendorLogin } from "../../Class/auth";
 
 const CompanyCalendar = (props) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = props.route.params.vendor;
   const navigation = props.navigation;
   const [Times, setTimes] = React.useState(false);
-  const [Days,setDays]=React.useState([
-    {
-      title:"Saturday"
-    },
-    {
-      title:"Sunday"
-    },
-    {
-      title:"Monday"
-    },
-    {
-      title:"Tuesday"
-    },
-    {
-      title:"Wednesday"
-    },
-    {
-      title:"Thursday"
-    }
-  ])
+  const [Days, setDays] = React.useState();
+  const newVendor = useSelector((state) => state.vendor);
+  const [Visible, setVisible] = React.useState(false);
+  const [Edit, setEdit] = React.useState(false);
+
   React.useEffect(() => {
     if (vendor && vendor.service && vendor.service.workingTime.length == 0) {
-      
       setTimes(true);
     }
     //console.log(vendor.service.workingTime)
@@ -56,7 +46,10 @@ const CompanyCalendar = (props) => {
   ];
   return (
     <View style={{ flex: 1 }}>
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
         style={{
           paddingHorizontal: 20,
           paddingVertical: 5,
@@ -73,9 +66,7 @@ const CompanyCalendar = (props) => {
           alignItems: "center",
         }}
       >
-        <AntDesign onPress={()=>{
-          navigation.goBack()
-        }} name="left" size={24} color={assentColor} />
+        <AntDesign name="left" size={24} color={assentColor} />
         <Text
           style={{
             fontSize: 16,
@@ -83,10 +74,45 @@ const CompanyCalendar = (props) => {
             marginLeft: 10,
           }}
         >
-          Appointment
+          Company Calender
         </Text>
-      </View>
-      <ScrollView>
+      </TouchableOpacity>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {newVendor && !Edit && (
+          <View
+            style={{
+              alignItems: "flex-end",
+              marginHorizontal: 20,
+            }}
+          >
+            <Menu
+              contentStyle={{ backgroundColor: primaryColor }}
+              onDismiss={() => {
+                setVisible((val) => !val);
+              }}
+              visible={Visible}
+              anchor={
+                <Entypo
+                  onPress={() => {
+                    setVisible((val) => !val);
+                  }}
+                  style={{}}
+                  name="dots-three-vertical"
+                  size={20}
+                  color={assentColor}
+                />
+              }
+            >
+              <Menu.Item
+                onPress={() => {
+                  setEdit((val) => !val);
+                  setVisible(false);
+                }}
+                title="Edit"
+              />
+            </Menu>
+          </View>
+        )}
         <SvgXml
           style={{
             marginLeft: "10%",
@@ -95,37 +121,44 @@ const CompanyCalendar = (props) => {
           xml={calenderVector}
           width="80%"
         />
-        <View
-          style={{
-            borderColor: "#e5e5e5",
-            borderWidth: 1,
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            marginHorizontal: 20,
-            backgroundColor: primaryColor,
-            borderRadius:5
-          }}
-        >
-          <View
+        {Edit ? (
+          <ViewBox navigation={navigation} setEdit={setEdit} times={vendor.service.workingTime} />
+        ) : (
+          <Animated.View
+            entering={SlideInLeft}
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-              borderColor:"#e5e5e5",
-              borderBottomWidth:1,
-              height:30
+              borderColor: "#F1EFEF",
+              borderWidth: .5,
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              marginHorizontal: 20,
+              backgroundColor: primaryColor,
+              borderRadius: 5,
             }}
           >
-           <Text style={styles.text}>Day</Text>
-           <Text style={styles.text}>Working Time</Text>
-          </View>
-          
-          {/* {vendor &&
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+                borderColor: "#F1EFEF",
+                borderBottomWidth: .5,
+                height: 30,
+              }}
+            >
+              <Text style={styles.text}>Day</Text>
+              <Text style={styles.text}>Working Time</Text>
+            </View>
+
+            {/* {vendor &&
             vendor.service.workingTime.map((doc, i) => (
               <Cart key={i} value={doc} />
             ))} */}
-          {days.map((times, i) => <Cart times={vendor.service.workingTime} key={i} day={times} />)}
-        </View>
+            {days.map((times, i) => (
+              <Cart times={vendor.service.workingTime} key={i} day={times} />
+            ))}
+          </Animated.View>
+        )}
       </ScrollView>
     </View>
   );
@@ -136,32 +169,161 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: "Poppins-Medium",
-    margin:0
+    margin: 0,
   },
   view: {
     flex: 1,
   },
 });
-const Cart = ({ value, day,times }) => {
+const ViewBox = ({ setEdit, times,navigation }) => {
+  const days = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+  const [AllDay, setAllDay] = React.useState(false);
+  const [Times, setTimes] = React.useState(times);
+  const user = useSelector((state) => state.user);
+  const [Loader, setLoader] = React.useState(false);
+  const dispatch = useDispatch();
+  const vendor=useSelector(state=>state.vendor)
+
+  React.useEffect(() => {
+    try {
+      if (times.length == 0) {
+        setAllDay(true);
+      }
+    } catch (e) {
+      console.warn(e.message);
+    }
+  }, []);
+  const update = () => {
+    setLoader(true);
+    if(AllDay){
+      setTimes([])
+    }
+    updateData(user.token, {
+      workingTime: Times,
+      serviceId:vendor.service.id
+    }).then((res) => {
+      vendorLogin(user.token, vendor.service.id).then((res) => {
+        if (res) {
+          setLoader(false);
+          dispatch({ type: "SET_VENDOR", playload: res });
+          //navigation.navigate("Profile");
+          navigation.goBack();
+        } else {
+          setLoader(false);
+          Alert.alert("Problem in log into dashboard");
+        }
+      });
+    }).catch(err=>{
+      setLoader(false)
+      Alert.alert("Opp!",err.response.data)
+    })
+  };
+  return (
+    <Animated.View
+      style={{
+        paddingHorizontal: 20,
+      }}
+      entering={SlideInRight}
+    >
+      <View
+        style={{
+          position: "absolute",
+          right: 0,
+          width: 145,
+          zIndex: 100,
+        }}
+      >
+        <CheckBox
+          value={AllDay}
+          onChange={() => {
+            setAllDay((val) => !val);
+          }}
+          title={"24/7 Open"}
+        />
+      </View>
+      {days.map((doc, i) => (
+        <Days allDay={AllDay}
+          onChange={(e) => {
+            let arr = Times.filter(
+              (d) => d.day.toUpperCase() != e.title.toUpperCase()
+            );
+            arr.push({
+              day: e.title,
+              open: toTime(e.openingTime),
+              close: toTime(e.closingTime),
+            });
+            setTimes(arr);
+          }}
+          values={times}
+          key={i}
+          open={true}
+          title={doc}
+        />
+      ))}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          marginVertical: 10,
+        }}
+      >
+        <IconButton
+          onPress={update}
+          style={{
+            backgroundColor: "#4ADE80",
+            height: 35,
+            color: "white",
+            width: 120,
+          }}
+          title={"Save"}
+        />
+        <IconButton
+          onPress={() => {
+            setEdit(false);
+          }}
+          style={{
+            borderColor: "red",
+            borderWidth: 1,
+            width: 120,
+            height: 35,
+            marginLeft: 10,
+          }}
+          title={"Cancel"}
+        />
+      </View>
+      <View style={{ height: 10 }} />
+    </Animated.View>
+  );
+};
+const Cart = ({ value, day, times }) => {
   //const text=times.length==0?"24/7 day":null;
-  const [Time,setTime]=React.useState()
-  React.useEffect(()=>{
-    try{
-      if(times.length==0){
-        setTime("24/7 days")
-      }else{
-        console.log(day)
-        let arr=times.filter(d=>d.day.toUpperCase().match(day));
-        if(arr.length==0){
-          setTime("Close")
-        }else{
-          setTime(convertTime(arr[0].open)+" - "+convertTime(arr[0].close))
+  const [Time, setTime] = React.useState();
+  React.useEffect(() => {
+    try {
+      if (times.length == 0) {
+        setTime("24/7 days");
+      } else {
+        let arr = times.filter((d) =>
+          d.day.toUpperCase().match(day.toUpperCase())
+        );
+        if (arr.length == 0) {
+          setTime("Close");
+        } else {
+          setTime(convertTime(arr[0].open) + " - " + convertTime(arr[0].close));
         }
       }
-    }catch(err){
-      console.warn(err.message)
+    } catch (err) {
+      console.warn(err.message);
     }
-  },[])
+  }, []);
   return (
     <View
       style={{
@@ -178,7 +340,7 @@ const Cart = ({ value, day,times }) => {
           alignItems: "center",
         }}
       >
-        <SvgXml xml={calender} height="30"/>
+        <SvgXml xml={calender} height="30" />
         <Text
           style={{
             fontSize: 15,
@@ -197,7 +359,7 @@ const Cart = ({ value, day,times }) => {
           justifyContent: "flex-end",
         }}
       >
-        <SvgXml xml={clock} height="30"/>
+        <SvgXml xml={clock} height="30" />
         <Text
           style={{
             fontSize: 15,
@@ -214,12 +376,16 @@ const Cart = ({ value, day,times }) => {
 const convertTime = (time) => {
   let newTime = time.split(":");
   if (newTime[0] > 12) {
-    let t=parseInt(newTime[0])-12
-    return `${t<10?"0"+t:t}:${newTime[1]<10?"0"+parseInt(newTime[1]):newTime[1]} Pm`;
+    let t = parseInt(newTime[0]) - 12;
+    return `${t < 10 ? "0" + t : t}:${
+      newTime[1] < 10 ? "0" + parseInt(newTime[1]) : newTime[1]
+    } Pm`;
   }
-  return `${newTime[0]<10?"0"+parseInt(newTime[0]):newTime[0]}:${newTime[1]<10?"0"+parseInt(newTime[1]):newTime[1]} Am`;
+  return `${newTime[0] < 10 ? "0" + parseInt(newTime[0]) : newTime[0]}:${
+    newTime[1] < 10 ? "0" + parseInt(newTime[1]) : newTime[1]
+  } Am`;
 };
-const calender=`<svg xmlns="http://www.w3.org/2000/svg" width="14.272" height="14.201" viewBox="0 0 14.272 14.201">
+const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="14.272" height="14.201" viewBox="0 0 14.272 14.201">
 <g id="Group_10026" data-name="Group 10026" transform="translate(-38.517 -294.9)">
   <g id="Group_10018" data-name="Group 10018" transform="translate(38.613 295)">
     <rect id="Rectangle_7218" data-name="Rectangle 7218" width="13.428" height="10.995" rx="1" transform="translate(0.545 2.036)" fill="#666"/>
@@ -227,11 +393,19 @@ const calender=`<svg xmlns="http://www.w3.org/2000/svg" width="14.272" height="1
   </g>
 </g>
 </svg>
-`
-const clock=`<svg xmlns="http://www.w3.org/2000/svg" width="14.3" height="14.3" viewBox="0 0 14.3 14.3">
+`;
+const clock = `<svg xmlns="http://www.w3.org/2000/svg" width="14.3" height="14.3" viewBox="0 0 14.3 14.3">
 <g id="Group_10010" data-name="Group 10010" transform="translate(-307.286 -87.286)">
   <circle id="Ellipse_2156" data-name="Ellipse 2156" cx="5.02" cy="5.02" r="5.02" transform="translate(309.416 89.416)" fill="#2e2e2e"/>
   <path id="Path_19965" data-name="Path 19965" d="M6.794,0h.385A7.009,7.009,0,0,1,14,6.795V7.2a7,7,0,0,1-2.643,5.273,6.953,6.953,0,0,1-2.55,1.287A7.206,7.206,0,0,1,7.18,14H6.822A7.016,7.016,0,0,1,0,7.206V6.8A7.01,7.01,0,0,1,6.794,0M6.753,2.566a.5.5,0,0,0-.253.443Q6.5,5,6.5,7a.508.508,0,0,0,.2.4q1.239.99,2.478,1.981a.5.5,0,0,0,.765-.606A.85.85,0,0,0,9.68,8.5C8.953,7.923,8.23,7.34,7.5,6.764c-.005-1.252,0-2.5,0-3.755a.5.5,0,0,0-.747-.444Z" transform="translate(307.436 87.436)" fill="#fff" stroke="#2e2e2e" stroke-width="0.3"/>
 </g>
 </svg>
-`
+`;
+const toTime = (timestamp) => {
+  let date = new Date(timestamp);
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes;
+  return strTime;
+};

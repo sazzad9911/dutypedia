@@ -34,6 +34,7 @@ import OutsideView from "react-native-detect-press-outside";
 import { useSelector, useDispatch } from "react-redux";
 import InputModal from "./InputModal";
 import { localOptionsToServer } from "../../Class/dataConverter";
+import { SvgXml } from "react-native-svg";
 
 const Pricing = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = React.useState();
@@ -529,7 +530,6 @@ const Pricing = ({ navigation, route }) => {
                 alignItems: "center",
                 textAlign: "center",
               }}
-              value={TeamNumber}
             />
             <TouchableOpacity
               onPress={() => {
@@ -939,7 +939,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
 import { Paragraph, Dialog, Portal, Snackbar } from "react-native-paper";
 
-const Days = ({ title, error, onChange, value }) => {
+export const Days = ({ title, error, onChange, value, open, values,allDay }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [day, setDay] = React.useState(false);
   const [OpeningTime, setOpeningTime] = React.useState();
@@ -960,6 +960,19 @@ const Days = ({ title, error, onChange, value }) => {
       }
     }
   }, [value]);
+  React.useEffect(() => {
+    if (Array.isArray(values)) {
+      let arr = values.filter((item) =>
+        item.day.toUpperCase().match(title.toUpperCase())
+      );
+      if (arr.length > 0) {
+        
+        setDay(true);
+        setOpeningTime(convertHMS(arr[0].open));
+        setClosingTime(convertHMS(arr[0].close));
+      }
+    }
+  }, [values]);
   const toTime = (timestamp) => {
     let date = new Date(timestamp);
     var hours = date.getHours();
@@ -971,7 +984,15 @@ const Days = ({ title, error, onChange, value }) => {
     var strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
-
+  React.useEffect(()=>{
+    if(allDay){
+      setDay(false)
+    }
+  },[allDay])
+  const convertHMS = (val) => {
+    let newTime=val.split(":");
+    return new Date(`2010-10-10 ${newTime[0]}:${newTime[1]}:00`)
+  };
   const Box = React.forwardRef((props, ref) => (
     <Checkbox
       {...props}
@@ -1004,9 +1025,15 @@ const Days = ({ title, error, onChange, value }) => {
         </View>
         <Text style={styles.text}>{title}</Text>
       </TouchableOpacity>
-      {day ? (
-        <Animated.View entering={FadeIn} style={{ flexDirection: "row" }}>
-          <TouchableOpacity
+      {day || open ? (
+        <Animated.View
+          entering={FadeIn}
+          style={{
+            flexDirection: "row",
+            marginTop: 10,
+          }}
+        >
+          <TouchableOpacity disabled={!day}
             onPress={() => {
               setOpen(true);
             }}
@@ -1021,6 +1048,7 @@ const Days = ({ title, error, onChange, value }) => {
               borderRadius: 5,
               margin: 5,
               flex: 1,
+              opacity:day?1:.4
             }}
           >
             <Text
@@ -1033,7 +1061,7 @@ const Days = ({ title, error, onChange, value }) => {
             >
               {OpeningTime ? toTime(OpeningTime) : "Opening Time"}
             </Text>
-            <MaterialCommunityIcons name="clock" size={24} color="#707070" />
+            <SvgXml xml={clock} height="24" width="24"/>
             <DateTimePickerModal
               date={OpeningTime ? OpeningTime : new Date()}
               buttonTextColorIOS={backgroundColor}
@@ -1062,7 +1090,7 @@ const Days = ({ title, error, onChange, value }) => {
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          <TouchableOpacity disabled={!day}
             onPress={() => {
               setClose(true);
             }}
@@ -1077,6 +1105,7 @@ const Days = ({ title, error, onChange, value }) => {
               borderRadius: 5,
               margin: 5,
               flex: 1,
+              opacity:day?1:.4
             }}
           >
             <Text
@@ -1089,7 +1118,7 @@ const Days = ({ title, error, onChange, value }) => {
             >
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
-            <MaterialCommunityIcons name="clock" size={24} color="#707070" />
+            <SvgXml xml={clock} height="24" width="24"/>
             <DateTimePickerModal
               date={ClosingTime ? ClosingTime : new Date()}
               buttonTextColorIOS={backgroundColor}
@@ -1171,3 +1200,10 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
     </View>
   );
 };
+const clock=`<svg xmlns="http://www.w3.org/2000/svg" width="14.3" height="14.3" viewBox="0 0 14.3 14.3">
+<g id="Group_10052" data-name="Group 10052" transform="translate(0.15 0.15)">
+  <circle id="Ellipse_2156" data-name="Ellipse 2156" cx="5.02" cy="5.02" r="5.02" transform="translate(1.98 1.98)" fill="#2e2e2e"/>
+  <path id="Path_19965" data-name="Path 19965" d="M6.794,0h.385A7.009,7.009,0,0,1,14,6.795V7.2a7,7,0,0,1-2.643,5.273,6.953,6.953,0,0,1-2.55,1.287A7.206,7.206,0,0,1,7.18,14H6.822A7.016,7.016,0,0,1,0,7.206V6.8A7.01,7.01,0,0,1,6.794,0M6.753,2.566a.5.5,0,0,0-.253.443Q6.5,5,6.5,7a.508.508,0,0,0,.2.4q1.239.99,2.478,1.981a.5.5,0,0,0,.765-.606A.85.85,0,0,0,9.68,8.5C8.953,7.923,8.23,7.34,7.5,6.764c-.005-1.252,0-2.5,0-3.755a.5.5,0,0,0-.747-.444Z" fill="#fff" stroke="#2e2e2e" stroke-width="0.3"/>
+</g>
+</svg>
+`
