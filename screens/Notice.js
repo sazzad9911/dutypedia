@@ -92,8 +92,15 @@ export default function Notice({ navigation, route }) {
       setData(AllNotice);
     }
   }, [Search]);
+  const childRef = React.useRef();
   return (
-    <View style={{ flex: 1 }}>
+    <OutsideView style={{flex:1}}
+    childRef={childRef}
+      onPressOutside={() => {
+        //console.log("eee");
+        setSearchOpen(false);
+      }}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -131,35 +138,27 @@ export default function Notice({ navigation, route }) {
             justifyContent: "space-between",
           }}
         >
-          <OutsideView
-            onPressOutside={() => {
-              console.log("eee")
-                setSearchOpen(false)
-              }}
-            >
-              {SearchOpen && (
-             <Animated.View entering={SlideInRight}>
-             <TextInput
-               autoFocus={true}
-               onBlur={() => {
-                 setSearchOpen(false);
-               }}
-               value={Search}
-               onChangeText={(e) => setSearch(e)}
-               ref={(ref) => setRef(ref)}
-               style={{
-                 width: width / 2 - 40,
-                 borderColor: "#C2D5F6",
-                 borderBottomWidth: 1,
-                 height: 25,
-               }}
-               placeholder="Search"
-             />
-           </Animated.View>
+          {SearchOpen && (
+            <Animated.View ref={childRef} entering={SlideInRight}>
+              <TextInput
+                autoFocus={true}
+                onBlur={() => {
+                  setSearchOpen(false);
+                }}
+                value={Search}
+                onChangeText={(e) => setSearch(e)}
+                ref={(ref) => setRef(ref)}
+                style={{
+                  width: width / 2 - 20,
+                  borderColor: "#C2D5F6",
+                  borderBottomWidth: 1,
+                  height: 25,
+                }}
+                placeholder="Search"
+              />
+            </Animated.View>
           )}
-             
-            </OutsideView>
-          
+
           <View style={{ backgroundColor: primaryColor, paddingRight: 20 }}>
             <AntDesign
               onPress={() => {
@@ -189,12 +188,14 @@ export default function Notice({ navigation, route }) {
             height="250"
             width={"90%"}
           />
-          <View style={{
-            width:"100%",
-            alignItems:"center",
-            marginTop:"10%"
-          }}>
-          {Loader && <ActivityLoader />}
+          <View
+            style={{
+              width: "100%",
+              alignItems: "center",
+              marginTop: "10%",
+            }}
+          >
+            {Loader && <ActivityLoader />}
           </View>
           {Data &&
             Data.map((doc, i) => (
@@ -252,7 +253,7 @@ export default function Notice({ navigation, route }) {
           }}
         />
       )}
-    </View>
+    </OutsideView>
   );
 }
 

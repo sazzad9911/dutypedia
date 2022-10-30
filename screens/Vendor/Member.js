@@ -1157,14 +1157,15 @@ export const AddOnlineUser = () => {
 
   React.useEffect(() => {
     if (user) {
-      getRandomUser(user.token).then((res) => {
+      getRandomUser(user.token,vendor.service.id).then((res) => {
         if (res) {
           setLoader(false);
           //console.log(res.users)
           return setData(res.users);
         }
-        console.warn(res);
-      });
+      }).catch(err=>{
+        console.warn(err.response.data.msg)
+      })
     }
   }, [user]);
 
@@ -1176,17 +1177,18 @@ export const AddOnlineUser = () => {
         if (res) {
           return setData(res.users);
         }
-        console.warn(res);
-      });
+      }).catch(err=>{
+        console.warn(err.response.data.msg)
+      })
     } else {
-      getRandomUser(user.token).then((res) => {
+      getRandomUser(user.token,vendor.service.id).then((res) => {
         if (res) {
           setLoader(false);
           return setData(res.users);
         }
-        //setLoader(false)
-        console.warn(res);
-      });
+      }).catch(err=>{
+        console.warn(err.response.data.msg)
+      })
     }
   }, [SearchValue]);
   const sendRequest = (id) => {

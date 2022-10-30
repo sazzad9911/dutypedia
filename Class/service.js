@@ -2,8 +2,7 @@ import { url } from "../action";
 import axios from "axios";
 import { localOptionsToServer } from "../Class/dataConverter";
 import DateTime from "./../screens/Seller/DateTime";
-import { io } from "socket.io-client";
-const socket=io(url)
+import {socket} from "./socket"
 
 const timePick = (date) => {
   date = new Date(date);

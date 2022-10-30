@@ -585,7 +585,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     });
                 }}
                 style={{
-                  backgroundColor: backgroundColor,
+                  backgroundColor: "#4ADE80",
                   borderRadius: 5,
                   alignSelf: "flex-end",
                   marginVertical: 20,
@@ -660,7 +660,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 });
             }}
             style={{
-              backgroundColor: backgroundColor,
+              backgroundColor: "#4ADE80",
               borderRadius: 5,
               alignSelf: "flex-end",
               marginVertical: 20,
@@ -745,7 +745,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 });
             }}
             style={{
-              backgroundColor: backgroundColor,
+              backgroundColor: "#4ADE80",
               borderRadius: 5,
               marginVertical: 20,
               borderWidth: 0,

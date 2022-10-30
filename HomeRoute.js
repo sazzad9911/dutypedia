@@ -40,7 +40,7 @@ import Notice from "./screens/Notice";
 import NewHeader from "./components/NewHeader";
 import { ViewCart } from "./screens/Vendor/Notice";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";
-const URL="http://185.211.6.223"
+import { getOnlineUsers } from "./Class/socket";
 
 const Stack = createStackNavigator();
 
@@ -54,13 +54,8 @@ const HomeRoute = ({ navigation }) => {
   const dispatch=useDispatch()
   
   React.useEffect(() => {
-    //console.log(interestCategory);
+    
     if (user) {
-      const socket = io(URL);
-      socket.emit("join",user.user.id);
-      // socket.on("getUsers",e=>{
-      //   console.log(e)
-      // })
       getFavoriteCategories(user.token)
         .then((result) => {
           if (result.data.favouriteCategories.length > 0) {
@@ -75,6 +70,7 @@ const HomeRoute = ({ navigation }) => {
         });
     }
   }, [interestCategory + vendor]);
+  
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

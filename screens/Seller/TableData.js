@@ -28,6 +28,7 @@ import {
   deleteListData,
 } from "../../action";
 import { AllData } from "../../Data/AllData";
+import { CheckBox } from "./Pricing";
 
 const optionsPerPage = [2, 3];
 
@@ -50,8 +51,9 @@ const TableData = (props) => {
   const length = useSelector((state) => state.length);
   const [newSelectedData, setNewSelectedData] = React.useState([]);
   const [Uncheck, setUncheck] = React.useState([]);
-  const route=props.route;
-  const direct = route.params&&route.params.direct?route.params.direct:false;
+  const route = props.route;
+  const direct =
+    route.params && route.params.direct ? route.params.direct : false;
 
   React.useEffect(() => {
     if (newSelectedData.length != 0) {
@@ -89,9 +91,9 @@ const TableData = (props) => {
           <Button
             disabled={buttonPress ? false : true}
             onPress={() => {
-              if(direct){
-                navigation.navigate("Service",{direct:direct});
-              }else{
+              if (direct) {
+                navigation.navigate("Service", { direct: direct });
+              } else {
                 navigation.navigate("Pricing");
               }
               setButtonPress(false);
@@ -196,7 +198,7 @@ const Table = ({
       data.splice(index, 1);
     }
   };
-  const selectData = (title, selected,newId) => {
+  const selectData = (title, selected, newId) => {
     if (!selected) {
       setUncheck((val) => [...val, newId]);
     }
@@ -294,19 +296,21 @@ const Table = ({
         </View>
         <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
         {Array.isArray(data) ? (
-          data.sort((a,b)=>a.title>b.title).map((data, i) => (
-            <Rows
-              selectData={selectData}
-              deleteData={deleteData}
-              data={data}
-              key={i}
-              title={data.title}
-              supTitle={tableName}
-              id={id}
-              setButtonPress={setButtonPress}
-              SelectedData={SelectedData}
-            />
-          ))
+          data
+            .sort((a, b) => a.title > b.title)
+            .map((data, i) => (
+              <Rows
+                selectData={selectData}
+                deleteData={deleteData}
+                data={data}
+                key={i}
+                title={data.title}
+                supTitle={tableName}
+                id={id}
+                setButtonPress={setButtonPress}
+                SelectedData={SelectedData}
+              />
+            ))
         ) : (
           <></>
         )}
@@ -329,7 +333,7 @@ const Table = ({
           onChange={(value) => {
             setText(value);
             setButtonPress(true);
-            let dataId=uuid.v4();
+            let dataId = uuid.v4();
             data.push({
               id: dataId,
               title: value,
@@ -417,9 +421,7 @@ const Rows = ({
   const listData = useSelector((state) => state.listData);
   const [Data, setData] = React.useState(listData);
   React.useEffect(() => {
-    let arr = listData.filter(
-      (d) => d.data.id == data.id
-    );
+    let arr = listData.filter((d) => d.data.id == data.id);
     //console.log(arr)
     if (arr && arr.length > 0) {
       setChecked(true);
@@ -434,7 +436,8 @@ const Rows = ({
         height: 40,
       }}
     >
-      <Text numberOfLines={2}
+      <Text
+        numberOfLines={2}
         style={{
           flex: 3,
           fontSize: Platform.OS == "ios" ? 16 : 14,
@@ -444,44 +447,26 @@ const Rows = ({
         {title}
       </Text>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            borderWidth: Platform.OS == "ios" ? 1 : 0,
-            borderColor: "#e5e5e5",
-            height: 33,
-            width: 33,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-            marginTop: Platform.OS == "ios" ? 3 : 0,
-            marginBottom: Platform.OS == "ios" ? 3 : 0,
+        {data.deletable ? (
+          <TouchableOpacity
+            onPress={() => {
+              deleteData(data);
+            }}
+          >
+            <AntDesign name="delete" size={22} color="red" />
+          </TouchableOpacity>
+        ) : (
+          <CheckBox style={{
+            width:30,
+            height:30
           }}
-        >
-          {data.deletable ? (
-            <TouchableOpacity
-              onPress={() => {
-                deleteData(data);
-              }}
-            >
-              <AntDesign name="delete" size={22} color="red" />
-            </TouchableOpacity>
-          ) : (
-            <Checkbox
-              style={{
-                backgroundColor: "red",
-                transform: [
-                  { scaleX: Platform.OS == "ios" ? 0.2 : 1 },
-                  { scaleY: Platform.OS == "ios" ? 0.2 : 1 },
-                ],
-              }}
-              status={checked ? "checked" : "unchecked"}
-              onPress={() => {
-                selectData(data.title, !checked,data.id);
-                setChecked(!checked);
-              }}
-            />
-          )}
-        </View>
+            value={checked}
+            onChange={() => {
+              selectData(data.title, !checked, data.id);
+              setChecked(!checked);
+            }}
+          />
+        )}
       </View>
     </View>
   );

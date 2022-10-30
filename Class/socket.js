@@ -1,11 +1,15 @@
 import { io } from "socket.io-client";
-const URL="http://185.211.6.223"
-const socket=io(URL)
+const URL = "http://185.211.6.223";
+const socket = io(URL);
+const getSocket = (id) => {
+  socket.emit("join", id);
+  return socket;
+};
+const getOnlineUsers = () => {
+  socket.on("getUsers", (users) => {
+    //console.log(users)
+    return users;
+  });
+};
 
-const connectSocket=()=>{
-    socket.on("connect",()=>{
-        console.log("socket connected")
-    })
-}
-
-export {socket,connectSocket}
+export { socket, getSocket, getOnlineUsers };

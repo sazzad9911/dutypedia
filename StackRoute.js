@@ -45,6 +45,7 @@ import Category from "./screens/Seller/Category";
 import Support from "./screens/Support";
 import Feed from "./screens/Feed";
 import { getJson } from "./Class/storage";
+import { getSocket } from "./Class/socket";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -65,6 +66,7 @@ export default function StackRoute() {
       .then((res) => {
         //console.log(res)
         if (res) {
+          getSocket(res.user.id)
           dispatch({ type: "SET_USER", playload: res });
           getDashboard(res.token).then((result) => {
             if (result && result.data && result.data.dashboards) {

@@ -366,6 +366,7 @@ const Rows = ({ title, item, name, setData, Data }) => {
           <CheckBox
             style={{
               marginTop: 5,
+              width:220,
             }}
             key={i}
             value={

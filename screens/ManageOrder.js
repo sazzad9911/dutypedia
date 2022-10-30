@@ -19,8 +19,7 @@ import Button from "./../components/Button";
 import DropDown from "./../components/DropDown";
 import { SvgXml } from "react-native-svg";
 import ActivityLoader from "./../components/ActivityLoader";
-import { io } from "socket.io-client";
-import { url } from "../action";
+import { getOnlineUsers,socket } from "../Class/socket";
 
 const ManageOrder = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
@@ -138,14 +137,7 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
-  React.useEffect(() => {
-    const socket =io(url)
-    socket.emit("join",user.user.id);
-    socket.emit("newOrder",{receiverId:"cl8e6a6no0321w2zntu43mt87",order:{}})
-      socket.on("newOrder", (e) => {
-        console.log(e);
-      });
-  }, []);
+  
   return (
     <ScrollView
       style={{ flexGrow: 1 }}

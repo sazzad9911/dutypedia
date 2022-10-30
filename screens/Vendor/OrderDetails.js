@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -127,7 +127,7 @@ const OrderDetails = ({ navigation, route }) => {
     }, [ListSelection])
   );
   React.useEffect(() => {
-     //console.log(data.user);
+    //console.log(data.user);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -136,10 +136,13 @@ const OrderDetails = ({ navigation, route }) => {
             data.selectedServices.category
           )
         );
-        dispatch({type:"SET_LIST_SELECTION",playload:serverToLocal(
-          data.selectedServices.options,
-          data.selectedServices.category
-        )})
+        dispatch({
+          type: "SET_LIST_SELECTION",
+          playload: serverToLocal(
+            data.selectedServices.options,
+            data.selectedServices.category
+          ),
+        });
       } else if (Array.isArray(data.selectedServices)) {
         let arr = [];
         data.selectedServices.map((doc, i) => {
@@ -151,12 +154,15 @@ const OrderDetails = ({ navigation, route }) => {
           });
         });
         setListData(arr);
-        dispatch({type:"SET_LIST_SELECTION",playload:arr})
+        dispatch({ type: "SET_LIST_SELECTION", playload: arr });
       } else if (data && data.selectedServices) {
         setListData(
           serverToLocal(data.selectedServices, data.service.category)
         );
-        dispatch({type:"SET_LIST_SELECTION",playload:serverToLocal(data.selectedServices, data.service.category)})
+        dispatch({
+          type: "SET_LIST_SELECTION",
+          playload: serverToLocal(data.selectedServices, data.service.category),
+        });
       }
     } catch (e) {
       console.warn(e.message);
@@ -212,7 +218,6 @@ const OrderDetails = ({ navigation, route }) => {
   }
   return (
     <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
-      
       <View
         style={{
           marginHorizontal: 20,
@@ -221,9 +226,12 @@ const OrderDetails = ({ navigation, route }) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("UserProfile",{name:`${data.user.firstName+" "+data.user.lastName}`})
-        }}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("UserProfile", {
+              name: `${data.user.firstName + " " + data.user.lastName}`,
+            });
+          }}
           style={{
             height: 70,
             width: 70,
@@ -260,7 +268,7 @@ const OrderDetails = ({ navigation, route }) => {
               color: textColor,
             }}
           >
-            {data ? `${data.user.firstName+" "+data.user.lastName}` : "--"}{" "}
+            {data ? `${data.user.firstName + " " + data.user.lastName}` : "--"}{" "}
             {data ? `(${data.user.gender.toUpperCase()})` : "(-)"}
           </Text>
           <Text
@@ -269,7 +277,7 @@ const OrderDetails = ({ navigation, route }) => {
               fontSize: 16,
               fontFamily: "Poppins-Medium",
               color: textColor,
-              marginTop:1
+              marginTop: 1,
             }}
           >
             {"ID: "}
@@ -505,43 +513,34 @@ const OrderDetails = ({ navigation, route }) => {
           {data &&
             data.service.gigs[0].facilites.selectedOptions &&
             data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
-              <View style={{ flexDirection: "row", margin: 2 }} key={i}>
-                <CheckBox
-                  disabled={
-                    data &&
-                    data.status == "WAITING_FOR_ACCEPT" &&
-                    data.type != "ONETIME"
-                      ? false
-                      : true
-                  }
-                  value={
+              <CheckBox
+                key={i}
+                style={{ width: "70%", marginBottom: 10 }}
+                disabled={
+                  data &&
+                  data.status == "WAITING_FOR_ACCEPT" &&
+                  data.type != "ONETIME"
+                    ? false
+                    : true
+                }
+                value={
+                  Facilities.filter((d) => d.title == doc.title).length > 0
+                    ? true
+                    : false
+                }
+                onChange={(e) => {
+                  if (
                     Facilities.filter((d) => d.title == doc.title).length > 0
-                      ? true
-                      : false
+                  ) {
+                    setFacilities((val) =>
+                      val.filter((d) => d.title != doc.title)
+                    );
+                  } else {
+                    setFacilities((val) => [...val, doc]);
                   }
-                  onChange={(e) => {
-                    if (
-                      Facilities.filter((d) => d.title == doc.title).length > 0
-                    ) {
-                      setFacilities((val) =>
-                        val.filter((d) => d.title != doc.title)
-                      );
-                    } else {
-                      setFacilities((val) => [...val, doc]);
-                    }
-                  }}
-                />
-                <Text
-                  style={{
-                    fontFamily: "Poppins-Medium",
-                    fontSize: 14,
-                    marginTop: 5,
-                    color: textColor,
-                  }}
-                >
-                  {doc.title}
-                </Text>
-              </View>
+                }}
+                title={doc.title}
+              />
             ))}
           {FacilitiesError && (
             <Text style={{ color: "red" }}>{FacilitiesError}</Text>
@@ -710,7 +709,7 @@ const OrderDetails = ({ navigation, route }) => {
                 }
               }}
               style={{
-                backgroundColor: backgroundColor,
+                backgroundColor: "#4ADE80",
                 borderRadius: 5,
                 marginVertical: 10,
                 borderWidth: 0,
@@ -752,7 +751,7 @@ const OrderDetails = ({ navigation, route }) => {
                   }
                 }}
                 style={{
-                  backgroundColor: backgroundColor,
+                  backgroundColor: "#4ADE80",
                   borderRadius: 5,
                   marginVertical: 20,
                   borderWidth: 0,
@@ -778,7 +777,7 @@ const OrderDetails = ({ navigation, route }) => {
                   }
                 }}
                 style={{
-                  backgroundColor: backgroundColor,
+                  backgroundColor: "#4ADE80",
                   borderRadius: 5,
                   marginVertical: 20,
                   borderWidth: 0,
@@ -807,7 +806,7 @@ const OrderDetails = ({ navigation, route }) => {
               }
             }}
             style={{
-              backgroundColor: backgroundColor,
+              backgroundColor: "#4ADE80",
               borderRadius: 5,
               alignSelf: "flex-end",
               marginVertical: 30,
@@ -817,25 +816,23 @@ const OrderDetails = ({ navigation, route }) => {
             title="Accept"
           />
         )}
-        {data.status == "PROCESSING" &&
-          !data.refundRequestByUser &&
-           (
-            <Button
-              onPress={() => {
-                setRefound(true);
-              }}
-              style={{
-                backgroundColor: backgroundColor,
-                borderRadius: 5,
-                alignSelf: "flex-end",
-                marginVertical: 30,
-                borderWidth: 0,
-                marginRight: 20,
-                width: 140,
-              }}
-              title="Request Extra Time"
-            />
-          )}
+        {data.status == "PROCESSING" && !data.refundRequestByUser && (
+          <Button
+            onPress={() => {
+              setRefound(true);
+            }}
+            style={{
+              backgroundColor: "#4ADE80",
+              borderRadius: 5,
+              alignSelf: "flex-end",
+              marginVertical: 30,
+              borderWidth: 0,
+              marginRight: 20,
+              width: 140,
+            }}
+            title="Request Extra Time"
+          />
+        )}
 
         {data.status != "CANCELLED" &&
           data.status != "DELIVERED" &&
@@ -884,7 +881,7 @@ const OrderDetails = ({ navigation, route }) => {
         isVisible={Refound}
         mode="date"
         onConfirm={(e) => {
-          if(dateDifference(data.deliveryDateTo,e)>0){
+          if (dateDifference(data.deliveryDateTo, e) > 0) {
             setRefoundDate(e);
             try {
               setRefound(false);
@@ -900,11 +897,13 @@ const OrderDetails = ({ navigation, route }) => {
             } catch (err) {
               console.warn(err.message);
             }
-          }else{
+          } else {
             setRefound(false);
-            Alert.alert("Opps!","You need to select upcoming date from delivery")
+            Alert.alert(
+              "Opps!",
+              "You need to select upcoming date from delivery"
+            );
           }
-
         }}
         onCancel={() => {
           setRefound(false);

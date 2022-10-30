@@ -24,8 +24,8 @@ import OrderDetails from "./OrderDetails";
 import AddServiceList from "./../AddServiceList";
 import AcceptOrder from "./AcceptOrder";
 import UserProfile from "../UserProfile";
-import { io } from "socket.io-client";
-import { url } from "../../action";
+import { socket } from "../../Class/socket";
+
 
 const Stack = createStackNavigator();
 
@@ -178,10 +178,14 @@ const VendorOrder = ({ navigation, route }) => {
   }, [Search]);
 
   React.useEffect(() => {
-    const socket =io(url)
-      socket.on("updateOrder", (e) => {
-        console.log(e);
-      });
+    socket.on("updateOrder",e=>{
+      //console.log(e)
+      setRefresh(val=>(!val))
+    })
+    socket.on("getOrder",e=>{
+      //console.log(e)
+      setRefresh(val=>(!val))
+    })
   }, []);
   return (
     <ScrollView
