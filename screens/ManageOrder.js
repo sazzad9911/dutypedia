@@ -137,6 +137,16 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
+  React.useEffect(() => {
+    socket.on("updateOrder",e=>{
+      //console.log(e)
+      setRefresh(val=>(!val))
+    })
+    socket.on("getOrder",e=>{
+      //console.log(e)
+      setRefresh(val=>(!val))
+    })
+  }, []);
   
   return (
     <ScrollView
