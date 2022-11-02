@@ -114,13 +114,14 @@ function uniq(a) {
   });
 }
 const serverToLocal = (data, category) => {
+  
   if (Array.isArray(data)) {
     let arr = [];
     data.forEach((doc) => {
       let newData = AllData.filter((d) =>
-        d.title.toUpperCase().includes(category.toUpperCase())
-      )[0];
+        d.key==category)[0];
       doc.selectedOptions.map((option) => {
+        //console.log(newData)
         let listData = newData.data.filter((d) => d.title == doc.title)[0].list;
         for (let i = 0; i < listData.length; i++) {
           let newArr = listData[i].data.filter((d) => d.title == option.title);

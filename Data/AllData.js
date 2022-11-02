@@ -60,6 +60,7 @@ export const AllData = [
     color: "#FF9C68",
     image: builder_1,
     picture:bu,
+    key:"BUIDLER",
     data: [
       {
         title: "Bridge Builder",
@@ -152,6 +153,7 @@ export const AllData = [
     color: "blue",
     image: business,
     picture:bs,
+    key:"BUSINESS",
     data: [
       {
         title: "Branding Services",
@@ -423,6 +425,7 @@ export const AllData = [
     color: "#ED488B",
     image: builder_1,
     picture:ck,
+    key:"COOKER",
     data: [
       {
         title: "Dinner & lunch",
@@ -544,6 +547,7 @@ export const AllData = [
     color: "#FFB800",
     image: electrician,
     picture:en,
+    key:"ELECTRICIAN",
     data: [
       {
         title: "Ac",
@@ -646,6 +650,7 @@ export const AllData = [
     color: "#8E4DD5",
     image: entertainment,
     picture:ent,
+    key:"ENTERTAINMENT",
     data: [
       {
         title: "Videographer Services",
@@ -712,6 +717,7 @@ export const AllData = [
     color: "#FF4155",
     image: entertainment,
     picture:hc,
+    key:"HOUSEKEEPER",
     list: [
       {
         title: "House Keeper",
@@ -725,6 +731,7 @@ export const AllData = [
     color: "#2381FF",
     image: it,
     picture:its,
+    key:"IT",
     data: [
       {
         title: "Data",
@@ -2379,6 +2386,7 @@ export const AllData = [
     color: "#FF4155",
     image: head,
     picture:law,
+    key:"LAWYER",
     data: [
       {
         title: "Bankruptcy Lawyers",
@@ -2523,6 +2531,7 @@ export const AllData = [
     color: "#FEB944",
     image: musicaudio,
     picture:music,
+    key:"MUSIC",
     data: [
       {
         title: "Producers & Composers",
@@ -2827,6 +2836,7 @@ export const AllData = [
     color: "#D934BF",
     image: entertainment,
     picture:ppt,
+    key:"PAINTER",
     list: [
       {
         title: "Painter",
@@ -2840,6 +2850,7 @@ export const AllData = [
     color: "#FBB540",
     image: onlinetution,
     picture:tutor,
+    key:"ONLINETUTION",
     data: [
       {
         title: "Language Tutoring",
@@ -2956,6 +2967,7 @@ export const AllData = [
     color: "#FF5364",
     image: parlour,
     picture:salon,
+    key:"PARLOUR",
     data: [
       {
         title: "Man",
@@ -3157,6 +3169,7 @@ export const AllData = [
     color: "#61AFF6",
     image: entertainment,
     picture:lb,
+    key:"LABOR",
     list: [
       {
         title: "Painter",
@@ -3170,6 +3183,7 @@ export const AllData = [
     color: "#FF9C68",
     image: lifestyle,
     picture:life,
+    key:"LIFESTYLE",
     data: [
       {
         title: "Cooking Lessons",

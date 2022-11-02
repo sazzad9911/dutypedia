@@ -46,6 +46,7 @@ import Support from "./screens/Support";
 import Feed from "./screens/Feed";
 import { getJson } from "./Class/storage";
 import { getSocket } from "./Class/socket";
+import VendorProfile from "./screens/VendorProfile";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -66,7 +67,7 @@ export default function StackRoute() {
       .then((res) => {
         //console.log(res)
         if (res) {
-          getSocket(res.user.id)
+          getSocket(res.user.id);
           dispatch({ type: "SET_USER", playload: res });
           getDashboard(res.token).then((result) => {
             if (result && result.data && result.data.dashboards) {
@@ -204,7 +205,20 @@ export default function StackRoute() {
           }}
           component={Address}
         />
-
+        <Stack.Screen
+          name="Review"
+          options={{
+            header: (props) => <SubHeader title="Review" {...props} />,
+          }}
+          component={Review}
+        />
+        <Stack.Screen
+        name="VendorProfile"
+        options={{
+          headerShown: false,
+        }}
+        component={VendorProfile}
+      />
         <Stack.Screen
           name="Service List"
           options={{
@@ -219,8 +233,7 @@ export default function StackRoute() {
           }}
           component={AllService}
         />
-        
-        
+
         <Stack.Screen
           name="Vendor Address"
           options={{

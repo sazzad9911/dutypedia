@@ -1167,7 +1167,8 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
         {
           flexDirection: "row",
           alignItems: "center",
-          opacity:disabled?.5:1
+          opacity:disabled?.5:1,
+          flexWrap:"wrap"
         },
         style,
       ]}

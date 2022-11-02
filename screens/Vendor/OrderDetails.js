@@ -30,6 +30,7 @@ import { serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
 import { convertDate, dateConverter, dateDifference } from "../../action";
+import { socket } from "../../Class/socket";
 
 const OrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
@@ -209,6 +210,12 @@ const OrderDetails = ({ navigation, route }) => {
       console.warn(e.message);
     }
   };
+  React.useEffect(() => {
+    socket.on("updateOrder", (e) => {
+      //console.log(e)
+      loadData();
+    });
+  }, []);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -840,13 +847,28 @@ const OrderDetails = ({ navigation, route }) => {
           data.status != "COMPLETED" && (
             <Button
               onPress={() => {
-                cancelOrder(user.token, data.id, "CANCELLED", "vendor")
-                  .then((response) => {
-                    navigation.navigate("VendorOrder", { reload: response });
-                  })
-                  .catch((err) => {
-                    console.warn(err.response.data);
-                  });
+                Alert.alert("Hey!", "Are you want to cancel this order?", [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      setLoader(true);
+                      cancelOrder(user.token, data.id, "CANCELLED", "vendor")
+                        .then((response) => {
+                          setLoader(false);
+                          loadData();
+                        })
+                        .catch((err) => {
+                          setLoader(false);
+                          console.warn(err.response.data);
+                        });
+                    },
+                  },
+                ]);
               }}
               style={{
                 backgroundColor: primaryColor,

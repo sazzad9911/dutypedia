@@ -2,7 +2,8 @@ import { url } from "../action";
 import axios from "axios";
 import { localOptionsToServer } from "../Class/dataConverter";
 import DateTime from "./../screens/Seller/DateTime";
-import {socket} from "./socket"
+import {socket} from "./socket";
+import { AllData } from "../Data/AllData";
 
 const timePick = (date) => {
   date = new Date(date);
@@ -29,41 +30,10 @@ export const createService = async (
       });
     });
   myHeaders.append("Authorization", `Bearer ${token}`);
-  const DASHBOARD = [
-    "BUIDLER",
-    "BUSINESS",
-    "COOKER",
-    "ELECTRICIAN",
-    "ENTERTAINMENT",
-    "HOUSEKEEPER",
-    "IT",
-    "LABOR",
-    "LAWYER",
-    "LIFESTYLE",
-    "MUSIC",
-    "ONLINETUTION",
-    "PAINTER",
-    "PARLOUR",
-  ];
-  const text = listData[0].mainTitle;
-  let dashboard = "";
-  DASHBOARD.forEach((das, i) => {
-    if (
-      das.length > 2 &&
-      das[0] == text[0].toUpperCase() &&
-      das[1] == text[1].toUpperCase() &&
-      das[2] == text[2].toUpperCase()
-    ) {
-      dashboard = DASHBOARD[i];
-    }
-    if (
-      das[0].match(text[0].toUpperCase()) &&
-      das[1].match(text[1].toUpperCase())
-    ) {
-      dashboard = DASHBOARD[i];
-    }
-  });
 
+  const text = listData[0].mainTitle;
+  const dashboard=AllData.filter(d=>d.title==text)[0].key;
+  
   let month = DateTime.month.indexOf(businessForm.startDate.month) + 1;
   month = month > 9 ? month : "0" + month;
   let day =
@@ -121,19 +91,13 @@ export const createService = async (
     headers: myHeaders,
     body: formData,
   };
-  let result = await axios
+  const result = await axios
     .post(`${url}/server/services/create`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    .catch((err) => {
-      console.warn(err.response.data.msg);
-    });
-  if (result) {
-    return result.data;
-  }
-  return false;
+  return result;
 };
 
 export const getService = async (token, id) => {

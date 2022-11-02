@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Dimensions,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -25,6 +26,7 @@ import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
 import Toast from "react-native-root-toast";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { socket } from "../../Class/socket";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -69,7 +71,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       borderBottomWidth: 1,
       borderBottomColor: "#F1EFEF",
       justifyContent: "center",
-      borderTopWidth:0
+      borderTopWidth: 0,
     },
     text: {
       fontSize: 16,
@@ -101,7 +103,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         data.selectedServices.map((doc, i) => {
           arr.push({
             title: "dfsfds",
-            tableName: "sdad", 
+            tableName: "sdad",
             mainTitle: "asad",
             data: doc,
           });
@@ -152,6 +154,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
+  React.useEffect(() => {
+    socket.on("updateOrder", (e) => {
+      //console.log(e)
+      loadData();
+    });
+  }, []);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -161,19 +169,21 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      
       <View
         style={{
           marginHorizontal: 20,
           marginVertical: 20,
           flexDirection: "row",
-          alignItems:"center",
-          justifyContent:"center"
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null})
-        }}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("OtherProfile", {
+              serviceId: data ? data.service.id : null,
+            });
+          }}
           style={{
             height: 70,
             width: 70,
@@ -209,7 +219,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontSize: 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
-              marginBottom:2
+              marginBottom: 2,
             }}
           >
             {data
@@ -222,7 +232,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontSize: 16,
               fontFamily: "Poppins-Medium",
               color: textColor,
-              marginTop:0
+              marginTop: 0,
             }}
           >
             {data ? data.service.providerInfo.title : "--"}{" "}
@@ -254,7 +264,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontFamily: "Poppins-Medium",
                 fontSize: 16,
                 marginTop: 0,
-                marginTop:20
+                marginTop: 20,
               }}
             >
               {
@@ -277,9 +287,11 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           flexDirection: "row",
         }}
       >
-        <View style={{
-          alignItems:"flex-start"
-        }}>
+        <View
+          style={{
+            alignItems: "flex-start",
+          }}
+        >
           <Text
             style={{
               fontSize: 16,
@@ -295,7 +307,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               fontFamily: "Poppins-Medium",
               color: textColor,
               textAlign: "center",
-              marginTop:2,
+              marginTop: 2,
             }}
           >
             Date:{" "}
@@ -316,7 +328,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               overflow: "hidden",
             }}
           >
-            <Barcode height="50" width="150"
+            <Barcode
+              height="50"
+              width="150"
               value={data ? data.id : "dsfff"}
               options={{ format: "CODE128", background: primaryColor }}
               rotation={0}
@@ -679,18 +693,30 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           !data.refundRequestByUser && (
             <Button
               onPress={() => {
-                setLoader(true);
-                cancelOrder(user.token, data.id, "CANCELLED", "user")
-                  .then((res) => {
-                    Toast.show("Successfully request send", {
-                      duration: Toast.durations.LONG,
-                    });
-                    loadData();
-                  })
-                  .catch((err) => {
-                    setLoader(false);
-                    console.warn(err.response.data);
-                  });
+                Alert.alert("Hey!", "Are you want to cancel this order?", [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      setLoader(true);
+                      cancelOrder(user.token, data.id, "CANCELLED", "user")
+                        .then((res) => {
+                          Toast.show("Successfully request send", {
+                            duration: Toast.durations.LONG,
+                          });
+                          loadData();
+                        })
+                        .catch((err) => {
+                          setLoader(false);
+                          console.warn(err.response.data);
+                        });
+                    },
+                  },
+                ]);
               }}
               style={{
                 borderColor: backgroundColor,

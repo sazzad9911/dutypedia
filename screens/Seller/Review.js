@@ -44,8 +44,9 @@ import ProfileOption from "./../../components/ProfileOption";
 import { fileFromURL } from "./../../action";
 import { uploadFile } from "../../Class/upload";
 import { createService, getService, getDashboard } from "../../Class/service";
-import { StackActions } from '@react-navigation/native';
-import {localOptionsToServer} from '../../Class/dataConverter'
+import { StackActions } from "@react-navigation/native";
+import { localOptionsToServer } from "../../Class/dataConverter";
+import { vendorLogin } from "../../Class/auth.js";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -65,6 +66,7 @@ const Review = (props) => {
   const newUser = useSelector((state) => state.user);
   const [Loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
+  const [Id, setId] = React.useState();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -80,7 +82,7 @@ const Review = (props) => {
     return null;
   };
   React.useEffect(() => {
-   // console.log('-------------------------')
+    // console.log('-------------------------')
     //console.log(localOptionsToServer(listData));
     if (businessForm) {
       setImages([
@@ -131,59 +133,60 @@ const Review = (props) => {
       console.log("Invalid user");
       return;
     }
+    setLoading(true);
     let blobImages = [];
     let imageLinks = [];
     const formData = new FormData();
-    (await Array.isArray(Images)) &&
+    Array.isArray(Images) &&
       Images.forEach((image, i) => {
         blobImages.push(fileFromURL(image));
       });
     const result = await uploadFile(blobImages, newUser.token);
-    if (result) {
+    if(!result){
+      setLoading(false);
+      //console.log(result)
+      Alert.alert("Opps!","Failed to upload images")
+    }
       //setLoading(false)
-      let Img1=[]
-      if(profileImage){
+      let Img1 = [];
+      if (profileImage) {
         Img1.push(fileFromURL(profileImage));
-      }else{
-        Img1=null;
+      } else {
+        Img1 = null;
       }
-      let Img2=[]
-      if(backgroundImage){
-        Img2.push(fileFromURL(backgroundImage))
-      }else{
-        Img2=null;
+      let Img2 = [];
+      if (backgroundImage) {
+        Img2.push(fileFromURL(backgroundImage));
+      } else {
+        Img2 = null;
       }
-      
-      
-      let img1=await uploadFile(Img1,newUser.token);
-      let img2=await uploadFile(Img2,newUser.token);
+
+      let img1 = await uploadFile(Img1, newUser.token);
+      let img2 = await uploadFile(Img2, newUser.token);
       const res = await createService(
         businessForm,
         listData,
         result,
         newUser.token,
-        Array.isArray(img1)?img1[0]:null,
-        Array.isArray(img2)?img2[0]:null
-      );
-      if (res) {
-        return {
-          code: true,
-          message: "Service created",
-          res: res,
-        };
+        Array.isArray(img1) ? img1[0] : null,
+        Array.isArray(img2) ? img2[0] : null
+      ).catch(err=>{
+        console.warn(err.response.data.msg)
+      })
+      if(!res){
+        Alert.alert(res.response.data.msg)
+        return
       }
-      return {
-        code: false,
-        message: "Problem in creating service",
-        res: res,
-      };
-    }
-    //console.log(result)
-    return {
-      code: false,
-      message: "Files upload failed",
-      res: result,
-    };
+      const data=await vendorLogin(newUser.token, res.data.service.id);
+      if(!data){
+        Alert.alert("Opps!",data.response.data.msg)
+        return
+      }
+      setLoading(false);
+      dispatch({ type: "SET_VENDOR", playload: data });
+            //navigation.navigate("Profile");
+      navigation.navigate("VendorProfile");
+  
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -718,30 +721,7 @@ const Review = (props) => {
           title="I agree with all the terms and conditions"
         />
         <Button
-          onPress={() => {
-            setLoading(true);
-            confirm().then((res) => {
-              
-              if (res.code) {
-                getDashboard(newUser.token).then((result) => {
-                  if (result && result.data && result.data.dashboards) {
-                    dispatch({
-                      type: "SET_VENDOR_INFO",
-                      playload: result.data.dashboards.reverse(),
-                    });
-                    setLoading(false);
-                    navigation.navigate("DashboardList")
-                  } else {
-                    setLoading(false);
-                    Alert.alert(
-                      "Opps!",
-                      "Server problem occurs. Please try again"
-                    );
-                  }
-                });
-              }
-            });
-          }}
+          onPress={confirm}
           disabled={ButtonPress ? false : true}
           style={{
             height: 45,

@@ -157,6 +157,37 @@ const VendorProfile = (props) => {
     return null;
   };
   React.useEffect(() => {
+    if (vendor) {
+      console.log(vendor.service.dashboard)
+      setImages(vendor.service.gigs[0].images);
+      setPrice(vendor.service.gigs[0].price);
+      setTitle(vendor.service.gigs[0].title);
+      setDescription(vendor.service.gigs[0].description);
+      setFacilities(vendor.service.gigs[0].facilites.selectedOptions);
+      setImage(vendor.service.profilePhoto);
+      setBackgroundImage(vendor.service.wallPhoto);
+      setDashboard(vendor.service.gigs[0].services.category);
+      setCategory(vendor.service.gigs[0].services.category);
+      try {
+        dispatch({
+          type: "SET_NEW_LIST_DATA",
+          playload: serverToLocal(
+            vendor.service.gigs[0].services.options,
+            vendor.service.gigs[0].services.category
+          ),
+        });
+        setNewDataList(
+          serverToLocal(
+            vendor.service.gigs[0].services.options,
+            vendor.service.gigs[0].services.category
+          )
+        );
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  }, [vendor + Bargaining + Refresh]);
+  React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
       let array = [];
@@ -224,37 +255,7 @@ const VendorProfile = (props) => {
     //console.log(result);
     return res;
   };
-  React.useEffect(() => {
-    if (vendor) {
-      //console.log(vendor.service.gigs[0].services.options.Data)
-      setImages(vendor.service.gigs[0].images);
-      setPrice(vendor.service.gigs[0].price);
-      setTitle(vendor.service.gigs[0].title);
-      setDescription(vendor.service.gigs[0].description);
-      setFacilities(vendor.service.gigs[0].facilites.selectedOptions);
-      setImage(vendor.service.profilePhoto);
-      setBackgroundImage(vendor.service.wallPhoto);
-      setDashboard(vendor.service.gigs[0].services.category);
-      setCategory(vendor.service.gigs[0].services.category);
-      try {
-        dispatch({
-          type: "SET_NEW_LIST_DATA",
-          playload: serverToLocal(
-            vendor.service.gigs[0].services.options,
-            vendor.service.gigs[0].services.category
-          ),
-        });
-        setNewDataList(
-          serverToLocal(
-            vendor.service.gigs[0].services.options,
-            vendor.service.gigs[0].services.category
-          )
-        );
-      } catch (e) {
-        console.log(e.message);
-      }
-    }
-  }, [vendor + Bargaining + Refresh]);
+ 
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -264,7 +265,7 @@ const VendorProfile = (props) => {
           //console.log(res.data.gigs);
         })
         .catch((err) => {
-          console.warn(err.response);
+          console.warn(err.response.data.msg);
         });
     }
   }, [Active + createLoad + Refresh]);
@@ -377,7 +378,9 @@ const VendorProfile = (props) => {
       height: 30,
     },
   });
-  if (!Price) {
+  //console.log(vendor)
+  //return null
+  if (!Price || !vendor || NewDataList.length==0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: textColor }}>Loading....</Text>
