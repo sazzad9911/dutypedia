@@ -34,7 +34,6 @@ const { width, height } = Dimensions.get("window");
 const Home = (props) => {
   const navigation = props.navigation;
   const [trans, setTrans] = React.useState(1);
-  const TextColor = colors.getTextColor();
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();

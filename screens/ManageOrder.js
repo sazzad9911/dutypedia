@@ -76,6 +76,8 @@ const ManageOrder = ({ navigation, route }) => {
   const [Search, setSearch] = React.useState();
   const [Filter, setFilter] = React.useState();
   const [Change, setChange] = React.useState(false);
+  const orderSocket=useSelector(state=>state.orderSocket)
+
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -106,7 +108,7 @@ const ManageOrder = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user + Refresh + reload]);
+  }, [user + Refresh + reload+orderSocket]);
   React.useEffect(() => {
     if (AllOrders) {
       let arr = AllOrders.filter((d) => d.type == Active);
@@ -137,16 +139,7 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
-  React.useEffect(() => {
-    socket.on("updateOrder",e=>{
-      //console.log(e)
-      setRefresh(val=>(!val))
-    })
-    socket.on("getOrder",e=>{
-      //console.log(e)
-      setRefresh(val=>(!val))
-    })
-  }, []);
+  
   
   return (
     <ScrollView

@@ -100,6 +100,8 @@ const OrderDetails = ({ navigation, route }) => {
   const [Refound, setRefound] = React.useState(false);
   const [RefoundDate, setRefoundDate] = React.useState();
   //console.log(data);
+  const orderSocket=useSelector(state=>state.orderSocket)
+
 
   const stringDate = (d) => {
     const Months = [
@@ -211,11 +213,8 @@ const OrderDetails = ({ navigation, route }) => {
     }
   };
   React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      //console.log(e)
-      loadData();
-    });
-  }, []);
+    loadData();
+  }, [orderSocket]);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

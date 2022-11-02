@@ -42,6 +42,7 @@ import { checkUser } from "../Class/auth";
 import { getService, getDashboard } from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
+import { socket } from "../Class/socket";
 
 const Tab = createBottomTabNavigator();
 
@@ -99,6 +100,16 @@ const TabRoute = () => {
       .catch((err) => {
         console.log(err.message);
       });
+  }, []);
+  React.useEffect(() => {
+    socket.on("updateOrder",e=>{
+      //console.log(e)
+      dispatch({type:"SET_ORDER_SOCKET",playload:e})
+    })
+    socket.on("getOrder",e=>{
+      //console.log(e)
+      dispatch({type:"SET_ORDER_SOCKET",playload:e})
+    })
   }, []);
   if (!user || !load) {
     return (

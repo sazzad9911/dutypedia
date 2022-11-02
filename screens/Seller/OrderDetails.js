@@ -88,6 +88,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [Facilities, setFacilities] = React.useState([]);
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
+  const orderSocket=useSelector(state=>state.orderSocket)
+
   React.useEffect(() => {
     //console.log(user.token);
     try {
@@ -155,11 +157,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     } ${date.getFullYear()}`;
   };
   React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      //console.log(e)
-      loadData();
-    });
-  }, []);
+    loadData();
+  }, [orderSocket]);
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
