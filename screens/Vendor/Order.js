@@ -177,7 +177,12 @@ const VendorOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
-
+  React.useEffect(()=>{
+    socket.on("getOrder",e=>{
+      AllOrders(val=>[...val,e.order])
+    })
+    setRefresh(val=>(!val))
+  },[orderSocket])
   
   return (
     <ScrollView
@@ -537,7 +542,7 @@ const OrderCart = ({ data, onPress }) => {
                 {data && data.paid && data.status != "REFUNDED"
                   ? "Paid"
                   : data && data.paid && data.status == "REFUNDED"
-                  ? "Canceled"
+                  ? "Refunded"
                   : "Due"}
               </Text>
             </View>

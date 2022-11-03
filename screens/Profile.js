@@ -62,6 +62,8 @@ const Stack = createStackNavigator();
 const Profile = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = useSelector((state) => state.vendor);
+  //const user=useSelector(state=>state.user)
+  //console.log(user.user.id)
   return (
     <Stack.Navigator>
       {vendor ? (

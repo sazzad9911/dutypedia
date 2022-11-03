@@ -123,7 +123,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          if (route == 1) {
+          if (route == 1&&vendor) {
             try {
               navigation.navigate("VendorOrder");
               return;

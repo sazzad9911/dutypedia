@@ -45,7 +45,7 @@ import Category from "./screens/Seller/Category";
 import Support from "./screens/Support";
 import Feed from "./screens/Feed";
 import { getJson } from "./Class/storage";
-import { getSocket } from "./Class/socket";
+import { getSocket,socket } from "./Class/socket";
 import VendorProfile from "./screens/VendorProfile";
 
 export default function StackRoute() {
@@ -61,13 +61,14 @@ export default function StackRoute() {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
+  const [userId,setUserId]=React.useState()
 
   React.useEffect(() => {
     checkUser()
       .then((res) => {
         //console.log(res)
         if (res) {
-          getSocket(res.user.id);
+          setUserId(res.user.id)
           dispatch({ type: "SET_USER", playload: res });
           getDashboard(res.token).then((result) => {
             if (result && result.data && result.data.dashboards) {
@@ -95,6 +96,13 @@ export default function StackRoute() {
       }
     });
   }, []);
+  React.useEffect(()=>{
+    if(userId){
+      socket.on("connect",()=>{
+        getSocket(userId);
+      })
+    }
+  },[socket+userId])
   const MyTheme = {
     ...DefaultTheme,
     colors: {

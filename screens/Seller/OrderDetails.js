@@ -510,7 +510,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             {data && data.paid && data.status != "REFUNDED"
               ? "Paid"
               : data && data.paid && data.status == "REFUNDED"
-              ? "Refund"
+              ? "Refunded"
               : "Due"}
           </Text>
         </View>
@@ -813,9 +813,9 @@ export default OrderDetails;
 const exporters = (key) => {
   switch (key) {
     case "WAITING_FOR_ACCEPT":
-      return "Waiting for accept";
+      return "Wait for accept order";
     case "ACCEPTED":
-      return "Accepted";
+      return "Waiting for payment";
     case "WAITING_FOR_PAYMENT":
       return "Waiting for payment";
     case "PROCESSING":
@@ -823,7 +823,7 @@ const exporters = (key) => {
     case "DELIVERED":
       return "Delivered";
     case "REFUNDED":
-      return "Canceled";
+      return "Refunded";
     case "CANCELLED":
       return "Cancelled";
     case "COMPLETED":

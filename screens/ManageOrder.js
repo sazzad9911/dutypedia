@@ -108,7 +108,7 @@ const ManageOrder = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user + Refresh + reload+orderSocket]);
+  }, [user + Refresh + reload]);
   React.useEffect(() => {
     if (AllOrders) {
       let arr = AllOrders.filter((d) => d.type == Active);
@@ -139,6 +139,9 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
+  React.useEffect(()=>{
+    setRefresh(val=>(!val))
+  },[orderSocket])
   
   
   return (
@@ -504,7 +507,7 @@ const OrderCart = ({ data, onPress }) => {
                 {data && data.paid && data.status != "REFUNDED"
                   ? "Paid"
                   : data && data.paid && data.status == "REFUNDED"
-                  ? "Canceled"
+                  ? "Refunded"
                   : "Due"}
               </Text>
             </View>
