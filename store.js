@@ -16,6 +16,7 @@ import isDark from "./Reducers/isDark";
 import ListSelection from "./Reducers/ListSelection";
 import { socket } from "./Class/socket";
 import orderSocket from "./Reducers/orderSocket";
+import orders from "./Reducers/orders";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -34,7 +35,8 @@ const combine = combineReducers({
   isDark: isDark,
   ListSelection: ListSelection,
   socket:socket,
-  orderSocket:orderSocket
+  orderSocket:orderSocket,
+  orders:orders
 });
 const store = createStore(combine);
 export default store;

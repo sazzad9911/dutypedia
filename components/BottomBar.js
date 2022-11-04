@@ -42,7 +42,7 @@ const BottomBar = (props) => {
   }, [vendor]);
   React.useEffect(()=>{
     if(props.state.index){
-      setRoute(props.state.index)
+      setRoute(props.state.index) 
     }
   },[props.state.index])
   React.useEffect(() => {

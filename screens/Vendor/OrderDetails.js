@@ -100,8 +100,7 @@ const OrderDetails = ({ navigation, route }) => {
   const [Refound, setRefound] = React.useState(false);
   const [RefoundDate, setRefoundDate] = React.useState();
   //console.log(data);
-  const orderSocket=useSelector(state=>state.orderSocket)
-
+  const orderSocket = useSelector((state) => state.orderSocket);
 
   const stringDate = (d) => {
     const Months = [
@@ -206,7 +205,7 @@ const OrderDetails = ({ navigation, route }) => {
       const res = await getOrders(user.token, "vendor", vendor.service.id);
       let arr = res.data.orders.filter((order) => order.id == data.id);
       setData(arr[0]);
-      route.params.onRefresh();
+      //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
       console.warn(e.message);
@@ -516,38 +515,43 @@ const OrderDetails = ({ navigation, route }) => {
             flexWrap: "wrap",
           }}
         >
-          {data &&
-            data.service.gigs[0].facilites.selectedOptions &&
-            data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
-              <CheckBox
-                key={i}
-                style={{ width: "70%", marginBottom: 10 }}
-                disabled={
-                  data &&
-                  data.status == "WAITING_FOR_ACCEPT" &&
-                  data.type != "ONETIME"
-                    ? false
-                    : true
-                }
-                value={
-                  Facilities.filter((d) => d.title == doc.title).length > 0
-                    ? true
-                    : false
-                }
-                onChange={(e) => {
-                  if (
+          {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME"
+            ? data &&
+              data.service.gigs[0].facilites.selectedOptions &&
+              data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
+                <CheckBox
+                  key={i}
+                  style={{ width: "70%", marginBottom: 10 }}
+                  value={
                     Facilities.filter((d) => d.title == doc.title).length > 0
-                  ) {
-                    setFacilities((val) =>
-                      val.filter((d) => d.title != doc.title)
-                    );
-                  } else {
-                    setFacilities((val) => [...val, doc]);
+                      ? true
+                      : false
                   }
-                }}
-                title={doc.title}
-              />
-            ))}
+                  onChange={(e) => {
+                    if (
+                      Facilities.filter((d) => d.title == doc.title).length > 0
+                    ) {
+                      setFacilities((val) =>
+                        val.filter((d) => d.title != doc.title)
+                      );
+                    } else {
+                      setFacilities((val) => [...val, doc]);
+                    }
+                  }}
+                  title={doc.title}
+                />
+              ))
+            : data &&
+              data.service.gigs[0].facilites.selectedOptions &&
+              data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (
+                <Text
+                  key={i}
+                  style={{
+                    width: "100%",
+                    marginTop:5
+                  }}
+                >{`${i + 1}. ${doc.title}`}</Text>
+              ))}
           {FacilitiesError && (
             <Text style={{ color: "red" }}>{FacilitiesError}</Text>
           )}
