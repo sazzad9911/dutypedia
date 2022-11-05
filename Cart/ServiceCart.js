@@ -21,12 +21,12 @@ const ServiceCart = ({data,onPress}) => {
       }
     }}
       style={{
-        shadowColor: secondaryColor,
+        shadowColor: assentColor,
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: .5,
+        shadowOpacity: .1,
         shadowRadius: 6,
         elevation: 5,
         borderRadius: 10,

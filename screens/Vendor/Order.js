@@ -10,6 +10,7 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Pressable
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +42,12 @@ import {
 } from "../../assets/icon";
 import Animated, { StretchInY } from "react-native-reanimated";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-
+import TopTabBar from "../Seller/components/TopTabBar";
+import OrderTabBar from "./components/OrderTabBar";
+import MemberList from "./MemberList";
+import NewTab from "./components/NewTab";
+import VendorServiceList from "./VendorServiceList";
+import SelectDate from "./SelectDate";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -74,6 +80,21 @@ const Order = () => {
         name="UserProfile"
         component={UserProfile}
       />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="MemberList"
+        component={MemberList}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="VendorServiceList"
+        component={VendorServiceList}
+      />
+       <Stack.Screen
+        options={{ headerShown: false }}
+        name="SelectDate"
+        component={SelectDate}
+      />
     </Stack.Navigator>
   );
 };
@@ -86,12 +107,9 @@ const VendorOrder = ({ navigation, route }) => {
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
-  const scrollY = new A.Value(0);
-  const diffClamp = A.diffClamp(scrollY, 0, 300);
-  const translateY = diffClamp.interpolate({
-    inputRange: [0, 300],
-    outputRange: [0, -300],
-  });
+  const order=useSelector(state=>state.order)
+  
+  
   const [initialState, setInitialState] = React.useState([
     {
       title: "Bargaining",
@@ -119,7 +137,7 @@ const VendorOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
@@ -129,23 +147,11 @@ const VendorOrder = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
-  const [Search, setSearch] = React.useState();
-  const [Filter, setFilter] = React.useState();
+  
   const [Change, setChange] = React.useState(false);
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch=useDispatch()
 
-  
-
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setRefresh((val) => !val);
-    //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
-    wait(1000).then(() => setRefreshing(false));
-  }, []);
   React.useEffect(() => {
     if (user && vendor && vendor.service) {
       //setLoader(true);
@@ -180,388 +186,24 @@ const VendorOrder = ({ navigation, route }) => {
         });
     }
   }, [user + Refresh + reload + vendor + orderSocket]);
-  React.useEffect(() => {
-    if (!Filter) {
-      setOrders(AllOrders);
-    } else {
-      let text = Filter;
-      text = text.split(" ").join("_");
-      let arr = AllOrders.filter((d) =>
-        d.status.toUpperCase().match(text.toUpperCase())
-      );
-      setOrders(arr);
-    }
-  }, [Filter]);
-  React.useEffect(() => {
-    if (!Search) {
-      setOrders(AllOrders);
-    } else {
-      let text = Search;
-      text = text.split(" ").join("_");
-      let arr = AllOrders.filter((d) =>
-        d.status.toUpperCase().match(text.toUpperCase())
-      );
-      setOrders(arr);
-    }
-  }, [Search]);
+ 
   React.useEffect(() => {
     socket.on("getOrder", (e) => {
       AllOrders((val) => [...val, e.order]);
     });
     setRefresh((val) => !val);
   }, [orderSocket]);
-
-  const Screens = ({navigation,route}) => {
-    const Order=useSelector(state=>state.orders);
-    const [NewOrders,setNewOrders]=React.useState()
-    const [Index, setIndex] = React.useState(-1);
-    const [AllStatus, setAllStatus] = React.useState([
-      {
-        title: "Waiting For Accept",
-        icon: waitionIcon,
-      },
-      {
-        title: "Due",
-        icon: dueIcon,
-      },
-      {
-        title: "Paid",
-        icon: paidIcon,
-      },
-      {
-        title: "Processing",
-        icon: processingIcon,
-      },
-      {
-        title: "Delivered",
-        icon: deliveryIcon,
-      },
-      {
-        title: "Order Completed",
-        icon: completeIcon,
-      },
-      {
-        title: "Order Canceled",
-        icon: cancelIcon,
-      },
-      {
-        title: "Refund",
-        icon: refundIcon,
-      },
-    ]);
-    const bottomSheetRef = React.useRef(null);
-    
-    React.useEffect(()=>{
-      if(Order){
-        let arr=Order.filter(d=>d.type==route.name);
-        setNewOrders(arr)
-      }
-    },[])
-    
-  const snapPoints = React.useMemo(() => ["25%", "50%"], []);
-
-  // callbacks
-  const handleSheetChanges = React.useCallback((index) => {
-    //console.log("handleSheetChanges", index);
-    setIndex(index);
-  }, []);
-    return (
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          style={{ flexGrow: 1 }}
-          stickyHeaderIndices={[0]}
-          scrollEventThrottle={16}
-          stickyHeaderHiddenOnScroll={true}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                //setPageChange(true);
-                onRefresh();
-              }}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-          onScroll={(e) => {
-            scrollY.setValue(e.nativeEvent.contentOffset.y);
-            //scroll;
-          }}
-        >
-          <A.View
-            style={[
-              {
-                transform: [{ translateY: translateY }],
-                top: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: secondaryColor,
-                zIndex: 500,
-              },
-            ]}
-          >
-           
-            <View
-              style={{
-                flexDirection: "row",
-                marginHorizontal: 10,
-                marginVertical: 0,
-                justifyContent: "space-between",
-                marginBottom: 15,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  backgroundColor: "#f5f5f5",
-                  paddingHorizontal: 15,
-                  paddingVertical: 8,
-                  flex: 2,
-                  borderRadius: 20,
-                  justifyContent: "flex-start",
-                }}
-              >
-                <AntDesign
-                  style={{ marginRight: 10 }}
-                  name="search1"
-                  size={24}
-                  color={assentColor}
-                />
-                <TextInput
-                  value={Search}
-                  onChangeText={(e) => {
-                    setSearch(e);
-                  }}
-                  placeholderTextColor={assentColor}
-                  placeholder="Search Now"
-                  returnKeyType="search"
-                />
-              </View>
-              {/* <DropDown
-              value={Filter}
-              onChange={(e) => {
-                setFilter(e);
-              }}
-              style={{
-                marginLeft: 15,
-              }}
-              DATA={[
-                "Waiting for accept",
-                "Accepted",
-                "Canceled",
-                "Refounded",
-                "Processing",
-                "Delivered",
-                "Completed",
-                "Waiting for payment",
-              ]}
-              placeholder={"Select"}
-            /> */}
-            </View>
-          </A.View>
-          {NewOrders &&
-            NewOrders.map((doc, i) => (
-              <OrderCart
-                onPress={() => {
-                  navigation.navigate("VendorOrderDetails", {
-                    data: doc,
-                  });
-                }}
-                key={i}
-                data={doc}
-              />
-            ))}
-
-          {NewOrders && NewOrders.length == 0 && !Loader && (
-            <Text style={{ color: textColor, textAlign: "center" }}>
-              No data available
-            </Text>
-          )}
-        </ScrollView>
-        <View
-          style={{
-            position: "absolute",
-            bottom: 10,
-            left: 0,
-            zIndex: 0,
-            backgroundColor: primaryColor,
-            marginHorizontal: 40,
-            borderRadius: 25,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: width - 80,
-            shadowOffset: {
-              height: 0,
-              width: 0,
-            },
-            shadowColor: "black",
-            shadowOpacity: 0.2,
-            shadowRadius: 5,
-            elevation: 3,
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            shadowTopRadius: 0,
-          }}
-        >
-          <TouchableOpacity style={styles.view}>
-            <SvgXml xml={plus} height="20" />
-            <Text style={styles.text}>New Order</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.view}>
-            <SvgXml xml={re} height="20" />
-            <Text style={styles.text}>Dutypedia User</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setIndex(1);
-            }}
-            style={styles.view}
-          >
-            <SvgXml xml={sort} height="20" />
-            <Text style={styles.text}>Sort</Text>
-          </TouchableOpacity>
-        </View>
-        <BottomSheet
-          enablePanDownToClose={true}
-          ref={bottomSheetRef}
-          index={parseInt(Index)}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-        >
-          <BottomSheetScrollView>
-            {AllStatus.map((doc, i) => (
-              <IconButton
-                onPress={() => {
-                  if (Filter == doc.title) {
-                    setFilter(null);
-                    return;
-                  }
-                  setFilter(doc.title);
-                }}
-                style={{
-                  justifyContent: "flex-start",
-                  borderWidth: 0,
-                  marginHorizontal: 10,
-                  backgroundColor:
-                    Filter == doc.title ? "#F2F2F6" : primaryColor,
-                }}
-                key={i}
-                LeftIcon={() => <SvgXml xml={doc.icon} height="24" />}
-                title={doc.title}
-              />
-            ))}
-          </BottomSheetScrollView>
-        </BottomSheet>
-      </View>
-    );
-  };
-  const Header=(props)=>{
-    const [initialState, setInitialState] = React.useState([
-      {
-        title: "Bargaining",
-        value: true,
-        type: "STARTING",
-      },
-      {
-        title: "Fixed",
-        value: false,
-        type: "ONETIME",
-      },
-      {
-        title: "Installment",
-        value: false,
-        type: "INSTALLMENT",
-      },
-      {
-        title: "Subscription",
-        value: false,
-        type: "SUBS",
-      },
-      {
-        title: "Package",
-        value: false,
-        type: "PACKAGE",
-      },
-    ]);
-    const orders=useSelector(state=>state.orders)
-    const [Active,setActive]=React.useState('STARTING')
-    const [scrollRef,setScrollRef]=React.useState();
-    const  [layout,setLayout]=React.useState()
-    React.useEffect(()=>{
-      setActive(props.state.routeNames[props.state.index])
-      if (layout && scrollRef) {
-        
-        scrollRef.scrollTo({ x: props.state.index * 300, animated: true });
-      }
-    },[props.state.index])
-    return(
-      <View
-      style={{
-        borderBottomWidth: 1,
-        borderBottomColor: "#F1EFEF",
-        marginVertical: 10,
-      width:"100%"
-      }}
-    >
-      <ScrollView  ref={ref=>setScrollRef(ref)}
-        style={{
-          marginVertical: 0,
-        }}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      >
-        <View style={{ width: 10 }} />
-        {initialState &&
-          initialState.map((doc, i) => (
-            <View onLayout={e=>setLayout(e.nativeEvent.layout)}
-              style={{
-                alignItems: "center",
-                width: 120,
-              }}
-              key={i}
-            >
-              <Button
-                onPress={() => {
-                  props.navigation.navigate(doc.type)
-                }}
-                style={{
-                  color: textColor,
-                  borderWidth: 0,
-                  backgroundColor: primaryColor,
-                  borderBottomWidth: 0,
-                  borderRadius: 0,
-                }}
-                active={Active == doc.type ? true : false}
-                title={`${doc.title} (${
-                  orders ? orders.filter(d=>d.type==doc.type).length : "0"
-                })`}
-              />
-              {Active == doc.type && (
-                <View
-                  style={{
-                    width: "50%",
-                    borderBottomColor: "#AC5DCB",
-                    borderBottomWidth: 3,
-                  }}
-                />
-              )}
-            </View>
-          ))}
-        <View style={{ width: 0 }} />
-      </ScrollView>
-    </View>
-    )
-  }
+  
   if(Loader){
     return(
       <ActivityLoader />
     )
   }
   return (
-    <Tab.Navigator tabBar={(props)=><Header {...props}/>}>
+    <Tab.Navigator tabBar={(props)=><NewTab data={order} {...props}/>}>
       {
         initialState.map((doc,i)=>(
-          <Tab.Screen key={i} name={doc.type} component={Screens} />
+          <Tab.Screen key={i} name={doc.type} initialParams={{setRefresh:setRefresh}} component={Screens} />
         ))
       }
     </Tab.Navigator>
@@ -576,12 +218,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize: 13,
+    fontSize: 11,
     marginTop: 2,
   },
 });
 
-const OrderCart = ({ data, onPress }) => {
+const OrderCart = ({ data, onPress,onSelect }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -591,19 +233,30 @@ const OrderCart = ({ data, onPress }) => {
   const assentColor = colors.getAssentColor();
   const dispatch = useDispatch();
   const [Open, setOpen] = React.useState(false);
+  const orderState=useSelector(state=>state.orderState)
   //console.log(data.user)
+  React.useEffect(()=>{
+    //console.log(orderState)
+    if(orderState&&orderState!=data.id){
+      setOpen(false)
+    }
+  },[orderState])
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
+
         setOpen((val) => !val);
+        if(onSelect){
+          onSelect(data.id)
+        }
       }}
     >
       <View
         style={{
           backgroundColor: Open ? "#F2F2F6" : primaryColor,
           paddingHorizontal: 10,
-          paddingVertical: 10,
+          paddingVertical: 0,
           paddingTop: 0,
         }}
       >
@@ -612,6 +265,7 @@ const OrderCart = ({ data, onPress }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            paddingTop:5
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
@@ -670,13 +324,14 @@ const OrderCart = ({ data, onPress }) => {
               </Text>
             </View>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1
+          ,
+          alignItems:"flex-end" }}>
             <View
               style={{
-                flex: 1,
                 alignItems: "center",
-                paddingHorizontal: 10,
                 paddingVertical: 10,
+                width:120
               }}
             >
               <Text
@@ -721,6 +376,7 @@ const OrderCart = ({ data, onPress }) => {
               style={{
                 flexDirection: "row",
                 marginTop: 20,
+                
               }}
             >
               <View style={{ flex: 1 }}>
@@ -756,6 +412,7 @@ const OrderCart = ({ data, onPress }) => {
                 alignItems: "flex-start",
                 justifyContent: "center",
                 marginTop: 10,
+                marginBottom:10
               }}
             >
               <View
@@ -808,8 +465,10 @@ const OrderCart = ({ data, onPress }) => {
             </View>
           </Animated.View>
         )}
+       
       </View>
-    </TouchableOpacity>
+      
+    </Pressable>
   );
 };
 
@@ -856,3 +515,312 @@ const sort = `<svg xmlns="http://www.w3.org/2000/svg" width="9.374" height="12.5
 </g>
 </svg>
 `;
+const Screens = ({navigation,route}) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const textColor = colors.getTextColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const assentColor = colors.getAssentColor();
+  const Order=useSelector(state=>state.orders);
+  const setRefresh=route.params.setRefresh;
+  const [NewOrders,setNewOrders]=React.useState()
+  const [Index, setIndex] = React.useState(-1);
+  const [AllStatus, setAllStatus] = React.useState([
+    {
+      title: "Waiting For Accept",
+      icon: waitionIcon,
+    },
+    {
+      title: "Due",
+      icon: dueIcon,
+    },
+    {
+      title: "Paid",
+      icon: paidIcon,
+    },
+    {
+      title: "Processing",
+      icon: processingIcon,
+    },
+    {
+      title: "Delivered",
+      icon: deliveryIcon,
+    },
+    {
+      title: "Order Completed",
+      icon: completeIcon,
+    },
+    {
+      title: "Order Canceled",
+      icon: cancelIcon,
+    },
+    {
+      title: "Refund",
+      icon: refundIcon,
+    },
+  ]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const bottomSheetRef = React.useRef(null);
+  const scrollY = new A.Value(0);
+  const diffClamp = A.diffClamp(scrollY, 0, 300);
+  const [Search, setSearch] = React.useState();
+  const [Filter, setFilter] = React.useState();
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 300],
+    outputRange: [0, -300],
+  });
+  const [Loader,setLoader]=React.useState()
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const dispatch=useDispatch()
+  const [AllOrders,setAllOrders]=React.useState()
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+  React.useEffect(()=>{
+    if(Array.isArray(Order)){
+      let arr=Order.filter(d=>d.type==route.name);
+      setAllOrders(arr)
+      setNewOrders(arr)
+    }
+  },[Order.length])
+  React.useEffect(() => {
+    if(AllOrders){
+      if (!Filter) {
+        setNewOrders(AllOrders);
+      } else {
+        let text = Filter;
+        text = text.split(" ").join("_");
+        let arr = AllOrders.filter((d) =>
+          d.status.toUpperCase().match(text.toUpperCase())
+        );
+        setNewOrders(arr);
+      }
+    }
+  }, [Filter]);
+  React.useEffect(() => {
+    if(AllOrders){
+      if (!Search) {
+        setNewOrders(AllOrders);
+      } else {
+        let text = Search;
+        text = text.split(" ").join("_");
+        let arr = AllOrders.filter((d) =>
+          d.status.toUpperCase().match(text.toUpperCase())
+        );
+        setNewOrders(arr);
+      }
+    }
+  }, [Search]);
+  
+const snapPoints = React.useMemo(() => ["25%", "50%"], []);
+
+// callbacks
+const handleSheetChanges = React.useCallback((index) => {
+  //console.log("handleSheetChanges", index);
+  setIndex(index);
+}, []);
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flexGrow: 1 }}
+        stickyHeaderIndices={[0]}
+        scrollEventThrottle={16}
+        stickyHeaderHiddenOnScroll={true}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+          //scroll;
+        }}
+      >
+        <A.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              top: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: secondaryColor,
+              zIndex: 500,
+            },
+          ]}
+        >
+         
+          <View
+            style={{
+              flexDirection: "row",
+              marginHorizontal: 10,
+              marginVertical: 0,
+              justifyContent: "space-between",
+              marginBottom: 15,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#f5f5f5",
+                paddingHorizontal: 15,
+                paddingVertical: 8,
+                flex: 2,
+                borderRadius: 20,
+                justifyContent: "flex-start",
+              }}
+            >
+              <AntDesign
+                style={{ marginRight: 10 }}
+                name="search1"
+                size={24}
+                color={assentColor}
+              />
+              <TextInput
+                value={Search}
+                onChangeText={(e) => {
+                  setSearch(e);
+                }}
+                placeholderTextColor={assentColor}
+                placeholder="Search Now"
+                returnKeyType="search"
+              />
+            </View>
+            {/* <DropDown
+            value={Filter}
+            onChange={(e) => {
+              setFilter(e);
+            }}
+            style={{
+              marginLeft: 15,
+            }}
+            DATA={[
+              "Waiting for accept",
+              "Accepted",
+              "Canceled",
+              "Refounded",
+              "Processing",
+              "Delivered",
+              "Completed",
+              "Waiting for payment",
+            ]}
+            placeholder={"Select"}
+          /> */}
+          </View>
+        </A.View>
+        {NewOrders &&
+          NewOrders.map((doc, i) => (
+            <OrderCart onSelect={e=>{
+              //console.log(e)
+              dispatch({type:"ORDER_STATE",playload:e})
+              dispatch({type:"ORDER_STATE",playload:e})
+            }}
+              onPress={() => {
+                navigation.navigate("VendorOrderDetails", {
+                  data: doc,
+                });
+              }}
+              key={i}
+              data={doc}
+            />
+          ))}
+
+        {NewOrders && NewOrders.length == 0 && !Loader && (
+          <Text style={{ color: textColor, textAlign: "center" }}>
+            No data available
+          </Text>
+        )}
+        <View style={{height:70}}/>
+      </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 10,
+          left: 0,
+          zIndex: 0,
+          backgroundColor: primaryColor,
+          marginHorizontal: 55,
+          borderRadius: 25,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: width - 110,
+          shadowOffset: {
+            height: 0,
+            width: 0,
+          },
+          shadowColor: "black",
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 3,
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+          shadowTopRadius: 0,
+        }}
+      >
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate("MemberList")
+        }} style={styles.view}>
+          <SvgXml xml={plus} height="20" />
+          <Text style={styles.text}>New Order</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.view}>
+          <SvgXml xml={re} height="20" />
+          <Text style={styles.text}>Dutypedia User</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setIndex(1);
+          }}
+          style={styles.view}
+        >
+          <SvgXml xml={sort} height="20" />
+          <Text style={styles.text}>Sort</Text>
+        </TouchableOpacity>
+      </View>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={parseInt(Index)}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetScrollView>
+          {AllStatus.map((doc, i) => (
+            <IconButton
+              onPress={() => {
+                if (Filter == doc.title) {
+                  setFilter(null);
+                  return;
+                }
+                setFilter(doc.title);
+              }}
+              style={{
+                justifyContent: "flex-start",
+                borderWidth: 0,
+                marginHorizontal: 10,
+                backgroundColor:
+                  Filter == doc.title ? "#F2F2F6" : primaryColor,
+              }}
+              key={i}
+              LeftIcon={() => <SvgXml xml={doc.icon} height="24" />}
+              title={doc.title}
+            />
+          ))}
+        </BottomSheetScrollView>
+      </BottomSheet>
+    </View>
+  );
+};

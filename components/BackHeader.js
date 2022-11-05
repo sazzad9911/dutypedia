@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: secondaryColor,
-    paddingTop: Platform.OS == "ios" ? 28 : 35,
+    paddingTop:5
   },
   text: {
     color: textColor,

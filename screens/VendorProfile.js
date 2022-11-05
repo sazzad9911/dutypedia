@@ -255,8 +255,6 @@ const VendorProfile = (props) => {
     //console.log(result);
     return res;
   };
- 
-
   React.useEffect(() => {
     if (user && vendor) {
       getOtherServices(newUser.token, vendor.service.id, "ONETIME")
