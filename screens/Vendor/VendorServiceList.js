@@ -76,7 +76,7 @@ const Screens = ({ navigation, route }) => {
     wait(2000).then(() => setRefreshing(false));
   }, []);
   React.useEffect(() => {
-    getOtherServices(user.token, vendor.service.id, route.name)
+    getOtherServices(user.token, vendor.service.id, route.params.key)
       .then((res) => {
         setData(res.data.gigs);
         //console.log(res.data)
@@ -143,7 +143,9 @@ const Screens = ({ navigation, route }) => {
         paddingHorizontal:10
       }}>
         {Data.map((doc, i) => (
-          <ServiceCart key={i} data={doc} />
+          <ServiceCart onPress={()=>{
+            navigation.navigate("SelectDate",{data:doc})
+          }} key={i} data={doc} />
         ))}
       </View>
       <View style={{height:20}}/>

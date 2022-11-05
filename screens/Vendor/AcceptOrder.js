@@ -8,7 +8,12 @@ import Input from "./../../components/Input";
 import IconButton from "./../../components/IconButton";
 import { SvgXml } from "react-native-svg";
 import { CheckBox } from "../Seller/Pricing";
-import { acceptOrder, getLastOrder } from "../../Class/service";
+import {
+  acceptOrder,
+  createOrder,
+  createVendorOrder,
+  getLastOrder,
+} from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
 
@@ -64,6 +69,9 @@ const AcceptOrder = (props) => {
   const [CourierServiceAddress, setCourierServiceAddress] = React.useState();
   const vendor = useSelector((state) => state.vendor);
   const [OtherService, setOtherService] = React.useState();
+  const newVendor = params.vendor;
+  const data = params.data;
+  //console.log(data)
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -167,6 +175,38 @@ const AcceptOrder = (props) => {
       return;
     }
     setLoader(true);
+    if (newVendor) {
+      createVendorOrder(
+        user.token,
+        user.user.id,
+        data.facilites,
+        data.services,
+        data.service.id,
+        data.type,
+        data.price,
+        Description,
+        data.price,
+        params.from,
+        params.to,
+        "VENDOR",
+        {
+          deliverMethodOnline: Select,
+          selfDeliverMethodOther: Description,
+          courierServiceName: CourierServiceName,
+          courierServiceAreaName: CourierServiceAddress,
+          otherServiceType: OtherService,
+          deliverBy: Deliver,
+          serviceType: Service,
+        }
+      ).then(res=>{
+        setLoader(false);
+        navigation.navigate(data.type, { reload: res });
+      }).catch(err=>{
+        setLoader(false);
+        console.warn(err.response.data.msg)
+      })
+      return
+    }
     acceptOrder(user.token, {
       orderId: params.id,
       selectedServices: {
