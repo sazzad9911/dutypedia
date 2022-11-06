@@ -76,7 +76,7 @@ const SaveList = ({ navigation }) => {
           {
             width: width,
             backgroundColor: "#48496D",
-            height: 70,
+            height: 50,
             zIndex: 6,
             flexDirection: "row",
             alignItems: "center",
@@ -88,9 +88,10 @@ const SaveList = ({ navigation }) => {
             navigation.goBack();
           }}
           style={{
-            marginTop: 40,
+            
             alignSelf: "flex-start",
             marginLeft: 10,
+            marginTop:11
           }}
           name="left"
           size={24}
@@ -101,7 +102,6 @@ const SaveList = ({ navigation }) => {
             style={{
               color: primaryColor,
               fontSize: 15,
-              marginTop: 30,
               marginLeft: 20,
               fontFamily: 'Poppins-Light'
             }}

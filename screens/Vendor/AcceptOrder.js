@@ -71,6 +71,8 @@ const AcceptOrder = (props) => {
   const [OtherService, setOtherService] = React.useState();
   const newVendor = params.vendor;
   const data = params.data;
+  const userId=params.userId;
+  //console.log(userId)
   //console.log(data)
 
   React.useEffect(() => {
@@ -178,7 +180,7 @@ const AcceptOrder = (props) => {
     if (newVendor) {
       createVendorOrder(
         user.token,
-        user.user.id,
+        userId,
         data.facilites,
         data.services,
         data.service.id,

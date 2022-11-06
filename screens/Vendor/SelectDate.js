@@ -21,6 +21,8 @@ export default function SelectDate({onChange,navigation,route}) {
   const backgroundColor = colors.getBackgroundColor();
   const [Error,setError]=React.useState()
   const data=route.params.data?route.params.data:null;
+  const userId=route.params.userId;
+  //console.log(userId)
   //console.log(data)
 
   return (
@@ -139,8 +141,9 @@ export default function SelectDate({onChange,navigation,route}) {
           id: data.id,
           data: data,
           vendor:true,
-          from:convertDate(OpeningTime),
-          to:dateConverter(ClosingTime)
+          from:dateConverter(OpeningTime),
+          to:dateConverter(ClosingTime),
+          userId:userId
         });
       }} style={{
         borderRadius:5,

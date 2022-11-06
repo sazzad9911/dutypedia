@@ -154,7 +154,7 @@ export default function MemberList({ navigation, route }) {
       </Text>
       {Data.map((doc, i) => (
         <UserCart onSelect={()=>{
-          navigation.navigate("VendorServiceList")
+          navigation.navigate("VendorServiceList",{userId:doc.userId})
         }} data={doc} key={i} />
       ))}
     </ScrollView>
@@ -170,6 +170,7 @@ const vectorImage = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http:/
 </svg>
 `;
 const UserCart = ({ data, onSelect }) => {
+  
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const textColor = colors.getTextColor();

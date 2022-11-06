@@ -348,20 +348,26 @@ const DutyPediaUser = (props) => {
         <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
       ) : (
         Data.map((doc, i) => (
-          <OnlineCart doc={doc} i={i} key={i} reload={onChange} />
+          <OnlineCart onPress={()=>{
+            navigation.navigate("OnlineUserProfile")
+          }} doc={doc} i={i} key={i} reload={onChange} />
         ))
       )}
     </ScrollView>
   );
 };
-const OnlineCart = ({ doc, i, reload }) => {
+const OnlineCart = ({ doc, i, reload,onPress }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
 
   return (
-    <TouchableOpacity
-      style={{
+    <TouchableOpacity onPress={()=>{
+      if(onPress){
+        onPress()
+      }
+    }}
+        style={{
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 5,

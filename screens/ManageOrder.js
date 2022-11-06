@@ -139,9 +139,15 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
-  React.useEffect(()=>{
-    setRefresh(val=>(!val))
-  },[orderSocket])
+  
+  React.useEffect(() => {
+    socket.on("getOrder", (e) => {
+      //console.log(e)
+      setAllOrders((val) => [...val, e.order]);
+      setRefresh((val) => (!val));
+    });
+    setRefresh((val) => (!val));
+  }, [orderSocket]);
   
   
   return (

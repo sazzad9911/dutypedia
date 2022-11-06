@@ -95,6 +95,11 @@ const Order = () => {
         name="SelectDate"
         component={SelectDate}
       />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddServiceList_1"
+        component={AddServiceList}
+      />
     </Stack.Navigator>
   );
 };
@@ -108,8 +113,6 @@ const VendorOrder = ({ navigation, route }) => {
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
   const order=useSelector(state=>state.order)
-  
-  
   const [initialState, setInitialState] = React.useState([
     {
       title: "Bargaining",
@@ -137,7 +140,6 @@ const VendorOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ]);
-  
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(true);
   const [Orders, setOrders] = React.useState(null);
@@ -189,7 +191,10 @@ const VendorOrder = ({ navigation, route }) => {
  
   React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      AllOrders((val) => [...val, e.order]);
+      let arr=AllOrders;
+      arr.push(e.order)
+      dispatch({type:"SET_ORDERS",playload:arr})
+      setRefresh((val) => !val);
     });
     setRefresh((val) => !val);
   }, [orderSocket]);
@@ -342,7 +347,7 @@ const OrderCart = ({ data, onPress,onSelect }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                Offer Price {data ? data.service.gigs[0].price : "0"}৳
+                Offer Price {data ? data.offerPrice : "0"}৳
               </Text>
 
               <Text
@@ -567,6 +572,7 @@ const Screens = ({navigation,route}) => {
   const diffClamp = A.diffClamp(scrollY, 0, 300);
   const [Search, setSearch] = React.useState();
   const [Filter, setFilter] = React.useState();
+  const orderSocket = useSelector((state) => state.orderSocket);
   const translateY = diffClamp.interpolate({
     inputRange: [0, 300],
     outputRange: [0, -300],
@@ -590,7 +596,7 @@ const Screens = ({navigation,route}) => {
       setAllOrders(arr)
       setNewOrders(arr)
     }
-  },[Order.length])
+  },[Order.length+orderSocket])
   React.useEffect(() => {
     if(AllOrders){
       if (!Filter) {

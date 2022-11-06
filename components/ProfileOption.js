@@ -48,10 +48,10 @@ const ProfileOption = (props) => {
       <View
         style={{
           flexDirection: "row",
-          borderBottomWidth: props.action ? 0 : 1,
-          borderBottomColor: "#e5e5e5",
+          borderBottomWidth: props.action ? 0 : .5,
+          borderBottomColor: "#F1EFEF",
           flex: 1,
-          paddingBottom: 3,
+          paddingBottom: 5,
           marginLeft: 10,
           alignItems: "center",
         }}

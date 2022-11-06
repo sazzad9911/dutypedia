@@ -522,7 +522,7 @@ export const createVendorOrder = async (
     }
   );
   socket.emit("newOrder", {
-    receiverId: res.data.receiverId,
+    receiverId: userId,
     order: res.data.order,
   });
   return res

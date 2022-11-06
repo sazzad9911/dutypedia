@@ -7,18 +7,19 @@ import ListHeader from "./components/ListHeader";
 import { SvgXml } from "react-native-svg";
 import { FAB } from "react-native-paper";
 import { getOtherServices } from "../../Class/service";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
 import ServiceCart from "../../Cart/ServiceCart";
 import ActivityLoader from "../../components/ActivityLoader";
 import { textColor } from "../../assets/colors";
+import { serverToLocal } from "../../Class/dataConverter";
 const {width,height}=Dimensions.get("window")
 
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
 
-export default function VendorServiceList() {
+export default function VendorServiceList({navigation,route}) {
   const [initialState, setInitialState] = React.useState([
     {
       title: "Fixed",
@@ -43,6 +44,8 @@ export default function VendorServiceList() {
   ]);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
+  
+ 
   // tabBar={(props) => <ListHeader {...props} />}
   return (
     <Tab.Navigator screenOptions={{
@@ -56,7 +59,7 @@ export default function VendorServiceList() {
       },
     }}>
       {initialState.map((doc, i) => (
-        <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type}} component={Screens} />
+        <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId}} component={Screens} />
       ))}
     </Tab.Navigator>
   );
@@ -70,7 +73,9 @@ const Screens = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  const dispatch=useDispatch()
+  const userId=route.params.userId;
+  //console.log(userId)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
@@ -117,7 +122,42 @@ const Screens = ({ navigation, route }) => {
             justifyContent: "center",
             alignItems: "center",
           }}
-          onPress={() => console.log("Pressed")}
+          onPress={() => {
+            dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+            if (vendor.service.gigs[0].services.category) {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  vendor.service.gigs[0].services.options,
+                  vendor.service.gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  vendor.service.gigs[0].services.options,
+                  vendor.service.gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+              });
+            } else {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  vendor.service.gigs[0].services,
+                  vendor.service.gigs[0].dashboard
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  vendor.service.gigs[0].services,
+                  vendor.service.gigs[0].dashboard
+                ),
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+              });
+            }
+          }}
         />
       </View>
     );
@@ -144,7 +184,7 @@ const Screens = ({ navigation, route }) => {
       }}>
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{
-            navigation.navigate("SelectDate",{data:doc})
+            navigation.navigate("SelectDate",{data:doc,userId:userId})
           }} key={i} data={doc} />
         ))}
       </View>

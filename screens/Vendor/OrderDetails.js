@@ -70,6 +70,7 @@ const OrderDetails = ({ navigation, route }) => {
     },
   ];
   const user = useSelector((state) => state.user);
+
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -99,7 +100,7 @@ const OrderDetails = ({ navigation, route }) => {
   const [data, setData] = React.useState(newData);
   const [Refound, setRefound] = React.useState(false);
   const [RefoundDate, setRefoundDate] = React.useState();
-  //console.log(data);
+  //console.log(data.type);
   const orderSocket = useSelector((state) => state.orderSocket);
 
   const stringDate = (d) => {
@@ -307,7 +308,7 @@ const OrderDetails = ({ navigation, route }) => {
             >
               {
                 initialState.filter((d) =>
-                  d.type.match(data.service.gigs[0].type)
+                  d.type.match(data.type)
                 )[0].title
               }{" "}
               Service
@@ -970,7 +971,7 @@ const exporters = (key) => {
     case "WAITING_FOR_ACCEPT":
       return "Wait for accept order";
     case "ACCEPTED":
-      return "Accepted";
+      return "Waiting for payment";
     case "WAITING_FOR_PAYMENT":
       return "Waiting for payment";
     case "PROCESSING":

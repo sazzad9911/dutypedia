@@ -41,6 +41,7 @@ import NewHeader from "./components/NewHeader";
 import { ViewCart } from "./screens/Vendor/Notice";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";
 import { getOnlineUsers } from "./Class/socket";
+import AddServiceList from "./screens/AddServiceList";
 
 const Stack = createStackNavigator();
 
@@ -51,10 +52,9 @@ const HomeRoute = ({ navigation }) => {
   const [NewState, setNewState] = React.useState(false);
   const interestCategory = useSelector((state) => state.interestCategory);
   const [Loader, setLoader] = React.useState(true);
-  const dispatch=useDispatch()
-  
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
-    
     if (user) {
       getFavoriteCategories(user.token)
         .then((result) => {
@@ -70,7 +70,7 @@ const HomeRoute = ({ navigation }) => {
         });
     }
   }, [interestCategory + vendor]);
-  
+
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -110,12 +110,12 @@ const HomeRoute = ({ navigation }) => {
         component={OtherProfile}
       />
       <Stack.Screen
-        options={{ headerShown:false}}
+        options={{ headerShown: false }}
         name="Notice"
         component={Notice}
       />
       <Stack.Screen
-        options={{ headerShown:false}}
+        options={{ headerShown: false }}
         name="ViewCart"
         component={ViewCart}
       />
@@ -151,12 +151,13 @@ const HomeRoute = ({ navigation }) => {
         component={OrderDetails}
       />
       <Stack.Screen
-          name="Company Calender"
-          options={{
-           headerShown:false
-          }}
-          component={CompanyCalendar}
-        />
+        name="Company Calender"
+        options={{
+          headerShown: false,
+        }}
+        component={CompanyCalendar}
+      />
+      
     </Stack.Navigator>
   );
 };

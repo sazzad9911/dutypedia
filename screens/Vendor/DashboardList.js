@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getGigs, getDashboard } from "../../Class/service";
 import { vendorLogin } from "../../Class/auth";
 
-const DashboardList = ({ navigation }) => {
+const DashboardList = ({ navigation,route }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const user = useSelector((state) => state.user);
   const [Data, setData] = React.useState();
@@ -31,6 +31,7 @@ const DashboardList = ({ navigation }) => {
   const textColor=colors.getTextColor();
   const secondaryColor=colors.getSecondaryColor();
   const backgroundColor=colors.getBackgroundColor();
+  const data=route.params.data
   
 
   React.useEffect(() => {
@@ -99,17 +100,14 @@ const DashboardList = ({ navigation }) => {
         width="120"
       />
       <View style={{ height: 50 }} />
-      <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+      <View style={{
+        justifyContent:"center",
+        alignItems:"center"
+      }} showsHorizontalScrollIndicator={false} horizontal={true}>
         <View style={{ width: 10 }} />
-        {Data ? (
-          Data.map((doc, i) => (
-            <Cart key={i} onChange={click} data={doc} />
-          ))
-        ) : (
-          <Text style={{color:textColor}}>Loading...</Text>
-        )}
+        <Cart  onChange={click} data={data} />
         <View style={{ width: 10 }} />
-      </ScrollView>
+      </View>
       <View style={{ height: height - (height / 10 + 470) }} />
       <Button
         onPress={() => {
