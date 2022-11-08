@@ -286,8 +286,8 @@ const OrderDetails = ({ navigation, route }) => {
               marginTop: 1,
             }}
           >
-            {"ID: "}
-            {data ? data.id : "-"}
+           {"@"}
+            {data ? data.user.username : "-"}
           </Text>
         </View>
       </View>

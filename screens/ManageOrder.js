@@ -66,7 +66,7 @@ const ManageOrder = ({ navigation, route }) => {
     route.params && route.params.active ? route.params.active : null;
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
-  const [Loader, setLoader] = React.useState(true);
+  const [Loader, setLoader] = React.useState(false);
   const [Orders, setOrders] = React.useState(null);
   const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
@@ -76,7 +76,8 @@ const ManageOrder = ({ navigation, route }) => {
   const [Search, setSearch] = React.useState();
   const [Filter, setFilter] = React.useState();
   const [Change, setChange] = React.useState(false);
-  const orderSocket=useSelector(state=>state.orderSocket)
+  const orderSocket=useSelector(state=>state.orderSocket);
+  const userOrders=useSelector(state=>state.userOrders)
 
 
   const wait = (timeout) => {
@@ -90,25 +91,11 @@ const ManageOrder = ({ navigation, route }) => {
   }, []);
 
   React.useEffect(() => {
-    if (user) {
-      //setLoader(true);
-      getOrders(user.token, "user")
-        .then((res) => {
-          if (res.data) {
-            setLoader(false);
-            // console.log(res.data.orders);
-            //console.log(res.data.orders[0].service.serviceCenterName);
-            setAllOrders(res.data.orders);
-            setChange((val) => !val);
-            //setOrders(res.data.orders);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
+    if (userOrders) {
+      setAllOrders(userOrders);
+      setChange((val) => !val);
     }
-  }, [user + Refresh + reload]);
+  }, [userOrders.length+Refresh]);
   React.useEffect(() => {
     if (AllOrders) {
       let arr = AllOrders.filter((d) => d.type == Active);
@@ -139,15 +126,6 @@ const ManageOrder = ({ navigation, route }) => {
       setOrders(arr);
     }
   }, [Search]);
-  
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      //console.log(e)
-      setAllOrders((val) => [...val, e.order]);
-      setRefresh((val) => (!val));
-    });
-    setRefresh((val) => (!val));
-  }, [orderSocket]);
   
   
   return (

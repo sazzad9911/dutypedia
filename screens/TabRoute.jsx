@@ -39,7 +39,7 @@ import AllPackageList from "./Seller/AllPackageList";
 import HomeRoute from "../HomeRoute";
 import Feed from "./Feed";
 import { checkUser } from "../Class/auth";
-import { getService, getDashboard } from "../Class/service";
+import { getService, getDashboard, getOrders } from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
 import { socket } from "../Class/socket";
@@ -101,6 +101,36 @@ const TabRoute = () => {
         console.log(err.message);
       });
   }, []);
+  React.useEffect(() => {
+    if (user) {
+      getOrders(user.token, "user")
+        .then((res) => {
+          if (res.data) {
+            dispatch({type:"USER_ORDERS",playload:res.data.orders})
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
+    }
+  }, [user]);
+  React.useEffect(() => {
+    if (user && vendor && vendor.service) {
+      //setLoader(true);
+      //console.log(vendor.service.id);
+      getOrders(user.token, "vendor", vendor.service.id)
+        .then((res) => {
+          if (res.data) {
+            dispatch({type:"VENDOR_ORDERS",playload:res.data.orders})
+            //console.log(res.data.orders);
+            //console.log(res.data.orders[0].service.serviceCenterName);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
+    }
+  }, [user + vendor]);
   React.useEffect(() => {
     socket.on("updateOrder",e=>{
       //console.log(e)

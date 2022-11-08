@@ -53,6 +53,7 @@ const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 const Order = () => {
+  
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -153,6 +154,7 @@ const VendorOrder = ({ navigation, route }) => {
   const [Change, setChange] = React.useState(false);
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch=useDispatch()
+  const vendorOrders=useSelector(state=>state.vendorO)
 
   React.useEffect(() => {
     if (user && vendor && vendor.service) {
@@ -191,12 +193,11 @@ const VendorOrder = ({ navigation, route }) => {
  
   React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      let arr=AllOrders;
-      arr.push(e.order)
-      dispatch({type:"SET_ORDERS",playload:arr})
-      setRefresh((val) => !val);
+      console.log(e)
+      setAllOrders((val) => [...val, e.order]);
+      setRefresh((val) => (!val));
     });
-    setRefresh((val) => !val);
+    setRefresh((val) => (!val));
   }, [orderSocket]);
   
   if(Loader){
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const OrderCart = ({ data, onPress,onSelect }) => {
+export const OrderCart = ({ data, onPress,onSelect }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -520,7 +521,7 @@ const sort = `<svg xmlns="http://www.w3.org/2000/svg" width="9.374" height="12.5
 </g>
 </svg>
 `;
-const Screens = ({navigation,route}) => {
+export const Screens = ({navigation,route}) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -591,11 +592,24 @@ const Screens = ({navigation,route}) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   React.useEffect(()=>{
-    if(Array.isArray(Order)){
-      let arr=Order.filter(d=>d.type==route.name);
-      setAllOrders(arr)
-      setNewOrders(arr)
+    const data=()=>{
+      if(Array.isArray(Order)){
+        let arr=Order.filter(d=>d.type==route.name);
+        setAllOrders(arr)
+        setNewOrders(arr)
+      }
     }
+  
+      socket.on("getOrder", (e) => {
+        data()
+        //let arr=AllOrders;
+       // arr.push(e.order)
+       // dispatch({type:"SET_ORDERS",playload:arr})
+        setRefresh((val) => !val);
+      })
+      
+      setRefresh((val) => !val);
+      return data()
   },[Order.length+orderSocket])
   React.useEffect(() => {
     if(AllOrders){
@@ -625,6 +639,8 @@ const Screens = ({navigation,route}) => {
       }
     }
   }, [Search]);
+  
+  
   
 const snapPoints = React.useMemo(() => ["25%", "50%"], []);
 

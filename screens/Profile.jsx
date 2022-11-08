@@ -312,6 +312,7 @@ const MainProfile = (props) => {
   const [Loader, setLoader] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const userOrders=useSelector(state=>state.userOrders);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -330,21 +331,8 @@ const MainProfile = (props) => {
     //console.log(user);
   }, [user]);
   React.useEffect(() => {
-    if (user) {
-      setLoader(true);
-      getOrders(user.token, "user")
-        .then((res) => {
-          if (res.data) {
-            setLoader(false);
-            setOrders(res.data.orders);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [user + Refresh]);
+    setOrders(userOrders);
+  }, [userOrders.length + Refresh]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

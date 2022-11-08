@@ -18,6 +18,8 @@ import { socket } from "./Class/socket";
 import orderSocket from "./Reducers/orderSocket";
 import orders from "./Reducers/orders";
 import orderState from "./Reducers/orderState";
+import userOrders from "./Reducers/userOrders";
+import vendorOrders from "./Reducers/vendorOrders";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -38,7 +40,9 @@ const combine = combineReducers({
   socket:socket,
   orderSocket:orderSocket,
   orders:orders,
-  orderState:orderState
+  orderState:orderState,
+  userOrders:userOrders,
+  vendorOrders:vendorOrders
 });
 const store = createStore(combine);
 export default store;

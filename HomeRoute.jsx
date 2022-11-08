@@ -40,7 +40,7 @@ import Notice from "./screens/Notice";
 import NewHeader from "./components/NewHeader";
 import { ViewCart } from "./screens/Vendor/Notice";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";
-import { getOnlineUsers } from "./Class/socket";
+import { getOnlineUsers, socket } from "./Class/socket";
 import AddServiceList from "./screens/AddServiceList";
 
 const Stack = createStackNavigator();
