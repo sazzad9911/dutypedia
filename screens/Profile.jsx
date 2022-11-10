@@ -60,6 +60,9 @@ import Notice from "./Notice";
 import CompanyCalendar from "./Seller/CompanyCalendar";
 import AccountBalance from "./Seller/AccountBalance";
 import OnlineUserProfile from "./Vendor/OnlineUserProfile";
+import UserProfile from "./UserProfile";
+import OfflineProfile from "./OfflineProfile";
+import Note, { AddNote } from "./Vendor/Note";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -274,11 +277,31 @@ const Profile = ({ navigation }) => {
         component={CompanyCalendar}
       />
       <Stack.Screen
+        options={{ headerShown: false }}
+        name="UserProfile"
+        component={UserProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="OfflineProfile"
+        component={OfflineProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddNote"
+        component={AddNote}
+      />
+      <Stack.Screen
         name="AccountBalance"
         options={{
           headerShown: false,
         }}
         component={AccountBalance}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Note"
+        component={Note}
       />
       <Stack.Screen
         name="OnlineUserProfile"
@@ -458,7 +481,7 @@ const MainProfile = (props) => {
         />
       }
     >
-      <StatusBar backgroundColor="#F2F2F6" />
+      <StatusBar backgroundColor={primaryColor} />
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {

@@ -10,7 +10,7 @@ import {
   Image,
   TextInput,
   Dimensions,
-  Pressable
+  Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,12 +48,14 @@ import MemberList from "./MemberList";
 import NewTab from "./components/NewTab";
 import VendorServiceList from "./VendorServiceList";
 import SelectDate from "./SelectDate";
+import OfflineProfile from "../OfflineProfile";
+import Notice from "../Notice";
+import Note, { AddNote } from "./Note";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
 
 const Order = () => {
-  
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -88,10 +90,25 @@ const Order = () => {
       />
       <Stack.Screen
         options={{ headerShown: false }}
+        name="OfflineProfile"
+        component={OfflineProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="Note"
+        component={Note}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddNote"
+        component={AddNote}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
         name="VendorServiceList"
         component={VendorServiceList}
       />
-       <Stack.Screen
+      <Stack.Screen
         options={{ headerShown: false }}
         name="SelectDate"
         component={SelectDate}
@@ -113,7 +130,7 @@ const VendorOrder = ({ navigation, route }) => {
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
-  const order=useSelector(state=>state.order)
+  const order = useSelector((state) => state.order);
   const [initialState, setInitialState] = React.useState([
     {
       title: "Bargaining",
@@ -142,7 +159,7 @@ const VendorOrder = ({ navigation, route }) => {
     },
   ]);
   const [Refresh, setRefresh] = React.useState(false);
-  const [Loader, setLoader] = React.useState(true);
+  const [Loader, setLoader] = React.useState(false);
   const [Orders, setOrders] = React.useState(null);
   const [AllOrders, setAllOrders] = React.useState([]);
   const user = useSelector((state) => state.user);
@@ -150,68 +167,20 @@ const VendorOrder = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
-  
+
   const [Change, setChange] = React.useState(false);
   const orderSocket = useSelector((state) => state.orderSocket);
-  const dispatch=useDispatch()
-  const vendorOrders=useSelector(state=>state.vendorO)
+  const dispatch = useDispatch();
+  const vendorOrders = useSelector((state) => state.vendorOrders);
 
-  React.useEffect(() => {
-    if (user && vendor && vendor.service) {
-      //setLoader(true);
-      //console.log(vendor.service.id);
-      getOrders(user.token, "vendor", vendor.service.id)
-        .then((res) => {
-          if (res.data) {
-            setLoader(false);
-            dispatch({type:"SET_ORDERS",playload:res.data.orders})
-            //console.log(res.data.orders);
-            //console.log(res.data.orders[0].service.serviceCenterName);
-            setAllOrders(res.data.orders);
-            setChange((val) => !val);
-            let newData = [];
-            initialState.map((doc, i) => {
-              let arr = res.data.orders.filter((d) => d.type == doc.type);
-              newData.push({
-                value: doc.value,
-                title: doc.title,
-                type: doc.type,
-                number: arr.length,
-              });
-            });
-            setInitialState(newData);
-            
-            //setOrders(res.data.orders);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [user + Refresh + reload + vendor + orderSocket]);
- 
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      console.log(e)
-      setAllOrders((val) => [...val, e.order]);
-      setRefresh((val) => (!val));
-    });
-    setRefresh((val) => (!val));
-  }, [orderSocket]);
-  
-  if(Loader){
-    return(
-      <ActivityLoader />
-    )
+  if (Loader) {
+    return <ActivityLoader />;
   }
   return (
-    <Tab.Navigator tabBar={(props)=><NewTab data={order} {...props}/>}>
-      {
-        initialState.map((doc,i)=>(
-          <Tab.Screen key={i} name={doc.type} initialParams={{setRefresh:setRefresh}} component={Screens} />
-        ))
-      }
+    <Tab.Navigator tabBar={(props) => <NewTab data={order} {...props} />}>
+      {initialState.map((doc, i) => (
+        <Tab.Screen key={i} name={doc.type} component={Screens} />
+      ))}
     </Tab.Navigator>
   );
 };
@@ -229,7 +198,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const OrderCart = ({ data, onPress,onSelect }) => {
+export const OrderCart = ({ data, onPress, onSelect, user }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -239,22 +208,22 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
   const assentColor = colors.getAssentColor();
   const dispatch = useDispatch();
   const [Open, setOpen] = React.useState(false);
-  const orderState=useSelector(state=>state.orderState)
-  //console.log(data.user)
-  React.useEffect(()=>{
+  const orderState = useSelector((state) => state.orderState);
+
+  //console.log(data.service)
+  React.useEffect(() => {
     //console.log(orderState)
-    if(orderState&&orderState!=data.id){
-      setOpen(false)
+    if (orderState &&data&& orderState != data.id) {
+      setOpen(false);
     }
-  },[orderState])
+  }, [orderState]);
 
   return (
     <Pressable
       onPress={() => {
-
         setOpen((val) => !val);
-        if(onSelect){
-          onSelect(data.id)
+        if (onSelect) {
+          onSelect(data.id);
         }
       }}
     >
@@ -271,7 +240,7 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingTop:5
+            paddingTop: 5,
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
@@ -287,13 +256,21 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
                 borderColor: "#e5e5e5",
               }}
             >
-              {data && data.user.profilePhoto ? (
+              {data && !user && data.user.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
                     width: 50,
                   }}
                   source={{ uri: data.user.profilePhoto }}
+                />
+              ) : data && user && data.service.profilePhoto ? (
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  source={{ uri: data.service.profilePhoto }}
                 />
               ) : (
                 <FontAwesome name="user" size={35} color={assentColor} />
@@ -314,8 +291,16 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {data ? data.user.firstName : "Um"}{" "}
-                {data ? data.user.lastName : "Um"}
+                {data
+                  ? user
+                    ? `${data.service.providerInfo.title}`
+                    : data.user.firstName
+                  : "Um"}{" "}
+                {data
+                  ? user
+                    ? `${data.service.providerInfo.name}`
+                    : data.user.lastName
+                  : "Um"}
               </Text>
               <Text
                 numberOfLines={1}
@@ -326,18 +311,20 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
                 }}
               >
                 {"@"}
-                {data ? data.user.username : "Empty position"}
+                {data
+                  ? user
+                    ? data.service.providerInfo.name.split(" ")[0].toLowerCase()
+                    : data.user.username
+                  : "Empty position"}
               </Text>
             </View>
           </View>
-          <View style={{ flex: 1
-          ,
-          alignItems:"flex-end" }}>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
             <View
               style={{
                 alignItems: "center",
                 paddingVertical: 10,
-                width:120
+                width: 120,
               }}
             >
               <Text
@@ -382,7 +369,6 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
               style={{
                 flexDirection: "row",
                 marginTop: 20,
-                
               }}
             >
               <View style={{ flex: 1 }}>
@@ -418,7 +404,7 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
                 alignItems: "flex-start",
                 justifyContent: "center",
                 marginTop: 10,
-                marginBottom:10
+                marginBottom: 10,
               }}
             >
               <View
@@ -471,9 +457,7 @@ export const OrderCart = ({ data, onPress,onSelect }) => {
             </View>
           </Animated.View>
         )}
-       
       </View>
-      
     </Pressable>
   );
 };
@@ -521,7 +505,7 @@ const sort = `<svg xmlns="http://www.w3.org/2000/svg" width="9.374" height="12.5
 </g>
 </svg>
 `;
-export const Screens = ({navigation,route}) => {
+export const Screens = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -529,9 +513,9 @@ export const Screens = ({navigation,route}) => {
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
-  const Order=useSelector(state=>state.orders);
-  const setRefresh=route.params.setRefresh;
-  const [NewOrders,setNewOrders]=React.useState()
+  const Order = useSelector((state) => state.orders);
+  //const setRefresh=route.params.setRefresh;
+  const [NewOrders, setNewOrders] = React.useState();
   const [Index, setIndex] = React.useState(-1);
   const [AllStatus, setAllStatus] = React.useState([
     {
@@ -578,12 +562,16 @@ export const Screens = ({navigation,route}) => {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
-  const [Loader,setLoader]=React.useState()
+  const [Refresh, setRefresh] = React.useState(false);
+  const [Loader, setLoader] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
-  const dispatch=useDispatch()
-  const [AllOrders,setAllOrders]=React.useState()
+  const dispatch = useDispatch();
+  const [AllOrders, setAllOrders] = React.useState();
+  const vendorOrders = useSelector((state) => state.vendorOrders);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -591,28 +579,13 @@ export const Screens = ({navigation,route}) => {
     //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
     wait(1000).then(() => setRefreshing(false));
   }, []);
-  React.useEffect(()=>{
-    const data=()=>{
-      if(Array.isArray(Order)){
-        let arr=Order.filter(d=>d.type==route.name);
-        setAllOrders(arr)
-        setNewOrders(arr)
-      }
-    }
-  
-      socket.on("getOrder", (e) => {
-        data()
-        //let arr=AllOrders;
-       // arr.push(e.order)
-       // dispatch({type:"SET_ORDERS",playload:arr})
-        setRefresh((val) => !val);
-      })
-      
-      setRefresh((val) => !val);
-      return data()
-  },[Order.length+orderSocket])
   React.useEffect(() => {
-    if(AllOrders){
+    let arr = vendorOrders.filter((d) => d.type == route.name);
+    setAllOrders(arr);
+    setNewOrders(arr);
+  }, [vendorOrders.length + orderSocket + Refresh]);
+  React.useEffect(() => {
+    if (AllOrders) {
       if (!Filter) {
         setNewOrders(AllOrders);
       } else {
@@ -626,7 +599,7 @@ export const Screens = ({navigation,route}) => {
     }
   }, [Filter]);
   React.useEffect(() => {
-    if(AllOrders){
+    if (AllOrders) {
       if (!Search) {
         setNewOrders(AllOrders);
       } else {
@@ -639,16 +612,35 @@ export const Screens = ({navigation,route}) => {
       }
     }
   }, [Search]);
-  
-  
-  
-const snapPoints = React.useMemo(() => ["25%", "50%"], []);
+  const getNewOrder = async () => {
+    try {
+      const res = await getOrders(user.token, "vendor", vendor.service.id);
+      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      const arr = res.data.orders.filter((d) => d.type == route.name);
+      setAllOrders(arr);
+      setNewOrders(arr);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  React.useEffect(() => {
+    // socket.on("getOrder", (e) => {
+    //   console.log(e.order)
+    //   getNewOrder()
+    // });
+    // socket.on("updateOrder", (e) => {
+    //   getNewOrder()
+    // });
+  }, []);
 
-// callbacks
-const handleSheetChanges = React.useCallback((index) => {
-  //console.log("handleSheetChanges", index);
-  setIndex(index);
-}, []);
+  const snapPoints = React.useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handleSheetChanges = React.useCallback((index) => {
+    //console.log("handleSheetChanges", index);
+    setIndex(index);
+  }, []);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -683,7 +675,6 @@ const handleSheetChanges = React.useCallback((index) => {
             },
           ]}
         >
-         
           <View
             style={{
               flexDirection: "row",
@@ -745,11 +736,12 @@ const handleSheetChanges = React.useCallback((index) => {
         </A.View>
         {NewOrders &&
           NewOrders.map((doc, i) => (
-            <OrderCart onSelect={e=>{
-              //console.log(e)
-              dispatch({type:"ORDER_STATE",playload:e})
-              dispatch({type:"ORDER_STATE",playload:e})
-            }}
+            <OrderCart
+              onSelect={(e) => {
+                //console.log(e)
+                dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
+              }}
               onPress={() => {
                 navigation.navigate("VendorOrderDetails", {
                   data: doc,
@@ -765,7 +757,7 @@ const handleSheetChanges = React.useCallback((index) => {
             No data available
           </Text>
         )}
-        <View style={{height:70}}/>
+        <View style={{ height: 70 }} />
       </ScrollView>
       <View
         style={{
@@ -792,9 +784,12 @@ const handleSheetChanges = React.useCallback((index) => {
           shadowTopRadius: 0,
         }}
       >
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("MemberList")
-        }} style={styles.view}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("MemberList");
+          }}
+          style={styles.view}
+        >
           <SvgXml xml={plus} height="20" />
           <Text style={styles.text}>New Order</Text>
         </TouchableOpacity>
@@ -833,8 +828,7 @@ const handleSheetChanges = React.useCallback((index) => {
                 justifyContent: "flex-start",
                 borderWidth: 0,
                 marginHorizontal: 10,
-                backgroundColor:
-                  Filter == doc.title ? "#F2F2F6" : primaryColor,
+                backgroundColor: Filter == doc.title ? "#F2F2F6" : primaryColor,
               }}
               key={i}
               LeftIcon={() => <SvgXml xml={doc.icon} height="24" />}

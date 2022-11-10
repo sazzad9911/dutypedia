@@ -1,23 +1,58 @@
 import React from "react";
-import { View, Text, ScrollView, Dimensions } from "react-native";
+import { View, Text, ScrollView, Dimensions,Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SvgXml } from "react-native-svg";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { Color, primaryColor } from "../../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import NewTab from "./components/NewTab";
-import { OrderCart } from "./Order";
+import { OrderCart } from "../Vendor/Order";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import NewTab from "../Vendor/components/NewTab";
+import { FontAwesome } from "@expo/vector-icons";
+
 const Tab = createMaterialTopTabNavigator();
 
-export default function OnlineUserProfile() {
+export default function OnlineUserProfile({navigation,route}) {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const textColor = colors.getTextColor();
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
-
+  const [initialState, setInitialState] = React.useState([
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ]);
+  const vendorOrders=useSelector(state=>state.vendorOrders)
+  const [Active, setActive] = React.useState("STARTING");
+  const user=route.params.user
+  const [Orders,setOrders]=React.useState()
+  const [AllOrders,setAllOrders]=React.useState()
+  const dispatch=useDispatch()
+  
   const ViewBox = ({ Icon, title }) => {
     return (
       <TouchableOpacity
@@ -47,9 +82,21 @@ export default function OnlineUserProfile() {
       </TouchableOpacity>
     );
   };
-
+  React.useEffect(()=>{
+    if(vendorOrders){
+      const arr=vendorOrders.filter(d=>d.user.id==user.id);
+      setAllOrders(arr);
+      //setOrders(arr)
+    }
+  },[vendorOrders])
+  React.useEffect(()=>{
+    if(AllOrders){
+      const arr=AllOrders.filter(d=>d.type==Active)
+      setOrders(arr)
+    }
+  },[Active+AllOrders])
   return (
-    <ScrollView
+    <ScrollView showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: "#F2F2F6",
       }}
@@ -69,8 +116,19 @@ export default function OnlineUserProfile() {
             borderRadius: 45,
             marginVertical: 10,
             marginTop: 30,
+            justifyContent:"center",
+            alignItems:"center",
+            overflow:"hidden"
           }}
-        ></View>
+        >
+          {user&&user.profilePhoto?(
+            <Image style={{
+              width:90,height:90,borderRadius:45
+            }} source={{uri:user.profilePhoto}}/>
+          ):(<FontAwesome name="user" size={70} color={assentColor} />
+          )}
+          
+        </View>  
         <Text
           style={{
             fontSize: 18,
@@ -78,7 +136,7 @@ export default function OnlineUserProfile() {
             color: textColor,
           }}
         >
-          Easin Arafat
+          {user?`${user.firstName} ${user.lastName}`:`Invalid user`}
           <Text
             style={{
               fontSize: 14,
@@ -87,7 +145,7 @@ export default function OnlineUserProfile() {
             }}
           >
             {" "}
-            (Male)
+            {user?`(${user.gender.toUpperCase()})`:`Invalid`}
           </Text>
         </Text>
         <Text
@@ -146,7 +204,7 @@ export default function OnlineUserProfile() {
               marginTop: 3,
             }}
           >
-            @EasinArafat
+            @{user?`${user.username}`:"invalid"}
           </Text>
         </View>
         <View
@@ -212,7 +270,7 @@ export default function OnlineUserProfile() {
               marginTop: 3,
             }}
           >
-            easinarafat@gmail.com
+            {user?`${user.email}`:"invalid"}
           </Text>
           <TouchableOpacity
             style={{
@@ -315,12 +373,84 @@ export default function OnlineUserProfile() {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={{ height: 500 }}>
-        {/* <TabBar /> */}
+      <View
+        style={{
+          height: 35,
+          backgroundColor: primaryColor,
+          marginVertical: 20,
+        }}
+      >
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+          {initialState.map((doc, i) => (
+            <TouchableOpacity key={i} onPress={()=>{
+              setActive(doc.type)
+            }}
+              style={{
+                height: "100%",
+                width: 90,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>{doc.title}</Text>
+              {Active == doc.type && (
+                <View
+                  style={{
+                    backgroundColor: "#AC5DCB",
+                    height: 2,
+                    width: "50%",
+                    marginTop: 5,
+                  }}
+                ></View>
+              )}
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
+      <View>
+        {Orders&&Orders.map((doc,i)=>(
+          <OrderCart onSelect={(e) => {
+            //console.log(e)
+            dispatch({ type: "ORDER_STATE", playload: e });
+            //dispatch({ type: "ORDER_STATE", playload: e });
+          }}
+          onPress={() => {
+            navigation.navigate("VendorOrderDetails", {
+              data: doc,
+            });
+          }} data={doc} key={i}/>
+        ))}
+      </View>
+      {Orders&&Orders.length==0&&(
+        <View style={{
+          height:400,
+          justifyContent:"center",
+          alignItems:"center"
+        }}>
+          <SvgXml xml={emptyIcon} width="100" height="100"/>
+          <Text style={{
+            marginTop:30,
+            color:textColor
+          }}>No Order Found</Text>
+        </View>
+      )}
+      <View style={{height:20}}/>
     </ScrollView>
   );
 }
+const emptyIcon=`<svg xmlns="http://www.w3.org/2000/svg" width="143.873" height="144" viewBox="0 0 143.873 144">
+<g id="_8022669" data-name="8022669" transform="translate(-0.143)">
+  <g id="_379df1ff" data-name="#379df1ff">
+    <path id="Path_20035" data-name="Path 20035" d="M63.7,0h16.88A133.612,133.612,0,0,1,99.9,1.924a75.4,75.4,0,0,1,15.352,4.323,46.545,46.545,0,0,1,12.984,8.41,36.391,36.391,0,0,1,6.512,7.555,47.927,47.927,0,0,1,5.263,11.634,58.661,58.661,0,0,1,2.745,11.395c.757,5.372,1.021,10.793,1.257,16.207V82.314a147.789,147.789,0,0,1-1.615,18.514,74.322,74.322,0,0,1-3.032,11.026,40.293,40.293,0,0,1-9.057,15.378,48.332,48.332,0,0,1-13.2,9.6,62.111,62.111,0,0,1-14.455,4.624,117.854,117.854,0,0,1-20.522,2.408c-4.4.225-8.815.062-13.223.132a143.215,143.215,0,0,1-22.19-1.561c-8.157-1.429-16.461-3.328-23.56-7.792-5.794-3.69-11.1-8.43-14.542-14.444-2.686-4.593-4.292-9.7-5.755-14.787A65.146,65.146,0,0,1,1.122,95.352C.34,87.7.166,79.988.143,72.3c.008-6.773.138-13.552.672-20.306a70.732,70.732,0,0,1,2.4-14.556,68.933,68.933,0,0,1,4.14-11.265,36.508,36.508,0,0,1,7.415-10.247A48.076,48.076,0,0,1,27.678,6.877,64.255,64.255,0,0,1,42.437,2.346,123.27,123.27,0,0,1,63.7,0m4.621,30.418A20.948,20.948,0,0,0,51.362,48.352,46.756,46.756,0,0,0,51.193,54c-4.132.02-8.267-.028-12.4.025a5.986,5.986,0,0,0-5.569,5.879q-.008,20.4.008,40.806a13.708,13.708,0,0,0,13.158,13.158q25.754.025,51.511,0a13.531,13.531,0,0,0,12.433-8.919c.956-2.534.714-5.277.743-7.927q-.008-18.573-.008-37.149a6.055,6.055,0,0,0-5.862-5.868c-4.034-.017-8.067,0-12.1-.008a36.724,36.724,0,0,0-.338-6.717A20.942,20.942,0,0,0,68.323,30.418Z" fill="#379df1"/>
+    <path id="Path_20036" data-name="Path 20036" d="M65.291,37.731a14.95,14.95,0,0,1,21.33,9.527A25.455,25.455,0,0,1,87.113,54q-14.966.008-29.928,0a27.032,27.032,0,0,1,.411-6.43A14.981,14.981,0,0,1,65.291,37.731Z" fill="#379df1"/>
+    <path id="Path_20037" data-name="Path 20037" d="M53.278,63.182A2.982,2.982,0,0,1,57.1,65.528c.138,1.5-.02,3.013.1,4.515a14.954,14.954,0,0,0,29.442,2.512c.588-2.2.388-4.484.458-6.731a2.973,2.973,0,0,1,5.938.267,45.369,45.369,0,0,1-.107,5.533,20.959,20.959,0,0,1-40.8,3.6,27.418,27.418,0,0,1-.92-9.437A2.956,2.956,0,0,1,53.278,63.182Z" fill="#379df1"/>
+  </g>
+  <g id="_ffffffff" data-name="#ffffffff">
+    <path id="Path_20038" data-name="Path 20038" d="M68.323,30.418A20.942,20.942,0,0,1,92.77,47.286,36.724,36.724,0,0,1,93.107,54c4.034.011,8.067-.008,12.1.008a6.055,6.055,0,0,1,5.862,5.868q.03,18.573.008,37.149c-.028,2.65.214,5.392-.743,7.927A13.531,13.531,0,0,1,97.9,113.874q-25.754.017-51.511,0a13.708,13.708,0,0,1-13.158-13.158q-.042-20.4-.008-40.806a5.986,5.986,0,0,1,5.569-5.879c4.132-.053,8.267-.006,12.4-.025a46.756,46.756,0,0,1,.169-5.651A20.948,20.948,0,0,1,68.323,30.418m-3.032,7.313a14.981,14.981,0,0,0-7.7,9.842A27.032,27.032,0,0,0,57.185,54q14.966.008,29.928,0a25.455,25.455,0,0,0-.492-6.745,14.95,14.95,0,0,0-21.33-9.527M53.278,63.182a2.956,2.956,0,0,0-2.062,2.6,27.418,27.418,0,0,0,.92,9.437,20.954,20.954,0,0,0,40.8-3.6,45.369,45.369,0,0,0,.107-5.533,2.973,2.973,0,0,0-5.938-.267c-.07,2.247.129,4.534-.458,6.731A14.954,14.954,0,0,1,57.2,70.042c-.121-1.5.037-3.013-.1-4.515A2.982,2.982,0,0,0,53.278,63.182Z" fill="#fff"/>
+  </g>
+</g>
+</svg>
+`
 const addressIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.37" height="15.451" viewBox="0 0 12.37 15.451">
 <g id="_faa636ff" data-name="#faa636ff" transform="translate(-15.986 -3.991)">
   <path id="Path_20030" data-name="Path 20030" d="M21.072,4.1a6.116,6.116,0,0,1,4.913,1.232,6.214,6.214,0,0,1,2.352,5.307A10.291,10.291,0,0,1,26.7,14.973a15.194,15.194,0,0,1-3.492,3.98c-.394.259-.871.65-1.367.419a7.031,7.031,0,0,1-1.879-1.445,16.314,16.314,0,0,1-3.184-4.55,7.075,7.075,0,0,1-.706-4.212,6.263,6.263,0,0,1,5-5.07m.387,2.561a3.092,3.092,0,1,0,2.777.7A3.1,3.1,0,0,0,21.458,6.656Z" fill="#faa636"/>
@@ -421,17 +551,17 @@ const Screens = () => {
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
   return (
-    <View  style={{backgroundColor:"#F2F2F6"}}>
-      <ScrollView >
-      <View style={{ height: 20 }} />
-      <OrderCart />
-      <OrderCart />
-      <OrderCart />
-      <OrderCart />
-      <OrderCart />
-      <OrderCart />
-      <View style={{ height: 20 }} />
-    </ScrollView>
+    <View style={{ backgroundColor: "#F2F2F6" }}>
+      <ScrollView>
+        <View style={{ height: 20 }} />
+        <OrderCart />
+        <OrderCart />
+        <OrderCart />
+        <OrderCart />
+        <OrderCart />
+        <OrderCart />
+        <View style={{ height: 20 }} />
+      </ScrollView>
     </View>
   );
 };

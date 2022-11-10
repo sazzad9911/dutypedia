@@ -348,8 +348,8 @@ const DutyPediaUser = (props) => {
         <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
       ) : (
         Data.map((doc, i) => (
-          <OnlineCart onPress={()=>{
-            navigation.navigate("OnlineUserProfile")
+          <OnlineCart onPress={()=>{  
+            navigation.navigate("UserProfile",{user:doc.user})
           }} doc={doc} i={i} key={i} reload={onChange} />
         ))
       )}
@@ -641,19 +641,21 @@ const OfflineUser = (props) => {
           <Text style={{ textAlign: "center" }}>Loading...</Text>
         ) : (
           Data.map((doc, i) => (
-            <OfflineCart {...props} i={i} doc={doc} key={i} reload={reload} />
+            <OfflineCart onPress={()=>{
+              navigation.navigate("OfflineProfile",{user:doc})
+            }}  {...props} i={i} doc={doc} key={i} reload={reload} />
           ))
         )}
       </View>
     </ScrollView>
   );
 };
-const OfflineCart = ({ doc, i, navigation, reload }) => {
+const OfflineCart = ({ doc, i, navigation, reload,onPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   return (
-    <TouchableOpacity
+    <TouchableOpacity  onPress={onPress}
       style={{
         flexDirection: "row",
         alignItems: "center",

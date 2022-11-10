@@ -89,6 +89,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
   const orderSocket=useSelector(state=>state.orderSocket)
+  const userOrders=useSelector(state=>state.userOrders)
+  const dispatch=useDispatch()
 
   React.useEffect(() => {
     //console.log(user.token);
@@ -124,16 +126,26 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     }
   }, [data]);
   const loadData = async () => {
+    //setLoader(false);
     try {
       const res = await getOrders(user.token, "user");
+      dispatch({type:"USER_ORDERS",playload:res.data.orders})
+      dispatch({type:"SET_ORDER_SOCKET",playload:'uiiiiii'})
       let arr = res.data.orders.filter((order) => order.id == data.id);
       setData(arr[0]);
-      route.params.onRefresh();
+      //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
       console.warn(e.message);
     }
   };
+  React.useState(()=>{
+    if(data){
+      let  arr=userOrders.filter(d=>d.id==data.id);
+      setData(arr[0])
+    }
+  },[orderSocket])
+
 
   const stringDate = (d) => {
     const Months = [
@@ -156,9 +168,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
-  React.useEffect(() => {
-    loadData();
-  }, [orderSocket]);
+  React.useEffect(()=>{
+    socket.on("updateOrder",e=>{
+      if(e.order.id==data.id){
+        loadData()
+      }
+    })
+  },[])
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -268,7 +284,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             >
               {
                 initialState.filter((d) =>
-                  d.type.match(data.service.gigs[0].type)
+                  d.type.match(data.type)
                 )[0].title
               }{" "}
               Service

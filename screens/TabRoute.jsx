@@ -56,6 +56,9 @@ const TabRoute = () => {
   const interestCategory = useSelector((state) => state.interestCategory);
   const vendor = useSelector((state) => state.vendor);
   const [load, setLoad] = React.useState(false);
+  const [reload,setReload]=React.useState(false);
+  const [VendorOrders,setVendorOrders]=React.useState()
+  const [UserOrders,setUserOrders]=React.useState()
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
@@ -107,13 +110,16 @@ const TabRoute = () => {
         .then((res) => {
           if (res.data) {
             dispatch({type:"USER_ORDERS",playload:res.data.orders})
+            dispatch({type:"SET_ORDER_SOCKET",playload:res.data.orders})
+            setUserOrders(res.data.orders)
           }
         })
         .catch((err) => {
           console.warn(err.response.data.msg);
+          setUserOrders(err.response.data)
         });
     }
-  }, [user]);
+  }, [user+reload]);
   React.useEffect(() => {
     if (user && vendor && vendor.service) {
       //setLoader(true);
@@ -122,26 +128,57 @@ const TabRoute = () => {
         .then((res) => {
           if (res.data) {
             dispatch({type:"VENDOR_ORDERS",playload:res.data.orders})
+            dispatch({type:"SET_ORDER_SOCKET",playload:res.data.orders})
             //console.log(res.data.orders);
             //console.log(res.data.orders[0].service.serviceCenterName);
+            setVendorOrders(res.data.orders)
           }
         })
         .catch((err) => {
           console.warn(err.response.data.msg);
+          setVendorOrders(err.response.data)
         });
+    }else{
+      setVendorOrders("artyrw")
     }
-  }, [user + vendor]);
+
+  }, [user+ vendor+reload]);
+  const getNewOrder = async () => {
+    try {
+      const res = await getOrders(user.token, "vendor", vendor.service.id);
+      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      //const arr = res.data.orders.filter((d) => d.type == route.name);
+      //setAllOrders(arr);
+      //setNewOrders(arr);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  const getNewOrderUser = async () => {
+    try {
+      const res = await getOrders(user.token, "user");
+      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      //const arr = res.data.orders.filter((d) => d.type == route.name);
+      //setAllOrders(arr);
+      //setOrders(arr);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
   React.useEffect(() => {
-    socket.on("updateOrder",e=>{
-      //console.log(e)
-      dispatch({type:"SET_ORDER_SOCKET",playload:e})
-    })
-    socket.on("getOrder",e=>{
-      //console.log(e)
-      dispatch({type:"SET_ORDER_SOCKET",playload:e})
-    })
+    socket.on("getOrder", (e) => {
+      
+      getNewOrder()
+      getNewOrderUser()
+    });
+    socket.on("updateOrder", (e) => {
+      getNewOrder()
+      getNewOrderUser()
+    });
   }, []);
-  if (!user || !load) {
+  if (!user || !load ||!VendorOrders  ||!UserOrders) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading.....</Text>

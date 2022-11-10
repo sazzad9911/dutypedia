@@ -102,6 +102,7 @@ const OrderDetails = ({ navigation, route }) => {
   const [RefoundDate, setRefoundDate] = React.useState();
   //console.log(data.type);
   const orderSocket = useSelector((state) => state.orderSocket);
+  const vendorOrders=useSelector(state=>state.vendorOrders);
 
   const stringDate = (d) => {
     const Months = [
@@ -201,9 +202,26 @@ const OrderDetails = ({ navigation, route }) => {
       data: data,
     });
   };
+  React.useState(()=>{
+    if(data){
+      let  arr=vendorOrders.filter(d=>d.id==data.id);
+      setData(arr[0])
+    }
+  },[orderSocket])
+  React.useEffect(()=>{
+    socket.on("updateOrder",e=>{
+      if(e.order.id==data.id){
+        loadData()
+        //setData(e.order)
+      }
+    })
+  },[])
   const loadData = async () => {
+    //setLoader(false);
     try {
       const res = await getOrders(user.token, "vendor", vendor.service.id);
+      dispatch({type:"VENDOR_ORDERS",playload:res.data.orders})
+      dispatch({type:"SET_ORDER_SOCKET",playload:'hsjkkaksd'})
       let arr = res.data.orders.filter((order) => order.id == data.id);
       setData(arr[0]);
       //route.params.onRefresh();
@@ -212,9 +230,7 @@ const OrderDetails = ({ navigation, route }) => {
       console.warn(e.message);
     }
   };
-  React.useEffect(() => {
-    loadData();
-  }, [orderSocket]);
+  
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -235,7 +251,7 @@ const OrderDetails = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("UserProfile", {
-              name: `${data.user.firstName + " " + data.user.lastName}`,
+              user: data.user,
             });
           }}
           style={{

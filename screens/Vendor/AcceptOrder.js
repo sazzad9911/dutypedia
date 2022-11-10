@@ -13,6 +13,7 @@ import {
   createOrder,
   createVendorOrder,
   getLastOrder,
+  getOrders
 } from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
@@ -71,7 +72,8 @@ const AcceptOrder = (props) => {
   const [OtherService, setOtherService] = React.useState();
   const newVendor = params.vendor;
   const data = params.data;
-  const userId=params.userId;
+  const userId = params.userId;
+  const dispatch=useDispatch()
   //console.log(userId)
   //console.log(data)
 
@@ -200,14 +202,25 @@ const AcceptOrder = (props) => {
           deliverBy: Deliver,
           serviceType: Service,
         }
-      ).then(res=>{
-        setLoader(false);
-        navigation.navigate(data.type, { reload: res });
-      }).catch(err=>{
-        setLoader(false);
-        console.warn(err.response.data.msg)
-      })
-      return
+      )
+        .then((res) => {
+          getOrders(user.token, "vendor", vendor.service.id)
+            .then((ress) => {
+              if (ress.data) {
+                dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
+                setLoader(false);
+                navigation.navigate(data.type, { reload: res });
+                //console.log(res.data.orders);
+                //console.log(res.data.orders[0].service.serviceCenterName);
+              }
+            })
+            
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+      return;
     }
     acceptOrder(user.token, {
       orderId: params.id,

@@ -14,7 +14,7 @@ import { FAB } from "react-native-paper";
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function UserProfile({ navigation, route }) {
+export default function OfflineProfile({ navigation, route }) {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const textColor = colors.getTextColor();
@@ -97,7 +97,7 @@ export default function UserProfile({ navigation, route }) {
     }
   }, [Active + AllOrders]);
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -144,7 +144,7 @@ export default function UserProfile({ navigation, route }) {
               color: textColor,
             }}
           >
-            {user ? `${user.firstName} ${user.lastName}` : `Invalid user`}
+            {user ? `${user.name}` : `Invalid user`}
             <Text
               style={{
                 fontSize: 14,
@@ -171,10 +171,11 @@ export default function UserProfile({ navigation, route }) {
             flexDirection: "row",
             paddingHorizontal: 20,
             marginVertical: 20,
+            justifyContent: "center",
           }}
         >
-          <ViewBox Icon={callIcon} title="Call" />
-          <ViewBox Icon={chatIcon} title="Chat" />
+          {/* <ViewBox Icon={callIcon} title="Call" />
+        <ViewBox Icon={chatIcon} title="Chat" /> */}
           <ViewBox Icon={calenderIcon} title="Appointment" />
           <ViewBox Icon={threeDot} title="" />
         </View>
@@ -200,33 +201,6 @@ export default function UserProfile({ navigation, route }) {
                 fontSize: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-              }}
-            >
-              User Name
-            </Text>
-            <Text
-              style={{
-                color: "#6366F1",
-                fontFamily: "Poppins-Medium",
-                fontSize: 16,
-                marginTop: 3,
-              }}
-            >
-              @{user ? `${user.username}` : "invalid"}
-            </Text>
-          </View>
-          <View
-            style={{
-              borderBottomWidth: 0.5,
-              borderBottomColor: "#E2E2E2",
-              paddingBottom: 8,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "Poppins-Medium",
-                color: textColor,
                 marginTop: 10,
               }}
             >
@@ -240,18 +214,8 @@ export default function UserProfile({ navigation, route }) {
                 marginTop: 3,
               }}
             >
-              N/A
+              {user && user.phone ? user.phone : "N/A"}
             </Text>
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: 10,
-                top: -30,
-                zIndex: 100,
-              }}
-            >
-              <Text>Edit</Text>
-            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -278,18 +242,8 @@ export default function UserProfile({ navigation, route }) {
                 marginTop: 3,
               }}
             >
-              {user ? `${user.email}` : "invalid"}
+              {user && user.email ? `${user.email}` : "N/A"}
             </Text>
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: 10,
-                top: -25,
-                zIndex: 100,
-              }}
-            >
-              <Text>Edit</Text>
-            </TouchableOpacity>
           </View>
         </View>
         <View
@@ -473,7 +427,9 @@ export default function UserProfile({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onPress={() => {}}
+        onPress={()=>{
+
+        }}
       />
     </View>
   );
@@ -530,3 +486,5 @@ const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" width="18.448" height=
 </g>
 </svg>
 `;
+
+

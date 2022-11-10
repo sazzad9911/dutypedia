@@ -5,14 +5,14 @@ import {Color} from "../../../assets/colors"
 import { useSelector } from "react-redux";
 import React from "react"
 
-function NewTab({ state, descriptors, navigation, position }) {
+function NewTabe({ state, descriptors, navigation, position }) {
     const isDark=useSelector(state=>state.isDark)
     const colors=new Color(isDark)
     const textColor=colors.getTextColor()
     const assentColor=colors.getAssentColor()
     const backgroundColor=colors.getBackgroundColor()
     const primaryColor=colors.getPrimaryColor()
-    const vendorOrders=useSelector(state=>state.vendorOrders)
+    const userOrders=useSelector(state=>state.userOrders)
     const [scrollRef,setScrollRef]=React.useState();
     const  [layout,setLayout]=React.useState()
     const [initialState, setInitialState] = React.useState([
@@ -99,9 +99,7 @@ function NewTab({ state, descriptors, navigation, position }) {
               style={{
                 alignItems: "center",
                 width: 120,
-              }}
-
-              
+              }}  
             >
               <Button
                 onPress={onPress}
@@ -114,7 +112,7 @@ function NewTab({ state, descriptors, navigation, position }) {
                 }}
                 active={isFocused ? true : false}
                 title={`${initialState[index].title} (${
-                  vendorOrders ? vendorOrders.filter(d=>d.type==route.name).length : "0"
+                  userOrders ? userOrders.filter(d=>d.type==route.name).length : "0"
                 })`}
               />
               {isFocused && (
@@ -136,4 +134,4 @@ function NewTab({ state, descriptors, navigation, position }) {
     </View>
   );
 }
-export default NewTab;
+export default NewTabe;
