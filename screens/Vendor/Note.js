@@ -1,5 +1,12 @@
 import React from "react";
-import { Dimensions, ScrollView, Text, View } from "react-native";
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { FAB } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
@@ -8,7 +15,15 @@ import { AntDesign } from "@expo/vector-icons";
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
 import IconButton from "../../components/IconButton";
-const {width,height}=Dimensions.get("window")
+import { getOfflineMembers } from "../../Class/member";
+import {
+  createOfflineNote,
+  createOnlineNote,
+  getOfflineNotes,
+  getOnlineNotes,
+} from "../../Class/notes";
+import { TouchableOpacity } from "react-native-gesture-handler";
+const { width, height } = Dimensions.get("window");
 
 export default function Note({ navigation, route }) {
   const isDark = useSelector((state) => state.isDark);
@@ -17,10 +32,41 @@ export default function Note({ navigation, route }) {
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
   const [Data, setData] = React.useState([]);
-  const reload=async()=>{
+  const offline = route.params && route.params.offline ? true : false;
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const newUser = route.params.user;
+  const [Reload, setReload] = React.useState(false);
 
-  }
+  //console.log(user.token)
+  React.useEffect(() => {
+    if (user && vendor) {
+      if (offline) {
+        getOfflineNotes(user.token, newUser.id, vendor.service.id)
+          .then((res) => {
+            //console.log(res.data)
+            setData(res.data.notes);
+          })
+          .catch((err) => {
+            console.warn(err.response.data.msg);
+          });
+      } else {
+        getOnlineNotes(user.token, newUser.id, vendor.service.id)
+          .then((res) => {
+            //console.log(res.data)
+            setData(res.data.notes);
+          })
+          .catch((err) => {
+            console.warn(err.response.data.msg);
+          });
+      }
+    }
+  }, [user + vendor + Reload]);
 
+  const save = () => {
+    setReload((val) => !val);
+    //navigation.goBack();
+  };
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -53,9 +99,35 @@ export default function Note({ navigation, route }) {
         </Text>
       </View>
       {Data && Data.length > 0 ? (
-        <ScrollView></ScrollView>
-      ) : Data && Data.length == 0 ? (
-        <EmptyBox />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <SvgXml style={{ marginTop: 30 }} xml={svgIcon} width="70%" />
+          </View>
+          {Data && Data.length == 0 && (
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+                marginTop: 30,
+              }}
+            >
+              No Note Found
+            </Text>
+          )}
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              marginHorizontal: 20,
+            }}
+          >
+            {Data.map((doc, i) => (
+              <NoteCart onPress={()=>{
+                navigation.navigate("ViewNote",{data:doc})
+              }} key={i} data={doc} />
+            ))}
+          </View>
+        </ScrollView>
       ) : (
         <Text
           style={{
@@ -67,7 +139,7 @@ export default function Note({ navigation, route }) {
         </Text>
       )}
 
-      <FAB 
+      <FAB
         color="#FFFFFF"
         icon="plus"
         style={{
@@ -82,39 +154,17 @@ export default function Note({ navigation, route }) {
           alignItems: "center",
         }}
         onPress={() => {
-            navigation.navigate("AddNote",{reload:reload})
+          navigation.navigate("AddNote", {
+            save: save,
+            user: newUser,
+            offline: offline,
+          });
         }}
       />
     </View>
   );
 }
-const EmptyBox = () => {
-  const isDark = useSelector((state) => state.isDark);
-  const colors = new Color(isDark);
-  const textColor = colors.getTextColor();
-  const primaryColor = colors.getPrimaryColor();
-  const assentColor = colors.getAssentColor();
-  return (
-    <View
-      style={{
-        flex: 1,
 
-        alignItems: "center",
-      }}
-    >
-      <SvgXml style={{ marginTop: 30 }} xml={svgIcon} width="70%" />
-      <Text
-        style={{
-          fontSize: 16,
-          color: textColor,
-          marginTop: 30,
-        }}
-      >
-        No Note Found
-      </Text>
-    </View>
-  );
-};
 const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="306.67" height="196.534" viewBox="0 0 306.67 196.534">
 <g id="Untitled-1" transform="translate(197.29 -147.15)">
   <path id="Path_20076" data-name="Path 20076" d="M535.36,270.05c-.13,0-.26,0-.38-.01l-1.59-.12c-.03-.48-.07-.76-.07-1.04q0-48.18.02-96.37c3.82-.01,7.64-.01,11.46-.02-.15,1.1-.31,2.21-.46,3.31a1.559,1.559,0,0,0-1.1,2.35c.4.87,1.15,1.59,2.26.76.33-.6,1-1.29.89-1.79-.12-.53-1-.89-1.54-1.32l.02-.03c.19-.99.38-1.97.57-2.96,1.72-.12,3.44-.23,5.15-.35a1.771,1.771,0,0,1,.23-.01l5.47.39.48.33c.18-.33.37-.67.55-1l5.04.33h5.4c-.16,1.1-.31,2.19-.47,3.29a1.493,1.493,0,0,0-1.29,2.05,1.585,1.585,0,0,0,2.09,1.3c1.89-1.22,1.82-2.17-.28-3.73.12-.41.23-.83.35-1.24a2.326,2.326,0,0,1,2.84-1.69,19.442,19.442,0,0,0,2.53-.03l.12-.02h.12l6.14-.24,5.16.24h.09l.09-.01c1.94.04,3.88.08,5.82.11l-.33,2.97c-1.08.27-2.08.67-2,2.02a1.351,1.351,0,0,0,1.66,1.41c.53-.14,1.07-.27,1.6-.41.22-.3.64-.6.64-.9-.02-1.67-.14-3.34-.22-4.91,1.56-.09,2.81-.16,4.05-.24,1.43,0,2.86-.01,4.29,0,.61,0,1.21.03,1.82.04,2.74-.01,5.49-.03,8.23-.04,1.07,0,2.15.01,3.23.02l5.4-.36c.11,0,.23,0,.34.01.62.11,1.24.25,1.87.33,1.07.14,2.15.23,3.22.35q-.015,7.755-.03,15.52c.01,1.13.03,2.26.04,3.39v2.68c-.02.73-.06,1.46-.06,2.19q0,35.82.04,71.65c0,1.36-.31,1.83-1.76,1.83Q579.18,270.035,535.36,270.05Zm31.01-35.5h9.07v-.24H554.52v.24Zm35.49-55.6c1.11.1,1.72-.42,1.69-1.52a1.407,1.407,0,0,0-1.71-1.55c-1.25-.1-1.77.61-1.67,1.71C600.25,178.49,600.62,179.34,601.86,178.95Zm-45.6-3.09c-1.24-.1-1.79.56-1.73,1.71.06,1.29.88,1.71,2.06,1.61a6.165,6.165,0,0,0,1.22-2.07C557.87,176.79,556.82,176.29,556.26,175.86Zm22.95-.12a1.6,1.6,0,0,0-1.92,1.69,1.7,1.7,0,0,0,1.93,1.76c.53-.55,1.51-1.15,1.46-1.65C580.63,176.9,579.74,176.33,579.21,175.74Zm-7.41,11.92q7.26,0,14.51.01h21.55v-.28H586.31q-7.245,0-14.49.01-8.61-.015-17.22-.02h-9.39v.28H571.8ZM589,207.3H552.84v.26h45.64v-.27C595.33,207.3,592.16,207.3,589,207.3Zm-17.24,31.66c1.74.01,3.49.03,5.23.03s3.47,0,5.2,0c0-.15-.01-.3-.01-.45-12.33-.29-24.66-.44-36.99.42h26.57Zm-23.97-43.02c.01.11.01.23.02.34h48.05v-.34Zm61.37,23.09c.03-.06.05-.12.08-.17h-58.6v.17Zm-13.48,8.42a.85.85,0,0,1,.04-.17H550.24v.17Zm.31,15.55c.02-.06.05-.12.07-.18H550.63V243Zm-49.11-20.14c.01.11.01.21.02.32h34.3v-.32Zm14.54-19.45v-.34H545.79v.34Zm51.92-28.85c-.33.44-.72,1.06-1.2,1.61a1.67,1.67,0,0,0-.02,2.52,1.484,1.484,0,0,0,2.35-.03,1.685,1.685,0,0,0-.01-2.52A14.728,14.728,0,0,1,613.34,174.56ZM571.41,211.9v-.13H545.23v.13Zm2.78-19.9v-.18h-21.3V192Z" transform="translate(-573.53 -10)" fill="#fefefe"/>
@@ -314,13 +364,34 @@ const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="306.67" height="
 </svg>
 `;
 export const AddNote = ({ navigation, route }) => {
-    const isDark = useSelector((state) => state.isDark);
+  const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const textColor = colors.getTextColor();
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
+  const [Title, setTitle] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [TitleError, setTitleError] = React.useState();
+  const [DescriptionError, setDescriptionError] = React.useState();
+  const [Loader, setLoader] = React.useState(false);
+  const newUser = route.params.user;
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const offline = route.params.offline;
+
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading..</Text>
+      </View>
+    );
+  }
   return (
-    <View style={{flex:1}}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -350,35 +421,206 @@ export const AddNote = ({ navigation, route }) => {
           Note
         </Text>
       </View>
-      <View style={{
-        paddingHorizontal:20,paddingVertical:20
-      }}>
-      <Text style={{
-        fontFamily:"Poppins-Medium",
-        color:textColor,
-        fontSize:16,
-        marginVertical:20
-      }}>Title</Text>
-      <Input style={{
-        borderWidth:1,
-        marginHorizontal:0
-      }}  placeholder={"Title Here.."}/>
-      <Text style={{
-        fontFamily:"Poppins-Medium",
-        color:textColor,
-        fontSize:16,
-        marginVertical:20
-      }}>Note</Text>
-      <TextArea placeholder={"Details Here.."}/>
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            fontSize: 16,
+            marginVertical: 20,
+          }}
+        >
+          Title
+        </Text>
+        <Input
+          value={Title}
+          onChange={(e) => setTitle(e)}
+          error={TitleError}
+          style={{
+            borderWidth: 1,
+            marginHorizontal: 0,
+          }}
+          placeholder={"Title Here.."}
+        />
+        <Text
+          style={{
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            fontSize: 16,
+            marginVertical: 20,
+          }}
+        >
+          Note
+        </Text>
+        <TextArea
+          value={Description}
+          onChange={(e) => setDescription(e)}
+          error={DescriptionError}
+          placeholder={"Details Here.."}
+        />
       </View>
-      <IconButton style={{
-        backgroundColor:"#4ADE80",
-        marginHorizontal:20,
-        height:35,
-        position:"absolute",
-        bottom:20,
-        width:width-40
-      }} title="Save"/>
+      <IconButton
+        onPress={() => {
+          setTitleError("");
+          setDescriptionError("");
+          if (!Title) {
+            setTitleError("Title is required");
+            return;
+          }
+          if (!Description) {
+            setDescriptionError("Description is required");
+            return;
+          }
+          setLoader(true);
+          if (offline) {
+            createOfflineNote(
+              user.token,
+              Title,
+              newUser.id,
+              vendor.service.id,
+              Description
+            )
+              .then((res) => {
+                setLoader(false);
+                //console.log(res)
+                route.params.save();
+                navigation.goBack();
+              })
+              .catch((err) => {
+                setLoader(false);
+
+                console.warn(err.response.data.msg);
+              });
+          } else {
+            createOnlineNote(
+              user.token,
+              Title,
+              newUser.id,
+              vendor.service.id,
+              Description
+            )
+              .then((res) => {
+                setLoader(false);
+                navigation.goBack();
+                route.params.save();
+              })
+              .catch((err) => {
+                setLoader(false);
+
+                console.warn(err.response.data.msg);
+              });
+          }
+        }}
+        style={{
+          backgroundColor: "#4ADE80",
+          marginHorizontal: 20,
+          height: 35,
+          position: "absolute",
+          bottom: 20,
+          width: width - 40,
+        }}
+        title="Save"
+      />
+    </KeyboardAvoidingView>
+  );
+};
+const NoteCart = ({ data, onPress,color }) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
+  const assentColor = colors.getAssentColor();
+  const Colors = [
+    "#FEF5E6",
+    "#FDECE6",
+    "#E2E2E2",
+    "#F1E9FE",
+    "#D4FBFF",
+    "#FAFAFA",
+    "#DEF9E8",
+  ];
+  //console.log(data)
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        width: !data.time ? width / 2 - 40 : width - 40,
+        height: width / 2 - 80,
+        backgroundColor:color,
+        margin: 10,
+        padding: 20,
+      }}
+    >
+      <Text
+        numberOfLines={1}
+        style={{
+          fontFamily: "Poppins-SemiBold",
+          fontSize: 16,
+          color: textColor,
+        }}
+      >
+        {data.title}
+      </Text>
+      <Text
+        numberOfLines={3}
+        style={{
+          fontFamily: "Poppins-Medium",
+          fontSize: 14,
+          color: textColor,
+          marginTop: 10,
+        }}
+      >
+        {data.description}{" "}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+export const ViewNote = ({ navigation, route }) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
+  const assentColor = colors.getAssentColor();
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          paddingHorizontal: 20,
+          alignItems: "center",
+          borderColor: "#F1EFEF",
+          borderBottomWidth: 0.5,
+          paddingVertical: 5,
+        }}
+      >
+        <AntDesign
+          onPress={() => {
+            navigation.goBack();
+          }}
+          name="left"
+          size={24}
+          color="#C1D3F7"
+        />
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            color: "#C1D3F7",
+            marginLeft: 10,
+          }}
+        >
+          Note
+        </Text>
+      </View>
+      <ScrollView>
+
+      </ScrollView>
     </View>
   );
 };

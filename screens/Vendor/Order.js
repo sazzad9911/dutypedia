@@ -50,7 +50,7 @@ import VendorServiceList from "./VendorServiceList";
 import SelectDate from "./SelectDate";
 import OfflineProfile from "../OfflineProfile";
 import Notice from "../Notice";
-import Note, { AddNote } from "./Note";
+import Note, { AddNote, ViewNote } from "./Note";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -102,6 +102,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AddNote"
         component={AddNote}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ViewNote"
+        component={ViewNote}
       />
       <Stack.Screen
         options={{ headerShown: false }}

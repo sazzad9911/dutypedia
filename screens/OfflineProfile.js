@@ -258,7 +258,7 @@ export default function OfflineProfile({ navigation, route }) {
           }}
         >
           <TouchableOpacity onPress={()=>{
-            navigation.navigate("Note",{user:user})
+            navigation.navigate("Note",{user:user,offline:true})
           }}
             style={{
               flexDirection: "row",
@@ -411,7 +411,7 @@ export default function OfflineProfile({ navigation, route }) {
             </Text>
           </View>
         )}
-        <View style={{ height: 20 }} />
+       <View style={{ height: 100 }} /> 
       </ScrollView>
       <FAB
         color="#FFFFFF"

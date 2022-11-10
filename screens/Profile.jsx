@@ -62,7 +62,7 @@ import AccountBalance from "./Seller/AccountBalance";
 import OnlineUserProfile from "./Vendor/OnlineUserProfile";
 import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
-import Note, { AddNote } from "./Vendor/Note";
+import Note, { AddNote, ViewNote } from "./Vendor/Note";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -290,6 +290,11 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="AddNote"
         component={AddNote}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ViewNote"
+        component={ViewNote}
       />
       <Stack.Screen
         name="AccountBalance"
