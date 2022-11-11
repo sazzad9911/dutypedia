@@ -11,6 +11,8 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
+import Carousel from "react-native-snap-carousel";
+
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -48,10 +50,12 @@ export default function OfflineProfile({ navigation, route }) {
     },
   ]);
   const vendorOrders = useSelector((state) => state.vendorOrders);
-  const [Active, setActive] = React.useState("STARTING");
+  const [Active, setActive] = React.useState(0);
   const user = route.params.user;
   const [Orders, setOrders] = React.useState();
   const [AllOrders, setAllOrders] = React.useState();
+  const [SliderRef,setSliderRef]=React.useState()
+
   const dispatch = useDispatch();
 
   const ViewBox = ({ Icon, title }) => {
@@ -92,7 +96,7 @@ export default function OfflineProfile({ navigation, route }) {
   }, [vendorOrders]);
   React.useEffect(() => {
     if (AllOrders) {
-      const arr = AllOrders.filter((d) => d.type == Active);
+      const arr = AllOrders.filter((d) => d.type == initialState[Active].type);
       setOrders(arr);
     }
   }, [Active + AllOrders]);
@@ -339,7 +343,7 @@ export default function OfflineProfile({ navigation, route }) {
         </View>
         <View
           style={{
-            height: 35,
+            height: 30,
             backgroundColor: primaryColor,
             marginVertical: 20,
           }}
@@ -349,23 +353,31 @@ export default function OfflineProfile({ navigation, route }) {
               <TouchableOpacity
                 key={i}
                 onPress={() => {
-                  setActive(doc.type);
+                  if(SliderRef){
+                    setActive(i);
+                    SliderRef.snapToItem(i,true)
+                  }
                 }}
                 style={{
                   height: "100%",
                   width: 90,
-                  justifyContent: "center",
+                  paddingVertical:5,
                   alignItems: "center",
                 }}
               >
-                <Text>{doc.title}</Text>
-                {Active == doc.type && (
+                <Text
+                  style={{
+                    marginBottom: 5,
+                  }}
+                >
+                  {doc.title}
+                </Text>
+                {i == Active && (
                   <View
                     style={{
                       backgroundColor: "#AC5DCB",
                       height: 2,
                       width: "50%",
-                      marginTop: 5,
                     }}
                   ></View>
                 )}
@@ -373,45 +385,59 @@ export default function OfflineProfile({ navigation, route }) {
             ))}
           </ScrollView>
         </View>
-        <View>
-          {Orders &&
-            Orders.map((doc, i) => (
-              <OrderCart
-                onSelect={(e) => {
-                  //console.log(e)
-                  dispatch({ type: "ORDER_STATE", playload: e });
-                  //dispatch({ type: "ORDER_STATE", playload: e });
-                }}
-                onPress={() => {
-                  navigation.navigate("VendorOrderDetails", {
-                    data: doc,
-                  });
-                }}
-                data={doc}
-                key={i}
-              />
-            ))}
-        </View>
-        {Orders && Orders.length == 0 && (
-          <View
-            style={{
-              height: 400,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <SvgXml xml={emptyIcon} width="100" height="100" />
-            <Text
-              style={{
-                marginTop: 30,
-                color: textColor,
-              }}
-            >
-              No Order Found
-            </Text>
-          </View>
-        )}
-       <View style={{ height: 100 }} /> 
+        <Carousel
+          ref={(c) => {
+            setSliderRef(c)
+          }}
+          onSnapToItem={(i)=>setActive(i)}
+          data={initialState}
+          renderItem={(item,index) => (
+            <View>
+              <View key={index}>
+                {Orders &&
+                  Orders.map((doc, i) => (
+                    <OrderCart
+                      onSelect={(e) => {
+                        //console.log(e)
+                        dispatch({ type: "ORDER_STATE", playload: e });
+                        //dispatch({ type: "ORDER_STATE", playload: e });
+                      }}
+                      onPress={() => {
+                        navigation.navigate("VendorOrderDetails", {
+                          data: doc,
+                        });
+                      }}
+                      data={doc}
+                      key={i}
+                    />
+                  ))}
+              </View>
+              {Orders && Orders.length == 0 && (
+                <View
+                  style={{
+                    height: 400,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <SvgXml xml={emptyIcon} width="100" height="100" />
+                  <Text
+                    style={{
+                      marginTop: 30,
+                      color: textColor,
+                    }}
+                  >
+                    No Order Found
+                  </Text>
+                </View>
+              )}
+
+              <View style={{ height: 100 }} />
+            </View>
+          )}
+          sliderWidth={width}
+          itemWidth={width}
+        />
       </ScrollView>
       <FAB
         color="#FFFFFF"

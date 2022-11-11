@@ -11,8 +11,7 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
-import Swipeable from "react-native-gesture-handler/Swipeable";
-import { SwipeContainer } from "../components/Swipe";
+import Carousel from "react-native-snap-carousel";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -50,11 +49,12 @@ export default function UserProfile({ navigation, route }) {
     },
   ]);
   const vendorOrders = useSelector((state) => state.vendorOrders);
-  const [Active, setActive] = React.useState("STARTING");
+  const [Active, setActive] = React.useState(0);
   const user = route.params.user;
   const [Orders, setOrders] = React.useState();
   const [AllOrders, setAllOrders] = React.useState();
   const dispatch = useDispatch();
+  const [SliderRef,setSliderRef]=React.useState()
 
   const ViewBox = ({ Icon, title }) => {
     return (
@@ -94,415 +94,413 @@ export default function UserProfile({ navigation, route }) {
   }, [vendorOrders]);
   React.useEffect(() => {
     if (AllOrders) {
-      const arr = AllOrders.filter((d) => d.type == Active);
+      const arr = AllOrders.filter((d) => d.type == initialState[Active].type);
       setOrders(arr);
     }
   }, [Active + AllOrders]);
   return (
-    <SwipeContainer style={{flex:1}}
-      onSwipeLeft={() => {
-        console.log("okk");
-        if (initialState.indexOf(Active) - 1 >= 0) {
-          setActive(initialState[initialState.indexOf(Active) - 1].type);
-        }
-      }}
-      onSwipeRight={() => {
-        if (initialState.indexOf(Active) + 1 < initialState.length) {
-          setActive(initialState[initialState.indexOf(Active) + 1].type);
-        }
-      }}
-    >
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          backgroundColor: "#F2F2F6",
+        }}
+      >
+        <View
           style={{
-            backgroundColor: "#F2F2F6",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <View
             style={{
+              width: 90,
+              height: 90,
+              borderColor: textColor,
+              borderWidth: 1,
+              borderRadius: 45,
+              marginVertical: 10,
+              marginTop: 30,
               justifyContent: "center",
+              alignItems: "center",
+              overflow: "hidden",
+            }}
+          >
+            {user && user.profilePhoto ? (
+              <Image
+                style={{
+                  width: 90,
+                  height: 90,
+                  borderRadius: 45,
+                }}
+                source={{ uri: user.profilePhoto }}
+              />
+            ) : (
+              <FontAwesome name="user" size={70} color={assentColor} />
+            )}
+          </View>
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "Poppins-SemiBold",
+              color: textColor,
+            }}
+          >
+            {user ? `${user.firstName} ${user.lastName}` : `Invalid user`}
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+              }}
+            >
+              {" "}
+              {user ? `(${user.gender.toUpperCase()})` : `Invalid`}
+            </Text>
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: textColor,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            Last seen today 12:00 pm
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            marginVertical: 20,
+          }}
+        >
+          <ViewBox Icon={callIcon} title="Call" />
+          <ViewBox Icon={chatIcon} title="Chat" />
+          <ViewBox Icon={calenderIcon} title="Appointment" />
+          <ViewBox Icon={threeDot} title="" />
+        </View>
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            borderRadius: 10,
+            marginHorizontal: 20,
+            paddingLeft: 10,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          <View
+            style={{
+              borderBottomWidth: 0.5,
+              borderBottomColor: "#E2E2E2",
+              paddingBottom: 8,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+              }}
+            >
+              User Name
+            </Text>
+            <Text
+              style={{
+                color: "#6366F1",
+                fontFamily: "Poppins-Medium",
+                fontSize: 16,
+                marginTop: 3,
+              }}
+            >
+              @{user ? `${user.username}` : "invalid"}
+            </Text>
+          </View>
+          <View
+            style={{
+              borderBottomWidth: 0.5,
+              borderBottomColor: "#E2E2E2",
+              paddingBottom: 8,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+                marginTop: 10,
+              }}
+            >
+              Mobile
+            </Text>
+            <Text
+              style={{
+                color: "#6366F1",
+                fontFamily: "Poppins-Medium",
+                fontSize: 16,
+                marginTop: 3,
+              }}
+            >
+              N/A
+            </Text>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 10,
+                top: -30,
+                zIndex: 100,
+              }}
+            >
+              <Text>Edit</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              borderBottomWidth: 0,
+              borderBottomColor: "#E2E2E2",
+              paddingBottom: 5,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+                marginTop: 10,
+              }}
+            >
+              Email
+            </Text>
+            <Text
+              style={{
+                color: "#6366F1",
+                fontFamily: "Poppins-Medium",
+                fontSize: 16,
+                marginTop: 3,
+              }}
+            >
+              {user ? `${user.email}` : "invalid"}
+            </Text>
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 10,
+                top: -25,
+                zIndex: 100,
+              }}
+            >
+              <Text>Edit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            borderRadius: 10,
+            marginHorizontal: 20,
+            paddingLeft: 10,
+            paddingTop: 10,
+            paddingBottom: 10,
+            marginTop: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Note", { user: user });
+            }}
+            style={{
+              flexDirection: "row",
               alignItems: "center",
             }}
           >
             <View
               style={{
-                width: 90,
-                height: 90,
-                borderColor: textColor,
-                borderWidth: 1,
-                borderRadius: 45,
-                marginVertical: 10,
-                marginTop: 30,
+                backgroundColor: "#03D303",
+                width: 30,
+                height: 30,
                 justifyContent: "center",
                 alignItems: "center",
-                overflow: "hidden",
+                borderRadius: 5,
               }}
             >
-              {user && user.profilePhoto ? (
-                <Image
-                  style={{
-                    width: 90,
-                    height: 90,
-                    borderRadius: 45,
-                  }}
-                  source={{ uri: user.profilePhoto }}
-                />
-              ) : (
-                <FontAwesome name="user" size={70} color={assentColor} />
-              )}
+              <SvgXml xml={noteIcon} height="24" width={"24"} />
             </View>
-            <Text
+            <View
               style={{
-                fontSize: 18,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
+                marginLeft: 10,
+                borderColor: "#E2E2E2",
+                borderBottomWidth: 0.5,
+                flex: 1,
               }}
             >
-              {user ? `${user.firstName} ${user.lastName}` : `Invalid user`}
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 16,
                   fontFamily: "Poppins-Medium",
                   color: textColor,
+                  marginBottom: 6,
                 }}
               >
-                {" "}
-                {user ? `(${user.gender.toUpperCase()})` : `Invalid`}
+                Note
               </Text>
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                color: textColor,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              Last seen today 12:00 pm
-            </Text>
-          </View>
-          <View
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               flexDirection: "row",
-              paddingHorizontal: 20,
-              marginVertical: 20,
-            }}
-          >
-            <ViewBox Icon={callIcon} title="Call" />
-            <ViewBox Icon={chatIcon} title="Chat" />
-            <ViewBox Icon={calenderIcon} title="Appointment" />
-            <ViewBox Icon={threeDot} title="" />
-          </View>
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              borderRadius: 10,
-              marginHorizontal: 20,
-              paddingLeft: 10,
-              paddingTop: 10,
-              paddingBottom: 10,
+              alignItems: "center",
+              marginTop: 10,
             }}
           >
             <View
               style={{
-                borderBottomWidth: 0.5,
-                borderBottomColor: "#E2E2E2",
-                paddingBottom: 8,
+                backgroundColor: "#333333",
+                width: 30,
+                height: 30,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
               }}
             >
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
-                }}
-              >
-                User Name
-              </Text>
-              <Text
-                style={{
-                  color: "#6366F1",
-                  fontFamily: "Poppins-Medium",
-                  fontSize: 16,
-                  marginTop: 3,
-                }}
-              >
-                @{user ? `${user.username}` : "invalid"}
-              </Text>
+              <SvgXml xml={addressIcon} height="24" width={"24"} />
             </View>
             <View
               style={{
-                borderBottomWidth: 0.5,
-                borderBottomColor: "#E2E2E2",
-                paddingBottom: 8,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
-                  marginTop: 10,
-                }}
-              >
-                Mobile
-              </Text>
-              <Text
-                style={{
-                  color: "#6366F1",
-                  fontFamily: "Poppins-Medium",
-                  fontSize: 16,
-                  marginTop: 3,
-                }}
-              >
-                N/A
-              </Text>
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  right: 10,
-                  top: -30,
-                  zIndex: 100,
-                }}
-              >
-                <Text>Edit</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
+                marginLeft: 10,
+                borderColor: "#E2E2E2",
                 borderBottomWidth: 0,
-                borderBottomColor: "#E2E2E2",
-                paddingBottom: 5,
+                flex: 1,
               }}
             >
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 16,
                   fontFamily: "Poppins-Medium",
                   color: textColor,
-                  marginTop: 10,
+                  marginBottom: 6,
                 }}
               >
-                Email
+                Address
               </Text>
-              <Text
-                style={{
-                  color: "#6366F1",
-                  fontFamily: "Poppins-Medium",
-                  fontSize: 16,
-                  marginTop: 3,
-                }}
-              >
-                {user ? `${user.email}` : "invalid"}
-              </Text>
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  right: 10,
-                  top: -25,
-                  zIndex: 100,
-                }}
-              >
-                <Text>Edit</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              borderRadius: 10,
-              marginHorizontal: 20,
-              paddingLeft: 10,
-              paddingTop: 10,
-              paddingBottom: 10,
-              marginTop: 20,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Note", { user: user });
-              }}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "#03D303",
-                  width: 30,
-                  height: 30,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 5,
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            height: 30,
+            backgroundColor: primaryColor,
+            marginVertical: 20,
+          }}
+        >
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+            {initialState.map((doc, i) => (
+              <TouchableOpacity
+                key={i}
+                onPress={() => {
+                  if(SliderRef){
+                    setActive(i);
+                    SliderRef.snapToItem(i,true)
+                  }
                 }}
-              >
-                <SvgXml xml={noteIcon} height="24" width={"24"} />
-              </View>
-              <View
                 style={{
-                  marginLeft: 10,
-                  borderColor: "#E2E2E2",
-                  borderBottomWidth: 0.5,
-                  flex: 1,
+                  height: "100%",
+                  width: 90,
+                  paddingVertical:5,
+                  alignItems: "center",
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Medium",
-                    color: textColor,
-                    marginBottom: 6,
+                    marginBottom: 5,
                   }}
                 >
-                  Note
+                  {doc.title}
                 </Text>
+                {i == Active && (
+                  <View
+                    style={{
+                      backgroundColor: "#AC5DCB",
+                      height: 2,
+                      width: "50%",
+                    }}
+                  ></View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+        <Carousel
+          ref={(c) => {
+            setSliderRef(c)
+          }}
+          onSnapToItem={(i)=>setActive(i)}
+          data={initialState}
+          renderItem={(item,index) => (
+            <View>
+              <View key={index}>
+                {Orders &&
+                  Orders.map((doc, i) => (
+                    <OrderCart
+                      onSelect={(e) => {
+                        //console.log(e)
+                        dispatch({ type: "ORDER_STATE", playload: e });
+                        //dispatch({ type: "ORDER_STATE", playload: e });
+                      }}
+                      onPress={() => {
+                        navigation.navigate("VendorOrderDetails", {
+                          data: doc,
+                        });
+                      }}
+                      data={doc}
+                      key={i}
+                    />
+                  ))}
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "#333333",
-                  width: 30,
-                  height: 30,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 5,
-                }}
-              >
-                <SvgXml xml={addressIcon} height="24" width={"24"} />
-              </View>
-              <View
-                style={{
-                  marginLeft: 10,
-                  borderColor: "#E2E2E2",
-                  borderBottomWidth: 0,
-                  flex: 1,
-                }}
-              >
-                <Text
+              {Orders && Orders.length == 0 && (
+                <View
                   style={{
-                    fontSize: 16,
-                    fontFamily: "Poppins-Medium",
-                    color: textColor,
-                    marginBottom: 6,
-                  }}
-                >
-                  Address
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              height: 40,
-              backgroundColor: primaryColor,
-              marginVertical: 20,
-            }}
-          >
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-            >
-              {initialState.map((doc, i) => (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() => {
-                    setActive(doc.type);
-                  }}
-                  style={{
-                    height: "100%",
-                    width: 90,
+                    height: 400,
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
+                  <SvgXml xml={emptyIcon} width="100" height="100" />
                   <Text
                     style={{
-                      marginBottom: 5,
+                      marginTop: 30,
+                      color: textColor,
                     }}
                   >
-                    {doc.title}
+                    No Order Found
                   </Text>
-                  {Active == doc.type && (
-                    <View
-                      style={{
-                        backgroundColor: "#AC5DCB",
-                        height: 2,
-                        width: "50%",
-                      }}
-                    ></View>
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                </View>
+              )}
 
-          <View>
-            {Orders &&
-              Orders.map((doc, i) => (
-                <OrderCart
-                  onSelect={(e) => {
-                    //console.log(e)
-                    dispatch({ type: "ORDER_STATE", playload: e });
-                    //dispatch({ type: "ORDER_STATE", playload: e });
-                  }}
-                  onPress={() => {
-                    navigation.navigate("VendorOrderDetails", {
-                      data: doc,
-                    });
-                  }}
-                  data={doc}
-                  key={i}
-                />
-              ))}
-          </View>
-          {Orders && Orders.length == 0 && (
-            <View
-              style={{
-                height: 400,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <SvgXml xml={emptyIcon} width="100" height="100" />
-              <Text
-                style={{
-                  marginTop: 30,
-                  color: textColor,
-                }}
-              >
-                No Order Found
-              </Text>
+              <View style={{ height: 100 }} />
             </View>
           )}
-
-          <View style={{ height: 100 }} />
-        </ScrollView>
-        <FAB
-          color="#FFFFFF"
-          icon="plus"
-          style={{
-            position: "absolute",
-            borderRadius: 30,
-            backgroundColor: "#43B05C",
-            bottom: 20,
-            right: 20,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => {}}
+          sliderWidth={width}
+          itemWidth={width}
         />
-      </View>
-    </SwipeContainer>
+      </ScrollView>
+      <FAB
+        color="#FFFFFF"
+        icon="plus"
+        style={{
+          position: "absolute",
+          borderRadius: 30,
+          backgroundColor: "#43B05C",
+          bottom: 20,
+          right: 20,
+          width: 50,
+          height: 50,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => {}}
+      />
+    </View>
   );
 }
 const emptyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="143.873" height="144" viewBox="0 0 143.873 144">
