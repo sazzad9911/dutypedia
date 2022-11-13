@@ -974,7 +974,7 @@ const OtherProfile = (props) => {
               </Text>
               <Button
                 onPress={() => {
-                  navigation.navigate("OfferNow", { data: Data });
+                  navigation.navigate("OfferNow", { data: Data,type:"STARTING" });
                 }}
                 style={{
                   borderRadius: 5,
@@ -1352,6 +1352,7 @@ const OtherProfile = (props) => {
                       navigation.navigate("OfferNow", {
                         data: Data,
                         gigs: Gigs,
+                        type:"ONETIME"
                       });
                     }}
                     style={{

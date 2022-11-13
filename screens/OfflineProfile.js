@@ -12,6 +12,7 @@ import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
 import Carousel from "react-native-snap-carousel";
+import { TabBar } from "./UserProfile";
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -55,6 +56,7 @@ export default function OfflineProfile({ navigation, route }) {
   const [Orders, setOrders] = React.useState();
   const [AllOrders, setAllOrders] = React.useState();
   const [SliderRef,setSliderRef]=React.useState()
+  const ref=React.useRef()
 
   const dispatch = useDispatch();
 
@@ -341,103 +343,10 @@ export default function OfflineProfile({ navigation, route }) {
             </View>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            height: 30,
-            backgroundColor: primaryColor,
-            marginVertical: 20,
-          }}
-        >
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-            {initialState.map((doc, i) => (
-              <TouchableOpacity
-                key={i}
-                onPress={() => {
-                  if(SliderRef){
-                    setActive(i);
-                    SliderRef.snapToItem(i,true)
-                  }
-                }}
-                style={{
-                  height: "100%",
-                  width: 90,
-                  paddingVertical:5,
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    marginBottom: 5,
-                  }}
-                >
-                  {doc.title}
-                </Text>
-                {i == Active && (
-                  <View
-                    style={{
-                      backgroundColor: "#AC5DCB",
-                      height: 2,
-                      width: "50%",
-                    }}
-                  ></View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+        <View style={{height:20}}/>
+        <View style={{ minHeight: 500 }}>
+          <TabBar userId={user.id} />
         </View>
-        <Carousel
-          ref={(c) => {
-            setSliderRef(c)
-          }}
-          onSnapToItem={(i)=>setActive(i)}
-          data={initialState}
-          renderItem={(item,index) => (
-            <View>
-              <View key={index}>
-                {Orders &&
-                  Orders.map((doc, i) => (
-                    <OrderCart
-                      onSelect={(e) => {
-                        //console.log(e)
-                        dispatch({ type: "ORDER_STATE", playload: e });
-                        //dispatch({ type: "ORDER_STATE", playload: e });
-                      }}
-                      onPress={() => {
-                        navigation.navigate("VendorOrderDetails", {
-                          data: doc,
-                        });
-                      }}
-                      data={doc}
-                      key={i}
-                    />
-                  ))}
-              </View>
-              {Orders && Orders.length == 0 && (
-                <View
-                  style={{
-                    height: 400,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml xml={emptyIcon} width="100" height="100" />
-                  <Text
-                    style={{
-                      marginTop: 30,
-                      color: textColor,
-                    }}
-                  >
-                    No Order Found
-                  </Text>
-                </View>
-              )}
-
-              <View style={{ height: 100 }} />
-            </View>
-          )}
-          sliderWidth={width}
-          itemWidth={width}
-        />
       </ScrollView>
       <FAB
         color="#FFFFFF"

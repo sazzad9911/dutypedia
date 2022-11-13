@@ -37,7 +37,18 @@ export  const createOfflineNote=async(token,title,memberId,serviceId,description
     return res
 }
 export const deleteNote=async(token,id)=>{
-    const res=axios.put(`${url}/server/notes/delete/:noteId=${id}`,{
+    const res=axios.delete(`${url}/server/notes/delete/${id}`,{
+        headers: { Authorization: `Bearer ${token}`}
+    })
+    return res
+}
+export const setNoteNotification=async(token,date,time,serviceId,noteId)=>{
+    const res=axios.post(`${url}/server/notes/set-notification`,{
+        date:date,
+        time:time,
+        serviceId:serviceId,
+        noteId:noteId
+    },{
         headers: { Authorization: `Bearer ${token}`}
     })
     return res

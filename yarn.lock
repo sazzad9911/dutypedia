@@ -3634,6 +3634,11 @@ expo-modules-core@0.11.8:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
+expo-network@~4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-4.3.0.tgz#4bad33aed3bdde835062926c488843aab6a559b3"
+  integrity sha512-Rcw6jUXajbS1esNVbk9jRMQfOTouoxegsj7HkZyKe1oTS12+VuhbiKmR31nBEhpfqE4WeQ21LBvKmKvZwl130Q==
+
 expo-permissions@~13.2.0:
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-13.2.0.tgz#9306f1ae3c49dbe9157f948983486ccb19fc2989"
@@ -6270,6 +6275,11 @@ react-native-axios@^0.17.1:
   integrity sha512-HQO5RB6+SYMYX6ckXPkzGtIC2H7LVdRrXhB6IVrUNj+QpJH9rWVDeKM51juvvhPBQtXJjB1vORWPrQhvnYOvMA==
   dependencies:
     follow-redirects "0.0.7"
+
+react-native-background-fetch@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.1.5.tgz#1ada72e5ea4e77539338a633f5eca5f8fd6a7a65"
+  integrity sha512-fi1fE59lw2pMkhy8O2svpo21AkaUnkuP8/8Ru2FrzJ+oJ9Qe8uh9Lh96caN75Bax06sLmR4WkhP0cRHcUp/wpQ==
 
 react-native-codegen@^0.0.7:
   version "0.0.7"

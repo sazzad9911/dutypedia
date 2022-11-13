@@ -37,12 +37,12 @@ function Cart1(props) {
       style={{
         width: 250,
         height: 50,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: assentColor,
         shadowOffset: {
           width: 2,
           height: 2,
         },
-        shadowOpacity: .7,
+        shadowOpacity: .1,
         shadowRadius: 6,
         elevation: 5,
         backgroundColor: primaryColor,

@@ -13,7 +13,7 @@ import {
   createOrder,
   createVendorOrder,
   getLastOrder,
-  getOrders
+  getOrders,
 } from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
@@ -73,7 +73,7 @@ const AcceptOrder = (props) => {
   const newVendor = params.vendor;
   const data = params.data;
   const userId = params.userId;
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   //console.log(userId)
   //console.log(data)
 
@@ -204,17 +204,16 @@ const AcceptOrder = (props) => {
         }
       )
         .then((res) => {
-          getOrders(user.token, "vendor", vendor.service.id)
-            .then((ress) => {
-              if (ress.data) {
-                dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-                setLoader(false);
-                navigation.navigate(data.type, { reload: res });
-                //console.log(res.data.orders);
-                //console.log(res.data.orders[0].service.serviceCenterName);
-              }
-            })
-            
+          getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
+            if (ress.data) {
+              dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
+              dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+              setLoader(false);
+              navigation.navigate(data.type, { reload: res });
+              //console.log(res.data.orders);
+              //console.log(res.data.orders[0].service.serviceCenterName);
+            }
+          });
         })
         .catch((err) => {
           setLoader(false);
@@ -240,8 +239,16 @@ const AcceptOrder = (props) => {
       otherServiceType: OtherService,
     })
       .then((response) => {
-        setLoader(false);
-        navigation.navigate("VendorOrder", { reload: response });
+        getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
+          if (ress.data) {
+            dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
+            dispatch({ type: "SET_ORDER_SOCKET", playload: ress.data });
+            setLoader(false);
+            navigation.navigate("VendorOrder", { reload: response });
+            //console.log(res.data.orders);
+            //console.log(res.data.orders[0].service.serviceCenterName);
+          }
+        });
       })
       .catch((error) => {
         setLoader(false);

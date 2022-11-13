@@ -56,9 +56,9 @@ const TabRoute = () => {
   const interestCategory = useSelector((state) => state.interestCategory);
   const vendor = useSelector((state) => state.vendor);
   const [load, setLoad] = React.useState(false);
-  const [reload,setReload]=React.useState(false);
-  const [VendorOrders,setVendorOrders]=React.useState()
-  const [UserOrders,setUserOrders]=React.useState()
+  const [reload, setReload] = React.useState(false);
+  const [VendorOrders, setVendorOrders] = React.useState();
+  const [UserOrders, setUserOrders] = React.useState();
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
@@ -106,48 +106,24 @@ const TabRoute = () => {
   }, []);
   React.useEffect(() => {
     if (user) {
-      getOrders(user.token, "user")
-        .then((res) => {
-          if (res.data) {
-            dispatch({type:"USER_ORDERS",playload:res.data.orders})
-            dispatch({type:"SET_ORDER_SOCKET",playload:res.data.orders})
-            setUserOrders(res.data.orders)
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-          setUserOrders(err.response.data)
-        });
+      getNewOrderUser()
+    } else{
+      setUserOrders("dfrgrg")
     }
-  }, [user+reload]);
+  }, [user + reload]);
   React.useEffect(() => {
     if (user && vendor && vendor.service) {
-      //setLoader(true);
-      //console.log(vendor.service.id);
-      getOrders(user.token, "vendor", vendor.service.id)
-        .then((res) => {
-          if (res.data) {
-            dispatch({type:"VENDOR_ORDERS",playload:res.data.orders})
-            dispatch({type:"SET_ORDER_SOCKET",playload:res.data.orders})
-            //console.log(res.data.orders);
-            //console.log(res.data.orders[0].service.serviceCenterName);
-            setVendorOrders(res.data.orders)
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-          setVendorOrders(err.response.data)
-        });
-    }else{
-      setVendorOrders("artyrw")
+      getNewOrder()
+    } else{
+      setVendorOrders("fdfdfdfd")
     }
-
-  }, [user+ vendor+reload]);
+  }, [user + vendor + reload]);
   const getNewOrder = async () => {
     try {
       const res = await getOrders(user.token, "vendor", vendor.service.id);
       dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
       dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      setVendorOrders(res.data);
       //const arr = res.data.orders.filter((d) => d.type == route.name);
       //setAllOrders(arr);
       //setNewOrders(arr);
@@ -158,8 +134,9 @@ const TabRoute = () => {
   const getNewOrderUser = async () => {
     try {
       const res = await getOrders(user.token, "user");
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
       dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      setVendorOrders(res.data);
       //const arr = res.data.orders.filter((d) => d.type == route.name);
       //setAllOrders(arr);
       //setOrders(arr);
@@ -169,16 +146,17 @@ const TabRoute = () => {
   };
   React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      
-      getNewOrder()
-      getNewOrderUser()
+      setReload((val) => !val);
+      //getNewOrder()
+      //getNewOrderUser()
     });
     socket.on("updateOrder", (e) => {
-      getNewOrder()
-      getNewOrderUser()
+      setReload((val) => !val);
+      //getNewOrder()
+      //getNewOrderUser()
     });
   }, []);
-  if (!user || !load ||!VendorOrders  ||!UserOrders) {
+  if (!user || !load) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading.....</Text>

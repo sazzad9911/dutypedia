@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
-import { textColor, primaryColor } from "./../assets/colors";
+import { textColor, primaryColor, assentColor } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -12,12 +12,12 @@ function Seller(props) {
       style={{
         width: 250,
         height: 50,
-        shadowColor: Platform.OS =="ios"?"#ebebeb":"#DDDDDD",
+        shadowColor: assentColor,
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: 1,
+        shadowOpacity: .1,
         shadowRadius: 6,
         elevation: 5,
         backgroundColor: primaryColor,

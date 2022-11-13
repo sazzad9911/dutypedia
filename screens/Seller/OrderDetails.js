@@ -88,9 +88,10 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [Facilities, setFacilities] = React.useState([]);
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
-  const orderSocket=useSelector(state=>state.orderSocket)
-  const userOrders=useSelector(state=>state.userOrders)
-  const dispatch=useDispatch()
+  const orderSocket = useSelector((state) => state.orderSocket);
+  const userOrders = useSelector((state) => state.userOrders);
+  const dispatch = useDispatch();
+  const [Refresh, setRefresh] = React.useState(false);
 
   React.useEffect(() => {
     //console.log(user.token);
@@ -129,8 +130,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     //setLoader(false);
     try {
       const res = await getOrders(user.token, "user");
-      dispatch({type:"USER_ORDERS",playload:res.data.orders})
-      dispatch({type:"SET_ORDER_SOCKET",playload:'uiiiiii'})
+      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
       let arr = res.data.orders.filter((order) => order.id == data.id);
       setData(arr[0]);
       //route.params.onRefresh();
@@ -139,13 +140,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       console.warn(e.message);
     }
   };
-  React.useState(()=>{
-    if(data){
-      let  arr=userOrders.filter(d=>d.id==data.id);
-      setData(arr[0])
+  React.useState(() => {
+    console.log("user order details")
+    if (data) {
+      let arr = userOrders.filter((d) => d.id == data.id);
+      setData(arr[0]);
     }
-  },[orderSocket])
-
+  }, [userOrders[userOrders.indexOf(data)]]);
 
   const stringDate = (d) => {
     const Months = [
@@ -168,13 +169,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
-  React.useEffect(()=>{
-    socket.on("updateOrder",e=>{
-      if(e.order.id==data.id){
-        loadData()
-      }
-    })
-  },[])
+  React.useEffect(() => {
+    socket.on("updateOrder", (e) => {
+      loadData()
+    });
+  }, []);
+  
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -282,11 +282,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 marginTop: 20,
               }}
             >
-              {
-                initialState.filter((d) =>
-                  d.type.match(data.type)
-                )[0].title
-              }{" "}
+              {initialState.filter((d) => d.type.match(data.type))[0].title}{" "}
               Service
             </Text>
           )}
@@ -563,7 +559,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       </View>
       {data.requestedDeliveryDate &&
         data.status != "CANCELLED" &&
-        data.status != "DELIVERED" && (
+        data.status != "DELIVERED" && 
+          data.status!="COMPLETED"&&
+          data.status!="REFUNDED"&& (
           <View
             style={{
               marginHorizontal: 20,
@@ -705,7 +703,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data.status != "CANCELLED" &&
           data.status != "DELIVERED" &&
           data.status != "COMPLETED" &&
-          !data.refundRequestByUser && (
+          (!data.refundRequestByUser) && (
             <Button
               onPress={() => {
                 Alert.alert("Hey!", "Are you want to cancel this order?", [

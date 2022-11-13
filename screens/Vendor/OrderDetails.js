@@ -21,6 +21,7 @@ import {
   getOrders,
   requestForTime,
   orderRefound,
+  getMemberId,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -103,6 +104,8 @@ const OrderDetails = ({ navigation, route }) => {
   //console.log(data.type);
   const orderSocket = useSelector((state) => state.orderSocket);
   const vendorOrders=useSelector(state=>state.vendorOrders);
+  const [Refresh,setRefresh]=React.useState(false)
+  const [MemberId,setMemberId]=React.useState()
 
   const stringDate = (d) => {
     const Months = [
@@ -203,6 +206,16 @@ const OrderDetails = ({ navigation, route }) => {
     });
   };
   React.useState(()=>{
+    //console.log("------")
+    //console.warn(data.user.id)
+   //console.log(vendor.service.id)
+   getMemberId(user.token,vendor.service.id,data.user.id).
+   then(res=>{
+    setMemberId(res.data.member)
+    //console.log(res.data)
+   }).catch(err=>{
+    console.log(err.response.data.msg)
+   })
     if(data){
       let  arr=vendorOrders.filter(d=>d.id==data.id);
       setData(arr[0])
@@ -210,10 +223,8 @@ const OrderDetails = ({ navigation, route }) => {
   },[orderSocket])
   React.useEffect(()=>{
     socket.on("updateOrder",e=>{
-      if(e.order.id==data.id){
-        loadData()
-        //setData(e.order)
-      }
+      loadData()
+      
     })
   },[])
   const loadData = async () => {
@@ -221,7 +232,7 @@ const OrderDetails = ({ navigation, route }) => {
     try {
       const res = await getOrders(user.token, "vendor", vendor.service.id);
       dispatch({type:"VENDOR_ORDERS",playload:res.data.orders})
-      dispatch({type:"SET_ORDER_SOCKET",playload:'hsjkkaksd'})
+      dispatch({type:"SET_ORDER_SOCKET",playload:res})
       let arr = res.data.orders.filter((order) => order.id == data.id);
       setData(arr[0]);
       //route.params.onRefresh();
@@ -251,7 +262,7 @@ const OrderDetails = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("UserProfile", {
-              user: data.user,
+              user:MemberId?MemberId: data,
             });
           }}
           style={{
@@ -706,7 +717,12 @@ const OrderDetails = ({ navigation, route }) => {
       <View style={{ marginHorizontal: 20 }}>
         {data.status == "PROCESSING" &&
           !data.requestedDeliveryDate &&
-          !data.refundRequestByUser && (
+          !data.refundRequestByUser&& 
+          !data.requestedDeliveryDate&&
+           data.status!="DELIVERED"  
+          &&data.status!="COMPLETED"&&
+          data.status!="REFUNDED"&&
+          data.status != "CANCELLED" && (
             <Text
               style={{
                 fontSize: 16,
@@ -718,7 +734,12 @@ const OrderDetails = ({ navigation, route }) => {
           )}
         {data.status == "PROCESSING" &&
           !data.requestedDeliveryDate &&
-          !data.refundRequestByUser && (
+          !data.refundRequestByUser && 
+          !data.requestedDeliveryDate&&
+          data.status!="DELIVERED"  
+          &&data.status!="COMPLETED"&&
+          data.status!="REFUNDED"&&
+          data.status != "CANCELLED" && (
             <Button
               onPress={() => {
                 try {
@@ -749,7 +770,8 @@ const OrderDetails = ({ navigation, route }) => {
       </View>
       {data.refundRequestByUser &&
         data.status != "DELIVERED" &&
-        data.status != "REFUNDED" && (
+        data.status != "REFUNDED"&&
+        data.status != "CANCELLED" && (
           <View style={{ marginHorizontal: 20 }}>
             <Text
               style={{
@@ -843,7 +865,9 @@ const OrderDetails = ({ navigation, route }) => {
             title="Accept"
           />
         )}
-        {data.status == "PROCESSING" && !data.refundRequestByUser && (
+        {data.status == "PROCESSING"&&
+         !data.requestedDeliveryDate&&
+         !data.refundRequestByUser&& (
           <Button
             onPress={() => {
               setRefound(true);
@@ -864,7 +888,8 @@ const OrderDetails = ({ navigation, route }) => {
         {data.status != "CANCELLED" &&
           data.status != "DELIVERED" &&
           data.status != "REFUNDED" &&
-          data.status != "COMPLETED" && (
+          data.status != "COMPLETED"&&
+          !data.refundRequestByUser && (
             <Button
               onPress={() => {
                 Alert.alert("Hey!", "Are you want to cancel this order?", [
@@ -905,7 +930,12 @@ const OrderDetails = ({ navigation, route }) => {
             />
           )}
       </View>
-      {data && data.requestedDeliveryDate && (
+      {data && data.requestedDeliveryDate &&
+      data.status!="DELIVERED"&&
+      data.status != "COMPLETED"&&
+      data.status != "REFUNDED"&&
+      data.status != "CANCELLED"&&
+      !data.refundRequestByUser && (
         <Text
           style={{
             fontSize: 16,

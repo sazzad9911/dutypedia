@@ -1,4 +1,5 @@
 import React from "react";
+import { Entypo } from "@expo/vector-icons";
 import {
   Dimensions,
   ScrollView,
@@ -6,6 +7,9 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  Modal,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { FAB } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
@@ -19,10 +23,14 @@ import { getOfflineMembers } from "../../Class/member";
 import {
   createOfflineNote,
   createOnlineNote,
+  deleteNote,
   getOfflineNotes,
   getOnlineNotes,
+  setNoteNotification,
 } from "../../Class/notes";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { allTimeConverter, dateConverter, timeConverter } from "../../action";
 const { width, height } = Dimensions.get("window");
 
 export default function Note({ navigation, route }) {
@@ -31,14 +39,14 @@ export default function Note({ navigation, route }) {
   const textColor = colors.getTextColor();
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
-  const [Data, setData] = React.useState([]);
+  const [Data, setData] = React.useState();
   const offline = route.params && route.params.offline ? true : false;
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const newUser = route.params.user;
   const [Reload, setReload] = React.useState(false);
 
-  //console.log(user.token)
+ // console.log(newUser)
   React.useEffect(() => {
     if (user && vendor) {
       if (offline) {
@@ -66,6 +74,35 @@ export default function Note({ navigation, route }) {
   const save = () => {
     setReload((val) => !val);
     //navigation.goBack();
+  };
+  const Delete = (id) => {
+    try {
+      deleteNote(user.token, id)
+        .then((res) => {
+          setReload((val) => !val);
+        })
+        .catch((err) => {
+          Alert.alert("Opps!", err.response.data);
+        });
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  const notify = (id, date, time) => {
+    setNoteNotification(
+      user.token,
+      dateConverter(date),
+      allTimeConverter(time),
+      vendor.service.id,
+      id
+    )
+      .then((res) => {
+        Alert.alert("Success", "Alert set successful");
+        setReload((val) => !val);
+      })
+      .catch((err) => {
+        Alert.alert("Opps!", err.response.data.msg);
+      });
   };
   return (
     <View style={{ flex: 1 }}>
@@ -98,7 +135,7 @@ export default function Note({ navigation, route }) {
           Note
         </Text>
       </View>
-      {Data && Data.length > 0 ? (
+      {Data ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <SvgXml style={{ marginTop: 30 }} xml={svgIcon} width="70%" />
@@ -109,6 +146,7 @@ export default function Note({ navigation, route }) {
                 fontSize: 16,
                 color: textColor,
                 marginTop: 30,
+                textAlign: "center",
               }}
             >
               No Note Found
@@ -121,11 +159,39 @@ export default function Note({ navigation, route }) {
               marginHorizontal: 20,
             }}
           >
-            {Data.map((doc, i) => (
-              <NoteCart onPress={()=>{
-                navigation.navigate("ViewNote",{data:doc})
-              }} key={i} data={doc} />
-            ))}
+            {Data.map((doc, i) =>
+              doc.date && (
+                <NoteCart
+                  onPress={(color) => {
+                    navigation.navigate("ViewNote", {
+                      data: doc,
+                      color: color,
+                      reload: Delete,
+                      notify: notify,
+                    });
+                  }}
+                  key={i}
+                  data={doc}
+                />
+              ) 
+            )}
+            {Data.map(
+              (doc, i) =>
+                !doc.date && (
+                  <NoteCart
+                    onPress={(color) => {
+                      navigation.navigate("ViewNote", {
+                        data: doc,
+                        color: color,
+                        reload: Delete,
+                        notify: notify,
+                      });
+                    }}
+                    key={i}
+                    data={doc}
+                  />
+                )
+            )}
           </View>
         </ScrollView>
       ) : (
@@ -497,6 +563,7 @@ export const AddNote = ({ navigation, route }) => {
                 console.warn(err.response.data.msg);
               });
           } else {
+            //console.log(newUser)
             createOnlineNote(
               user.token,
               Title,
@@ -511,7 +578,7 @@ export const AddNote = ({ navigation, route }) => {
               })
               .catch((err) => {
                 setLoader(false);
-
+                Alert.alert("Hey!", "To create note you need to add member first");
                 console.warn(err.response.data.msg);
               });
           }
@@ -529,7 +596,7 @@ export const AddNote = ({ navigation, route }) => {
     </KeyboardAvoidingView>
   );
 };
-const NoteCart = ({ data, onPress,color }) => {
+const NoteCart = ({ data, onPress, color }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const textColor = colors.getTextColor();
@@ -544,28 +611,40 @@ const NoteCart = ({ data, onPress,color }) => {
     "#FAFAFA",
     "#DEF9E8",
   ];
+  const newColor = Colors[Math.floor(Math.random() * 7)];
   //console.log(data)
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => {
+        onPress(newColor);
+      }}
       style={{
         width: !data.time ? width / 2 - 40 : width - 40,
         height: width / 2 - 80,
-        backgroundColor:color,
+        backgroundColor: newColor,
         margin: 10,
         padding: 20,
       }}
     >
-      <Text
-        numberOfLines={1}
+      <View
         style={{
-          fontFamily: "Poppins-SemiBold",
-          fontSize: 16,
-          color: textColor,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        {data.title}
-      </Text>
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: "Poppins-SemiBold",
+            fontSize: 16,
+            color: textColor,
+          }}
+        >
+          {data.title}
+        </Text>
+        {data.date && <SvgXml xml={notificationIcon} height="18" width="18" />}
+      </View>
       <Text
         numberOfLines={3}
         style={{
@@ -586,6 +665,20 @@ export const ViewNote = ({ navigation, route }) => {
   const textColor = colors.getTextColor();
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const color = route.params && route.params.color ? route.params.color : null;
+  const data = route.params && route.params.data ? route.params.data : null;
+  const [Visible, setVisible] = React.useState(false);
+  const user = useSelector((state) => state.user);
+  const reload = route.params.reload ? route.params.reload : null;
+  const [ModalVisible, setModalVisible] = React.useState(false);
+  const [NewDate, setNewDate] = React.useState();
+  const [NewTime, setNewTime] = React.useState();
+  const [Error, setError] = React.useState();
+  const [DateOpen, setDateOpen] = React.useState(false);
+  const [TimeOpen, setTimeOpen] = React.useState(false);
+  const vendor = useSelector((state) => state.vendor);
+  const notify = route.params.notify ? route.params.notify : null;
 
   return (
     <View style={{ flex: 1 }}>
@@ -597,30 +690,312 @@ export const ViewNote = ({ navigation, route }) => {
           borderColor: "#F1EFEF",
           borderBottomWidth: 0.5,
           paddingVertical: 5,
+          justifyContent: "space-between",
         }}
       >
-        <AntDesign
-          onPress={() => {
-            navigation.goBack();
-          }}
-          name="left"
-          size={24}
-          color="#C1D3F7"
-        />
-        <Text
+        <View
           style={{
-            fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            color: "#C1D3F7",
-            marginLeft: 10,
+            flexDirection: "row",
           }}
         >
-          Note
-        </Text>
+          <AntDesign
+            onPress={() => {
+              navigation.goBack();
+            }}
+            name="left"
+            size={24}
+            color="#C1D3F7"
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Poppins-Medium",
+              color: "#C1D3F7",
+              marginLeft: 10,
+            }}
+          >
+            Note
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
+            <SvgXml xml={notificationIcon} height="20" width="20" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(true);
+            }}
+            style={{
+              marginLeft: 20,
+            }}
+          >
+            <SvgXml xml={deleteIcon} height="20" width="20" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <ScrollView>
-
+      <ScrollView style={{ backgroundColor: color }}>
+        <Text
+          style={{
+            marginHorizontal: 20,
+            marginVertical: 20,
+            fontFamily: "Poppins-SemiBold",
+            color: textColor,
+            fontSize: 18,
+          }}
+        >
+          {data.title}
+        </Text>
+        <Text
+          style={{
+            marginHorizontal: 20,
+            marginBottom: 20,
+            fontFamily: "Poppins-Medium",
+            color: textColor,
+            fontSize: 16,
+          }}
+        >
+          {data.description}
+        </Text>
       </ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setVisible(!Visible)}
+        visible={Visible}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0, 0, 0, 0.265)",
+            paddingTop: "40%",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              width: width - 60,
+              backgroundColor: primaryColor,
+              height: 130,
+              borderRadius: 15,
+              padding: 30,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              Are you sure want to delete this note
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginTop: 20,
+              }}
+            >
+              <IconButton
+                onPress={() => setVisible(false)}
+                style={{
+                  borderWidth: 0,
+                  color: textColor,
+                }}
+                title={"Cancel"}
+              />
+              <IconButton
+                onPress={() => {
+                  setVisible(false);
+                  navigation.goBack();
+                  if (reload) {
+                    reload(data.id);
+                  }
+                }}
+                style={{
+                  borderWidth: 0,
+                  color: "red",
+                }}
+                title={"Delete"}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setModalVisible(!ModalVisible)}
+        visible={ModalVisible}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0, 0, 0, 0.265)",
+            paddingTop: "40%",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              width: width - 60,
+              backgroundColor: primaryColor,
+              borderRadius: 15,
+              padding: 30,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Set Notification
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(!ModalVisible);
+                }}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  borderColor: "#4ADE80",
+                  borderWidth: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Entypo name="cross" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
+            <IconButton
+              onPress={() => {
+                setDateOpen(true);
+              }}
+              style={{
+                justifyContent: "space-between",
+                width: 180,
+                marginTop: 20,
+              }}
+              Icon={() => <SvgXml xml={calender} height="20" width={"20"} />}
+              title={NewDate ? dateConverter(NewDate) : "yyyy/mm/dd"}
+            />
+            <DateTimePickerModal
+              date={NewDate ? NewDate : new Date()}
+              buttonTextColorIOS={backgroundColor}
+              isVisible={DateOpen}
+              mode="date"
+              onConfirm={(e) => {
+                if (new Date() > e) {
+                  setError(`Opening date can't be earlier from today.`);
+                  setDateOpen(false);
+                  setNewDate(null);
+                  return;
+                }
+                setError(null);
+                setNewDate(e);
+                setDateOpen(false);
+              }}
+              onCancel={() => {
+                setDateOpen(false);
+              }}
+            />
+            <IconButton
+              onPress={() => {
+                setTimeOpen(true);
+              }}
+              style={{
+                justifyContent: "space-between",
+                width: 120,
+                marginTop: 20,
+              }}
+              Icon={() => <SvgXml xml={clock} height="20" width={"20"} />}
+              title={NewTime ? timeConverter(NewTime) : "--:--"}
+            />
+            <DateTimePickerModal
+              date={NewTime ? NewTime : new Date()}
+              buttonTextColorIOS={backgroundColor}
+              isVisible={TimeOpen}
+              mode="time"
+              onConfirm={(e) => {
+                setError(null);
+                setNewTime(e);
+                setTimeOpen(false);
+              }}
+              onCancel={() => {
+                setTimeOpen(false);
+              }}
+            />
+            {Error && (
+              <Text
+                style={{
+                  color: "red",
+                  marginTop: 10,
+                }}
+              >
+                {Error}
+              </Text>
+            )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                marginTop: 20,
+              }}
+            >
+              <IconButton
+                onPress={() => {
+                  notify(data.id, NewDate, NewTime);
+                  setModalVisible(false);
+                }}
+                style={{
+                  borderWidth: 0,
+                  color: textColor,
+                  backgroundColor: "#4ADE80",
+                  width: 100,
+                }}
+                title={"Set"}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
+const deleteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="9.88" height="12.701" viewBox="0 0 9.88 12.701">
+<g id="_000000ff" data-name="#000000ff" transform="translate(-14.213)">
+  <path id="Path_20271" data-name="Path 20271" d="M17.393,0h3.521c.242.23.469.475.711.707.823,0,1.645,0,2.468,0q0,.706,0,1.409-4.939,0-9.877,0,0-.7,0-1.409c.824,0,1.646,0,2.469,0C16.924.475,17.151.23,17.393,0Z" fill="#9ba9dd"/>
+  <path id="Path_20272" data-name="Path 20272" d="M21.338,28.436q4.232,0,8.462,0c0,2.825.006,5.65,0,8.475a1.436,1.436,0,0,1-1.27,1.4H22.649a1.427,1.427,0,0,1-1.309-1.4C21.332,34.087,21.337,31.262,21.338,28.436Z" transform="translate(-6.415 -25.613)" fill="#9ba9dd"/>
+</g>
+</svg>
+`;
+const notificationIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11.661" height="14" viewBox="0 0 11.661 14">
+<g id="_000000ff" data-name="#000000ff" transform="translate(-10.68)">
+  <path id="Path_20269" data-name="Path 20269" d="M16.357,0h.273c.551.14.477.769.467,1.206a4.137,4.137,0,0,1,3.242,2.63,10.645,10.645,0,0,1,.268,3.271,3.944,3.944,0,0,0,1.366,2.751,1.028,1.028,0,0,1,.229,1.3,1.054,1.054,0,0,1-.981.506c-3.174,0-6.348.005-9.522,0A1.022,1.022,0,0,1,10.682,10.6a1.1,1.1,0,0,1,.428-.8,3.951,3.951,0,0,0,1.127-1.725c.442-1.35-.07-2.821.418-4.162a4.144,4.144,0,0,1,3.273-2.708C15.919.773,15.842.182,16.357,0Z" transform="translate(0)" fill="#9ba9dd"/>
+  <path id="Path_20270" data-name="Path 20270" d="M44.3,111.993q2.154-.011,4.309,0a2.279,2.279,0,0,1-1.988,1.746H46.3A2.276,2.276,0,0,1,44.3,111.993Z" transform="translate(-29.943 -99.739)" fill="#9ba9dd"/>
+</g>
+</svg>
+`;
+const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.036" viewBox="0 0 18.129 18.036">
+<g id="_000000ff" data-name="#000000ff" transform="translate(-6.401 -6.715)">
+  <path id="Path_19748" data-name="Path 19748" d="M11.523,7.079a.642.642,0,0,1,1.182.055,8.463,8.463,0,0,1,.033,1.215q2.726,0,5.454,0a8.556,8.556,0,0,1,.031-1.205A.639.639,0,0,1,19.411,7.1a7.548,7.548,0,0,1,.039,1.251c.755.017,1.511-.035,2.264.028A3.182,3.182,0,0,1,24.459,11a23.1,23.1,0,0,1,.027,3.149c0,2.515.011,5.029-.006,7.545a3.161,3.161,0,0,1-3.194,3.053q-5.823,0-11.648,0a3.183,3.183,0,0,1-3.2-3.345c.006-2.365,0-4.73,0-7.1,0-1.057-.1-2.118,0-3.174a3.162,3.162,0,0,1,2-2.559,9.512,9.512,0,0,1,3.034-.225,6.984,6.984,0,0,1,.044-1.27M8.256,10.244c-.644.606-.522,1.541-.518,2.338H23.191c.006-.8.121-1.734-.521-2.34-.834-.875-2.151-.469-3.218-.563a4.715,4.715,0,0,1-.074,1.3.633.633,0,0,1-1.139-.046,6.4,6.4,0,0,1-.047-1.253q-2.726,0-5.454,0a6.3,6.3,0,0,1-.049,1.254.637.637,0,0,1-1.141.049,4.949,4.949,0,0,1-.071-1.3c-1.067.1-2.387-.313-3.221.565m1.9,5.534a.837.837,0,1,0,1.073,1.04.843.843,0,0,0-1.073-1.04m3.308.019a.838.838,0,1,0,1.157.873.843.843,0,0,0-1.157-.873m3.32.014a.837.837,0,1,0,1.193.7.846.846,0,0,0-1.193-.7m3.44-.031A.837.837,0,1,0,21.3,16.823a.842.842,0,0,0-1.075-1.043M10.189,19.123a.837.837,0,1,0,1.05,1.017.843.843,0,0,0-1.05-1.017m10.069,0a.836.836,0,1,0,1.053,1.012.841.841,0,0,0-1.053-1.012m-6.933.1a.836.836,0,1,0,1.29.59.843.843,0,0,0-1.29-.59m3.424-.041a.836.836,0,1,0,1.224.64A.843.843,0,0,0,16.749,19.188Z" transform="translate(0)" fill="#666"/>
+</g>
+</svg>
+`;
+const clock = `<svg id="_000000ff" data-name="#000000ff" xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.129" viewBox="0 0 18.129 18.129">
+<path id="Path_19965" data-name="Path 19965" d="M8.8,0h.5a9.077,9.077,0,0,1,8.833,8.8v.529a9.065,9.065,0,0,1-3.422,6.828,9,9,0,0,1-3.3,1.667,9.33,9.33,0,0,1-2.107.306H8.834A9.085,9.085,0,0,1,0,9.331V8.8A9.077,9.077,0,0,1,8.8,0M8.745,3.322a.652.652,0,0,0-.328.574q0,2.584,0,5.168a.658.658,0,0,0,.264.523q1.605,1.282,3.209,2.566a.646.646,0,0,0,.991-.785,1.1,1.1,0,0,0-.347-.358c-.94-.75-1.877-1.5-2.82-2.252-.007-1.621,0-3.241,0-4.862a.648.648,0,0,0-.967-.574Z" fill="#666"/>
+</svg>
+`;

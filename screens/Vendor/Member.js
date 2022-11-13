@@ -53,7 +53,7 @@ import { Feather } from "@expo/vector-icons";
 const Member = () => {
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ height: 35, backgroundColor: primaryColor }} />
+      
       <Tab.Navigator
         screenOptions={{
           tabBarIndicatorStyle: {
@@ -210,6 +210,7 @@ const DutyPediaUser = (props) => {
       getOnlineUser(user.token, vendor.service.id).then((res) => {
         setLoader(false);
         if (res) {
+          console.log(res)
           setData(res.members);
           setAllData(res.members);
         }
@@ -349,7 +350,7 @@ const DutyPediaUser = (props) => {
       ) : (
         Data.map((doc, i) => (
           <OnlineCart onPress={()=>{  
-            navigation.navigate("UserProfile",{user:doc.user})
+            navigation.navigate("UserProfile",{user:doc})
           }} doc={doc} i={i} key={i} reload={onChange} />
         ))
       )}
@@ -360,7 +361,7 @@ const OnlineCart = ({ doc, i, reload,onPress }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
-
+  
   return (
     <TouchableOpacity onPress={()=>{
       if(onPress){
@@ -402,13 +403,13 @@ const OnlineCart = ({ doc, i, reload,onPress }) => {
             backgroundColor: "#f5f5f5",
           }}
         >
-          {doc.profilePhoto ? (
+          {doc.user.profilePhoto ? (
             <Image
               style={{
                 height: 40,
                 width: 40,
               }}
-              source={{ uri: doc.profilePhoto }}
+              source={{ uri: doc.user.profilePhoto }}
             />
           ) : (
             <FontAwesome name="user" size={30} color="#983C85" />
@@ -422,7 +423,7 @@ const OnlineCart = ({ doc, i, reload,onPress }) => {
             fontFamily: "Poppins-Medium",
           }}
         >
-          {doc.name ? doc.name : "Easin Arafat"}
+          {doc.user.firstName ? doc.user.firstName+" "+doc.user.lastName : "Easin Arafat"}
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
@@ -654,6 +655,7 @@ const OfflineCart = ({ doc, i, navigation, reload,onPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
+  
   return (
     <TouchableOpacity  onPress={onPress}
       style={{

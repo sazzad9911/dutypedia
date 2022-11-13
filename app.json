@@ -7,7 +7,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      ["react-native-background-fetch"]
     ],
     "name": "dutypedia",
     "slug": "dutypedia",
@@ -22,11 +23,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch", "processing"],
+        "BGTaskSchedulerPermittedIdentifiers": ["com.sazzad991.dutypedia"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -34,7 +37,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.sazzad991.dutypedia",
-      "versionCode":1
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

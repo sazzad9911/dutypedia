@@ -527,3 +527,9 @@ export const createVendorOrder = async (
   });
   return res
 };
+export const getMemberId=async(token,serviceId,userId)=>{
+  const res=axios.get(`${url}/server/members/online/get-by-userid?serviceId=${serviceId}&&userId=${userId}`,{
+    headers:{Authorization:`Bearer ${token}`}
+  });
+  return res
+}

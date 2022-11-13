@@ -35,7 +35,7 @@ import {
 } from "../../assets/OfferIcons";
 import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
-import { createOrder } from "../../Class/service";
+import { createOrder, getOrders } from "../../Class/service";
 import { serverToLocal } from "../../Class/dataConverter";
 
 const OfferNow = ({ navigation, route }) => {
@@ -66,6 +66,8 @@ const OfferNow = ({ navigation, route }) => {
   const gigs = params.gigs;
   const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
+  const dispatch=useDispatch()
+  const type=route.params.type
 
   React.useEffect(() => {
     //console.log(gigs);
@@ -105,12 +107,13 @@ const OfferNow = ({ navigation, route }) => {
       setPriceError("Invalid price");
       return;
     }
+    
     setLoader(true);
     createOrder(
       user.token,
       gigs?gigs.service.id:data.service.id,
-      gigs?gigs.type:data.service.gigs[0].type,
-      gigs?gigs.price:data.service.gigs[0].price,
+      type,
+      gigs?gigs.price:data.service.gigs.filter(d=>d.type==type)[0].price,
       Description,
       Price,
       From,
@@ -122,8 +125,9 @@ const OfferNow = ({ navigation, route }) => {
       .then((res) => {
         if (res) {
           try {
-            setLoader(false);
-            navigation.navigate("ManageOrder", { reload: res,active:gigs?gigs.type:data.service.gigs[0].type });
+             
+            getNewOrderUser()
+            
           } catch (e) {
             setLoader(false);
             console.warn(e.message);
@@ -134,6 +138,17 @@ const OfferNow = ({ navigation, route }) => {
         setLoader(false);
         console.warn(err.response.data.msg);
       });
+  };
+  const getNewOrderUser = async () => {
+    try {
+      const res = await getOrders(user.token, "user");
+      setLoader(false);
+      navigation.navigate("ManageOrder", { reload: res,active:gigs?gigs.type:data.service.gigs[0].type });
+      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+    } catch (e) {
+      console.warn(e.message);
+    }
   };
   if (Loader) {
     return (

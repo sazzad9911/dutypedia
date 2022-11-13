@@ -102,7 +102,7 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AddNote"
         component={AddNote}
-      />
+      /> 
       <Stack.Screen
         options={{ headerShown: false }}
         name="ViewNote"
@@ -630,14 +630,8 @@ export const Screens = ({ navigation, route }) => {
     }
   };
   React.useEffect(() => {
-    // socket.on("getOrder", (e) => {
-    //   console.log(e.order)
-    //   getNewOrder()
-    // });
-    // socket.on("updateOrder", (e) => {
-    //   getNewOrder()
-    // });
-  }, []);
+    setRefresh((val) => !val);
+  }, [orderSocket]);
 
   const snapPoints = React.useMemo(() => ["25%", "50%"], []);
 

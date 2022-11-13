@@ -24,12 +24,12 @@ function Cart2(props) {
       }}
       style={{
         width: 260,
-        shadowColor: primaryColor,
+        shadowColor: assentColor,
         shadowOffset: {
           width: 1,
           height: 1,
         },
-        shadowOpacity: .5,
+        shadowOpacity: .1,
         shadowRadius: 6,
         elevation: 5,
         backgroundColor: primaryColor,

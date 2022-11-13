@@ -207,6 +207,7 @@ const ComponentScreen = (props) => {
           <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
+      <View style={{height:80}}/>
     </ScrollView>
   );
 };
@@ -366,7 +367,7 @@ const Rows = ({ title, item, name, setData, Data }) => {
           <CheckBox
             style={{
               marginTop: 5,
-              width:220,
+              width:width/2-30,
             }}
             key={i}
             value={

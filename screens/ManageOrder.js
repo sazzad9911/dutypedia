@@ -204,18 +204,13 @@ const Screens = ({ navigation, route }) => {
       const arr = res.data.orders.filter((d) => d.type == route.name);
       setAllOrders(arr);
       setOrders(arr);
-    } catch (e) {
+    } catch (e) { 
       console.warn(e.message);
     }
   };
   React.useEffect(() => {
-    // socket.on("getOrder", (e) => {
-    //   getNewOrder()
-    // });
-    // socket.on("updateOrder", (e) => {
-    //   getNewOrder()
-    // });
-  }, []);
+    setRefresh((val) => !val);
+  }, [orderSocket]);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView

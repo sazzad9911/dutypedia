@@ -53,7 +53,9 @@ function NewTabe({ state, descriptors, navigation, position }) {
 
   return (
     <View style={{
-        height:50,
+        height:40,
+        backgroundColor:primaryColor,
+        marginBottom:20
     }}>
       <ScrollView ref={ref=>setScrollRef(ref)} showsHorizontalScrollIndicator={false} horizontal={true}>
       <View style={{ width: 10 }} />
@@ -98,7 +100,7 @@ function NewTabe({ state, descriptors, navigation, position }) {
             <View key={index} onLayout={e=>setLayout(e.nativeEvent.layout)}
               style={{
                 alignItems: "center",
-                width: 120,
+                width: 80,
               }}  
             >
               <Button
@@ -111,9 +113,7 @@ function NewTabe({ state, descriptors, navigation, position }) {
                   borderRadius: 0,
                 }}
                 active={isFocused ? true : false}
-                title={`${initialState[index].title} (${
-                  userOrders ? userOrders.filter(d=>d.type==route.name).length : "0"
-                })`}
+                title={`${initialState[index].title}`}
               />
               {isFocused && (
                 <Animated.View

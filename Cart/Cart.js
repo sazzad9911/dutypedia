@@ -25,12 +25,12 @@ function Cart(props) {
         style={{
           width: width / 3-10,
           height: 150,
-          shadowColor: primaryColor,
+          shadowColor: assentColor,
           shadowOffset: {
             width: 1,
             height: 1,
           },
-          shadowOpacity: 1,
+          shadowOpacity: .1,
           shadowRadius: 6,
           elevation: 5,
           backgroundColor: primaryColor,

@@ -12,6 +12,7 @@ import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
 import Carousel from "react-native-snap-carousel";
+import NewTabe from "./Vendor/components/NewTabe";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -21,40 +22,8 @@ export default function UserProfile({ navigation, route }) {
   const textColor = colors.getTextColor();
   const primaryColor = colors.getPrimaryColor();
   const assentColor = colors.getAssentColor();
-  const [initialState, setInitialState] = React.useState([
-    {
-      title: "Bargaining",
-      value: true,
-      type: "STARTING",
-    },
-    {
-      title: "Fixed",
-      value: false,
-      type: "ONETIME",
-    },
-    {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
-    {
-      title: "Package",
-      value: false,
-      type: "PACKAGE",
-    },
-  ]);
-  const vendorOrders = useSelector((state) => state.vendorOrders);
-  const [Active, setActive] = React.useState(0);
   const user = route.params.user;
-  const [Orders, setOrders] = React.useState();
-  const [AllOrders, setAllOrders] = React.useState();
-  const dispatch = useDispatch();
-  const [SliderRef,setSliderRef]=React.useState()
+  const ref = React.useRef();
 
   const ViewBox = ({ Icon, title }) => {
     return (
@@ -85,19 +54,7 @@ export default function UserProfile({ navigation, route }) {
       </TouchableOpacity>
     );
   };
-  React.useEffect(() => {
-    if (vendorOrders) {
-      const arr = vendorOrders.filter((d) => d.user.id == user.id);
-      setAllOrders(arr);
-      //setOrders(arr)
-    }
-  }, [vendorOrders]);
-  React.useEffect(() => {
-    if (AllOrders) {
-      const arr = AllOrders.filter((d) => d.type == initialState[Active].type);
-      setOrders(arr);
-    }
-  }, [Active + AllOrders]);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -126,14 +83,14 @@ export default function UserProfile({ navigation, route }) {
               overflow: "hidden",
             }}
           >
-            {user && user.profilePhoto ? (
+            {user && user.user.profilePhoto ? (
               <Image
                 style={{
                   width: 90,
                   height: 90,
                   borderRadius: 45,
                 }}
-                source={{ uri: user.profilePhoto }}
+                source={{ uri: user.user.profilePhoto }}
               />
             ) : (
               <FontAwesome name="user" size={70} color={assentColor} />
@@ -146,7 +103,9 @@ export default function UserProfile({ navigation, route }) {
               color: textColor,
             }}
           >
-            {user ? `${user.firstName} ${user.lastName}` : `Invalid user`}
+            {user
+              ? `${user.user.firstName} ${user.user.lastName}`
+              : `Invalid user`}
             <Text
               style={{
                 fontSize: 14,
@@ -155,7 +114,7 @@ export default function UserProfile({ navigation, route }) {
               }}
             >
               {" "}
-              {user ? `(${user.gender.toUpperCase()})` : `Invalid`}
+              {user ? `(${user.user.gender.toUpperCase()})` : `Invalid`}
             </Text>
           </Text>
           <Text
@@ -214,7 +173,7 @@ export default function UserProfile({ navigation, route }) {
                 marginTop: 3,
               }}
             >
-              @{user ? `${user.username}` : "invalid"}
+              @{user ? `${user.user.username}` : "invalid"}
             </Text>
           </View>
           <View
@@ -280,7 +239,7 @@ export default function UserProfile({ navigation, route }) {
                 marginTop: 3,
               }}
             >
-              {user ? `${user.email}` : "invalid"}
+              {user ? `${user.user.email}` : "invalid"}
             </Text>
             <TouchableOpacity
               style={{
@@ -386,14 +345,14 @@ export default function UserProfile({ navigation, route }) {
             </View>
           </TouchableOpacity>
         </View>
-        <View
+        {/* <View
           style={{
             height: 30,
             backgroundColor: primaryColor,
             marginVertical: 20,
           }}
         >
-          <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+          <ScrollView ref={ref} showsHorizontalScrollIndicator={false} horizontal={true}>
             {initialState.map((doc, i) => (
               <TouchableOpacity
                 key={i}
@@ -429,60 +388,11 @@ export default function UserProfile({ navigation, route }) {
               </TouchableOpacity>
             ))}
           </ScrollView>
+        </View> */}
+        <View style={{height:20}}/>
+        <View style={{ minHeight: 500 }}>
+          <TabBar userId={user.user.id} />
         </View>
-        <Carousel
-          ref={(c) => {
-            setSliderRef(c)
-          }}
-          onSnapToItem={(i)=>setActive(i)}
-          data={initialState}
-          renderItem={(item,index) => (
-            <View>
-              <View key={index}>
-                {Orders &&
-                  Orders.map((doc, i) => (
-                    <OrderCart
-                      onSelect={(e) => {
-                        //console.log(e)
-                        dispatch({ type: "ORDER_STATE", playload: e });
-                        //dispatch({ type: "ORDER_STATE", playload: e });
-                      }}
-                      onPress={() => {
-                        navigation.navigate("VendorOrderDetails", {
-                          data: doc,
-                        });
-                      }}
-                      data={doc}
-                      key={i}
-                    />
-                  ))}
-              </View>
-              {Orders && Orders.length == 0 && (
-                <View
-                  style={{
-                    height: 400,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml xml={emptyIcon} width="100" height="100" />
-                  <Text
-                    style={{
-                      marginTop: 30,
-                      color: textColor,
-                    }}
-                  >
-                    No Order Found
-                  </Text>
-                </View>
-              )}
-
-              <View style={{ height: 100 }} />
-            </View>
-          )}
-          sliderWidth={width}
-          itemWidth={width}
-        />
       </ScrollView>
       <FAB
         color="#FFFFFF"
@@ -555,3 +465,154 @@ const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" width="18.448" height=
 </g>
 </svg>
 `;
+
+export const TabBar = ({ userId }) => {
+  const [initialState, setInitialState] = React.useState([
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ]);
+
+  return (
+    <Tab.Navigator screenOptions={{
+      tabBarLabelStyle: { fontSize: 12 },
+      tabBarItemStyle: {
+      margin:0,
+      padding:0,
+      width:120,
+     },
+      tabBarIndicatorStyle: {
+        backgroundColor: "#AC5DCB",
+      },
+      tabBarScrollEnabled: true
+    }}>
+      {initialState.map((doc, i) => (
+        <Tab.Screen
+          key={i}
+          name={doc.title}
+          initialParams={{ userId: userId }}
+          component={Screens}
+        />
+      ))}
+    </Tab.Navigator>
+  );
+};
+const Screens = ({ navigation, route }) => {
+  const vendorOrders = useSelector((state) => state.vendorOrders);
+  const [Orders, setOrders] = React.useState();
+  const [AllOrders, setAllOrders] = React.useState();
+  const userId = route.params.userId;
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
+  const assentColor = colors.getAssentColor();
+  const dispatch = useDispatch();
+  const [initialState, setInitialState] = React.useState([
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ]);
+
+  React.useEffect(() => {
+    if (vendorOrders) {
+      const arr = vendorOrders.filter((d) => d.user.id == userId);
+      setAllOrders(arr);
+      //setOrders(arr)
+    }
+  }, [vendorOrders]);
+  React.useEffect(() => {
+    if (AllOrders) {
+      const type=initialState.filter(d=>d.title==route.name)[0].type
+      const arr = AllOrders.filter((d) => d.type == type);
+      setOrders(arr);
+    }
+  }, [AllOrders + route.name]);
+  return (
+    <View>
+      <ScrollView>
+        {Orders &&
+          Orders.map((doc, i) => (
+            <OrderCart
+              onSelect={(e) => {
+                //console.log(e)
+                dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
+              }}
+              onPress={() => {
+                navigation.navigate("VendorOrderDetails", {
+                  data: doc,
+                });
+              }}
+              data={doc}
+              key={i}
+            />
+          ))}
+        <View style={{ height: 100 }} />
+      </ScrollView>
+      {Orders && Orders.length == 0 && (
+        <View
+          style={{
+            height: 400,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <SvgXml xml={emptyIcon} width="100" height="100" />
+          <Text
+            style={{
+              marginTop: 30,
+              color: textColor,
+            }}
+          >
+            No Order Found
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
