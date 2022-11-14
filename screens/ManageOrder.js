@@ -68,11 +68,26 @@ const ManageOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ];
+  const userOrders=useSelector(state=>state.userOrders)
 
   return (
-    <Tab.Navigator tabBar={(props) => <NewTabe {...props} />}>
+    <Tab.Navigator screenOptions={{
+      tabBarLabelStyle: { fontSize: 12 },
+      tabBarItemStyle: {
+      margin:0,
+      padding:0,
+      width:120,
+     },
+      tabBarIndicatorStyle: {
+        backgroundColor: "#AC5DCB",
+      },
+      tabBarScrollEnabled: true,
+      
+    }}>
       {initialState.map((doc, i) => (
-        <Tab.Screen key={i} name={doc.type} component={Screens} />
+        <Tab.Screen options={{
+          title:`${initialState[i].title}(${userOrders ? userOrders.filter(d=>d.type==initialState[i].type).length : "0"})`
+        }} key={i} name={doc.type} component={Screens} />
       ))}
     </Tab.Navigator>
   );
@@ -252,6 +267,7 @@ const Screens = ({ navigation, route }) => {
               marginVertical: 0,
               justifyContent: "space-between",
               marginBottom: 15,
+              marginTop:20
             }}
           >
             <View

@@ -26,6 +26,7 @@ import StackRoute from "./StackRoute";
 import { useSelector } from "react-redux";
 import { Color } from "./assets/colors";
 import { RootSiblingParent } from "react-native-root-siblings";
+import * as Network from 'expo-network';
 
 export default function App() {
   
@@ -65,6 +66,11 @@ export default function App() {
       fontFamily: "Poppins-Medium",
     },
   };
+  const getNetwork=async()=>{
+    const network=await Network.getNetworkStateAsync();
+    console.log(network)
+  }
+  //getNetwork()
 
   return (
     <Provider store={store}>

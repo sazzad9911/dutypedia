@@ -177,14 +177,28 @@ const VendorOrder = ({ navigation, route }) => {
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch = useDispatch();
   const vendorOrders = useSelector((state) => state.vendorOrders);
+  
 
   if (Loader) {
     return <ActivityLoader />;
   }
   return (
-    <Tab.Navigator tabBar={(props) => <NewTab data={order} {...props} />}>
+    <Tab.Navigator screenOptions={{
+      tabBarLabelStyle: { fontSize: 12 },
+      tabBarItemStyle: {
+      margin:0,
+      padding:0,
+      width:120,
+     },
+      tabBarIndicatorStyle: {
+        backgroundColor: "#AC5DCB",
+      },
+      tabBarScrollEnabled: true
+    }}>
       {initialState.map((doc, i) => (
-        <Tab.Screen key={i} name={doc.type} component={Screens} />
+        <Tab.Screen options={{
+          title:`${initialState[i].title}(${vendorOrders ? vendorOrders.filter(d=>d.type==initialState[i].type).length : "0"})`
+        }} key={i} name={doc.type} component={Screens} />
       ))}
     </Tab.Navigator>
   );
@@ -681,6 +695,7 @@ export const Screens = ({ navigation, route }) => {
               marginVertical: 0,
               justifyContent: "space-between",
               marginBottom: 15,
+              marginTop:20
             }}
           >
             <View

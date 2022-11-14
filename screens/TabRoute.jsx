@@ -43,8 +43,43 @@ import { getService, getDashboard, getOrders } from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
 import { socket } from "../Class/socket";
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 
 const Tab = createBottomTabNavigator();
+
+const BACKGROUND_FETCH_TASK = 'background-fetch';
+
+// 1. Define the task by providing a name and the function that should be executed
+// Note: This needs to be called in the global scope (e.g outside of your React components)
+TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+  const now = Date.now();
+
+  setInterval(()=>{
+    console.warn(`Got background fetch call at date: ${new Date(now).toISOString()}`);
+  },1000)
+
+  // Be sure to return the successful result type!
+  return BackgroundFetch.BackgroundFetchResult.NewData;
+});
+
+// 2. Register the task at some point in your app by providing the same name,
+// and some configuration options for how the background fetch should behave
+// Note: This does NOT need to be in the global scope and CAN be used in your React components!
+async function registerBackgroundFetchAsync() {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
+    minimumInterval: 60 * 15, // 15 minutes
+    stopOnTerminate: false, // android only,
+    startOnBoot: true, // android only
+  });
+}
+
+// 3. (Optional) Unregister tasks by specifying the task name
+// This will cancel any future background fetch calls that match the given name
+// Note: This does NOT need to be in the global scope and CAN be used in your React components!
+async function unregisterBackgroundFetchAsync() {
+  return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+}
 
 const TabRoute = () => {
   const bottomSheetRef = React.useRef();
@@ -59,6 +94,9 @@ const TabRoute = () => {
   const [reload, setReload] = React.useState(false);
   const [VendorOrders, setVendorOrders] = React.useState();
   const [UserOrders, setUserOrders] = React.useState();
+  const [isRegistered, setIsRegistered] = React.useState(false);
+  const [status, setStatus] = React.useState(null);
+
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
@@ -105,58 +143,67 @@ const TabRoute = () => {
       });
   }, []);
   React.useEffect(() => {
-    if (user) {
-      getNewOrderUser()
+    if (user) { 
+
+      getOrders(user.token, "user").then(res=>{
+        dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+        dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+        setUserOrders("dfrgrg")
+      }).catch(err=>{
+        console.warn(err.response.data.msg)
+        setUserOrders("dfrgrg")
+      })
     } else{
       setUserOrders("dfrgrg")
     }
   }, [user + reload]);
   React.useEffect(() => {
     if (user && vendor && vendor.service) {
-      getNewOrder()
+      getOrders(user.token, "vendor", vendor.service.id).then(res=>{
+        dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+        dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+        setVendorOrders("dssedf");
+      }).catch(err=>{
+        console.warn(err.response.data.msg)
+        setVendorOrders("fdfdfdfd")
+      })
     } else{
       setVendorOrders("fdfdfdfd")
     }
   }, [user + vendor + reload]);
-  const getNewOrder = async () => {
-    try {
-      const res = await getOrders(user.token, "vendor", vendor.service.id);
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-      setVendorOrders(res.data);
-      //const arr = res.data.orders.filter((d) => d.type == route.name);
-      //setAllOrders(arr);
-      //setNewOrders(arr);
-    } catch (e) {
-      console.warn(e.message);
-    }
+  React.useEffect(() => {
+    checkStatusAsync();
+    
+    //registerBackgroundFetchAsync()
+  }, []);
+
+  const checkStatusAsync = async () => {
+    const status = await BackgroundFetch.getStatusAsync();
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
+    setStatus(status);
+    
+    setIsRegistered(isRegistered);
   };
-  const getNewOrderUser = async () => {
-    try {
-      const res = await getOrders(user.token, "user");
-      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-      setVendorOrders(res.data);
-      //const arr = res.data.orders.filter((d) => d.type == route.name);
-      //setAllOrders(arr);
-      //setOrders(arr);
-    } catch (e) {
-      console.warn(e.message);
+
+  const toggleFetchTask = async () => {
+    if (isRegistered) {
+      await unregisterBackgroundFetchAsync();
+    } else {
+      await registerBackgroundFetchAsync();
     }
+
+    checkStatusAsync();
   };
+ 
   React.useEffect(() => {
     socket.on("getOrder", (e) => {
       setReload((val) => !val);
-      //getNewOrder()
-      //getNewOrderUser()
     });
     socket.on("updateOrder", (e) => {
       setReload((val) => !val);
-      //getNewOrder()
-      //getNewOrderUser()
     });
   }, []);
-  if (!user || !load) {
+  if (!user || !load ||!UserOrders ||!VendorOrders ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>Loading.....</Text>
