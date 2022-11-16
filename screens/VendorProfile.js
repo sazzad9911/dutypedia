@@ -133,6 +133,7 @@ const VendorProfile = (props) => {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
+  const [PackageService,setPackageService]=React.useState()
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -260,6 +261,14 @@ const VendorProfile = (props) => {
       getOtherServices(newUser.token, vendor.service.id, "ONETIME")
         .then((res) => {
           setFixedService(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
+        getOtherServices(newUser.token, vendor.service.id, "PACKAGE")
+        .then((res) => {
+          setPackageService(res.data.gigs);
           //console.log(res.data.gigs);
         })
         .catch((err) => {
@@ -1303,8 +1312,8 @@ const VendorProfile = (props) => {
             }}
           >
             {!Click &&
-              FixedService &&
-              FixedService.map((doc, i) => (
+              PackageService &&
+              PackageService.map((doc, i) => (
                 <ServiceCart
                   onPress={() => {
                     setClick(true);
@@ -1329,7 +1338,7 @@ const VendorProfile = (props) => {
                 />
               ))}
 
-            {!Click && !FixedService && (
+            {!Click && !PackageService && (
               <View
                 style={{
                   flex: 1,
@@ -1746,7 +1755,7 @@ const VendorProfile = (props) => {
                   vendor.service.gigs[0].services.category
                 ),
                 name: "VendorOrderDetails",
-                data: "ONETIME",
+                data: "PACKAGE",
               });
             } else {
               dispatch({
@@ -1762,7 +1771,7 @@ const VendorProfile = (props) => {
                   vendor.service.gigs[0].dashboard
                 ),
                 name: "VendorOrderDetails",
-                data: "ONETIME",
+                data: "PACKAGE",
               });
             }
           }}

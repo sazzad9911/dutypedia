@@ -63,6 +63,7 @@ import OnlineUserProfile from "./Vendor/OnlineUserProfile";
 import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
 import Note, { AddNote, ViewNote } from "./Vendor/Note";
+import AddPackage, { AddScreen } from "./services/AddPackage";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -268,6 +269,16 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="AddServiceList_1"
         component={AddServiceList}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddPackage"
+        component={AddPackage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddPackageScreen"
+        component={AddScreen}
       />
       <Stack.Screen
         name="Vendor Calender"

@@ -121,6 +121,12 @@ const AddServiceList = (props) => {
                   setDataError("You must need at least one service");
                   return;
                 }
+                if(params.data=="PACKAGE"){
+                  navigation.navigate("AddPackage",{
+                    data:Data
+                  })
+                  return
+                }
                 navigation.navigate("Service", {
                   direct: params.data,
                   data: Data,

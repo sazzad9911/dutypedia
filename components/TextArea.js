@@ -6,8 +6,9 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
-import { primaryColor, backgroundColor, textColor } from "../assets/colors";
+import { primaryColor, backgroundColor, textColor, Color } from "../assets/colors";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { useSelector } from "react-redux";
 
 const TextArea = ({
   placeholder,
@@ -26,6 +27,9 @@ const TextArea = ({
   const ref = React.useRef();
   const { width, height } = Dimensions.get("window");
   const [Data, setData] = React.useState();
+  const isDark=useSelector(state=>state.isDark)
+  const colors=new Color(isDark)
+  const assentColor=colors.getAssentColor()
 
   React.useEffect(() => {
     setData(value);
@@ -54,12 +58,12 @@ const TextArea = ({
           }
         }}
       >
-        <TextInput
+        <TextInput enablesReturnKeyAutomatically={true}
           value={Data}
           multiline={true}
           ref={innerRef ? innerRef : ref}
           returnKeyType={returnKeyType}
-          placeholderTextColor={placeholderTextColor}
+          placeholderTextColor={assentColor}
           onSubmitEditing={() => {
             if (onSubmitEditing) {
               onSubmitEditing();
