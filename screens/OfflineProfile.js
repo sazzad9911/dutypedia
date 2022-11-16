@@ -363,7 +363,7 @@ export default function OfflineProfile({ navigation, route }) {
           alignItems: "center",
         }}
         onPress={()=>{
-
+          navigation.navigate("VendorServiceList",{userId:user.id})
         }}
       />
     </View>

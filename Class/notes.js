@@ -53,3 +53,11 @@ export const setNoteNotification=async(token,date,time,serviceId,noteId)=>{
     })
     return res
 }
+export const unSetNotification=async(token,noteId)=>{
+    const res=axios.post(`${url}/server/notes/remove-notification`,{
+        noteId:noteId
+    },{
+        headers: { Authorization: `Bearer ${token}`}
+    })
+    return res
+}

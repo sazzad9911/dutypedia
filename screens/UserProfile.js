@@ -408,7 +408,9 @@ export default function UserProfile({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate("VendorServiceList",{userId:user.user.id})
+        }}
       />
     </View>
   );

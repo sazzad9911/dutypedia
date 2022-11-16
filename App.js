@@ -1,5 +1,5 @@
 //import {  } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView,StatusBar } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView,StatusBar,DevSettings } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -72,6 +72,8 @@ export default function App() {
   }
   //getNetwork()
 
+  
+
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
@@ -86,6 +88,7 @@ const Views = () => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
+  
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar

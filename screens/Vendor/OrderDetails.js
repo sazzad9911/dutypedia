@@ -261,9 +261,13 @@ const OrderDetails = ({ navigation, route }) => {
       >
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("UserProfile", {
-              user:MemberId?MemberId: data,
-            });
+            if(MemberId){
+              navigation.navigate("UserProfile", {
+                user:MemberId,
+              });
+            }else{
+              Alert.alert("Opps!","This user is not  into your member list. Accept order to add into member list.")
+            }
           }}
           style={{
             height: 70,

@@ -27,9 +27,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["fetch", "processing"],
-        "BGTaskSchedulerPermittedIdentifiers": ["com.sazzad991.dutypedia"]
-      }
+        "UIBackgroundModes": ["fetch", "processing"]      }
     },
     "android": {
       "adaptiveIcon": {

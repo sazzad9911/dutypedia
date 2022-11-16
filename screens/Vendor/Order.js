@@ -51,6 +51,7 @@ import SelectDate from "./SelectDate";
 import OfflineProfile from "../OfflineProfile";
 import Notice from "../Notice";
 import Note, { AddNote, ViewNote } from "./Note";
+import { ActivityIndicator } from "react-native-paper";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -102,7 +103,7 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AddNote"
         component={AddNote}
-      /> 
+      />
       <Stack.Screen
         options={{ headerShown: false }}
         name="ViewNote"
@@ -177,28 +178,39 @@ const VendorOrder = ({ navigation, route }) => {
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch = useDispatch();
   const vendorOrders = useSelector((state) => state.vendorOrders);
-  
 
   if (Loader) {
     return <ActivityLoader />;
   }
   return (
-    <Tab.Navigator screenOptions={{
-      tabBarLabelStyle: { fontSize: 12 },
-      tabBarItemStyle: {
-      margin:0,
-      padding:0,
-      width:120,
-     },
-      tabBarIndicatorStyle: {
-        backgroundColor: "#AC5DCB",
-      },
-      tabBarScrollEnabled: true
-    }}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: {
+          margin: 0,
+          padding: 0,
+          width: 120,
+        },
+        tabBarIndicatorStyle: {
+          backgroundColor: "#AC5DCB",
+        },
+        tabBarScrollEnabled: true,
+      }}
+    >
       {initialState.map((doc, i) => (
-        <Tab.Screen options={{
-          title:`${initialState[i].title}(${vendorOrders ? vendorOrders.filter(d=>d.type==initialState[i].type).length : "0"})`
-        }} key={i} name={doc.type} component={Screens} />
+        <Tab.Screen
+          options={{
+            title: `${initialState[i].title}(${
+              vendorOrders
+                ? vendorOrders.filter((d) => d.type == initialState[i].type)
+                    .length
+                : "0"
+            })`,
+          }}
+          key={i}
+          name={doc.type}
+          component={Screens}
+        />
       ))}
     </Tab.Navigator>
   );
@@ -232,7 +244,7 @@ export const OrderCart = ({ data, onPress, onSelect, user }) => {
   //console.log(data.service)
   React.useEffect(() => {
     //console.log(orderState)
-    if (orderState &&data&& orderState != data.id) {
+    if (orderState && data && orderState != data.id) {
       setOpen(false);
     }
   }, [orderState]);
@@ -599,10 +611,12 @@ export const Screens = ({ navigation, route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   React.useEffect(() => {
-    let arr = vendorOrders.filter((d) => d.type == route.name);
-    setAllOrders(arr);
-    setNewOrders(arr);
-  }, [vendorOrders.length + orderSocket + Refresh]);
+    if (vendorOrders) {
+      let arr = vendorOrders.filter((d) => d.type == route.name);
+      setAllOrders(arr);
+      setNewOrders(arr);
+    }
+  }, [vendorOrders && vendorOrders.length + orderSocket + Refresh]);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {
@@ -647,13 +661,26 @@ export const Screens = ({ navigation, route }) => {
     setRefresh((val) => !val);
   }, [orderSocket]);
 
-  const snapPoints = React.useMemo(() => ["25%", "50%"], []);
+  const snapPoints = React.useMemo(() => ["25%", "60%"], []);
 
   // callbacks
   const handleSheetChanges = React.useCallback((index) => {
     //console.log("handleSheetChanges", index);
     setIndex(index);
   }, []);
+  if(!vendorOrders){
+    return(
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="small" color={backgroundColor} />
+      </View>
+    )
+  }
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -695,7 +722,7 @@ export const Screens = ({ navigation, route }) => {
               marginVertical: 0,
               justifyContent: "space-between",
               marginBottom: 15,
-              marginTop:20
+              marginTop: 20,
             }}
           >
             <View

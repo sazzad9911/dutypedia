@@ -171,7 +171,7 @@ const Screens = ({ navigation, route }) => {
 
   const bottomSheetRef = React.useRef(null);
 
-  const snapPoints = React.useMemo(() => ["25%", "50%"], []);
+  const snapPoints = React.useMemo(() => ["25%", "60%"], []);
 
   // callbacks
   const handleSheetChanges = React.useCallback((index) => {

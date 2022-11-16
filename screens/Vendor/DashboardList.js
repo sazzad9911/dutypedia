@@ -18,21 +18,22 @@ const { height, width } = Dimensions.get("window");
 import { useSelector, useDispatch } from "react-redux";
 import { getGigs, getDashboard } from "../../Class/service";
 import { vendorLogin } from "../../Class/auth";
+import { ActivityIndicator } from "react-native-paper";
 
-const DashboardList = ({ navigation,route }) => {
+const DashboardList = ({ navigation, route }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const user = useSelector((state) => state.user);
   const [Data, setData] = React.useState();
   const dispatch = useDispatch();
   const [Loading, setLoading] = React.useState(false);
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const secondaryColor=colors.getSecondaryColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const data=route.params.data
-  
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const data = route.params.data;
+  const vendorOrders = useSelector((state) => state.vendorOrders);
 
   React.useEffect(() => {
     if (Array.isArray(vendorInfo)) {
@@ -51,12 +52,13 @@ const DashboardList = ({ navigation,route }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{color:textColor}}>Loading...</Text>
+        <ActivityIndicator size="small" color={backgroundColor} />
       </View>
     );
   }
   const click = (id) => {
     setLoading(true);
+    dispatch({ type: "VENDOR_ORDERS", playload: null });
     vendorLogin(user.token, id).then((res) => {
       if (res) {
         //console.log(res)
@@ -84,7 +86,7 @@ const DashboardList = ({ navigation,route }) => {
           style={{
             fontSize: 20,
             fontFamily: "Poppins-Medium",
-            color:textColor,
+            color: textColor,
           }}
         >
           Dutypedia Business Account
@@ -100,12 +102,16 @@ const DashboardList = ({ navigation,route }) => {
         width="120"
       />
       <View style={{ height: 50 }} />
-      <View style={{
-        justifyContent:"center",
-        alignItems:"center"
-      }} showsHorizontalScrollIndicator={false} horizontal={true}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
         <View style={{ width: 10 }} />
-        <Cart  onChange={click} data={data} />
+        <Cart onChange={click} data={data} />
         <View style={{ width: 10 }} />
       </View>
       <View style={{ height: height - (height / 10 + 470) }} />
@@ -140,12 +146,12 @@ const Cart = ({ data, onChange }) => {
   const id = data.id;
   const image = data.image;
   const title = data.name;
-  const isDark= useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const secondaryColor=colors.getSecondaryColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const backgroundColor = colors.getBackgroundColor();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -204,7 +210,7 @@ const Cart = ({ data, onChange }) => {
               fontSize: 15,
               fontFamily: "Poppins-Medium",
               flex: 1,
-              color:textColor
+              color: textColor,
             }}
           >
             {title ? title : "Sazzad It Center"}

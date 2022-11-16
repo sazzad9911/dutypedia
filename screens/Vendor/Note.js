@@ -27,10 +27,11 @@ import {
   getOfflineNotes,
   getOnlineNotes,
   setNoteNotification,
+  unSetNotification,
 } from "../../Class/notes";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { allTimeConverter, dateConverter, timeConverter } from "../../action";
+import { allTimeConverter, convertDate, dateConverter, dateDifference, timeConverter } from "../../action";
 const { width, height } = Dimensions.get("window");
 
 export default function Note({ navigation, route }) {
@@ -168,6 +169,7 @@ export default function Note({ navigation, route }) {
                       color: color,
                       reload: Delete,
                       notify: notify,
+                      save:save
                     });
                   }}
                   key={i}
@@ -679,6 +681,7 @@ export const ViewNote = ({ navigation, route }) => {
   const [TimeOpen, setTimeOpen] = React.useState(false);
   const vendor = useSelector((state) => state.vendor);
   const notify = route.params.notify ? route.params.notify : null;
+  const [Notify,setNotify]=React.useState(data.date)
 
   return (
     <View style={{ flex: 1 }}>
@@ -720,10 +723,24 @@ export const ViewNote = ({ navigation, route }) => {
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             onPress={() => {
-              setModalVisible(true);
+              if(Notify){
+                setNotify(false)
+                unSetNotification(user.token,data.id).then(res=>{
+                  try{
+                    route.params.save()
+                  }catch(err){
+                    console.warn(err.message)
+                  }
+                }).catch(err=>{
+                  console.warn(err.message)
+                })
+              }else{
+                
+                setModalVisible(true);
+              }
             }}
           >
-            <SvgXml xml={notificationIcon} height="20" width="20" />
+            <SvgXml xml={Notify?notNotification:notificationIcon} height="20" width="20" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -898,7 +915,7 @@ export const ViewNote = ({ navigation, route }) => {
               isVisible={DateOpen}
               mode="date"
               onConfirm={(e) => {
-                if (new Date() > e) {
+                if (dateDifference(convertDate(new Date()),e)<0) {
                   setError(`Opening date can't be earlier from today.`);
                   setDateOpen(false);
                   setNewDate(null);
@@ -931,6 +948,16 @@ export const ViewNote = ({ navigation, route }) => {
               mode="time"
               onConfirm={(e) => {
                 setError(null);
+                const date=new Date()
+                if(date.getHours()>e.getHours()){
+                  setError("Please select upcoming time.")
+                  return
+                }
+                if((date.getHours()==e.getHours())
+                &&date.getMinutes()>e.getMinutes()){
+                  setError("Please select upcoming time.")
+                  return
+                }
                 setNewTime(e);
                 setTimeOpen(false);
               }}
@@ -958,6 +985,7 @@ export const ViewNote = ({ navigation, route }) => {
               <IconButton
                 onPress={() => {
                   notify(data.id, NewDate, NewTime);
+                  setNotify(true)
                   setModalVisible(false);
                 }}
                 style={{
@@ -989,6 +1017,16 @@ const notificationIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11.661"
 </g>
 </svg>
 `;
+const notNotification=`<svg xmlns="http://www.w3.org/2000/svg" width="11.661" height="14.887" viewBox="0 0 11.661 14.887">
+<g id="Group_10207" data-name="Group 10207" transform="translate(-354.067 -32.307)">
+  <g id="_000000ff" data-name="#000000ff" transform="translate(343.387 32.5)">
+    <path id="Path_20269" data-name="Path 20269" d="M16.357,0h.273c.551.14.477.769.467,1.206a4.137,4.137,0,0,1,3.242,2.63,10.645,10.645,0,0,1,.268,3.271,3.944,3.944,0,0,0,1.366,2.751,1.028,1.028,0,0,1,.229,1.3,1.054,1.054,0,0,1-.981.506c-3.174,0-6.348.005-9.522,0A1.022,1.022,0,0,1,10.682,10.6a1.1,1.1,0,0,1,.428-.8,3.951,3.951,0,0,0,1.127-1.725c.442-1.35-.07-2.821.418-4.162a4.144,4.144,0,0,1,3.273-2.708C15.919.773,15.842.182,16.357,0Z" transform="translate(0)" fill="#9ba9dd"/>
+    <path id="Path_20270" data-name="Path 20270" d="M44.3,111.993q2.154-.011,4.309,0a2.279,2.279,0,0,1-1.988,1.746H46.3A2.276,2.276,0,0,1,44.3,111.993Z" transform="translate(-29.943 -99.739)" fill="#9ba9dd"/>
+  </g>
+  <line id="Line_5916" data-name="Line 5916" y1="13.5" x2="9" transform="translate(354.994 33)" fill="none" stroke="#9ba9dd" stroke-linecap="round" stroke-width="1"/>
+</g>
+</svg>
+`
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.036" viewBox="0 0 18.129 18.036">
 <g id="_000000ff" data-name="#000000ff" transform="translate(-6.401 -6.715)">
   <path id="Path_19748" data-name="Path 19748" d="M11.523,7.079a.642.642,0,0,1,1.182.055,8.463,8.463,0,0,1,.033,1.215q2.726,0,5.454,0a8.556,8.556,0,0,1,.031-1.205A.639.639,0,0,1,19.411,7.1a7.548,7.548,0,0,1,.039,1.251c.755.017,1.511-.035,2.264.028A3.182,3.182,0,0,1,24.459,11a23.1,23.1,0,0,1,.027,3.149c0,2.515.011,5.029-.006,7.545a3.161,3.161,0,0,1-3.194,3.053q-5.823,0-11.648,0a3.183,3.183,0,0,1-3.2-3.345c.006-2.365,0-4.73,0-7.1,0-1.057-.1-2.118,0-3.174a3.162,3.162,0,0,1,2-2.559,9.512,9.512,0,0,1,3.034-.225,6.984,6.984,0,0,1,.044-1.27M8.256,10.244c-.644.606-.522,1.541-.518,2.338H23.191c.006-.8.121-1.734-.521-2.34-.834-.875-2.151-.469-3.218-.563a4.715,4.715,0,0,1-.074,1.3.633.633,0,0,1-1.139-.046,6.4,6.4,0,0,1-.047-1.253q-2.726,0-5.454,0a6.3,6.3,0,0,1-.049,1.254.637.637,0,0,1-1.141.049,4.949,4.949,0,0,1-.071-1.3c-1.067.1-2.387-.313-3.221.565m1.9,5.534a.837.837,0,1,0,1.073,1.04.843.843,0,0,0-1.073-1.04m3.308.019a.838.838,0,1,0,1.157.873.843.843,0,0,0-1.157-.873m3.32.014a.837.837,0,1,0,1.193.7.846.846,0,0,0-1.193-.7m3.44-.031A.837.837,0,1,0,21.3,16.823a.842.842,0,0,0-1.075-1.043M10.189,19.123a.837.837,0,1,0,1.05,1.017.843.843,0,0,0-1.05-1.017m10.069,0a.836.836,0,1,0,1.053,1.012.841.841,0,0,0-1.053-1.012m-6.933.1a.836.836,0,1,0,1.29.59.843.843,0,0,0-1.29-.59m3.424-.041a.836.836,0,1,0,1.224.64A.843.843,0,0,0,16.749,19.188Z" transform="translate(0)" fill="#666"/>
