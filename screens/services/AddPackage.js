@@ -8,6 +8,8 @@ import {
   Platform,
   Pressable,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -19,9 +21,39 @@ const Tab = createMaterialTopTabNavigator();
 import Animated from "react-native-reanimated";
 import IconButton from "../../components/IconButton";
 import { CheckBox } from "../Seller/Pricing";
+import uuid from "react-native-uuid";
+import { ImageButton } from "../Seller/Service";
+import { uploadFile } from "../../Class/upload";
+import { fileFromURL } from "../../action";
+import { useSelector } from "react-redux";
+import { Entypo } from "@expo/vector-icons";
+import { createOtherService, createService } from "../../Class/service";
 
-export default function AddPackage({ navigation }) {
+export default function AddPackage({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
+  const [Title, setTitle] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [Images1, setImage1] = React.useState();
+  const [Image2, setImage2] = React.useState();
+  const [Image3, setImage3] = React.useState();
+  const [Image4, setImage4] = React.useState();
+  const [ImageError, setImageError] = React.useState();
+  const [TitleError, setTitleError] = React.useState();
+  const [DescriptionError, setDescriptionError] = React.useState();
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const businessForm = useSelector((state) => state.businessForm);
+  const listData = useSelector((state) => state.listData);
+  const [Loader, setLoader] = React.useState(false);
+
+  if (Loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator color={"red"} size="small" />
+      </View>
+    );
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -77,19 +109,38 @@ export default function AddPackage({ navigation }) {
             width={width / 2 + 35}
           />
         </View>
-        <Input
+        <View
           style={{
-            borderWidth: 1,
+            paddingHorizontal: 20,
           }}
-          placeholder={"Service Title"}
-        />
-        <TextArea
+        >
+          <Input
+            error={TitleError}
+            value={Title}
+            onChange={(e) => setTitle(e)}
+            style={{
+              borderWidth: 1,
+              marginHorizontal: 0,
+            }}
+            placeholder={"Service Title"}
+          />
+        </View>
+        <View
           style={{
-            marginLeft: 20,
-            marginTop: 15,
+            marginHorizontal: 20,
+            marginBottom: 10,
           }}
-          placeholder={"Description"}
-        />
+        >
+          <TextArea
+            error={DescriptionError}
+            value={Description}
+            onChange={(e) => setDescription(e)}
+            style={{
+              marginTop: 15,
+            }}
+            placeholder={"Description"}
+          />
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -126,17 +177,34 @@ export default function AddPackage({ navigation }) {
         </View>
         <View
           style={{
-            height: 400,
+            height: 450,
           }}
         >
           <Tab.Navigator
-            tabBar={(props) => <TabBar {...props} />}
+            tabBar={(props) => (
+              <TabBar
+                onClick={(e) => {
+                  //console.log(e)
+                  navigation.navigate("AddPackageScreen", {
+                    setPackage: setPackage,
+                    data: Package.filter((d) => e.match(d.title))[0],
+                    package: Package,
+                  });
+                }}
+                {...props}
+              />
+            )}
             screenOptions={{
               lazy: true,
             }}
           >
             {Package.map((doc, i) => (
-              <Tab.Screen key={i} name={doc.name} component={Screen} />
+              <Tab.Screen
+                initialParams={{ data: doc }}
+                key={i}
+                name={`${doc.name} ${doc.price}৳`}
+                component={TabScreen}
+              />
             ))}
 
             <Tab.Screen
@@ -146,7 +214,163 @@ export default function AddPackage({ navigation }) {
             />
           </Tab.Navigator>
         </View>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            Add Photo
+          </Text>
+          <Text
+            style={{
+              fontSize: 10,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            *maximum 2 mb size
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "space-between",
+            marginTop: 20,
+          }}
+        >
+          <ImageButton
+            value={Images1}
+            onChange={(e) => {
+              setImage1(e);
+            }}
+          />
+          <ImageButton
+            value={Image2}
+            onChange={(e) => {
+              setImage2(e);
+            }}
+          />
+          <ImageButton
+            value={Image3}
+            onChange={(e) => {
+              setImage3(e);
+            }}
+          />
+          <ImageButton
+            value={Image4}
+            onChange={(e) => {
+              setImage4(e);
+            }}
+          />
+        </View>
+        {ImageError && (
+          <Text
+            style={{
+              color: "red",
+              marginHorizontal: 20,
+            }}
+          >
+            {ImageError}
+          </Text>
+        )}
+        <View
+          style={{
+            height: 20,
+          }}
+        />
       </ScrollView>
+      <IconButton
+        onPress={async () => {
+          //navigation.goBack()
+          setTitleError("");
+          setDescriptionError("");
+          setImageError("");
+          if (!Title) {
+            setTitleError("*Title is required");
+            return;
+          }
+          if (!Description) {
+            setDescriptionError("*Description is  required");
+            return;
+          }
+          if (!Images1 || !Image2 || !Image3 || !Image4) {
+            setImageError("*Image is required");
+            return;
+          }
+
+          //ongoing function-------------
+          setLoader(true);
+          let blobImages = [];
+          blobImages.push(fileFromURL(Images1));
+          blobImages.push(fileFromURL(Image2));
+          blobImages.push(fileFromURL(Image3));
+          blobImages.push(fileFromURL(Image4));
+          const result = await uploadFile(blobImages, user.token);
+
+          if (result) {
+            createOtherService(
+              user.token,
+              {
+                serviceTitle: Title,
+                price: 0,
+                description: Description,
+                packageData: Package,
+              },
+              route.params.data,
+              result,
+              vendor.service.id,
+              "PACKAGE"
+            )
+              .then((res) => {
+                navigation.navigate("VendorProfile", { direct: res });
+                setLoader(false);
+              })
+              .catch((err) => {
+                console.warn(err);
+                Alert.alert("Opps!", err.response.data.msg);
+                setLoader(false);
+              });
+            return;
+          }
+          Alert.alert("Error!", "Can't upload photos");
+          return;
+        }}
+        style={{
+          backgroundColor: "#4ADE80",
+          marginHorizontal: 20,
+          height: 35,
+          borderWidth: 0,
+        }}
+        title={"Confirm"}
+      />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+        style={{
+          alignItems: "center",
+          marginVertical: 15,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "Poppins-Medium",
+            textDecorationLine: "underline",
+          }}
+        >
+          Cancel
+        </Text>
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }
@@ -181,6 +405,68 @@ const Screen = ({ navigation, route }) => {
     </View>
   );
 };
+const TabScreen = ({ navigation, route }) => {
+  const data = route.params.data;
+
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      {data.features.map((doc, i) => (
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: 20,
+            justifyContent: "space-between",
+            marginVertical: 5,
+            borderBottomColor: "#F1F1F1",
+            borderBottomWidth: data.features.length - 1 == i ? 0 : 1,
+          }}
+          key={i}
+        >
+          {doc.isAvailable ? (
+            <SvgXml xml={right} height="30" width={"30"} />
+          ) : (
+            <View
+              style={{
+                height: 10,
+                width: 10,
+                borderRadius: 5,
+                backgroundColor: "gray",
+                margin: 8,
+              }}
+            ></View>
+          )}
+          <Text
+            style={{
+              fontSize: 14,
+              color: "#666666",
+            }}
+          >
+            {doc.title}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+const right = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30.605" height="27.993" viewBox="0 0 30.605 27.993">
+<defs>
+  <filter id="Path_20808" x="0" y="0" width="30.605" height="27.993" filterUnits="userSpaceOnUse">
+    <feOffset dy="3" input="SourceAlpha"/>
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feFlood flood-opacity="0.059"/>
+    <feComposite operator="in" in2="blur"/>
+    <feComposite in="SourceGraphic"/>
+  </filter>
+</defs>
+<g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_20808)">
+  <path id="Path_20808-2" data-name="Path 20808" d="M-1914.146,1248.438a2.381,2.381,0,0,1,1.1-.082,3.952,3.952,0,0,1,3.039,1.914l.306.491a13.771,13.771,0,0,1,8.1-6.767l.053.046c-.041.048-.078.1-.122.144-.976.977-1.964,1.943-2.926,2.931a22.819,22.819,0,0,0-2.99,3.7c-.429.681-.823,1.382-1.237,2.071-.17.283-.351.559-.53.837a1.017,1.017,0,0,1-.122.149c-.156.163-.245.161-.361-.031q-.482-.794-.945-1.6a13.755,13.755,0,0,0-1.538-2.3,7.365,7.365,0,0,0-1.763-1.467Z" transform="translate(1923.15 -1237.99)" fill="#0d9e21"/>
+</g>
+</svg>
+`;
 
 const vectorImage = `<svg xmlns="http://www.w3.org/2000/svg" width="282.58" height="188.187" viewBox="0 0 282.58 188.187">
 <g id="Group_10219" data-name="Group 10219" transform="translate(-121.823 -42.025)">
@@ -394,7 +680,14 @@ const circle = `<svg xmlns="http://www.w3.org/2000/svg" width="13.678" height="1
 </g>
 </svg>
 `;
-const TabBar = ({ state, descriptors, navigation, position }) => {
+const TabBar = ({ state, descriptors, navigation, position, onClick }) => {
+  const ref = React.useRef();
+  React.useEffect(() => {
+    if (ref) {
+      ref.current.scrollTo({ x: state.index * 80, animated: true });
+    }
+  }, [state.index]);
+
   return (
     <View
       style={{
@@ -403,65 +696,93 @@ const TabBar = ({ state, descriptors, navigation, position }) => {
         borderBottomWidth: 0.5,
       }}
     >
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
+      <ScrollView
+        ref={ref}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+              ? options.title
+              : route.name;
 
-        const isFocused = state.index === index;
-        const onPress = () => {
-          const event = navigation.emit({
-            type: "tabPress",
-            target: route.key,
-            canPreventDefault: true,
-          });
+          const isFocused = state.index === index;
+          const onPress = () => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
 
-        return (
-          <View key={index}>
-            <Pressable
-              onPress={onPress}
-              style={{
-                borderBottomColor: "#707070",
-                paddingHorizontal: 20,
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: 5,
-                height: 40,
-              }}
-            >
-              {label == "Add Package" && (
-                <SvgXml
-                  style={{
-                    marginRight: 10,
-                  }}
-                  xml={plus}
-                  height="15"
-                  width="15"
-                />
-              )}
-              <Text
+          return (
+            <View key={index}>
+              <Pressable
+                onPress={onPress}
                 style={{
-                  fontSize: 16,
+                  borderBottomColor: "#707070",
+                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 5,
+                  height: 40,
+                  justifyContent: "center",
                 }}
               >
-                {label}
-              </Text>
-            </Pressable>
-            {isFocused && (
-              <View style={{ height: 2, backgroundColor: "#707070" }} />
-            )}
-          </View>
-        );
-      })}
+                {label == "Add Package" && (
+                  <SvgXml
+                    style={{
+                      marginRight: 10,
+                    }}
+                    xml={plus}
+                    height="15"
+                    width="15"
+                  />
+                )}
+
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}
+                >
+                  {label}
+                </Text>
+                {label != "Add Package" && (
+                  <Entypo
+                    onPress={() => {
+                      onClick(label);
+                    }}
+                    style={{
+                      marginLeft: 10,
+                    }}
+                    name="dots-three-vertical"
+                    size={18}
+                    color="black"
+                  />
+                )}
+              </Pressable>
+              {isFocused && (
+                <View
+                  style={{
+                    height: 2,
+                    backgroundColor: "#707070",
+                    width: "80%",
+                    alignSelf: "center",
+                  }}
+                />
+              )}
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
@@ -596,93 +917,76 @@ const plusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.261" height=
 export const AddScreen = ({ navigation, route }) => {
   const setPackage =
     route.params && route.params.setPackage ? route.params.setPackage : null;
-  const [Feature, setFeature] = React.useState([
-    {
-      title: "Feature 1",
-      available: true,
-    },
-  ]);
-  const [TotalFeature,setTotalFeature]=React.useState(["Feature 1"])
-  const Render = ({ data, setFeature, index, onChange }) => {
-    const [text, setText] = React.useState(data.title);
-    const [available, setAvailable] = React.useState(data.available);
 
-    return (
-      <View>
-        <Input
-          onChange={(e) => {
-            setText(e);
-            if (onChange) {
-              onChange({
-                title: text,
-                available: available,
-              });
-            }
-          }}
-          onSubmitEditing={() => {
-            setFeature((val) => {
-              let arr = [];
-              val.map((doc, i) => {
-                if (i == index) {
-                  arr.push({
-                    title: text,
-                    available: available,
-                  });
-                } else {
-                  arr.push(doc);
-                }
-              });
-              return arr;
-            });
-          }}
-          value={text}
-          keyboardType={"numeric"}
-          style={{
-            borderWidth: 1,
-          }}
-          placeholder={"Feature 1"}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <CheckBox
-            value={available}
-            onChange={() => {
-              setAvailable((val) => !val);
-              if (onChange) {
-                onChange({
-                  title: text,
-                  available: available,
-                });
-              }
-            }}
-            style={{
-              marginHorizontal: 20,
-              marginVertical: 10,
-              width: 120,
-            }}
-            title={"Available"}
-          />
-          <IconButton
-            onPress={() => {
-              setFeature((val) => {
-                return val.filter((d) => d.title != data.title);
-              });
-            }}
-            style={{
-              borderWidth: 0,
-            }}
-            LeftIcon={() => (
-              <AntDesign name="minuscircleo" size={20} color="red" />
-            )}
-            title={"Remove"}
-          />
-        </View>
-      </View>
-    );
-  };
+  const [TotalFeature, setTotalFeature] = React.useState(["Feature 1"]);
+  const [Feature3, setFeature3] = React.useState("Feature 3");
+  const [Feature1, setFeature1] = React.useState("Feature 1");
+  const [Feature2, setFeature2] = React.useState("Feature 2");
+  const [Feature4, setFeature4] = React.useState("Feature 4");
+  const [Feature5, setFeature5] = React.useState("Feature 5");
+  const [Feature6, setFeature6] = React.useState("Feature 6");
+  const [Feature7, setFeature7] = React.useState("Feature 7");
+  const [Feature8, setFeature8] = React.useState("Feature 8");
+  const [Feature9, setFeature9] = React.useState("Feature 9");
+  const [Feature10, setFeature10] = React.useState("Feature 10");
+  const [Check1, setCheck1] = React.useState(false);
+  const [Check2, setCheck2] = React.useState(false);
+  const [Check3, setCheck3] = React.useState(false);
+  const [Check4, setCheck4] = React.useState(false);
+  const [Check5, setCheck5] = React.useState(false);
+  const [Check6, setCheck6] = React.useState(false);
+  const [Check7, setCheck7] = React.useState(false);
+  const [Check8, setCheck8] = React.useState(false);
+  const [Check9, setCheck9] = React.useState(false);
+  const [Check10, setCheck10] = React.useState(false);
+  const [Name, setName] = React.useState();
+  const [Price, setPrice] = React.useState();
+  const [NameError, setNameError] = React.useState();
+  const [PriceError, setPriceError] = React.useState();
+
+  React.useEffect(() => {
+    if (route.params.data) {
+      const data = route.params.data;
+      console.log(data);
+      setName(data.name);
+      setPrice(data.price);
+      setTotalFeature(data.features);
+      data.features.map((doc, i) => {
+        if (i == 0) {
+          setCheck1(doc.isAvailable);
+          setFeature1(doc.title);
+        } else if (i == 1) {
+          setCheck2(doc.isAvailable);
+          setFeature2(doc.title);
+        } else if (i == 2) {
+          setCheck3(doc.isAvailable);
+          setFeature3(doc.title);
+        } else if (i == 3) {
+          setCheck4(doc.isAvailable);
+          setFeature4(doc.title);
+        } else if (i == 4) {
+          setCheck5(doc.isAvailable);
+          setFeature5(doc.title);
+        } else if (i == 5) {
+          setCheck6(doc.isAvailable);
+          setFeature6(doc.title);
+        } else if (i == 6) {
+          setCheck7(doc.isAvailable);
+          setFeature7(doc.title);
+        } else if (i == 7) {
+          setCheck8(doc.isAvailable);
+          setFeature8(doc.title);
+        } else if (i == 8) {
+          setCheck9(doc.isAvailable);
+          setFeature9(doc.title);
+        } else if (i == 9) {
+          setCheck10(doc.isAvailable);
+          setFeature10(doc.title);
+        }
+      });
+    }
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -737,20 +1041,32 @@ export const AddScreen = ({ navigation, route }) => {
             width={width / 2 + 35}
           />
         </View>
-        <Input
-          style={{
-            borderWidth: 1,
-          }}
-          placeholder={"Package Name"}
-        />
-        <Input
-          keyboardType={"numeric"}
-          style={{
-            borderWidth: 1,
-            marginTop: 10,
-          }}
-          placeholder={"Price"}
-        />
+        <View style={{ marginHorizontal: 20 }}>
+          <Input
+            value={Name}
+            onChange={(e) => setName(e)}
+            error={NameError}
+            style={{
+              borderWidth: 1,
+              marginHorizontal: 0,
+            }}
+            placeholder={"Package Name"}
+          />
+        </View>
+        <View style={{ marginHorizontal: 20 }}>
+          <Input
+            value={Price}
+            onChange={(e) => setPrice(e)}
+            error={PriceError}
+            keyboardType={"numeric"}
+            style={{
+              borderWidth: 1,
+              marginTop: 10,
+              marginHorizontal: 0,
+            }}
+            placeholder={"Price"}
+          />
+        </View>
 
         <View
           style={{
@@ -761,7 +1077,7 @@ export const AddScreen = ({ navigation, route }) => {
           }}
         >
           <Text
-            style={{
+            sty3e={{
               fontSize: 16,
               fontFamily: "Poppins-SemiBold",
               marginTop: 15,
@@ -786,50 +1102,331 @@ export const AddScreen = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
-        {TotalFeature &&
-          TotalFeature.map((doc, i) => (
-            <Render
-              onChange={(e) => {
-                setFeature((val) => {
-                  let arr = [];
-                  val.map((doc, j) => {
-                    if (i == j) {
-                      arr.push({
-                        title: e.title,
-                        available: e.available,
-                      });
-                    } else {
-                      arr.push(doc);
-                    }
-                  });
-                  return arr;
-                });
+        {TotalFeature.length >= 1 && (
+          <View>
+            <Input
+              onChange={(e) => setFeature1(e)}
+              value={Feature1}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
               }}
-              index={i}
-              setFeature={setFeature}
-              data={Feature[i]}
-              key={i}
+              placeholder={"Feature 1"}
             />
-          ))}
-        <IconButton
-          onPress={() => {
-            setFeature((val) => [
-              ...val,
-              {
-                title: `Feature ${Feature.length + 1}`,
-                available: false,
-              },
-            ]);
-          }}
-          LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
-          style={{
-            justifyContent: "flex-start",
-            borderWidth: 0,
-            marginHorizontal: 10,
-            width: 150,
-          }}
-          title={"Add More Feature"}
-        />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check1}
+                onChange={() => {
+                  setCheck1(!Check1);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        )}
+        {TotalFeature.length >= 2 && (
+          <View>
+            <Input
+              onChange={(e) => setFeature2(e)}
+              value={Feature2}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check2}
+                onChange={() => {
+                  setCheck2(!Check2);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        )}
+        {TotalFeature.length >= 3 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature3(e)}
+              value={Feature3}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check3}
+                onChange={() => {
+                  setCheck3(!Check3);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 4 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature4(e)}
+              value={Feature4}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 4"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check4}
+                onChange={() => {
+                  setCheck4(Check4);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 5 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature5(e)}
+              value={Feature5}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check5}
+                onChange={() => {
+                  setCheck5(!Check5);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 6 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature6(e)}
+              value={Feature6}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check6}
+                onChange={() => {
+                  setCheck6(!Check6);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 7 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature7(e)}
+              value={Feature7}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check7}
+                onChange={() => {
+                  setCheck7(!Check7);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 8 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature8(e)}
+              value={Feature8}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check8}
+                onChange={() => {
+                  setCheck8(!Check8);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 9 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature9(e)}
+              value={Feature9}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check9}
+                onChange={() => {
+                  setCheck9(!Check9);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 10 ? (
+          <View>
+            <Input
+              onChange={(e) => setFeature10(e)}
+              value={Feature10}
+              keyboardType={"numeric"}
+              style={{
+                borderWidth: 1,
+              }}
+              placeholder={"Feature 1"}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check10}
+                onChange={() => {
+                  setCheck10(!Check10);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length != 10 ? (
+          <IconButton
+            onPress={() => {
+              setTotalFeature((val) => [...val, "New feature"]);
+            }}
+            LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
+            style={{
+              justifyContent: "flex-start",
+              borderWidth: 0,
+              marginHorizontal: 10,
+              width: 150,
+            }}
+            title={"Add More Feature"}
+          />
+        ) : null}
         <View
           style={{
             height: 30,
@@ -837,6 +1434,132 @@ export const AddScreen = ({ navigation, route }) => {
         />
       </ScrollView>
       <IconButton
+        onPress={() => {
+          let arr = [];
+          //let i=0;
+          if (Feature1) {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature1,
+              isAvailable: Check1,
+            });
+          }
+          if (Feature2 != "Feature 2") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature2,
+              isAvailable: Check2,
+            });
+          }
+          if (Feature3 != "Feature 3") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature3,
+              isAvailable: Check3,
+            });
+          }
+          if (Feature4 != "Feature 4") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature4,
+              isAvailable: Check4,
+            });
+          }
+          if (Feature5 != "Feature 5") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature5,
+              isAvailable: Check5,
+            });
+          }
+          if (Feature6 != "Feature 6") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature6,
+              isAvailable: Check6,
+            });
+          }
+          if (Feature7 != "Feature 7") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature7,
+              isAvailable: Check7,
+            });
+          }
+          if (Feature8 != "Feature 8") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature8,
+              isAvailable: Check8,
+            });
+          }
+          if (Feature9 != "Feature 9") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature9,
+              isAvailable: Check9,
+            });
+          }
+          if (Feature10 != "Feature 10") {
+            arr.push({
+              id: uuid.v4(),
+              title: Feature10,
+              isAvailable: Check10,
+            });
+          }
+          setNameError(null);
+          setPriceError(null);
+          if (!Name) {
+            setNameError("* Name is required");
+            return;
+          }
+          if (!Price) {
+            setPriceError("* Price is required");
+            return;
+          }
+          if (route.params.data) {
+            let packages = route.params.package;
+            let newArr = [];
+            packages.map((doc, i) => {
+              if (doc.id == route.params.data.id) {
+                newArr.push({
+                  name: Name,
+                  id: route.params.data.id,
+                  price: Price,
+                  features: arr,
+                });
+              } else {
+                newArr.push(doc);
+              }
+            });
+
+            setPackage(newArr);
+            return;
+          }
+          setPackage((data) => {
+            if (data) {
+              return [
+                ...data,
+                {
+                  id: uuid.v4(),
+                  name: Name,
+                  price: Price,
+                  features: arr,
+                },
+              ];
+            } else {
+              return [
+                {
+                  id: uuid.v4(),
+                  name: Name,
+                  price: Price,
+                  features: arr,
+                },
+              ];
+            }
+          });
+          navigation.navigate("Add Package");
+        }}
         style={{
           backgroundColor: "#4ADE80",
           marginHorizontal: 20,

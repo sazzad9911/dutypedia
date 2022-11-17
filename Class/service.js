@@ -157,7 +157,7 @@ export const createOtherService = async (
   listData,
   images,
   serviceId,
-  type
+  type,
 ) => {
   const data = {
     title: businessForm.serviceTitle,
@@ -177,6 +177,7 @@ export const createOtherService = async (
     images: images,
     serviceId: serviceId,
     type: type,
+    packageData:businessForm.packageData
   };
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },

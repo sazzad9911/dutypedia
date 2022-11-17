@@ -468,7 +468,7 @@ const Service = ({ navigation, route }) => {
 
 export default Service;
 
-const ImageButton = ({ style, onChange, value }) => {
+export const ImageButton = ({ style, onChange, value }) => {
   const [image, setImage] = React.useState(null);
   React.useEffect(() => {
     if (value) {

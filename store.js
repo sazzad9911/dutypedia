@@ -20,6 +20,7 @@ import orders from "./Reducers/orders";
 import orderState from "./Reducers/orderState";
 import userOrders from "./Reducers/userOrders";
 import vendorOrders from "./Reducers/vendorOrders";
+import packages from "./Reducers/packages";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -42,7 +43,8 @@ const combine = combineReducers({
   orders:orders,
   orderState:orderState,
   userOrders:userOrders,
-  vendorOrders:vendorOrders
+  vendorOrders:vendorOrders,
+  packages:packages
 });
 const store = createStore(combine);
 export default store;
