@@ -51,8 +51,8 @@ export default function AddPackage({ navigation, route }) {
   const [PackageError, setPackageError] = React.useState();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const [Height, setHeight] = React.useState();
-  const length=route.params.length?route.params.length:null;
+  const [Height, setHeight] = React.useState(4);
+  const length=route.params&&route.params.length?route.params.length:null;
 
   const deleteData = async (id) => {
     setLoader(true);
@@ -60,6 +60,7 @@ export default function AddPackage({ navigation, route }) {
     setLoader(false);
   };
   React.useEffect(() => {
+    //setLoader(true)
     let max = 0;
     packages &&
       packages.map((doc, i) => {
@@ -67,17 +68,16 @@ export default function AddPackage({ navigation, route }) {
           max = doc.features.length;
         }
       });
+      if(max<4){
+        setHeight(4);
+        return
+      }
+      setHeight(max);
+      //setLoader(false)
+  }, [packages.length+length]);
+  
 
-    setHeight(max);
-  }, [packages.length]);
-  React.useEffect(() => {
-    setLoader(true)
-    if(isFocused){
-      setLoader(false)
-    }
-  }, [length]);
-
-  if (Loader) {
+  if (Loader|| !isFocused) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator color={"red"} size="small" />
@@ -206,13 +206,13 @@ export default function AddPackage({ navigation, route }) {
           </View>
         </View>
         
-         {Height&&isFocused?(
+         {Height?(
            <View
            style={{
-             height: Height ? Height * 51 : 200,
+             height: Height * 60,
            }}
          >
-           <Tab.Navigator
+           <Tab.Navigator initialRouteName={packages.length==0?"Add Package":packages[packages.length-1].id}
             
              tabBar={(props) => (
                <TabBar
@@ -1130,8 +1130,10 @@ export const AddScreen = ({ navigation, route }) => {
       });
     }
   }, []);
-  const removeById = (id, position) => {
-    const arr = TotalFeature.filter((d) => d != id);
+  const removeById = (position) => {
+    //const arr = TotalFeature.filter((d) => d != id);
+    let arr=TotalFeature;
+    arr.pop()
     setTotalFeature(arr);
     if (position == 1) {
       setFeature1("");
@@ -1315,7 +1317,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[0], 1);
+                  removeById(1);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1381,7 +1383,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[1], 2);
+                  removeById(2);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1447,7 +1449,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[2], 3);
+                  removeById(3);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1513,7 +1515,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[3], 4);
+                  removeById(4);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1579,7 +1581,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[4], 5);
+                  removeById(5);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1645,7 +1647,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[5], 6);
+                  removeById(6);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1711,7 +1713,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[6], 7);
+                  removeById(7);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1777,7 +1779,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[7], 8);
+                  removeById(8);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1843,7 +1845,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[8], 9);
+                  removeById(9);
                 }}
                 style={{
                   flexDirection: "row",
@@ -1909,7 +1911,7 @@ export const AddScreen = ({ navigation, route }) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  removeById(TotalFeature[9], 10);
+                  removeById(10);
                 }}
                 style={{
                   flexDirection: "row",
@@ -2033,6 +2035,7 @@ export const AddScreen = ({ navigation, route }) => {
                 isAvailable: Check10,
               });
             }
+            
             setNameError(null);
             setPriceError(null);
             if (!Name) {
@@ -2102,7 +2105,7 @@ export const AddScreen = ({ navigation, route }) => {
                 features: arr,
               },
             });
-            navigation.navigate("AddPackage",{length:newArr.length});
+            navigation.navigate("AddPackage");
           }}
           style={{
             backgroundColor: "#4ADE80",
