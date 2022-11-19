@@ -25,9 +25,11 @@ import uuid from "react-native-uuid";
 import { ImageButton } from "../Seller/Service";
 import { uploadFile } from "../../Class/upload";
 import { fileFromURL } from "../../action";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { createOtherService, createService } from "../../Class/service";
+import { Menu } from "react-native-paper";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function AddPackage({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
@@ -45,6 +47,35 @@ export default function AddPackage({ navigation, route }) {
   const businessForm = useSelector((state) => state.businessForm);
   const listData = useSelector((state) => state.listData);
   const [Loader, setLoader] = React.useState(false);
+  const packages = useSelector((state) => state.packages);
+  const [PackageError, setPackageError] = React.useState();
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const [Height, setHeight] = React.useState();
+  const length=route.params.length?route.params.length:null;
+
+  const deleteData = async (id) => {
+    setLoader(true);
+    await dispatch({ type: "DELETE_PACKAGE", playload: id });
+    setLoader(false);
+  };
+  React.useEffect(() => {
+    let max = 0;
+    packages &&
+      packages.map((doc, i) => {
+        if (max < doc.features.length) {
+          max = doc.features.length;
+        }
+      });
+
+    setHeight(max);
+  }, [packages.length]);
+  React.useEffect(() => {
+    setLoader(true)
+    if(isFocused){
+      setLoader(false)
+    }
+  }, [length]);
 
   if (Loader) {
     return (
@@ -58,7 +89,7 @@ export default function AddPackage({ navigation, route }) {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
       <View
         style={{
@@ -145,15 +176,14 @@ export default function AddPackage({ navigation, route }) {
           style={{
             flexDirection: "row",
             paddingHorizontal: 20,
-            alignItems: "center",
             marginBottom: 15,
+            marginTop: 10,
           }}
         >
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 18,
               fontFamily: "Poppins-SemiBold",
-              marginTop: 15,
             }}
           >
             Add Package
@@ -167,53 +197,87 @@ export default function AddPackage({ navigation, route }) {
           >
             <Text
               style={{
-                fontSize: 10,
-                marginTop: 10,
+                fontSize: 12,
+                textAlign: "justify",
               }}
             >
               *minimum Two package and maximum 5 package can add
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            height: 450,
-          }}
-        >
-          <Tab.Navigator
-            tabBar={(props) => (
-              <TabBar
-                onClick={(e) => {
-                  //console.log(e)
-                  navigation.navigate("AddPackageScreen", {
-                    setPackage: setPackage,
-                    data: Package.filter((d) => e.match(d.title))[0],
-                    package: Package,
-                  });
-                }}
-                {...props}
-              />
-            )}
-            screenOptions={{
-              lazy: true,
+        
+         {Height&&isFocused?(
+           <View
+           style={{
+             height: Height ? Height * 51 : 200,
+           }}
+         >
+           <Tab.Navigator
+            
+             tabBar={(props) => (
+               <TabBar
+                 onClick={(e) => {
+                   //console.log(e)
+                   navigation.navigate("AddPackageScreen", {
+                     setPackage: setPackage,
+                     data: packages.filter((d) => e.id == d.id)[0],
+                     package: packages,
+                   });
+                 }}
+                 onPress={(e) => {
+                   Alert.alert("Hey!", "Are you want to delete this?", [
+                     {
+                       text: "Cancel",
+                       onPress: () => console.log("Cancel Pressed"),
+                       style: "cancel",
+                     },
+                     {
+                       text: "OK",
+                       onPress: () => {
+                         deleteData(e);
+                       },
+                     },
+                   ]);
+                 }}
+                 {...props}
+               />
+             )}
+             screenOptions={{
+               lazy: true,
+               lazyPreloadDistance: 100,
+             }}
+           >
+             {packages.map((doc, i) => (
+               <Tab.Screen
+                 initialParams={{ data: doc }}
+                 key={i}
+                 name={doc.id}
+                 component={TabScreen}
+               />
+             ))}
+
+             {packages.length < 5 && (
+               <Tab.Screen
+                 name="Add Package"
+                 initialParams={{ setPackage: setPackage }}
+                 component={Screen}
+               />
+             )}
+           </Tab.Navigator>
+         </View>
+         ):(<></>)}
+        
+        {PackageError && (
+          <Text
+            style={{
+              marginHorizontal: 20,
+              color: "red",
+              marginVertical: 10,
             }}
           >
-            {Package.map((doc, i) => (
-              <Tab.Screen
-                initialParams={{ data: doc }}
-                key={i}
-                name={`${doc.name} ${doc.price}৳`}
-                component={TabScreen}
-              />
-            ))}
-
-            <Tab.Screen
-              name="Add Package"
-              initialParams={{ setPackage: setPackage }}
-              component={Screen}
-            />
-          </Tab.Navigator>
-        </View>
+            {PackageError}
+          </Text>
+        )}
         <View
           style={{
             paddingHorizontal: 20,
@@ -287,90 +351,81 @@ export default function AddPackage({ navigation, route }) {
             height: 20,
           }}
         />
-      </ScrollView>
-      <IconButton
-        onPress={async () => {
-          //navigation.goBack()
-          setTitleError("");
-          setDescriptionError("");
-          setImageError("");
-          if (!Title) {
-            setTitleError("*Title is required");
-            return;
-          }
-          if (!Description) {
-            setDescriptionError("*Description is  required");
-            return;
-          }
-          if (!Images1 || !Image2 || !Image3 || !Image4) {
-            setImageError("*Image is required");
-            return;
-          }
+        <IconButton
+          onPress={async () => {
+            //navigation.goBack()
+            setTitleError("");
+            setDescriptionError("");
+            setImageError("");
+            setPackageError("");
+            if (!Title) {
+              setTitleError("*Title is required");
+              return;
+            }
+            if (!Description) {
+              setDescriptionError("*Description is  required");
+              return;
+            }
+            if (packages.length < 2) {
+              setPackageError("You must select minimum 2 package");
+              return;
+            }
+            if (!Images1 || !Image2 || !Image3 || !Image4) {
+              setImageError("*Image is required");
+              return;
+            }
 
-          //ongoing function-------------
-          setLoader(true);
-          let blobImages = [];
-          blobImages.push(fileFromURL(Images1));
-          blobImages.push(fileFromURL(Image2));
-          blobImages.push(fileFromURL(Image3));
-          blobImages.push(fileFromURL(Image4));
-          const result = await uploadFile(blobImages, user.token);
+            //ongoing function-------------
+            setLoader(true);
+            let blobImages = [];
+            blobImages.push(fileFromURL(Images1));
+            blobImages.push(fileFromURL(Image2));
+            blobImages.push(fileFromURL(Image3));
+            blobImages.push(fileFromURL(Image4));
+            const result = await uploadFile(blobImages, user.token);
 
-          if (result) {
-            createOtherService(
-              user.token,
-              {
-                serviceTitle: Title,
-                price: 0,
-                description: Description,
-                packageData: Package,
-              },
-              route.params.data,
-              result,
-              vendor.service.id,
-              "PACKAGE"
-            )
-              .then((res) => {
-                navigation.navigate("VendorProfile", { direct: res });
-                setLoader(false);
-              })
-              .catch((err) => {
-                console.warn(err);
-                Alert.alert("Opps!", err.response.data.msg);
-                setLoader(false);
-              });
+            if (result) {
+              createOtherService(
+                user.token,
+                {
+                  serviceTitle: Title,
+                  price: 0,
+                  description: Description,
+                  packageData: packages,
+                },
+                route.params.data,
+                result,
+                vendor.service.id,
+                "PACKAGE"
+              )
+                .then((res) => {
+                  navigation.navigate("VendorProfile", { direct: res });
+                  setLoader(false);
+                })
+                .catch((err) => {
+                  console.warn(err);
+                  Alert.alert("Opps!", err.response.data.msg);
+                  setLoader(false);
+                });
+              return;
+            }
+            Alert.alert("Error!", "Can't upload photos");
             return;
-          }
-          Alert.alert("Error!", "Can't upload photos");
-          return;
-        }}
-        style={{
-          backgroundColor: "#4ADE80",
-          marginHorizontal: 20,
-          height: 35,
-          borderWidth: 0,
-        }}
-        title={"Confirm"}
-      />
-      <TouchableOpacity
-        onPress={() => {
-          navigation.goBack();
-        }}
-        style={{
-          alignItems: "center",
-          marginVertical: 15,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            textDecorationLine: "underline",
           }}
-        >
-          Cancel
-        </Text>
-      </TouchableOpacity>
+          style={{
+            backgroundColor: "#4ADE80",
+            marginHorizontal: 20,
+            height: 35,
+            borderWidth: 0,
+          }}
+          title={"Confirm"}
+        />
+        <View
+          style={{
+            height: 20,
+          }}
+        />
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -381,6 +436,8 @@ const Screen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {route.name == "Add Package" && (
@@ -397,7 +454,6 @@ const Screen = ({ navigation, route }) => {
             width: 120,
             alignSelf: "center",
             justifySelf: "center",
-            marginTop: "20%",
           }}
           title={"Add Now"}
         />
@@ -426,27 +482,34 @@ const TabScreen = ({ navigation, route }) => {
           }}
           key={i}
         >
-          {doc.isAvailable ? (
-            <SvgXml xml={right} height="30" width={"30"} />
-          ) : (
-            <View
+          <View style={{flex:1}}>
+            {doc.isAvailable ? (
+              <SvgXml xml={right} height="30" width={"30"} />
+            ) : (
+              <Entypo
+                style={{
+                  marginBottom: 8,
+                }}
+                name="cross"
+                size={20}
+                color="red"
+              />
+            )}
+          </View>
+          <View style={{
+            flex:1,
+            alignItems:"flex-end"
+          }}>
+            <Text
               style={{
-                height: 10,
-                width: 10,
-                borderRadius: 5,
-                backgroundColor: "gray",
-                margin: 8,
+                fontSize: 14,
+                color: "#666666",
+                textAlign:"justify"
               }}
-            ></View>
-          )}
-          <Text
-            style={{
-              fontSize: 14,
-              color: "#666666",
-            }}
-          >
-            {doc.title}
-          </Text>
+            >
+              {doc.title ? doc.title : ""}
+            </Text>
+          </View>
         </View>
       ))}
     </View>
@@ -680,9 +743,22 @@ const circle = `<svg xmlns="http://www.w3.org/2000/svg" width="13.678" height="1
 </g>
 </svg>
 `;
-const TabBar = ({ state, descriptors, navigation, position, onClick }) => {
+const TabBar = ({
+  state,
+  descriptors,
+  navigation,
+  position,
+  onClick,
+  onPress,
+}) => {
   const ref = React.useRef();
+  const packages = useSelector((state) => state.packages);
+
+  const dispatch = useDispatch();
+
   React.useEffect(() => {
+    //console.log(packages[state.index-1])
+    console.log(state.index);
     if (ref) {
       ref.current.scrollTo({ x: state.index * 80, animated: true });
     }
@@ -701,32 +777,25 @@ const TabBar = ({ state, descriptors, navigation, position, onClick }) => {
         showsHorizontalScrollIndicator={false}
         horizontal={true}
       >
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const label =
-            options.tabBarLabel !== undefined
-              ? options.tabBarLabel
-              : options.title !== undefined
-              ? options.title
-              : route.name;
-
+        {packages.map((doc, index) => {
           const isFocused = state.index === index;
-          const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
+          const [Visible, setVisible] = React.useState(false);
+          const [Title, setTitle] = React.useState();
+          const [id, setId] = React.useState();
+          React.useEffect(() => {
+            //console.log(packages[state.index-1])
+            if (packages.length > index) {
+              setTitle(`${packages[index].name} ${packages[index].price}৳`);
+              setId(packages[index].id);
             }
-          };
-
+          }, [index]);
           return (
             <View key={index}>
               <Pressable
-                onPress={onPress}
+                onPress={() => {
+                  navigation.navigate(doc.id);
+                }}
                 style={{
                   borderBottomColor: "#707070",
                   paddingHorizontal: 20,
@@ -737,37 +806,51 @@ const TabBar = ({ state, descriptors, navigation, position, onClick }) => {
                   justifyContent: "center",
                 }}
               >
-                {label == "Add Package" && (
-                  <SvgXml
-                    style={{
-                      marginRight: 10,
-                    }}
-                    xml={plus}
-                    height="15"
-                    width="15"
-                  />
-                )}
-
                 <Text
                   style={{
                     fontSize: 16,
                   }}
                 >
-                  {label}
+                  {Title}
+
+                  {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
                 </Text>
-                {label != "Add Package" && (
-                  <Entypo
+
+                <Menu
+                  contentStyle={{
+                    backgroundColor: "white",
+                  }}
+                  visible={Visible}
+                  onDismiss={() => setVisible(!Visible)}
+                  anchor={
+                    <Entypo
+                      onPress={() => {
+                        setVisible(true);
+                      }}
+                      style={{
+                        marginLeft: 10,
+                      }}
+                      name="dots-three-vertical"
+                      size={18}
+                      color="black"
+                    />
+                  }
+                >
+                  <Menu.Item
                     onPress={() => {
-                      onClick(label);
+                      onClick(packages[index]);
+                      setVisible(false);
                     }}
-                    style={{
-                      marginLeft: 10,
-                    }}
-                    name="dots-three-vertical"
-                    size={18}
-                    color="black"
+                    title="Edit"
                   />
-                )}
+                  <Menu.Item
+                    onPress={() => {
+                      onPress(id);
+                      setVisible(false);
+                    }}
+                    title="Delete"
+                  />
+                </Menu>
               </Pressable>
               {isFocused && (
                 <View
@@ -782,6 +865,55 @@ const TabBar = ({ state, descriptors, navigation, position, onClick }) => {
             </View>
           );
         })}
+        <View
+          onLayout={() => {
+            if (ref) {
+              ref.current.scrollTo({ x: 10000, animated: true });
+            }
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Add Package");
+            }}
+            style={{
+              borderBottomColor: "#707070",
+              paddingHorizontal: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 5,
+              height: 40,
+              justifyContent: "center",
+            }}
+          >
+            <SvgXml
+              style={{
+                marginRight: 10,
+              }}
+              xml={plus}
+              height="15"
+              width="15"
+            />
+
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Add Package
+            </Text>
+          </Pressable>
+          {state.index == packages.length && (
+            <View
+              style={{
+                height: 2,
+                backgroundColor: "#707070",
+                width: "80%",
+                alignSelf: "center",
+              }}
+            />
+          )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -918,36 +1050,48 @@ export const AddScreen = ({ navigation, route }) => {
   const setPackage =
     route.params && route.params.setPackage ? route.params.setPackage : null;
 
-  const [TotalFeature, setTotalFeature] = React.useState(["Feature 1"]);
-  const [Feature3, setFeature3] = React.useState("Feature 3");
-  const [Feature1, setFeature1] = React.useState("Feature 1");
-  const [Feature2, setFeature2] = React.useState("Feature 2");
-  const [Feature4, setFeature4] = React.useState("Feature 4");
-  const [Feature5, setFeature5] = React.useState("Feature 5");
-  const [Feature6, setFeature6] = React.useState("Feature 6");
-  const [Feature7, setFeature7] = React.useState("Feature 7");
-  const [Feature8, setFeature8] = React.useState("Feature 8");
-  const [Feature9, setFeature9] = React.useState("Feature 9");
-  const [Feature10, setFeature10] = React.useState("Feature 10");
-  const [Check1, setCheck1] = React.useState(false);
-  const [Check2, setCheck2] = React.useState(false);
-  const [Check3, setCheck3] = React.useState(false);
-  const [Check4, setCheck4] = React.useState(false);
-  const [Check5, setCheck5] = React.useState(false);
-  const [Check6, setCheck6] = React.useState(false);
-  const [Check7, setCheck7] = React.useState(false);
-  const [Check8, setCheck8] = React.useState(false);
-  const [Check9, setCheck9] = React.useState(false);
-  const [Check10, setCheck10] = React.useState(false);
+  const [TotalFeature, setTotalFeature] = React.useState([uuid.v4()]);
+  const [Feature3, setFeature3] = React.useState();
+  const [Feature1, setFeature1] = React.useState();
+  const [Feature2, setFeature2] = React.useState();
+  const [Feature4, setFeature4] = React.useState();
+  const [Feature5, setFeature5] = React.useState();
+  const [Feature6, setFeature6] = React.useState();
+  const [Feature7, setFeature7] = React.useState();
+  const [Feature8, setFeature8] = React.useState();
+  const [Feature9, setFeature9] = React.useState();
+  const [Feature10, setFeature10] = React.useState();
+  const [Check1, setCheck1] = React.useState(true);
+  const [Check2, setCheck2] = React.useState(true);
+  const [Check3, setCheck3] = React.useState(true);
+  const [Check4, setCheck4] = React.useState(true);
+  const [Check5, setCheck5] = React.useState(true);
+  const [Check6, setCheck6] = React.useState(true);
+  const [Check7, setCheck7] = React.useState(true);
+  const [Check8, setCheck8] = React.useState(true);
+  const [Check9, setCheck9] = React.useState(true);
+  const [Check10, setCheck10] = React.useState(true);
   const [Name, setName] = React.useState();
   const [Price, setPrice] = React.useState();
   const [NameError, setNameError] = React.useState();
   const [PriceError, setPriceError] = React.useState();
+  const dispatch = useDispatch();
+  const [Feature1Error, setFeature1Error] = React.useState("");
+  const [Feature2Error, setFeature2Error] = React.useState("");
+  const [Feature3Error, setFeature3Error] = React.useState("");
+  const [Feature4Error, setFeature4Error] = React.useState("");
+  const [Feature5Error, setFeature5Error] = React.useState("");
+  const [Feature6Error, setFeature6Error] = React.useState("");
+  const [Feature7Error, setFeature7Error] = React.useState("");
+  const [Feature8Error, setFeature8Error] = React.useState("");
+  const [Feature9Error, setFeature9Error] = React.useState("");
+  const [Feature10Error, setFeature10Error] = React.useState("");
+  const [FeatureError, setFeatureError] = React.useState("");
 
   React.useEffect(() => {
     if (route.params.data) {
       const data = route.params.data;
-      console.log(data);
+      //console.log(data);
       setName(data.name);
       setPrice(data.price);
       setTotalFeature(data.features);
@@ -986,6 +1130,31 @@ export const AddScreen = ({ navigation, route }) => {
       });
     }
   }, []);
+  const removeById = (id, position) => {
+    const arr = TotalFeature.filter((d) => d != id);
+    setTotalFeature(arr);
+    if (position == 1) {
+      setFeature1("");
+    } else if (position == 2) {
+      setFeature2("");
+    } else if (position == 3) {
+      setFeature3("");
+    } else if (position == 4) {
+      setFeature4("");
+    } else if (position == 5) {
+      setFeature5("");
+    } else if (position == 6) {
+      setFeature6("");
+    } else if (position == 7) {
+      setFeature7("");
+    } else if (position == 8) {
+      setFeature8("");
+    } else if (position == 9) {
+      setFeature9("");
+    } else if (position == 10) {
+      setFeature10("");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -1072,15 +1241,14 @@ export const AddScreen = ({ navigation, route }) => {
           style={{
             flexDirection: "row",
             paddingHorizontal: 20,
-            alignItems: "center",
+            marginTop: 15,
             marginBottom: 15,
           }}
         >
           <Text
-            sty3e={{
-              fontSize: 16,
+            style={{
+              fontSize: 18,
               fontFamily: "Poppins-SemiBold",
-              marginTop: 15,
             }}
           >
             Add Feature
@@ -1094,8 +1262,7 @@ export const AddScreen = ({ navigation, route }) => {
           >
             <Text
               style={{
-                fontSize: 10,
-                marginTop: 10,
+                fontSize: 12,
               }}
             >
               *minimum one and maximum ten feature can add
@@ -1104,15 +1271,31 @@ export const AddScreen = ({ navigation, route }) => {
         </View>
         {TotalFeature.length >= 1 && (
           <View>
-            <Input
-              onChange={(e) => setFeature1(e)}
-              value={Feature1}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature1Error}
+                onChange={(e) => {
+                  setFeature1Error("");
+                  if (e.length > 50) {
+                    setFeature1Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature1(e);
+                }}
+                value={Feature1}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1130,20 +1313,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[0], 1);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
         {TotalFeature.length >= 2 && (
           <View>
-            <Input
-              onChange={(e) => setFeature2(e)}
-              value={Feature2}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature2Error}
+                onChange={(e) => {
+                  setFeature2Error("");
+                  if (e.length > 50) {
+                    setFeature2Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature2(e);
+                }}
+                value={Feature2}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1161,20 +1379,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[1], 2);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
         {TotalFeature.length >= 3 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature3(e)}
-              value={Feature3}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature3Error}
+                onChange={(e) => {
+                  setFeature3Error("");
+                  if (e.length > 50) {
+                    setFeature3Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature3(e);
+                }}
+                value={Feature3}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1192,20 +1445,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[2], 3);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 4 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature4(e)}
-              value={Feature4}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 4"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature4Error}
+                onChange={(e) => {
+                  setFeature4Error("");
+                  if (e.length > 50) {
+                    setFeature4Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature4(e);
+                }}
+                value={Feature4}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1223,20 +1511,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[3], 4);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 5 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature5(e)}
-              value={Feature5}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature5Error}
+                onChange={(e) => {
+                  setFeature5Error("");
+                  if (e.length > 50) {
+                    setFeature5Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature5(e);
+                }}
+                value={Feature5}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1254,20 +1577,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[4], 5);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 6 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature6(e)}
-              value={Feature6}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature6Error}
+                onChange={(e) => {
+                  setFeature6Error("");
+                  if (e.length > 50) {
+                    setFeature6Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature6(e);
+                }}
+                value={Feature6}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1285,20 +1643,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[5], 6);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 7 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature7(e)}
-              value={Feature7}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature7Error}
+                onChange={(e) => {
+                  setFeature7Error("");
+                  if (e.length > 50) {
+                    setFeature7Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature7(e);
+                }}
+                value={Feature7}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1316,20 +1709,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[6], 7);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 8 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature8(e)}
-              value={Feature8}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature8Error}
+                onChange={(e) => {
+                  setFeature8Error("");
+                  if (e.length > 50) {
+                    setFeature8Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature8(e);
+                }}
+                value={Feature8}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1347,20 +1775,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[7], 8);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 9 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature9(e)}
-              value={Feature9}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature9Error}
+                onChange={(e) => {
+                  setFeature9Error("");
+                  if (e.length > 50) {
+                    setFeature9Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature9(e);
+                }}
+                value={Feature9}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1378,20 +1841,55 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[8], 9);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length >= 10 ? (
           <View>
-            <Input
-              onChange={(e) => setFeature10(e)}
-              value={Feature10}
-              keyboardType={"numeric"}
+            <View
               style={{
-                borderWidth: 1,
+                marginHorizontal: 20,
+                marginVertical: 5,
               }}
-              placeholder={"Feature 1"}
-            />
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature10Error}
+                onChange={(e) => {
+                  setFeature10Error("");
+                  if (e.length > 50) {
+                    setFeature10Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature10(e);
+                }}
+                value={Feature10}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1409,13 +1907,32 @@ export const AddScreen = ({ navigation, route }) => {
                 }}
                 title={"Available"}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(TotalFeature[9], 10);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : null}
         {TotalFeature.length != 10 ? (
           <IconButton
             onPress={() => {
-              setTotalFeature((val) => [...val, "New feature"]);
+              setTotalFeature((val) => [...val, uuid.v4()]);
             }}
             LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
             style={{
@@ -1427,166 +1944,180 @@ export const AddScreen = ({ navigation, route }) => {
             title={"Add More Feature"}
           />
         ) : null}
+        {FeatureError && (
+          <Text
+            style={{
+              color: "red",
+              marginHorizontal: 20,
+            }}
+          >
+            {FeatureError}
+          </Text>
+        )}
+        <View
+          style={{
+            height: 30,
+          }}
+        />
+        <IconButton
+          onPress={() => {
+            let arr = [];
+            //let i=0;
+            if (Feature1) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature1,
+                isAvailable: Check1,
+              });
+            }
+            if (Feature2) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature2,
+                isAvailable: Check2,
+              });
+            }
+            if (Feature3) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature3,
+                isAvailable: Check3,
+              });
+            }
+            if (Feature4) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature4,
+                isAvailable: Check4,
+              });
+            }
+            if (Feature5) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature5,
+                isAvailable: Check5,
+              });
+            }
+            if (Feature6) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature6,
+                isAvailable: Check6,
+              });
+            }
+            if (Feature7) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature7,
+                isAvailable: Check7,
+              });
+            }
+            if (Feature8) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature8,
+                isAvailable: Check8,
+              });
+            }
+            if (Feature9) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature9,
+                isAvailable: Check9,
+              });
+            }
+            if (Feature10) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature10,
+                isAvailable: Check10,
+              });
+            }
+            setNameError(null);
+            setPriceError(null);
+            if (!Name) {
+              setNameError("* Name is required");
+              return;
+            }
+            if (!Price) {
+              setPriceError("* Price is required");
+              return;
+            }
+            if (arr.length != TotalFeature.length) {
+              TotalFeature.map((doc, i) => {
+                if (i == 0 && !Feature1) {
+                  setFeature1Error("Empty box");
+                } else if (i == 1 && !Feature2) {
+                  setFeature2Error("Empty box");
+                } else if (i == 2 && !Feature3) {
+                  setFeature3Error("Empty box");
+                } else if (i == 3 && !Feature4) {
+                  setFeature4Error("Empty box");
+                } else if (i == 4 && !Feature5) {
+                  setFeature5Error("Empty box");
+                } else if (i == 5 && !Feature6) {
+                  setFeature6Error("Empty box");
+                } else if (i == 6 && !Feature7) {
+                  setFeature7Error("Empty box");
+                } else if (i == 7 && !Feature8) {
+                  setFeature8Error("Empty box");
+                } else if (i == 8 && !Feature9) {
+                  setFeature9Error("Empty box");
+                } else if (i == 9 && !Feature10) {
+                  setFeature10Error("Empty box");
+                }
+              });
+              return;
+            }
+            if (arr.length == 0) {
+              setFeatureError("Require minimum 1 feature");
+              return;
+            }
+            if (route.params.data) {
+              let packages = route.params.package;
+              let newArr = [];
+              packages.map((doc, i) => {
+                if (doc.id == route.params.data.id) {
+                  newArr.push({
+                    name: Name,
+                    id: route.params.data.id,
+                    price: Price,
+                    features: arr,
+                  });
+                } else {
+                  newArr.push(doc);
+                }
+              });
+
+              dispatch({ type: "SET_PACKAGES", playload: newArr });
+              navigation.navigate("AddPackage",{length:newArr.length});
+              return;
+            }
+            dispatch({
+              type: "ADD_PACKAGE",
+              playload: {
+                id: uuid.v4(),
+                name: Name,
+                price: Price,
+                features: arr,
+              },
+            });
+            navigation.navigate("AddPackage",{length:newArr.length});
+          }}
+          style={{
+            backgroundColor: "#4ADE80",
+            marginHorizontal: 20,
+            height: 35,
+            borderWidth: 0,
+          }}
+          title={"Confirm"}
+        />
         <View
           style={{
             height: 30,
           }}
         />
       </ScrollView>
-      <IconButton
-        onPress={() => {
-          let arr = [];
-          //let i=0;
-          if (Feature1) {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature1,
-              isAvailable: Check1,
-            });
-          }
-          if (Feature2 != "Feature 2") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature2,
-              isAvailable: Check2,
-            });
-          }
-          if (Feature3 != "Feature 3") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature3,
-              isAvailable: Check3,
-            });
-          }
-          if (Feature4 != "Feature 4") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature4,
-              isAvailable: Check4,
-            });
-          }
-          if (Feature5 != "Feature 5") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature5,
-              isAvailable: Check5,
-            });
-          }
-          if (Feature6 != "Feature 6") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature6,
-              isAvailable: Check6,
-            });
-          }
-          if (Feature7 != "Feature 7") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature7,
-              isAvailable: Check7,
-            });
-          }
-          if (Feature8 != "Feature 8") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature8,
-              isAvailable: Check8,
-            });
-          }
-          if (Feature9 != "Feature 9") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature9,
-              isAvailable: Check9,
-            });
-          }
-          if (Feature10 != "Feature 10") {
-            arr.push({
-              id: uuid.v4(),
-              title: Feature10,
-              isAvailable: Check10,
-            });
-          }
-          setNameError(null);
-          setPriceError(null);
-          if (!Name) {
-            setNameError("* Name is required");
-            return;
-          }
-          if (!Price) {
-            setPriceError("* Price is required");
-            return;
-          }
-          if (route.params.data) {
-            let packages = route.params.package;
-            let newArr = [];
-            packages.map((doc, i) => {
-              if (doc.id == route.params.data.id) {
-                newArr.push({
-                  name: Name,
-                  id: route.params.data.id,
-                  price: Price,
-                  features: arr,
-                });
-              } else {
-                newArr.push(doc);
-              }
-            });
-
-            setPackage(newArr);
-            return;
-          }
-          setPackage((data) => {
-            if (data) {
-              return [
-                ...data,
-                {
-                  id: uuid.v4(),
-                  name: Name,
-                  price: Price,
-                  features: arr,
-                },
-              ];
-            } else {
-              return [
-                {
-                  id: uuid.v4(),
-                  name: Name,
-                  price: Price,
-                  features: arr,
-                },
-              ];
-            }
-          });
-          navigation.navigate("Add Package");
-        }}
-        style={{
-          backgroundColor: "#4ADE80",
-          marginHorizontal: 20,
-          height: 35,
-          borderWidth: 0,
-        }}
-        title={"Confirm"}
-      />
-      <TouchableOpacity
-        onPress={() => {
-          navigation.goBack();
-        }}
-        style={{
-          alignItems: "center",
-          marginVertical: 15,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            textDecorationLine: "underline",
-          }}
-        >
-          Cancel
-        </Text>
-      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 };

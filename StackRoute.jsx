@@ -47,6 +47,7 @@ import Feed from "./screens/Feed";
 import { getJson } from "./Class/storage";
 import { getSocket,socket } from "./Class/socket";
 import VendorProfile from "./screens/VendorProfile";
+import AddPackage, { AddScreen } from "./screens/services/AddPackage";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -221,7 +222,7 @@ export default function StackRoute() {
           component={Review}
         />
         <Stack.Screen
-        name="VendorProfile"
+        name="VendorProfile_1"
         options={{
           headerShown: false,
         }}
@@ -256,6 +257,16 @@ export default function StackRoute() {
           }}
           component={Support}
         />
+        <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddPackage"
+        component={AddPackage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddPackageScreen"
+        component={AddScreen}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

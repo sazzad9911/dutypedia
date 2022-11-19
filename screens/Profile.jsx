@@ -270,16 +270,7 @@ const Profile = ({ navigation }) => {
         name="AddServiceList_1"
         component={AddServiceList}
       />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddPackage"
-        component={AddPackage}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddPackageScreen"
-        component={AddScreen}
-      />
+      
       <Stack.Screen
         name="Vendor Calender"
         options={{

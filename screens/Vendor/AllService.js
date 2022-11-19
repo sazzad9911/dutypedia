@@ -57,8 +57,11 @@ const AllService = (props) => {
       {Services.map((doc, i) => (
         <Tab.Screen key={i} name={doc} component={ComponentScreen} />
       ))}
-      <Tab.Screen name={'Extra Facilities'} initialParams={{facilites:params.facilites}}
+      {params.facilites?(
+        <Tab.Screen name={'Extra Facilities'} initialParams={{facilites:params.facilites}}
        component={ExtraFacilities} />
+      ):null}
+      
     </Tab.Navigator>
   );
 };

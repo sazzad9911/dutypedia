@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   Alert,
   RefreshControl,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -26,6 +27,7 @@ import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "../components/Button";
 import RatingView from "../components/RatingView";
+import { Menu } from "react-native-paper";
 import {
   brain,
   flag,
@@ -59,6 +61,8 @@ import Animated, {
 import { FAB } from "react-native-paper";
 import { AllData } from "../Data/AllData";
 import ServiceCart from "./../Cart/ServiceCart";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+const Tab = createMaterialTopTabNavigator();
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -133,7 +137,8 @@ const VendorProfile = (props) => {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
-  const [PackageService,setPackageService]=React.useState()
+  const [PackageService, setPackageService] = React.useState();
+  const [packageData,setPackageData]=React.useState()
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -266,7 +271,7 @@ const VendorProfile = (props) => {
         .catch((err) => {
           console.warn(err.response.data.msg);
         });
-        getOtherServices(newUser.token, vendor.service.id, "PACKAGE")
+      getOtherServices(newUser.token, vendor.service.id, "PACKAGE")
         .then((res) => {
           setPackageService(res.data.gigs);
           //console.log(res.data.gigs);
@@ -1308,7 +1313,7 @@ const VendorProfile = (props) => {
               alignItems: "center",
               flexDirection: "row",
               flexWrap: "wrap",
-              paddingHorizontal: 10,
+              paddingHorizontal: 0,
             }}
           >
             {!Click &&
@@ -1316,12 +1321,23 @@ const VendorProfile = (props) => {
               PackageService.map((doc, i) => (
                 <ServiceCart
                   onPress={() => {
-                    setClick(true);
+                    if(doc.packageData.length==0){
+                      Alert.alert("Opps!","No package found")
+                      return
+                    }
+                    let max=0;
+                    doc.packageData.map((doc,i)=>{
+                      if(max<doc.features.length){
+                        max=doc.features.length
+                      }
+                    })
+                    //console.log(max)
+                    setClick(max);
                     setImages(doc.images);
-                    //console.log(doc.services);
-                    setPrice(doc.price);
+                    setPrice("100");
                     setFacilities(doc.facilites.selectedOptions);
                     setTitle(doc.title);
+                    setPackageData(doc.packageData)
                     setDescription(doc.description);
                     try {
                       dispatch({
@@ -1354,7 +1370,7 @@ const VendorProfile = (props) => {
                 />
               </View>
             )}
-            {Click && (
+            {Click&&packageData && (
               <View>
                 <View style={{ backgroundColor: secondaryColor }}>
                   <SliderBox
@@ -1424,18 +1440,44 @@ const VendorProfile = (props) => {
                   </Text>
                 )} */}
                   </TouchableOpacity>
-                  <Text
-                    style={{
-                      alignSelf: "flex-end",
-                      marginRight: 20,
-                      fontSize: 18,
-                      fontFamily: "Poppins-Medium",
-                      color: textColor,
-                      marginTop: 10,
+                </View>
+                <View
+                  style={{
+                    height: Click*60,
+                  }}
+                >
+                  <Tab.Navigator
+                    tabBar={(props) => (
+                      <TabBar data={packageData}
+                        onClick={(e) => {
+                          //console.log(e)
+                          navigation.navigate("AddPackageScreen", {
+                            setPackage: setPackage,
+                            data: packages.filter((d) => e.id == d.id)[0],
+                            package: packages,
+                          });
+                        }}
+                        onPress={(e) => {
+                          
+                        }}
+                        {...props}
+                      />
+                    )}
+                    screenOptions={{
+                      lazy: true,
+                      lazyPreloadDistance: 100,
                     }}
                   >
-                    From {Price}৳
-                  </Text>
+                    {packageData.map((doc, i) => (
+                      <Tab.Screen
+                        initialParams={{ data: doc }}
+                        key={i}
+                        name={doc.id}
+                        component={TabScreen}
+                      />
+                    ))}
+
+                  </Tab.Navigator>
                 </View>
                 <View
                   style={{
@@ -1505,17 +1547,6 @@ const VendorProfile = (props) => {
                           title={NewDataList[0].mainTitle}
                         />
                       )}
-                      <Button
-                        onPress={() => {
-                          setActiveService("Extra Facilities");
-                        }}
-                        style={
-                          ActiveService == "Extra Facilities"
-                            ? styles.activeButton
-                            : styles.inactiveButton
-                        }
-                        title={"Extra Facilities"}
-                      />
                     </View>
                     <View
                       style={{
@@ -1545,31 +1576,6 @@ const VendorProfile = (props) => {
                       ) : (
                         <></>
                       )}
-                      {ActiveService == "Extra Facilities" && (
-                        <View>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              fontFamily: "Poppins-Medium",
-                              color: "#707070",
-                            }}
-                          >
-                            Extra Facilities
-                          </Text>
-                          {Array.isArray(Facilities) &&
-                            Facilities.map((doc, i) => (
-                              <Text
-                                style={{
-                                  fontSize: 13,
-                                  fontFamily: "Poppins-Light",
-                                }}
-                                key={i}
-                              >
-                                {doc.title}
-                              </Text>
-                            ))}
-                        </View>
-                      )}
                     </View>
                   </View>
                 </View>
@@ -1586,7 +1592,7 @@ const VendorProfile = (props) => {
                     onPress={() => {
                       navigation.navigate("Service List_1", {
                         NewDataList: NewDataList,
-                        facilites: Facilities,
+                        facilites: null,
                       });
                     }}
                     style={{
@@ -1740,6 +1746,7 @@ const VendorProfile = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
+            dispatch({ type: "SET_PACKAGES", playload: [] });
             dispatch({ type: "SET_LIST_SELECTION", playload: [] });
             if (vendor.service.gigs[0].services.category) {
               dispatch({
@@ -2008,3 +2015,192 @@ function uniq(a) {
 export const ServiceCarts = () => {
   return <TouchableOpacity></TouchableOpacity>;
 };
+
+export const TabBar = ({
+  state,
+  descriptors,
+  navigation,
+  position,
+  onClick,
+  onPress,
+  data,
+  onChange
+}) => {
+  const ref = React.useRef();
+  const packages = data;
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    //console.log(packages[state.index-1])
+    //console.log(state.index);
+    if(onChange){
+      onChange(packages[state.index])
+    }
+    if (ref) {
+      ref.current.scrollTo({ x: state.index * 80, animated: true });
+    }
+  }, [state.index]);
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        borderBottomColor: "#E9E6E6",
+        borderBottomWidth: 0.5,
+      }}
+    >
+      <ScrollView
+        ref={ref}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        {packages.map((doc, index) => {
+          const isFocused = state.index === index;
+
+          const [Visible, setVisible] = React.useState(false);
+          const [Title, setTitle] = React.useState();
+          const [id, setId] = React.useState();
+          React.useEffect(() => {
+            //console.log(packages[state.index-1])
+            if (packages.length > index) {
+              setTitle(`${packages[index].name} ${packages[index].price}৳`);
+              setId(packages[index].id);
+            }
+          }, [index]);
+          return (
+            <View key={index}>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate(doc.id);
+                }}
+                style={{
+                  borderBottomColor: "#707070",
+                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 5,
+                  height: 40,
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily:"Poppins-SemiBold"
+                  }}
+                >
+                  {Title}
+
+                  {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
+                </Text>
+
+                {/* <Menu
+                  contentStyle={{
+                    backgroundColor: "white",
+                  }}
+                  visible={Visible}
+                  onDismiss={() => setVisible(!Visible)}
+                  anchor={
+                    <Entypo
+                      onPress={() => {
+                        setVisible(true);
+                      }}
+                      style={{
+                        marginLeft: 10,
+                      }}
+                      name="dots-three-vertical"
+                      size={18}
+                      color="black"
+                    />
+                  }
+                >
+                  <Menu.Item
+                    onPress={() => {
+                      onClick(packages[index]);
+                      setVisible(false);
+                    }}
+                    title="Edit"
+                  />
+                  <Menu.Item
+                    onPress={() => {
+                      onPress(id);
+                      setVisible(false);
+                    }}
+                    title="Delete"
+                  />
+                </Menu> */}
+              </Pressable>
+              {isFocused && (
+                <View
+                  style={{
+                    height: 2,
+                    backgroundColor: "#707070",
+                    width: "80%",
+                    alignSelf: "center",
+                  }}
+                />
+              )}
+            </View>
+          );
+        })}
+       
+      </ScrollView>
+    </View>
+  );
+};
+export const TabScreen = ({ navigation, route }) => {
+  const data = route.params.data;
+
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      {data.features.map((doc, i) => (
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: 20,
+            justifyContent: "space-between",
+            marginVertical: 5,
+            borderBottomColor: "#F1F1F1",
+            borderBottomWidth: data.features.length - 1 == i ? 0 : 1,
+          }}
+          key={i}
+        >
+          {doc.isAvailable ? (
+            <SvgXml xml={right} height="30" width={"30"} />
+          ) : (
+            <Entypo name="cross" size={20} color="red" />
+
+          )}
+          <Text
+            style={{
+              fontSize: 14,
+              color: "#666666",
+            }}
+          >
+            {doc.title}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+const right = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30.605" height="27.993" viewBox="0 0 30.605 27.993">
+<defs>
+  <filter id="Path_20808" x="0" y="0" width="30.605" height="27.993" filterUnits="userSpaceOnUse">
+    <feOffset dy="3" input="SourceAlpha"/>
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feFlood flood-opacity="0.059"/>
+    <feComposite operator="in" in2="blur"/>
+    <feComposite in="SourceGraphic"/>
+  </filter>
+</defs>
+<g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_20808)">
+  <path id="Path_20808-2" data-name="Path 20808" d="M-1914.146,1248.438a2.381,2.381,0,0,1,1.1-.082,3.952,3.952,0,0,1,3.039,1.914l.306.491a13.771,13.771,0,0,1,8.1-6.767l.053.046c-.041.048-.078.1-.122.144-.976.977-1.964,1.943-2.926,2.931a22.819,22.819,0,0,0-2.99,3.7c-.429.681-.823,1.382-1.237,2.071-.17.283-.351.559-.53.837a1.017,1.017,0,0,1-.122.149c-.156.163-.245.161-.361-.031q-.482-.794-.945-1.6a13.755,13.755,0,0,0-1.538-2.3,7.365,7.365,0,0,0-1.763-1.467Z" transform="translate(1923.15 -1237.99)" fill="#0d9e21"/>
+</g>
+</svg>
+`;
