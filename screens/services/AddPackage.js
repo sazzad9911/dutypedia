@@ -1132,8 +1132,12 @@ export const AddScreen = ({ navigation, route }) => {
   }, []);
   const removeById = (position) => {
     //const arr = TotalFeature.filter((d) => d != id);
-    let arr=TotalFeature;
-    arr.pop()
+    let arr=[];
+    TotalFeature.map((doc,i)=>{
+      if(i!=position-1){
+        arr.push(doc)
+      }
+    })
     setTotalFeature(arr);
     if (position == 1) {
       setFeature1("");

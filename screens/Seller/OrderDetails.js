@@ -95,6 +95,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
 
   React.useEffect(() => {
     //console.log(user.token);
+    console.log(data.selectedServices)
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -141,7 +142,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     }
   };
   React.useState(() => {
-    console.log("user order details")
+    //console.log("user order details")
     if (data) {
       let arr = userOrders.filter((d) => d.id == data.id);
       setData(arr[0]);

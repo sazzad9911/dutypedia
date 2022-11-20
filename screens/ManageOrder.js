@@ -36,11 +36,13 @@ import {
 } from "../assets/icon";
 import NewTabe from "./Vendor/components/NewTabe";
 import { OrderCart } from "./Vendor/Order";
+import { useIsFocused } from "@react-navigation/native";
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
 
 const ManageOrder = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const initialState = [
     {
       title: "Bargaining",
@@ -69,9 +71,22 @@ const ManageOrder = ({ navigation, route }) => {
     },
   ];
   const userOrders=useSelector(state=>state.userOrders)
+  const type=route.params&&route.params.type?route.params.type:null
 
+  if(!isFocused){
+    return(
+      <View style={{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+      }}>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
+  console.log(type)
   return (
-    <Tab.Navigator screenOptions={{
+    <Tab.Navigator initialRouteName={type} screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },
       tabBarItemStyle: {
       margin:0,

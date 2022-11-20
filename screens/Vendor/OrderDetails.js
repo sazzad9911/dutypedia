@@ -134,7 +134,7 @@ const OrderDetails = ({ navigation, route }) => {
     }, [ListSelection])
   );
   React.useEffect(() => {
-    //console.log(data.user);
+    console.log(data.selectedServices)
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -464,7 +464,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text style={{ color: "#606060", fontSize: 18 }}>N/A</Text>
           )}
         </View>
-        {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME" && (
+        {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME"&&data.type != "PACKAGE" && (
           <IconButton
             onPress={() => {
               if (data.service.gigs[0].services.category) {
@@ -547,7 +547,7 @@ const OrderDetails = ({ navigation, route }) => {
             flexWrap: "wrap",
           }}
         >
-          {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME"
+          {data && data.status == "WAITING_FOR_ACCEPT" && data.type != "ONETIME" &&data.type != "PACKAGE"
             ? data &&
               data.service.gigs[0].facilites.selectedOptions &&
               data.service.gigs[0].facilites.selectedOptions.map((doc, i) => (

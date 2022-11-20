@@ -36,7 +36,7 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
 import { createOrder, getOrders } from "../../Class/service";
-import { serverToLocal } from "../../Class/dataConverter";
+import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 
 const OfferNow = ({ navigation, route }) => {
   const params = route.params ? route.params : null;
@@ -68,9 +68,20 @@ const OfferNow = ({ navigation, route }) => {
   const [Facilities, setFacilities] = React.useState([]);
   const dispatch=useDispatch()
   const type=route.params.type
+  const selectedPackage=params.selectedPackage
+  const [services,setServices]=React.useState([])
+  const service=params.services;
+  const category=params.category;
 
   React.useEffect(() => {
-    //console.log(gigs);
+    console.log(service);
+    if(category&&service){
+      try{
+        setServices(serverToLocal(service.options,service.category))
+      }catch(err){
+        console.log(err.message)
+      }
+    }
     if (gigs) {
       setPrice(gigs.price);
       try {
@@ -86,6 +97,9 @@ const OfferNow = ({ navigation, route }) => {
       }
       setFacilities(gigs.facilites.selectedOptions);
     }
+    if(selectedPackage&&services){
+      setPrice(selectedPackage.price);
+    }
   }, [gigs]);
   const pickDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync();
@@ -95,6 +109,7 @@ const OfferNow = ({ navigation, route }) => {
     return false;
   };
   const validate = () => {
+    
     if (!From) {
       setFromDateError("Invalid date");
       return;
@@ -113,14 +128,16 @@ const OfferNow = ({ navigation, route }) => {
       user.token,
       gigs?gigs.service.id:data.service.id,
       type,
-      gigs?gigs.price:data.service.gigs.filter(d=>d.type==type)[0].price,
+      selectedPackage?parseInt(selectedPackage.price):gigs?parseInt(gigs.price):data.service.gigs.filter(d=>d.type==type)[0].price,
       Description,
-      Price,
+      parseInt(Price),
       From,
       To,
       vendor ? "VENDOR" : "USER",
-      gigs?gigs.services:"",
-      gigs?gigs.facilites.selectedOptions:""
+      service?service:gigs?gigs.services:"",
+      service?[]:gigs?gigs.facilites.selectedOptions:"",
+      selectedPackage?selectedPackage:undefined,
+      params.packageData
     )
       .then((res) => {
         if (res) {
@@ -143,7 +160,7 @@ const OfferNow = ({ navigation, route }) => {
     try {
       const res = await getOrders(user.token, "user");
       setLoader(false);
-      navigation.navigate("ManageOrder", { reload: res,active:gigs?gigs.type:data.service.gigs[0].type });
+      navigation.navigate("ManageOrder", { reload: res,active:gigs?gigs.type:data.service.gigs[0].type,type:type });
       dispatch({ type: "USER_ORDERS", playload: res.data.orders });
       dispatch({ type: "SET_ORDER_SOCKET", playload: res });
     } catch (e) {
@@ -256,7 +273,7 @@ const OfferNow = ({ navigation, route }) => {
         <View
           style={{ height: 1, backgroundColor: "#e5e5e5", marginTop: 20 }}
         />
-        {gigs && (
+        {gigs&&!selectedPackage && (
           <>
             <View
               style={{
@@ -371,7 +388,7 @@ const OfferNow = ({ navigation, route }) => {
             </View>
           </>
         )}
-        {!gigs && (
+        {!gigs&&!selectedPackage && (
           <>
             <View
               style={{
@@ -426,6 +443,111 @@ const OfferNow = ({ navigation, route }) => {
               placeholderTextColor={assentColor}
               placeholder="Your Price"
             />
+          </>
+        )}
+        {selectedPackage && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginTop: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+               Package
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Price
+              </Text>
+            </View>
+          </>
+        )}
+        {selectedPackage && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginTop: 20,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+                marginBottom:10
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+               {selectedPackage.name}
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {selectedPackage.price}৳
+              </Text>
+            </View>
+            
+          </>
+        )}
+        {services && (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+                marginTop: 10,
+                backgroundColor: "#e5e5e5",
+                padding: 5,
+                borderRadius: 5,
+                marginBottom:10
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+               Service List
+              </Text>
+              
+            </View>
+            <View style={{
+              marginHorizontal:20,
+              marginVertical:5
+            }}>
+            {services.map((doc,i)=>(
+              <Text key={i}>{`${i!=0?", ":""}${doc.data.title}`}</Text>
+            ))}
+            </View>
           </>
         )}
         <View

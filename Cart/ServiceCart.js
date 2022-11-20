@@ -21,6 +21,7 @@ const ServiceCart = ({ data, onPress }) => {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
+  
 
   return (
     <TouchableOpacity
@@ -86,7 +87,8 @@ const ServiceCart = ({ data, onPress }) => {
               alignItems: "center",
             }}
           >
-            <View
+            {data.type=="PACKAGE"&&(
+              <View
               style={{
                 flexDirection: "row",
               }}
@@ -103,6 +105,7 @@ const ServiceCart = ({ data, onPress }) => {
               </Text>
               <SvgXml xml={icon} height="15" width="15" />
             </View>
+            )}
             {data.type != "PACKAGE" ? (
               <Text
                 style={{

@@ -280,22 +280,28 @@ export const createOrder = async (
   deliveryDateTo,
   orderedBy,
   selectedServices,
-  facilites
+  facilites,
+  selectedPackage,
+  packageData
 ) => {
+  const data={
+    serviceId: serviceId,
+    type: type,
+    amount: amount,
+    description: description,
+    offerPrice: offerPrice,
+    deliveryDateFrom: deliveryDateFrom,
+    deliveryDateTo: deliveryDateTo,
+    orderedBy: orderedBy,
+    selectedServices: selectedServices,
+    facilites: facilites,
+    selectedPackage:selectedPackage,
+    packageData:packageData
+  }
+  //console.log(data)
   const res = await axios.post(
     `${url}/server/orders/create`,
-    {
-      serviceId: serviceId,
-      type: type,
-      amount: amount,
-      description: description,
-      offerPrice: offerPrice,
-      deliveryDateFrom: deliveryDateFrom,
-      deliveryDateTo: deliveryDateTo,
-      orderedBy: orderedBy,
-      selectedServices: selectedServices,
-      facilites: facilites,
-    },
+    data,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   socket.emit("newOrder", {

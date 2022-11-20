@@ -135,7 +135,8 @@ const OtherProfile = (props) => {
   const [Gigs, setGigs] = React.useState();
   const [PackageService, setPackageService] = React.useState();
   const [packageData, setPackageData] = React.useState();
-  const [selectedPackage,setSelectedPackage]=React.useState()
+  const [selectedPackage,setSelectedPackage]=React.useState();
+  const [PackageServiceList,setPackageServiceList]=React.useState()
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -1020,6 +1021,11 @@ const OtherProfile = (props) => {
             }}
             entering={FadeIn}
           >
+            <View style={{
+              marginHorizontal:10,
+              flexDirection:"row",
+              flexWrap:"wrap"
+            }}>
             {!Click &&
               FixedService &&
               FixedService.map(
@@ -1050,6 +1056,7 @@ const OtherProfile = (props) => {
                     />
                   )
               )}
+            </View>
             {Array.isArray(FixedService) && FixedService.length > 6 && !Click && (
               <IconButton
                 onPress={() => {
@@ -1427,6 +1434,7 @@ const OtherProfile = (props) => {
                     setTitle(doc.title);
                     setPackageData(doc.packageData);
                     setDescription(doc.description);
+                    setPackageServiceList(doc.services)
                     try {
                       dispatch({
                         type: "SET_NEW_LIST_DATA",
@@ -1699,13 +1707,17 @@ const OtherProfile = (props) => {
                       color="#707070"
                     />
                   </TouchableOpacity>
-                </View>
+                </View> 
                 <Button
                   onPress={() => {
                     navigation.navigate("OfferNow", {
                       data: Data,
                       gigs: Gigs,
                       type: "PACKAGE",
+                      selectedPackage:selectedPackage,
+                      services:PackageServiceList,
+                      packageData:packageData,
+                      category:Category
                     });
                   }}
                   style={{

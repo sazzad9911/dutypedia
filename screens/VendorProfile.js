@@ -2173,7 +2173,9 @@ export const TabScreen = ({ navigation, route }) => {
           {doc.isAvailable ? (
             <SvgXml xml={right} height="30" width={"30"} />
           ) : (
-            <Entypo name="cross" size={20} color="red" />
+            <Entypo style={{
+              marginBottom:8
+            }} name="cross" size={20} color="red" />
 
           )}
           <Text
