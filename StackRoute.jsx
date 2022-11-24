@@ -48,6 +48,12 @@ import { getJson } from "./Class/storage";
 import { getSocket,socket } from "./Class/socket";
 import VendorProfile from "./screens/VendorProfile";
 import AddPackage, { AddScreen } from "./screens/services/AddPackage";
+import AppointmentHeader from "./components/Appointment/AppointmentHeader";
+import AppointmentList from "./screens/Seller/Appointment/AppointmentList";
+import CreateAppointment from "./screens/Seller/Appointment/CreateAppointment";
+import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails";
+import VendorAppointmentList from "./screens/Vendor/Appointment/VendorAppointmentList";
+import CreateVendorAppointment from "./screens/Vendor/Appointment/CreateVendorAppointment";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -266,6 +272,31 @@ export default function StackRoute() {
         options={{ headerShown: false }}
         name="AddPackageScreen"
         component={AddScreen}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="AppointmentList"
+        component={AppointmentList}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="CreateAppointment"
+        component={CreateAppointment}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="AppointmentDetails"
+        component={AppointmentDetails}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="VendorAppointmentList"
+        component={VendorAppointmentList}
+      />
+      <Stack.Screen
+        options={{ headerShown:false}}
+        name="CreateVendorAppointment"
+        component={CreateVendorAppointment}
       />
       </Stack.Navigator>
     </NavigationContainer>

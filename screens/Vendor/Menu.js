@@ -146,7 +146,9 @@ const Menu = ({ navigation }) => {
           title="Manage Order"
           Icon={() => <SvgXml xml={manageOrder} height="30" width="30" />}
         />
-        <Cart
+        <Cart onPress={()=>{
+          navigation.navigate("VendorAppointmentList")
+        }}
           title="Appointment"
           Icon={() => <SvgXml xml={appointment} height="30" width="30" />}
         />

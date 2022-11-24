@@ -42,6 +42,10 @@ import { ViewCart } from "./screens/Vendor/Notice";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";
 import { getOnlineUsers, socket } from "./Class/socket";
 import AddServiceList from "./screens/AddServiceList";
+import AppointmentList from "./screens/Seller/Appointment/AppointmentList";
+import AppointmentHeader from "./components/Appointment/AppointmentHeader";
+import CreateAppointment from "./screens/Seller/Appointment/CreateAppointment";
+import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails";
 
 const Stack = createStackNavigator();
 

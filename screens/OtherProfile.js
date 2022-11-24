@@ -463,7 +463,9 @@ const OtherProfile = (props) => {
             marginBottom: -1,
           }}
         >
-          <IconButton
+          <IconButton onPress={()=>{
+            navigation.navigate("AppointmentList",{data:Data})
+          }}
             style={{
               borderRadius: 20,
               height: 35,

@@ -91,6 +91,7 @@ const ServiceCart = ({ data, onPress }) => {
               <View
               style={{
                 flexDirection: "row",
+                alignItems:'center'
               }}
             >
               <Text

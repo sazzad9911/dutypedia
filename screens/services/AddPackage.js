@@ -30,6 +30,7 @@ import { Entypo } from "@expo/vector-icons";
 import { createOtherService, createService } from "../../Class/service";
 import { Menu } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
+import { localOptionsToServer } from "../../Class/dataConverter";
 
 export default function AddPackage({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
@@ -53,12 +54,21 @@ export default function AddPackage({ navigation, route }) {
   const dispatch = useDispatch();
   const [Height, setHeight] = React.useState(4);
   const length=route.params&&route.params.length?route.params.length:null;
-
+  const params=route.params;
+  const [serverData,setServerData]=React.useState()
+  
+  
+  
   const deleteData = async (id) => {
     setLoader(true);
     await dispatch({ type: "DELETE_PACKAGE", playload: id });
     setLoader(false);
   };
+  React.useEffect(()=>{
+    if(params&&params.data){
+      setServerData(params.data)
+    }
+  },[])
   React.useEffect(() => {
     //setLoader(true)
     let max = 0;
@@ -374,7 +384,12 @@ export default function AddPackage({ navigation, route }) {
               setImageError("*Image is required");
               return;
             }
-
+            //console.log(serverData)
+            if(!vendor||!serverData){
+              Alert.alert("Opps!","Something went wrong")
+              return
+            }
+            
             //ongoing function-------------
             setLoader(true);
             let blobImages = [];
@@ -393,7 +408,7 @@ export default function AddPackage({ navigation, route }) {
                   description: Description,
                   packageData: packages,
                 },
-                route.params.data,
+                serverData,
                 result,
                 vendor.service.id,
                 "PACKAGE"
@@ -758,7 +773,7 @@ const TabBar = ({
 
   React.useEffect(() => {
     //console.log(packages[state.index-1])
-    console.log(state.index);
+    //console.log(state.index);
     if (ref) {
       ref.current.scrollTo({ x: state.index * 80, animated: true });
     }
@@ -1508,7 +1523,7 @@ export const AddScreen = ({ navigation, route }) => {
               <CheckBox
                 value={Check4}
                 onChange={() => {
-                  setCheck4(Check4);
+                  setCheck4(!Check4);
                 }}
                 style={{
                   marginHorizontal: 20,
