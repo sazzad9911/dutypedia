@@ -32,6 +32,10 @@ const status = [
     title: "Pending",
     color: "#6366F1",
   },
+  {
+    title:"Approved",
+    color:"#6366F1"
+  }
 ];
 
 export default function AppointmentList({ navigation, route }) {

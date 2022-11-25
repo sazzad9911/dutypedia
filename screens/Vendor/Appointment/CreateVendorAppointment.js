@@ -1,187 +1,230 @@
 import React from "react";
-import { View, ScrollView, Pressable,Text } from "react-native";
+import { View, ScrollView, Pressable, Text, Image, ActivityIndicator } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Menu } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
+import Avatar from "../../../components/Avatar";
+import IconButton from "../../../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
+import { getOfflineMembers, getOnlineUser } from "../../../Class/member";
+import { Color } from "../../../assets/colors";
 
 export default function CreateVendorAppointment({ navigation, route }) {
   return (
-    <Tab.Navigator >
+    <Tab.Navigator tabBar={(props)=><TabBar {...props}/>}>
       <Tab.Screen name="Online User" component={Screen} />
       <Tab.Screen name="Offline User" component={Screen} />
     </Tab.Navigator>
   );
 }
-const Screen = () => {
-  return <View></View>;
+const Screen = ({navigation,route}) => {
+  const name=route.name;
+  const isFocused=useIsFocused()
+  const [Data,setData]=React.useState([])
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  const [Loader,setLoader]=React.useState(false)
+  const isDark=useSelector(state=>state.isDark)
+  const colors=new Color(isDark)
+  const backgroundColor=colors.getBackgroundColor()
+
+  React.useEffect(()=>{
+    //console.log(name)
+    if(user&&vendor&&name&&name=="Online User"){
+      setLoader(true)
+      getOnlineUser(user.token,vendor.service.id).then(res=>{
+        setData(res.members)
+        setLoader(false)
+        //console.log(res.members)
+      }).catch(err=>{
+        setLoader(false)
+        console.warn(err.response.data.msg)
+      })
+    }else{
+      setLoader(true)
+      getOfflineMembers(user.token,vendor.service.id).then(res=>{
+        setData(res.members)
+        setLoader(false)
+        //console.log(res.members)
+      }).catch(err=>{
+        setLoader(false)
+        console.warn(err.response.data.msg)
+      })
+    }
+
+  },[isFocused+user+vendor+name])
+
+  if(Loader){
+    return(
+      <View style={{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+      }}>
+        <ActivityIndicator  size={"small"} color={backgroundColor}/>
+      </View>
+    )
+  }
+  return (
+    <ScrollView>
+      <View style={{height:20}}/>
+      {
+        Data.map((doc,i)=>(
+          <Cart key={i} onPress={()=>{
+            navigation.navigate("AppointmentForm",{data:doc})
+          }} name={doc.user?
+          `${doc.user.firstName} ${doc.user.lastName}`:`${doc.name}`}
+           gender={doc.user?doc.user.gender:doc.gender} 
+           image={doc.user?doc.user.profilePhoto:doc.profilePhoto}
+           username={doc.name?`@${doc.name.replace(" ","").toLowerCase()}`:doc.user?
+           `@${doc.user.firstName.toLowerCase()}`
+           :`@invalid`} />
+        ))
+      }
+      <View style={{height:20}}/>
+    </ScrollView>
+  );
 };
 const TabBar = ({
-    state,
-    descriptors,
-    navigation,
-    position,
-    onClick,
-    onPress,
-  }) => {
-    const ref = React.useRef();
-    const packages = useSelector((state) => state.packages);
+  state,
+  descriptors,
+  navigation,
+  position,
+  onClick,
+  onPress,
+}) => {
+  const ref = React.useRef();
+  const packages = useSelector((state) => state.packages);
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    //console.log(packages[state.index-1])
+    //console.log(state);
+    
+  }, [state.index]);
   
-    const dispatch = useDispatch();
-  
-    React.useEffect(() => {
-      //console.log(packages[state.index-1])
-      //console.log(state.index);
-      if (ref) {
-        ref.current.scrollTo({ x: state.index * 80, animated: true });
-      }
-    }, [state.index]);
-  
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          borderBottomColor: "#E9E6E6",
-          borderBottomWidth: 0.5,
-        }}
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        borderBottomColor: "#E9E6E6",
+        borderBottomWidth: 0.5,
+        alignItems:"center",
+        paddingHorizontal:20
+      }}
+    >
+      <AntDesign onPress={()=>{
+        navigation.goBack()
+      }} name="left" size={24} color="black" />
+      <View  style={{
+        flexDirection:"row",
+        justifyContent:"center",
+        flex:1,
+        paddingRight:40
+      }}
+       
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
       >
-        <ScrollView
-          ref={ref}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-        >
-          {packages.map((doc, index) => {
-            const isFocused = state.index === index;
-  
-            const [Visible, setVisible] = React.useState(false);
-            const [Title, setTitle] = React.useState();
-            const [id, setId] = React.useState();
-            React.useEffect(() => {
-              //console.log(packages[state.index-1])
-              if (packages.length > index) {
-                setTitle(`${packages[index].name} ${packages[index].price}৳`);
-                setId(packages[index].id);
-              }
-            }, [index]);
-            return (
-              <View key={index}>
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate(doc.id);
-                  }}
-                  style={{
-                    borderBottomColor: "#707070",
-                    paddingHorizontal: 20,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginLeft: 5,
-                    height: 40,
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                    }}
-                  >
-                    {Title}
-  
-                    {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
-                  </Text>
-  
-                  <Menu
-                    contentStyle={{
-                      backgroundColor: "white",
-                    }}
-                    visible={Visible}
-                    onDismiss={() => setVisible(!Visible)}
-                    anchor={
-                      <Entypo
-                        onPress={() => {
-                          setVisible(true);
-                        }}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                        name="dots-three-vertical"
-                        size={18}
-                        color="black"
-                      />
-                    }
-                  >
-                    <Menu.Item
-                      onPress={() => {
-                        onClick(packages[index]);
-                        setVisible(false);
-                      }}
-                      title="Edit"
-                    />
-                    <Menu.Item
-                      onPress={() => {
-                        onPress(id);
-                        setVisible(false);
-                      }}
-                      title="Delete"
-                    />
-                  </Menu>
-                </Pressable>
-                {isFocused && (
-                  <View
-                    style={{
-                      height: 2,
-                      backgroundColor: "#707070",
-                      width: "80%",
-                      alignSelf: "center",
-                    }}
-                  />
-                )}
-              </View>
-            );
-          })}
-          <View
-            onLayout={() => {
-              if (ref) {
-                ref.current.scrollTo({ x: 10000, animated: true });
-              }
-            }}
-          >
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Add Package");
-              }}
-              style={{
-                borderBottomColor: "#707070",
-                paddingHorizontal: 20,
-                flexDirection: "row",
-                alignItems: "center",
-                marginLeft: 5,
-                height: 40,
-                justifyContent: "center",
-              }}
-            >
-              
-              <Text
+        {state.routes.map((doc, index) => {
+          const isFocused = state.index === index;
+
+          const [Visible, setVisible] = React.useState(false);
+          const [Title, setTitle] = React.useState();
+          const [id, setId] = React.useState();
+          React.useEffect(() => {
+            //console.log(packages[state.index-1])
+            
+          }, [index]);
+          return (
+            <View key={index}>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate(doc.name);
+                }}
                 style={{
-                  fontSize: 16,
+                  borderBottomColor: "#707070",
+                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 5,
+                  height: 40,
+                  justifyContent: "center",
                 }}
               >
-                Add Package
-              </Text>
-            </Pressable>
-            {state.index == packages.length && (
-              <View
-                style={{
-                  height: 2,
-                  backgroundColor: "#707070",
-                  width: "80%",
-                  alignSelf: "center",
-                }}
-              />
-            )}
-          </View>
-        </ScrollView>
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}
+                >
+                  {doc.name}
+
+                  {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
+                </Text>
+
+                
+              </Pressable>
+              {isFocused && (
+                <View
+                  style={{
+                    height: 2,
+                    backgroundColor: "#707070",
+                    width: "80%",
+                    alignSelf: "center",
+                  }}
+                />
+              )}
+            </View>
+          );
+        })}
+       
       </View>
-    );
-  };
+    </View>
+  );
+};
+const Cart = ({image,name,gender,username,onPress}) => {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems:"center",
+        justifyContent:"space-between",
+        paddingHorizontal:20,
+        paddingVertical:10
+      }}
+    >
+      <Avatar source={{uri:image}}
+        style={{
+          width: 60,
+          height: 60,
+        }}
+      />
+      <View style={{
+        flex:1,
+        marginHorizontal:20
+      }}>
+        <Text numberOfLines={1} style={{
+          fontSize:16,
+          fontFamily:"Poppins-Medium"
+        }}>{name&&gender?`${name} (${gender})`:"Easin Arafat (Male)"}</Text>
+        <Text style={{
+          fontSize:14,
+          fontFamily:"Poppins-Medium"
+        }}>{username?username:"@easinarafat"}</Text>
+      </View>
+      <IconButton onPress={onPress} style={{
+        width:90,
+        borderColor:"#DA1E37",
+        borderWidth:1,
+        height:40,
+        color:"#DA1E37"
+      }} title={"Select"}/>
+    </View>
+  );
+};

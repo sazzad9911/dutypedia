@@ -9,7 +9,7 @@ import { Color } from "../../../assets/colors";
 import { ActivityIndicator } from "react-native-paper";
 import { changeTime } from "../../../action";
 
-export default function AppointmentDetails({ navigation, route }) {
+export default function VendorAppointmentListDetails({ navigation, route }) {
   const [image, setImage] = React.useState();
   const data = route.params && route.params.data ? route.params.data : null;
   const appointment =
@@ -19,6 +19,8 @@ export default function AppointmentDetails({ navigation, route }) {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
+  const params=route.params
+  //console.log(data)
 
   if (Loader) {
     return (
@@ -49,13 +51,21 @@ export default function AppointmentDetails({ navigation, route }) {
               overflow: "hidden",
             }}
           >
-            {data && data.service.profilePhoto ? (
+            {data &&data.user && data.user.profilePhoto ? (
               <Image
                 style={{
                   height: 60,
                   width: 60,
                 }}
-                source={{ uri: data.service.profilePhoto }}
+                source={{ uri: data.user.profilePhoto }}
+              />
+            ):data&&data.profilePhoto?(
+                <Image
+                style={{
+                  height: 60,
+                  width: 60,
+                }}
+                source={{ uri: data.profilePhoto }}
               />
             ) : (
               <FontAwesome name="user" size={45} color="black" />
@@ -64,19 +74,9 @@ export default function AppointmentDetails({ navigation, route }) {
           <View
             style={{
               marginLeft: 20,
+              justifyContent:"center"
             }}
           >
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Poppins-SemiBold",
-                lineHeight: 22,
-              }}
-            >
-              {data && data.service.serviceCenterName
-                ? data.service.serviceCenterName
-                : "Invalid"}
-            </Text>
             <Text
               style={{
                 fontSize: 14,
@@ -84,27 +84,14 @@ export default function AppointmentDetails({ navigation, route }) {
                 lineHeight: 18,
               }}
             >
-              {data && data.service.providerInfo.title
-                ? `${data.service.providerInfo.title} `
-                : "--"}
-              {data && data.service.providerInfo.name
-                ? data.service.providerInfo.name
-                : "Invalid"}
-              {` (${
-                data && data.service.providerInfo.gender
-                  ? data.service.providerInfo.gender.toUpperCase()
-                  : "Invalid"
-              })`}
+              {data?`${data.user.firstName} ${data.user.lastName}`:"Invalid"}
             </Text>
             <Text
               style={{
                 fontSize: 12,
               }}
             >
-              Position of{" "}
-              {data && data.service.providerInfo.position
-                ? data.service.providerInfo.position
-                : "Invalid"}
+              @{data&&data.user?data.user.username:""}
             </Text>
           </View>
         </View>
@@ -119,9 +106,9 @@ export default function AppointmentDetails({ navigation, route }) {
               fontFamily: "Poppins-Medium",
             }}
           >
-            {appointment ? appointment.date : "Invalid"}
+            {data ? data.date : "Invalid"}
             {"    "}
-            {appointment ? changeTime(appointment.startTime) : "Invalid"}
+            {data ? changeTime(data.startTime) : "Invalid"}
           </Text>
           <Text
             style={{
@@ -130,7 +117,7 @@ export default function AppointmentDetails({ navigation, route }) {
               marginTop: 20,
             }}
           >
-            {appointment ? appointment.title : "Invalid"}
+            {data ? data.title : "Invalid"}
           </Text>
           <Text
             style={{
@@ -139,12 +126,12 @@ export default function AppointmentDetails({ navigation, route }) {
               textAlign: "justify",
             }}
           >
-            {appointment && appointment.description
-              ? appointment.description
+            {data && data.description
+              ? data.description
               : "N/A"}
           </Text>
         </View>
-        {appointment && appointment.status == "CANCELLED" && (
+        {data && data.status == "CANCELLED" && (
           <Text
             style={{
               color: "#DA1E37",
@@ -155,7 +142,7 @@ export default function AppointmentDetails({ navigation, route }) {
             Cancelled
           </Text>
         )}
-        {appointment && appointment.status == "COMPLETED" && (
+        {data && data.status == "COMPLETED" && (
           <Text
             style={{
               color: "#4ADE80",
@@ -166,7 +153,7 @@ export default function AppointmentDetails({ navigation, route }) {
             Completed
           </Text>
         )}
-        {appointment && appointment.status == "REJECTED" && (
+        {data && data.status == "REJECTED" && (
           <Text
             style={{
               color: "red",
@@ -179,10 +166,10 @@ export default function AppointmentDetails({ navigation, route }) {
         )}
       </ScrollView>
 
-      {appointment &&
-        appointment.status != "CANCELLED" &&
-        appointment.status != "COMPLETED" &&
-        appointment.status != "REJECTED" && (
+      {data &&
+        data.status != "CANCELLED" &&
+        data.status != "COMPLETED" &&
+        data.status != "REJECTED" && (
           <View
             style={{
               flexDirection: "row",
@@ -192,15 +179,15 @@ export default function AppointmentDetails({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            {appointment && appointment.status == "INCOMPLETE" && (
+            {data && data.status == "APPROVED" && (
               <IconButton
                 onPress={() => {
-                  if (!appointment) {
+                  if (!data) {
                     Alert.alert("Opps", "Something went wrong");
                     return;
                   }
                   setLoader(true);
-                  changeAppointment(user.token, appointment.id, "COMPLETED")
+                  changeAppointment(user.token, data.id, "COMPLETED")
                     .then((res) => {
                       setLoader(false);
                       navigation.goBack();
@@ -221,7 +208,36 @@ export default function AppointmentDetails({ navigation, route }) {
                 title="Complete Appointment"
               />
             )}
-            {appointment && appointment.status == "PENDING" && (
+            {params.active && (
+              <IconButton
+                onPress={() => {
+                  if (!data) {
+                    Alert.alert("Opps", "Something went wrong");
+                    return;
+                  }
+                  setLoader(true);
+                  changeAppointment(user.token, data.id, "APPROVED")
+                    .then((res) => {
+                      setLoader(false);
+                      navigation.goBack();
+                    })
+                    .catch((err) => {
+                      setLoader(false);
+
+                      Alert.alert("Error", err.response.data.msg);
+                    });
+                }}
+                style={{
+                  color: "#4BAE4F",
+                  height: 40,
+                }}
+                LeftIcon={() => (
+                  <SvgXml xml={accept} width="20" height={"20"} />
+                )}
+                title="Accept Appointment"
+              />
+            )}
+            {data && data.status == "PENDING"&&!params.active && (
               <Text
                 style={{
                   fontSize: 16,
@@ -235,12 +251,12 @@ export default function AppointmentDetails({ navigation, route }) {
             <View style={{ width: 20 }} />
             <IconButton
               onPress={() => {
-                if (!appointment) {
+                if (!data) {
                   Alert.alert("Opps", "Something went wrong");
                   return;
                 }
                 setLoader(true);
-                changeAppointment(user.token, appointment.id, "CANCELLED")
+                changeAppointment(user.token, data.id, "CANCELLED")
                   .then((res) => {
                     setLoader(false);
                     navigation.goBack();
@@ -256,7 +272,7 @@ export default function AppointmentDetails({ navigation, route }) {
                 height: 40,
               }}
               LeftIcon={() => <SvgXml xml={cancel} width="20" height={"20"} />}
-              title="Cancel Appointment Request"
+              title="Cancel Appointment"
             />
           </View>
         )}

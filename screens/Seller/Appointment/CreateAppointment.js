@@ -6,7 +6,7 @@ import IconButton from "../../../components/IconButton";
 import Input from "../../../components/Input";
 import TextArea from "../../../components/TextArea";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { allTimeConverter, convertDate, dateDifference } from "../../../action";
+import { allTimeConverter, changeTime, convertDate, dateDifference } from "../../../action";
 import { createAppointment } from "../../../Class/appointment";
 import { useSelector } from "react-redux";
 import { ActivityIndicator } from "react-native-paper";
@@ -214,7 +214,7 @@ export default function CreateAppointment({navigation,route}) {
               width: 150,
               justifyContent: "space-between",
             }}
-            title={FromTime?FromTime:"--:-- --"}
+            title={FromTime?changeTime(FromTime):"--:-- --"}
             Icon={() => <SvgXml xml={calender} height="20" width="20" />}
           />
           <DateTimePickerModal date={new Date()}
@@ -251,7 +251,7 @@ export default function CreateAppointment({navigation,route}) {
               width: 150,
               justifyContent: "space-between",
             }}
-            title={ToTime?ToTime:"--:-- --"}
+            title={ToTime?changeTime(ToTime):"--:-- --"}
             Icon={() => <SvgXml xml={calender} height="20" width="20" />}
           />
           <DateTimePickerModal

@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import {
   getAppointment,
+  getUserAppointment,
   getVendorAppointment,
 } from "../../../Class/appointment";
 import { Color } from "../../../assets/colors";
@@ -46,7 +47,7 @@ const status = [
   }
 ];
 
-export default function VendorAppointmentList({ navigation, route }) {
+export default function UserAppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Upcoming");
   const user = useSelector((state) => state.user);
   const data = route.params && route.params.data ? route.params.data : null;
@@ -63,9 +64,9 @@ export default function VendorAppointmentList({ navigation, route }) {
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-    if(Active=="All"){
+    if(Active=="All"&&user){
       setLoader(true);
-      getVendorAppointment(user.token, "upcoming", vendor.service.id)
+      getUserAppointment(user.token, "upcoming", user.user.id)
         .then((res) => {
           setLoader(false);
           let arr=[]
@@ -80,7 +81,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           setLoader(false);
           console.warn(err.response.data.msg);
         });
-        getVendorAppointment(user.token, "previous", vendor.service.id)
+        getUserAppointment(user.token, "previous", user.user.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
@@ -96,18 +97,15 @@ export default function VendorAppointmentList({ navigation, route }) {
         });
         return
     }
-    if (user && vendor && Active &&Active!="Request") {
+    if (user && Active &&Active!="Request") {
       setLoader(true);
-      getVendorAppointment(user.token, Active, vendor.service.id)
+      getUserAppointment(user.token, Active, user.user.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
           let arr=[]
           res.data.appointments.map((doc,i)=>{
             arr.push(doc)
-            if(doc.createdBy=="VENDOR"){
-              
-            }
           })
           setData(arr)
         })
@@ -191,7 +189,7 @@ export default function VendorAppointmentList({ navigation, route }) {
         />
         <Chip
           onPress={() => {
-            navigation.navigate("RequestAppointmentList")
+            navigation.navigate("UserRequestAppointment")
           }}
           title={"Request"}
           active={Active == "Request" ? true : false}
@@ -203,7 +201,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           key={i}
           onPress={() => {
             //console.log(doc)
-            navigation.navigate("VendorAppointmentListDetails", {
+            navigation.navigate("UserAppointmentDetails", {
               data: doc,
             });
           }}
@@ -212,30 +210,14 @@ export default function VendorAppointmentList({ navigation, route }) {
           }
           title={doc.title}
           date={`${doc.date} ${changeTime(doc.startTime)}`}
-          name={`${doc.user.firstName} ${doc.user.lastName}`}
-          image={doc.user.profilePhoto}
-          username={doc.user.username}
+          name={doc.service.providerInfo.name}
+          image={doc.service.profilePhoto}
+          username={doc.service.providerInfo.name.replace(" ","").toLowerCase()}
+          position={doc.service.providerInfo.position}
         />
       ))}
 
-      <FAB
-        color="#FFFFFF"
-        icon="plus"
-        style={{
-          position: "absolute",
-          borderRadius: 30,
-          backgroundColor: "#43B05C",
-          bottom: 20,
-          right: 20,
-          width: 50,
-          height: 50,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onPress={() => {
-          navigation.navigate("CreateVendorAppointment", { data: data });
-        }}
-      />
+     
     </View>
   );
 }
@@ -350,7 +332,7 @@ const Chip = ({ title, active, onPress, style }) => {
       style={[
         {
           padding: 8,
-          backgroundColor: active ? "#6366F1" : "transparent",
+          backgroundColor: active ? "#DA1E37" : "transparent",
           borderRadius: 20,
           paddingHorizontal: 15,
           borderWidth: active ? 0 : 1,

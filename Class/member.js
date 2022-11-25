@@ -120,3 +120,9 @@ export const deleteOnlineMember=async(token,id) => {
     console.warn(res)
     return false
 }
+export const getUserInfo=async(token,userId)=>{
+    const res=axios.get(`${url}/server/auth/get-user?id=${userId}`,{
+        headers:{ Authorization: `Bearer ${token}` }
+    })
+    return res
+}

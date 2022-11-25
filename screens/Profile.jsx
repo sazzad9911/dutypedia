@@ -696,7 +696,7 @@ const MainProfile = (props) => {
         <ProfileOption
           style={{ paddingHorizontal: 0 }}
           onPress={() => {
-            navigation.navigate("Appointment");
+            navigation.navigate("UserAppointmentList");
           }}
           Icon={() => (
             <View

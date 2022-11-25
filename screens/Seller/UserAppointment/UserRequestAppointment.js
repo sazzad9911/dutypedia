@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import {
   getAppointment,
+  getUserAppointment,
   getVendorAppointment,
 } from "../../../Class/appointment";
 import { Color } from "../../../assets/colors";
@@ -39,15 +40,11 @@ const status = [
   {
     title:"Approved",
     color:"#6366F1"
-  },
-  {
-    title:"Rejected",
-    color:"#DA1E37"
   }
 ];
 
-export default function VendorAppointmentList({ navigation, route }) {
-  const [Active, setActive] = React.useState("Upcoming");
+export default function UserRequestAppointment({ navigation, route }) {
+  const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
   const data = route.params && route.params.data ? route.params.data : null;
   const [Loader, setLoader] = React.useState(false);
@@ -58,56 +55,20 @@ export default function VendorAppointmentList({ navigation, route }) {
   const vendor = useSelector((state) => state.vendor);
   const [Upcoming,setUpcoming]=React.useState()
   const [Previous,setPrevious]=React.useState()
-
-
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-    if(Active=="All"){
+   
+    if (user && Active &&Active!="Request") {
       setLoader(true);
-      getVendorAppointment(user.token, "upcoming", vendor.service.id)
+      getUserAppointment(user.token, Active, user.user.id)
         .then((res) => {
           setLoader(false);
-          let arr=[]
           //console.log(res.data.appointments)
+          let arr=[]
           res.data.appointments.map((doc,i)=>{
             arr.push(doc)
             
-          })
-          setUpcoming(arr)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-        getVendorAppointment(user.token, "previous", vendor.service.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-          })
-          setPrevious(arr)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-        return
-    }
-    if (user && vendor && Active &&Active!="Request") {
-      setLoader(true);
-      getVendorAppointment(user.token, Active, vendor.service.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            if(doc.createdBy=="VENDOR"){
-              
-            }
           })
           setData(arr)
         })
@@ -117,18 +78,7 @@ export default function VendorAppointmentList({ navigation, route }) {
         });
     }
   }, [isFocused + Active]);
-  React.useLayoutEffect(()=>{
-    if(Upcoming&&Previous){
-      let arr=[];
-      Upcoming.map((doc,i)=>{
-        arr.push(doc)
-      })
-      Previous.map((doc,i)=>{
-        arr.push(doc)
-      })
-      setData(arr)
-    }
-  },[Loader+Upcoming+Previous])
+ 
   //console.log(data.service.serviceCenterName)
   if (Loader) {
     return (
@@ -155,10 +105,10 @@ export default function VendorAppointmentList({ navigation, route }) {
         <Chip
           style={{ width: 70 }}
           onPress={() => {
-            setActive("All");
+            setActive("Sent");
           }}
-          title={"All"}
-          active={Active == "All" ? true : false}
+          title={"Sent"}
+          active={Active == "Sent" ? true : false}
         />
         <View
           style={{
@@ -167,175 +117,135 @@ export default function VendorAppointmentList({ navigation, route }) {
         />
         <Chip
           onPress={() => {
-            setActive("Upcoming");
+            setActive("Receive");
           }}
-          title={"Upcoming"}
-          active={Active == "Upcoming" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Previous");
-          }}
-          title={"Previous"}
-          active={Active == "Previous" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            navigation.navigate("RequestAppointmentList")
-          }}
-          title={"Request"}
-          active={Active == "Request" ? true : false}
+          title={"Receive"}
+          active={Active == "Receive" ? true : false}
         />
       </View>
       {Data.length == 0 ? <NoAppointment /> : null}
       {Data.map((doc, i) => (
         <Cart
-          key={i}
-          onPress={() => {
-            //console.log(doc)
-            navigation.navigate("VendorAppointmentListDetails", {
-              data: doc,
-            });
-          }}
-          status={
-            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-          }
-          title={doc.title}
-          date={`${doc.date} ${changeTime(doc.startTime)}`}
-          name={`${doc.user.firstName} ${doc.user.lastName}`}
-          image={doc.user.profilePhoto}
-          username={doc.user.username}
-        />
+        key={i}
+        onPress={() => {
+          //console.log(doc)
+          navigation.navigate("UserAppointmentDetails", {
+            data: doc,
+          });
+        }}
+        status={
+          status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+        }
+        title={doc.title}
+        date={`${doc.date} ${changeTime(doc.startTime)}`}
+        name={doc.service.providerInfo.name}
+        image={doc.service.profilePhoto}
+        username={doc.service.providerInfo.name.replace(" ","").toLowerCase()}
+        position={doc.service.providerInfo.position}
+      />
       ))}
 
-      <FAB
-        color="#FFFFFF"
-        icon="plus"
-        style={{
-          position: "absolute",
-          borderRadius: 30,
-          backgroundColor: "#43B05C",
-          bottom: 20,
-          right: 20,
-          width: 50,
-          height: 50,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onPress={() => {
-          navigation.navigate("CreateVendorAppointment", { data: data });
-        }}
-      />
+      
     </View>
   );
 }
 const Cart = ({ date, status, title, onPress, image,name,username }) => {
-  //console.log(status)
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        flexDirection: "row",
-        width: width - 10,
-        marginHorizontal: 5,
-        justifyContent: "space-between",
-        paddingHorizontal: 5,
-        paddingVertical: 20,
-        shadowColor: "#333333",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        elevation: 3,
-        shadowRadius: 3,
-        backgroundColor: "white",
-        alignItems: "center",
-        marginTop: 10,
-        borderRadius: 5,
-      }}
-    >
-      <Avatar
+    //console.log(status)
+    return (
+      <TouchableOpacity
+        onPress={onPress}
         style={{
-          width: 55,
-          height: 55,
-        }}
-        source={{ uri: image }}
-      />
-      <View
-        style={{
-          width: 10,
-        }}
-      />
-      <View
-        style={{
-          flex: .5,
+          flexDirection: "row",
+          width: width - 10,
+          marginHorizontal: 5,
+          justifyContent: "space-between",
+          paddingHorizontal: 5,
+          paddingVertical: 20,
+          shadowColor: "#333333",
+          shadowOffset: {
+            width: 1,
+            height: 1,
+          },
+          shadowOpacity: 0.1,
+          elevation: 3,
+          shadowRadius: 3,
+          backgroundColor: "white",
+          alignItems: "center",
+          marginTop: 10,
+          borderRadius: 5,
         }}
       >
-        <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-        <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
-      </View>
-      <View
-        style={{
-          width: 1,
-          height: 40,
-          backgroundColor: "#E2E2E2",
-          marginHorizontal: 15,
-        }}
-      />
-      <View
-        style={{
-          flex: 2,
-        }}
-      >
+        <Avatar
+          style={{
+            width: 55,
+            height: 55,
+          }}
+          source={{ uri: image }}
+        />
         <View
           style={{
-            flexDirection: "row",
+            width: 10,
+          }}
+        />
+        <View
+          style={{
+            flex: .5,
           }}
         >
-          <Text
+          <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
+          <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
+        </View>
+        <View
+          style={{
+            width: 1,
+            height: 40,
+            backgroundColor: "#E2E2E2",
+            marginHorizontal: 15,
+          }}
+        />
+        <View
+          style={{
+            flex: 2,
+          }}
+        >
+          <View
             style={{
-              fontSize: 14,
+              flexDirection: "row",
             }}
           >
-            {date}
-          </Text>
+            <Text
+              style={{
+                fontSize: 14,
+              }}
+            >
+              {date}
+            </Text>
+            <Text
+              style={{
+                color: status ? status.color : "red",
+                fontSize: 14,
+                marginLeft: 10,
+              }}
+            >{`(${status ? status.title : "Invalid"})`}</Text>
+          </View>
           <Text
             style={{
-              color: status ? status.color : "red",
               fontSize: 14,
-              marginLeft: 10,
             }}
-          >{`(${status ? status.title : "Invalid"})`}</Text>
+            numberOfLines={1}
+          >
+            {title ? title : "Invalid"}
+          </Text>
         </View>
-        <Text
+        <View
           style={{
-            fontSize: 14,
+            width: 20,
           }}
-          numberOfLines={1}
-        >
-          {title ? title : "Invalid"}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: 20,
-        }}
-      />
-      <AntDesign name="right" size={24} color="#666666" />
-    </TouchableOpacity>
-  );
-};
+        />
+        <AntDesign name="right" size={24} color="#666666" />
+      </TouchableOpacity>
+    );
+  };
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="21.988" height="21.89" viewBox="0 0 21.988 21.89">
 <g id="Group_10006" data-name="Group 10006" transform="translate(-29.237 -142.571)">
   <rect id="Rectangle_7218" data-name="Rectangle 7218" width="21" height="18" rx="4" transform="translate(30 145.672)" fill="#666"/>
@@ -350,7 +260,7 @@ const Chip = ({ title, active, onPress, style }) => {
       style={[
         {
           padding: 8,
-          backgroundColor: active ? "#6366F1" : "transparent",
+          backgroundColor: active ? "#DA1E37" : "transparent",
           borderRadius: 20,
           paddingHorizontal: 15,
           borderWidth: active ? 0 : 1,

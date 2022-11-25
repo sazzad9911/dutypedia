@@ -54,6 +54,12 @@ import CreateAppointment from "./screens/Seller/Appointment/CreateAppointment";
 import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails";
 import VendorAppointmentList from "./screens/Vendor/Appointment/VendorAppointmentList";
 import CreateVendorAppointment from "./screens/Vendor/Appointment/CreateVendorAppointment";
+import AppointmentForm from "./screens/Vendor/Appointment/AppointmentForm";
+import RequestAppointmentList from "./screens/Vendor/Appointment/RequestAppointmentList";
+import VendorAppointmentListDetails from "./screens/Vendor/Appointment/VendorAppointmentListDetails";
+import UserAppointmentList from "./screens/Seller/UserAppointment/UserAppointmentList";
+import UserRequestAppointment from "./screens/Seller/UserAppointment/UserRequestAppointment";
+import UserAppointmentDetails from "./screens/Seller/UserAppointment/UserAppointmentDetails";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -297,6 +303,36 @@ export default function StackRoute() {
         options={{ headerShown:false}}
         name="CreateVendorAppointment"
         component={CreateVendorAppointment}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="AppointmentForm"
+        component={AppointmentForm}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="RequestAppointmentList"
+        component={RequestAppointmentList}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="VendorAppointmentListDetails"
+        component={VendorAppointmentListDetails}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="UserAppointmentList"
+        component={UserAppointmentList}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="UserRequestAppointment"
+        component={UserRequestAppointment}
+      />
+      <Stack.Screen
+        options={{ header: (props) => <AppointmentHeader title={"Appointment"} {...props} /> }}
+        name="UserAppointmentDetails"
+        component={UserAppointmentDetails}
       />
       </Stack.Navigator>
     </NavigationContainer>

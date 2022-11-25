@@ -9,7 +9,7 @@ import { Color } from "../../../assets/colors";
 import { ActivityIndicator } from "react-native-paper";
 import { changeTime } from "../../../action";
 
-export default function AppointmentDetails({ navigation, route }) {
+export default function UserAppointmentDetails({ navigation, route }) {
   const [image, setImage] = React.useState();
   const data = route.params && route.params.data ? route.params.data : null;
   const appointment =
@@ -119,9 +119,9 @@ export default function AppointmentDetails({ navigation, route }) {
               fontFamily: "Poppins-Medium",
             }}
           >
-            {appointment ? appointment.date : "Invalid"}
+            {data ? data.date : "Invalid"}
             {"    "}
-            {appointment ? changeTime(appointment.startTime) : "Invalid"}
+            {data ? changeTime(data.startTime) : "Invalid"}
           </Text>
           <Text
             style={{
@@ -130,7 +130,7 @@ export default function AppointmentDetails({ navigation, route }) {
               marginTop: 20,
             }}
           >
-            {appointment ? appointment.title : "Invalid"}
+            {data ? data.title : "Invalid"}
           </Text>
           <Text
             style={{
@@ -139,12 +139,12 @@ export default function AppointmentDetails({ navigation, route }) {
               textAlign: "justify",
             }}
           >
-            {appointment && appointment.description
-              ? appointment.description
+            {data && data.description
+              ? data.description
               : "N/A"}
           </Text>
         </View>
-        {appointment && appointment.status == "CANCELLED" && (
+        {data && data.status == "CANCELLED" && (
           <Text
             style={{
               color: "#DA1E37",
@@ -155,7 +155,7 @@ export default function AppointmentDetails({ navigation, route }) {
             Cancelled
           </Text>
         )}
-        {appointment && appointment.status == "COMPLETED" && (
+        {data && data.status == "COMPLETED" && (
           <Text
             style={{
               color: "#4ADE80",
@@ -166,7 +166,7 @@ export default function AppointmentDetails({ navigation, route }) {
             Completed
           </Text>
         )}
-        {appointment && appointment.status == "REJECTED" && (
+        {data && data.status == "REJECTED" && (
           <Text
             style={{
               color: "red",
@@ -179,10 +179,10 @@ export default function AppointmentDetails({ navigation, route }) {
         )}
       </ScrollView>
 
-      {appointment &&
-        appointment.status != "CANCELLED" &&
-        appointment.status != "COMPLETED" &&
-        appointment.status != "REJECTED" && (
+      {data &&
+        data.status != "CANCELLED" &&
+        data.status != "COMPLETED" &&
+        data.status != "REJECTED" && (
           <View
             style={{
               flexDirection: "row",
@@ -192,15 +192,15 @@ export default function AppointmentDetails({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            {appointment && appointment.status == "INCOMPLETE" && (
+            {data && data.status == "APPROVED" && (
               <IconButton
                 onPress={() => {
-                  if (!appointment) {
+                  if (!data) {
                     Alert.alert("Opps", "Something went wrong");
                     return;
                   }
                   setLoader(true);
-                  changeAppointment(user.token, appointment.id, "COMPLETED")
+                  changeAppointment(user.token, data.id, "COMPLETED")
                     .then((res) => {
                       setLoader(false);
                       navigation.goBack();
@@ -221,7 +221,7 @@ export default function AppointmentDetails({ navigation, route }) {
                 title="Complete Appointment"
               />
             )}
-            {appointment && appointment.status == "PENDING" && (
+            {data && data.status == "PENDING" && (
               <Text
                 style={{
                   fontSize: 16,
@@ -235,12 +235,12 @@ export default function AppointmentDetails({ navigation, route }) {
             <View style={{ width: 20 }} />
             <IconButton
               onPress={() => {
-                if (!appointment) {
+                if (!data) {
                   Alert.alert("Opps", "Something went wrong");
                   return;
                 }
                 setLoader(true);
-                changeAppointment(user.token, appointment.id, "CANCELLED")
+                changeAppointment(user.token, data.id, "CANCELLED")
                   .then((res) => {
                     setLoader(false);
                     navigation.goBack();
@@ -256,7 +256,7 @@ export default function AppointmentDetails({ navigation, route }) {
                 height: 40,
               }}
               LeftIcon={() => <SvgXml xml={cancel} width="20" height={"20"} />}
-              title="Cancel Appointment Request"
+              title="Cancel Appointment"
             />
           </View>
         )}

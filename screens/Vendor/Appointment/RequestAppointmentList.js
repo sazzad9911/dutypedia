@@ -46,8 +46,8 @@ const status = [
   }
 ];
 
-export default function VendorAppointmentList({ navigation, route }) {
-  const [Active, setActive] = React.useState("Upcoming");
+export default function RequestAppointmentList({ navigation, route }) {
+  const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
   const data = route.params && route.params.data ? route.params.data : null;
   const [Loader, setLoader] = React.useState(false);
@@ -58,8 +58,6 @@ export default function VendorAppointmentList({ navigation, route }) {
   const vendor = useSelector((state) => state.vendor);
   const [Upcoming,setUpcoming]=React.useState()
   const [Previous,setPrevious]=React.useState()
-
-
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
@@ -128,7 +126,7 @@ export default function VendorAppointmentList({ navigation, route }) {
       })
       setData(arr)
     }
-  },[Loader+Upcoming+Previous])
+  },[Loader])
   //console.log(data.service.serviceCenterName)
   if (Loader) {
     return (
@@ -155,10 +153,10 @@ export default function VendorAppointmentList({ navigation, route }) {
         <Chip
           style={{ width: 70 }}
           onPress={() => {
-            setActive("All");
+            setActive("Sent");
           }}
-          title={"All"}
-          active={Active == "All" ? true : false}
+          title={"Sent"}
+          active={Active == "Sent" ? true : false}
         />
         <View
           style={{
@@ -167,34 +165,10 @@ export default function VendorAppointmentList({ navigation, route }) {
         />
         <Chip
           onPress={() => {
-            setActive("Upcoming");
+            setActive("Receive");
           }}
-          title={"Upcoming"}
-          active={Active == "Upcoming" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Previous");
-          }}
-          title={"Previous"}
-          active={Active == "Previous" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            navigation.navigate("RequestAppointmentList")
-          }}
-          title={"Request"}
-          active={Active == "Request" ? true : false}
+          title={"Receive"}
+          active={Active == "Receive" ? true : false}
         />
       </View>
       {Data.length == 0 ? <NoAppointment /> : null}
@@ -204,8 +178,9 @@ export default function VendorAppointmentList({ navigation, route }) {
           onPress={() => {
             //console.log(doc)
             navigation.navigate("VendorAppointmentListDetails", {
-              data: doc,
-            });
+                data: doc,
+                active:Active=="Receive"?true:false
+              });
           }}
           status={
             status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
