@@ -1921,10 +1921,11 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
     >
       <Text
         style={{
-          fontFamily: "Poppins-Medium",
-          fontSize: 15,
+          fontFamily: "Poppins-SemiBold",
+          fontSize: 18,
           margin: 0,
-          color: textColor,
+          color: "#535353",
+          lineHeight:30
         }}
       >
         {item}
@@ -1935,8 +1936,9 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
             <Text
               style={{
                 fontFamily: "Poppins-Medium",
-                fontSize: 14,
-                color: "#707070",
+                fontSize: 18,
+                color: "#95979D",
+                lineHeight:30
               }}
             >
               {item}
@@ -1949,8 +1951,9 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
           <Text
             style={{
               fontFamily: "Poppins-Medium",
-              fontSize: 14,
-              color: "#707070",
+                fontSize: 18,
+                color: "#95979D",
+                lineHeight:30
             }}
           >
             {name}
@@ -1996,10 +1999,10 @@ export const Rows = ({ title, item, name, NewDataList }) => {
   return (
     <Text
       style={{
-        fontSize: 13,
+        fontSize: 18,
         fontFamily: "Poppins-Medium",
         color: textColor,
-        lineHeight: 18,
+        lineHeight: 25,
       }}
     >
       {text}

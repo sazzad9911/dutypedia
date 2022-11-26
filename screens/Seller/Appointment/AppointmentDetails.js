@@ -122,6 +122,8 @@ export default function AppointmentDetails({ navigation, route }) {
             {appointment ? appointment.date : "Invalid"}
             {"    "}
             {appointment ? changeTime(appointment.startTime) : "Invalid"}
+            {" - "}
+            {appointment ? changeTime(appointment.endTime) : "Invalid"}
           </Text>
           <Text
             style={{
@@ -177,6 +179,18 @@ export default function AppointmentDetails({ navigation, route }) {
             Rejected
           </Text>
         )}
+        {appointment && appointment.status == "APPROVED" && (
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                  color: "#6366F1",
+                  textAlign:"center"
+                }}
+              >
+                Request Approved
+              </Text>
+            )}
       </ScrollView>
 
       {appointment &&
@@ -232,6 +246,36 @@ export default function AppointmentDetails({ navigation, route }) {
                 Request Pending
               </Text>
             )}
+            
+            {appointment && appointment.status == "APPROVED" && (
+              <IconButton
+                onPress={() => {
+                  if (!appointment) {
+                    Alert.alert("Opps", "Something went wrong");
+                    return;
+                  }
+                  setLoader(true);
+                  changeAppointment(user.token, appointment.id, "COMPLETED")
+                    .then((res) => {
+                      setLoader(false);
+                      navigation.goBack();
+                    })
+                    .catch((err) => {
+                      setLoader(false);
+
+                      Alert.alert("Error", err.response.data.msg);
+                    });
+                }}
+                style={{
+                  color: "#4BAE4F",
+                  height: 40,
+                }}
+                LeftIcon={() => (
+                  <SvgXml xml={accept} width="20" height={"20"} />
+                )}
+                title="Complete Appointment"
+              />
+            )}
             <View style={{ width: 20 }} />
             <IconButton
               onPress={() => {
@@ -256,7 +300,7 @@ export default function AppointmentDetails({ navigation, route }) {
                 height: 40,
               }}
               LeftIcon={() => <SvgXml xml={cancel} width="20" height={"20"} />}
-              title="Cancel Appointment Request"
+              title={`Cancel ${appointment.status!="APPROVED"?"Appointment":""} Request`}
             />
           </View>
         )}

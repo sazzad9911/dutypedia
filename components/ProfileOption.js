@@ -29,9 +29,9 @@ const ProfileOption = (props) => {
     },
     text: {
       flex: 10,
-      fontSize: 15,
+      fontSize: 18,
       fontFamily: "Poppins-SemiBold",
-      color: textColor,
+      color: "#333333",
     },
   });
 

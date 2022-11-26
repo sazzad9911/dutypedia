@@ -109,7 +109,7 @@ const HomeRoute = ({ navigation }) => {
         component={AllPackageList}
       />
       <Stack.Screen
-        options={{ header: (props) => <OtherProfileHeader {...props} /> }}
+        options={{ headerShown:false}}
         name="OtherProfile"
         component={OtherProfile}
       />

@@ -28,9 +28,9 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
      }
         <Text numberOfLines={1}
           style={{
-            fontSize: 13,
+            fontSize:style&&style.fontSize?style.fontSize: 13,
             color:style&&style.color?style.color:'white',
-            fontFamily:'Poppins-Medium',
+            fontFamily:style&&style.fontFamily?style.fontFamily:'Poppins-Medium',
           }}
         >
           {title}

@@ -84,7 +84,7 @@ const ManageOrder = ({ navigation, route }) => {
       </View>
     )
   }
-  console.log(type)
+  //console.log(type)
   return (
     <Tab.Navigator initialRouteName={type} screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },

@@ -109,6 +109,8 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
             {data ? data.date : "Invalid"}
             {"    "}
             {data ? changeTime(data.startTime) : "Invalid"}
+            {" - "}
+            {data ? changeTime(data.endTime) : "Invalid"}
           </Text>
           <Text
             style={{

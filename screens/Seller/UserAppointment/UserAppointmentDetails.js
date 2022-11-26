@@ -19,6 +19,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
+  //console.log(data)
 
   if (Loader) {
     return (
@@ -121,7 +122,8 @@ export default function UserAppointmentDetails({ navigation, route }) {
           >
             {data ? data.date : "Invalid"}
             {"    "}
-            {data ? changeTime(data.startTime) : "Invalid"}
+            {data ? changeTime(data.startTime) : "Invalid"}{" - "}
+            {data ? changeTime(data.endTime) : "Invalid"}
           </Text>
           <Text
             style={{
@@ -166,6 +168,17 @@ export default function UserAppointmentDetails({ navigation, route }) {
             Completed
           </Text>
         )}
+        {data && data.status == "APPROVED" && (
+          <Text
+            style={{
+              color: "#4ADE80",
+              textAlign: "center",
+              marginVertical: 40,
+            }}
+          >
+            Approved
+          </Text>
+        )}
         {data && data.status == "REJECTED" && (
           <Text
             style={{
@@ -192,6 +205,35 @@ export default function UserAppointmentDetails({ navigation, route }) {
               alignItems: "center",
             }}
           >
+            {data && data.status == "PENDING" && (
+              <IconButton
+                onPress={() => {
+                  if (!data) {
+                    Alert.alert("Opps", "Something went wrong");
+                    return;
+                  }
+                  setLoader(true);
+                  changeAppointment(user.token, data.id, "APPROVED")
+                    .then((res) => {
+                      setLoader(false);
+                      navigation.goBack();
+                    })
+                    .catch((err) => {
+                      setLoader(false);
+
+                      Alert.alert("Error", err.response.data.msg);
+                    });
+                }}
+                style={{
+                  color: "#4BAE4F",
+                  height: 40,
+                }}
+                LeftIcon={() => (
+                  <SvgXml xml={accept} width="20" height={"20"} />
+                )}
+                title="Accept Appointment"
+              />
+            )}
             {data && data.status == "APPROVED" && (
               <IconButton
                 onPress={() => {
@@ -221,7 +263,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
                 title="Complete Appointment"
               />
             )}
-            {data && data.status == "PENDING" && (
+            {/* {data && data.status == "PENDING" && (
               <Text
                 style={{
                   fontSize: 16,
@@ -231,7 +273,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
               >
                 Request Pending
               </Text>
-            )}
+            )} */}
             <View style={{ width: 20 }} />
             <IconButton
               onPress={() => {
