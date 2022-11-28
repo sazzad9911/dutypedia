@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SvgXml } from "react-native-svg";
 
 const ServiceCart = ({ data, onPress }) => {
-  //console.log(data);
+  //console.log(data.packageData);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -57,6 +57,7 @@ const ServiceCart = ({ data, onPress }) => {
           style={{
             width: "100%",
             height: "50%",
+            opacity:.9
           }}
           source={{
             uri: data?.images[0],
@@ -91,10 +92,11 @@ const ServiceCart = ({ data, onPress }) => {
               <View
               style={{
                 flexDirection: "row",
-                alignItems:'center'
+                alignItems:'center',
+                flex:1
               }}
             >
-              <Text
+              <Text numberOfLines={1}
                 style={{
                   fontSize: 14,
                   fontFamily: "Poppins-Medium",
@@ -102,9 +104,12 @@ const ServiceCart = ({ data, onPress }) => {
                   marginRight: 5,
                 }}
               >
-                Package
+                {data&&data.packageData
+                &&data.packageData.map((doc,i)=>{
+                  return `${i!=0?", ":""}${doc.price}৳`
+                })}
               </Text>
-              <SvgXml xml={icon} height="15" width="15" />
+              
             </View>
             )}
             {data.type != "PACKAGE" ? (
@@ -130,6 +135,13 @@ const ServiceCart = ({ data, onPress }) => {
           </View>
         </View>
       </View>
+      {data.type=="PACKAGE"&&(
+        <SvgXml style={{
+          position:"absolute",
+          top:10,
+          left:10
+        }} xml={icon} height="15" width="15" />
+      )}
     </TouchableOpacity>
   );
 };

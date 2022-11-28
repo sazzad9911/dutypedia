@@ -46,6 +46,7 @@ import AppointmentList from "./screens/Seller/Appointment/AppointmentList";
 import AppointmentHeader from "./components/Appointment/AppointmentHeader";
 import CreateAppointment from "./screens/Seller/Appointment/CreateAppointment";
 import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails";
+import FixedService from "./screens/FixedService";
 
 const Stack = createStackNavigator();
 
@@ -112,6 +113,11 @@ const HomeRoute = ({ navigation }) => {
         options={{ headerShown:false}}
         name="OtherProfile"
         component={OtherProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown:false}}
+        name="FixedService"
+        component={FixedService}
       />
       <Stack.Screen
         options={{ headerShown: false }}
