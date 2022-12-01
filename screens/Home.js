@@ -135,6 +135,7 @@ const Home = (props) => {
       stickyHeaderIndices={[0]}
       scrollEventThrottle={16}
       stickyHeaderHiddenOnScroll={true}
+      
       refreshControl={
         <RefreshControl
           refreshing={refreshing}

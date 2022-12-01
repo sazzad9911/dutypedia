@@ -14,7 +14,7 @@ import {
   Alert,
   Pressable,
   Animated as Animation,
-  Easing,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,15 +25,9 @@ import {
   secondaryColor,
   textColor,
 } from "./../assets/colors";
-import { EvilIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import ProfileOption from "./../components/ProfileOption";
-import { Octicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Button from "./../components/Button";
 import RatingView from "./../components/RatingView";
 import { user, calenderIcon, noticeIcon, serviceIcon } from "../assets/icon";
@@ -43,7 +37,12 @@ import RelatedService from "./../Cart/RelatedService";
 import IconButton from "./../components/IconButton";
 import { Menu } from "react-native-paper";
 import { Rows, ServiceTable, TabBar, TabScreen } from "./VendorProfile";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  StretchInY,
+  FlipInEasyX,
+  Transition,
+} from "react-native-reanimated";
 import ServiceCart from "./../Cart/ServiceCart";
 import {
   getService,
@@ -59,7 +58,11 @@ import { useIsFocused } from "@react-navigation/native";
 import Avatar from "../components/Avatar";
 const Tab = createMaterialTopTabNavigator();
 import OutsideView from "react-native-detect-press-outside";
-import { Shadow } from "react-native-neomorph-shadows";
+import InsetShadow from "react-native-inset-shadow";
+import { Tooltip } from "react-native-paper";
+import useHandleScroll from "../components/constants/FabView";
+import Carousel from "react-native-reanimated-carousel";
+import LargeText from "../components/LargeText";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -98,7 +101,7 @@ const OtherProfile = (props) => {
     },
   ];
   const [Active, setActive] = React.useState("Bargaining");
-  const [NewLines, setNewLines] = React.useState(4);
+  const [NewLines, setNewLines] = React.useState(3);
   const [Facilities, setFacilities] = React.useState([]);
   const [NewDataList, setNewDataList] = React.useState([]);
   const [ServiceList, setServiceList] = React.useState([]);
@@ -137,20 +140,26 @@ const OtherProfile = (props) => {
   const childRef = React.useRef();
   const [height, setHeight] = React.useState(new Animation.Value(0));
   const [opacity, setOpacity] = React.useState(new Animation.Value(0));
-
-  Animation.timing(height, {
-    toValue: 1,
-    duration: 500,
-    easing: Easing.linear,
-    useNativeDriver: false, // <-- neccessary
-  }).start(() => {
-    Animation.timing(opacity, {
-      toValue: 1,
-      duration: 500,
-      easing: Easing.linear,
-      useNativeDriver: false, // <-- neccessary
-    }).start();
+  const scrollRef = React.useRef();
+  const [isActionButtonVisible, setIsActionButtonVisible] =
+    React.useState(false);
+  const scrollY = new Animation.Value(0);
+  const diffClamp = Animation.diffClamp(scrollY, 0, 300);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 500],
+    outputRange: [0, 500],
   });
+  const startingHeight = 1;
+  const fullHeight = 125;
+  const animatedHeight = React.useRef(
+    new Animation.Value(startingHeight)
+  ).current;
+  const aboutStartHeight = 60;
+  const aboutEndHeight = Data?.service.about.split("").length*.5;
+  const aboutHeight = React.useRef(
+    new Animation.Value(aboutStartHeight)
+  ).current;
+  const { handleScroll, showButton } = useHandleScroll();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -368,6 +377,20 @@ const OtherProfile = (props) => {
         });
     }
   }, [Data]);
+  React.useEffect(() => {
+    Animation.spring(animatedHeight, {
+      speed: 1000,
+      toValue: OpenDetails ? fullHeight : startingHeight,
+      useNativeDriver: false,
+    }).start();
+  }, [OpenDetails]);
+  React.useEffect(() => {
+    Animation.spring(aboutHeight, {
+      speed: 1000,
+      toValue: Lines != 3 ? aboutEndHeight : aboutStartHeight,
+      useNativeDriver: false,
+    }).start();
+  }, [Lines]);
   const showCart = (doc) => {
     setGigs(doc);
     setClick(true);
@@ -387,10 +410,7 @@ const OtherProfile = (props) => {
       console.log(e.message);
     }
   };
-  const maxHeight = height.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1000], // <-- value that larger than your content's height
-  });
+
   const clickFixed = (doc) => {
     setClick(true);
     setImages(doc.images);
@@ -428,8 +448,12 @@ const OtherProfile = (props) => {
   }
   //console.warn(Data.service.profilePhoto)
   return (
-    <SafeAreaView style={{ backgroundColor: "black" }}>
+    <SafeAreaView style={{ flex: 1,backgroundColor:primaryColor }}>
       <ScrollView
+        scrollEventThrottle={16}
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        ref={scrollRef}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -437,157 +461,172 @@ const OtherProfile = (props) => {
         style={{
           backgroundColor: "#f1f1f2",
         }}
+        onScroll={(e) => handleScroll(e)}
       >
-        <OutsideView
-          childRef={childRef}
-          onPressOutside={() => {
-            // handle press outside of childRef event
-            setNameDropDown(false);
-            setPositionDropDown(false);
+        <InsetShadow
+          shadowColor={"black"}
+          elevation={20}
+          shadowRadius={20}
+          shadowOffset={50}
+          left={true}
+          right={true}
+          bottom={true}
+          top={true}
+          containerStyle={{
+            height: 400,
+            width: width,
           }}
         >
-          <View style={styles.container}>
-            {backgroundImage ? (
-              <Image
-                source={{ uri: backgroundImage }}
-                style={{
-                  height: 400,
-                }}
-              />
-            ) : (
-              <View
-                style={{
-                  height: 400,
-                  backgroundColor: primaryColor,
-                }}
-              ></View>
-            )}
-            {/* {!backgroundImage && (
-              <LinearGradient
-                style={{
-                  height: 400,
-                  position: "absolute",
-                  width: width,
-                  top: 0,
-                  left: 0,
-                }}
-                colors={["#cbcbcbf8", "#cbcbcb37", "#cbcbcb09"]}
-              ></LinearGradient>
-            )} */}
-            <Shadow
-              inner // <- enable inner shadow
-              useArt // <- set this prop to use non-native shadow on ios
+          {backgroundImage ? (
+            <Image
+              source={{ uri: backgroundImage }}
               style={{
-                shadowOffset: { width: 10, height: 10 },
-                shadowOpacity: 1,
-                shadowColor: "grey",
-                shadowRadius: 10,
-                borderRadius: 20,
-                backgroundColor: "white",
-                width: width,
                 height: 400,
-                // ...include most of View/Layout styles
               }}
-            >
-
-            </Shadow>
-            
+            />
+          ) : (
             <View
               style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
                 height: 400,
-                justifyContent: "center",
               }}
-            >
+            ></View>
+          )}
+        </InsetShadow>
+        
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 10,
+            height: 400,
+            justifyContent: "center",
+            elevation: 2,
+          }}
+        >
+          <Menu
+            contentStyle={{
+              backgroundColor: primaryColor,
+            }}
+            visible={Visible}
+            onDismiss={() => {
+              setVisible(!Visible);
+            }}
+            anchor={
               <SvgXml
+                onPress={() => {
+                  setVisible(!Visible);
+                  console.log("sadfa");
+                }}
                 style={{
                   shadowOffset: {
                     width: 1,
                     height: 1,
                   },
                   shadowColor: "#707070",
-                  shadowRadius: 3,
+                  shadowRadius:Platform.OS=="ios"?4: 20,
                   elevation: 0,
-                  shadowOpacity: 0,
-                  marginLeft: 6,
+                  shadowOpacity: Platform.OS=="ios"?.1:1,
+                  marginLeft: 0,
                 }}
                 xml={threeDot}
-                height="40"
-                width={"40"}
-              />
-              <SvgXml
-                style={{
-                  shadowOffset: {
-                    width: 1,
-                    height: 1,
-                  },
-                  shadowColor: "#707070",
-                  shadowRadius: 3,
-                  elevation: 0,
-                  shadowOpacity: 0.3,
-                }}
-                xml={loveIcon}
                 height="50"
                 width={"50"}
               />
-              <SvgXml
-                style={{
-                  shadowOffset: {
-                    width: 1,
-                    height: 1,
-                  },
-                  shadowColor: "#707070",
-                  shadowRadius: 3,
-                  elevation: 0,
-                  shadowOpacity: 0.3,
-                }}
-                xml={shareIcon}
-                height="50"
-                width={"50"}
-              />
-              <SvgXml
-                style={{
-                  shadowOffset: {
-                    width: 1,
-                    height: 1,
-                  },
-                  shadowColor: "#707070",
-                  shadowRadius: 3,
-                  elevation: 0,
-                  shadowOpacity: 0.3,
-                }}
-                xml={newCalender}
-                height="50"
-                width={"50"}
-              />
-              <SvgXml
-                style={{
-                  shadowOffset: {
-                    width: 1,
-                    height: 1,
-                  },
-                  shadowColor: "#707070",
-                  shadowRadius: 3,
-                  elevation: 0,
-                  shadowOpacity: 0.3,
-                }}
-                xml={messageIcon}
-                height="50"
-                width={"50"}
-              />
-            </View>
+            }
+          >
+            <Menu.Item
+              onPress={() => {
+                navigation.navigate("Support_1");
+                setVisible(!Visible);
+              }}
+              title="Report"
+            />
+            <Menu.Item onPress={() => {}} title="Copy URL" />
+          </Menu>
+
+          <SvgXml
+            style={{
+              shadowOffset: {
+                width: 1,
+                height: 1,
+              },
+              shadowColor: "#707070",
+              shadowRadius:Platform.OS=="ios"?4: 20,
+              elevation: 0,
+              shadowOpacity: Platform.OS=="ios"?.1:1,
+            }}
+            xml={loveIcon}
+            height="50"
+            width={"50"}
+          />
+          <SvgXml
+            style={{
+              shadowOffset: {
+                width: 1,
+                height: 1,
+              },
+              shadowColor: "#707070",
+              shadowRadius:Platform.OS=="ios"?4: 20,
+              elevation: 0,
+              shadowOpacity: Platform.OS=="ios"?.1:1,
+            }}
+            xml={shareIcon}
+            height="50"
+            width={"50"}
+          />
+
+          <SvgXml
+            onPress={() => {
+              navigation.navigate("AppointmentList", { data: Data });
+            }}
+            style={{
+              shadowOffset: {
+                width: 1,
+                height: 1,
+              },
+              shadowColor: "#707070",
+              shadowRadius:Platform.OS=="ios"?4: 20,
+              elevation: 0,
+              shadowOpacity: Platform.OS=="ios"?.1:1,
+            }}
+            xml={newCalender}
+            height="50"
+            width={"50"}
+          />
+          <SvgXml
+            onPress={() => {
+              //navigation.navigate("Message")
+            }}
+            style={{
+              shadowOffset: {
+                width: 1,
+                height: 1,
+              },
+              shadowColor: "#707070",
+              shadowRadius:Platform.OS=="ios"?4: 20,
+              elevation: 0,
+              shadowOpacity: Platform.OS=="ios"?.1:1,
+            }}
+            xml={messageIcon}
+            height="50"
+            width={"50"}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            marginTop: -30,
+          }}
+        >
+          <View>
             <View
               style={{
-                paddingHorizontal: 20,
-                paddingVertical: 5,
-                backgroundColor: primaryColor,
-                borderTopLeftRadius: 30,
-                borderTopRightRadius: 30,
-                marginTop: -20,
                 flexDirection: "row",
                 alignItems: "center",
+                paddingHorizontal: 20,
+                paddingVertical: 5,
               }}
             >
               <Text
@@ -618,13 +657,13 @@ const OtherProfile = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  <SvgXml xml={newStar} height="23" width={"23"} />
+                  <SvgXml xml={newStar} height="21" width={"21"} />
                   <Text
                     style={{
                       fontSize: 20,
                       fontFamily: "Poppins-Bold",
                       color: "#FFC107",
-                      marginLeft: 10,
+                      marginLeft: 5,
                     }}
                   >
                     4.6
@@ -634,7 +673,7 @@ const OtherProfile = (props) => {
                   style={{
                     fontSize: 12,
                     fontFamily: "Poppins-Medium",
-                    marginTop: 5,
+                    marginTop: Platform.OS=="ios"?5:0,
                   }}
                 >
                   Profile Views {Data ? Data.service.views : "00"}
@@ -647,6 +686,7 @@ const OtherProfile = (props) => {
                 alignItems: "center",
                 paddingHorizontal: 20,
                 marginVertical: 15,
+                flex: 1,
               }}
             >
               <Avatar
@@ -656,65 +696,86 @@ const OtherProfile = (props) => {
                 }}
                 source={{ uri: Data ? Data.service.profilePhoto : null }}
               />
-              <Pressable
-                onPress={() => {
-                  setNameDropDown((val) => !val);
-                }}
-                ref={childRef}
+              <View
                 style={{
-                  borderRadius: 10,
-                  marginHorizontal: 10,
-                  backgroundColor: "#E7EFFF",
-                  paddingVertical: 10,
-                  paddingHorizontal: 10,
-                  height: NameDropDown ? 70 : 42,
-                  maxWidth: "50%",
+                  flex: 3,
                 }}
               >
-                <Text
-                  numberOfLines={NameDropDown ? 2 : 1}
-                  style={{
-                    color: "#6366F1",
-                    flex: 1,
-                    fontSize: 18,
-                    fontFamily: "Poppins-SemiBold",
-                  }}
+                <Tooltip
+                  enterTouchDelay={100}
+                  title={
+                    Data
+                      ? `${Data.service.providerInfo.title} ${
+                          Data.service.providerInfo.name
+                        } (${Data.service.providerInfo.gender.toUpperCase()})`
+                      : "No"
+                  }
                 >
-                  {Data ? Data.service.providerInfo.name : ""}
-                  {` (${
-                    Data ? Data.service.providerInfo.gender.toUpperCase() : ""
-                  })`}
-                </Text>
-              </Pressable>
-              <Pressable
-                ref={childRef}
-                onPress={() => {
-                  setPositionDropDown((val) => !val);
-                }}
+                  <View
+                    onPress={() => {
+                      setNameDropDown((val) => !val);
+                    }}
+                    ref={childRef}
+                    style={{
+                      borderRadius: 10,
+                      marginHorizontal: 10,
+                      backgroundColor: "#E7EFFF",
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      flex: 1,
+                    }}
+                  >
+                    <Text
+                      numberOfLines={NameDropDown ? 2 : 1}
+                      style={{
+                        color: "#6366F1",
+                        fontSize: 16.5,
+                        fontFamily: "Poppins-SemiBold",
+                      }}
+                    >
+                      {Data
+                        ? `${Data.service.providerInfo.title} ${
+                            Data.service.providerInfo.name
+                          } (${Data.service.providerInfo.gender.toUpperCase()})`
+                        : null}
+                    </Text>
+                  </View>
+                </Tooltip>
+              </View>
+              <View
                 style={{
-                  width: 130,
-                  backgroundColor: "#F0EFEF",
-                  paddingVertical: 10,
-                  paddingHorizontal: 10,
-                  borderRadius: 10,
-                  height: PositionDropDown ? 70 : 42,
-                  justifyContent: "center",
-                  justifySelf: "flex-end",
+                  flex: 2,
                 }}
               >
-                <Text
-                  numberOfLines={PositionDropDown ? 4 : 1}
-                  style={{
-                    color: "#DA1E37",
-                    textAlign: "center",
-                    fontSize: 14,
-                    fontFamily: "Poppins-SemiBold",
-                  }}
+                <Tooltip
+                  enterTouchDelay={100}
+                  title={Data ? Data.service.providerInfo.position : ""}
                 >
-                  {Data ? Data.service.providerInfo.position : ""}
-                </Text>
-              </Pressable>
-              <View style={{ flex: 1 }} />
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: "#F0EFEF",
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      borderRadius: 10,
+                      justifyContent: "center",
+                      justifySelf: "flex-end",
+                    }}
+                  >
+                    <Text
+                      numberOfLines={PositionDropDown ? 4 : 1}
+                      style={{
+                        color: "#DA1E37",
+                        textAlign: "center",
+                        fontSize: 14,
+                        fontFamily: "Poppins-SemiBold",
+                      }}
+                    >
+                      {Data ? Data.service.providerInfo.position : ""}
+                    </Text>
+                  </View>
+                </Tooltip>
+              </View>
             </Animation.View>
             <View
               style={{
@@ -772,41 +833,42 @@ const OtherProfile = (props) => {
               >
                 About
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setLines((num) => {
-                    if (num === 2) {
-                      return 30;
+              <Animation.View style={{height:aboutHeight}}>
+                <Pressable
+                  onPress={() => {
+                    if (Lines === 3) {
+                      setLines(100);
                     } else {
-                      return 2;
+                      setLines(3);
                     }
-                  });
-                }}
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Text
-                  numberOfLines={Lines}
+                  }}
                   style={{
-                    fontSize: 16.5,
-                    textAlign: "justify",
-                    fontFamily: "Poppins-Medium",
-                    lineHeight: 25,
-                    marginTop: -10,
+                    flexDirection: "row",
+                    flexWrap: "wrap",
                   }}
                 >
-                  {Data?.service.about}
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    numberOfLines={Lines}
+                    style={{
+                      fontSize: 16.5,
+                      textAlign: "justify",
+                      fontFamily: "Poppins-Medium",
+                      lineHeight: 25,
+                      marginTop: -10,
+                      marginBottom: Lines != 3 ? -20 : 0,
+                    }}
+                  >
+                    {Data?.service.about}
+                  </Text>
+                </Pressable>
+              </Animation.View>
             </View>
             <Pressable
               onPress={() => {
                 setOpenDetails((val) => !val);
               }}
               style={{
-                paddingHorizontal: 10,
+                paddingHorizontal: 20,
                 paddingVertical: 10,
                 paddingTop: 20,
               }}
@@ -814,7 +876,7 @@ const OtherProfile = (props) => {
               <Text
                 style={{
                   color: "#4ADE80",
-                  fontSize: 18,
+                  fontSize: 16.5,
                   fontFamily: "Poppins-SemiBold",
                 }}
               >
@@ -823,41 +885,53 @@ const OtherProfile = (props) => {
             </Pressable>
           </View>
 
-          {OpenDetails && (
-            <Animated.View entering={FadeIn}>
-              <ProfileOption
-                onPress={() => {
-                  navigation.navigate("Company Calender", { vendor: Data });
-                }}
-                Icon={() => (
-                  <SvgXml xml={calenderIcon} height="22" width="22" />
-                )}
-                title="Company Calender"
-              />
-              <ProfileOption
-                onPress={() => {
-                  navigation.navigate("Notice", { serviceId: Data.service.id });
-                }}
-                style={{
-                  marginBottom: 0,
-                }}
-                Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
-                title="Notice"
-              />
-              <BarOption
-                icon={user}
-                title={`Worker and Team (${Data?.service.worker} member)`}
-              />
-            </Animated.View>
-          )}
-          <View style={{ height: 1, backgroundColor: "#FAFAFA" }} />
+          <Animation.View
+            style={[
+              {
+                height: 1,
+                backgroundColor:primaryColor
+              },
+              { height: animatedHeight },
+            ]}
+          >
+            <ProfileOption
+              onPress={() => {
+                navigation.navigate("Company Calender", { vendor: Data });
+              }}
+              Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
+              title="Company Calender"
+            />
+            <ProfileOption
+              onPress={() => {
+                navigation.navigate("Notice", { serviceId: Data.service.id });
+              }}
+              style={{
+                marginBottom: 0,
+              }}
+              Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
+              title="Notice"
+            />
+            <BarOption
+              icon={user}
+              title={`Worker and Team (${Data?.service.worker} member)`}
+            />
+          </Animation.View>
+          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
           <View
             style={{
               height: 1100,
+              backgroundColor: primaryColor,
             }}
           >
             <Tab.Navigator
               screenOptions={{
+                tabBarStyle: {
+                  paddingLeft: 20,
+                  elevation: 0,
+                  borderBottomColor: "#FAFAFA",
+                  borderBottomWidth: 2,
+                  backgroundColor: primaryColor,
+                },
                 tabBarLabelStyle: { fontSize: 12 },
                 tabBarItemStyle: {
                   margin: 0,
@@ -868,8 +942,10 @@ const OtherProfile = (props) => {
                 },
                 tabBarIndicatorStyle: {
                   backgroundColor: "#4ADE80",
+                  marginLeft: 20,
                 },
                 tabBarScrollEnabled: true,
+                tabBarPressColor: primaryColor,
               }}
             >
               <Tab.Screen
@@ -879,7 +955,7 @@ const OtherProfile = (props) => {
                       style={{
                         color: focused ? "#4ADE80" : "black",
                         fontFamily: "Poppins-SemiBold",
-                        fontSize: 18,
+                        fontSize: 16.5,
                       }}
                     >
                       {initialState[0].title}
@@ -1048,10 +1124,10 @@ const OtherProfile = (props) => {
 
                     <TouchableOpacity
                       onPress={() => {
-                        if (NewLines == 4) {
+                        if (NewLines == 3) {
                           setNewLines(100);
                         } else {
-                          setNewLines(4);
+                          setNewLines(3);
                         }
                       }}
                       disabled={Description.length > 100 ? false : true}
@@ -1686,115 +1762,138 @@ const OtherProfile = (props) => {
               </View>
             </Animated.View>
           )}
-        </OutsideView>
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 0,
-            paddingVertical: 20,
-          }}
-        >
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-            }}
-            title="Seller Communication"
-            rate={4.6}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service As Describe"
-            rate={4.6}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service Quality"
-            rate={3.2}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service Quality"
-            rate={3.2}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service Quality"
-            rate={3.2}
-          />
-        </View>
-        <ReviewCart navigation={navigation} />
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 0,
-          }}
-        >
-          {RelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                Related Service
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {RelatedServices.map((doc, i) => (
-                  <RelatedService
-                    data={doc}
-                    key={i}
-                    navigation={props.navigation}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          )}
 
-          {UnRelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                You Might Also Like
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {UnRelatedServices.map((doc, i) => (
-                  <RelatedService
-                    data={doc}
-                    key={i}
-                    navigation={props.navigation}
-                  />
-                ))}
-                <View style={{ width: 10 }} />
-              </ScrollView>
-            </View>
-          )}
+          <View
+            style={{
+              backgroundColor: primaryColor,
+              marginTop: 0,
+              paddingVertical: 20,
+            }}
+          >
+            <RatingView
+              style={{
+                marginHorizontal: 20,
+              }}
+              title="Seller Communication"
+              rate={4.6}
+            />
+            <RatingView
+              style={{
+                marginHorizontal: 20,
+                marginTop: 5,
+              }}
+              title="Service As Describe"
+              rate={4.6}
+            />
+            <RatingView
+              style={{
+                marginHorizontal: 20,
+                marginTop: 5,
+              }}
+              title="Service Quality"
+              rate={3.2}
+            />
+            <RatingView
+              style={{
+                marginHorizontal: 20,
+                marginTop: 5,
+              }}
+              title="Service Quality"
+              rate={3.2}
+            />
+            <RatingView
+              style={{
+                marginHorizontal: 20,
+                marginTop: 5,
+              }}
+              title="Service Quality"
+              rate={3.2}
+            />
+          </View>
+          <ReviewCart navigation={navigation} />
+          <View
+            style={{
+              backgroundColor: primaryColor,
+              marginTop: 0,
+            }}
+          >
+            {RelatedServices.length > 0 && (
+              <View>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontFamily: "Poppins-SemiBold",
+                    color: textColor,
+                    paddingHorizontal: 20,
+                    paddingVertical: 15,
+                  }}
+                >
+                  Related Service
+                </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View style={{ width: 10 }} />
+                  {RelatedServices.map((doc, i) => (
+                    <RelatedService
+                      data={doc}
+                      key={i}
+                      navigation={props.navigation}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
+            {UnRelatedServices.length > 0 && (
+              <View>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontFamily: "Poppins-SemiBold",
+                    color: textColor,
+                    paddingHorizontal: 20,
+                    paddingVertical: 15,
+                  }}
+                >
+                  You Might Also Like
+                </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <View style={{ width: 10 }} />
+                  {UnRelatedServices.map((doc, i) => (
+                    <RelatedService
+                      data={doc}
+                      key={i}
+                      navigation={props.navigation}
+                    />
+                  ))}
+                  <View style={{ width: 10 }} />
+                </ScrollView>
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
+      {showButton && (
+        <Animated.View
+          entering={FadeIn}
+          style={{
+            shadowOffset: {
+              width: 1,
+              height: 1,
+            },
+            shadowColor: "#707070",
+            shadowRadius: 3,
+            elevation: 0,
+            shadowOpacity: 0.3,
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+            backgroundColor: "#4ADE80",
+            borderRadius: 25,
+          }}
+        >
+          <SvgXml xml={messageIcon} height="50" width={"50"} />
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 };
@@ -1990,7 +2089,12 @@ const BargainingScreen = ({ navigation, route }) => {
   const Facilities = params.Facilities;
   const Data = params.Data;
   const Price = params.Price;
+  const startingHeight = 120;
+  const fullHeight = Description.split("").length * 0.6;
   const isFocused = useIsFocused();
+  const animatedHeight = React.useRef(
+    new Animation.Value(startingHeight)
+  ).current;
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -2009,6 +2113,14 @@ const BargainingScreen = ({ navigation, route }) => {
     }
   }, [ActiveService]);
 
+  React.useEffect(() => {
+    Animation.spring(animatedHeight, {
+      speed: 1100,
+      toValue: NewLines != 3 ? fullHeight : startingHeight,
+      useNativeDriver: false,
+    }).start();
+  }, [NewLines]);
+
   return (
     <View>
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
@@ -2023,61 +2135,76 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           {Title}
         </Text>
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-            alignItems: "flex-end",
-          }}
-          onPress={() => {
-            if (NewLines == 3) {
-              setNewLines(100);
-            } else {
-              setNewLines(3);
-            }
-          }}
-        >
-          <Text
-            numberOfLines={NewLines}
+        <Animation.View style={{ height: animatedHeight }}>
+          <Pressable
+            disabled={Description.split("").length > 130 ? false : true}
             style={{
-              marginHorizontal: 20,
-              textAlign: "justify",
+              flexDirection: "row",
+              alignItems: "flex-end",
               marginVertical: 20,
-              fontSize: 16.5,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              lineHeight: 25,
-              marginBottom: NewLines != 3 ? 20 : 0,
+            }}
+            onPress={() => {
+              if (NewLines == 3) {
+                setNewLines(100);
+              } else {
+                setNewLines(3);
+              }
             }}
           >
-            {Description}
-          </Text>
-        </TouchableOpacity>
-        {NewLines == 3 && (
-          <Text
-            style={{
-              color: "#4ADE80",
-              fontSize: 14,
-              marginHorizontal: 20,
-              marginBottom: 20,
-            }}
-          >
-            More
-          </Text>
-        )}
-        <SliderBox
-          images={Images}
-          sliderBoxHeight={width}
-          dotColor="#232F6D"
-          inactiveDotColor="#ffffff"
-          dotStyle={{
-            width: 0,
-            height: 0,
-            borderRadius: 10,
-            marginHorizontal: 0,
-            padding: 0,
-            margin: 0,
-            backgroundColor: "rgba(128, 128, 128, 0.92)",
-          }}
+            <Text
+              numberOfLines={NewLines}
+              style={{
+                marginHorizontal: 20,
+                textAlign: "justify",
+                fontSize: 16,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+                lineHeight: 25,
+                marginBottom: 0,
+              }}
+            >
+              {NewLines &&
+                Description.split("").map((doc, i) => {
+                  if (NewLines != 3) {
+                    return `${doc}`;
+                  }
+                  if (i < 130) {
+                    return `${doc}`;
+                  }
+                })}
+              {Description.split("").length > 129 && NewLines == 3
+                ? "...."
+                : ""}
+              {Description.split("").length > 129 && NewLines == 3 && (
+                <Text
+                  style={{
+                    color: "#4ADE80",
+                    fontSize: 16.5,
+                  }}
+                >
+                  More
+                </Text>
+              )}
+            </Text>
+          </Pressable>
+        </Animation.View>
+        <Carousel
+          loop={false}
+          width={width}
+          height={width}
+          autoPlay={false}
+          data={Images}
+          scrollAnimationDuration={500}
+          onSnapToItem={(index) => {}}
+          renderItem={({ index }) => (
+            <Image
+              style={{
+                width: width,
+                height: width,
+              }}
+              source={{ uri: Images[index] }}
+            />
+          )}
         />
       </View>
       <View
@@ -2088,10 +2215,11 @@ const BargainingScreen = ({ navigation, route }) => {
       >
         <Text
           style={{
-            fontFamily: "Poppins-Medium",
+            fontFamily: "Poppins-SemiBold",
             fontSize: 22,
             marginBottom: 30,
             marginTop: 40,
+            color:"#535353"
           }}
         >
           Service List
@@ -2100,9 +2228,9 @@ const BargainingScreen = ({ navigation, route }) => {
         <View
           style={{
             backgroundColor: primaryColor,
-            height: 180,
             overflowY: "hidden",
             overflow: "hidden",
+            height: 180,
           }}
         >
           <View
@@ -2160,7 +2288,7 @@ const BargainingScreen = ({ navigation, route }) => {
             <View
               style={{
                 width: 1,
-                backgroundColor: "#e5e5e5",
+                backgroundColor: "#FFF3F3",
                 marginLeft: 30,
                 marginRight: 30,
               }}
@@ -2185,7 +2313,7 @@ const BargainingScreen = ({ navigation, route }) => {
                 <View>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 16.5,
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
                       lineHeight: 30,
@@ -2197,7 +2325,7 @@ const BargainingScreen = ({ navigation, route }) => {
                     Facilities.map((doc, i) => (
                       <Text
                         style={{
-                          fontSize: 18,
+                          fontSize: 16.5,
                           fontFamily: "Poppins-Medium",
                           lineHeight: 25,
                         }}

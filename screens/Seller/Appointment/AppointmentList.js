@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { getAppointment } from "../../../Class/appointment";
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
+import Animated, { FadeIn,SlideInRight } from "react-native-reanimated";
 const status = [
   {
     title: "Incomplete",
@@ -33,94 +34,101 @@ const status = [
     color: "#6366F1",
   },
   {
-    title:"Approved",
-    color:"#6366F1"
-  }
+    title: "Approved",
+    color: "#6366F1",
+  },
 ];
 
 export default function AppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Upcoming");
-  const user=useSelector(state=>state.user)
-  const data=route.params&&route.params.data?route.params.data:null;
-  const [Loader,setLoader]=React.useState(false)
-  const [Data,setData]=React.useState([])
-  const isDark=useSelector(state=>state.isDark)
-  const colors=new Color(isDark)
-  const backgroundColor=colors.getBackgroundColor()
+  const user = useSelector((state) => state.user);
+  const data = route.params && route.params.data ? route.params.data : null;
+  const [Loader, setLoader] = React.useState(false);
+  const [Data, setData] = React.useState([]);
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const backgroundColor = colors.getBackgroundColor();
 
-  const isFocused=useIsFocused()
-  React.useLayoutEffect(()=>{
-    if(user&&data&&Active){
-        setLoader(true)
-        getAppointment(user.token,Active,data.service.id).then(res=>{
-            setLoader(false)
-            //console.log(res.data)
-            setData(res.data.appointments)
-        }).catch(err=>{
-            setLoader(false)
-            console.warn(err.response)
+  const isFocused = useIsFocused();
+  React.useLayoutEffect(() => {
+    if (user && data && Active) {
+      setLoader(true);
+      getAppointment(user.token, Active, data.service.id)
+        .then((res) => {
+          setLoader(false);
+          //console.log(res.data)
+          setData(res.data.appointments);
         })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response);
+        });
     }
-  },[isFocused+Active])
+  }, [isFocused + Active]);
   //console.log(data.service.serviceCenterName)
-  if(Loader){
-    return(
-        <View style={{
-            flex:1,
-            justifyContent:"center",
-            alignItems:"center"
-        }}>
-            <ActivityIndicator size={"small"}  color={backgroundColor}/>
-        </View>
-    )
-  }
-  return (
-    <View style={{ flex: 1 }}>
+  if (Loader) {
+    return (
       <View
         style={{
-          flexDirection: "row",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Chip
-          onPress={() => {
-            setActive("Upcoming");
-          }}
-          title={"Upcoming"}
-          active={Active == "Upcoming" ? true : false}
-        />
+        <ActivityIndicator size={"small"} color={backgroundColor} />
+      </View>
+    );
+  }
+  return (
+    <Animated.View style={{ flex: 1 }}>
+      <ScrollView>
         <View
           style={{
-            width: 10,
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            paddingVertical: 10,
           }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Previous");
-          }}
-          title={"Previous"}
-          active={Active == "Previous" ? true : false}
-        />
-      </View>
-      {
-        Data.length==0?(
-            <NoAppointment />
-        ):null
-      }
-      {
-        Data.map((doc,i)=>(
-            <Cart key={i} onPress={()=>{
-                //console.log(doc)
-                navigation.navigate("AppointmentDetails",{data:data,appointment:doc})
-              }}
-                status={status.filter(s=>s.title.toUpperCase().match(doc.status))[0]}
-                title={doc.title}
-                date={`${doc.date} ${changeTime(doc.startTime)}`}
-              />
-        ))
-      }
-      
+        >
+          <Chip
+            onPress={() => {
+              setActive("Upcoming");
+            }}
+            title={"Upcoming"}
+            active={Active == "Upcoming" ? true : false}
+          />
+          <View
+            style={{
+              width: 10,
+            }}
+          />
+          <Chip
+            onPress={() => {
+              setActive("Previous");
+            }}
+            title={"Previous"}
+            active={Active == "Previous" ? true : false}
+          />
+        </View>
+        {Data.length == 0 ? <NoAppointment /> : null}
+        {Data.map((doc, i) => (
+          <Cart
+            key={i}
+            onPress={() => {
+              //console.log(doc)
+              navigation.navigate("AppointmentDetails", {
+                data: data,
+                appointment: doc,
+              });
+            }}
+            status={
+              status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+            }
+            title={doc.title}
+            date={`${doc.date} ${changeTime(doc.startTime)}`}
+          />
+        ))}
+      </ScrollView>
+
       <FAB
         color="#FFFFFF"
         icon="plus"
@@ -136,70 +144,86 @@ export default function AppointmentList({ navigation, route }) {
           alignItems: "center",
         }}
         onPress={() => {
-          navigation.navigate("CreateAppointment", {data:data});
+          navigation.navigate("CreateAppointment", { data: data });
         }}
       />
-    </View>
+    </Animated.View>
   );
 }
-const Cart = ({ date, status, title,onPress }) => {
+const Cart = ({ date, status, title, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}
-      style={{
-        flexDirection: "row",
-        width: width - 10,
-        marginHorizontal: 5,
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        shadowColor: "#333333",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        elevation: 3,
-        shadowRadius: 3,
-        backgroundColor: "white",
-        alignItems: "center",
-        marginTop: 10,
-        borderRadius: 5,
-      }}
-    >
-      <SvgXml xml={calender} height="24" width="24" />
-      <View
+    <Animated.View entering={SlideInRight}>
+      <TouchableOpacity
+        onPress={onPress}
         style={{
-          width: 40,
-        }}
-      />
-      <View
-        style={{
-          flex: 3,
+          flexDirection: "row",
+          width: width - 10,
+          marginHorizontal: 5,
+          justifyContent: "space-between",
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+          shadowColor: "#333333",
+          shadowOffset: {
+            width: 1,
+            height: 1,
+          },
+          shadowOpacity: 0.1,
+          elevation: 3,
+          shadowRadius: 3,
+          backgroundColor: "white",
+          alignItems: "center",
+          marginTop: 10,
+          borderRadius: 5,
         }}
       >
-        <View style={{
-            flexDirection:"row"
-        }}>
-          <Text style={{
-            fontSize:14
-          }}>{date}</Text>
-          <Text style={{
-            color:status?status.color:"red",
-            fontSize:14,
-            marginLeft:10
-          }}>{`(${status?status.title:"Invalid"})`}</Text>
+        <SvgXml xml={calender} height="24" width="24" />
+        <View
+          style={{
+            width: 40,
+          }}
+        />
+        <View
+          style={{
+            flex: 3,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+              }}
+            >
+              {date}
+            </Text>
+            <Text
+              style={{
+                color: status ? status.color : "red",
+                fontSize: 14,
+                marginLeft: 10,
+              }}
+            >{`(${status ? status.title : "Invalid"})`}</Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 14,
+            }}
+            numberOfLines={1}
+          >
+            {title ? title : "Invalid"}
+          </Text>
         </View>
-        <Text style={{
-            fontSize:14
-        }} numberOfLines={1}>{title ? title : "Invalid"}</Text>
-      </View>
-      <View
-        style={{
-          width: 40,
-        }}
-      />
-      <AntDesign name="right" size={24} color="#666666" />
-    </TouchableOpacity>
+        <View
+          style={{
+            width: 40,
+          }}
+        />
+        <AntDesign name="right" size={24} color="#666666" />
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="21.988" height="21.89" viewBox="0 0 21.988 21.89">

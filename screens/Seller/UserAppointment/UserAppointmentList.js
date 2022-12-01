@@ -142,7 +142,7 @@ export default function UserAppointmentList({ navigation, route }) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
@@ -218,7 +218,7 @@ export default function UserAppointmentList({ navigation, route }) {
       ))}
 
      
-    </View>
+    </ScrollView>
   );
 }
 const Cart = ({ date, status, title, onPress, image,name,username }) => {

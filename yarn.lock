@@ -1090,7 +1090,7 @@
   resolved "https://registry.yarnpkg.com/@bang88/react-native-ultimate-listview/-/react-native-ultimate-listview-4.1.0.tgz#efff14ce5a09e8c52116580cdfa17f253faffde2"
   integrity sha512-om2CsUXyr5kPvW1qBL+zGWOLwE7jq+wYCY47eBIRs7GmLqnnhbG2LlTHhnid8NI4q2/DQsEVfu8oWk15Atb7BA==
 
-"@callstack/react-theme-provider@^3.0.7":
+"@callstack/react-theme-provider@^3.0.8":
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.8.tgz#d0d7ac71e422133c5f7b78f4c4aa1bc57f156f50"
   integrity sha512-5U231sYY2sqQOaELX0WBCn+iluV8bFaXIS7em03k4W5Xz0AhGvKlnpLIhDGFP8im/SvNW7/2XoR0BsClhn9t6Q==
@@ -1588,15 +1588,6 @@
   integrity sha512-KrR021BmBLsA0TT1AAsfH16bHYy0MSbhdAeBAqpriak3GS1T2alFcdTUvn13p0ZW6FKRD6Bd3ryU2zhU/IYYJQ==
   dependencies:
     merge-options "^3.0.4"
-
-"@react-native-community/art@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.2.0.tgz#386d95393f6042d9006f9d4bc6063fb898794460"
-  integrity sha512-a+ZcRGl/BzLa89yi33Mbn5SHavsEXqKUMdbfLf3U8MDLElndPqUetoJyGkv63+BcPO49UMWiQRP1YUz6/zfJ+A==
-  dependencies:
-    art "^0.10.3"
-    invariant "^2.2.4"
-    prop-types "^15.7.2"
 
 "@react-native-community/cameraroll@^4.1.2":
   version "4.1.2"
@@ -2325,11 +2316,6 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha512-SleRWjh9JUud2wH1hPs9rZBZ33H6T9HOiL0uwGnGx9FpE6wKGyfWugmbkEOIs6qWrZhg0LWeLziLrEwQJhs5mQ==
 
-art@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/art/-/art-0.10.3.tgz#b01d84a968ccce6208df55a733838c96caeeaea2"
-  integrity sha512-HXwbdofRTiJT6qZX/FnchtldzJjS3vkLJxQilc3Xj+ma2MXjY4UAyQ0ls1XZYVnDvVIBiFZbC6QsvtW86TD6tQ==
-
 asap@~2.0.3, asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
@@ -2939,6 +2925,11 @@ color@^4.2.3:
   dependencies:
     color-convert "^2.0.1"
     color-string "^1.9.0"
+
+colord@2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/colord/-/colord-2.9.2.tgz#25e2bacbbaa65991422c07ea209e2089428effb1"
+  integrity sha512-Uqbg+J445nc1TKn4FoDPS6ZZqAvEDnwrH42yo8B40JSOgSLxMZ/gt3h4nmCtPLQeXhjJJkqBx7SCY35WnIixaQ==
 
 colorette@^1.0.7:
   version "1.4.0"
@@ -6373,6 +6364,13 @@ react-native-image-slider-box@^2.0.6:
   dependencies:
     react-native-snap-carousel latest
 
+react-native-inset-shadow@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-inset-shadow/-/react-native-inset-shadow-1.0.3.tgz#9a0cd6d33b69cbc95d1aa5568e1b938e9a43506b"
+  integrity sha512-4UXuSrenJtOWKcV0zSqHLQ47Oxn+BXdmxFxYXf5rE8KletbTvQq8ziZsX8MSEegUGWDcJJ3Mw+1OVbPJxm4lZg==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
@@ -6398,27 +6396,24 @@ react-native-modal-popover@^2.0.1:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-neomorph-shadows@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-neomorph-shadows/-/react-native-neomorph-shadows-1.1.2.tgz#5af1b7024fc9286bfa55df1db1b080688dd85af4"
-  integrity sha512-HJ7bBEwuze6TNxz/+1RvaHrrHHYMEZ0itE3hPgGxvst7Jz47K9TnEDiFskjTXMaTxXOCqzPDa9UmUfQK2K15tA==
-  dependencies:
-    "@react-native-community/art" "^1.2.0"
-    prop-types "^15.7.2"
-
 react-native-pager-view@5.4.24:
   version "5.4.24"
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.24.tgz#8626e757ddc55e41eca66d2f8a8a75aec54591ee"
   integrity sha512-dRMB7i3B+mu4NCeIN6gqbR/kC/rr2wzqO0gisXDdJwJr78G24sWoTNpLEDFo3G8TFHY9nTMutVl5CUvkN2dp6g==
 
-react-native-paper@5.0.0-rc.4:
-  version "5.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.0.0-rc.4.tgz#e30d196694a5b2332aaa84e5b841b9f09077d5ce"
-  integrity sha512-BZHa9i/xGnxCuxve6LYtPGYM23R7oMOiMt4hy+Yb620aqbQHhVUnrQB67tIJn1vcwy7DleYWn4mCaJLa0agpLQ==
+react-native-paper@5.0.0-rc.10:
+  version "5.0.0-rc.10"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.0.0-rc.10.tgz#c902e73bc24f5494038cb51d897ba01f520f038f"
+  integrity sha512-SmWgcEiWP7+8D7lXuUE1JE3WzjvIfkwPTrKoz+Zr6lI/GTyZwt+OpinxspDr+CSA3cC4FJOy/d33XM30CM7Y9g==
   dependencies:
-    "@callstack/react-theme-provider" "^3.0.7"
+    "@callstack/react-theme-provider" "^3.0.8"
     color "^3.1.2"
     react-native-iphone-x-helper "^1.3.1"
+
+react-native-reanimated-carousel@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.1.5.tgz#9737071fb06137632bd3dc7e92e75eeaf7de17a2"
+  integrity sha512-s3+Qoaajpic6u4npfqLHZeIDG8G1jbBSf5fCf0gRioWCiSNw8+1kzvfU9kB5knY10XCYTksMZ0eJfi8EqEvWEw==
 
 react-native-reanimated@^2.11.0:
   version "2.11.0"
@@ -6459,6 +6454,13 @@ react-native-screens@^3.18.2:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-shadow-2@^7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-shadow-2/-/react-native-shadow-2-7.0.6.tgz#8fbdb975674b77f236c5fce6af3e0781af6a0ae1"
+  integrity sha512-kH0fKttPE67gIzTsnvmdJS0HAyb2utYAnUZguznmn6iNDRxRDD8RY1COsfW8YN1YuzYZgVtu60G394Az9bmuTg==
+  dependencies:
+    colord "2.9.2"
 
 "react-native-size-matters@^0.3.0 || ^0.4.0":
   version "0.4.0"

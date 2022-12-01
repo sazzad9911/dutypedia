@@ -138,7 +138,7 @@ const VendorProfile = (props) => {
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
   const [PackageService, setPackageService] = React.useState();
-  const [packageData,setPackageData]=React.useState()
+  const [packageData, setPackageData] = React.useState();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -1321,23 +1321,23 @@ const VendorProfile = (props) => {
               PackageService.map((doc, i) => (
                 <ServiceCart
                   onPress={() => {
-                    if(doc.packageData.length==0){
-                      Alert.alert("Opps!","No package found")
-                      return
+                    if (doc.packageData.length == 0) {
+                      Alert.alert("Opps!", "No package found");
+                      return;
                     }
-                    let max=0;
-                    doc.packageData.map((doc,i)=>{
-                      if(max<doc.features.length){
-                        max=doc.features.length
+                    let max = 0;
+                    doc.packageData.map((doc, i) => {
+                      if (max < doc.features.length) {
+                        max = doc.features.length;
                       }
-                    })
+                    });
                     //console.log(max)
                     setClick(max);
                     setImages(doc.images);
                     setPrice("100");
                     setFacilities(doc.facilites.selectedOptions);
                     setTitle(doc.title);
-                    setPackageData(doc.packageData)
+                    setPackageData(doc.packageData);
                     setDescription(doc.description);
                     try {
                       dispatch({
@@ -1370,7 +1370,7 @@ const VendorProfile = (props) => {
                 />
               </View>
             )}
-            {Click&&packageData && (
+            {Click && packageData && (
               <View>
                 <View style={{ backgroundColor: secondaryColor }}>
                   <SliderBox
@@ -1443,12 +1443,13 @@ const VendorProfile = (props) => {
                 </View>
                 <View
                   style={{
-                    height: Click*60,
+                    height: Click * 60,
                   }}
                 >
                   <Tab.Navigator
                     tabBar={(props) => (
-                      <TabBar data={packageData}
+                      <TabBar
+                        data={packageData}
                         onClick={(e) => {
                           //console.log(e)
                           navigation.navigate("AddPackageScreen", {
@@ -1457,9 +1458,7 @@ const VendorProfile = (props) => {
                             package: packages,
                           });
                         }}
-                        onPress={(e) => {
-                          
-                        }}
+                        onPress={(e) => {}}
                         {...props}
                       />
                     )}
@@ -1476,7 +1475,6 @@ const VendorProfile = (props) => {
                         component={TabScreen}
                       />
                     ))}
-
                   </Tab.Navigator>
                 </View>
                 <View
@@ -1919,41 +1917,44 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
       }}
       key={i}
     >
-      <Text
+      <Text numberOfLines={1}
         style={{
           fontFamily: "Poppins-SemiBold",
-          fontSize: 18,
+          fontSize: 16.5,
           margin: 0,
           color: "#535353",
-          lineHeight:30
+          lineHeight: 30,
         }}
       >
         {item}
       </Text>
       {Data.length > 0 ? (
-        Data.map((item, i) => (
-          <View key={i}>
-            <Text
-              style={{
-                fontFamily: "Poppins-Medium",
-                fontSize: 18,
-                color: "#95979D",
-                lineHeight:30
-              }}
-            >
-              {item}
-            </Text>
-            <Rows item={item} name={name} NewDataList={NewDataList} />
-          </View>
-        ))
+        Data.map(
+          (item, i) =>
+            i == 0 && (
+              <View key={i}>
+                <Text numberOfLines={1}
+                  style={{
+                    fontFamily: "Poppins-Medium",
+                    fontSize: 16.5,
+                    color: "#95979D",
+                    lineHeight: 30,
+                  }}
+                >
+                  {item}
+                </Text>
+                <Rows item={item} name={name} NewDataList={NewDataList} />
+              </View>
+            )
+        )
       ) : (
         <View>
-          <Text
+          <Text numberOfLines={1}
             style={{
               fontFamily: "Poppins-Medium",
-                fontSize: 18,
-                color: "#95979D",
-                lineHeight:30
+              fontSize: 16.5,
+              color: "#95979D",
+              lineHeight: 30,
             }}
           >
             {name}
@@ -1998,11 +1999,14 @@ export const Rows = ({ title, item, name, NewDataList }) => {
 
   return (
     <Text
+      
+      numberOfLines={6}
       style={{
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: "Poppins-Medium",
         color: textColor,
         lineHeight: 25,
+        maxHeight: 160,
       }}
     >
       {text}
@@ -2027,7 +2031,7 @@ export const TabBar = ({
   onClick,
   onPress,
   data,
-  onChange
+  onChange,
 }) => {
   const ref = React.useRef();
   const packages = data;
@@ -2037,8 +2041,8 @@ export const TabBar = ({
   React.useEffect(() => {
     //console.log(packages[state.index-1])
     //console.log(state.index);
-    if(onChange){
-      onChange(packages[state.index])
+    if (onChange) {
+      onChange(packages[state.index]);
     }
     if (ref) {
       ref.current.scrollTo({ x: state.index * 80, animated: true });
@@ -2090,7 +2094,7 @@ export const TabBar = ({
                 <Text
                   style={{
                     fontSize: 16,
-                    fontFamily:"Poppins-SemiBold"
+                    fontFamily: "Poppins-SemiBold",
                   }}
                 >
                   {Title}
@@ -2147,7 +2151,6 @@ export const TabBar = ({
             </View>
           );
         })}
-       
       </ScrollView>
     </View>
   );
@@ -2176,10 +2179,14 @@ export const TabScreen = ({ navigation, route }) => {
           {doc.isAvailable ? (
             <SvgXml xml={right} height="30" width={"30"} />
           ) : (
-            <Entypo style={{
-              marginBottom:8
-            }} name="cross" size={20} color="red" />
-
+            <Entypo
+              style={{
+                marginBottom: 8,
+              }}
+              name="cross"
+              size={20}
+              color="red"
+            />
           )}
           <Text
             style={{
