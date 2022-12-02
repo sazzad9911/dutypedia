@@ -16,6 +16,7 @@ import {
   Animated as Animation,
   Platform,
 } from "react-native";
+import rnTextSize, { TSFontSpecs } from 'react-native-text-size'
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -63,6 +64,7 @@ import { Tooltip } from "react-native-paper";
 import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
 import LargeText from "../components/LargeText";
+
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -155,7 +157,7 @@ const OtherProfile = (props) => {
     new Animation.Value(startingHeight)
   ).current;
   const aboutStartHeight = 60;
-  const aboutEndHeight = Data?.service.about.split("").length*.5;
+  const aboutEndHeight = calculateHeight(Data?Data.service.about:"g",null,20);
   const aboutHeight = React.useRef(
     new Animation.Value(aboutStartHeight)
   ).current;
@@ -2088,15 +2090,27 @@ const BargainingScreen = ({ navigation, route }) => {
   const Data = params.Data;
   const Price = params.Price;
   const startingHeight = 120;
-  const fullHeight = Description.split("").length * 0.6;
+  const fullHeight = calculateHeight(Description,25);
   const isFocused = useIsFocused();
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
   ).current;
+  
+  React.useEffect(()=>{
+    if(ServiceList&&ServiceList.length>0){
+      setActiveService(ServiceList[0])
+      return
+    }
+    if(NewDataList){
+      setActiveService(NewDataList[0].mainTitle)
+      return
+    }
+  },[NewDataList+ServiceList])
   React.useEffect(() => {
     setSubServiceList([]);
 
     if (Array.isArray(NewDataList)) {
+      
       let arr = [];
       NewDataList.map((item) => {
         if (item.title && item.title.match(ActiveService)) {
@@ -2166,14 +2180,14 @@ const BargainingScreen = ({ navigation, route }) => {
                   if (NewLines != 3) {
                     return `${doc}`;
                   }
-                  if (i < 130) {
+                  if (i < 121) {
                     return `${doc}`;
                   }
                 })}
-              {Description.split("").length > 129 && NewLines == 3
+              {Description.split("").length > 120 && NewLines == 3
                 ? "...."
                 : ""}
-              {Description.split("").length > 129 && NewLines == 3 && (
+              {Description.split("").length > 120 && NewLines == 3 && (
                 <Text
                   style={{
                     color: "#4ADE80",
@@ -2572,3 +2586,17 @@ const PackageScreen = ({ navigation, route }) => {
     </View>
   );
 };
+const calculateHeight=(text,plus,minus)=>{
+  let textLength=text.split("").length;
+  textLength=parseInt(textLength)
+  let lineHeight=Platform.OS=="ios"?26:26;
+  let letterWidth=Platform.OS=="ios"?8:8;
+  let height=((textLength*letterWidth)/(width-40))*lineHeight;
+  if(plus &&Platform.OS=="ios"){
+    return height+plus
+  }
+  if(minus&&Platform.OS=="ios"){
+    return height-minus
+  }
+  return height
+}
