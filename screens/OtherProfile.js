@@ -620,8 +620,7 @@ const OtherProfile = (props) => {
             marginTop: -30,
           }}
         >
-          <View>
-            <View
+          <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -1571,7 +1570,7 @@ const OtherProfile = (props) => {
                   <View
                     style={{
                       paddingHorizontal: 20,
-                      backgroundColor: secondaryColor,
+                      backgroundColor: primaryColor,
                       paddingVertical: 20,
                       marginTop: -1,
                       marginBottom: -1,
@@ -1868,8 +1867,7 @@ const OtherProfile = (props) => {
                   <View style={{ width: 10 }} />
                 </ScrollView>
               </View>
-            )}
-          </View>
+            )}  
         </View>
       </ScrollView>
       {showButton && (
