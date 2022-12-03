@@ -16,7 +16,7 @@ import {
   Animated as Animation,
   Platform,
 } from "react-native";
-import rnTextSize, { TSFontSpecs } from 'react-native-text-size'
+import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -64,7 +64,7 @@ import { Tooltip } from "react-native-paper";
 import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
 import LargeText from "../components/LargeText";
-
+import { MotiView, MotiText } from "moti";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -140,8 +140,10 @@ const OtherProfile = (props) => {
   const [NameDropDown, setNameDropDown] = React.useState(false);
   const [PositionDropDown, setPositionDropDown] = React.useState(false);
   const childRef = React.useRef();
-  const [height, setHeight] = React.useState(new Animation.Value(0));
+  const [height, setHeight] = React.useState(0);
+  const [calenderHeight, setCalenderHeight] = React.useState(0);
   const [opacity, setOpacity] = React.useState(new Animation.Value(0));
+  const [SeeMore, setSeeMore] = React.useState(false);
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
@@ -157,11 +159,15 @@ const OtherProfile = (props) => {
     new Animation.Value(startingHeight)
   ).current;
   const aboutStartHeight = 60;
-  const aboutEndHeight = calculateHeight(Data?Data.service.about:"g",null,20);
-  const aboutHeight = React.useRef(
-    new Animation.Value(aboutStartHeight)
-  ).current;
+  const aboutEndHeight = calculateHeight(
+    Data ? Data.service.about : "g",
+    null,
+    20
+  );
   const { handleScroll, showButton } = useHandleScroll();
+  const [Specialty, setSpecialty] = React.useState(
+    "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
+  );
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -183,6 +189,7 @@ const OtherProfile = (props) => {
             setLoader(false);
 
             setData(response.data);
+            setSpecialty(response.data.service.speciality);
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
             setImages(response.data.service.gigs[0].images);
@@ -386,13 +393,13 @@ const OtherProfile = (props) => {
       useNativeDriver: false,
     }).start();
   }, [OpenDetails]);
+
   React.useEffect(() => {
-    Animation.spring(aboutHeight, {
-      speed: 1000,
-      toValue: Lines != 3 ? aboutEndHeight : aboutStartHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [Lines]);
+    if (Specialty && !Array.isArray(Specialty)) {
+      let arr = Specialty.split(",");
+      setSpecialty(arr);
+    }
+  }, [Specialty]);
   const showCart = (doc) => {
     setGigs(doc);
     setClick(true);
@@ -435,6 +442,10 @@ const OtherProfile = (props) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {};
+  const countLength = (width) => {
+    setTotalWidth((val) => val + width);
+  };
+  //console.log(TotalWidth)
 
   if (
     Loader ||
@@ -448,9 +459,9 @@ const OtherProfile = (props) => {
       </View>
     );
   }
-  //console.warn(Data.service.profilePhoto)
+  //console.warn(Data.service.id)
   return (
-    <SafeAreaView style={{ flex: 1,backgroundColor:primaryColor }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
       <ScrollView
         scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
@@ -461,7 +472,7 @@ const OtherProfile = (props) => {
         }
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: "#f1f1f2",
+          backgroundColor: primaryColor,
         }}
         onScroll={(e) => handleScroll(e)}
       >
@@ -494,7 +505,7 @@ const OtherProfile = (props) => {
             ></View>
           )}
         </InsetShadow>
-        
+
         <View
           style={{
             position: "absolute",
@@ -525,14 +536,14 @@ const OtherProfile = (props) => {
                     height: 1,
                   },
                   shadowColor: "#707070",
-                  shadowRadius:Platform.OS=="ios"?4: 20,
+                  shadowRadius: Platform.OS == "ios" ? 4 : 20,
                   elevation: 0,
-                  shadowOpacity: Platform.OS=="ios"?.1:1,
+                  shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
                   marginLeft: 0,
                 }}
                 xml={threeDot}
-                height="50"
-                width={"50"}
+                height={Platform.OS == "ios" ? "50" : "45"}
+                width={Platform.OS == "ios" ? "50" : "45"}
               />
             }
           >
@@ -553,13 +564,13 @@ const OtherProfile = (props) => {
                 height: 1,
               },
               shadowColor: "#707070",
-              shadowRadius:Platform.OS=="ios"?4: 20,
+              shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS=="ios"?.1:1,
+              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
             }}
             xml={loveIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
           <SvgXml
             style={{
@@ -568,13 +579,13 @@ const OtherProfile = (props) => {
                 height: 1,
               },
               shadowColor: "#707070",
-              shadowRadius:Platform.OS=="ios"?4: 20,
+              shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS=="ios"?.1:1,
+              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
             }}
             xml={shareIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
 
           <SvgXml
@@ -587,13 +598,13 @@ const OtherProfile = (props) => {
                 height: 1,
               },
               shadowColor: "#707070",
-              shadowRadius:Platform.OS=="ios"?4: 20,
+              shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS=="ios"?.1:1,
+              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
             }}
             xml={newCalender}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
           <SvgXml
             onPress={() => {
@@ -605,13 +616,13 @@ const OtherProfile = (props) => {
                 height: 1,
               },
               shadowColor: "#707070",
-              shadowRadius:Platform.OS=="ios"?4: 20,
+              shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS=="ios"?.1:1,
+              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
             }}
             xml={messageIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
         </View>
         <View
@@ -623,277 +634,310 @@ const OtherProfile = (props) => {
           }}
         >
           <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 20,
-                paddingVertical: 5,
-              }}
-            >
-              <Text
-                numberOfLines={2}
-                style={[
-                  {
-                    fontFamily: "Poppins-SemiBold",
-                    marginTop: 15,
-                    flex: 3,
-                    fontSize: 22,
-                  },
-                ]}
-              >
-                {Data
-                  ? Data.service.serviceCenterName
-                  : "Easin Arafat It Consulting Center"}
-              </Text>
-              <View style={{ flex: 0.5 }} />
-              <View
-                style={{
-                  paddingTop: 20,
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml xml={newStar} height="21" width={"21"} />
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontFamily: "Poppins-Bold",
-                      color: "#FFC107",
-                      marginLeft: 5,
-                    }}
-                  >
-                    4.6
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: "Poppins-Medium",
-                    marginTop: Platform.OS=="ios"?5:0,
-                  }}
-                >
-                  Profile Views {Data ? Data.service.views : "00"}
-                </Text>
-              </View>
-            </View>
-            <Animation.View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 20,
-                marginVertical: 15,
-                flex: 1,
-              }}
-            >
-              <Avatar
-                style={{
-                  width: 40,
-                  height: 40,
-                }}
-                source={{ uri: Data ? Data.service.profilePhoto : null }}
-              />
-              <View
-                style={{
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              backgroundColor: primaryColor,
+            }}
+          >
+            <Text
+              numberOfLines={2}
+              style={[
+                {
+                  fontFamily: "Poppins-SemiBold",
+                  marginTop: 15,
                   flex: 3,
-                }}
-              >
-                <Tooltip
-                  enterTouchDelay={100}
-                  title={
-                    Data
-                      ? `${Data.service.providerInfo.title} ${
-                          Data.service.providerInfo.name
-                        } (${Data.service.providerInfo.gender.toUpperCase()})`
-                      : "No"
-                  }
-                >
-                  <View
-                    onPress={() => {
-                      setNameDropDown((val) => !val);
-                    }}
-                    ref={childRef}
-                    style={{
-                      borderRadius: 10,
-                      marginHorizontal: 10,
-                      backgroundColor: "#E7EFFF",
-                      paddingVertical: 10,
-                      paddingHorizontal: 10,
-                      flex: 1,
-                    }}
-                  >
-                    <Text
-                      numberOfLines={NameDropDown ? 2 : 1}
-                      style={{
-                        color: "#6366F1",
-                        fontSize: 16.5,
-                        fontFamily: "Poppins-SemiBold",
-                      }}
-                    >
-                      {Data
-                        ? `${Data.service.providerInfo.title} ${
-                            Data.service.providerInfo.name
-                          } (${Data.service.providerInfo.gender.toUpperCase()})`
-                        : null}
-                    </Text>
-                  </View>
-                </Tooltip>
-              </View>
-              <View
-                style={{
-                  flex: 2,
-                }}
-              >
-                <Tooltip
-                  enterTouchDelay={100}
-                  title={Data ? Data.service.providerInfo.position : ""}
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      backgroundColor: "#F0EFEF",
-                      paddingVertical: 10,
-                      paddingHorizontal: 10,
-                      borderRadius: 10,
-                      justifyContent: "center",
-                      justifySelf: "flex-end",
-                    }}
-                  >
-                    <Text
-                      numberOfLines={PositionDropDown ? 4 : 1}
-                      style={{
-                        color: "#DA1E37",
-                        textAlign: "center",
-                        fontSize: 14,
-                        fontFamily: "Poppins-SemiBold",
-                      }}
-                    >
-                      {Data ? Data.service.providerInfo.position : ""}
-                    </Text>
-                  </View>
-                </Tooltip>
-              </View>
-            </Animation.View>
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                },
+              ]}
+            >
+              {Data
+                ? Data.service.serviceCenterName
+                : "Easin Arafat It Consulting Center"}
+            </Text>
+            <View style={{ flex: 0.5 }} />
             <View
               style={{
-                paddingHorizontal: 20,
+                paddingTop: 20,
+                alignItems: "center",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: "Poppins-SemiBold",
-                  marginVertical: 10,
-                }}
-              >
-                Specialty In
-              </Text>
               <View
                 style={{
                   flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                {Data &&
-                  Data.service.speciality.split(",").map((doc, i) => (
-                    <View
-                      key={i}
-                      style={{
-                        borderRadius: 5,
-                        backgroundColor: "#4ADE80",
-                        paddingHorizontal: 5,
-                        paddingVertical: 5,
-                        marginRight: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                        }}
-                      >
-                        {doc}
-                      </Text>
-                    </View>
-                  ))}
+                <SvgXml
+                  xml={newStar}
+                  height={Platform.OS == "ios" ? "21" : "19"}
+                  width={Platform.OS == "ios" ? "21" : "19"}
+                />
+                <Text
+                  style={{
+                    fontSize: Platform.OS == "ios" ? 20 : 18,
+                    fontFamily: "Poppins-Bold",
+                    color: "#FFC107",
+                    marginLeft: 5,
+                  }}
+                >
+                  4.6
+                </Text>
               </View>
-            </View>
-            <View
-              style={{
-                paddingHorizontal: 20,
-              }}
-            >
               <Text
                 style={{
-                  fontSize: 22,
-                  fontFamily: "Poppins-SemiBold",
-                  marginVertical: 20,
+                  fontSize: Platform.OS == "ios" ? 12 : 11,
+                  fontFamily: "Poppins-Medium",
+                  marginTop: Platform.OS == "ios" ? 5 : 0,
                 }}
               >
-                About
+                Profile Views {Data ? Data.service.views : "00"}
               </Text>
-              <Animation.View style={{height:aboutHeight}}>
-                <Pressable
+            </View>
+          </View>
+          <Animation.View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
+              marginVertical: 15,
+              flex: 1,
+            }}
+          >
+            <Avatar
+              style={{
+                width: 40,
+                height: 40,
+              }}
+              source={{ uri: Data ? Data.service.profilePhoto : null }}
+            />
+            <View
+              style={{
+                flex: 3,
+              }}
+            >
+              <Tooltip
+                enterTouchDelay={100}
+                title={
+                  Data
+                    ? `${Data.service.providerInfo.title} ${
+                        Data.service.providerInfo.name
+                      } (${Data.service.providerInfo.gender.toUpperCase()})`
+                    : "No"
+                }
+              >
+                <View
                   onPress={() => {
-                    if (Lines === 3) {
-                      setLines(100);
-                    } else {
-                      setLines(3);
-                    }
+                    setNameDropDown((val) => !val);
                   }}
+                  ref={childRef}
                   style={{
-                    flexDirection: "row",
-                    flexWrap: "wrap",
+                    borderRadius: 10,
+                    marginHorizontal: 10,
+                    backgroundColor: "#E7EFFF",
+                    paddingVertical: 10,
+                    paddingHorizontal: 10,
+                    flex: 1,
                   }}
                 >
                   <Text
-                    numberOfLines={Lines}
+                    numberOfLines={NameDropDown ? 2 : 1}
                     style={{
-                      fontSize: 16.5,
-                      textAlign: "justify",
-                      fontFamily: "Poppins-Medium",
-                      lineHeight: 25,
-                      marginTop: -10,
-                      marginBottom: Lines != 3 ? -20 : 0,
+                      color: "#6366F1",
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                      fontFamily: "Poppins-SemiBold",
                     }}
                   >
-                    {Data?.service.about}
+                    {Data
+                      ? `${Data.service.providerInfo.title} ${
+                          Data.service.providerInfo.name
+                        } (${Data.service.providerInfo.gender.toUpperCase()})`
+                      : null}
                   </Text>
-                </Pressable>
-              </Animation.View>
+                </View>
+              </Tooltip>
             </View>
-            <Pressable
-              onPress={() => {
-                setOpenDetails((val) => !val);
-              }}
+            <View
               style={{
-                paddingHorizontal: 20,
-                paddingVertical: 10,
-                paddingTop: 20,
+                flex: 2,
               }}
             >
-              <Text
+              <Tooltip
+                enterTouchDelay={100}
+                title={Data ? Data.service.providerInfo.position : ""}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: "#F0EFEF",
+                    paddingVertical: 10,
+                    paddingHorizontal: 10,
+                    borderRadius: 10,
+                    justifyContent: "center",
+                    justifySelf: "flex-end",
+                  }}
+                >
+                  <Text
+                    numberOfLines={PositionDropDown ? 4 : 1}
+                    style={{
+                      color: "#DA1E37",
+                      textAlign: "center",
+                      fontSize: Platform.OS == "ios" ? 14 : 13,
+                      fontFamily: "Poppins-SemiBold",
+                    }}
+                  >
+                    {Data ? Data.service.providerInfo.position : ""}
+                  </Text>
+                </View>
+              </Tooltip>
+            </View>
+          </Animation.View>
+          <View
+            style={{
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                marginVertical: 10,
+                marginTop: 2,
+              }}
+            >
+              Specialty In
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              {Array.isArray(Specialty) &&
+                Specialty.map((doc, i) => (
+                  <SpecialtyComponent
+                    seeMore={() => {
+                      setSeeMore(true);
+                    }}
+                    doc={doc}
+                    i={i}
+                    arr={Specialty}
+                  />
+                ))}
+              {SeeMore && (
+                <Pressable>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                      color: "#86939B",
+                    }}
+                  >
+                    ...Show All
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: 20,
+              backgroundColor:primaryColor
+            }}
+          >
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                marginTop: 20,
+              }}
+            >
+              About
+            </Text>
+            <MotiView animate={{ height }} style={{ overflow: "hidden" }}>
+              <Pressable
+                onPress={() => {
+                  setHeight(calculateHeight(Data?.service.about));
+                  if (Lines === 3) {
+                    setLines(100);
+                  } else {
+                    setLines(3);
+                  }
+                }}
                 style={{
-                  color: "#4ADE80",
-                  fontSize: 16.5,
-                  fontFamily: "Poppins-SemiBold",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  marginTop: 10,
+                  marginBottom: 15,
                 }}
               >
-                ...Company Calender, Notice & Team
-              </Text>
-            </Pressable>
+                <Text
+                  onLayout={(e) => {
+                    let height = e.nativeEvent.layout.height;
+                    if (
+                      Data?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" &&
+                      Lines != 3
+                    ) {
+                      height = height - 20;
+                    }
+                    height = height + 30;
+                    setHeight(height);
+                  }}
+                  numberOfLines={Lines}
+                  style={{
+                    fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                    textAlign: "justify",
+                    fontFamily: "Poppins-Medium",
+                    lineHeight: Platform.OS == "ios" ? 30 : 25,
+                  }}
+                >
+                  {Data?.service.about}
+                </Text>
+              </Pressable>
+            </MotiView>
           </View>
+          <Pressable
+            onPress={() => {
+              if (calenderHeight == 0) {
+                setCalenderHeight(125);
+              } else {
+                setCalenderHeight(0);
+              }
+              setOpenDetails((val) => !val);
+            }}
+            style={{
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              paddingTop: 0,
+            }}
+          >
+            <Text
+              style={{
+                color: "#4ADE80",
+                fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                fontFamily: "Poppins-SemiBold",
+              }}
+            >
+              ...Company Calender, Notice & Team
+            </Text>
+          </Pressable>
+        </View>
 
-          <Animation.View
-            style={[
-              {
-                height: 1,
-                backgroundColor:primaryColor
-              },
-              { height: animatedHeight },
-            ]}
+        <MotiView
+          animate={{ height: calenderHeight }}
+          style={{ overflow: "hidden" }}
+        >
+          <View
+            style={{
+              height: OpenDetails ? 125 : 0,
+              backgroundColor: primaryColor,
+            }}
+            onLayout={(e) => {
+              setCalenderHeight(e.nativeEvent.layout.height);
+            }}
           >
             <ProfileOption
               onPress={() => {
@@ -916,837 +960,169 @@ const OtherProfile = (props) => {
               icon={user}
               title={`Worker and Team (${Data?.service.worker} member)`}
             />
-          </Animation.View>
-          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
-          <View
-            style={{
-              height: 1100,
-              backgroundColor: primaryColor,
+          </View>
+        </MotiView>
+
+        <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
+        <View
+          style={{
+            height: 1100,
+            backgroundColor: primaryColor,
+          }}
+        >
+          <Tab.Navigator
+            screenOptions={{
+              tabBarStyle: {
+                paddingLeft: 20,
+                elevation: 0,
+                borderBottomColor: "#FAFAFA",
+                borderBottomWidth: 2,
+                backgroundColor: primaryColor,
+              },
+              tabBarLabelStyle: { fontSize: Platform.OS == "ios" ? 12 : 10.5 },
+              tabBarItemStyle: {
+                margin: 0,
+                padding: 0,
+                width: 120,
+                borderTopWidth: 0,
+                borderTopColor: "#F0F0F0",
+              },
+              tabBarIndicatorStyle: {
+                backgroundColor: "#4ADE80",
+                marginLeft: 20,
+              },
+              tabBarScrollEnabled: true,
+              tabBarPressColor: primaryColor,
             }}
           >
-            <Tab.Navigator
-              screenOptions={{
-                tabBarStyle: {
-                  paddingLeft: 20,
-                  elevation: 0,
-                  borderBottomColor: "#FAFAFA",
-                  borderBottomWidth: 2,
-                  backgroundColor: primaryColor,
-                },
-                tabBarLabelStyle: { fontSize: 12 },
-                tabBarItemStyle: {
-                  margin: 0,
-                  padding: 0,
-                  width: 120,
-                  borderTopWidth: 0,
-                  borderTopColor: "#F0F0F0",
-                },
-                tabBarIndicatorStyle: {
-                  backgroundColor: "#4ADE80",
-                  marginLeft: 20,
-                },
-                tabBarScrollEnabled: true,
-                tabBarPressColor: primaryColor,
-              }}
-            >
-              <Tab.Screen
-                options={{
-                  tabBarLabel: ({ focused, color, size }) => (
-                    <Text
-                      style={{
-                        color: focused ? "#4ADE80" : "black",
-                        fontFamily: "Poppins-SemiBold",
-                        fontSize: 16.5,
-                      }}
-                    >
-                      {initialState[0].title}
-                    </Text>
-                  ),
-                }}
-                name={initialState[0].title}
-                initialParams={{
-                  Images: Images,
-                  primaryColor: primaryColor,
-                  textColor: textColor,
-                  Title: Title,
-                  Description: Description,
-                  ServiceList: ServiceList,
-                  SubServiceList: SubServiceList,
-                  NewDataList: NewDataList,
-                  Facilities: Facilities,
-                  Data: Data,
-                  Price: Price,
-                }}
-                component={BargainingScreen}
-              />
-              <Tab.Screen
-                options={{
-                  tabBarLabel: ({ focused, color, size }) => (
-                    <Text
-                      style={{
-                        color: focused ? "#4ADE80" : "black",
-                        fontFamily: "Poppins-SemiBold",
-                        fontSize: 18,
-                      }}
-                    >
-                      {initialState[1].title}
-                    </Text>
-                  ),
-                }}
-                name={initialState[1].title}
-                initialParams={{
-                  Images: Images,
-                  primaryColor: primaryColor,
-                  textColor: textColor,
-                  Title: Title,
-                  Description: Description,
-                  ServiceList: ServiceList,
-                  SubServiceList: SubServiceList,
-                  NewDataList: NewDataList,
-                  Facilities: Facilities,
-                  Data: Data,
-                  Price: Price,
-                  onPress: clickFixed,
-                  FixedService: FixedService,
-                }}
-                component={FixedScreen}
-              />
-              <Tab.Screen
-                options={{
-                  tabBarLabel: ({ focused, color, size }) => (
-                    <Text
-                      style={{
-                        color: focused ? "#4ADE80" : "black",
-                        fontFamily: "Poppins-SemiBold",
-                        fontSize: 18,
-                      }}
-                    >
-                      {initialState[2].title}
-                    </Text>
-                  ),
-                }}
-                name={initialState[2].title}
-                initialParams={{
-                  Images: Images,
-                  primaryColor: primaryColor,
-                  textColor: textColor,
-                  Title: Title,
-                  Description: Description,
-                  ServiceList: ServiceList,
-                  SubServiceList: SubServiceList,
-                  NewDataList: NewDataList,
-                  Facilities: Facilities,
-                  Data: Data,
-                  Price: Price,
-                  onPress: clickPackage,
-                  PackageService: PackageService,
-                }}
-                component={PackageScreen}
-              />
-            </Tab.Navigator>
-          </View>
-          {Active == "Bargaining" ? (
-            <></>
-          ) : Active == "Fixed" ? (
-            <Animated.View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                backgroundColor: primaryColor,
-              }}
-              entering={FadeIn}
-            >
-              {Array.isArray(FixedService) &&
-                FixedService.length > 6 &&
-                !Click && (
-                  <IconButton
-                    onPress={() => {
-                      navigation.navigate("AllPackageList", {
-                        serviceId: Data.service.id,
-                        onPress: (doc) => showCart(doc),
-                      });
-                    }}
-                    style={{
-                      marginLeft: width / 2 - 60,
-                      width: 120,
-                    }}
-                    title="Show All"
-                    Icon={() => (
-                      <AntDesign name="right" size={20} color={textColor} />
-                    )}
-                  />
-                )}
-              {!Click && !FixedService && (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml
-                    xml={serviceIcon}
-                    style={{ marginVertical: 100 }}
-                    height="200"
-                    width="200"
-                  />
-                </View>
-              )}
-              {Click && (
-                <View>
-                  <View style={{ backgroundColor: primaryColor }}>
-                    <SliderBox
-                      images={Images}
-                      sliderBoxHeight={width}
-                      dotColor="#232F6D"
-                      inactiveDotColor="#ffffff"
-                      dotStyle={{
-                        width: 0,
-                        height: 0,
-                        borderRadius: 10,
-                        marginHorizontal: 0,
-                        padding: 0,
-                        margin: 0,
-                        backgroundColor: "rgba(128, 128, 128, 0.92)",
-                      }}
-                    />
-                    <Text
-                      style={{
-                        marginHorizontal: 20,
-                        fontSize: 21,
-                        color: textColor,
-                        fontFamily: "Poppins-SemiBold",
-                        marginVertical: 15,
-                        marginTop: 25,
-                      }}
-                    >
-                      {Title}
-                    </Text>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (NewLines == 3) {
-                          setNewLines(100);
-                        } else {
-                          setNewLines(3);
-                        }
-                      }}
-                      disabled={Description.length > 100 ? false : true}
-                    >
-                      <Text
-                        numberOfLines={NewLines}
-                        style={{
-                          marginHorizontal: 20,
-                          textAlign: "justify",
-                          marginVertical: 5,
-                          fontSize: 14,
-                          color: textColor,
-                          fontFamily: "Poppins-Medium",
-                          marginTop: 0,
-                          lineHeight: 18,
-                        }}
-                      >
-                        {Description}
-                      </Text>
-                      {/* {Description.length > 100 && (
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
                   <Text
                     style={{
-                      marginHorizontal: 20,
-                      fontSize: 14,
-                      fontFamily: "Poppins-Medium",
-                      color: "green",
-                      marginTop: -5,
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     }}
                   >
-                    Read {NewLines == 4 ? "More" : "Less"}
+                    {initialState[0].title}
                   </Text>
-                )} */}
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        alignSelf: "flex-end",
-                        marginRight: 20,
-                        fontSize: 18,
-                        fontFamily: "Poppins-Medium",
-                        color: "black",
-                        marginTop: 10,
-                      }}
-                    >
-                      From {Price}৳
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      paddingHorizontal: 20,
-                      backgroundColor: primaryColor,
-                      paddingVertical: 20,
-                      marginTop: -1,
-                      marginBottom: -1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        fontFamily: "Poppins-Medium",
-                      }}
-                    >
-                      Service List
-                    </Text>
-                    <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-                  </View>
-                  <View
-                    style={{
-                      backgroundColor: primaryColor,
-                      height: 140,
-                      overflowY: "hidden",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                      }}
-                    >
-                      <View
-                        style={{
-                          flex: 1.2,
-                          marginLeft: 20,
-                          height: 200,
-                        }}
-                      >
-                        {Array.isArray(ServiceList) &&
-                        ServiceList.length > 0 ? (
-                          ServiceList.map((item, i) => (
-                            <Button
-                              onPress={() => {
-                                setActiveService(item);
-                              }}
-                              key={i}
-                              style={
-                                ActiveService == item
-                                  ? styles.activeButton
-                                  : styles.inactiveButton
-                              }
-                              title={item}
-                            />
-                          ))
-                        ) : (
-                          <Button
-                            onPress={() => {
-                              setActiveService(NewDataList[0].mainTitle);
-                            }}
-                            style={
-                              NewDataList[0].mainTitle == ActiveService
-                                ? styles.activeButton
-                                : styles.inactiveButton
-                            }
-                            title={NewDataList[0].mainTitle}
-                          />
-                        )}
-                        <Button
-                          onPress={() => {
-                            setActiveService("Extra Facilities");
-                          }}
-                          style={
-                            ActiveService == "Extra Facilities"
-                              ? styles.activeButton
-                              : styles.inactiveButton
-                          }
-                          title={"Extra Facilities"}
-                        />
-                      </View>
-                      <View
-                        style={{
-                          width: 1,
-                          backgroundColor: "#e5e5e5",
-                          marginLeft: 10,
-                          marginRight: 10,
-                        }}
-                      />
-                      <View style={{ flex: 2, marginRight: 20 }}>
-                        {Array.isArray(SubServiceList) &&
-                        SubServiceList.length > 0 ? (
-                          SubServiceList.map((item, i) => (
-                            <ServiceTable
-                              key={i}
-                              item={item}
-                              i={i}
-                              name={ActiveService}
-                              NewDataList={NewDataList}
-                            />
-                          ))
-                        ) : ActiveService != "Extra Facilities" ? (
-                          <ServiceTable
-                            NewDataList={NewDataList}
-                            name={ActiveService}
-                          />
-                        ) : (
-                          <></>
-                        )}
-                        {ActiveService == "Extra Facilities" && (
-                          <View>
-                            <Text
-                              style={{
-                                fontSize: 15,
-                                fontFamily: "Poppins-Medium",
-                                color: "#707070",
-                              }}
-                            >
-                              Extra Facilities
-                            </Text>
-                            {Array.isArray(Facilities) &&
-                              Facilities.map((doc, i) => (
-                                <Text
-                                  style={{
-                                    fontSize: 13,
-                                    fontFamily: "Poppins-Light",
-                                  }}
-                                  key={i}
-                                >
-                                  {doc.title}
-                                </Text>
-                              ))}
-                          </View>
-                        )}
-                      </View>
-                    </View>
-                    <LinearGradient
-                      style={{
-                        position: "absolute",
-                        zIndex: 100,
-                        bottom: 0,
-                        height: 20,
-                        width: (width / 3.2) * 2,
-                        left: (width / 3.2) * 1.2,
-                      }}
-                      colors={[
-                        "rgba(255, 255, 255, 0.252)",
-                        "rgba(255, 255, 255, 0.343)",
-                        "#ffff",
-                      ]}
-                    ></LinearGradient>
-                  </View>
-                  <View
-                    style={{
-                      height: 1,
-                      backgroundColor: "#e5e5e5",
-                      marginVertical: 10,
-                      marginHorizontal: 20,
-                    }}
-                  />
-                  <View style={{ backgroundColor: primaryColor }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Service List_1", {
-                          NewDataList: NewDataList,
-                          facilites: Facilities,
-                        });
-                      }}
-                      style={{
-                        flexDirection: "row",
-                        minWidth: 10,
-                        alignSelf: "flex-end",
-                        alignItems: "center",
-                        marginRight: 20,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: "Poppins-Medium",
-                          color: "#707070",
-                          marginRight: 5,
-                        }}
-                      >
-                        Show All
-                      </Text>
-                      <MaterialIcons
-                        name="keyboard-arrow-right"
-                        size={22}
-                        color="#707070"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ backgroundColor: primaryColor }}>
-                    <Text
-                      style={{
-                        marginHorizontal: 20,
-                        fontSize: 17,
-                        marginBottom: 20,
-                        color: textColor,
-                        fontFamily: "Poppins-Medium",
-                      }}
-                    >
-                      From {Price} ৳
-                    </Text>
-                    <Button
-                      onPress={() => {
-                        navigation.navigate("OfferNow", {
-                          data: Data,
-                          gigs: Gigs,
-                          type: "ONETIME",
-                        });
-                      }}
-                      style={{
-                        borderRadius: 5,
-                        marginHorizontal: 20,
-                        backgroundColor: "#FEA31E",
-                        borderWidth: 0,
-                        marginBottom: 10,
-                        color: textColor,
-                      }}
-                      title="Continue"
-                    />
-                  </View>
-                </View>
-              )}
-            </Animated.View>
-          ) : Active == "Package" ? (
-            <Animated.View
-              entering={FadeIn}
-              style={{
-                backgroundColor: secondaryColor,
-                alignItems: "center",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                paddingHorizontal: 0,
+                ),
               }}
-            >
-              {!Click &&
-                PackageService &&
-                PackageService.map((doc, i) => (
-                  <ServiceCart
-                    onPress={() => {
-                      if (doc.packageData.length == 0) {
-                        Alert.alert("Opps!", "No package found");
-                        return;
-                      }
-                      let max = 0;
-                      doc.packageData.map((doc, i) => {
-                        if (max < doc.features.length) {
-                          max = doc.features.length;
-                        }
-                      });
-                      setSelectedPackage(doc.packageData[0]);
-                      //console.log(max)
-                      setClick(max);
-                      setImages(doc.images);
-                      setPrice("100");
-                      setFacilities(doc.facilites.selectedOptions);
-                      setTitle(doc.title);
-                      setPackageData(doc.packageData);
-                      setDescription(doc.description);
-                      setPackageServiceList(doc.services);
-                      try {
-                        dispatch({
-                          type: "SET_NEW_LIST_DATA",
-                          playload: serverToLocal(doc.services, Category),
-                        });
-                        setNewDataList(serverToLocal(doc.services, Category));
-                      } catch (e) {
-                        console.log(e.message);
-                      }
-                    }}
-                    key={i}
-                    data={doc}
-                  />
-                ))}
-
-              {!Click && !PackageService && (
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <SvgXml
-                    xml={serviceIcon}
-                    style={{ marginVertical: 100 }}
-                    height="200"
-                    width="200"
-                  />
-                </View>
-              )}
-              {Click && packageData && (
-                <View>
-                  <View style={{ backgroundColor: secondaryColor }}>
-                    <SliderBox
-                      images={Images}
-                      sliderBoxHeight={width}
-                      dotColor="#232F6D"
-                      inactiveDotColor="#ffffff"
-                      dotStyle={{
-                        width: 0,
-                        height: 0,
-                        borderRadius: 10,
-                        marginHorizontal: 0,
-                        padding: 0,
-                        margin: 0,
-                        backgroundColor: "rgba(128, 128, 128, 0.92)",
-                      }}
-                    />
-                    <Text
-                      style={{
-                        marginHorizontal: 20,
-                        fontSize: 21,
-                        color: textColor,
-                        fontFamily: "Poppins-SemiBold",
-                        marginVertical: 15,
-                        marginTop: 25,
-                      }}
-                    >
-                      {Title}
-                    </Text>
-
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (NewLines == 4) {
-                          setNewLines(100);
-                        } else {
-                          setNewLines(4);
-                        }
-                      }}
-                      disabled={Description.length > 100 ? false : true}
-                    >
-                      <Text
-                        numberOfLines={NewLines}
-                        style={{
-                          marginHorizontal: 20,
-                          textAlign: "justify",
-                          marginVertical: 5,
-                          fontSize: 14,
-                          color: textColor,
-                          fontFamily: "Poppins-Medium",
-                          marginTop: 0,
-                          lineHeight: 18,
-                        }}
-                      >
-                        {Description}
-                      </Text>
-                      {/* {Description.length > 100 && (
+              name={initialState[0].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+              }}
+              component={BargainingScreen}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
                   <Text
                     style={{
-                      marginHorizontal: 20,
-                      fontSize: 14,
-                      fontFamily: "Poppins-Medium",
-                      color: "green",
-                      marginTop: -5,
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
                     }}
                   >
-                    Read {NewLines == 4 ? "More" : "Less"}
+                    {initialState[1].title}
                   </Text>
-                )} */}
-                    </TouchableOpacity>
-                  </View>
-                  <View
-                    style={{
-                      height: Click * 80,
-                    }}
-                  >
-                    <Tab.Navigator
-                      tabBar={(props) => (
-                        <TabBar
-                          data={packageData}
-                          onClick={(e) => {}}
-                          onPress={(e) => {}}
-                          onChange={(e) => setSelectedPackage(e)}
-                          {...props}
-                        />
-                      )}
-                      screenOptions={{
-                        lazy: true,
-                        lazyPreloadDistance: 100,
-                      }}
-                    >
-                      {packageData.map((doc, i) => (
-                        <Tab.Screen
-                          initialParams={{ data: doc }}
-                          key={i}
-                          name={doc.id}
-                          component={TabScreen}
-                        />
-                      ))}
-                    </Tab.Navigator>
-                  </View>
-                  <View
-                    style={{
-                      paddingHorizontal: 20,
-                      backgroundColor: primaryColor,
-                      paddingVertical: 20,
-                      marginTop: -1,
-                      marginBottom: -1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        fontFamily: "Poppins-Medium",
-                        color: textColor,
-                      }}
-                    >
-                      Service List
-                    </Text>
-                    <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
-                  </View>
-                  <View
-                    style={{
-                      backgroundColor: secondaryColor,
-                      height: 140,
-                      overflowY: "hidden",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                      }}
-                    >
-                      <View
-                        style={{
-                          flex: 1.2,
-                          marginLeft: 20,
-                          height: 200,
-                        }}
-                      >
-                        {Array.isArray(ServiceList) &&
-                        ServiceList.length > 0 ? (
-                          ServiceList.map((item, i) => (
-                            <Button
-                              onPress={() => {
-                                setActiveService(item);
-                              }}
-                              key={i}
-                              style={
-                                ActiveService == item
-                                  ? styles.activeButton
-                                  : styles.inactiveButton
-                              }
-                              title={item}
-                            />
-                          ))
-                        ) : (
-                          <Button
-                            onPress={() => {
-                              setActiveService(NewDataList[0].mainTitle);
-                            }}
-                            style={
-                              NewDataList[0].mainTitle == ActiveService
-                                ? styles.activeButton
-                                : styles.inactiveButton
-                            }
-                            title={NewDataList[0].mainTitle}
-                          />
-                        )}
-                      </View>
-                      <View
-                        style={{
-                          width: 1,
-                          backgroundColor: "#e5e5e5",
-                          marginLeft: 10,
-                          marginRight: 10,
-                        }}
-                      />
-                      <View style={{ flex: 2, marginRight: 20 }}>
-                        {Array.isArray(SubServiceList) &&
-                        SubServiceList.length > 0 ? (
-                          SubServiceList.map((item, i) => (
-                            <ServiceTable
-                              key={i}
-                              item={item}
-                              i={i}
-                              name={ActiveService}
-                              NewDataList={NewDataList}
-                            />
-                          ))
-                        ) : ActiveService != "Extra Facilities" ? (
-                          <ServiceTable
-                            NewDataList={NewDataList}
-                            name={ActiveService}
-                          />
-                        ) : (
-                          <></>
-                        )}
-                      </View>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      height: 1,
-                      backgroundColor: "#e5e5e5",
-                      marginVertical: 10,
-                      marginHorizontal: 20,
-                    }}
-                  />
-                  <View style={{ backgroundColor: secondaryColor }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Service List_1", {
-                          NewDataList: NewDataList,
-                          facilites: null,
-                        });
-                      }}
-                      style={{
-                        flexDirection: "row",
-                        minWidth: 10,
-                        alignSelf: "flex-end",
-                        alignItems: "center",
-                        marginRight: 20,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: "Poppins-Medium",
-                          color: "#707070",
-                          marginRight: 5,
-                        }}
-                      >
-                        Show All
-                      </Text>
-                      <MaterialIcons
-                        name="keyboard-arrow-right"
-                        size={22}
-                        color="#707070"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <Button
-                    onPress={() => {
-                      navigation.navigate("OfferNow", {
-                        data: Data,
-                        gigs: Gigs,
-                        type: "PACKAGE",
-                        selectedPackage: selectedPackage,
-                        services: PackageServiceList,
-                        packageData: packageData,
-                        category: Category,
-                      });
-                    }}
-                    style={{
-                      borderRadius: 5,
-                      marginHorizontal: 20,
-                      backgroundColor: "#FEA31E",
-                      borderWidth: 0,
-                      marginBottom: 10,
-                      color: textColor,
-                      marginTop: 20,
-                    }}
-                    title={`Continue ${selectedPackage.price}৳`}
-                  />
-                </View>
-              )}
-            </Animated.View>
-          ) : (
-            <Animated.View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                paddingHorizontal: 10,
-                backgroundColor: primaryColor,
+                ),
               }}
-              entering={FadeIn}
-            >
+              name={initialState[1].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickFixed,
+                FixedService: FixedService,
+              }}
+              component={FixedScreen}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
+                  <Text
+                    style={{
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                    }}
+                  >
+                    {initialState[2].title}
+                  </Text>
+                ),
+              }}
+              name={initialState[2].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickPackage,
+                PackageService: PackageService,
+              }}
+              component={PackageScreen}
+            />
+          </Tab.Navigator>
+        </View>
+        {Active == "Bargaining" ? (
+          <></>
+        ) : Active == "Fixed" ? (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              backgroundColor: primaryColor,
+            }}
+            entering={FadeIn}
+          >
+            {Array.isArray(FixedService) &&
+              FixedService.length > 6 &&
+              !Click && (
+                <IconButton
+                  onPress={() => {
+                    navigation.navigate("AllPackageList", {
+                      serviceId: Data.service.id,
+                      onPress: (doc) => showCart(doc),
+                    });
+                  }}
+                  style={{
+                    marginLeft: width / 2 - 60,
+                    width: 120,
+                  }}
+                  title="Show All"
+                  Icon={() => (
+                    <AntDesign name="right" size={20} color={textColor} />
+                  )}
+                />
+              )}
+            {!Click && !FixedService && (
               <View
                 style={{
                   flex: 1,
@@ -1761,115 +1137,783 @@ const OtherProfile = (props) => {
                   width="200"
                 />
               </View>
-            </Animated.View>
-          )}
-
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              marginTop: 0,
-              paddingVertical: 20,
-            }}
-          >
-            <RatingView
-              style={{
-                marginHorizontal: 20,
-              }}
-              title="Seller Communication"
-              rate={4.6}
-            />
-            <RatingView
-              style={{
-                marginHorizontal: 20,
-                marginTop: 5,
-              }}
-              title="Service As Describe"
-              rate={4.6}
-            />
-            <RatingView
-              style={{
-                marginHorizontal: 20,
-                marginTop: 5,
-              }}
-              title="Service Quality"
-              rate={3.2}
-            />
-            <RatingView
-              style={{
-                marginHorizontal: 20,
-                marginTop: 5,
-              }}
-              title="Service Quality"
-              rate={3.2}
-            />
-            <RatingView
-              style={{
-                marginHorizontal: 20,
-                marginTop: 5,
-              }}
-              title="Service Quality"
-              rate={3.2}
-            />
-          </View>
-          <ReviewCart navigation={navigation} />
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              marginTop: 0,
-            }}
-          >
-            {RelatedServices.length > 0 && (
+            )}
+            {Click && (
               <View>
-                <Text
+                <View style={{ backgroundColor: primaryColor }}>
+                  <SliderBox
+                    images={Images}
+                    sliderBoxHeight={width}
+                    dotColor="#232F6D"
+                    inactiveDotColor="#ffffff"
+                    dotStyle={{
+                      width: 0,
+                      height: 0,
+                      borderRadius: 10,
+                      marginHorizontal: 0,
+                      padding: 0,
+                      margin: 0,
+                      backgroundColor: "rgba(128, 128, 128, 0.92)",
+                    }}
+                  />
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                      color: textColor,
+                      fontFamily: "Poppins-SemiBold",
+                      marginVertical: 15,
+                      marginTop: 25,
+                    }}
+                  >
+                    {Title}
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (NewLines == 3) {
+                        setNewLines(100);
+                      } else {
+                        setNewLines(3);
+                      }
+                    }}
+                    disabled={Description.length > 100 ? false : true}
+                  >
+                    <Text
+                      numberOfLines={NewLines}
+                      style={{
+                        marginHorizontal: 20,
+                        textAlign: "justify",
+                        marginVertical: 5,
+                        fontSize: Platform.OS == "ios" ? 14 : 13,
+                        color: textColor,
+                        fontFamily: "Poppins-Medium",
+                        marginTop: 0,
+                        lineHeight: 18,
+                      }}
+                    >
+                      {Description}
+                    </Text>
+                    {/* {Description.length > 100 && (
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: 14,
+                      fontFamily: "Poppins-Medium",
+                      color: "green",
+                      marginTop: -5,
+                    }}
+                  >
+                    Read {NewLines == 4 ? "More" : "Less"}
+                  </Text>
+                )} */}
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      alignSelf: "flex-end",
+                      marginRight: 20,
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                      fontFamily: "Poppins-Medium",
+                      color: "black",
+                      marginTop: 10,
+                    }}
+                  >
+                    From {Price}৳
+                  </Text>
+                </View>
+                <View
                   style={{
-                    fontSize: 22,
-                    fontFamily: "Poppins-SemiBold",
-                    color: textColor,
                     paddingHorizontal: 20,
-                    paddingVertical: 15,
+                    backgroundColor: primaryColor,
+                    paddingVertical: 20,
+                    marginTop: -1,
+                    marginBottom: -1,
                   }}
                 >
-                  Related Service
-                </Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={{ width: 10 }} />
-                  {RelatedServices.map((doc, i) => (
-                    <RelatedService
-                      data={doc}
-                      key={i}
-                      navigation={props.navigation}
+                  <Text
+                    style={{
+                      fontSize: Platform.OS == "ios" ? 15 : 14,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Service List
+                  </Text>
+                  <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
+                </View>
+                <View
+                  style={{
+                    backgroundColor: primaryColor,
+                    height: 140,
+                    overflowY: "hidden",
+                    overflow: "hidden",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flex: 1.2,
+                        marginLeft: 20,
+                        height: 200,
+                      }}
+                    >
+                      {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                        ServiceList.map((item, i) => (
+                          <Button
+                            onPress={() => {
+                              setActiveService(item);
+                            }}
+                            key={i}
+                            style={
+                              ActiveService == item
+                                ? styles.activeButton
+                                : styles.inactiveButton
+                            }
+                            title={item}
+                          />
+                        ))
+                      ) : (
+                        <Button
+                          onPress={() => {
+                            setActiveService(NewDataList[0].mainTitle);
+                          }}
+                          style={
+                            NewDataList[0].mainTitle == ActiveService
+                              ? styles.activeButton
+                              : styles.inactiveButton
+                          }
+                          title={NewDataList[0].mainTitle}
+                        />
+                      )}
+                      <Button
+                        onPress={() => {
+                          setActiveService("Extra Facilities");
+                        }}
+                        style={
+                          ActiveService == "Extra Facilities"
+                            ? styles.activeButton
+                            : styles.inactiveButton
+                        }
+                        title={"Extra Facilities"}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: 1,
+                        backgroundColor: "#e5e5e5",
+                        marginLeft: 10,
+                        marginRight: 10,
+                      }}
                     />
-                  ))}
-                </ScrollView>
+                    <View style={{ flex: 2, marginRight: 20 }}>
+                      {Array.isArray(SubServiceList) &&
+                      SubServiceList.length > 0 ? (
+                        SubServiceList.map((item, i) => (
+                          <ServiceTable
+                            key={i}
+                            item={item}
+                            i={i}
+                            name={ActiveService}
+                            NewDataList={NewDataList}
+                          />
+                        ))
+                      ) : ActiveService != "Extra Facilities" ? (
+                        <ServiceTable
+                          NewDataList={NewDataList}
+                          name={ActiveService}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {ActiveService == "Extra Facilities" && (
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: Platform.OS == "ios" ? 15 : 14,
+                              fontFamily: "Poppins-Medium",
+                              color: "#707070",
+                            }}
+                          >
+                            Extra Facilities
+                          </Text>
+                          {Array.isArray(Facilities) &&
+                            Facilities.map((doc, i) => (
+                              <Text
+                                style={{
+                                  fontSize: Platform.OS == "ios" ? 13 : 12,
+                                  fontFamily: "Poppins-Light",
+                                }}
+                                key={i}
+                              >
+                                {doc.title}
+                              </Text>
+                            ))}
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                  <LinearGradient
+                    style={{
+                      position: "absolute",
+                      zIndex: 100,
+                      bottom: 0,
+                      height: 20,
+                      width: (width / 3.2) * 2,
+                      left: (width / 3.2) * 1.2,
+                    }}
+                    colors={[
+                      "rgba(255, 255, 255, 0.252)",
+                      "rgba(255, 255, 255, 0.343)",
+                      "#ffff",
+                    ]}
+                  ></LinearGradient>
+                </View>
+                <View
+                  style={{
+                    height: 1,
+                    backgroundColor: "#e5e5e5",
+                    marginVertical: 10,
+                    marginHorizontal: 20,
+                  }}
+                />
+                <View style={{ backgroundColor: primaryColor }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Service List_1", {
+                        NewDataList: NewDataList,
+                        facilites: Facilities,
+                      });
+                    }}
+                    style={{
+                      flexDirection: "row",
+                      minWidth: 10,
+                      alignSelf: "flex-end",
+                      alignItems: "center",
+                      marginRight: 20,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: Platform.OS == "ios" ? 14 : 13,
+                        fontFamily: "Poppins-Medium",
+                        color: "#707070",
+                        marginRight: 5,
+                      }}
+                    >
+                      Show All
+                    </Text>
+                    <MaterialIcons
+                      name="keyboard-arrow-right"
+                      size={22}
+                      color="#707070"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ backgroundColor: primaryColor }}>
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: Platform.OS == "ios" ? 17 : 16,
+                      marginBottom: 20,
+                      color: textColor,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    From {Price} ৳
+                  </Text>
+                  <Button
+                    onPress={() => {
+                      navigation.navigate("OfferNow", {
+                        data: Data,
+                        gigs: Gigs,
+                        type: "ONETIME",
+                      });
+                    }}
+                    style={{
+                      borderRadius: 5,
+                      marginHorizontal: 20,
+                      backgroundColor: "#FEA31E",
+                      borderWidth: 0,
+                      marginBottom: 10,
+                      color: textColor,
+                    }}
+                    title="Continue"
+                  />
+                </View>
               </View>
             )}
+          </Animated.View>
+        ) : Active == "Package" ? (
+          <Animated.View
+            entering={FadeIn}
+            style={{
+              backgroundColor: secondaryColor,
+              alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 0,
+            }}
+          >
+            {!Click &&
+              PackageService &&
+              PackageService.map((doc, i) => (
+                <ServiceCart
+                  onPress={() => {
+                    if (doc.packageData.length == 0) {
+                      Alert.alert("Opps!", "No package found");
+                      return;
+                    }
+                    let max = 0;
+                    doc.packageData.map((doc, i) => {
+                      if (max < doc.features.length) {
+                        max = doc.features.length;
+                      }
+                    });
+                    setSelectedPackage(doc.packageData[0]);
+                    //console.log(max)
+                    setClick(max);
+                    setImages(doc.images);
+                    setPrice("100");
+                    setFacilities(doc.facilites.selectedOptions);
+                    setTitle(doc.title);
+                    setPackageData(doc.packageData);
+                    setDescription(doc.description);
+                    setPackageServiceList(doc.services);
+                    try {
+                      dispatch({
+                        type: "SET_NEW_LIST_DATA",
+                        playload: serverToLocal(doc.services, Category),
+                      });
+                      setNewDataList(serverToLocal(doc.services, Category));
+                    } catch (e) {
+                      console.log(e.message);
+                    }
+                  }}
+                  key={i}
+                  data={doc}
+                />
+              ))}
 
-            {UnRelatedServices.length > 0 && (
+            {!Click && !PackageService && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <SvgXml
+                  xml={serviceIcon}
+                  style={{ marginVertical: 100 }}
+                  height="200"
+                  width="200"
+                />
+              </View>
+            )}
+            {Click && packageData && (
               <View>
-                <Text
+                <View style={{ backgroundColor: secondaryColor }}>
+                  <SliderBox
+                    images={Images}
+                    sliderBoxHeight={width}
+                    dotColor="#232F6D"
+                    inactiveDotColor="#ffffff"
+                    dotStyle={{
+                      width: 0,
+                      height: 0,
+                      borderRadius: 10,
+                      marginHorizontal: 0,
+                      padding: 0,
+                      margin: 0,
+                      backgroundColor: "rgba(128, 128, 128, 0.92)",
+                    }}
+                  />
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                      color: textColor,
+                      fontFamily: "Poppins-SemiBold",
+                      marginVertical: 15,
+                      marginTop: 25,
+                    }}
+                  >
+                    {Title}
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (NewLines == 4) {
+                        setNewLines(100);
+                      } else {
+                        setNewLines(4);
+                      }
+                    }}
+                    disabled={Description.length > 100 ? false : true}
+                  >
+                    <Text
+                      numberOfLines={NewLines}
+                      style={{
+                        marginHorizontal: 20,
+                        textAlign: "justify",
+                        marginVertical: 5,
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                        color: textColor,
+                        fontFamily: "Poppins-Medium",
+                        marginTop: 0,
+                        lineHeight: 18,
+                      }}
+                    >
+                      {Description}
+                    </Text>
+                    {/* {Description.length > 100 && (
+                  <Text
+                    style={{
+                      marginHorizontal: 20,
+                      fontSize: 14,
+                      fontFamily: "Poppins-Medium",
+                      color: "green",
+                      marginTop: -5,
+                    }}
+                  >
+                    Read {NewLines == 4 ? "More" : "Less"}
+                  </Text>
+                )} */}
+                  </TouchableOpacity>
+                </View>
+                <View
                   style={{
-                    fontSize: 22,
-                    fontFamily: "Poppins-SemiBold",
-                    color: textColor,
-                    paddingHorizontal: 20,
-                    paddingVertical: 15,
+                    height: Click * 80,
                   }}
                 >
-                  You Might Also Like
-                </Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View style={{ width: 10 }} />
-                  {UnRelatedServices.map((doc, i) => (
-                    <RelatedService
-                      data={doc}
-                      key={i}
-                      navigation={props.navigation}
+                  <Tab.Navigator
+                    tabBar={(props) => (
+                      <TabBar
+                        data={packageData}
+                        onClick={(e) => {}}
+                        onPress={(e) => {}}
+                        onChange={(e) => setSelectedPackage(e)}
+                        {...props}
+                      />
+                    )}
+                    screenOptions={{
+                      lazy: true,
+                      lazyPreloadDistance: 100,
+                    }}
+                  >
+                    {packageData.map((doc, i) => (
+                      <Tab.Screen
+                        initialParams={{ data: doc }}
+                        key={i}
+                        name={doc.id}
+                        component={TabScreen}
+                      />
+                    ))}
+                  </Tab.Navigator>
+                </View>
+                <View
+                  style={{
+                    paddingHorizontal: 20,
+                    backgroundColor: primaryColor,
+                    paddingVertical: 20,
+                    marginTop: -1,
+                    marginBottom: -1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                      fontFamily: "Poppins-Medium",
+                      color: textColor,
+                    }}
+                  >
+                    Service List
+                  </Text>
+                  <View style={{ height: 1, backgroundColor: "#e5e5e5" }} />
+                </View>
+                <View
+                  style={{
+                    backgroundColor: secondaryColor,
+                    height: 140,
+                    overflowY: "hidden",
+                    overflow: "hidden",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <View
+                      style={{
+                        flex: 1.2,
+                        marginLeft: 20,
+                        height: 200,
+                      }}
+                    >
+                      {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
+                        ServiceList.map((item, i) => (
+                          <Button
+                            onPress={() => {
+                              setActiveService(item);
+                            }}
+                            key={i}
+                            style={
+                              ActiveService == item
+                                ? styles.activeButton
+                                : styles.inactiveButton
+                            }
+                            title={item}
+                          />
+                        ))
+                      ) : (
+                        <Button
+                          onPress={() => {
+                            setActiveService(NewDataList[0].mainTitle);
+                          }}
+                          style={
+                            NewDataList[0].mainTitle == ActiveService
+                              ? styles.activeButton
+                              : styles.inactiveButton
+                          }
+                          title={NewDataList[0].mainTitle}
+                        />
+                      )}
+                    </View>
+                    <View
+                      style={{
+                        width: 1,
+                        backgroundColor: "#e5e5e5",
+                        marginLeft: 10,
+                        marginRight: 10,
+                      }}
                     />
-                  ))}
-                  <View style={{ width: 10 }} />
-                </ScrollView>
+                    <View style={{ flex: 2, marginRight: 20 }}>
+                      {Array.isArray(SubServiceList) &&
+                      SubServiceList.length > 0 ? (
+                        SubServiceList.map((item, i) => (
+                          <ServiceTable
+                            key={i}
+                            item={item}
+                            i={i}
+                            name={ActiveService}
+                            NewDataList={NewDataList}
+                          />
+                        ))
+                      ) : ActiveService != "Extra Facilities" ? (
+                        <ServiceTable
+                          NewDataList={NewDataList}
+                          name={ActiveService}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </View>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: 1,
+                    backgroundColor: "#e5e5e5",
+                    marginVertical: 10,
+                    marginHorizontal: 20,
+                  }}
+                />
+                <View style={{ backgroundColor: secondaryColor }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Service List_1", {
+                        NewDataList: NewDataList,
+                        facilites: null,
+                      });
+                    }}
+                    style={{
+                      flexDirection: "row",
+                      minWidth: 10,
+                      alignSelf: "flex-end",
+                      alignItems: "center",
+                      marginRight: 20,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                        fontFamily: "Poppins-Medium",
+                        color: "#707070",
+                        marginRight: 5,
+                      }}
+                    >
+                      Show All
+                    </Text>
+                    <MaterialIcons
+                      name="keyboard-arrow-right"
+                      size={22}
+                      color="#707070"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Button
+                  onPress={() => {
+                    navigation.navigate("OfferNow", {
+                      data: Data,
+                      gigs: Gigs,
+                      type: "PACKAGE",
+                      selectedPackage: selectedPackage,
+                      services: PackageServiceList,
+                      packageData: packageData,
+                      category: Category,
+                    });
+                  }}
+                  style={{
+                    borderRadius: 5,
+                    marginHorizontal: 20,
+                    backgroundColor: "#FEA31E",
+                    borderWidth: 0,
+                    marginBottom: 10,
+                    color: textColor,
+                    marginTop: 20,
+                  }}
+                  title={`Continue ${selectedPackage.price}৳`}
+                />
               </View>
-            )}  
+            )}
+          </Animated.View>
+        ) : (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+            paddingVertical: 20,
+          }}
+        >
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+            }}
+            title="Seller Communication"
+            rate={4.6}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service As Describe"
+            rate={4.6}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service Quality"
+            rate={3.2}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service Quality"
+            rate={3.2}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service Quality"
+            rate={3.2}
+          />
+        </View>
+        <ReviewCart navigation={navigation} />
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+          }}
+        >
+          {RelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {RelatedServices.map((doc, i) => (
+                  <RelatedService
+                    data={doc}
+                    key={i}
+                    navigation={props.navigation}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {UnRelatedServices.map((doc, i) => (
+                  <RelatedService
+                    data={doc}
+                    key={i}
+                    navigation={props.navigation}
+                  />
+                ))}
+                <View style={{ width: 10 }} />
+              </ScrollView>
+            </View>
+          )}
         </View>
       </ScrollView>
       {showButton && (
@@ -1954,12 +1998,12 @@ const styles = StyleSheet.create({
     right: -10,
   },
   headLine: {
-    fontSize: 22,
+    fontSize: Platform.OS == "ios" ? 22 : 20.5,
     fontFamily: "Poppins-SemiBold",
   },
   text: {
     textAlign: "center",
-    fontSize: 14,
+    fontSize: Platform.OS == "ios" ? 14 : 13,
     fontFamily: "Poppins-Medium",
   },
   image: {
@@ -1979,7 +2023,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     height: 30,
-    fontSize: 15,
+    fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
   },
   inactiveButton: {
@@ -1991,7 +2035,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     height: 30,
-    fontSize: 15,
+    fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
   },
 });
@@ -2056,7 +2100,7 @@ const BarOption = ({ icon, title }) => {
           style={{
             fontFamily: "Poppins-SemiBold",
             marginBottom: 5,
-            fontSize: 16.5,
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
             color: "#333333",
           }}
         >
@@ -2090,27 +2134,29 @@ const BargainingScreen = ({ navigation, route }) => {
   const Data = params.Data;
   const Price = params.Price;
   const startingHeight = 120;
-  const fullHeight = calculateHeight(Description,25);
+  const fullHeight = calculateHeight(Description, 25);
   const isFocused = useIsFocused();
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
   ).current;
+  const [newHeight, setHeight] = React.useState(0);
+  const [text,setText]=React.useState("")
   
-  React.useEffect(()=>{
-    if(ServiceList&&ServiceList.length>0){
-      setActiveService(ServiceList[0])
-      return
+
+  React.useEffect(() => {
+    if (ServiceList && ServiceList.length > 0) {
+      setActiveService(ServiceList[0]);
+      return;
     }
-    if(NewDataList){
-      setActiveService(NewDataList[0].mainTitle)
-      return
+    if (NewDataList) {
+      setActiveService(NewDataList[0].mainTitle);
+      return;
     }
-  },[NewDataList+ServiceList])
+  }, [NewDataList + ServiceList]);
   React.useEffect(() => {
     setSubServiceList([]);
 
     if (Array.isArray(NewDataList)) {
-      
       let arr = [];
       NewDataList.map((item) => {
         if (item.title && item.title.match(ActiveService)) {
@@ -2132,13 +2178,32 @@ const BargainingScreen = ({ navigation, route }) => {
       useNativeDriver: false,
     }).start();
   }, [NewLines]);
+  React.useEffect(() => {
+    if (Description) {
+      setText(null);
+      let totalText = "";
+      Description.split("").map((doc, i) => {
+        if (NewLines != 3) {
+          totalText = totalText + doc;
+          //setText((val) => val + doc);
+        }
+        if (i < 121 && NewLines == 3) {
+          totalText = totalText + doc;
+          //setNewHeight(calculateHeight(text))
+          //setText((val) => val + doc);
+        }
+      });
+      setText(totalText);
+    }
+  }, [NewLines]);
+  //console.log(newHeight);
 
   return (
     <View>
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
         <Text
           style={{
-            fontSize: 21,
+            fontSize: Platform.OS == "ios" ? 22 : 20.5,
             fontFamily: "Poppins-SemiBold",
             color: textColor,
             paddingHorizontal: 20,
@@ -2147,59 +2212,66 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           {Title}
         </Text>
-        <Animation.View style={{ height: animatedHeight }}>
-          <Pressable
-            disabled={Description.split("").length > 130 ? false : true}
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-end",
-              marginVertical: 20,
-            }}
-            onPress={() => {
-              if (NewLines == 3) {
-                setNewLines(100);
-              } else {
-                setNewLines(3);
-              }
-            }}
+        {text && (
+          <MotiView
+            animate={{ height: newHeight }}
+            style={{ overflow: "hidden" }}
           >
-            <Text
-              numberOfLines={NewLines}
+            
+          </MotiView>
+        )}
+            <Pressable 
+              disabled={Description.split("").length > 130 ? false : true}
               style={{
-                marginHorizontal: 20,
-                textAlign: "justify",
-                fontSize: 16,
-                color: textColor,
-                fontFamily: "Poppins-Medium",
-                lineHeight: 25,
-                marginBottom: 0,
+                flexDirection: "row",
+                alignItems: "flex-end",
+                marginVertical: 20,
+                position:"absolute",
+                top:40
+              }}
+              onPress={() => {
+                setHeight(calculateHeight(text)*2);
+                //setNewHeight(calculateHeight(text)*1.8);
+                if (NewLines == 3) {
+                  setNewLines(100);
+                } else {
+                  setNewLines(3);
+                }
               }}
             >
-              {NewLines &&
-                Description.split("").map((doc, i) => {
-                  if (NewLines != 3) {
-                    return `${doc}`;
-                  }
-                  if (i < 121) {
-                    return `${doc}`;
-                  }
-                })}
-              {Description.split("").length > 120 && NewLines == 3
-                ? "...."
-                : ""}
-              {Description.split("").length > 120 && NewLines == 3 && (
-                <Text
-                  style={{
-                    color: "#4ADE80",
-                    fontSize: 16.5,
-                  }}
-                >
-                  More
-                </Text>
-              )}
-            </Text>
-          </Pressable>
-        </Animation.View>
+              <Text
+                onLayout={(e) => {
+                  let height = e.nativeEvent.layout.height;
+
+                  height = height + 30;
+                  setHeight(height);
+                  // setNewHeight(height);
+                }}
+                numberOfLines={NewLines}
+                style={{
+                  marginHorizontal: 20,
+                  textAlign: "justify",
+                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
+                  marginBottom: 0,
+                }}
+              >
+                {text}
+                {Description.split("").length > 120 && NewLines == 3 ? "...." : ""}
+                {Description.split("").length > 120 && NewLines == 3 && (
+                  <Text
+                    style={{
+                      color: "#4ADE80",
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                    }}
+                  >
+                    More
+                  </Text>
+                )}
+              </Text>
+            </Pressable>
         <Carousel
           loop={false}
           width={width}
@@ -2228,10 +2300,10 @@ const BargainingScreen = ({ navigation, route }) => {
         <Text
           style={{
             fontFamily: "Poppins-SemiBold",
-            fontSize: 22,
+            fontSize: Platform.OS == "ios" ? 22 : 20.5,
             marginBottom: 30,
             marginTop: 40,
-            color:"#535353"
+            color: "#535353",
           }}
         >
           Service List
@@ -2325,7 +2397,7 @@ const BargainingScreen = ({ navigation, route }) => {
                 <View>
                   <Text
                     style={{
-                      fontSize: 16.5,
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
                       lineHeight: 30,
@@ -2337,7 +2409,7 @@ const BargainingScreen = ({ navigation, route }) => {
                     Facilities.map((doc, i) => (
                       <Text
                         style={{
-                          fontSize: 16.5,
+                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
                           fontFamily: "Poppins-Medium",
                           lineHeight: 25,
                         }}
@@ -2377,7 +2449,7 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           <Text
             style={{
-              fontSize: 14,
+              fontSize: Platform.OS == "ios" ? 16.5 : 15,
               fontFamily: "Poppins-SemiBold",
               color: "#707070",
               marginRight: 0,
@@ -2387,7 +2459,7 @@ const BargainingScreen = ({ navigation, route }) => {
           </Text>
           <MaterialIcons
             name="keyboard-arrow-right"
-            size={22}
+            size={24}
             color="#707070"
           />
         </TouchableOpacity>
@@ -2396,7 +2468,7 @@ const BargainingScreen = ({ navigation, route }) => {
         <Text
           style={{
             marginHorizontal: 20,
-            fontSize: 17,
+            fontSize: Platform.OS == "ios" ? 17 : 15.5,
             marginBottom: 20,
             color: textColor,
             marginTop: 20,
@@ -2586,17 +2658,144 @@ const PackageScreen = ({ navigation, route }) => {
     </View>
   );
 };
-const calculateHeight=(text,plus,minus)=>{
-  let textLength=text.split("").length;
-  textLength=parseInt(textLength)
-  let lineHeight=Platform.OS=="ios"?26:26;
-  let letterWidth=Platform.OS=="ios"?8:8;
-  let height=((textLength*letterWidth)/(width-40))*lineHeight;
-  if(plus &&Platform.OS=="ios"){
-    return height+plus
+const calculateHeight = (text, plus, minus) => {
+  let textLength = text.split("").length;
+  textLength = parseInt(textLength);
+  let lineHeight = Platform.OS == "ios" ? 26 : 26;
+  let letterWidth = Platform.OS == "ios" ? 8 : 8;
+  let height = ((textLength * letterWidth) / (width - 40)) * lineHeight;
+  if (plus) {
+    return height + plus;
   }
-  if(minus&&Platform.OS=="ios"){
-    return height-minus
+  if (minus) {
+    return height - minus;
   }
-  return height
-}
+  return height;
+};
+const SpecialtyComponent = ({ doc, i, arr, seeMore }) => {
+  const [Length, setLength] = React.useState(0);
+  React.useEffect(() => {
+    let length = 0;
+    arr.forEach((doc, j) => {
+      if (j <= i) {
+        length = length + doc.split("").length + 40;
+      }
+    });
+    setLength(length);
+    //console.log(length)
+  }, []);
+
+  if (Length > width) {
+    seeMore();
+    return null;
+  }
+
+  return (
+    <View
+      style={{
+        borderRadius: 5,
+        backgroundColor: "#4ADE80",
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        marginRight: 5,
+        marginVertical: 5,
+      }}
+    >
+      <Text
+        style={{
+          color: "white",
+          fontFamily: "Poppins-Medium",
+          fontSize: Platform.OS == "ios" ? 14.5 : 12,
+        }}
+      >
+        {doc}
+      </Text>
+    </View>
+  );
+};
+const DescriptionTime = ({
+  Description,
+  NewLines,
+  setNewLines,
+  setHeight,
+  height,
+}) => {
+  const length = Description.split("").length;
+  const [text, setText] = React.useState(null);
+  const [newHeight, setNewHeight] = React.useState(0);
+  React.useEffect(() => {
+    if (Description) {
+      setText(null);
+      let totalText = "";
+      Description.split("").map((doc, i) => {
+        if (NewLines != 3) {
+          totalText = totalText + doc;
+          //setText((val) => val + doc);
+        }
+        if (i < 121 && NewLines == 3) {
+          totalText = totalText + doc;
+          //setNewHeight(calculateHeight(text))
+          //setText((val) => val + doc);
+        }
+      });
+      setText(totalText);
+    }
+  }, [NewLines]);
+  if (text == null) {
+    return <Text>...</Text>;
+  }
+  return (
+    <Pressable
+      disabled={length > 130 ? false : true}
+      style={{
+        flexDirection: "row",
+        alignItems: "flex-end",
+        marginVertical: 20,
+      }}
+      onPress={() => {
+        //setNewHeight(calculateHeight(text)*1.8);
+        if (NewLines == 3) {
+          setNewLines(100);
+        } else {
+          setNewLines(3);
+        }
+      }}
+    >
+      {text && (
+        <Text
+          animate={{ height: newHeight }}
+          onLayout={(e) => {
+            let height = e.nativeEvent.layout.height;
+
+            height = height + 30;
+            setHeight(height);
+            setNewHeight(height);
+          }}
+          numberOfLines={NewLines}
+          style={{
+            marginHorizontal: 20,
+            textAlign: "justify",
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
+            color: textColor,
+            fontFamily: "Poppins-Medium",
+            lineHeight: Platform.OS == "ios" ? 30 : 25,
+            marginBottom: 0,
+          }}
+        >
+          {text}
+          {length > 120 && NewLines == 3 ? "...." : ""}
+          {length > 120 && NewLines == 3 && (
+            <Text
+              style={{
+                color: "#4ADE80",
+                fontSize: Platform.OS == "ios" ? 16.5 : 15,
+              }}
+            >
+              More
+            </Text>
+          )}
+        </Text>
+      )}
+    </Pressable>
+  );
+};

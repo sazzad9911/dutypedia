@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { Badge } from "react-native-paper";
@@ -29,7 +29,7 @@ const ProfileOption = (props) => {
     },
     text: {
       flex: 10,
-      fontSize: 16.5,
+      fontSize:Platform.OS=="ios"? 16.5:15,
       fontFamily: "Poppins-SemiBold",
       color: "#333333",
     },

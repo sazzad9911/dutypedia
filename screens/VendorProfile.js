@@ -13,6 +13,7 @@ import {
   Alert,
   RefreshControl,
   Pressable,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -1920,7 +1921,7 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
       <Text numberOfLines={1}
         style={{
           fontFamily: "Poppins-SemiBold",
-          fontSize: 16.5,
+          fontSize:Platform.OS=="ios" ?16.5:15,
           margin: 0,
           color: "#535353",
           lineHeight: 30,
@@ -1936,7 +1937,7 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
                 <Text numberOfLines={1}
                   style={{
                     fontFamily: "Poppins-Medium",
-                    fontSize: 16.5,
+                    fontSize:Platform.OS=="ios"? 16.5:15,
                     color: "#95979D",
                     lineHeight: 30,
                   }}
@@ -1952,7 +1953,7 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
           <Text numberOfLines={1}
             style={{
               fontFamily: "Poppins-Medium",
-              fontSize: 16.5,
+              fontSize:Platform.OS=="ios"? 16.5:15,
               color: "#95979D",
               lineHeight: 30,
             }}
@@ -2000,9 +2001,9 @@ export const Rows = ({ title, item, name, NewDataList }) => {
   return (
     <Text
       
-      numberOfLines={6}
+      numberOfLines={5}
       style={{
-        fontSize: 16,
+        fontSize:Platform.OS=="ios"? 16.5:15,
         fontFamily: "Poppins-Medium",
         color: textColor,
         lineHeight: 25,

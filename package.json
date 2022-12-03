@@ -44,6 +44,7 @@
     "expo-task-manager": "~10.3.0",
     "expo-updates": "~0.14.4",
     "jsbarcode": "^3.11.5",
+    "moti": "^0.21.0",
     "object-observer": "^5.1.0",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
