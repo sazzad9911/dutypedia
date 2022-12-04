@@ -65,6 +65,7 @@ import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
 import LargeText from "../components/LargeText";
 import { MotiView, MotiText } from "moti";
+import AnimatedHeight from "../Hooks/AnimatedHeight";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -140,10 +141,11 @@ const OtherProfile = (props) => {
   const [NameDropDown, setNameDropDown] = React.useState(false);
   const [PositionDropDown, setPositionDropDown] = React.useState(false);
   const childRef = React.useRef();
-  const [height, setHeight] = React.useState(0);
+  const [heightt, setHeight] = React.useState(0);
   const [calenderHeight, setCalenderHeight] = React.useState(0);
   const [opacity, setOpacity] = React.useState(new Animation.Value(0));
   const [SeeMore, setSeeMore] = React.useState(false);
+  const [More, setMore] = React.useState(false);
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
@@ -153,22 +155,19 @@ const OtherProfile = (props) => {
     inputRange: [0, 500],
     outputRange: [0, 500],
   });
-  const startingHeight = 1;
-  const fullHeight = 125;
-  const animatedHeight = React.useRef(
-    new Animation.Value(startingHeight)
-  ).current;
-  const aboutStartHeight = 60;
-  const aboutEndHeight = calculateHeight(
-    Data ? Data.service.about : "g",
-    null,
-    20
+  const [specialtyHeight, setSpecialtyHeight] = React.useState(75);
+  const [specialtyAnimation, setSpecialtyAnimation] = React.useState(
+    new Animation.Value(specialtyHeight)
+  );
+  const [aboutHeight, setAboutHeight] = React.useState(120);
+  const [aboutAnimation, setAboutAnimation] = React.useState(
+    new Animation.Value(aboutHeight)
   );
   const { handleScroll, showButton } = useHandleScroll();
   const [Specialty, setSpecialty] = React.useState(
     "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
   );
-
+  //console.log(SeeMore)
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -386,13 +385,6 @@ const OtherProfile = (props) => {
         });
     }
   }, [Data]);
-  React.useEffect(() => {
-    Animation.spring(animatedHeight, {
-      speed: 1000,
-      toValue: OpenDetails ? fullHeight : startingHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [OpenDetails]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -442,9 +434,14 @@ const OtherProfile = (props) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {};
-  const countLength = (width) => {
-    setTotalWidth((val) => val + width);
-  };
+  React.useEffect(()=>{
+    Animation.timing(specialtyAnimation, {
+      duration: 300,
+      toValue: specialtyHeight,
+      useNativeDriver: false,
+    }).start();
+  },[specialtyHeight])
+
   //console.log(TotalWidth)
 
   if (
@@ -809,43 +806,57 @@ const OtherProfile = (props) => {
             >
               Specialty In
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                alignItems: "center",
-              }}
+            <Animation.View
+              style={{ height: specialtyAnimation, }}
             >
-              {Array.isArray(Specialty) &&
-                Specialty.map((doc, i) => (
-                  <SpecialtyComponent
-                    seeMore={() => {
-                      setSeeMore(true);
-                    }}
-                    doc={doc}
-                    i={i}
-                    arr={Specialty}
-                  />
-                ))}
-              {SeeMore && (
-                <Pressable>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                      color: "#86939B",
+              <View
+                onLayout={(e) => {
+                  //console.log(e.nativeEvent.layout.height)
+                  setSpecialtyHeight(e.nativeEvent.layout.height);
+                }}
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                {Array.isArray(Specialty) &&
+                  Specialty.map((doc, i) => (
+                    <SpecialtyComponent
+                      more={More}
+                      seeMore={() => {
+                        setSeeMore(true);
+                      }}
+                      doc={doc}
+                      i={i}
+                      arr={Specialty}
+                    />
+                  ))}
+
+                {SeeMore && (
+                  <Pressable
+                    onPress={() => {
+                      setMore((val) => !val);
                     }}
                   >
-                    ...Show All
-                  </Text>
-                </Pressable>
-              )}
-            </View>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                        color: "#86939B",
+                      }}
+                    >
+                      {!More ? "...Show All" : "...Show Less"}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+            </Animation.View>
           </View>
           <View
             style={{
               paddingHorizontal: 20,
-              backgroundColor:primaryColor
+              backgroundColor: primaryColor,
             }}
           >
             <Text
@@ -853,51 +864,56 @@ const OtherProfile = (props) => {
                 fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
                 marginTop: 20,
+                marginBottom: 10,
               }}
             >
               About
             </Text>
-            <MotiView animate={{ height }} style={{ overflow: "hidden" }}>
-              <Pressable
-                onPress={() => {
-                  setHeight(calculateHeight(Data?.service.about));
-                  if (Lines === 3) {
-                    setLines(100);
-                  } else {
-                    setLines(3);
+            {/* <Pressable
+              onPress={() => {
+                // setHeight(calculateHeight(Data?.service.about));
+                if (Lines === 3) {
+                  //toggleAbout(aboutHeight)
+                  setLines(100);
+                } else {
+                  //toggleAbout(aboutHeight)
+                  setLines(3);
+                }
+                
+              }}
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginTop: 10,
+                marginBottom: 15,
+              }}
+            >
+              <Text
+                onLayout={(e) => {
+                  let height = e.nativeEvent.layout.height;
+                  if (
+                    Data?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" &&
+                    Lines != 3
+                  ) {
+                    height = height - 20;
                   }
+                  height = height + 30;
+                  //console.log(height)
+                  setAboutHeight(height)
+                  
                 }}
+                numberOfLines={Lines}
                 style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  marginTop: 10,
-                  marginBottom: 15,
+                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                  textAlign: "justify",
+                  fontFamily: "Poppins-Medium",
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
                 }}
               >
-                <Text
-                  onLayout={(e) => {
-                    let height = e.nativeEvent.layout.height;
-                    if (
-                      Data?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" &&
-                      Lines != 3
-                    ) {
-                      height = height - 20;
-                    }
-                    height = height + 30;
-                    setHeight(height);
-                  }}
-                  numberOfLines={Lines}
-                  style={{
-                    fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                    textAlign: "justify",
-                    fontFamily: "Poppins-Medium",
-                    lineHeight: Platform.OS == "ios" ? 30 : 25,
-                  }}
-                >
-                  {Data?.service.about}
-                </Text>
-              </Pressable>
-            </MotiView>
+                {Data?.service.about}
+              </Text>
+            </Pressable> */}
+            <AnimatedHeight text={Data.service.about} />
           </View>
           <Pressable
             onPress={() => {
@@ -911,7 +927,7 @@ const OtherProfile = (props) => {
             style={{
               paddingHorizontal: 20,
               paddingVertical: 10,
-              paddingTop: 0,
+              paddingTop:5,
             }}
           >
             <Text
@@ -927,16 +943,19 @@ const OtherProfile = (props) => {
         </View>
 
         <MotiView
+          transition={{ type: "timing" }}
           animate={{ height: calenderHeight }}
           style={{ overflow: "hidden" }}
         >
           <View
             style={{
-              height: OpenDetails ? 125 : 0,
+              height: 125,
               backgroundColor: primaryColor,
             }}
             onLayout={(e) => {
-              setCalenderHeight(e.nativeEvent.layout.height);
+              if (OpenDetails) {
+                setCalenderHeight(e.nativeEvent.layout.height);
+              }
             }}
           >
             <ProfileOption
@@ -2140,8 +2159,7 @@ const BargainingScreen = ({ navigation, route }) => {
     new Animation.Value(startingHeight)
   ).current;
   const [newHeight, setHeight] = React.useState(0);
-  const [text,setText]=React.useState("")
-  
+  const [text, setText] = React.useState("");
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -2212,66 +2230,71 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           {Title}
         </Text>
-        {text && (
+        {/* {text && (
           <MotiView
+            transition={{ type: "timing" }}
             animate={{ height: newHeight }}
             style={{ overflow: "hidden" }}
-          >
-            
-          </MotiView>
+          ></MotiView>
         )}
-            <Pressable 
-              disabled={Description.split("").length > 130 ? false : true}
-              style={{
-                flexDirection: "row",
-                alignItems: "flex-end",
-                marginVertical: 20,
-                position:"absolute",
-                top:40
-              }}
-              onPress={() => {
-                setHeight(calculateHeight(text)*2);
-                //setNewHeight(calculateHeight(text)*1.8);
-                if (NewLines == 3) {
-                  setNewLines(100);
-                } else {
-                  setNewLines(3);
-                }
-              }}
-            >
-              <Text
-                onLayout={(e) => {
-                  let height = e.nativeEvent.layout.height;
+        <Pressable
+          disabled={Description.split("").length > 130 ? false : true}
+          style={{
+            flexDirection: "row",
+            alignItems: "flex-end",
+            marginVertical: 20,
+            position: "absolute",
+            top: 40,
+          }}
+          onPress={() => {
+            setHeight(calculateHeight(text) * 2);
+            //setNewHeight(calculateHeight(text)*1.8);
+            if (NewLines == 3) {
+              setNewLines(100);
+            } else {
+              setNewLines(3);
+            }
+          }}
+        >
+          <Text
+            onLayout={(e) => {
+              let height = e.nativeEvent.layout.height;
 
-                  height = height + 30;
-                  setHeight(height);
-                  // setNewHeight(height);
-                }}
-                numberOfLines={NewLines}
+              height = height + 30;
+              setHeight(height);
+              // setNewHeight(height);
+            }}
+            numberOfLines={NewLines}
+            style={{
+              marginHorizontal: 20,
+              textAlign: "justify",
+              fontSize: Platform.OS == "ios" ? 16.5 : 15,
+              color: textColor,
+              fontFamily: "Poppins-Medium",
+              lineHeight: Platform.OS == "ios" ? 30 : 25,
+              marginBottom: 0,
+            }}
+          >
+            {text}
+            {Description.split("").length > 120 && NewLines == 3 ? "...." : ""}
+            {Description.split("").length > 120 && NewLines == 3 && (
+              <Text
                 style={{
-                  marginHorizontal: 20,
-                  textAlign: "justify",
+                  color: "#4ADE80",
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                  color: textColor,
-                  fontFamily: "Poppins-Medium",
-                  lineHeight: Platform.OS == "ios" ? 30 : 25,
-                  marginBottom: 0,
                 }}
               >
-                {text}
-                {Description.split("").length > 120 && NewLines == 3 ? "...." : ""}
-                {Description.split("").length > 120 && NewLines == 3 && (
-                  <Text
-                    style={{
-                      color: "#4ADE80",
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                    }}
-                  >
-                    More
-                  </Text>
-                )}
+                More
               </Text>
-            </Pressable>
+            )}
+          </Text>
+        </Pressable> */}
+        <View style={{
+          marginHorizontal:20,
+          marginVertical:10
+        }}>
+          <AnimatedHeight button={true} text={Description} />
+        </View>
         <Carousel
           loop={false}
           width={width}
@@ -2672,21 +2695,25 @@ const calculateHeight = (text, plus, minus) => {
   }
   return height;
 };
-const SpecialtyComponent = ({ doc, i, arr, seeMore }) => {
+const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
   const [Length, setLength] = React.useState(0);
   React.useEffect(() => {
     let length = 0;
     arr.forEach((doc, j) => {
       if (j <= i) {
-        length = length + doc.split("").length + 40;
+        length =
+          length + doc.split("").length + (Platform.OS == "ios" ? 70 : 60);
       }
     });
     setLength(length);
-    //console.log(length)
+    //console.log(length)//
   }, []);
 
   if (Length > width) {
     seeMore();
+  }
+  if (Length > width && !more) {
+    //seeMore();
     return null;
   }
 

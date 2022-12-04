@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-const URL = "http://185.211.6.223";
+const URL = "https://dutybazar.com";
 const socket = io(URL,{
   reconnection: true,
   reconnectionDelay: 100,
