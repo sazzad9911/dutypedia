@@ -33,7 +33,7 @@ const RelatedService = (props) => {
     <TouchableOpacity
       onPress={() => {
         if(navigation){
-          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null});
+          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null,data:data});
         }
       }}
       style={{

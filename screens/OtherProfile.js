@@ -66,6 +66,16 @@ import Carousel from "react-native-reanimated-carousel";
 import LargeText from "../components/LargeText";
 import { MotiView, MotiText } from "moti";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
+import {
+  Canvas,
+  Box,
+  BoxShadow,
+  Fill,
+  rrect,
+  rect,
+  Image as Picture,
+  useImage
+} from "@shopify/react-native-skia";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -167,7 +177,12 @@ const OtherProfile = (props) => {
   const [Specialty, setSpecialty] = React.useState(
     "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
   );
+  const params=props.route.params;
+  const data=params.data;
+  //console.log(data)
+  
   //console.log(SeeMore)
+  const newImage = useImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png");
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -189,6 +204,7 @@ const OtherProfile = (props) => {
 
             setData(response.data);
             setSpecialty(response.data.service.speciality);
+            
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
             setImages(response.data.service.gigs[0].images);
@@ -385,6 +401,7 @@ const OtherProfile = (props) => {
         });
     }
   }, [Data]);
+  
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -434,13 +451,13 @@ const OtherProfile = (props) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {};
-  React.useEffect(()=>{
+  React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
       toValue: specialtyHeight,
       useNativeDriver: false,
     }).start();
-  },[specialtyHeight])
+  }, [specialtyHeight]);
 
   //console.log(TotalWidth)
 
@@ -456,7 +473,7 @@ const OtherProfile = (props) => {
       </View>
     );
   }
-  //console.warn(Data.service.id)
+  //console.log(Data.service.id)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
       <ScrollView
@@ -473,11 +490,31 @@ const OtherProfile = (props) => {
         }}
         onScroll={(e) => handleScroll(e)}
       >
-        <InsetShadow
+        <Canvas style={{ width: width, height: 400 }}>
+          <Fill color={primaryColor}/>
+          <Box box={rrect(rect(0,0, width-3, 390), 5, 5)} color={primaryColor}>
+            <BoxShadow dx={30} dy={30} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} inner />
+            <BoxShadow dx={-10} dy={-10} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} inner />
+            <BoxShadow dx={5} dy={5} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} />
+            <BoxShadow dx={-20} dy={-20} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} />
+          </Box>
+          {backgroundImage&&newImage&&(
+            <Picture
+            image={newImage}
+            fit="cover"
+            x={0}
+            y={0}
+            width={width}
+            height={400}
+          />
+          )}
+        </Canvas>
+        
+        {/* <InsetShadow
           shadowColor={"black"}
           elevation={20}
           shadowRadius={20}
-          shadowOffset={50}
+          shadowOffset={100}
           left={true}
           right={true}
           bottom={true}
@@ -501,8 +538,7 @@ const OtherProfile = (props) => {
               }}
             ></View>
           )}
-        </InsetShadow>
-
+        </InsetShadow> */}
         <View
           style={{
             position: "absolute",
@@ -511,6 +547,7 @@ const OtherProfile = (props) => {
             height: 400,
             justifyContent: "center",
             elevation: 2,
+            zIndex: 100  
           }}
         >
           <Menu
@@ -529,13 +566,13 @@ const OtherProfile = (props) => {
                 }}
                 style={{
                   shadowOffset: {
-                    width: 1,
-                    height: 1,
+                    width: 0,
+                    height: 3,
                   },
-                  shadowColor: "#707070",
+                  shadowColor: "#DDDDDD",
                   shadowRadius: Platform.OS == "ios" ? 4 : 20,
                   elevation: 0,
-                  shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+                  shadowOpacity: Platform.OS == "ios" ? .5 : 1,
                   marginLeft: 0,
                 }}
                 xml={threeDot}
@@ -557,13 +594,13 @@ const OtherProfile = (props) => {
           <SvgXml
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              elevation: 5,
+              shadowOpacity: Platform.OS == "ios" ? .5 : 1,
             }}
             xml={loveIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
@@ -572,13 +609,13 @@ const OtherProfile = (props) => {
           <SvgXml
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5: 1,
             }}
             xml={shareIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
@@ -591,13 +628,13 @@ const OtherProfile = (props) => {
             }}
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5: 1,
             }}
             xml={newCalender}
             height={Platform.OS == "ios" ? "50" : "45"}
@@ -609,13 +646,13 @@ const OtherProfile = (props) => {
             }}
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
+              shadowColor:Platform.OS=="ios"?"#DDDDDD" :"#000000",
+              shadowRadius: Platform.OS == "ios" ? 4 : 30,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5 : 1,
             }}
             xml={messageIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
@@ -628,6 +665,7 @@ const OtherProfile = (props) => {
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
             marginTop: -30,
+            overflow: "hidden",
           }}
         >
           <View
@@ -707,6 +745,7 @@ const OtherProfile = (props) => {
               style={{
                 width: 40,
                 height: 40,
+                borderWidth: Data && Data.service.profilePhoto ? 0 : 0.5,
               }}
               source={{ uri: Data ? Data.service.profilePhoto : null }}
             />
@@ -800,15 +839,13 @@ const OtherProfile = (props) => {
               style={{
                 fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
-                marginVertical: 10,
+                marginVertical: 15,
                 marginTop: 2,
               }}
             >
               Specialty In
             </Text>
-            <Animation.View
-              style={{ height: specialtyAnimation, }}
-            >
+            <Animation.View style={{ height: specialtyAnimation }}>
               <View
                 onLayout={(e) => {
                   //console.log(e.nativeEvent.layout.height)
@@ -838,6 +875,9 @@ const OtherProfile = (props) => {
                     onPress={() => {
                       setMore((val) => !val);
                     }}
+                    style={{
+                      marginVertical:5
+                    }}
                   >
                     <Text
                       style={{
@@ -863,57 +903,17 @@ const OtherProfile = (props) => {
               style={{
                 fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
-                marginTop: 20,
+                marginTop: 15,
                 marginBottom: 10,
               }}
             >
               About
             </Text>
-            {/* <Pressable
-              onPress={() => {
-                // setHeight(calculateHeight(Data?.service.about));
-                if (Lines === 3) {
-                  //toggleAbout(aboutHeight)
-                  setLines(100);
-                } else {
-                  //toggleAbout(aboutHeight)
-                  setLines(3);
-                }
-                
-              }}
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                marginTop: 10,
-                marginBottom: 15,
-              }}
-            >
-              <Text
-                onLayout={(e) => {
-                  let height = e.nativeEvent.layout.height;
-                  if (
-                    Data?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" &&
-                    Lines != 3
-                  ) {
-                    height = height - 20;
-                  }
-                  height = height + 30;
-                  //console.log(height)
-                  setAboutHeight(height)
-                  
-                }}
-                numberOfLines={Lines}
-                style={{
-                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                  textAlign: "justify",
-                  fontFamily: "Poppins-Medium",
-                  lineHeight: Platform.OS == "ios" ? 30 : 25,
-                }}
-              >
-                {Data?.service.about}
-              </Text>
-            </Pressable> */}
-            <AnimatedHeight text={Data.service.about} />
+            
+            <AnimatedHeight
+              id={Data.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
+              text={Data.service.about}
+            />
           </View>
           <Pressable
             onPress={() => {
@@ -927,7 +927,7 @@ const OtherProfile = (props) => {
             style={{
               paddingHorizontal: 20,
               paddingVertical: 10,
-              paddingTop:5,
+              paddingTop: 5,
             }}
           >
             <Text
@@ -935,6 +935,7 @@ const OtherProfile = (props) => {
                 color: "#4ADE80",
                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
                 fontFamily: "Poppins-SemiBold",
+                marginBottom:15
               }}
             >
               ...Company Calender, Notice & Team
@@ -2044,6 +2045,7 @@ const styles = StyleSheet.create({
     height: 30,
     fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
+   
   },
   inactiveButton: {
     color: textColor,
@@ -2056,6 +2058,7 @@ const styles = StyleSheet.create({
     height: 30,
     fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
+    
   },
 });
 const Options = ({ text, Icon }) => {
@@ -2230,75 +2233,19 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           {Title}
         </Text>
-        {/* {text && (
-          <MotiView
-            transition={{ type: "timing" }}
-            animate={{ height: newHeight }}
-            style={{ overflow: "hidden" }}
-          ></MotiView>
-        )}
-        <Pressable
-          disabled={Description.split("").length > 130 ? false : true}
+
+        <View
           style={{
-            flexDirection: "row",
-            alignItems: "flex-end",
-            marginVertical: 20,
-            position: "absolute",
-            top: 40,
-          }}
-          onPress={() => {
-            setHeight(calculateHeight(text) * 2);
-            //setNewHeight(calculateHeight(text)*1.8);
-            if (NewLines == 3) {
-              setNewLines(100);
-            } else {
-              setNewLines(3);
-            }
+            marginHorizontal: 20,
+            marginVertical: 15,
           }}
         >
-          <Text
-            onLayout={(e) => {
-              let height = e.nativeEvent.layout.height;
-
-              height = height + 30;
-              setHeight(height);
-              // setNewHeight(height);
-            }}
-            numberOfLines={NewLines}
-            style={{
-              marginHorizontal: 20,
-              textAlign: "justify",
-              fontSize: Platform.OS == "ios" ? 16.5 : 15,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              lineHeight: Platform.OS == "ios" ? 30 : 25,
-              marginBottom: 0,
-            }}
-          >
-            {text}
-            {Description.split("").length > 120 && NewLines == 3 ? "...." : ""}
-            {Description.split("").length > 120 && NewLines == 3 && (
-              <Text
-                style={{
-                  color: "#4ADE80",
-                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                }}
-              >
-                More
-              </Text>
-            )}
-          </Text>
-        </Pressable> */}
-        <View style={{
-          marginHorizontal:20,
-          marginVertical:10
-        }}>
           <AnimatedHeight button={true} text={Description} />
         </View>
         <Carousel
           loop={false}
           width={width}
-          height={width}
+          height={width + 30}
           autoPlay={false}
           data={Images}
           scrollAnimationDuration={500}
@@ -2307,7 +2254,7 @@ const BargainingScreen = ({ navigation, route }) => {
             <Image
               style={{
                 width: width,
-                height: width,
+                height: width+30,
               }}
               source={{ uri: Images[index] }}
             />
@@ -2324,8 +2271,8 @@ const BargainingScreen = ({ navigation, route }) => {
           style={{
             fontFamily: "Poppins-SemiBold",
             fontSize: Platform.OS == "ios" ? 22 : 20.5,
-            marginBottom: 30,
-            marginTop: 40,
+            marginBottom: 20,
+            marginTop: 35,
             color: "#535353",
           }}
         >

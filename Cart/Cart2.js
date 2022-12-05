@@ -4,6 +4,7 @@ import { Color } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import {useDispatch,useSelector} from 'react-redux'
+import { getUserInfo } from "../Class/member";
 
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
@@ -16,11 +17,15 @@ function Cart2(props) {
   const primaryColor =colors.getPrimaryColor();
   const textColor=colors.getTextColor();
   const assentColor=colors.getAssentColor();
+  const user=useSelector(state=>state.user);
+  const [User,setUser]=React.useState()
+
+  
   return (
     <TouchableOpacity
       onPress={() => {
         dispatch({type: 'SET_INTEREST_CATEGORY',playload:"cart2"})
-        navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null})
+        navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null,data:data})
       }}
       style={{
         width: 260,
