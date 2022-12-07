@@ -1,9 +1,26 @@
 import React from 'react';
-import {TouchableOpacity,Text} from 'react-native'
+import {TouchableOpacity,Text,Dimensions} from 'react-native'
 
+const {width,height}=Dimensions.get("window")
 const Button = ({ style, title, onPress,disabled,Icon }) => {
+  const [text,setText]=React.useState()
+  const [contentWidth,setContentWidth]=React.useState()
+  React.useEffect(()=>{
+    setText("")
+    if(contentWidth){
+      let line=''
+      title.split("").map((doc,i)=>{
+        if((12*i)<contentWidth){
+          line=line+doc;
+        }
+      })
+      setText(`${line} ${(title.split("").length*12)<contentWidth?"":"..."}`)
+    }
+  },[contentWidth])
     return (
-      <TouchableOpacity disabled={disabled?true:false}
+      <TouchableOpacity onLayout={e=>{
+        setContentWidth(e.nativeEvent.layout.width)
+      }} disabled={disabled?true:false}
         onPress={() => {
           if (onPress) {
             onPress();
@@ -11,8 +28,7 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
         }}
         style={[
           {
-            borderWidth: 1,
-            minWidth: 100,
+            borderWidth: 100,
             height: 35,
             borderRadius: 23,
             justifyContent: "center",
@@ -26,14 +42,15 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
      {
       Icon?( <Icon/>):(<></>)
      }
-        <Text numberOfLines={1}
+        <Text 
           style={{
             fontSize:style&&style.fontSize?style.fontSize: 13,
             color:style&&style.color?style.color:'white',
             fontFamily:style&&style.fontFamily?style.fontFamily:'Poppins-Medium',
+            textAlign:"justify"
           }}
         >
-          {title}
+          {text}
         </Text>
       </TouchableOpacity>
     );

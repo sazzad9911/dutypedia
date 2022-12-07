@@ -64,6 +64,18 @@ import { Tooltip } from "react-native-paper";
 import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
 import LargeText from "../components/LargeText";
+import { MotiView, MotiText } from "moti";
+import AnimatedHeight from "../Hooks/AnimatedHeight";
+import {
+  Canvas,
+  Box,
+  BoxShadow,
+  Fill,
+  rrect,
+  rect,
+  Image as Picture,
+  useImage
+} from "@shopify/react-native-skia";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -139,8 +151,11 @@ const FixedService = (props) => {
   const [NameDropDown, setNameDropDown] = React.useState(false);
   const [PositionDropDown, setPositionDropDown] = React.useState(false);
   const childRef = React.useRef();
-  const [height, setHeight] = React.useState(new Animation.Value(0));
+  const [heightt, setHeight] = React.useState(0);
+  const [calenderHeight, setCalenderHeight] = React.useState(0);
   const [opacity, setOpacity] = React.useState(new Animation.Value(0));
+  const [SeeMore, setSeeMore] = React.useState(false);
+  const [More, setMore] = React.useState(false);
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
@@ -150,16 +165,24 @@ const FixedService = (props) => {
     inputRange: [0, 500],
     outputRange: [0, 500],
   });
-
-  const params = props.route.params;
-  const data = params.data;
-  //console.log(data)
-
-  const aboutHeight = React.useRef(
-    new Animation.Value(aboutStartHeight)
-  ).current;
+  const [specialtyHeight, setSpecialtyHeight] = React.useState(75);
+  const [specialtyAnimation, setSpecialtyAnimation] = React.useState(
+    new Animation.Value(specialtyHeight)
+  );
+  const [aboutHeight, setAboutHeight] = React.useState(120);
+  const [aboutAnimation, setAboutAnimation] = React.useState(
+    new Animation.Value(aboutHeight)
+  );
   const { handleScroll, showButton } = useHandleScroll();
-
+  const [Specialty, setSpecialty] = React.useState(
+    "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
+  );
+  const params=props.route.params;
+  const data=params.data;
+  //console.log(data)
+  
+  //console.log(SeeMore)
+  const newImage = useImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png");
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -173,72 +196,114 @@ const FixedService = (props) => {
     setActive("Bargaining");
     setLoader(true);
     setActiveServiceData(null);
-    if (data) {
-        setData(data);
-        setBackgroundImage(data.service.wallPhoto);
-        setImage(data.service.profilePhoto);
-        setImages(data.images);
-        setPrice(data.price);
-        setTitle(data.title);
-        setDescription(data.description);
-        //setNewDataList(response.data.service.gigs[0].services.options)
-        setFacilities(data.facilites.selectedOptions);
-        let arr = initialState;
-        data.service.activeServiceTypes.forEach((doc) => {
-          arr = arr.map((d) => {
-            if (d.type == doc) {
-              //console.log(doc);
-              return {
-                title: d.title,
-                value: true,
-                type: d.type,
-              };
-            } else {
-              return d;
-            }
-          });
-        });
-        setCategory(data.dashboard);
-        setActiveServiceData(arr);
-        if(data.services.category){
-          try {
-            dispatch({
-              type: "SET_NEW_LIST_DATA",
-              playload: serverToLocal(
-                data.services.options,
-                data.services.category
-              ),
-            });
-            setNewDataList(
-              serverToLocal(
-                data.services.options,
-                data.services.category
-              )
+    if (serviceId && newUser) {
+      getService(newUser.token, serviceId)
+        .then((response) => {
+          if (response.data) {
+            setLoader(false);
+
+            setData(response.data);
+            setSpecialty(response.data.service.speciality);
+            
+            setBackgroundImage(response.data.service.wallPhoto);
+            setImage(response.data.service.profilePhoto);
+            setImages(response.data.service.gigs[0].images);
+            setPrice(response.data.service.gigs[0].price);
+            setTitle(response.data.service.gigs[0].title);
+            setDescription(response.data.service.gigs[0].description);
+            //setNewDataList(response.data.service.gigs[0].services.options)
+            setFacilities(
+              response.data.service.gigs[0].facilites.selectedOptions
             );
-          } catch (e) {
-            console.warn(e.message);
+            let arr = initialState;
+            response.data.service.activeServiceTypes.forEach((doc) => {
+              arr = arr.map((d) => {
+                if (d.type == doc) {
+                  //console.log(doc);
+                  return {
+                    title: d.title,
+                    value: true,
+                    type: d.type,
+                  };
+                } else {
+                  return d;
+                }
+              });
+            });
+            setCategory(response.data.service.gigs[0].services.category);
+            setActiveServiceData(arr);
+            try {
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  response.data.service.gigs[0].services.options,
+                  response.data.service.gigs[0].services.category
+                ),
+              });
+              setNewDataList(
+                serverToLocal(
+                  response.data.service.gigs[0].services.options,
+                  response.data.service.gigs[0].services.category
+                )
+              );
+            } catch (e) {
+              console.warn(e.message);
+            }
           }
-          return
-        }
-        try {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(
-              data.services,
-              Category
-            ),
-          });
-          setNewDataList(
-            serverToLocal(
-              data.services,
-              Category
-            )
-          );
-        } catch (e) {
-          console.warn(e.message);
-        }
+        })
+        .catch((error) => {
+          console.warn(error.response.data);
+        });
     }
   }, [serviceId + Refresh]);
+  React.useEffect(() => {
+    setActive("Bargaining");
+    //setLoader(true);
+    if (Data) {
+      setBackgroundImage(Data.service.wallPhoto);
+      setImage(Data.service.profilePhoto);
+      setImages(Data.service.gigs[0].images);
+      setPrice(Data.service.gigs[0].price);
+      setTitle(Data.service.gigs[0].title);
+      setDescription(Data.service.gigs[0].description);
+      //setNewDataList(response.data.service.gigs[0].services.options)
+      setFacilities(Data.service.gigs[0].facilites.selectedOptions);
+      let arr = initialState;
+      Data.service.activeServiceTypes.forEach((doc) => {
+        arr = arr.map((d) => {
+          if (d.type == doc) {
+            //console.log(doc);
+            return {
+              title: d.title,
+              value: true,
+              type: d.type,
+            };
+          } else {
+            return d;
+          }
+        });
+      });
+      setCategory(Data.service.gigs[0].services.category);
+      setActiveServiceData(arr);
+      try {
+        dispatch({
+          type: "SET_NEW_LIST_DATA",
+          playload: serverToLocal(
+            Data.service.gigs[0].services.options,
+            Data.service.gigs[0].services.category
+          ),
+        });
+        setNewDataList(
+          serverToLocal(
+            Data.service.gigs[0].services.options,
+            Data.service.gigs[0].services.category
+          )
+        );
+      } catch (e) {
+        console.warn(e.message);
+      }
+    }
+  }, [Bargaining + Data]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -279,8 +344,8 @@ const FixedService = (props) => {
     }
   }, [ActiveService + Click + Refresh]);
   React.useEffect(() => {
-    if (newUser && data) {
-      getOtherServices(newUser.token, data.service.id, "ONETIME")
+    if (newUser && Data) {
+      getOtherServices(newUser.token, Data.service.id, "ONETIME")
         .then((res) => {
           setFixedService(res.data.gigs);
           //console.log(res.data.gigs);
@@ -290,10 +355,10 @@ const FixedService = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + data + newUser]);
+  }, [Active + Data + newUser]);
   React.useEffect(() => {
-    if (newUser && data) {
-      getOtherServices(newUser.token, data.service.id, "PACKAGE")
+    if (newUser && Data) {
+      getOtherServices(newUser.token, Data.service.id, "PACKAGE")
         .then((res) => {
           setPackageService(res.data.gigs);
           //console.log(res.data.gigs);
@@ -303,11 +368,11 @@ const FixedService = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser]);
+  }, [Data + newUser]);
   React.useEffect(() => {
-    if (newUser && data) {
+    if (newUser && Data) {
       setLoader(true);
-      getRelatedServices(newUser.token, data.service.id, data.dashboard)
+      getRelatedServices(newUser.token, Data.service.id, Data.service.dashboard)
         .then((response) => {
           if (response.data) {
             setLoader(false);
@@ -321,8 +386,8 @@ const FixedService = (props) => {
       setLoader(true);
       getUnRelatedServices(
         newUser.token,
-        data.service.id,
-        data.dashboard
+        Data.service.id,
+        Data.service.dashboard
       )
         .then((response) => {
           if (response.data) {
@@ -335,15 +400,15 @@ const FixedService = (props) => {
           console.warn(err.response);
         });
     }
-  }, [data]);
+  }, [Data]);
+  
 
   React.useEffect(() => {
-    Animation.spring(aboutHeight, {
-      speed: 1000,
-      toValue: Lines != 3 ? aboutEndHeight : aboutStartHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [Lines]);
+    if (Specialty && !Array.isArray(Specialty)) {
+      let arr = Specialty.split(",");
+      setSpecialty(arr);
+    }
+  }, [Specialty]);
   const showCart = (doc) => {
     setGigs(doc);
     setClick(true);
@@ -386,6 +451,15 @@ const FixedService = (props) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {};
+  React.useEffect(() => {
+    Animation.timing(specialtyAnimation, {
+      duration: 300,
+      toValue: specialtyHeight,
+      useNativeDriver: false,
+    }).start();
+  }, [specialtyHeight]);
+
+  //console.log(TotalWidth)
 
   if (
     Loader ||
@@ -399,7 +473,7 @@ const FixedService = (props) => {
       </View>
     );
   }
-  //console.warn(Data.service.id)
+  //console.log(Data.service.id)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
       <ScrollView
@@ -412,15 +486,35 @@ const FixedService = (props) => {
         }
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: "#f1f1f2",
+          backgroundColor: primaryColor,
         }}
         onScroll={(e) => handleScroll(e)}
       >
-        <InsetShadow
+        <Canvas style={{ width: width, height: 400 }}>
+          <Fill color={primaryColor}/>
+          <Box box={rrect(rect(0,0, width-3, 390), 5, 5)} color={primaryColor}>
+            <BoxShadow dx={30} dy={30} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} inner />
+            <BoxShadow dx={-10} dy={-10} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} inner />
+            <BoxShadow dx={5} dy={5} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} />
+            <BoxShadow dx={-20} dy={-20} blur={20} color={Platform.OS=="ios"?"#e6e6e6":"#cdcdcd"} />
+          </Box>
+          {backgroundImage&&newImage&&(
+            <Picture
+            image={newImage}
+            fit="cover"
+            x={0}
+            y={0}
+            width={width}
+            height={400}
+          />
+          )}
+        </Canvas>
+        
+        {/* <InsetShadow
           shadowColor={"black"}
           elevation={20}
           shadowRadius={20}
-          shadowOffset={50}
+          shadowOffset={100}
           left={true}
           right={true}
           bottom={true}
@@ -430,26 +524,21 @@ const FixedService = (props) => {
             width: width,
           }}
         >
-          <Carousel
-            loop={false}
-            width={width}
-            height={width}
-            autoPlay={false}
-            data={Images}
-            scrollAnimationDuration={500}
-            onSnapToItem={(index) => {}}
-            renderItem={({ index }) => (
-              <Image
-                style={{
-                  width: width,
-                  height: width,
-                }}
-                source={{ uri: Images[index] }}
-              />
-            )}
-          />
-        </InsetShadow>
-
+          {backgroundImage ? (
+            <Image
+              source={{ uri: backgroundImage }}
+              style={{
+                height: 400,
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                height: 400,
+              }}
+            ></View>
+          )}
+        </InsetShadow> */}
         <View
           style={{
             position: "absolute",
@@ -458,6 +547,7 @@ const FixedService = (props) => {
             height: 400,
             justifyContent: "center",
             elevation: 2,
+            zIndex: 100  
           }}
         >
           <Menu
@@ -476,18 +566,18 @@ const FixedService = (props) => {
                 }}
                 style={{
                   shadowOffset: {
-                    width: 1,
-                    height: 1,
+                    width: 0,
+                    height: 3,
                   },
-                  shadowColor: "#707070",
+                  shadowColor: "#DDDDDD",
                   shadowRadius: Platform.OS == "ios" ? 4 : 20,
                   elevation: 0,
-                  shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+                  shadowOpacity: Platform.OS == "ios" ? .5 : 1,
                   marginLeft: 0,
                 }}
                 xml={threeDot}
-                height="50"
-                width={"50"}
+                height={Platform.OS == "ios" ? "50" : "45"}
+                width={Platform.OS == "ios" ? "50" : "45"}
               />
             }
           >
@@ -504,32 +594,32 @@ const FixedService = (props) => {
           <SvgXml
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              elevation: 5,
+              shadowOpacity: Platform.OS == "ios" ? .5 : 1,
             }}
             xml={loveIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
           <SvgXml
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5: 1,
             }}
             xml={shareIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
 
           <SvgXml
@@ -538,17 +628,17 @@ const FixedService = (props) => {
             }}
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
+              shadowColor: "#DDDDDD",
               shadowRadius: Platform.OS == "ios" ? 4 : 20,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5: 1,
             }}
             xml={newCalender}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
           <SvgXml
             onPress={() => {
@@ -556,17 +646,17 @@ const FixedService = (props) => {
             }}
             style={{
               shadowOffset: {
-                width: 1,
-                height: 1,
+                width: 0,
+                height: 3,
               },
-              shadowColor: "#707070",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
+              shadowColor:Platform.OS=="ios"?"#DDDDDD" :"#000000",
+              shadowRadius: Platform.OS == "ios" ? 4 : 30,
               elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.1 : 1,
+              shadowOpacity: Platform.OS == "ios" ? .5 : 1,
             }}
             xml={messageIcon}
-            height="50"
-            width={"50"}
+            height={Platform.OS == "ios" ? "50" : "45"}
+            width={Platform.OS == "ios" ? "50" : "45"}
           />
         </View>
         <View
@@ -575,6 +665,7 @@ const FixedService = (props) => {
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
             marginTop: -30,
+            overflow: "hidden",
           }}
         >
           <View
@@ -583,6 +674,7 @@ const FixedService = (props) => {
               alignItems: "center",
               paddingHorizontal: 20,
               paddingVertical: 5,
+              backgroundColor: primaryColor,
             }}
           >
             <Text
@@ -592,7 +684,7 @@ const FixedService = (props) => {
                   fontFamily: "Poppins-SemiBold",
                   marginTop: 15,
                   flex: 3,
-                  fontSize: 22,
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 },
               ]}
             >
@@ -613,10 +705,14 @@ const FixedService = (props) => {
                   alignItems: "center",
                 }}
               >
-                <SvgXml xml={newStar} height="21" width={"21"} />
+                <SvgXml
+                  xml={newStar}
+                  height={Platform.OS == "ios" ? "21" : "19"}
+                  width={Platform.OS == "ios" ? "21" : "19"}
+                />
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: Platform.OS == "ios" ? 20 : 18,
                     fontFamily: "Poppins-Bold",
                     color: "#FFC107",
                     marginLeft: 5,
@@ -627,7 +723,7 @@ const FixedService = (props) => {
               </View>
               <Text
                 style={{
-                  fontSize: 12,
+                  fontSize: Platform.OS == "ios" ? 12 : 11,
                   fontFamily: "Poppins-Medium",
                   marginTop: Platform.OS == "ios" ? 5 : 0,
                 }}
@@ -649,6 +745,7 @@ const FixedService = (props) => {
               style={{
                 width: 40,
                 height: 40,
+                borderWidth: Data && Data.service.profilePhoto ? 0 : 0.5,
               }}
               source={{ uri: Data ? Data.service.profilePhoto : null }}
             />
@@ -685,7 +782,7 @@ const FixedService = (props) => {
                     numberOfLines={NameDropDown ? 2 : 1}
                     style={{
                       color: "#6366F1",
-                      fontSize: 16.5,
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                     }}
                   >
@@ -723,7 +820,7 @@ const FixedService = (props) => {
                     style={{
                       color: "#DA1E37",
                       textAlign: "center",
-                      fontSize: 14,
+                      fontSize: Platform.OS == "ios" ? 14 : 13,
                       fontFamily: "Poppins-SemiBold",
                     }}
                   >
@@ -740,101 +837,105 @@ const FixedService = (props) => {
           >
             <Text
               style={{
-                fontSize: 22,
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
-                marginVertical: 10,
+                marginVertical: 15,
+                marginTop: 2,
               }}
             >
               Specialty In
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-              }}
-            >
-              {Data &&
-                Data.service.speciality.split(",").map((doc, i) => (
-                  <View
-                    key={i}
+            <Animation.View style={{ height: specialtyAnimation }}>
+              <View
+                onLayout={(e) => {
+                  //console.log(e.nativeEvent.layout.height)
+                  setSpecialtyHeight(e.nativeEvent.layout.height);
+                }}
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                }}
+              >
+                {Array.isArray(Specialty) &&
+                  Specialty.map((doc, i) => (
+                    <SpecialtyComponent
+                      more={More}
+                      seeMore={() => {
+                        setSeeMore(true);
+                      }}
+                      doc={doc}
+                      i={i}
+                      arr={Specialty}
+                    />
+                  ))}
+
+                {SeeMore && (
+                  <Pressable
+                    onPress={() => {
+                      setMore((val) => !val);
+                    }}
                     style={{
-                      borderRadius: 5,
-                      backgroundColor: "#4ADE80",
-                      paddingHorizontal: 5,
-                      paddingVertical: 5,
-                      marginRight: 5,
+                      marginVertical:5
                     }}
                   >
                     <Text
                       style={{
-                        color: "white",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                        color: "#86939B",
                       }}
                     >
-                      {doc}
+                      {!More ? "...Show All" : "...Show Less"}
                     </Text>
-                  </View>
-                ))}
-            </View>
+                  </Pressable>
+                )}
+              </View>
+            </Animation.View>
           </View>
           <View
             style={{
               paddingHorizontal: 20,
+              backgroundColor: primaryColor,
             }}
           >
             <Text
               style={{
-                fontSize: 22,
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
-                marginVertical: 20,
+                marginTop: 15,
+                marginBottom: 10,
               }}
             >
               About
             </Text>
-            <Pressable
-              onPress={() => {
-                if (Lines === 3) {
-                  setLines(100);
-                } else {
-                  setLines(3);
-                }
-              }}
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              <Text
-                numberOfLines={Lines}
-                style={{
-                  fontSize: 16.5,
-                  textAlign: "justify",
-                  fontFamily: "Poppins-Medium",
-                  lineHeight: 25,
-                  marginTop: -10,
-                  marginBottom:
-                    Data?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" && Lines != 3
-                      ? -20
-                      : 0,
-                }}
-              >
-                {Data?.service.about}
-              </Text>
-            </Pressable>
+            
+            <AnimatedHeight
+              id={Data.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
+              text={Data.service.about}
+            />
           </View>
           <Pressable
             onPress={() => {
+              if (calenderHeight == 0) {
+                setCalenderHeight(125);
+              } else {
+                setCalenderHeight(0);
+              }
               setOpenDetails((val) => !val);
             }}
             style={{
               paddingHorizontal: 20,
               paddingVertical: 10,
-              paddingTop: 20,
+              paddingTop: 5,
             }}
           >
             <Text
               style={{
                 color: "#4ADE80",
-                fontSize: 16.5,
+                fontSize: Platform.OS == "ios" ? 16.5 : 15,
                 fontFamily: "Poppins-SemiBold",
+                marginBottom:15
               }}
             >
               ...Company Calender, Notice & Team
@@ -842,37 +943,46 @@ const FixedService = (props) => {
           </Pressable>
         </View>
 
-        <Animation.View
-          style={[
-            {
-              height: 1,
-              backgroundColor: primaryColor,
-            },
-            { height: animatedHeight },
-          ]}
+        <MotiView
+          transition={{ type: "timing" }}
+          animate={{ height: calenderHeight }}
+          style={{ overflow: "hidden" }}
         >
-          <ProfileOption
-            onPress={() => {
-              navigation.navigate("Company Calender", { vendor: Data });
-            }}
-            Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
-            title="Company Calender"
-          />
-          <ProfileOption
-            onPress={() => {
-              navigation.navigate("Notice", { serviceId: Data.service.id });
-            }}
+          <View
             style={{
-              marginBottom: 0,
+              height: 125,
+              backgroundColor: primaryColor,
             }}
-            Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
-            title="Notice"
-          />
-          <BarOption
-            icon={user}
-            title={`Worker and Team (${Data?.service.worker} member)`}
-          />
-        </Animation.View>
+            onLayout={(e) => {
+              if (OpenDetails) {
+                setCalenderHeight(e.nativeEvent.layout.height);
+              }
+            }}
+          >
+            <ProfileOption
+              onPress={() => {
+                navigation.navigate("Company Calender", { vendor: Data });
+              }}
+              Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
+              title="Company Calender"
+            />
+            <ProfileOption
+              onPress={() => {
+                navigation.navigate("Notice", { serviceId: Data.service.id });
+              }}
+              style={{
+                marginBottom: 0,
+              }}
+              Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
+              title="Notice"
+            />
+            <BarOption
+              icon={user}
+              title={`Worker and Team (${Data?.service.worker} member)`}
+            />
+          </View>
+        </MotiView>
+
         <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
         <View
           style={{
@@ -889,7 +999,7 @@ const FixedService = (props) => {
                 borderBottomWidth: 2,
                 backgroundColor: primaryColor,
               },
-              tabBarLabelStyle: { fontSize: 12 },
+              tabBarLabelStyle: { fontSize: Platform.OS == "ios" ? 12 : 10.5 },
               tabBarItemStyle: {
                 margin: 0,
                 padding: 0,
@@ -912,7 +1022,7 @@ const FixedService = (props) => {
                     style={{
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
-                      fontSize: 16.5,
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     }}
                   >
                     {initialState[0].title}
@@ -942,7 +1052,7 @@ const FixedService = (props) => {
                     style={{
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
-                      fontSize: 18,
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
                     }}
                   >
                     {initialState[1].title}
@@ -974,7 +1084,7 @@ const FixedService = (props) => {
                     style={{
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
-                      fontSize: 18,
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
                     }}
                   >
                     {initialState[2].title}
@@ -1069,7 +1179,7 @@ const FixedService = (props) => {
                   <Text
                     style={{
                       marginHorizontal: 20,
-                      fontSize: 21,
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
                       color: textColor,
                       fontFamily: "Poppins-SemiBold",
                       marginVertical: 15,
@@ -1095,7 +1205,7 @@ const FixedService = (props) => {
                         marginHorizontal: 20,
                         textAlign: "justify",
                         marginVertical: 5,
-                        fontSize: 14,
+                        fontSize: Platform.OS == "ios" ? 14 : 13,
                         color: textColor,
                         fontFamily: "Poppins-Medium",
                         marginTop: 0,
@@ -1122,7 +1232,7 @@ const FixedService = (props) => {
                     style={{
                       alignSelf: "flex-end",
                       marginRight: 20,
-                      fontSize: 18,
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
                       fontFamily: "Poppins-Medium",
                       color: "black",
                       marginTop: 10,
@@ -1142,7 +1252,7 @@ const FixedService = (props) => {
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: Platform.OS == "ios" ? 15 : 14,
                       fontFamily: "Poppins-Medium",
                     }}
                   >
@@ -1242,7 +1352,7 @@ const FixedService = (props) => {
                         <View>
                           <Text
                             style={{
-                              fontSize: 15,
+                              fontSize: Platform.OS == "ios" ? 15 : 14,
                               fontFamily: "Poppins-Medium",
                               color: "#707070",
                             }}
@@ -1253,7 +1363,7 @@ const FixedService = (props) => {
                             Facilities.map((doc, i) => (
                               <Text
                                 style={{
-                                  fontSize: 13,
+                                  fontSize: Platform.OS == "ios" ? 13 : 12,
                                   fontFamily: "Poppins-Light",
                                 }}
                                 key={i}
@@ -1307,7 +1417,7 @@ const FixedService = (props) => {
                   >
                     <Text
                       style={{
-                        fontSize: 14,
+                        fontSize: Platform.OS == "ios" ? 14 : 13,
                         fontFamily: "Poppins-Medium",
                         color: "#707070",
                         marginRight: 5,
@@ -1326,7 +1436,7 @@ const FixedService = (props) => {
                   <Text
                     style={{
                       marginHorizontal: 20,
-                      fontSize: 17,
+                      fontSize: Platform.OS == "ios" ? 17 : 16,
                       marginBottom: 20,
                       color: textColor,
                       fontFamily: "Poppins-Medium",
@@ -1444,7 +1554,7 @@ const FixedService = (props) => {
                   <Text
                     style={{
                       marginHorizontal: 20,
-                      fontSize: 21,
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
                       color: textColor,
                       fontFamily: "Poppins-SemiBold",
                       marginVertical: 15,
@@ -1470,7 +1580,7 @@ const FixedService = (props) => {
                         marginHorizontal: 20,
                         textAlign: "justify",
                         marginVertical: 5,
-                        fontSize: 14,
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
                         color: textColor,
                         fontFamily: "Poppins-Medium",
                         marginTop: 0,
@@ -1535,7 +1645,7 @@ const FixedService = (props) => {
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-Medium",
                       color: textColor,
                     }}
@@ -1650,7 +1760,7 @@ const FixedService = (props) => {
                   >
                     <Text
                       style={{
-                        fontSize: 14,
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
                         fontFamily: "Poppins-Medium",
                         color: "#707070",
                         marginRight: 5,
@@ -1776,7 +1886,7 @@ const FixedService = (props) => {
             <View>
               <Text
                 style={{
-                  fontSize: 22,
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
                   paddingHorizontal: 20,
@@ -1802,7 +1912,7 @@ const FixedService = (props) => {
             <View>
               <Text
                 style={{
-                  fontSize: 22,
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
                   paddingHorizontal: 20,
@@ -1908,12 +2018,12 @@ const styles = StyleSheet.create({
     right: -10,
   },
   headLine: {
-    fontSize: 22,
+    fontSize: Platform.OS == "ios" ? 22 : 20.5,
     fontFamily: "Poppins-SemiBold",
   },
   text: {
     textAlign: "center",
-    fontSize: 14,
+    fontSize: Platform.OS == "ios" ? 14 : 13,
     fontFamily: "Poppins-Medium",
   },
   image: {
@@ -1933,8 +2043,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     height: 30,
-    fontSize: 15,
+    fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
+   
   },
   inactiveButton: {
     color: textColor,
@@ -1945,8 +2056,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     height: 30,
-    fontSize: 15,
+    fontSize: Platform.OS == "ios" ? 16.5 : 15,
     fontFamily: "Poppins-SemiBold",
+    
   },
 });
 const Options = ({ text, Icon }) => {
@@ -2010,7 +2122,7 @@ const BarOption = ({ icon, title }) => {
           style={{
             fontFamily: "Poppins-SemiBold",
             marginBottom: 5,
-            fontSize: 16.5,
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
             color: "#333333",
           }}
         >
@@ -2049,6 +2161,8 @@ const BargainingScreen = ({ navigation, route }) => {
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
   ).current;
+  const [newHeight, setHeight] = React.useState(0);
+  const [text, setText] = React.useState("");
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -2085,13 +2199,32 @@ const BargainingScreen = ({ navigation, route }) => {
       useNativeDriver: false,
     }).start();
   }, [NewLines]);
+  React.useEffect(() => {
+    if (Description) {
+      setText(null);
+      let totalText = "";
+      Description.split("").map((doc, i) => {
+        if (NewLines != 3) {
+          totalText = totalText + doc;
+          //setText((val) => val + doc);
+        }
+        if (i < 121 && NewLines == 3) {
+          totalText = totalText + doc;
+          //setNewHeight(calculateHeight(text))
+          //setText((val) => val + doc);
+        }
+      });
+      setText(totalText);
+    }
+  }, [NewLines]);
+  //console.log(newHeight);
 
   return (
     <View>
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
         <Text
           style={{
-            fontSize: 21,
+            fontSize: Platform.OS == "ios" ? 22 : 20.5,
             fontFamily: "Poppins-SemiBold",
             color: textColor,
             paddingHorizontal: 20,
@@ -2100,59 +2233,19 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           {Title}
         </Text>
-        <Pressable
-          disabled={Description.split("").length > 130 ? false : true}
+
+        <View
           style={{
-            flexDirection: "row",
-            alignItems: "flex-end",
-            marginVertical: 20,
-          }}
-          onPress={() => {
-            if (NewLines == 3) {
-              setNewLines(100);
-            } else {
-              setNewLines(3);
-            }
+            marginHorizontal: 20,
+            marginVertical: 15,
           }}
         >
-          <Text
-            numberOfLines={NewLines}
-            style={{
-              marginHorizontal: 20,
-              textAlign: "justify",
-              fontSize: 16,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              lineHeight: 25,
-              marginBottom: 0,
-            }}
-          >
-            {NewLines &&
-              Description.split("").map((doc, i) => {
-                if (NewLines != 3) {
-                  return `${doc}`;
-                }
-                if (i < 121) {
-                  return `${doc}`;
-                }
-              })}
-            {Description.split("").length > 120 && NewLines == 3 ? "...." : ""}
-            {Description.split("").length > 120 && NewLines == 3 && (
-              <Text
-                style={{
-                  color: "#4ADE80",
-                  fontSize: 16.5,
-                }}
-              >
-                More
-              </Text>
-            )}
-          </Text>
-        </Pressable>
+          <AnimatedHeight button={true} text={Description} />
+        </View>
         <Carousel
           loop={false}
           width={width}
-          height={width}
+          height={width + 30}
           autoPlay={false}
           data={Images}
           scrollAnimationDuration={500}
@@ -2161,7 +2254,7 @@ const BargainingScreen = ({ navigation, route }) => {
             <Image
               style={{
                 width: width,
-                height: width,
+                height: width+30,
               }}
               source={{ uri: Images[index] }}
             />
@@ -2177,9 +2270,9 @@ const BargainingScreen = ({ navigation, route }) => {
         <Text
           style={{
             fontFamily: "Poppins-SemiBold",
-            fontSize: 22,
-            marginBottom: 30,
-            marginTop: 40,
+            fontSize: Platform.OS == "ios" ? 22 : 20.5,
+            marginBottom: 20,
+            marginTop: 35,
             color: "#535353",
           }}
         >
@@ -2274,7 +2367,7 @@ const BargainingScreen = ({ navigation, route }) => {
                 <View>
                   <Text
                     style={{
-                      fontSize: 16.5,
+                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
                       lineHeight: 30,
@@ -2286,7 +2379,7 @@ const BargainingScreen = ({ navigation, route }) => {
                     Facilities.map((doc, i) => (
                       <Text
                         style={{
-                          fontSize: 16.5,
+                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
                           fontFamily: "Poppins-Medium",
                           lineHeight: 25,
                         }}
@@ -2326,7 +2419,7 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           <Text
             style={{
-              fontSize: 14,
+              fontSize: Platform.OS == "ios" ? 16.5 : 15,
               fontFamily: "Poppins-SemiBold",
               color: "#707070",
               marginRight: 0,
@@ -2336,7 +2429,7 @@ const BargainingScreen = ({ navigation, route }) => {
           </Text>
           <MaterialIcons
             name="keyboard-arrow-right"
-            size={22}
+            size={24}
             color="#707070"
           />
         </TouchableOpacity>
@@ -2345,7 +2438,7 @@ const BargainingScreen = ({ navigation, route }) => {
         <Text
           style={{
             marginHorizontal: 20,
-            fontSize: 17,
+            fontSize: Platform.OS == "ios" ? 17 : 15.5,
             marginBottom: 20,
             color: textColor,
             marginTop: 20,
@@ -2541,11 +2634,142 @@ const calculateHeight = (text, plus, minus) => {
   let lineHeight = Platform.OS == "ios" ? 26 : 26;
   let letterWidth = Platform.OS == "ios" ? 8 : 8;
   let height = ((textLength * letterWidth) / (width - 40)) * lineHeight;
-  if (plus && Platform.OS == "ios") {
+  if (plus) {
     return height + plus;
   }
-  if (minus && Platform.OS == "ios") {
+  if (minus) {
     return height - minus;
   }
   return height;
+};
+const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
+  const [Length, setLength] = React.useState(0);
+  React.useEffect(() => {
+    let length = 0;
+    arr.forEach((doc, j) => {
+      if (j <= i) {
+        length =
+          length + doc.split("").length + (Platform.OS == "ios" ? 70 : 60);
+      }
+    });
+    setLength(length);
+    //console.log(length)//
+  }, []);
+
+  if (Length > width) {
+    seeMore();
+  }
+  if (Length > width && !more) {
+    //seeMore();
+    return null;
+  }
+
+  return (
+    <View
+      style={{
+        borderRadius: 5,
+        backgroundColor: "#4ADE80",
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        marginRight: 5,
+        marginVertical: 5,
+      }}
+    >
+      <Text
+        style={{
+          color: "white",
+          fontFamily: "Poppins-Medium",
+          fontSize: Platform.OS == "ios" ? 14.5 : 12,
+        }}
+      >
+        {doc}
+      </Text>
+    </View>
+  );
+};
+const DescriptionTime = ({
+  Description,
+  NewLines,
+  setNewLines,
+  setHeight,
+  height,
+}) => {
+  const length = Description.split("").length;
+  const [text, setText] = React.useState(null);
+  const [newHeight, setNewHeight] = React.useState(0);
+  React.useEffect(() => {
+    if (Description) {
+      setText(null);
+      let totalText = "";
+      Description.split("").map((doc, i) => {
+        if (NewLines != 3) {
+          totalText = totalText + doc;
+          //setText((val) => val + doc);
+        }
+        if (i < 121 && NewLines == 3) {
+          totalText = totalText + doc;
+          //setNewHeight(calculateHeight(text))
+          //setText((val) => val + doc);
+        }
+      });
+      setText(totalText);
+    }
+  }, [NewLines]);
+  if (text == null) {
+    return <Text>...</Text>;
+  }
+  return (
+    <Pressable
+      disabled={length > 130 ? false : true}
+      style={{
+        flexDirection: "row",
+        alignItems: "flex-end",
+        marginVertical: 20,
+      }}
+      onPress={() => {
+        //setNewHeight(calculateHeight(text)*1.8);
+        if (NewLines == 3) {
+          setNewLines(100);
+        } else {
+          setNewLines(3);
+        }
+      }}
+    >
+      {text && (
+        <Text
+          animate={{ height: newHeight }}
+          onLayout={(e) => {
+            let height = e.nativeEvent.layout.height;
+
+            height = height + 30;
+            setHeight(height);
+            setNewHeight(height);
+          }}
+          numberOfLines={NewLines}
+          style={{
+            marginHorizontal: 20,
+            textAlign: "justify",
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
+            color: textColor,
+            fontFamily: "Poppins-Medium",
+            lineHeight: Platform.OS == "ios" ? 30 : 25,
+            marginBottom: 0,
+          }}
+        >
+          {text}
+          {length > 120 && NewLines == 3 ? "...." : ""}
+          {length > 120 && NewLines == 3 && (
+            <Text
+              style={{
+                color: "#4ADE80",
+                fontSize: Platform.OS == "ios" ? 16.5 : 15,
+              }}
+            >
+              More
+            </Text>
+          )}
+        </Text>
+      )}
+    </Pressable>
+  );
 };

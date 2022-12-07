@@ -13,7 +13,7 @@ const RatingView = ({ title, rate, style }) => {
       arr.push(i);
       i++;
     }
-    setPeriod(arr);
+    setPeriod(["2"]);
   }, [rate]);
   return (
     <View

@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { primaryColor, textColor } from './../assets/colors';
 import {useDispatch} from 'react-redux';
+import Animated,{FadeIn} from "react-native-reanimated";
+
 
 export default function SellerCart({navigation,onPress,title,buttonTitle,style}) {
   const dispatch= useDispatch()
   return (
-    <View
+    <Animated.View entering={FadeIn}
       style={[{
         flexDirection: "row",
         borderRadius: 10,
@@ -79,6 +81,6 @@ export default function SellerCart({navigation,onPress,title,buttonTitle,style})
           }}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 }

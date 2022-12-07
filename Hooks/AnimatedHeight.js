@@ -12,7 +12,7 @@ import {
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-function AnimatedHeight({ text, button,id }) {
+function AnimatedHeight({ text, button,id,onPress }) {
   const [newHeight, setNewHeight] = useState(100);
   const [Lines, setLines] = React.useState(3);
   const [textHeight, setTextHeight] = React.useState(100);
@@ -22,18 +22,36 @@ function AnimatedHeight({ text, button,id }) {
   );
   const [detailsText, setDetailsText] = React.useState("");
   const [size,setSize]=React.useState(125)
+  const [minHeight,setMinHeight]=React.useState(100)
+
+  React.useEffect(()=>{
+    console.log(width)
+    if(width<400&&Platform.OS=="android"){
+      setSize(100)
+      setNewHeight(85)
+      setMinHeight(85)
+    }else{
+      setNewHeight(100)
+      setMinHeight(100)
+    }
+    if(width>400){
+      setNewHeight(85)
+      setMinHeight(85)
+    }
+    if(width<400&&Platform.OS=="ios"){
+      setSize(100)
+    }
+  },[])
 
   React.useEffect(() => {
     //console.log(`height: ${width}`)
-    if(width<400){
-      setSize(90)
-    }
+    
     if (text) {
       
       let totalText = "";
       let arr = text.split("");
       arr.map((doc, i) => {
-        if (newHeight == 100) {
+        if (newHeight == minHeight) {
           totalText = totalText + `${i < size ? doc : ""}`;
         } else {
           totalText = totalText + doc;
@@ -43,26 +61,26 @@ function AnimatedHeight({ text, button,id }) {
 
       //setDetailsText(text);
       //console.log(totalText)
-      if (newHeight == 100&&arr.length>(size-2)) {
+      if (newHeight == minHeight&&arr.length>(size-2)) {
         setTimeout(() => {
           setDetailsText(totalText + `${"..."}`);
-        }, 300);
+        }, 250);
         return;
       }else{
         setTimeout(()=>{
           setDetailsText(`${text}`);
-        },150)
+        },10)
       }
     }
   }, [newHeight+size]);
 
-  
+
   return (
     <MotiView
       transition={{ type: "timing" }}
       animate={{
-        height: newHeight < 100 ? textHeight:detailsText.split("").length<size?textHeight+(Platform.OS=="ios"?10:25) :newHeight,
-        marginBottom:newHeight!=100?10: (Platform.OS=="android"?-15:0),
+        height: newHeight < minHeight ? textHeight:detailsText.split("").length<size?textHeight+(Platform.OS=="ios"?10:25) :newHeight,
+        marginBottom:newHeight!=minHeight?10:0,
       }}
       style={{
         overflow: "hidden",
@@ -73,12 +91,18 @@ function AnimatedHeight({ text, button,id }) {
       <Pressable disabled={detailsText.split("").length<size?true:false}
         onPress={() => {
           // setHeight(calculateHeight(Data?.service.about));
-          if (newHeight === 100) {
+          if (newHeight === minHeight) {
+            if(onPress){
+              onPress(countTextHeight(text,Platform.OS=="ios"?.6:.7))
+            }
             setNewHeight(countTextHeight(text,Platform.OS=="ios"?.6:.7));
             //toggleAbout(aboutHeight)
             //setLines(100);
           } else {
-            setNewHeight(100);
+            if(onPress){
+              onPress(minHeight)
+            }
+            setNewHeight(minHeight);
             //toggleAbout(aboutHeight)
             //setLines(3);
           }
@@ -92,11 +116,10 @@ function AnimatedHeight({ text, button,id }) {
         }}
         
       >
-        <Animated.Text numberOfLines={newHeight==100?3:200}
+        <Animated.Text numberOfLines={newHeight==minHeight?3:200}
           onLayout={(e) => {
             setTextHeight(e.nativeEvent.layout.height);
             
-            //setNewHeight(e.nativeEvent.layout.height)
           }}
           style={{
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -108,7 +131,7 @@ function AnimatedHeight({ text, button,id }) {
           }}
         >
           {detailsText}
-          {button && newHeight == 100&&detailsText.split("").length>(size-2) && (
+          {button && newHeight == minHeight&&detailsText.split("").length>(size-2) && (
             <Text
               style={{
                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
