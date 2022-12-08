@@ -22,12 +22,12 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
           j=j+1
         }
       })
-      for(var k=len;k<(len+j);k++){
-        console.log("fd")
-        if(arr.length>=(len+j)){
-          line=line+arr[k]
-        }
-      }
+      // for(var k=len;k<(len+j);k++){
+      //   console.log("fd")
+      //   if(arr.length>=(len+j)){
+      //     line=line+arr[k]
+      //   }
+      // }
       setText(`${line} ${(title.split("").length*12)<contentWidth?"":"..."}`)
     }
   },[contentWidth])

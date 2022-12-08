@@ -3,11 +3,11 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Image,
   ScrollView,
   FlatList,
   Platform,
-  Dimensions
+  Dimensions,
+  Image
 } from "react-native";
 import {
   Color
@@ -17,6 +17,7 @@ import { star } from "../assets/icon";
 import { AntDesign } from "@expo/vector-icons";
 import {useDispatch,useSelector} from 'react-redux'
 const { width, height } = Dimensions.get("window");
+import { Canvas, useImage } from "@shopify/react-native-skia";
 
 const RelatedService = (props) => {
   const navigation = props.navigation;
@@ -28,7 +29,8 @@ const RelatedService = (props) => {
   const textColor=colors.getTextColor();
   const assentColor=colors.getAssentColor();
   const backgroundColor=colors.getBackgroundColor();
-  
+  //console.log(data.images[0])
+  const image = useImage(data.images[0]);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -54,20 +56,21 @@ const RelatedService = (props) => {
     >
       <View
         style={{
-          width: "100%",
-          height: "100%",
+          width: width/3+20,
+          height: 280,
           backgroundColor: primaryColor,
           borderRadius: 10
         }}
       >
+      
         <Image
           style={{
-            width: "100%",
-            height: "50%",
+            width: width/3+20,
+            height: 140,
             borderRadius: 10,
           }}
           source={{
-            uri:data?data.images[0]: "https://www.ouc.com/images/business/3-4.jpg?sfvrsn=3294c0f0_2",
+            uri:data.images[0],
           }}
         />
         <View

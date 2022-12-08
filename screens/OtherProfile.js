@@ -56,18 +56,14 @@ import {
   getUnRelatedServices,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { SliderBox } from "react-native-image-slider-box";
 import { serverToLocal } from "../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useIsFocused } from "@react-navigation/native";
 import Avatar from "../components/Avatar";
 const Tab = createMaterialTopTabNavigator();
-import OutsideView from "react-native-detect-press-outside";
-import InsetShadow from "react-native-inset-shadow";
 import { Tooltip } from "react-native-paper";
 import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
-import LargeText from "../components/LargeText";
 import { MotiView, MotiText } from "moti";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
 import {
@@ -987,15 +983,15 @@ const OtherProfile = (props) => {
 
         <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
 
-        <MotiView
+        {/* <View
           transition={{ type: "timing" }}
           animate={{ height: newNavigation }}
           style={{
             overflow: "hidden",
+            height: newNavigation
           }}
         >
-          {newNavigation && (
-            <Tab.Navigator
+           <Tab.Navigator
               screenOptions={{
                 tabBarStyle: {
                   paddingLeft: 20,
@@ -1126,8 +1122,70 @@ const OtherProfile = (props) => {
                 component={PackageScreen}
               />
             </Tab.Navigator>
-          )}
-        </MotiView>
+          
+        </View> */}
+        <Swiper onIndexChanged={e=>{
+          setActiveService()
+        }} height={newNavigation}>
+          <View>
+            <BargainingScreen setNewNavigation={setNewNavigation} params={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}/>
+          </View>
+          <View>
+            <FixedScreen setNewNavigation={setNewNavigation} params={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  onPress: clickFixed,
+                  FixedService: FixedService,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}/>
+          </View>
+          <View>
+            <PackageScreen setNewNavigation={setNewNavigation} params={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  onPress: clickPackage,
+                  PackageService: PackageService,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}/>
+          </View>
+        </Swiper>
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1252,36 +1310,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold",
   },
 });
-const Options = ({ text, Icon }) => {
-  return (
-    <TouchableOpacity
-      style={{
-        width: "100%",
-        marginBottom: 1,
-        backgroundColor: primaryColor,
-        flexDirection: "row",
-        paddingHorizontal: 20,
-        justifyContent: "space-between",
-        paddingVertical: 5,
-      }}
-    >
-      <Icon
-        style={{
-          flex: 1,
-        }}
-      />
-      <Text
-        style={{
-          fontSize: 15,
-          flex: 8,
-          marginLeft: 10,
-        }}
-      >
-        {text}
-      </Text>
-    </TouchableOpacity>
-  );
-};
+
 const BarOption = ({ icon, title }) => {
   const [lines, setLines] = React.useState(1);
   return (
@@ -1328,8 +1357,8 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
-const BargainingScreen = ({ navigation, route }) => {
-  const params = route.params;
+const BargainingScreen = ({ navigation, route,params }) => {
+  //const params = route.params;
   const Images = params.Images;
   const primaryColor = params.primaryColor;
   const textColor = params.textColor;
@@ -1474,36 +1503,6 @@ const BargainingScreen = ({ navigation, route }) => {
             button={true}
             text={Description}
           />
-
-          {/* <Animated.View style={[{
-            overflow:"hidden"
-          },animationStyle]}>
-            <Pressable
-              onPress={() => {
-                
-                if (newHeight == 3) {
-                  animation.value={height:500}
-                  setHeight(200);
-                } else {
-                  animation.value={height:125}
-                  setHeight(3);
-                }
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                  textAlign: "justify",
-                  fontFamily: "Poppins-Medium",
-                  lineHeight: Platform.OS == "ios" ? 30 : 25,
-                  width: "100%",
-                }}
-                numberOfLines={newHeight}
-              >
-                {Description}
-              </Text>
-            </Pressable>
-          </Animated.View> */}
         </View>
         <Carousel
           loop={false}
@@ -1944,11 +1943,11 @@ const newStar = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" 
 <path id="Polygon_1" data-name="Polygon 1" d="M9.6,1.879a1,1,0,0,1,1.8,0l1.844,3.843a1,1,0,0,0,.817.564l4.428.376a1,1,0,0,1,.537,1.78l-3.181,2.526a1,1,0,0,0-.349,1.024l.951,3.827a1,1,0,0,1-1.441,1.123L10.971,14.79a1,1,0,0,0-.941,0L5.994,16.942a1,1,0,0,1-1.441-1.123L5.5,11.992a1,1,0,0,0-.349-1.024L1.973,8.442a1,1,0,0,1,.537-1.78l4.428-.376a1,1,0,0,0,.817-.564Z" fill="#ffc107"/>
 </svg>
 `;
-const FixedScreen = ({ navigation, route }) => {
-  const params = route.params;
+const FixedScreen = ({ navigation, route,params,setNewNavigation }) => {
+  //const params = route.params;
   const FixedService = params.FixedService;
   const onPress = params.onPress;
-  const setNewNavigation = params.setNewNavigation;
+  //const setNewNavigation = params.setNewNavigation;
   const isFocused = useIsFocused();
   const [viewHeight, setViewHeight] = React.useState();
   const RelatedServices = params.RelatedServices;
@@ -1959,7 +1958,7 @@ const FixedScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 140);
+      //setNewNavigation(layoutHeight + 140);
       //setNewNavigation(layoutHeight + 70);
       setTimeout(()=>{
         setNewNavigation(layoutHeight + 140);
@@ -2089,10 +2088,10 @@ const FixedScreen = ({ navigation, route }) => {
     </View>
   );
 };
-const PackageScreen = ({ navigation, route }) => {
-  const params = route.params;
+const PackageScreen = ({ navigation, route,params }) => {
+  //const params = route.params;
   const PackageService = params.PackageService;
-  const onPress = route.onPress;
+  //const onPress = route.onPress;
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
   const [content, setContent] = React.useState(2);
@@ -2102,8 +2101,11 @@ const PackageScreen = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
-      console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 140);
+      //console.log(layoutHeight);
+      setTimeout(()=>{
+        setNewNavigation(layoutHeight + 140);
+      },300)
+      
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
