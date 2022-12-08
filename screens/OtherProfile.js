@@ -43,6 +43,10 @@ import Animated, {
   StretchInY,
   FlipInEasyX,
   Transition,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  
 } from "react-native-reanimated";
 import ServiceCart from "./../Cart/ServiceCart";
 import {
@@ -76,6 +80,7 @@ import {
   Image as Picture,
   useImage,
 } from "@shopify/react-native-skia";
+import Swiper from 'react-native-swiper'
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -140,8 +145,8 @@ const OtherProfile = (props) => {
   const [Bargaining, setBargaining] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
-  const [RelatedServices, setRelatedServices] = React.useState([]);
-  const [UnRelatedServices, setUnRelatedServices] = React.useState([]);
+  const [RelatedServices, setRelatedServices] = React.useState();
+  const [UnRelatedServices, setUnRelatedServices] = React.useState();
   const [Gigs, setGigs] = React.useState();
   const [PackageService, setPackageService] = React.useState();
   const [packageData, setPackageData] = React.useState();
@@ -464,7 +469,9 @@ const OtherProfile = (props) => {
     Loader ||
     !Data ||
     !Array.isArray(FixedService) ||
-    !Array.isArray(PackageService)
+    !Array.isArray(PackageService) ||
+    !RelatedServices ||
+    !UnRelatedServices
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -980,143 +987,147 @@ const OtherProfile = (props) => {
 
         <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
 
-        <View
+        <MotiView
           transition={{ type: "timing" }}
           animate={{ height: newNavigation }}
-          style={{ height: newNavigation }}
+          style={{
+            overflow: "hidden",
+          }}
         >
-          <Tab.Navigator
-            screenOptions={{
-              tabBarStyle: {
-                paddingLeft: 20,
-                elevation: 0,
-                borderBottomColor: "#FAFAFA",
-                borderBottomWidth: 2,
-                backgroundColor: primaryColor,
-              },
-              tabBarLabelStyle: {
-                fontSize: Platform.OS == "ios" ? 12 : 10.5,
-              },
-              tabBarItemStyle: {
-                margin: 0,
-                padding: 0,
-                width: 120,
-                borderTopWidth: 0,
-                borderTopColor: "#F0F0F0",
-              },
-              tabBarIndicatorStyle: {
-                backgroundColor: "#4ADE80",
-                marginLeft: 20,
-              },
-              tabBarScrollEnabled: true,
-              tabBarPressColor: primaryColor,
-            }}
-          >
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                    }}
-                  >
-                    {initialState[0].title}
-                  </Text>
-                ),
+          {newNavigation && (
+            <Tab.Navigator
+              screenOptions={{
+                tabBarStyle: {
+                  paddingLeft: 20,
+                  elevation: 0,
+                  borderBottomColor: "#FAFAFA",
+                  borderBottomWidth: 2,
+                  backgroundColor: primaryColor,
+                },
+                tabBarLabelStyle: {
+                  fontSize: Platform.OS == "ios" ? 12 : 10.5,
+                },
+                tabBarItemStyle: {
+                  margin: 0,
+                  padding: 0,
+                  width: 120,
+                  borderTopWidth: 0,
+                  borderTopColor: "#F0F0F0",
+                },
+                tabBarIndicatorStyle: {
+                  backgroundColor: "#4ADE80",
+                  marginLeft: 20,
+                },
+                tabBarScrollEnabled: true,
+                tabBarPressColor: primaryColor,
               }}
-              name={initialState[0].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-              }}
-              component={BargainingScreen}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
-                    {initialState[1].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[1].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickFixed,
-                FixedService: FixedService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-              }}
-              component={FixedScreen}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
-                    {initialState[2].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[2].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickPackage,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-              }}
-              component={PackageScreen}
-            />
-          </Tab.Navigator>
-        </View>
+            >
+              <Tab.Screen
+                options={{
+                  tabBarLabel: ({ focused, color, size }) => (
+                    <Text
+                      style={{
+                        color: focused ? "#4ADE80" : "black",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                      }}
+                    >
+                      {initialState[0].title}
+                    </Text>
+                  ),
+                }}
+                name={initialState[0].title}
+                initialParams={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}
+                component={BargainingScreen}
+              />
+              <Tab.Screen
+                options={{
+                  tabBarLabel: ({ focused, color, size }) => (
+                    <Text
+                      style={{
+                        color: focused ? "#4ADE80" : "black",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 18 : 17,
+                      }}
+                    >
+                      {initialState[1].title}
+                    </Text>
+                  ),
+                }}
+                name={initialState[1].title}
+                initialParams={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  onPress: clickFixed,
+                  FixedService: FixedService,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}
+                component={FixedScreen}
+              />
+              <Tab.Screen
+                options={{
+                  tabBarLabel: ({ focused, color, size }) => (
+                    <Text
+                      style={{
+                        color: focused ? "#4ADE80" : "black",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 18 : 17,
+                      }}
+                    >
+                      {initialState[2].title}
+                    </Text>
+                  ),
+                }}
+                name={initialState[2].title}
+                initialParams={{
+                  Images: Images,
+                  primaryColor: primaryColor,
+                  textColor: textColor,
+                  Title: Title,
+                  Description: Description,
+                  ServiceList: ServiceList,
+                  SubServiceList: SubServiceList,
+                  NewDataList: NewDataList,
+                  Facilities: Facilities,
+                  Data: Data,
+                  Price: Price,
+                  onPress: clickPackage,
+                  PackageService: PackageService,
+                  setNewNavigation: setNewNavigation,
+                  RelatedServices: RelatedServices,
+                  UnRelatedServices: UnRelatedServices,
+                }}
+                component={PackageScreen}
+              />
+            </Tab.Navigator>
+          )}
+        </MotiView>
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1218,7 +1229,7 @@ const styles = StyleSheet.create({
   activeButton: {
     color: "#666666",
     backgroundColor: "#4ADE80",
-    borderRadius: 5,
+    borderRadius: 15,
     borderWidth: 0,
     marginBottom: 5,
     alignItems: "flex-start",
@@ -1342,11 +1353,12 @@ const BargainingScreen = ({ navigation, route }) => {
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
   ).current;
-  const [newHeight, setHeight] = React.useState(0);
+  const [newHeight, setHeight] = React.useState(3);
   const [text, setText] = React.useState("");
   const [navHeight, setNavHeight] = React.useState();
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
+  const [textHeight, setTextHeight] = React.useState(0);
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -1404,9 +1416,27 @@ const BargainingScreen = ({ navigation, route }) => {
   //console.log(newHeight);
   React.useEffect(() => {
     if (navHeight) {
-      setNewNavigation(navHeight + 55);
+      //console.log(textHeight)
+      setNewNavigation(navHeight +textHeight+20);
     }
-  }, [navHeight + isFocused]);
+  }, [navHeight + isFocused+textHeight]);
+  React.useEffect(() => {
+    //console.log(`height: ${width}`)
+
+    if (Description) {
+      let totalText = "";
+      let arr = text.split("");
+      arr.map((doc, i) => {
+        if (newHeight) {
+          totalText = totalText + `${i < 125 ? doc : ""}`;
+        } else {
+          totalText = totalText + doc;
+        }
+      });
+      setText(totalText);
+    }
+  }, [newHeight]);
+  
 
   return (
     <View
@@ -1437,11 +1467,43 @@ const BargainingScreen = ({ navigation, route }) => {
         >
           <AnimatedHeight
             onChange={(height) => {
-              setNewNavigation(newHeight + 55 + height);
+              //setNewNavigation(newHeight + 55 + height);
+              //console.log(height)
+              setTextHeight(height)
             }}
             button={true}
             text={Description}
           />
+
+          {/* <Animated.View style={[{
+            overflow:"hidden"
+          },animationStyle]}>
+            <Pressable
+              onPress={() => {
+                
+                if (newHeight == 3) {
+                  animation.value={height:500}
+                  setHeight(200);
+                } else {
+                  animation.value={height:125}
+                  setHeight(3);
+                }
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                  textAlign: "justify",
+                  fontFamily: "Poppins-Medium",
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
+                  width: "100%",
+                }}
+                numberOfLines={newHeight}
+              >
+                {Description}
+              </Text>
+            </Pressable>
+          </Animated.View> */}
         </View>
         <Carousel
           loop={false}
@@ -1892,17 +1954,21 @@ const FixedScreen = ({ navigation, route }) => {
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
   const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
 
   React.useEffect(() => {
-    if (isFocused && viewHeight) {
-      setNewNavigation(viewHeight - 500);
+    if (layoutHeight && isFocused) {
+      console.log(layoutHeight);
+      setNewNavigation(layoutHeight + 70);
+      //setNewNavigation(layoutHeight + 70);
     }
-  }, [isFocused + viewHeight]);
+  }, [layoutHeight + isFocused]);
+
   //console.log(FixedService)
   return (
     <View
       onLayout={(e) => {
-        //setViewHeight(e.nativeEvent.layout.height)
+        setLayoutHeight(e.nativeEvent.layout.height);
       }}
       style={{
         marginHorizontal: 10,
@@ -2027,9 +2093,22 @@ const PackageScreen = ({ navigation, route }) => {
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
   const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
+  const isFocused = useIsFocused();
+  const setNewNavigation = params.setNewNavigation;
+
+  React.useEffect(() => {
+    if (layoutHeight && isFocused) {
+      console.log(layoutHeight);
+      setNewNavigation(layoutHeight + 70);
+    }
+  }, [layoutHeight + isFocused]);
   //console.log(FixedService)
   return (
     <View
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
       style={{
         marginHorizontal: 10,
         flexDirection: "row",

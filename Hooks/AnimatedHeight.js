@@ -12,7 +12,7 @@ import {
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-function AnimatedHeight({ text, button,id,onPress }) {
+function AnimatedHeight({ text, button, id, onChange }) {
   const [newHeight, setNewHeight] = useState(100);
   const [Lines, setLines] = React.useState(3);
   const [textHeight, setTextHeight] = React.useState(100);
@@ -21,33 +21,32 @@ function AnimatedHeight({ text, button,id,onPress }) {
     new Animated.Value(textHeight)
   );
   const [detailsText, setDetailsText] = React.useState("");
-  const [size,setSize]=React.useState(125)
-  const [minHeight,setMinHeight]=React.useState(100)
+  const [size, setSize] = React.useState(125);
+  const [minHeight, setMinHeight] = React.useState(100);
 
-  React.useEffect(()=>{
-    console.log(width)
-    if(width<400&&Platform.OS=="android"){
-      setSize(100)
-      setNewHeight(85)
-      setMinHeight(85)
-    }else{
-      setNewHeight(100)
-      setMinHeight(100)
+  React.useEffect(() => {
+    console.log(width);
+    if (width < 400 && Platform.OS == "android") {
+      setSize(100);
+      setNewHeight(85);
+      setMinHeight(85);
+    } else {
+      setNewHeight(100);
+      setMinHeight(100);
     }
-    if(width>400){
-      setNewHeight(85)
-      setMinHeight(85)
+    if (width > 400) {
+      setNewHeight(85);
+      setMinHeight(85);
     }
-    if(width<400&&Platform.OS=="ios"){
-      setSize(100)
+    if (width < 400 && Platform.OS == "ios") {
+      setSize(100);
     }
-  },[])
+  }, []);
 
   React.useEffect(() => {
     //console.log(`height: ${width}`)
-    
+
     if (text) {
-      
       let totalText = "";
       let arr = text.split("");
       arr.map((doc, i) => {
@@ -57,50 +56,62 @@ function AnimatedHeight({ text, button,id,onPress }) {
           totalText = totalText + doc;
         }
       });
-    
-
       //setDetailsText(text);
       //console.log(totalText)
-      if (newHeight == minHeight&&arr.length>(size-2)) {
+      if (newHeight == minHeight && arr.length > size - 2) {
         setTimeout(() => {
           setDetailsText(totalText + `${"..."}`);
-        }, 250);
+        }, 200);
         return;
-      }else{
-        setTimeout(()=>{
+      } else {
+        setTimeout(() => {
           setDetailsText(`${text}`);
-        },10)
+        }, 0);
       }
     }
-  }, [newHeight+size]);
-
+  }, [newHeight + size]);
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (onChange) {
+        onChange(textHeight);
+      }
+    }, 300);
+  }, [textHeight]);
 
   return (
     <MotiView
       transition={{ type: "timing" }}
       animate={{
-        height: newHeight < minHeight ? textHeight:detailsText.split("").length<size?textHeight+(Platform.OS=="ios"?10:25) :newHeight,
-        marginBottom:newHeight!=minHeight?10:0,
+        height:
+          newHeight < minHeight
+            ? textHeight
+            : detailsText.split("").length < size
+            ? textHeight + (Platform.OS == "ios" ? 10 : 25)
+            : newHeight,
+        marginBottom: newHeight != minHeight ? 10 : 0,
       }}
       style={{
         overflow: "hidden",
-        width:"100%",
-        height:"auto"
+        width: "100%",
+        height: "auto",
       }}
     >
-      <Pressable disabled={detailsText.split("").length<size?true:false}
+      <Pressable
+        disabled={detailsText.split("").length < size ? true : false}
         onPress={() => {
           // setHeight(calculateHeight(Data?.service.about));
           if (newHeight === minHeight) {
-            if(onPress){
-              onPress(countTextHeight(text,Platform.OS=="ios"?.6:.7))
+            if (onChange) {
+              //onChange(textHeight)
             }
-            setNewHeight(countTextHeight(text,Platform.OS=="ios"?.6:.7));
+            setNewHeight(
+              countTextHeight(text, Platform.OS == "ios" ? 0.6 : 0.7)
+            );
             //toggleAbout(aboutHeight)
             //setLines(100);
           } else {
-            if(onPress){
-              onPress(minHeight)
+            if (onChange) {
+              //onChange(minHeight)
             }
             setNewHeight(minHeight);
             //toggleAbout(aboutHeight)
@@ -108,43 +119,42 @@ function AnimatedHeight({ text, button,id,onPress }) {
           }
         }}
         style={{
-          flexDirection:"row",
-          flexWrap:"wrap",
-          justifyContent:"center",
-          width:"100%",
-          height:"auto"
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          width: "100%",
+          height: "auto",
         }}
-        
       >
-        <Animated.Text numberOfLines={newHeight==minHeight?3:200}
+        <Animated.Text
+          numberOfLines={newHeight == minHeight ? 3 : 200}
           onLayout={(e) => {
             setTextHeight(e.nativeEvent.layout.height);
-            
           }}
           style={{
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             textAlign: "justify",
             fontFamily: "Poppins-Medium",
             lineHeight: Platform.OS == "ios" ? 30 : 25,
-            width:"100%",
-            
+            width: "100%",
           }}
         >
           {detailsText}
-          {button && newHeight == minHeight&&detailsText.split("").length>(size-2) && (
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                textAlign: "justify",
-                fontFamily: "Poppins-Medium",
-                lineHeight: Platform.OS == "ios" ? 30 : 25,
-                color: "#4ADE80",
-            
-              }}
-            >
-              More
-            </Text>
-          )}
+          {button &&
+            newHeight == minHeight &&
+            detailsText.split("").length > size - 2 && (
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                  textAlign: "justify",
+                  fontFamily: "Poppins-Medium",
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
+                  color: "#4ADE80",
+                }}
+              >
+                More
+              </Text>
+            )}
         </Animated.Text>
       </Pressable>
     </MotiView>
@@ -152,8 +162,8 @@ function AnimatedHeight({ text, button,id,onPress }) {
 }
 export default AnimatedHeight;
 
-const countTextHeight=(text,size)=>{
-  let arr=text.split("");
-  let length=arr.length;
-  return length/width;
-}
+const countTextHeight = (text, size) => {
+  let arr = text.split("");
+  let length = arr.length;
+  return length / width;
+};

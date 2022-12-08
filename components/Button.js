@@ -34,7 +34,8 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
             justifyContent: "center",
             alignItems: "center",
             borderColor: "#b5b5b5",
-            opacity:disabled?.8:1
+            opacity:disabled?.8:1,
+            
           },
           style,
         ]}
