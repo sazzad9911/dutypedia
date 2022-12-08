@@ -1606,7 +1606,7 @@ const BargainingScreen = ({ navigation, route }) => {
               style={{
                 width: 1,
                 backgroundColor: "#FFF3F3",
-                marginLeft: 30,
+                marginLeft: 20,
                 marginRight: 30,
               }}
             />
@@ -1958,11 +1958,14 @@ const FixedScreen = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
-      console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 70);
+      //console.log(layoutHeight);
+      setNewNavigation(layoutHeight + 140);
       //setNewNavigation(layoutHeight + 70);
+      setTimeout(()=>{
+        setNewNavigation(layoutHeight + 140);
+      },300)
     }
-  }, [layoutHeight + isFocused]);
+  }, [isFocused+layoutHeight]);
 
   //console.log(FixedService)
   return (
@@ -2100,7 +2103,7 @@ const PackageScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 70);
+      setNewNavigation(layoutHeight + 140);
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
