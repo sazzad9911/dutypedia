@@ -486,7 +486,6 @@ const OtherProfile = (props) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
       <ScrollView
-        scrollEnabled={scrollEnabled}
         scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
