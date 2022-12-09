@@ -66,7 +66,7 @@ function AnimatedHeight({ text, button, id, onChange }) {
       } else {
         setTimeout(() => {
           setDetailsText(`${text}`);
-        }, 0);
+        }, 10);
       }
     }
   }, [newHeight + size]);
