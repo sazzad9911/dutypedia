@@ -465,7 +465,7 @@ const OtherProfile = (props) => {
   const changeScrollStatus = React.useCallback((val) => {
     setScrollEnabled(val);
   });
-  //console.log(TotalWidth)
+  //console.log(SeeMore)
 
   if (
     Loader ||
@@ -763,7 +763,7 @@ const OtherProfile = (props) => {
               }}
             >
               <Tooltip
-                enterTouchDelay={100}
+                enterTouchDelay={10}
                 title={
                   Data
                     ? `${Data.service.providerInfo.title} ${
@@ -809,7 +809,7 @@ const OtherProfile = (props) => {
               }}
             >
               <Tooltip
-                enterTouchDelay={100}
+                enterTouchDelay={10}
                 title={Data ? Data.service.providerInfo.position : ""}
               >
                 <View
@@ -869,8 +869,8 @@ const OtherProfile = (props) => {
                   Specialty.map((doc, i) => (
                     <SpecialtyComponent
                       more={More}
-                      seeMore={() => {
-                        setSeeMore(true);
+                      seeMore={(val) => {
+                        setSeeMore(val);
                       }}
                       doc={doc}
                       i={i}
@@ -958,12 +958,12 @@ const OtherProfile = (props) => {
         >
           <View
             style={{
-              height: 125,
               backgroundColor: primaryColor,
+              marginTop:-10
             }}
             onLayout={(e) => {
               if (OpenDetails) {
-                setCalenderHeight(e.nativeEvent.layout.height);
+                //setCalenderHeight(e.nativeEvent.layout.height);
               }
             }}
           >
@@ -1236,6 +1236,7 @@ const OtherProfile = (props) => {
           </View>
         )}
       </View>
+      <View style={{height:70}}/>
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1513,7 +1514,7 @@ const BargainingScreen = ({ navigation, route }) => {
       //console.log(textHeight)
       setTimeout(() => {
         setNewNavigation(navHeight + textHeight-40);
-      }, 300);
+      }, 30);
     }
   }, [navHeight + isFocused + textHeight]);
 
@@ -2108,12 +2109,16 @@ const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
       }
     });
     setLength(width < 400 ? length - 40 : length);
-    //console.log(length)//
+    //console.log(width)
   }, []);
 
-  if (Length > width) {
-    seeMore();
-  }
+  React.useEffect(()=>{
+    if (Length > width) {
+      seeMore(true);
+    }else{
+      seeMore(false)
+    }
+  },[Length])
   if (Length > width && !more) {
     //seeMore();
     return null;
