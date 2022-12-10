@@ -1716,7 +1716,7 @@ const BargainingScreen = ({ navigation, route }) => {
                       >
                         {doc.title}
                       </Text>
-                      ):(<></>)
+                      ):null
                     ))}
                 </View>
               )}

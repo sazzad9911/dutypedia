@@ -1918,7 +1918,12 @@ export const ServiceTable = ({
       }
     }
   }, [name]);
-  React.useLayoutEffect(() => {}, []);
+
+  React.useLayoutEffect(() => {
+    if(height){
+      setContentHeight(height)
+    }
+  }, [height]);
   return (
     <View
       onLayout={(e) => {
@@ -2019,7 +2024,7 @@ export const Rows = ({ title, item, name, NewDataList,height,index }) => {
   }, [item + title + NewDataList]);
   console.log(`index ${index+1} ${height}`)
 
-  if(height<10){
+  if(height<15){
     return null
   }
 
