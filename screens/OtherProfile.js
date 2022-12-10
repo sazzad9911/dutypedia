@@ -496,10 +496,12 @@ const OtherProfile = (props) => {
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: primaryColor,
+          flex:1
         }}
         onScroll={(e) => {
           handleScroll(e);
         }}
+        
       >
         <Canvas style={{ width: width, height: 400 }}>
           <Fill color={primaryColor} />
@@ -2007,9 +2009,7 @@ const PackageScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      setTimeout(() => {
-        setNewNavigation(layoutHeight + 140);
-      },0);
+      setNewNavigation(layoutHeight + 140);
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
