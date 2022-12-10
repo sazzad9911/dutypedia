@@ -116,7 +116,7 @@ const OtherProfile = (props) => {
   const [Active, setActive] = React.useState("Bargaining");
   const [NewLines, setNewLines] = React.useState(3);
   const [Facilities, setFacilities] = React.useState([]);
-  const [NewDataList, setNewDataList] = React.useState([]);
+  const [NewDataList, setNewDataList] = React.useState(null);
   const [ServiceList, setServiceList] = React.useState([]);
   const [ActiveService, setActiveService] = React.useState();
   const [SubServiceList, setSubServiceList] = React.useState([]);
@@ -289,6 +289,7 @@ const OtherProfile = (props) => {
       setCategory(Data.service.gigs[0].services.category);
       setActiveServiceData(arr);
       try {
+        //console.log(Data.service.gigs[0].services.options)
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
@@ -304,6 +305,19 @@ const OtherProfile = (props) => {
         );
       } catch (e) {
         console.warn(e.message);
+        // dispatch({
+        //   type: "SET_NEW_LIST_DATA",
+        //   playload: serverToLocal(
+        //     Data.service.gigs[0].services.options,
+        //     Data.service.gigs[0].services.category
+        //   ),
+        // });
+        // setNewDataList(
+        //   serverToLocal(
+        //     Data.service.gigs[0].services.options,
+        //     Data.service.gigs[0].services.category
+        //   )
+        // );
       }
     }
   }, [Bargaining + Data]);
@@ -328,7 +342,7 @@ const OtherProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList.length + Click + Refresh]);
+  }, [NewDataList + Click + Refresh]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -473,7 +487,8 @@ const OtherProfile = (props) => {
     !Array.isArray(FixedService) ||
     !Array.isArray(PackageService) ||
     !RelatedServices ||
-    !UnRelatedServices
+    !UnRelatedServices ||
+    !NewDataList
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -496,12 +511,11 @@ const OtherProfile = (props) => {
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: primaryColor,
-          flex:1
+          flex: 1,
         }}
         onScroll={(e) => {
           handleScroll(e);
         }}
-        
       >
         <Canvas style={{ width: width, height: 400 }}>
           <Fill color={primaryColor} />
@@ -960,7 +974,7 @@ const OtherProfile = (props) => {
           <View
             style={{
               backgroundColor: primaryColor,
-              marginTop:-10
+              marginTop: -10,
             }}
             onLayout={(e) => {
               if (OpenDetails) {
@@ -996,19 +1010,18 @@ const OtherProfile = (props) => {
 
         <View
           transition={{ type: "timing" }}
-          animate={{height:newNavigation}}
+          animate={{ height: newNavigation }}
           style={[
             {
               overflow: "hidden",
-              height:newNavigation
-
+              height: newNavigation,
             },
           ]}
         >
           <Tab.Navigator
             screenOptions={{
               tabBarStyle: {
-                paddingLeft: 20,
+                paddingLeft: 0,
                 elevation: 0,
                 borderBottomColor: "#FAFAFA",
                 borderBottomWidth: 2,
@@ -1026,7 +1039,7 @@ const OtherProfile = (props) => {
               },
               tabBarIndicatorStyle: {
                 backgroundColor: "#4ADE80",
-                marginLeft: 20,
+                marginLeft: 0,
               },
               tabBarScrollEnabled: true,
               tabBarPressColor: primaryColor,
@@ -1139,105 +1152,89 @@ const OtherProfile = (props) => {
           </Tab.Navigator>
         </View>
         <View
-        style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
-          paddingVertical: 20,
-        }}
-      >
-        <RatingView
           style={{
-            marginHorizontal: 20,
+            backgroundColor: primaryColor,
+            marginTop: 0,
+            paddingVertical: 20,
           }}
-          title="Seller Communication"
-          rate={4.6}
-        />
-        <RatingView
+        >
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+            }}
+            title="Seller Communication"
+            rate={4.6}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service As Describe"
+            rate={4.6}
+          />
+          <RatingView
+            style={{
+              marginHorizontal: 20,
+              marginTop: 5,
+            }}
+            title="Service Quality"
+            rate={3.2}
+          />
+        </View>
+        <ReviewCart navigation={navigation} />
+        <View
           style={{
-            marginHorizontal: 20,
-            marginTop: 5,
+            backgroundColor: primaryColor,
+            marginTop: 0,
           }}
-          title="Service As Describe"
-          rate={4.6}
-        />
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-            marginTop: 5,
-          }}
-          title="Service Quality"
-          rate={3.2}
-        />
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-            marginTop: 5,
-          }}
-          title="Service Quality"
-          rate={3.2}
-        />
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-            marginTop: 5,
-          }}
-          title="Service Quality"
-          rate={3.2}
-        />
-      </View>
-      <ReviewCart navigation={navigation} />
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
-        }}
-      >
-        {RelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              Related Service
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {RelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        >
+          {RelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {RelatedServices.map((doc, i) => (
+                  <RelatedService data={doc} key={i} navigation={navigation} />
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
-        {UnRelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              You Might Also Like
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {UnRelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-              <View style={{ width: 10 }} />
-            </ScrollView>
-          </View>
-        )}
-      </View>
-      <View style={{height:70}}/>
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 20,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={{ width: 10 }} />
+                {UnRelatedServices.map((doc, i) => (
+                  <RelatedService data={doc} key={i} navigation={navigation} />
+                ))}
+                <View style={{ width: 10 }} />
+              </ScrollView>
+            </View>
+          )}
+        </View>
+        <View style={{ height: 70 }} />
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1449,13 +1446,14 @@ const BargainingScreen = ({ navigation, route }) => {
   const [textHeight, setTextHeight] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
   const [offset, setOffset] = React.useState(0);
+  const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
       setActiveService(ServiceList[0]);
       return;
     }
-    if (NewDataList) {
+    if (Array.isArray(NewDataList)) {
       setActiveService(NewDataList[0].mainTitle);
       return;
     }
@@ -1511,10 +1509,10 @@ const BargainingScreen = ({ navigation, route }) => {
   }, [NewLines]);
   //console.log(newHeight);
   React.useEffect(() => {
-    if (navHeight&&isFocused) {
+    if (navHeight && isFocused) {
       //console.log(textHeight)
       setTimeout(() => {
-        setNewNavigation(navHeight + textHeight-40);
+        setNewNavigation(navHeight + textHeight - 40);
       }, 30);
     }
   }, [navHeight + isFocused + textHeight]);
@@ -1598,7 +1596,8 @@ const BargainingScreen = ({ navigation, route }) => {
             backgroundColor: primaryColor,
             overflowY: "hidden",
             overflow: "hidden",
-            height: 180,
+
+            height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
           }}
         >
           <View
@@ -1608,8 +1607,13 @@ const BargainingScreen = ({ navigation, route }) => {
             }}
           >
             <View
+              onLayout={(e) => {
+                //console.log(e.nativeEvent.layout.height);
+                setServiceTableHeight(e.nativeEvent.layout.height);
+              }}
               style={{
                 flex: 1.2,
+                maxHeight: 182,
               }}
             >
               {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
@@ -1661,7 +1665,9 @@ const BargainingScreen = ({ navigation, route }) => {
                 marginRight: 30,
               }}
             />
-            <View style={{ flex: 2, marginRight: 0 }}>
+            <View
+              style={{ flex: 2, marginRight: 0, maxHeight: ServiceTableHeight }}
+            >
               {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
                 SubServiceList.map((item, i) => (
                   <ServiceTable
@@ -1670,16 +1676,20 @@ const BargainingScreen = ({ navigation, route }) => {
                     i={i}
                     name={ActiveService}
                     NewDataList={NewDataList}
+                    height={ServiceTableHeight}
                   />
                 ))
               ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable NewDataList={NewDataList} name={ActiveService} />
+                <ServiceTable height={ServiceTableHeight} 
+                NewDataList={NewDataList} 
+                name={ActiveService} />
               ) : (
                 <></>
               )}
               {ActiveService == "Extra Facilities" && (
                 <View>
                   <Text
+                    numberOfLines={1}
                     style={{
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
@@ -1691,16 +1701,22 @@ const BargainingScreen = ({ navigation, route }) => {
                   </Text>
                   {Array.isArray(Facilities) &&
                     Facilities.map((doc, i) => (
-                      <Text
+                      (ServiceTableHeight-30)>((i+1)*25)?(
+                        <Text numberOfLines={1}
+                        onLayout={(e) => {
+                          console.log(e.nativeEvent.layout.height);
+                        }}
                         style={{
                           fontSize: Platform.OS == "ios" ? 16.5 : 15,
                           fontFamily: "Poppins-Medium",
                           lineHeight: 25,
+                          color: textColor,
                         }}
-                        key={i}
+                        key={i+1}
                       >
                         {doc.title}
                       </Text>
+                      ):(<></>)
                     ))}
                 </View>
               )}
@@ -1715,7 +1731,7 @@ const BargainingScreen = ({ navigation, route }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           marginHorizontal: 20,
-          marginVertical: 15,
+          marginVertical: 25,
         }}
       >
         <Text
@@ -1759,7 +1775,7 @@ const BargainingScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={{ backgroundColor: primaryColor }}>
-        <Button
+        <IconButton
           onPress={() => {
             navigation.navigate("OfferNow", {
               data: Data,
@@ -1771,13 +1787,14 @@ const BargainingScreen = ({ navigation, route }) => {
             marginHorizontal: 20,
             backgroundColor: "#FEA31E",
             borderWidth: 0,
-            marginVertical: 15,
+            marginVertical: 0,
             color: textColor,
+            marginTop: 0,
+            height: 40,
           }}
           title="Offer Now"
         />
       </View>
-      
     </View>
   );
 };
@@ -1920,7 +1937,6 @@ const FixedScreen = ({ navigation, route }) => {
     }
   }, [isFocused + layoutHeight]);
 
-  
   //console.log(FixedService)
   return (
     <View
@@ -1991,7 +2007,6 @@ const FixedScreen = ({ navigation, route }) => {
           </View>
         </Animated.View>
       )}
-       
     </View>
   );
 };
@@ -2078,8 +2093,6 @@ const PackageScreen = ({ navigation, route }) => {
           </View>
         </Animated.View>
       )}
-     
-      
     </View>
   );
 };
@@ -2111,13 +2124,13 @@ const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
     //console.log(width)
   }, []);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     if (Length > width) {
       seeMore(true);
-    }else{
-      seeMore(false)
+    } else {
+      seeMore(false);
     }
-  },[Length])
+  }, [Length]);
   if (Length > width && !more) {
     //seeMore();
     return null;

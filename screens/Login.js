@@ -6,6 +6,7 @@ const { width, height } = Dimensions.get("window");
 import { userLogin } from "../Class/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { getService,getDashboard } from "../Class/service";
+import IconButton from "../components/IconButton";
 
 const Login = ({navigation}) => {
   const [Email, setEmail] = React.useState();
@@ -70,7 +71,7 @@ const Login = ({navigation}) => {
         }}
         placeholder="Password"
       />
-      <Button
+      <IconButton
         onPress={login}
         style={{
           color: "black",

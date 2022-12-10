@@ -6,31 +6,32 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
   const [text,setText]=React.useState()
   const [contentWidth,setContentWidth]=React.useState()
   const [textWidth,setTextWidth]=React.useState(0)
-  React.useEffect(()=>{
-    setText("")
-    if(contentWidth){
-      let line=''
-      let arr=title.split("")
-      let j=0;
-      let len=0
-      arr.map((doc,i)=>{
-        if((12*i)<contentWidth){
-          line=line+doc;
-          len=len+1
-        }
-        if(doc=="i"||doc=="l"){
-          j=j+1
-        }
-      })
-      // for(var k=len;k<(len+j);k++){
-      //   console.log("fd")
-      //   if(arr.length>=(len+j)){
-      //     line=line+arr[k]
-      //   }
-      // }
-      setText(`${line} ${(title.split("").length*12)<contentWidth?"":"..."}`)
-    }
-  },[contentWidth])
+  // React.useEffect(()=>{
+  //   setText("")
+  //   if(contentWidth){
+  //     console.log(contentWidth)
+  //     let line=''
+  //     let arr=title.split("")
+  //     let j=0;
+  //     let len=0
+  //     arr.map((doc,i)=>{
+  //       if((12*i)<contentWidth){
+  //         line=line+doc;
+  //         len=len+1
+  //       }
+  //       if(doc=="i"||doc=="l"){
+  //         j=j+1
+  //       }
+  //     })
+  //     // for(var k=len;k<(len+j);k++){
+  //     //   console.log("fd")
+  //     //   if(arr.length>=(len+j)){
+  //     //     line=line+arr[k]
+  //     //   }
+  //     // }
+  //     setText(`${line} ${(title.split("").length*12)<contentWidth?"":"..."}`)
+  //   }
+  // },[contentWidth])
   
     return (
       <TouchableOpacity onLayout={e=>{
@@ -58,17 +59,17 @@ const Button = ({ style, title, onPress,disabled,Icon }) => {
      {
       Icon?( <Icon/>):(<></>)
      }
-        <Text onLayout={e=>{
+        <Text numberOfLines={1} onLayout={e=>{
           setTextWidth(e.nativeEvent.layout.width)
         }}
           style={{
             fontSize:style&&style.fontSize?style.fontSize: 13,
             color:style&&style.color?style.color:'white',
             fontFamily:style&&style.fontFamily?style.fontFamily:'Poppins-Medium',
-            
+            width:"100%",
           }}
         >
-          {text}
+          {title}
         </Text>
       </TouchableOpacity>
     );

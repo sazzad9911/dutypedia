@@ -1878,7 +1878,14 @@ const BarOption = ({ icon, title }) => {
     </TouchableOpacity>
   );
 };
-export const ServiceTable = ({ item, i, name, NewDataList }) => {
+export const ServiceTable = ({
+  item,
+  i,
+  name,
+  NewDataList,
+  onLayout,
+  height,
+}) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -1887,6 +1894,8 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
   const backgroundColor = colors.getBackgroundColor();
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
+  const [contentHeight, setContentHeight] = React.useState(height?height:60);
+  console.log(`total ${contentHeight}`)
   React.useEffect(() => {
     if (NewDataList) {
       setData([]);
@@ -1909,8 +1918,13 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
       }
     }
   }, [name]);
+  React.useLayoutEffect(() => {}, []);
   return (
     <View
+      onLayout={(e) => {
+        //console.log(e.nativeEvent.layout.height)
+        //setContentHeight(e.nativeEvent.layout.height);
+      }}
       style={{
         paddingBottom: 5,
         borderColor: "#e5e5e5",
@@ -1918,56 +1932,62 @@ export const ServiceTable = ({ item, i, name, NewDataList }) => {
       }}
       key={i}
     >
-      <Text numberOfLines={1}
-        style={{
-          fontFamily: "Poppins-SemiBold",
-          fontSize:Platform.OS=="ios" ?16.5:15,
-          margin: 0,
-          color: "#535353",
-          lineHeight: 30,
-        }}
-      >
-        {item}
-      </Text>
+      {item && contentHeight > 30 && (
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: "Poppins-SemiBold",
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
+            margin: 0,
+            color: "#535353",
+            lineHeight: 30,
+          }}
+        >
+          {item}
+        </Text>
+      )}
       {Data.length > 0 ? (
         Data.map(
-          (item, i) =>
+          (doc, i) =>
             i == 0 && (
               <View key={i}>
-                <Text numberOfLines={1}
+                <Text
+                  numberOfLines={1}
                   style={{
                     fontFamily: "Poppins-Medium",
-                    fontSize:Platform.OS=="ios"? 16.5:15,
+                    fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     color: "#95979D",
                     lineHeight: 30,
                   }}
                 >
-                  {item}
+                  {doc}
                 </Text>
-                <Rows item={item} name={name} NewDataList={NewDataList} />
+                <Rows index={i} height={item?contentHeight-60:contentHeight-30}  
+                item={doc} name={name} NewDataList={NewDataList} />
               </View>
             )
         )
       ) : (
         <View>
-          <Text numberOfLines={1}
+          <Text
+            numberOfLines={1}
             style={{
               fontFamily: "Poppins-Medium",
-              fontSize:Platform.OS=="ios"? 16.5:15,
+              fontSize: Platform.OS == "ios" ? 16.5 : 15,
               color: "#95979D",
               lineHeight: 30,
             }}
           >
             {name}
           </Text>
-          <Rows NewDataList={NewDataList} name={name} />
+            <Rows index={0} height={item?contentHeight-60:contentHeight-30} NewDataList={NewDataList} name={name} />
         </View>
       )}
     </View>
   );
 };
 
-export const Rows = ({ title, item, name, NewDataList }) => {
+export const Rows = ({ title, item, name, NewDataList,height,index }) => {
   const [text, setText] = React.useState();
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -1997,13 +2017,17 @@ export const Rows = ({ title, item, name, NewDataList }) => {
     });
     setText(word);
   }, [item + title + NewDataList]);
+  console.log(`index ${index+1} ${height}`)
+
+  if(height<10){
+    return null
+  }
 
   return (
     <Text
-      
-      numberOfLines={5}
+      numberOfLines={1}
       style={{
-        fontSize:Platform.OS=="ios"? 16.5:15,
+        fontSize: Platform.OS == "ios" ? 16.5 : 15,
         fontFamily: "Poppins-Medium",
         color: textColor,
         lineHeight: 25,
