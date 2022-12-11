@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Image,
   FlatList,
-  StatusBar,
   SafeAreaView,
   RefreshControl,
   Alert,
@@ -76,6 +75,7 @@ import {
   useImage,
 } from "@shopify/react-native-skia";
 import Swiper from "react-native-swiper";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -183,6 +183,7 @@ const OtherProfile = (props) => {
   const [pageHeight, setPageHeight] = React.useState(0);
   const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
+  const [offset, setOffset] = React.useState(0);
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -477,8 +478,9 @@ const OtherProfile = (props) => {
 
   React.useEffect(() => {}, [newNavigation]);
   const changeScrollStatus = React.useCallback((val) => {
-    setScrollEnabled(val);
+    //setScrollEnabled(val);
   });
+
   //console.log(SeeMore)
 
   if (
@@ -500,6 +502,18 @@ const OtherProfile = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
+      {Platform.OS == "android" ? (
+        <StatusBar
+          style="light"
+          backgroundColor={scrollEnabled ? "#00000025" : "gray"}
+        />
+      ) : (
+        <View style={{
+          backgroundColor:"red"
+        }}>
+          <StatusBar animated={true} style="dark"  />
+        </View>
+      )}
       <ScrollView
         scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
@@ -515,6 +529,20 @@ const OtherProfile = (props) => {
         }}
         onScroll={(e) => {
           handleScroll(e);
+          const currentOffset = e.nativeEvent.contentOffset.y;
+          const dif = currentOffset - (offset || 0);
+
+          if (Math.abs(dif) < 3) {
+            console.log("unclear");
+          } else if (dif < 0) {
+            setScrollEnabled(false);
+          } else {
+            setScrollEnabled(true);
+          }
+          if (currentOffset == 0) {
+            setScrollEnabled(true);
+          }
+          setOffset(currentOffset);
         }}
       >
         <Canvas style={{ width: width, height: 400 }}>
@@ -1155,7 +1183,8 @@ const OtherProfile = (props) => {
           style={{
             backgroundColor: primaryColor,
             marginTop: 0,
-            paddingVertical: 20,
+            paddingVertical: 25,
+            paddingTop: 0,
           }}
         >
           <RatingView
@@ -1447,6 +1476,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
+  const [boxHeight, setBoxHeight] = React.useState();
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -1512,7 +1542,7 @@ const BargainingScreen = ({ navigation, route }) => {
     if (navHeight && isFocused) {
       //console.log(textHeight)
       setTimeout(() => {
-        setNewNavigation(navHeight + textHeight - 40);
+        setNewNavigation(navHeight + textHeight);
       }, 30);
     }
   }, [navHeight + isFocused + textHeight]);
@@ -1680,9 +1710,11 @@ const BargainingScreen = ({ navigation, route }) => {
                   />
                 ))
               ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable height={ServiceTableHeight} 
-                NewDataList={NewDataList} 
-                name={ActiveService} />
+                <ServiceTable
+                  height={ServiceTableHeight}
+                  NewDataList={NewDataList}
+                  name={ActiveService}
+                />
               ) : (
                 <></>
               )}
@@ -1700,24 +1732,25 @@ const BargainingScreen = ({ navigation, route }) => {
                     Extra Facilities
                   </Text>
                   {Array.isArray(Facilities) &&
-                    Facilities.map((doc, i) => (
-                      (ServiceTableHeight-30)>((i+1)*25)?(
-                        <Text numberOfLines={1}
-                        onLayout={(e) => {
-                          console.log(e.nativeEvent.layout.height);
-                        }}
-                        style={{
-                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                          fontFamily: "Poppins-Medium",
-                          lineHeight: 25,
-                          color: textColor,
-                        }}
-                        key={i+1}
-                      >
-                        {doc.title}
-                      </Text>
-                      ):null
-                    ))}
+                    Facilities.map((doc, i) =>
+                      ServiceTableHeight - 30 > (i + 1) * 25 ? (
+                        <Text
+                          numberOfLines={1}
+                          onLayout={(e) => {
+                            console.log(e.nativeEvent.layout.height);
+                          }}
+                          style={{
+                            fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                            fontFamily: "Poppins-Medium",
+                            lineHeight: 25,
+                            color: textColor,
+                          }}
+                          key={i + 1}
+                        >
+                          {doc.title}
+                        </Text>
+                      ) : null
+                    )}
                 </View>
               )}
             </View>

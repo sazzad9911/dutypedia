@@ -28,6 +28,8 @@ import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { AllData } from "./../Data/AllData";
 import { setFavoriteCategories, getFavoriteCategories } from "../Class/auth";
+import CustomAppStatusBar from "../Hooks/AppBar";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 
@@ -130,76 +132,81 @@ const Home = (props) => {
   }, []);
 
   return (
-    <ScrollView
-      style={{ flexGrow: 1 }}
-      stickyHeaderIndices={[0]}
-      scrollEventThrottle={16}
-      stickyHeaderHiddenOnScroll={true}
-      
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => {
-            //setPageChange(true);
-            onRefresh();
-          }}
-        />
-      }
-      showsVerticalScrollIndicator={false}
-      onScroll={(e) => {
-        scrollY.setValue(e.nativeEvent.contentOffset.y);
-        //scroll;
-      }}
-    >
-      <Animated.View
-        style={[
-          {
-            transform: [{ translateY: translateY }],
-            top: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: primaryColor,
-            zIndex: 500,
-          },
-        ]}
+    <View style={{ flex: 1 }}>
+      <StatusBar
+        translucent={false}
+        style="dark"
+        backgroundColor={primaryColor}
+      />
+
+      <ScrollView
+        style={{ flexGrow: 1 }}
+        stickyHeaderIndices={[0]}
+        scrollEventThrottle={16}
+        stickyHeaderHiddenOnScroll={true}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+          //scroll;
+        }}
       >
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            
-          }}
+        <Animated.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              top: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: primaryColor,
+              zIndex: 500,
+            },
+          ]}
         >
-          <Text
+          <View
             style={{
-              fontSize: 24,
-              fontFamily: "Poppins-SemiBold",
-              color: textColor,
+              paddingHorizontal: 20,
+              paddingVertical: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            Dutypedia
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("SearchScreen");
-            }}
-            style={{
-              backgroundColor: "#e5e5e5",
-              width: 35,
-              height: 35,
-              borderRadius: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AntDesign name="search1" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-      <View>
-        {/* <Text
+            <Text
+              style={{
+                fontSize: 24,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+              }}
+            >
+              Dutypedia
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SearchScreen");
+              }}
+              style={{
+                backgroundColor: "#e5e5e5",
+                width: 35,
+                height: 35,
+                borderRadius: 20,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <AntDesign name="search1" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
+        <View>
+          {/* <Text
             style={{
               fontSize: 20,
               color: TextColor,
@@ -211,135 +218,136 @@ const Home = (props) => {
           >
             Category
           </Text> */}
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      >
-        <View style={{ width: 15 }} />
-        {AllData &&
-          AllData.map((item, i) => (
-            <Cart navigation={navigation} key={i} data={item} />
-          ))}
-        <View style={{ width: 15 }} />
-      </ScrollView>
-      <Text
-        style={{
-          fontFamily: "Poppins-SemiBold",
-          marginVertical: 15,
-          marginLeft: 5,
-          paddingLeft: 15,
-          paddingRight: 15,
-          fontSize: 18,
-          color: textColor,
-        }}
-      >
-        What is Your Best Interested Category
-      </Text>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      >
-        <View style={{ width: 15 }} />
-        {Temporary.map((item, i) =>
-          item.num == 3 ? (
-            <CombineCart
-              key={i}
-              num={[
-                AllData[item.index],
-                AllData[item.index + 1],
-                AllData[item.index + 2],
-              ]}
-              Component={(props) => <Cart1 {...props} />}
-            />
-          ) : item.num == 2 ? (
-            <CombineCart
-              key={i}
-              num={[AllData[item.index], AllData[item.index + 1]]}
-              Component={(props) => <Cart1 {...props} />}
-            />
-          ) : (
-            <CombineCart
-              key={i}
-              num={[AllData[item.index]]}
-              Component={() => <Cart1 {...props} />}
-            />
-          )
-        )}
-        <View style={{ width: 15 }} />
-      </ScrollView>
-
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        >
+          <View style={{ width: 15 }} />
+          {AllData &&
+            AllData.map((item, i) => (
+              <Cart navigation={navigation} key={i} data={item} />
+            ))}
+          <View style={{ width: 15 }} />
+        </ScrollView>
         <Text
           style={{
             fontFamily: "Poppins-SemiBold",
             marginVertical: 15,
-            flex: 5,
             marginLeft: 5,
-            fontSize: 14,
             paddingLeft: 15,
             paddingRight: 15,
             fontSize: 18,
             color: textColor,
           }}
         >
-          Some Suggest
+          What is Your Best Interested Category
         </Text>
-        <TouchableOpacity
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        >
+          <View style={{ width: 15 }} />
+          {Temporary.map((item, i) =>
+            item.num == 3 ? (
+              <CombineCart
+                key={i}
+                num={[
+                  AllData[item.index],
+                  AllData[item.index + 1],
+                  AllData[item.index + 2],
+                ]}
+                Component={(props) => <Cart1 {...props} />}
+              />
+            ) : item.num == 2 ? (
+              <CombineCart
+                key={i}
+                num={[AllData[item.index], AllData[item.index + 1]]}
+                Component={(props) => <Cart1 {...props} />}
+              />
+            ) : (
+              <CombineCart
+                key={i}
+                num={[AllData[item.index]]}
+                Component={() => <Cart1 {...props} />}
+              />
+            )
+          )}
+          <View style={{ width: 15 }} />
+        </ScrollView>
+
+        <View
           style={{
-            marginVertical: 10,
-            flex: 2,
+            flexDirection: "row",
           }}
         >
           <Text
             style={{
               fontFamily: "Poppins-SemiBold",
-              textDecorationLine: "underline",
-              marginRight: 20,
+              marginVertical: 15,
+              flex: 5,
+              marginLeft: 5,
               fontSize: 14,
-              textAlign: "right",
+              paddingLeft: 15,
+              paddingRight: 15,
+              fontSize: 18,
               color: textColor,
             }}
           >
-            View All
+            Some Suggest
           </Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      >
-        <View style={{ width: 15 }} />
-        {!SomeSuggest && (
-          <View
+          <TouchableOpacity
             style={{
-              height: 270,
-              justifyContent: "center",
-              alignItems: "center",
+              marginVertical: 10,
+              flex: 2,
             }}
           >
-            <Text>Loading...</Text>
-          </View>
-        )}
-        {SomeSuggest &&
-          SomeSuggest.map((doc, i) => (
-            <Cart2 key={i} data={doc} navigation={props.navigation} />
-          ))}
-        <View style={{ width: 15 }} />
+            <Text
+              style={{
+                fontFamily: "Poppins-SemiBold",
+                textDecorationLine: "underline",
+                marginRight: 20,
+                fontSize: 14,
+                textAlign: "right",
+                color: textColor,
+              }}
+            >
+              View All
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        >
+          <View style={{ width: 15 }} />
+          {!SomeSuggest && (
+            <View
+              style={{
+                height: 270,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>Loading...</Text>
+            </View>
+          )}
+          {SomeSuggest &&
+            SomeSuggest.map((doc, i) => (
+              <Cart2 key={i} data={doc} navigation={props.navigation} />
+            ))}
+          <View style={{ width: 15 }} />
+        </ScrollView>
+        <View style={{ height: 19 }} />
+        <View style={{ marginHorizontal: 20 }}>
+          <SellerCart {...props} />
+        </View>
+        <View style={{ height: 10 }} />
       </ScrollView>
-      <View style={{ height: 19 }} />
-      <View style={{ marginHorizontal: 20 }}>
-        <SellerCart {...props} />
-      </View>
-      <View style={{ height: 10 }} />
-    </ScrollView>
+    </View>
   );
 };
 

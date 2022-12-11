@@ -42,6 +42,8 @@ import SellerCart3 from "./../Cart/SellerCart3";
 import { AllData } from "../Data/AllData";
 import { getTopServices, getPopularCategories } from "../Class/service";
 import ActivityLoader from "./../components/ActivityLoader";
+import CustomAppStatusBar from "../Hooks/AppBar";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get("window");
 
@@ -155,7 +157,9 @@ const Home_Next = (props) => {
   });
 
   return (
-    <ScrollView
+    <View style={{flex:1}}>
+      <StatusBar translucent={false} style="dark"  backgroundColor={primaryColor}/>
+      <ScrollView
       style={{ flexGrow: 1,flex:1 }}
       stickyHeaderIndices={[0]}
       scrollEventThrottle={16}
@@ -391,6 +395,7 @@ const Home_Next = (props) => {
 
       <View style={{ height: 10 }} />
     </ScrollView>
+    </View>
   );
 };
 

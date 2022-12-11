@@ -49,6 +49,7 @@
     "object-observer": "^5.1.0",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
+    "prop-types": "^15.8.1",
     "react": "18.1.0",
     "react-detect-click-outside": "^1.1.7",
     "react-dom": "18.1.0",

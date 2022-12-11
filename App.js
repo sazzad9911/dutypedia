@@ -1,5 +1,12 @@
 //import {  } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView,StatusBar,DevSettings } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  StatusBar,
+  DevSettings,
+} from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -26,10 +33,10 @@ import StackRoute from "./StackRoute";
 import { useSelector } from "react-redux";
 import { Color } from "./assets/colors";
 import { RootSiblingParent } from "react-native-root-siblings";
-import * as Network from 'expo-network';
+import * as Network from "expo-network";
+import CustomAppStatusBar from "./Hooks/AppBar";
 
 export default function App() {
-  
   const MyTheme = {
     ...DefaultTheme,
     colors: {
@@ -37,7 +44,7 @@ export default function App() {
       background: secondaryColor,
     },
   };
-  
+
   const [fontsLoaded] = useFonts({
     "Poppins-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
     "Poppins-Light": require("./assets/fonts/Roboto-Light.ttf"),
@@ -66,13 +73,11 @@ export default function App() {
       fontFamily: "Poppins-Medium",
     },
   };
-  const getNetwork=async()=>{
-    const network=await Network.getNetworkStateAsync();
-    console.log(network)
-  }
+  const getNetwork = async () => {
+    const network = await Network.getNetworkStateAsync();
+    console.log(network);
+  };
   //getNetwork()
-
-  
 
   return (
     <Provider store={store}>
@@ -88,13 +93,16 @@ const Views = () => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
-  
+  const textColor = colors.getTextColor();
+  const statusBar=useSelector(state=>state.statusBar)
+  //console.log(statusBar)
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar
+      {/* <CustomAppStatusBar
         barStyle={isDark ? "light-content" : "dark-content"}
-        backgroundColor={primaryColor}
-      />
+        backgroundColor={statusBar?.backgroundColor}
+      /> */}
       <SafeAreaView style={{ flex: 1 }}>
         <StackRoute />
       </SafeAreaView>

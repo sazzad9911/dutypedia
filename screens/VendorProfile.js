@@ -1895,7 +1895,7 @@ export const ServiceTable = ({
   const [Data, setData] = React.useState([]);
   const [TableName, setTableName] = React.useState();
   const [contentHeight, setContentHeight] = React.useState(height?height:60);
-  console.log(`total ${contentHeight}`)
+  //console.log(`total ${contentHeight}`)
   React.useEffect(() => {
     if (NewDataList) {
       setData([]);
@@ -2022,7 +2022,7 @@ export const Rows = ({ title, item, name, NewDataList,height,index }) => {
     });
     setText(word);
   }, [item + title + NewDataList]);
-  console.log(`index ${index+1} ${height}`)
+  //console.log(`index ${index+1} ${height}`)
 
   if(height<15){
     return null
