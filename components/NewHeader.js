@@ -16,7 +16,8 @@ export default function NewHeader({ navigation, route, title }) {
     <View style={{
         flexDirection:"row",
         paddingHorizontal:20,
-        paddingVertical:10
+        paddingVertical:10,
+        paddingTop:25
     }}>
       <AntDesign onPress={()=>{
         navigation.goBack()

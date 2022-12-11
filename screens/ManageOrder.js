@@ -86,7 +86,11 @@ const ManageOrder = ({ navigation, route }) => {
   }
   //console.log(type)
   return (
-    <Tab.Navigator initialRouteName={type} screenOptions={{
+    <View style={{
+      flex:1,
+      paddingTop:25
+    }}>
+      <Tab.Navigator initialRouteName={type} screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },
       tabBarItemStyle: {
       margin:0,
@@ -105,6 +109,7 @@ const ManageOrder = ({ navigation, route }) => {
         }} key={i} name={doc.type} component={Screens} />
       ))}
     </Tab.Navigator>
+    </View>
   );
 };
 

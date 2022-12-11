@@ -76,6 +76,7 @@ import {
 } from "@shopify/react-native-skia";
 import Swiper from "react-native-swiper";
 import { StatusBar } from "expo-status-bar";
+import CustomAppStatusBar from "../Hooks/AppBar";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -182,7 +183,7 @@ const OtherProfile = (props) => {
   const [newNavigation, setNewNavigation] = React.useState(1100);
   const [pageHeight, setPageHeight] = React.useState(0);
   const scroll = React.useRef();
-  const [scrollEnabled, setScrollEnabled] = React.useState(true);
+  const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
 
   //console.log(SeeMore)
@@ -501,18 +502,14 @@ const OtherProfile = (props) => {
   //console.log(newNavigation);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: primaryColor }}>
-      {Platform.OS == "android" ? (
+    <View style={{ flex: 1, backgroundColor: primaryColor }}>
+      {Platform.OS == "ios" && scrollEnabled && (
+        <CustomAppStatusBar backgroundColor={primaryColor} />
+      )}
+      {Platform.OS == "android" && (
         <StatusBar
-          style="light"
-          backgroundColor={scrollEnabled ? "#00000025" : "gray"}
+          backgroundColor={scrollEnabled ? primaryColor : "transparent"}
         />
-      ) : (
-        <View style={{
-          backgroundColor:"red"
-        }}>
-          <StatusBar animated={true} style="dark"  />
-        </View>
       )}
       <ScrollView
         scrollEventThrottle={16}
@@ -533,13 +530,15 @@ const OtherProfile = (props) => {
           const dif = currentOffset - (offset || 0);
 
           if (Math.abs(dif) < 3) {
-            console.log("unclear");
+            //console.log("unclear");
           } else if (dif < 0) {
-            setScrollEnabled(false);
+            //setScrollEnabled(false);
           } else {
-            setScrollEnabled(true);
+            
           }
-          if (currentOffset == 0) {
+          if (currentOffset < 10) {
+            setScrollEnabled(false);
+          }else{
             setScrollEnabled(true);
           }
           setOffset(currentOffset);
@@ -1287,7 +1286,7 @@ const OtherProfile = (props) => {
           <SvgXml xml={messageIcon} height="50" width={"50"} />
         </Animated.View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

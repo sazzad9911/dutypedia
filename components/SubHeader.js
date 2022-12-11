@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Platform } from "react-native";
 import { Color } from "./../assets/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { StatusBar } from "expo-status-bar";
 
 const SubHeader = (props) => {
   const navigation = props.navigation;
@@ -14,7 +15,9 @@ const SubHeader = (props) => {
   const assentColor = colors.getAssentColor();
 
   return (
-    <View
+    <View>
+      <StatusBar/>
+      <View
       style={[
         {
           backgroundColor: primaryColor,
@@ -53,6 +56,7 @@ const SubHeader = (props) => {
       >
         {props.title ? props.title : params.title ? params.title : ""}
       </Text>
+    </View>
     </View>
   );
 };

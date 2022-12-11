@@ -9,12 +9,15 @@ import {
 } from "react-native";
 import { EvilIcons, AntDesign } from "@expo/vector-icons";
 import { secondaryColor, primaryColor, textColor } from "../assets/colors";
+import { StatusBar } from "expo-status-bar";
 
 const BackHeader = (props) => {
   const navigation = props.navigation;
   const ref= React.useRef();
   return (
-    <View style={styles.box}>
+    <View>
+      <StatusBar/>
+      <View style={styles.box}>
       <View
         style={{
           flexDirection: "row",
@@ -30,7 +33,7 @@ const BackHeader = (props) => {
             zIndex:500
           }}
           name="left"
-          size={25}
+          size={22}
           color="black"
         />
         <Text style={styles.text}>{props.title?props.title:'Dutypedia'}</Text>
@@ -65,6 +68,7 @@ const BackHeader = (props) => {
           }}
         ></TextInput>
       </TouchableOpacity>
+    </View>
     </View>
   );
 };

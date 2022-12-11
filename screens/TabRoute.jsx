@@ -71,9 +71,9 @@ const TabRoute = () => {
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [status, setStatus] = React.useState(null);
   const [isOffline, setOfflineStatus] = React.useState(false);
-  const isDark=useSelector(state=>isDark)
-  const colors=new Color(isDark)
-  const backgroundColor=colors.getBackgroundColor()
+  const isDark = useSelector((state) => isDark);
+  const colors = new Color(isDark);
+  const backgroundColor = colors.getBackgroundColor();
 
   React.useEffect(() => {
     checkVendor().then((res) => {
@@ -214,7 +214,7 @@ const TabRoute = () => {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,}}>
       <Tab.Navigator
         tabBar={(props) => {
           if (
@@ -230,7 +230,12 @@ const TabRoute = () => {
         {!vendor &&
           (!Array.isArray(user) && user && load ? (
             <Tab.Screen
-              options={{ headerShown: false }}
+              options={{
+                headerShown: false,
+                headerStyle: {
+                  backgroundColor: "green",
+                },
+              }}
               name="Home"
               component={HomeRoute}
             />
@@ -442,3 +447,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+const New = () => {
+  return <View style={{ flex: 1, backgroundColor: "red" }} />;
+};

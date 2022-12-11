@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { Color } from "../../../assets/colors";
 import { ActivityIndicator } from "react-native-paper";
 import { changeTime } from "../../../action";
+import { SafeAreaView } from "moti";
 
 export default function UserAppointmentDetails({ navigation, route }) {
   const [image, setImage] = React.useState();
@@ -29,7 +30,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View
           style={{
@@ -302,7 +303,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
             />
           </View>
         )}
-    </View>
+    </SafeAreaView>
   );
 }
 const cancel = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14" viewBox="0 0 14 14">

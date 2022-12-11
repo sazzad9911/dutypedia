@@ -103,9 +103,7 @@ const Views = () => {
         barStyle={isDark ? "light-content" : "dark-content"}
         backgroundColor={statusBar?.backgroundColor}
       /> */}
-      <SafeAreaView style={{ flex: 1 }}>
-        <StackRoute />
-      </SafeAreaView>
+      <StackRoute />
     </GestureHandlerRootView>
   );
 };

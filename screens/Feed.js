@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AllData } from "./../Data/AllData";
 import CustomAppStatusBar from "../Hooks/AppBar";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Feed = ({ navigation, route }) => {
   const scrollY = new Animated.Value(0);
@@ -45,7 +46,7 @@ const Feed = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
         translucent={false}
         style="dark"
@@ -172,7 +173,7 @@ const Feed = ({ navigation, route }) => {
         </View>
         <View style={{ height: 15 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

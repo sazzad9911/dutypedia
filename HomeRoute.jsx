@@ -110,12 +110,17 @@ const HomeRoute = ({ navigation }) => {
         component={AllPackageList}
       />
       <Stack.Screen
-        options={{ headerShown:false}}
+        options={{
+          headerStyle: {
+            backgroundColor: "green",
+          },
+          headerShown:false
+        }}
         name="OtherProfile"
         component={OtherProfile}
       />
       <Stack.Screen
-        options={{ headerShown:false}}
+        options={{ headerShown: false }}
         name="FixedService"
         component={FixedService}
       />
@@ -167,8 +172,10 @@ const HomeRoute = ({ navigation }) => {
         }}
         component={CompanyCalendar}
       />
-      
     </Stack.Navigator>
   );
 };
 export default HomeRoute;
+const New = () => {
+  return <View style={{ flex: 1, backgroundColor: "red" }} />;
+};

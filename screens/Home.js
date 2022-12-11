@@ -132,7 +132,7 @@ const Home = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
         translucent={false}
         style="dark"
@@ -347,7 +347,7 @@ const Home = (props) => {
         </View>
         <View style={{ height: 10 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

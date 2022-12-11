@@ -1,16 +1,20 @@
 import React from "react";
-import { View,Text } from "react-native";
+import { View,Text,StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+
 
 export default function AppointmentHeader({ title,navigation }) {
   return (
-    <View style={{
+    <View>
+      
+      <View style={{
         flexDirection:"row",
         borderBottomColor:"#E2E2E2",
         borderBottomWidth:1,
         paddingHorizontal:20,
         alignItems:"center",
-        height:45
+        height:45,
+        marginTop:25,
     }}>
       <AntDesign onPress={()=>{
         navigation.goBack()
@@ -21,6 +25,7 @@ export default function AppointmentHeader({ title,navigation }) {
         marginLeft:10,
         color:"#333333"
       }}>{title}</Text>
+    </View>
     </View>
   );
 }

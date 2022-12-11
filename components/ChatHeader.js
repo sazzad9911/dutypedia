@@ -15,6 +15,7 @@ const ChatHeader = () => {
     box: {
       justifyContent: "center",
       alignItems: "center",
+      paddingTop:10
     },
     text: {
       color: textColor,

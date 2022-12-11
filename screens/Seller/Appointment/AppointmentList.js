@@ -16,6 +16,7 @@ import { getAppointment } from "../../../Class/appointment";
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Animated, { FadeIn,SlideInRight } from "react-native-reanimated";
+import { StatusBar } from "expo-status-bar";
 const status = [
   {
     title: "Incomplete",
@@ -81,6 +82,7 @@ export default function AppointmentList({ navigation, route }) {
   }
   return (
     <Animated.View style={{ flex: 1 }}>
+      <StatusBar/>
       <ScrollView>
         <View
           style={{

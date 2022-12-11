@@ -20,6 +20,8 @@ import {
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 const status = [
   {
     title: "Incomplete",
@@ -38,13 +40,13 @@ const status = [
     color: "#6366F1",
   },
   {
-    title:"Approved",
-    color:"#6366F1"
+    title: "Approved",
+    color: "#6366F1",
   },
   {
-    title:"Rejected",
-    color:"#DA1E37"
-  }
+    title: "Rejected",
+    color: "#DA1E37",
+  },
 ];
 
 export default function UserAppointmentList({ navigation, route }) {
@@ -57,57 +59,55 @@ export default function UserAppointmentList({ navigation, route }) {
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
   const vendor = useSelector((state) => state.vendor);
-  const [Upcoming,setUpcoming]=React.useState()
-  const [Previous,setPrevious]=React.useState()
-
+  const [Upcoming, setUpcoming] = React.useState();
+  const [Previous, setPrevious] = React.useState();
 
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-    if(Active=="All"&&user){
+    if (Active == "All" && user) {
       setLoader(true);
       getUserAppointment(user.token, "upcoming", user.user.id)
         .then((res) => {
           setLoader(false);
-          let arr=[]
+          let arr = [];
           //console.log(res.data.appointments)
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            
-          })
-          setUpcoming(arr)
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setUpcoming(arr);
         })
         .catch((err) => {
           setLoader(false);
           console.warn(err.response.data.msg);
         });
-        getUserAppointment(user.token, "previous", user.user.id)
+      getUserAppointment(user.token, "previous", user.user.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-          })
-          setPrevious(arr)
+          let arr = [];
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setPrevious(arr);
         })
         .catch((err) => {
           setLoader(false);
           console.warn(err.response.data.msg);
         });
-        return
+      return;
     }
-    if (user && Active &&Active!="Request") {
+    if (user && Active && Active != "Request") {
       setLoader(true);
       getUserAppointment(user.token, Active, user.user.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-          })
-          setData(arr)
+          let arr = [];
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setData(arr);
         })
         .catch((err) => {
           setLoader(false);
@@ -115,18 +115,18 @@ export default function UserAppointmentList({ navigation, route }) {
         });
     }
   }, [isFocused + Active]);
-  React.useLayoutEffect(()=>{
-    if(Upcoming&&Previous){
-      let arr=[];
-      Upcoming.map((doc,i)=>{
-        arr.push(doc)
-      })
-      Previous.map((doc,i)=>{
-        arr.push(doc)
-      })
-      setData(arr)
+  React.useLayoutEffect(() => {
+    if (Upcoming && Previous) {
+      let arr = [];
+      Upcoming.map((doc, i) => {
+        arr.push(doc);
+      });
+      Previous.map((doc, i) => {
+        arr.push(doc);
+      });
+      setData(arr);
     }
-  },[Loader+Upcoming+Previous])
+  }, [Loader + Upcoming + Previous]);
   //console.log(data.service.serviceCenterName)
   if (Loader) {
     return (
@@ -142,86 +142,89 @@ export default function UserAppointmentList({ navigation, route }) {
     );
   }
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-        }}
-      >
-        <Chip
-          style={{ width: 70 }}
-          onPress={() => {
-            setActive("All");
-          }}
-          title={"All"}
-          active={Active == "All" ? true : false}
-        />
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar/>
+      <ScrollView style={{ flex: 1 }}>
         <View
           style={{
-            width: 10,
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            paddingVertical: 10,
           }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Upcoming");
-          }}
-          title={"Upcoming"}
-          active={Active == "Upcoming" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Previous");
-          }}
-          title={"Previous"}
-          active={Active == "Previous" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            navigation.navigate("UserRequestAppointment")
-          }}
-          title={"Request"}
-          active={Active == "Request" ? true : false}
-        />
-      </View>
-      {Data.length == 0 ? <NoAppointment /> : null}
-      {Data.map((doc, i) => (
-        <Cart
-          key={i}
-          onPress={() => {
-            //console.log(doc)
-            navigation.navigate("UserAppointmentDetails", {
-              data: doc,
-            });
-          }}
-          status={
-            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-          }
-          title={doc.title}
-          date={`${doc.date} ${changeTime(doc.startTime)}`}
-          name={doc.service.providerInfo.name}
-          image={doc.service.profilePhoto}
-          username={doc.service.providerInfo.name.replace(" ","").toLowerCase()}
-          position={doc.service.providerInfo.position}
-        />
-      ))}
-
-     
-    </ScrollView>
+        >
+          <Chip
+            style={{ width: 70 }}
+            onPress={() => {
+              setActive("All");
+            }}
+            title={"All"}
+            active={Active == "All" ? true : false}
+          />
+          <View
+            style={{
+              width: 10,
+            }}
+          />
+          <Chip
+            onPress={() => {
+              setActive("Upcoming");
+            }}
+            title={"Upcoming"}
+            active={Active == "Upcoming" ? true : false}
+          />
+          <View
+            style={{
+              width: 10,
+            }}
+          />
+          <Chip
+            onPress={() => {
+              setActive("Previous");
+            }}
+            title={"Previous"}
+            active={Active == "Previous" ? true : false}
+          />
+          <View
+            style={{
+              width: 10,
+            }}
+          />
+          <Chip
+            onPress={() => {
+              navigation.navigate("UserRequestAppointment");
+            }}
+            title={"Request"}
+            active={Active == "Request" ? true : false}
+          />
+        </View>
+        {Data.length == 0 ? <NoAppointment /> : null}
+        {Data.map((doc, i) => (
+          <Cart
+            key={i}
+            onPress={() => {
+              //console.log(doc)
+              navigation.navigate("UserAppointmentDetails", {
+                data: doc,
+              });
+            }}
+            status={
+              status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+            }
+            title={doc.title}
+            date={`${doc.date} ${changeTime(doc.startTime)}`}
+            name={doc.service.providerInfo.name}
+            image={doc.service.profilePhoto}
+            username={doc.service.providerInfo.name
+              .replace(" ", "")
+              .toLowerCase()}
+            position={doc.service.providerInfo.position}
+          />
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-const Cart = ({ date, status, title, onPress, image,name,username }) => {
+const Cart = ({ date, status, title, onPress, image, name, username }) => {
   //console.log(status)
   return (
     <TouchableOpacity
@@ -261,11 +264,11 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
       />
       <View
         style={{
-          flex: .5,
+          flex: 0.5,
         }}
       >
-        <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-        <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
+        <Text numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
+        <Text numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
       </View>
       <View
         style={{

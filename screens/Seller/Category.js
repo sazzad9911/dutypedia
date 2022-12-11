@@ -53,7 +53,7 @@ const Category = (props) => {
     return [];
   }; 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
+    <KeyboardAvoidingView style={{flex: 1,paddingTop:25}} behavior={Platform.OS === "ios" ? "padding" : null}
     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <BackHeader
         value={search}

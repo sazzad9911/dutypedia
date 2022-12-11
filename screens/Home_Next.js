@@ -157,7 +157,7 @@ const Home_Next = (props) => {
   });
 
   return (
-    <View style={{flex:1}}>
+    <SafeAreaView style={{flex:1}}>
       <StatusBar translucent={false} style="dark"  backgroundColor={primaryColor}/>
       <ScrollView
       style={{ flexGrow: 1,flex:1 }}
@@ -395,7 +395,7 @@ const Home_Next = (props) => {
 
       <View style={{ height: 10 }} />
     </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
