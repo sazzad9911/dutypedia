@@ -15,7 +15,9 @@ const SubHeader = (props) => {
   const assentColor = colors.getAssentColor();
 
   return (
-    <View>
+    <View style={{
+      paddingTop:25
+    }}>
       <StatusBar/>
       <View
       style={[

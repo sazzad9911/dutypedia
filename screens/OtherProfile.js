@@ -185,6 +185,7 @@ const OtherProfile = (props) => {
   const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
+  const [Love,setLove]=React.useState(false)
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -534,11 +535,10 @@ const OtherProfile = (props) => {
           } else if (dif < 0) {
             //setScrollEnabled(false);
           } else {
-            
           }
           if (currentOffset < 10) {
             setScrollEnabled(false);
-          }else{
+          } else {
             setScrollEnabled(true);
           }
           setOffset(currentOffset);
@@ -692,7 +692,7 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
-              //navigation.navigate("Message")
+              navigation.navigate("ChatScreen",{data:Data})
             }}
             style={{
               shadowOffset: {
@@ -1283,7 +1283,11 @@ const OtherProfile = (props) => {
             borderRadius: 25,
           }}
         >
-          <SvgXml xml={messageIcon} height="50" width={"50"} />
+          <Pressable onPress={()=>{
+            navigation.navigate("ChatScreen",{data:Data})
+          }}>
+            <SvgXml xml={messageIcon} height="50" width={"50"} />
+          </Pressable>
         </Animated.View>
       )}
     </View>

@@ -169,7 +169,7 @@ export default function StackRoute() {
           />
           <Stack.Screen
             options={{
-              header: (props) => <ChatHead {...props} />,
+              headerShown:false
             }}
             name="ChatScreen"
             component={ChatScreen}

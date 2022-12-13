@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Platform
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
@@ -15,18 +15,19 @@ import { Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
-import { Switch } from 'react-native-paper'; 
-import {useDispatch,useSelector} from 'react-redux'
+import { Switch } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import Avatar from "./Avatar";
 
 const ChatHead = (props) => {
   const navigation = props.navigation;
-  const isDark=useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
   const [visible, setVisible] = React.useState(false);
   const styles = StyleSheet.create({
     box: {
@@ -34,6 +35,7 @@ const ChatHead = (props) => {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+      paddingTop: 25,
     },
     image: {
       width: 40,
@@ -44,8 +46,8 @@ const ChatHead = (props) => {
     },
     text: {
       fontSize: 14,
-      fontFamily: 'Poppins-Medium',
-      color:textColor
+      fontFamily: "Poppins-Medium",
+      color: textColor,
     },
     icon: {
       marginLeft: 20,
@@ -73,10 +75,11 @@ const ChatHead = (props) => {
       marginVertical: 5,
     },
   });
+  const data = props.data;
+  //console.log(data)
   return (
     <View
       style={{
-     
         minHeight: 50,
         paddingVertical: 5,
         paddingHorizontal: 10,
@@ -92,13 +95,22 @@ const ChatHead = (props) => {
           size={24}
           color={textColor}
         />
-        <Image
+        <Avatar style={styles.image} source={{uri:data.service.profilePhoto}}/>
+        {/* <Image
           style={styles.image}
           source={{
-            uri: "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
+            uri: data
+              ? data.service.profilePhoto
+              : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
           }}
-        />
-        <Text style={styles.text}>Sefa Khandakar</Text>
+        /> */}
+        <Text style={styles.text}>
+          {data
+            ? `${data.service.providerInfo.title} ${
+                data.service.providerInfo.name
+              }`
+            : "Sefa Khandakar"}
+        </Text>
       </View>
       <View
         style={[
@@ -147,13 +159,13 @@ const MenuBar = (props) => {
   const [Call, setCall] = React.useState(false);
   const [Mute, setMute] = React.useState(false);
   const childRef = React.useRef();
-  const isDark=useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
   const styles = StyleSheet.create({
     box: {
       flex: 1,
@@ -170,7 +182,7 @@ const MenuBar = (props) => {
     },
     text: {
       fontSize: 14,
-      fontFamily: 'Poppins-Medium'
+      fontFamily: "Poppins-Medium",
     },
     icon: {
       marginLeft: 20,
@@ -215,40 +227,67 @@ const MenuBar = (props) => {
         <View ref={childRef} style={styles.menuContainer}>
           <View style={styles.menuSubContainer}>
             <Ionicons name="ios-call" size={20} color={textColor} />
-            <Text style={{
-              fontFamily: 'Poppins-Light',
-              fontSize:13,
-              color:textColor
-            }}>Call</Text>
-            <Switch style={{
-              height:35,
-              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
-            }} color='#A8AF63' value={Call} onValueChange={(val)=>{
-              setCall(val)
-            }} />
+            <Text
+              style={{
+                fontFamily: "Poppins-Light",
+                fontSize: 13,
+                color: textColor,
+              }}
+            >
+              Call
+            </Text>
+            <Switch
+              style={{
+                height: 35,
+                transform: [
+                  { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                  { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+                ],
+              }}
+              color="#A8AF63"
+              value={Call}
+              onValueChange={(val) => {
+                setCall(val);
+              }}
+            />
           </View>
           <View style={styles.menuSubContainer}>
             <Ionicons name="volume-mute" size={20} color={textColor} />
-            <Text style={{
-              fontFamily: 'Poppins-Light',
-              fontSize:13,
-              color:textColor
-            }}>Mute</Text>
-            <Switch style={{
-              height:35,
-              transform: [{ scaleX: Platform.OS=='ios'?.8:1 }, { scaleY: Platform.OS=='ios'?.8:1}]
-            }} color='#A8AF63' value={Mute} onValueChange={(val)=>{
-              setMute(val);
-            }} />
+            <Text
+              style={{
+                fontFamily: "Poppins-Light",
+                fontSize: 13,
+                color: textColor,
+              }}
+            >
+              Mute
+            </Text>
+            <Switch
+              style={{
+                height: 35,
+                transform: [
+                  { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                  { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+                ],
+              }}
+              color="#A8AF63"
+              value={Mute}
+              onValueChange={(val) => {
+                setMute(val);
+              }}
+            />
           </View>
           <TouchableOpacity style={styles.menuSubContainer}>
             <FontAwesome name="user-circle-o" size={20} color={textColor} />
-            <Text style={{
-              fontFamily: 'Poppins-Light',
-              fontSize:13,
-              color:textColor
-
-            }}>View Profile</Text>
+            <Text
+              style={{
+                fontFamily: "Poppins-Light",
+                fontSize: 13,
+                color: textColor,
+              }}
+            >
+              View Profile
+            </Text>
             <View style={{ width: 5 }} />
           </TouchableOpacity>
         </View>

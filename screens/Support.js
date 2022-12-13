@@ -14,6 +14,7 @@ import Button from "../components/Button";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import IconButton from "../components/IconButton";
 
 const Support = ({ navigation,route}) => {
   const ref = React.useRef();
@@ -236,7 +237,7 @@ const Support = ({ navigation,route}) => {
           ......................................
         </Text>
       </View>
-      <Button
+      <IconButton
         onPress={() => {
           setVisible(true);
         }}
@@ -249,7 +250,7 @@ const Support = ({ navigation,route}) => {
         }}
         title={route.name=='Support_1'?"Send Report":"Send Request"}
       />
-      <Button onPress={() =>{
+      <IconButton onPress={() =>{
         navigation.goBack()
       }}
         style={{

@@ -19,9 +19,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 import {Color} from '../assets/colors'
 import {useDispatch,useSelector} from 'react-redux'
+import ChatHead from "../components/ChatHead";
 
 
-const ChatScreen = () => {
+const ChatScreen = (props) => {
   const scrollRef = React.useRef();
   const [Messages, setMessages] = React.useState([
     {
@@ -75,6 +76,8 @@ const ChatScreen = () => {
   const assentColor=colors.getAssentColor();
   const backgroundColor=colors.getBackgroundColor();
   const secondaryColor=colors.getSecondaryColor();
+  const params=props.route.params;
+  const data=params.data;
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",
@@ -110,6 +113,7 @@ const ChatScreen = () => {
     <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <View style={{ flex: 1 }}>
+      <ChatHead data={data} {...props} />
         <FlatList
           ref={scrollRef}
           data={Messages}
