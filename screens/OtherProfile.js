@@ -185,7 +185,7 @@ const OtherProfile = (props) => {
   const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
-  const [Love,setLove]=React.useState(false)
+  const [statusBarHeight,setStatusBarHeight]=React.useState(0)
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -500,13 +500,14 @@ const OtherProfile = (props) => {
       </View>
     );
   }
-  //console.log(newNavigation);
+  
 
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
-      {Platform.OS == "ios" && scrollEnabled && (
-        <CustomAppStatusBar backgroundColor={primaryColor} />
-      )}
+      {/* {Platform.OS == "ios" && scrollEnabled && (
+       <View style={{height:25}}/>
+      )} */}
+     
       {Platform.OS == "android" && (
         <StatusBar
           backgroundColor={scrollEnabled ? primaryColor : "transparent"}
@@ -521,6 +522,7 @@ const OtherProfile = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         showsVerticalScrollIndicator={false}
+        
         style={{
           backgroundColor: primaryColor,
           flex: 1,
@@ -536,14 +538,29 @@ const OtherProfile = (props) => {
             //setScrollEnabled(false);
           } else {
           }
-          if (currentOffset < 10) {
-            setScrollEnabled(false);
-          } else {
+          if (currentOffset > 380) {
             setScrollEnabled(true);
+          } else {
+            setScrollEnabled(false);
           }
+         // scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
+         {/* <Animation.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 500,
+            },
+          ]}
+        >
+         <View style={{height:25}}/>
+         
+        </Animation.View> */}
         <Canvas style={{ width: width, height: 400 }}>
           <Fill color={primaryColor} />
           <Box
@@ -1289,6 +1306,17 @@ const OtherProfile = (props) => {
             <SvgXml xml={messageIcon} height="50" width={"50"} />
           </Pressable>
         </Animated.View>
+      )}
+      {Platform.OS=="ios"&&(
+        <View style={{
+          position:"absolute",
+          left:0,
+          top:0,
+          height:24,
+          backgroundColor:scrollEnabled? primaryColor:"transparent",
+          zIndex:600,
+          width:width
+        }}/>
       )}
     </View>
   );
