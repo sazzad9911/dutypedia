@@ -74,7 +74,7 @@ const OfferNow = ({ navigation, route }) => {
   const category=params.category;
 
   React.useEffect(() => {
-    console.log(service);
+    //console.log(service);
     if(category&&service){
       try{
         setServices(serverToLocal(service.options,service.category))
@@ -579,7 +579,7 @@ const OfferNow = ({ navigation, route }) => {
           }}
         >
           <View style={{ flex: 1 }}>
-            <Button
+            <IconButton
               onPress={() => {
                 setFromVisible(true);
               }}
@@ -623,7 +623,7 @@ const OfferNow = ({ navigation, route }) => {
             TO
           </Text>
           <View style={{ flex: 1 }}>
-            <Button
+            <IconButton
               onPress={() => {
                 setToVisible(true);
               }}

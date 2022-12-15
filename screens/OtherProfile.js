@@ -201,6 +201,7 @@ const OtherProfile = (props) => {
   React.useEffect(() => {
     setActive("Bargaining");
     setLoader(true);
+    setScrollEnabled(false);
     setActiveServiceData(null);
     if (serviceId && newUser) {
       getService(newUser.token, serviceId)
@@ -507,12 +508,14 @@ const OtherProfile = (props) => {
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-     
-      {Platform.OS == "android" && (
+      <StatusBar hidden={true}
+          backgroundColor={scrollEnabled ? primaryColor : "transparent"}
+        />
+      {/* {Platform.OS == "android" && (
         <StatusBar
           backgroundColor={scrollEnabled ? primaryColor : "transparent"}
         />
-      )}
+      )} */}
       <ScrollView
         scrollEventThrottle={16}
         alwaysBounceHorizontal={false}
@@ -533,16 +536,27 @@ const OtherProfile = (props) => {
           const dif = currentOffset - (offset || 0);
 
           if (Math.abs(dif) < 3) {
-            //console.log("unclear");
-          } else if (dif < 0) {
             //setScrollEnabled(false);
+          } else if (dif < 0) {
+            //console.log("up")
+            if(currentOffset<380){
+              setScrollEnabled(false);
+            }
+            
           } else {
+            if(currentOffset>380){
+              setScrollEnabled(true);
+            }else{
+              setScrollEnabled(false);
+            }
+            //console.log("down")
           }
-          if (currentOffset > 380) {
-            setScrollEnabled(true);
-          } else {
-            setScrollEnabled(false);
-          }
+          // console.log(currentOffset)
+          // if (currentOffset > 380) {
+          //   setScrollEnabled(true);
+          // } else {
+          //   setScrollEnabled(false);
+          // }
          // scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
@@ -1307,7 +1321,7 @@ const OtherProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      {Platform.OS=="ios"&&(
+      {/* {Platform.OS=="ios"&&(
         <View style={{
           position:"absolute",
           left:0,
@@ -1317,7 +1331,7 @@ const OtherProfile = (props) => {
           zIndex:600,
           width:width
         }}/>
-      )}
+      )} */}
     </View>
   );
 };
