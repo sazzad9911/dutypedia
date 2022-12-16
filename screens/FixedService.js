@@ -56,35 +56,17 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useIsFocused } from "@react-navigation/native";
-import Avatar from "../components/Avatar";
 const Tab = createMaterialTopTabNavigator();
-import { Tooltip } from "react-native-paper";
 import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
-import { MotiView, MotiText } from "moti";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
-import {
-  Canvas,
-  Box,
-  BoxShadow,
-  Fill,
-  rrect,
-  rect,
-  Image as Picture,
-  useImage,
-} from "@shopify/react-native-skia";
-import Swiper from "react-native-swiper";
 import { StatusBar } from "expo-status-bar";
-import CustomAppStatusBar from "../Hooks/AppBar";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
-  const window = Dimensions.get("window");
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
-  const [Lines, setLines] = React.useState(3);
   const navigation = props.navigation;
   const [Visible, setVisible] = React.useState(false);
   const initialState = [
@@ -114,8 +96,6 @@ const FixedService = (props) => {
       type: "SUBS",
     },
   ];
-  const [Active, setActive] = React.useState("Bargaining");
-  const [NewLines, setNewLines] = React.useState(3);
   const [Facilities, setFacilities] = React.useState([]);
   const [NewDataList, setNewDataList] = React.useState(null);
   const [ServiceList, setServiceList] = React.useState([]);
@@ -131,49 +111,26 @@ const FixedService = (props) => {
   const [Images, setImages] = React.useState([]);
   const dispatch = useDispatch();
   const [ActiveServiceData, setActiveServiceData] = React.useState(null);
-  const [FixedService, setFixedService] = React.useState(null);
   const vendor = useSelector((state) => state.vendor);
   const [Click, setClick] = React.useState(false);
   const [Title, setTitle] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Price, setPrice] = React.useState();
   const [Category, setCategory] = React.useState();
-  const [Bargaining, setBargaining] = React.useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [RelatedServices, setRelatedServices] = React.useState();
   const [UnRelatedServices, setUnRelatedServices] = React.useState();
   const [Gigs, setGigs] = React.useState();
-  const [PackageService, setPackageService] = React.useState();
-  const [packageData, setPackageData] = React.useState();
-  const [selectedPackage, setSelectedPackage] = React.useState();
-  const [PackageServiceList, setPackageServiceList] = React.useState();
-  const [OpenDetails, setOpenDetails] = React.useState(false);
-  const [NameDropDown, setNameDropDown] = React.useState(false);
-  const [PositionDropDown, setPositionDropDown] = React.useState(false);
-  const childRef = React.useRef();
-  const [heightt, setHeight] = React.useState(0);
-  const [calenderHeight, setCalenderHeight] = React.useState(0);
-  const [opacity, setOpacity] = React.useState(new Animation.Value(0));
-  const [SeeMore, setSeeMore] = React.useState(false);
-  const [More, setMore] = React.useState(false);
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
   const scrollY = new Animation.Value(0);
-  const diffClamp = Animation.diffClamp(scrollY, 0, 300);
+  const diffClamp = Animation.diffClamp(scrollY, 0, 200);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 500],
-    outputRange: [0, 500],
+    inputRange: [0, 200],
+    outputRange: [0, -200],
   });
-  const [specialtyHeight, setSpecialtyHeight] = React.useState(75);
-  const [specialtyAnimation, setSpecialtyAnimation] = React.useState(
-    new Animation.Value(specialtyHeight)
-  );
-  const [aboutHeight, setAboutHeight] = React.useState(120);
-  const [aboutAnimation, setAboutAnimation] = React.useState(
-    new Animation.Value(aboutHeight)
-  );
+
   const { handleScroll, showButton } = useHandleScroll();
   const [Specialty, setSpecialty] = React.useState(
     "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
@@ -182,15 +139,11 @@ const FixedService = (props) => {
   const data = params.data;
   const [newNavigation, setNewNavigation] = React.useState(1100);
   const [imageIndex, setImageIndex] = React.useState(0);
-  const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
   //console.log(SeeMore)
-  const newImage1 = useImage(data.images[0]);
-  const newImage2 = useImage(data.images[1]);
-  const newImage3 = useImage(data.images[2]);
-  const newImage4 = useImage(data.images[3]);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -201,7 +154,6 @@ const FixedService = (props) => {
   }, []);
 
   React.useEffect(() => {
-    setActive("Bargaining");
     setScrollEnabled(false);
     setActiveServiceData(null);
     //console.log(data);
@@ -337,69 +289,6 @@ const FixedService = (props) => {
     }
   }, [Data]);
 
-  React.useEffect(() => {
-    if (Specialty && !Array.isArray(Specialty)) {
-      let arr = Specialty.split(",");
-      setSpecialty(arr);
-    }
-  }, [Specialty]);
-  const showCart = (doc) => {
-    setGigs(doc);
-    setClick(true);
-    setImages(doc.images);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  const clickFixed = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    console.log("ok");
-    navigation.navigate("FixedService", { data: doc });
-  };
-  const clickPackage = (doc) => {};
-  React.useEffect(() => {
-    Animation.timing(specialtyAnimation, {
-      duration: 300,
-      toValue: specialtyHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [specialtyHeight]);
-
-  React.useEffect(() => {}, [newNavigation]);
-  const changeScrollStatus = React.useCallback((val) => {
-    //setScrollEnabled(val);
-  });
-
-  //console.log(SeeMore)
-
   if (
     Loader ||
     !Data ||
@@ -419,27 +308,30 @@ const FixedService = (props) => {
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-      <StatusBar
-        hidden={true}
-        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
+      <StatusBar hidden={false} backgroundColor={"transparent"} />
+      <View
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.325)",
+          width: width,
+          height: 20,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 200,
+        }}
       />
       {/* {Platform.OS == "android" && (
         <StatusBar
           backgroundColor={scrollEnabled ? primaryColor : "transparent"}
         />
       )} */}
-      <TouchableOpacity onPress={()=>{
-        navigation.goBack()
-      }} style={{
-        position:"absolute",
-        zIndex:1000,
-        top:15,
-        left:15
-      }}>
-        <SvgXml xml={backIcon} width="30" height={"30"} />
-      </TouchableOpacity>
-      <ScrollView
+     
+
+      <ScrollView 
+        stickyHeaderHiddenOnScroll={true}
         scrollEventThrottle={16}
+        stickyHeaderIndices={[0]}
+        
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         ref={scrollRef}
@@ -448,7 +340,7 @@ const FixedService = (props) => {
         }
         showsVerticalScrollIndicator={false}
         style={{
-          backgroundColor: primaryColor,
+          backgroundColor: "transparent",
           flex: 1,
         }}
         onScroll={(e) => {
@@ -460,30 +352,68 @@ const FixedService = (props) => {
             //setScrollEnabled(false);
           } else if (dif < 0) {
             //console.log("up")
-            if (currentOffset < 380) {
-              setScrollEnabled(false);
-            }
+            // if (currentOffset < 380) {
+            //   setScrollEnabled(false);
+            // }
           } else {
-            if (currentOffset > 380) {
-              setScrollEnabled(true);
-            } else {
-              setScrollEnabled(false);
-            }
             //console.log("down")
           }
-          // console.log(currentOffset)
-          // if (currentOffset > 380) {
-          //   setScrollEnabled(true);
-          // } else {
-          //   setScrollEnabled(false);
-          // }
-          // scrollY.setValue(e.nativeEvent.contentOffset.y);
+          if (currentOffset > 380 && currentOffset > 0) {
+            console.log("white");
+            setScrollEnabled(true);
+          } else {
+            console.log("transparent");
+            setScrollEnabled(false);
+          }
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
-        <Carousel style={{
-          backgroundColor:"black"
-        }}
+         <Animation.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              top: 0,
+              left: 0,
+              backgroundColor: scrollEnabled ? primaryColor : "transparent",
+              zIndex: 100,
+              width: width,
+              overflow: "hidden",
+            },
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingTop: 20,
+              backgroundColor: "transparent",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{
+                marginVertical: 10,
+                marginHorizontal: 20,
+              }}
+            >
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color={scrollEnabled ? "black" : primaryColor}
+              />
+            </TouchableOpacity>
+          </View>
+        </Animation.View>
+        <Carousel
+          style={{
+            backgroundColor: "black",
+          }}
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
           loop={false}
           width={width}
           height={400}
@@ -527,34 +457,34 @@ const FixedService = (props) => {
             //       color={Platform.OS == "ios" ? "#e6e6e6" : "#cdcdcd"}
             //     />
             //   </Box>
-              
+
             // </Canvas>
             <Image
-                source={{uri:Images[index]}}
-                fit="cover"
-                x={0}
-                y={0}
-                width={width}
-                height={400}
-                style={{
-                  width:width,
-                  height:400,
-                  opacity:.9,
-                  backgroundColor:"black"
-                }}
-              />
+              source={{ uri: Images[index] }}
+              fit="cover"
+              x={0}
+              y={0}
+              width={width}
+              height={400}
+              style={{
+                width: width,
+                height: 400,
+                opacity: 0.9,
+                backgroundColor: "black",
+              }}
+            />
           )}
         />
         <View
           style={{
             position: "absolute",
-            zIndex: 100,
-            top: 340,
+            zIndex: 1,
             right: 20,
             backgroundColor: "#707070",
             paddingHorizontal: 10,
             paddingVertical: 3,
             borderRadius: 20,
+            top: 380,
           }}
         >
           <Text
@@ -573,10 +503,9 @@ const FixedService = (props) => {
             top: 0,
             right: 10,
             height: 400,
-            justifyContent: "flex-end",
+            justifyContent: "center",
             elevation: 2,
             zIndex: 100,
-            paddingBottom: 70,
           }}
         >
           <Menu
@@ -670,6 +599,7 @@ const FixedService = (props) => {
             width={Platform.OS == "ios" ? "50" : "45"}
           />
         </View>
+        
         <View
           style={{
             backgroundColor: primaryColor,
@@ -961,7 +891,7 @@ const FixedService = (props) => {
               onPress={() => {
                 navigation.navigate("OfferNow", {
                   type: "ONETIME",
-                  gigs:data
+                  gigs: data,
                 });
               }}
               style={{

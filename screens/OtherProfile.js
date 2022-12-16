@@ -1089,7 +1089,7 @@ const OtherProfile = (props) => {
           style={[
             {
               overflow: "hidden",
-              height: height - 52,
+              height: newNavigation,
             },
           ]}
         >
@@ -1118,6 +1118,7 @@ const OtherProfile = (props) => {
               },
               tabBarScrollEnabled: true,
               tabBarPressColor: primaryColor,
+              swipeEnabled:false
             }}
           >
             <Tab.Screen
@@ -1459,7 +1460,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
-  console.log(Data);
+  //console.log(Data);
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -1521,17 +1522,21 @@ const BargainingScreen = ({ navigation, route }) => {
     }
   }, [NewLines]);
   //console.log(newHeight);
-  // React.useEffect(() => {
-  //   if (navHeight && isFocused) {
-  //     //console.log(textHeight)
-  //     setTimeout(() => {
-  //       setNewNavigation(navHeight + textHeight);
-  //     }, 30);
-  //   }
-  // }, [navHeight + isFocused + textHeight]);
+  React.useEffect(() => {
+    if (navHeight && isFocused) {
+      //console.log(textHeight)
+      setTimeout(() => {
+        setNewNavigation(navHeight + textHeight);
+      }, 0);
+    }
+  }, [navHeight + isFocused + textHeight]);
 
   return (
-    <ScrollView
+    <View onLayout={e=>{
+      if(navHeight===0){
+        setNavHeight(e.nativeEvent.layout.height)
+      }
+    }}
       scrollEventThrottle={16}
       onScroll={(e) => {
         //console.log(e.nativeEvent.contentOffset.y)
@@ -1573,7 +1578,7 @@ const BargainingScreen = ({ navigation, route }) => {
             onChange={(height) => {
               //setNewNavigation(newHeight + 55 + height);
               //console.log(height)
-              setTextHeight(height);
+              setTextHeight(height-50);
             }}
             button={true}
             text={Description}
@@ -1735,7 +1740,7 @@ const BargainingScreen = ({ navigation, route }) => {
                         <Text
                           numberOfLines={1}
                           onLayout={(e) => {
-                            console.log(e.nativeEvent.layout.height);
+                            //console.log(e.nativeEvent.layout.height);
                           }}
                           style={{
                             fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -1911,7 +1916,7 @@ const BargainingScreen = ({ navigation, route }) => {
         )}
       </View>
       <View style={{ height: 90 }} />
-    </ScrollView>
+    </View>
   );
 };
 const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28.227" height="16.127" viewBox="0 0 28.227 16.127">
@@ -2047,7 +2052,7 @@ const FixedScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 140);
+      setNewNavigation(layoutHeight + 50);
       //setNewNavigation(layoutHeight + 70);
       setTimeout(() => {
         //setNewNavigation(layoutHeight + 140);
@@ -2057,7 +2062,9 @@ const FixedScreen = ({ navigation, route }) => {
 
   //console.log(FixedService)
   return (
-    <ScrollView
+    <View onLayout={e=>{
+      setLayoutHeight(e.nativeEvent.layout.height)
+    }}
       scrollEventThrottle={16}
       onScroll={(e) => {
         //console.log(e.nativeEvent.contentOffset.y)
@@ -2143,7 +2150,7 @@ const FixedScreen = ({ navigation, route }) => {
             marginTop: 0,
           }}
         >
-          {RelatedServices.length > 0 && (
+          {RelatedServices.length > 2 && (
             <View>
               <Text
                 style={{
@@ -2211,7 +2218,7 @@ const FixedScreen = ({ navigation, route }) => {
         </View>
       </View>
       <View style={{ height: 70 }} />
-    </ScrollView>
+    </View>
   );
 };
 const PackageScreen = ({ navigation, route }) => {
@@ -2230,12 +2237,12 @@ const PackageScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 140);
+      setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
   return (
-    <ScrollView
+    <View
       scrollEventThrottle={16}
       onScroll={(e) => {
         //console.log(e.nativeEvent.contentOffset.y)
@@ -2250,12 +2257,13 @@ const PackageScreen = ({ navigation, route }) => {
         }
         setOffset(currentOffset);
       }}
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
       nestedScrollEnabled={true}
     >
       <View
-        onLayout={(e) => {
-          //setLayoutHeight(e.nativeEvent.layout.height);
-        }}
+        
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
@@ -2322,7 +2330,7 @@ const PackageScreen = ({ navigation, route }) => {
             marginTop: 0,
           }}
         >
-          {RelatedServices.length > 0 && (
+          {RelatedServices.length > 2 && (
             <View>
               <Text
                 style={{
@@ -2390,7 +2398,7 @@ const PackageScreen = ({ navigation, route }) => {
         </View>
       </View>
       <View style={{ height: 70 }} />
-    </ScrollView>
+    </View>
   );
 };
 const calculateHeight = (text, plus, minus) => {
