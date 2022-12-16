@@ -268,7 +268,7 @@ const OtherProfile = (props) => {
           console.warn(error.response.data);
         });
     }
-  }, [serviceId + Refresh]);
+  }, [serviceId + Refresh+data]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
@@ -330,7 +330,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data + serviceId + Refresh]);
+  }, [Bargaining + Data + Refresh]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -352,7 +352,7 @@ const OtherProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList + Click + Refresh + serviceId]);
+  }, [NewDataList + Click + Refresh ]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -369,7 +369,7 @@ const OtherProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService + Click + Refresh + serviceId]);
+  }, [ActiveService + Click + Refresh ]);
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -382,7 +382,7 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + data + newUser + serviceId]);
+  }, [Active + data + newUser + serviceId+Data]);
   React.useEffect(() => {
     if (newUser && data) {
       getOtherServices(newUser.token, data.service.id, "PACKAGE")
@@ -395,11 +395,11 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + serviceId]);
+  }, [data + newUser + serviceId+Data]);
   React.useEffect(() => {
     if (newUser && data) {
       setLoader(true);
-      getRelatedServices(newUser.token, data.service.id, Data.service.dashboard)
+      getRelatedServices(newUser.token, data.service.id, data.service.dashboard)
         .then((response) => {
           if (response.data) {
             setLoader(false);
@@ -413,8 +413,8 @@ const OtherProfile = (props) => {
       setLoader(true);
       getUnRelatedServices(
         newUser.token,
-        Data.service.id,
-        Data.service.dashboard
+        data.service.id,
+        data.service.dashboard
       )
         .then((response) => {
           if (response.data) {
@@ -427,7 +427,7 @@ const OtherProfile = (props) => {
           console.warn(err.response);
         });
     }
-  }, [data + serviceId]);
+  }, [data + serviceId+Data]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -786,8 +786,8 @@ const OtherProfile = (props) => {
                 },
               ]}
             >
-              {Data
-                ? Data.service.serviceCenterName
+              {data
+                ? data.service.serviceCenterName
                 : "Easin Arafat It Consulting Center"}
             </Text>
             <View style={{ flex: 0.5 }} />
