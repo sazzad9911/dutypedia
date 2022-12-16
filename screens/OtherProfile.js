@@ -77,6 +77,7 @@ import {
 import Swiper from "react-native-swiper";
 import { StatusBar } from "expo-status-bar";
 import CustomAppStatusBar from "../Hooks/AppBar";
+import { TabbedHeaderPager } from "react-native-sticky-parallax-header";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -181,11 +182,11 @@ const OtherProfile = (props) => {
   const params = props.route.params;
   const data = params.data;
   const [newNavigation, setNewNavigation] = React.useState(1100);
-  const [pageHeight, setPageHeight] = React.useState(0);
+  const [scrollLayout, setScrollLayout] = React.useState();
   const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
-  const [offset, setOffset] = React.useState(0);
-  const [statusBarHeight,setStatusBarHeight]=React.useState(0)
+  const [offset, setOffset] = React.useState();
+  const [statusBarHeight, setStatusBarHeight] = React.useState(0);
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -483,6 +484,20 @@ const OtherProfile = (props) => {
   const changeScrollStatus = React.useCallback((val) => {
     //setScrollEnabled(val);
   });
+  const scrollTo=React.useCallback((position)=>{
+    
+    if(scrollRef &&offset){ 
+      //console.log(offset)
+      if(position>0){
+        scrollRef.current.scrollTo({y:offset-position,animated:true})
+      setOffset(val=>(val-position))
+      }else{
+        console.log(position)
+        scrollRef.current.scrollTo({y:offset+position,animated:true})
+      setOffset(val=>(val+position))
+      }
+    }
+  })
 
   //console.log(SeeMore)
 
@@ -501,16 +516,16 @@ const OtherProfile = (props) => {
       </View>
     );
   }
-  
 
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-      <StatusBar hidden={true}
-          backgroundColor={scrollEnabled ? primaryColor : "transparent"}
-        />
+      <StatusBar
+        hidden={true}
+        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
+      />
       {/* {Platform.OS == "android" && (
         <StatusBar
           backgroundColor={scrollEnabled ? primaryColor : "transparent"}
@@ -525,7 +540,6 @@ const OtherProfile = (props) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         showsVerticalScrollIndicator={false}
-        
         style={{
           backgroundColor: primaryColor,
           flex: 1,
@@ -539,14 +553,13 @@ const OtherProfile = (props) => {
             //setScrollEnabled(false);
           } else if (dif < 0) {
             //console.log("up")
-            if(currentOffset<380){
+            if (currentOffset < 380) {
               setScrollEnabled(false);
             }
-            
           } else {
-            if(currentOffset>380){
+            if (currentOffset > 380) {
               setScrollEnabled(true);
-            }else{
+            } else {
               setScrollEnabled(false);
             }
             //console.log("down")
@@ -557,11 +570,13 @@ const OtherProfile = (props) => {
           // } else {
           //   setScrollEnabled(false);
           // }
-         // scrollY.setValue(e.nativeEvent.contentOffset.y);
-          setOffset(currentOffset);
+          // scrollY.setValue(e.nativeEvent.contentOffset.y);
+          if(!offset){
+            setOffset(currentOffset);
+          }
         }}
       >
-         {/* <Animation.View
+        {/* <Animation.View
           style={[
             {
               transform: [{ translateY: translateY }],
@@ -723,7 +738,7 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
-              navigation.navigate("ChatScreen",{data:Data})
+              navigation.navigate("ChatScreen", { data: Data });
             }}
             style={{
               shadowOffset: {
@@ -1072,7 +1087,7 @@ const OtherProfile = (props) => {
           style={[
             {
               overflow: "hidden",
-              height: newNavigation,
+              height: height-52,
             },
           ]}
         >
@@ -1134,6 +1149,7 @@ const OtherProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 changeScrollStatus: changeScrollStatus,
+                scrollTo:scrollTo
               }}
               component={BargainingScreen}
             />
@@ -1209,91 +1225,6 @@ const OtherProfile = (props) => {
             />
           </Tab.Navigator>
         </View>
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 0,
-            paddingVertical: 25,
-            paddingTop: 0,
-          }}
-        >
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-            }}
-            title="Seller Communication"
-            rate={4.6}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service As Describe"
-            rate={4.6}
-          />
-          <RatingView
-            style={{
-              marginHorizontal: 20,
-              marginTop: 5,
-            }}
-            title="Service Quality"
-            rate={3.2}
-          />
-        </View>
-        <ReviewCart navigation={navigation} />
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 0,
-          }}
-        >
-          {RelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                Related Service
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {RelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-              </ScrollView>
-            </View>
-          )}
-
-          {UnRelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                You Might Also Like
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {UnRelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-                <View style={{ width: 10 }} />
-              </ScrollView>
-            </View>
-          )}
-        </View>
-        <View style={{ height: 70 }} />
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1314,9 +1245,11 @@ const OtherProfile = (props) => {
             borderRadius: 25,
           }}
         >
-          <Pressable onPress={()=>{
-            navigation.navigate("ChatScreen",{data:Data})
-          }}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("ChatScreen", { data: Data });
+            }}
+          >
             <SvgXml xml={messageIcon} height="50" width={"50"} />
           </Pressable>
         </Animated.View>
@@ -1514,14 +1447,14 @@ const BargainingScreen = ({ navigation, route }) => {
   ).current;
   const [newHeight, setHeight] = React.useState(3);
   const [text, setText] = React.useState("");
-  const [navHeight, setNavHeight] = React.useState();
+  const [navHeight, setNavHeight] = React.useState(0);
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
   const [textHeight, setTextHeight] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
-  const [boxHeight, setBoxHeight] = React.useState();
+  const scrollTo=params.scrollTo;
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -1583,21 +1516,31 @@ const BargainingScreen = ({ navigation, route }) => {
     }
   }, [NewLines]);
   //console.log(newHeight);
-  React.useEffect(() => {
-    if (navHeight && isFocused) {
-      //console.log(textHeight)
-      setTimeout(() => {
-        setNewNavigation(navHeight + textHeight);
-      }, 30);
-    }
-  }, [navHeight + isFocused + textHeight]);
+  // React.useEffect(() => {
+  //   if (navHeight && isFocused) {
+  //     //console.log(textHeight)
+  //     setTimeout(() => {
+  //       setNewNavigation(navHeight + textHeight);
+  //     }, 30);
+  //   }
+  // }, [navHeight + isFocused + textHeight]);
 
   return (
-    <View
-      onLayout={(e) => {
-        if (!navHeight) {
-          setNavHeight(e.nativeEvent.layout.height);
+    <ScrollView scrollEventThrottle={16} onScroll={(e)=>{
+      //console.log(e.nativeEvent.contentOffset.y)
+      //console.log(navHeight)
+        if(e.nativeEvent.contentOffset.y<-80){
+          //console.log("ok")
+          scrollTo(1)
         }
+        if(e.nativeEvent.contentOffset.y>navHeight){
+          //console.log("ok")
+          scrollTo(-1)
+        }
+        
+    }} nestedScrollEnabled={true}
+      onLayout={(e) => {
+        
       }}
     >
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
@@ -1873,7 +1816,95 @@ const BargainingScreen = ({ navigation, route }) => {
           title="Offer Now"
         />
       </View>
-    </View>
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          marginTop: 0,
+          paddingVertical: 25,
+          paddingTop: 25,
+        }}
+      >
+        <RatingView
+          style={{
+            marginHorizontal: 20,
+          }}
+          title="Seller Communication"
+          rate={4.6}
+        />
+        <RatingView
+          style={{
+            marginHorizontal: 20,
+            marginTop: 5,
+          }}
+          title="Service As Describe"
+          rate={4.6}
+        />
+        <RatingView
+          style={{
+            marginHorizontal: 20,
+            marginTop: 5,
+          }}
+          title="Service Quality"
+          rate={3.2}
+        />
+      </View>
+      <ReviewCart navigation={navigation} />
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          marginTop: 0,
+        }}
+      >
+        {RelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              Related Service
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {RelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {UnRelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              You Might Also Like
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {UnRelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+              <View style={{ width: 10 }} />
+            </ScrollView>
+          </View>
+        )}
+      </View>
+      <View style={{ height: 70 }} />
+      <View onLayout={e=>{
+        setNavHeight(e.nativeEvent.layout.y-400)
+      }}/>
+    </ScrollView>
   );
 };
 const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28.227" height="16.127" viewBox="0 0 28.227 16.127">
@@ -2085,6 +2116,58 @@ const FixedScreen = ({ navigation, route }) => {
           </View>
         </Animated.View>
       )}
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          marginTop: 0,
+        }}
+      >
+        {RelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              Related Service
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {RelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {UnRelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              You Might Also Like
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {UnRelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+              <View style={{ width: 10 }} />
+            </ScrollView>
+          </View>
+        )}
+      </View>
+      <View style={{ height: 70 }} />
     </View>
   );
 };
@@ -2171,6 +2254,58 @@ const PackageScreen = ({ navigation, route }) => {
           </View>
         </Animated.View>
       )}
+      <View
+        style={{
+          backgroundColor: primaryColor,
+          marginTop: 0,
+        }}
+      >
+        {RelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              Related Service
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {RelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {UnRelatedServices.length > 0 && (
+          <View>
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                fontFamily: "Poppins-SemiBold",
+                color: textColor,
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              You Might Also Like
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ width: 10 }} />
+              {UnRelatedServices.map((doc, i) => (
+                <RelatedService data={doc} key={i} navigation={navigation} />
+              ))}
+              <View style={{ width: 10 }} />
+            </ScrollView>
+          </View>
+        )}
+      </View>
+      <View style={{ height: 70 }} />
     </View>
   );
 };

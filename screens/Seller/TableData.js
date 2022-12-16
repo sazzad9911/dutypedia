@@ -88,7 +88,7 @@ const TableData = (props) => {
           <></>
         )}
         {exit && (
-          <Button
+          <IconButton
             disabled={buttonPress ? false : true}
             onPress={() => {
               if (direct) {
@@ -124,7 +124,7 @@ const TableData = (props) => {
         )}
       </ScrollView>
       {!exit && (
-        <Button
+        <IconButton
           disabled={buttonPress ? false : true}
           onPress={() => {
             //dispatch(setListData(!listData));
@@ -406,6 +406,7 @@ const Table = ({
 };
 import { Observable } from "object-observer";
 import InputModal from "./InputModal";
+import IconButton from "../../components/IconButton";
 const Rows = ({
   title,
   data,

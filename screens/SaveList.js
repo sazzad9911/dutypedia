@@ -87,8 +87,7 @@ const SaveList = ({ navigation }) => {
           onPress={() => {
             navigation.goBack();
           }}
-          style={{
-            
+          style={{   
             alignSelf: "flex-start",
             marginLeft: 10,
             marginTop:11
