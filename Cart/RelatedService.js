@@ -7,15 +7,13 @@ import {
   FlatList,
   Platform,
   Dimensions,
-  Image
+  Image,
 } from "react-native";
-import {
-  Color
-} from "./../assets/colors";
+import { Color } from "./../assets/colors";
 import { SvgXml } from "react-native-svg";
 import { star } from "../assets/icon";
 import { AntDesign } from "@expo/vector-icons";
-import {useDispatch,useSelector} from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 const { width, height } = Dimensions.get("window");
 import { Canvas, useImage } from "@shopify/react-native-skia";
 
@@ -23,23 +21,129 @@ const RelatedService = (props) => {
   const navigation = props.navigation;
   const [Like, seLike] = React.useState(false);
   const data = props.data;
-  const isDark=useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
   //console.log(data.images[0])
   const image = useImage(data.images[0]);
+
+  if (props.squire) {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate("OtherProfile", {
+              serviceId: data ? data.service.id : null,
+              data: data,
+            });
+          }
+        }}
+        style={{
+          shadowColor: assentColor,
+          shadowOffset: {
+            width: 1,
+            height: 1,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+          borderRadius: 10,
+          backgroundColor: primaryColor,
+          margin: 10,
+        }}
+      >
+        <View
+          style={{
+            width: width / 2 - 30,
+            height: width / 2 - 10,
+            overflow: "hidden",
+            borderRadius: 10,
+            backgroundColor: primaryColor,
+          }}
+        >
+          <Image
+            style={{
+              width: "100%",
+              height: "50%",
+              opacity: 0.9,
+            }}
+            source={{
+              uri: data?.images[0],
+            }}
+          />
+          <View
+            style={{
+              padding: 10,
+              paddingTop: 15,
+            }}
+          >
+            <Text
+              numberOfLines={2}
+              style={{
+                fontSize: 14,
+                fontFamily: "Poppins-Medium",
+                lineHeight: 15,
+                color: textColor,
+              }}
+            >
+              {data?.title}
+            </Text>
+            <View
+              style={{
+                marginTop: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: "Poppins-Medium",
+                  color: "#707070",
+                }}
+              >
+                From {data?.price}৳
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <SvgXml xml={star} height="15" width="15" />
+                <Text
+                  style={{
+                    marginLeft: 5,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    fontSize:15,
+                    color:"#707070"
+                  }}
+                >
+                  5.0
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
   return (
     <TouchableOpacity
       onPress={() => {
-        if(navigation){
-          navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null,data:data});
+        if (navigation) {
+          navigation.navigate("OtherProfile", {
+            serviceId: data ? data.service.id : null,
+            data: data,
+          });
         }
       }}
       style={{
-        width: width/3+20,
+        width: width / 3 + 20,
         height: 280,
         borderRadius: 10,
         shadowColor: assentColor,
@@ -47,30 +151,29 @@ const RelatedService = (props) => {
           width: 1,
           height: 1,
         },
-        shadowOpacity: .1,
+        shadowOpacity: 0.1,
         shadowRadius: 6,
         elevation: 5,
         margin: 10,
-        backgroundColor:primaryColor
+        backgroundColor: primaryColor,
       }}
     >
       <View
         style={{
-          width: width/3+20,
+          width: width / 3 + 20,
           height: 280,
           backgroundColor: primaryColor,
-          borderRadius: 10
+          borderRadius: 10,
         }}
       >
-      
         <Image
           style={{
-            width: width/3+20,
+            width: width / 3 + 20,
             height: 140,
             borderRadius: 10,
           }}
           source={{
-            uri:data.images[0],
+            uri: data.images[0],
           }}
         />
         <View
@@ -91,8 +194,8 @@ const RelatedService = (props) => {
               style={{
                 marginLeft: 5,
                 color: textColor,
-                fontFamily: 'Poppins-Medium',
-                marginTop:-2
+                fontFamily: "Poppins-Medium",
+                marginTop: -2,
               }}
             >
               5.0
@@ -115,11 +218,13 @@ const RelatedService = (props) => {
           style={{
             marginHorizontal: 10,
             color: textColor,
-            fontFamily: 'Poppins-Medium',
-            fontSize:13
+            fontFamily: "Poppins-Medium",
+            fontSize: 13,
           }}
         >
-          {data?data.title:"I will make custom graphic for your blog I will"}
+          {data
+            ? data.title
+            : "I will make custom graphic for your blog I will"}
         </Text>
         <View
           style={{
@@ -138,7 +243,7 @@ const RelatedService = (props) => {
               style={{
                 fontSize: 13,
                 color: textColor,
-                fontFamily: 'Poppins-Light'
+                fontFamily: "Poppins-Light",
               }}
             >
               From
@@ -148,10 +253,10 @@ const RelatedService = (props) => {
                 fontSize: 18,
                 color: textColor,
                 marginLeft: 5,
-                fontFamily: 'Poppins-Medium'
+                fontFamily: "Poppins-Medium",
               }}
             >
-              {data?data.price:"0"}৳
+              {data ? data.price : "0"}৳
             </Text>
           </View>
         </View>

@@ -203,8 +203,13 @@ const OtherProfile = (props) => {
     setActive("Bargaining");
     setLoader(true);
     setScrollEnabled(false);
-    setActiveServiceData(null);
+
     if (serviceId && newUser) {
+      setActiveServiceData(null);
+      setRelatedServices(null);
+      setUnRelatedServices(null);
+      setFixedService(null);
+      setPackageService(null);
       getService(newUser.token, serviceId)
         .then((response) => {
           if (response.data) {
@@ -325,7 +330,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data]);
+  }, [Bargaining + Data + serviceId + Refresh]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -347,7 +352,7 @@ const OtherProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList + Click + Refresh]);
+  }, [NewDataList + Click + Refresh + serviceId]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -364,10 +369,10 @@ const OtherProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService + Click + Refresh]);
+  }, [ActiveService + Click + Refresh + serviceId]);
   React.useEffect(() => {
     if (newUser && Data) {
-      getOtherServices(newUser.token, Data.service.id, "ONETIME")
+      getOtherServices(newUser.token, data.service.id, "ONETIME")
         .then((res) => {
           setFixedService(res.data.gigs);
           //console.log(res.data.gigs);
@@ -377,10 +382,10 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + Data + newUser]);
+  }, [Active + data + newUser + serviceId]);
   React.useEffect(() => {
-    if (newUser && Data) {
-      getOtherServices(newUser.token, Data.service.id, "PACKAGE")
+    if (newUser && data) {
+      getOtherServices(newUser.token, data.service.id, "PACKAGE")
         .then((res) => {
           setPackageService(res.data.gigs);
           //console.log(res.data.gigs);
@@ -390,11 +395,11 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Data + newUser]);
+  }, [data + newUser + serviceId]);
   React.useEffect(() => {
-    if (newUser && Data) {
+    if (newUser && data) {
       setLoader(true);
-      getRelatedServices(newUser.token, Data.service.id, Data.service.dashboard)
+      getRelatedServices(newUser.token, data.service.id, Data.service.dashboard)
         .then((response) => {
           if (response.data) {
             setLoader(false);
@@ -422,7 +427,7 @@ const OtherProfile = (props) => {
           console.warn(err.response);
         });
     }
-  }, [Data]);
+  }, [data + serviceId]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -484,20 +489,19 @@ const OtherProfile = (props) => {
   const changeScrollStatus = React.useCallback((val) => {
     //setScrollEnabled(val);
   });
-  const scrollTo=React.useCallback((position)=>{
-    
-    if(scrollRef &&offset){ 
+  const scrollTo = React.useCallback((position) => {
+    if (scrollRef) {
       //console.log(offset)
-      if(position>0){
-        scrollRef.current.scrollTo({y:offset-position,animated:true})
-      setOffset(val=>(val-position))
-      }else{
-        console.log(position)
-        scrollRef.current.scrollTo({y:offset+position,animated:true})
-      setOffset(val=>(val+position))
+      if (position > 0) {
+        scrollRef.current.scrollTo({ y: position, animated: true });
+        //setOffset(val=>(val-position))
+      } else {
+        //console.log(position)
+        scrollRef.current.scrollTo({ y: 1200, animated: true });
+        //setOffset(val=>(val+position))
       }
     }
-  })
+  });
 
   //console.log(SeeMore)
 
@@ -571,9 +575,7 @@ const OtherProfile = (props) => {
           //   setScrollEnabled(false);
           // }
           // scrollY.setValue(e.nativeEvent.contentOffset.y);
-          if(!offset){
-            setOffset(currentOffset);
-          }
+          setOffset(currentOffset);
         }}
       >
         {/* <Animation.View
@@ -1087,7 +1089,7 @@ const OtherProfile = (props) => {
           style={[
             {
               overflow: "hidden",
-              height: height-52,
+              height: height - 52,
             },
           ]}
         >
@@ -1149,7 +1151,7 @@ const OtherProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 changeScrollStatus: changeScrollStatus,
-                scrollTo:scrollTo
+                scrollTo: scrollTo,
               }}
               component={BargainingScreen}
             />
@@ -1185,6 +1187,7 @@ const OtherProfile = (props) => {
                 setNewNavigation: setNewNavigation,
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
               }}
               component={FixedScreen}
             />
@@ -1220,6 +1223,7 @@ const OtherProfile = (props) => {
                 setNewNavigation: setNewNavigation,
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
               }}
               component={PackageScreen}
             />
@@ -1454,7 +1458,8 @@ const BargainingScreen = ({ navigation, route }) => {
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
-  const scrollTo=params.scrollTo;
+  const scrollTo = params.scrollTo;
+  console.log(Data);
 
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
@@ -1526,22 +1531,24 @@ const BargainingScreen = ({ navigation, route }) => {
   // }, [navHeight + isFocused + textHeight]);
 
   return (
-    <ScrollView scrollEventThrottle={16} onScroll={(e)=>{
-      //console.log(e.nativeEvent.contentOffset.y)
-      //console.log(navHeight)
-        if(e.nativeEvent.contentOffset.y<-80){
+    <ScrollView
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
           //console.log("ok")
-          scrollTo(1)
+          scrollTo(1);
         }
-        if(e.nativeEvent.contentOffset.y>navHeight){
-          //console.log("ok")
-          scrollTo(-1)
+
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
         }
-        
-    }} nestedScrollEnabled={true}
-      onLayout={(e) => {
-        
+
+        setOffset(currentOffset);
       }}
+      nestedScrollEnabled={true}
     >
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
         <Text
@@ -1573,6 +1580,9 @@ const BargainingScreen = ({ navigation, route }) => {
           />
         </View>
         <Carousel
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
           loop={false}
           width={width}
           height={width + 30}
@@ -1900,10 +1910,7 @@ const BargainingScreen = ({ navigation, route }) => {
           </View>
         )}
       </View>
-      <View style={{ height: 70 }} />
-      <View onLayout={e=>{
-        setNavHeight(e.nativeEvent.layout.y-400)
-      }}/>
+      <View style={{ height: 90 }} />
     </ScrollView>
   );
 };
@@ -2034,6 +2041,8 @@ const FixedScreen = ({ navigation, route }) => {
   const UnRelatedServices = params.UnRelatedServices;
   const [content, setContent] = React.useState(2);
   const [layoutHeight, setLayoutHeight] = React.useState();
+  const [offset, setOffset] = React.useState(0);
+  const scrollTo = params.scrollTo;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2048,127 +2057,161 @@ const FixedScreen = ({ navigation, route }) => {
 
   //console.log(FixedService)
   return (
-    <View
-      onLayout={(e) => {
-        //setNewNavigation(e.nativeEvent.layout.height);
-        setLayoutHeight(e.nativeEvent.layout.height);
+    <ScrollView
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
       }}
-      style={{
-        marginHorizontal: 10,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        marginVertical: 20,
-        backgroundColor: primaryColor,
-      }}
+      nestedScrollEnabled={true}
     >
-      {FixedService.map(
-        (doc, i) =>
-          i < content && (
-            <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
-          )
-      )}
-      {FixedService.length > content && (
-        <View
-          style={{
-            justifyContent: "center",
-            marginVertical: 15,
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <IconButton
-            onPress={() => {
-              setContent((val) => val + 2);
-            }}
-            style={{
-              borderWidth: 0,
-            }}
-            Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
-            title="Load More"
-          />
-        </View>
-      )}
-      {FixedService.length == 0 && (
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            paddingHorizontal: 10,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            width: "100%",
-          }}
-          entering={FadeIn}
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
-          </View>
-        </Animated.View>
-      )}
       <View
         style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginHorizontal: 10,
+          marginVertical: 20,
         }}
       >
-        {RelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
+        {FixedService.map(
+          (doc, i) =>
+            i < content && (
+              <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
+            )
+        )}
+        {FixedService.length > content && (
+          <View
+            style={{
+              justifyContent: "center",
+              marginVertical: 15,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <IconButton
+              onPress={() => {
+                setContent((val) => val + 2);
               }}
-            >
-              Related Service
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {RelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-            </ScrollView>
+              style={{
+                borderWidth: 0,
+              }}
+              Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
+              title="Load More"
+            />
           </View>
         )}
+        {FixedService.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+          }}
+        >
+          {RelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {RelatedServices.map((doc, i) =>
+                  i < 6 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
 
-        {UnRelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              You Might Also Like
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {UnRelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-              <View style={{ width: 10 }} />
-            </ScrollView>
-          </View>
-        )}
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {UnRelatedServices.map((doc, i) =>
+                  i < 50 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+        </View>
       </View>
       <View style={{ height: 70 }} />
-    </View>
+    </ScrollView>
   );
 };
 const PackageScreen = ({ navigation, route }) => {
@@ -2181,6 +2224,8 @@ const PackageScreen = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const isFocused = useIsFocused();
   const setNewNavigation = params.setNewNavigation;
+  const scrollTo = params.scrollTo;
+  const [offset, setOffset] = React.useState(0);
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2190,123 +2235,162 @@ const PackageScreen = ({ navigation, route }) => {
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
   return (
-    <View
-      onLayout={(e) => {
-        setLayoutHeight(e.nativeEvent.layout.height);
+    <ScrollView
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
       }}
-      style={{
-        marginHorizontal: 10,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        marginVertical: 20,
-      }}
+      nestedScrollEnabled={true}
     >
-      {PackageService.map(
-        (doc, i) =>
-          i < content && <ServiceCart onPress={onPress} key={i} data={doc} />
-      )}
-      {PackageService.length > content && (
-        <View
-          style={{
-            justifyContent: "center",
-            marginVertical: 15,
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <IconButton
-            onPress={() => {
-              setContent((val) => val + 2);
-            }}
-            style={{
-              borderWidth: 0,
-            }}
-            Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
-            title="Load More"
-          />
-        </View>
-      )}
-      {PackageService.length == 0 && (
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            paddingHorizontal: 10,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            width: "100%",
-          }}
-          entering={FadeIn}
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
-          </View>
-        </Animated.View>
-      )}
       <View
+        onLayout={(e) => {
+          //setLayoutHeight(e.nativeEvent.layout.height);
+        }}
         style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
+          marginHorizontal: 10,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginVertical: 20,
         }}
       >
-        {RelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
+        {PackageService.map(
+          (doc, i) =>
+            i < content && <ServiceCart onPress={onPress} key={i} data={doc} />
+        )}
+        {PackageService.length > content && (
+          <View
+            style={{
+              justifyContent: "center",
+              marginVertical: 15,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <IconButton
+              onPress={() => {
+                setContent((val) => val + 2);
               }}
-            >
-              Related Service
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {RelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-            </ScrollView>
+              style={{
+                borderWidth: 0,
+              }}
+              Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
+              title="Load More"
+            />
           </View>
         )}
+        {PackageService.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+          }}
+        >
+          {RelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {RelatedServices.map((doc, i) =>
+                  i < 6 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
 
-        {UnRelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              You Might Also Like
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {UnRelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-              <View style={{ width: 10 }} />
-            </ScrollView>
-          </View>
-        )}
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {UnRelatedServices.map((doc, i) =>
+                  i < 50 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+        </View>
       </View>
       <View style={{ height: 70 }} />
-    </View>
+    </ScrollView>
   );
 };
 const calculateHeight = (text, plus, minus) => {

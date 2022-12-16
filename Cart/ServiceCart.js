@@ -47,7 +47,7 @@ const ServiceCart = ({ data, onPress }) => {
       <View
         style={{
           width: width / 2 - 30,
-          height: 180,
+          height: width / 2 - 10,
           overflow: "hidden",
           borderRadius: 10,
           backgroundColor: primaryColor,
