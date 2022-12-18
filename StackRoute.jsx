@@ -62,6 +62,7 @@ import UserRequestAppointment from "./screens/Seller/UserAppointment/UserRequest
 import UserAppointmentDetails from "./screens/Seller/UserAppointment/UserAppointmentDetails";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FixedService from "./screens/FixedService";
+import PackageService from "./screens/PackageService";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -178,6 +179,11 @@ export default function StackRoute() {
             options={{ headerShown: false }}
             name="FixedService"
             component={FixedService}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="PackageService"
+            component={PackageService}
           />
           <Stack.Screen
             options={{ headerShown: false }}

@@ -478,7 +478,27 @@ const OtherProfile = (props) => {
     console.log("ok");
     navigation.navigate("FixedService", { data: doc });
   };
-  const clickPackage = (doc) => {};
+  const clickPackage = (doc) => {
+    setClick(true);
+    setImages(doc.images);
+    setGigs(doc);
+    //console.log(doc.services);
+    setPrice(doc.price);
+    setFacilities(doc.facilites.selectedOptions);
+    setTitle(doc.title);
+    setDescription(doc.description);
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(doc.services, Category),
+      });
+      setNewDataList(serverToLocal(doc.services, Category));
+    } catch (e) {
+      console.log(e.message);
+    }
+    console.log("ok");
+    navigation.navigate("PackageService", { data: doc });
+  };
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -2227,7 +2247,7 @@ const FixedScreen = ({ navigation, route }) => {
 const PackageScreen = ({ navigation, route }) => {
   const params = route.params;
   const PackageService = params.PackageService;
-  const onPress = route.onPress;
+  const onPress = route.params.onPress;
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
   const [content, setContent] = React.useState(2);
@@ -2276,7 +2296,11 @@ const PackageScreen = ({ navigation, route }) => {
       >
         {PackageService.map(
           (doc, i) =>
-            i < content && <ServiceCart onPress={onPress} key={i} data={doc} />
+            i < content && <ServiceCart onPress={()=>{
+              if(onPress){
+                onPress(doc)
+              }
+            }} key={i} data={doc} />
         )}
         {PackageService.length > content && (
           <View
