@@ -61,6 +61,7 @@ import UserAppointmentList from "./screens/Seller/UserAppointment/UserAppointmen
 import UserRequestAppointment from "./screens/Seller/UserAppointment/UserRequestAppointment";
 import UserAppointmentDetails from "./screens/Seller/UserAppointment/UserAppointmentDetails";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import FixedService from "./screens/FixedService";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -133,9 +134,11 @@ export default function StackRoute() {
     );
   }
   return (
-    <SafeAreaProvider style={{
-      flex:1,
-    }}>
+    <SafeAreaProvider
+      style={{
+        flex: 1,
+      }}
+    >
       <NavigationContainer theme={MyTheme}>
         <Stack.Navigator
           screenOptions={({ route, navigation }) => ({
@@ -144,7 +147,6 @@ export default function StackRoute() {
               open: TransitionSpecs.TransitionIOSSpec,
               close: TransitionSpecs.TransitionIOSSpec,
             },
-            
           })}
         >
           <Stack.Screen
@@ -152,7 +154,7 @@ export default function StackRoute() {
               presentation: "modal",
               animationTypeForReplace: "push",
               animation: "slide_from_right",
-              headerShown:false
+              headerShown: false,
             }}
             name="Dashboard"
             component={TabRoute}
@@ -164,12 +166,17 @@ export default function StackRoute() {
           />
           <Stack.Screen
             options={{ headerShown: false }}
+            name="FixedService"
+            component={FixedService}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
             name="LogIn"
             component={Login}
           />
           <Stack.Screen
             options={{
-              headerShown:false
+              headerShown: false,
             }}
             name="ChatScreen"
             component={ChatScreen}

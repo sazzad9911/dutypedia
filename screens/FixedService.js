@@ -14,6 +14,7 @@ import {
   Pressable,
   Animated as Animation,
   Platform,
+  Easing,
 } from "react-native";
 import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
@@ -61,6 +62,7 @@ import useHandleScroll from "../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
 import { StatusBar } from "expo-status-bar";
+import { MotiView } from "moti";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -125,10 +127,10 @@ const FixedService = (props) => {
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
   const scrollY = new Animation.Value(0);
-  const diffClamp = Animation.diffClamp(scrollY, 0, 200);
+  const diffClamp = Animation.diffClamp(scrollY, 0, 250);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, -200],
+    inputRange: [200, 250],
+    outputRange: [0, 1],
   });
 
   const { handleScroll, showButton } = useHandleScroll();
@@ -143,6 +145,8 @@ const FixedService = (props) => {
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [scrollDirection, setScrollDirection] = React.useState(false);
+
   //console.log(SeeMore)
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -289,6 +293,10 @@ const FixedService = (props) => {
     }
   }, [Data]);
 
+  React.useEffect(() => {
+    console.log(scrollEnabled);
+  }, [scrollEnabled]);
+
   if (
     Loader ||
     !Data ||
@@ -309,29 +317,9 @@ const FixedService = (props) => {
        <View style={{height:25}}/>
       )} */}
       <StatusBar hidden={false} backgroundColor={"transparent"} />
-      <View
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.325)",
-          width: width,
-          height: 20,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 200,
-        }}
-      />
-      {/* {Platform.OS == "android" && (
-        <StatusBar
-          backgroundColor={scrollEnabled ? primaryColor : "transparent"}
-        />
-      )} */}
-     
 
-      <ScrollView 
-        stickyHeaderHiddenOnScroll={true}
+      <ScrollView
         scrollEventThrottle={16}
-        stickyHeaderIndices={[0]}
-        
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         ref={scrollRef}
@@ -351,62 +339,27 @@ const FixedService = (props) => {
           if (Math.abs(dif) < 3) {
             //setScrollEnabled(false);
           } else if (dif < 0) {
+            //setScrollDirection(true);
             //console.log("up")
             // if (currentOffset < 380) {
             //   setScrollEnabled(false);
             // }
           } else {
+            //setScrollDirection(false);
             //console.log("down")
           }
-          if (currentOffset > 380 && currentOffset > 0) {
+          if (currentOffset > 200) {
             console.log("white");
             setScrollEnabled(true);
           } else {
             console.log("transparent");
             setScrollEnabled(false);
           }
+
           scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
-         <Animation.View
-          style={[
-            {
-              transform: [{ translateY: translateY }],
-              top: 0,
-              left: 0,
-              backgroundColor: scrollEnabled ? primaryColor : "transparent",
-              zIndex: 100,
-              width: width,
-              overflow: "hidden",
-            },
-          ]}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: 20,
-              backgroundColor: "transparent",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}
-              style={{
-                marginVertical: 10,
-                marginHorizontal: 20,
-              }}
-            >
-              <AntDesign
-                name="arrowleft"
-                size={24}
-                color={scrollEnabled ? "black" : primaryColor}
-              />
-            </TouchableOpacity>
-          </View>
-        </Animation.View>
         <Carousel
           style={{
             backgroundColor: "black",
@@ -484,7 +437,7 @@ const FixedService = (props) => {
             paddingHorizontal: 10,
             paddingVertical: 3,
             borderRadius: 20,
-            top: 380,
+            top: 325,
           }}
         >
           <Text
@@ -599,7 +552,7 @@ const FixedService = (props) => {
             width={Platform.OS == "ios" ? "50" : "45"}
           />
         </View>
-        
+
         <View
           style={{
             backgroundColor: primaryColor,
@@ -908,6 +861,7 @@ const FixedService = (props) => {
             />
           </View>
         </View>
+
         <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
         <View
           style={{
@@ -960,6 +914,7 @@ const FixedService = (props) => {
             </View>
           )}
         </View>
+
         <View style={{ height: 70 }} />
       </ScrollView>
       {showButton && (
@@ -990,6 +945,60 @@ const FixedService = (props) => {
           </Pressable>
         </Animated.View>
       )}
+      <View
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.325)",
+          width: width,
+          height:Platform.OS=="ios"? 20:21,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 200,
+        }}
+      />
+      <Animation.View
+        style={[
+          {
+            top: 0,
+            left: 0,
+            backgroundColor: primaryColor,
+            zIndex: 1,
+            width: width,
+            position: "absolute",
+            height: 60,
+            opacity: translateY,
+          },
+        ]}
+      ></Animation.View>
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          paddingTop: 20,
+          paddingHorizontal: 0,
+          flexDirection: "row",
+          zIndex: 2,
+          left: 0,
+          width: width,
+          backgroundColor: "transparent",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{
+            marginVertical: 10,
+            marginHorizontal: 20,
+          }}
+        >
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color={scrollEnabled ? "black" : primaryColor}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

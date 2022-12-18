@@ -119,11 +119,7 @@ const HomeRoute = ({ navigation }) => {
         name="OtherProfile"
         component={OtherProfile}
       />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="FixedService"
-        component={FixedService}
-      />
+      
       <Stack.Screen
         options={{ headerShown: false }}
         name="Notice"
