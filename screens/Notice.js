@@ -20,6 +20,7 @@ import { FAB } from "react-native-paper";
 import Animated, { SlideInRight } from "react-native-reanimated";
 import { ScrollView } from "react-native-gesture-handler";
 import OutsideView from "react-native-detect-press-outside";
+import IconButton from "../components/IconButton";
 
 export default function Notice({ navigation, route }) {
   const serviceId =
@@ -113,6 +114,7 @@ export default function Notice({ navigation, route }) {
           shadowOpacity: 0.01,
           shadowColor: "black",
           backgroundColor: primaryColor,
+          paddingTop:15
         }}
       >
         <TouchableOpacity
@@ -270,7 +272,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
         padding: 10,
         width: width / 2 - 15,
         margin: 5,
-        height: 185,
+        
       }}
     >
       <Text
@@ -313,7 +315,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
       >
         {data.message}
       </Text>
-      <Button
+      <IconButton
         onPress={() => {
           navigation.navigate("ViewCart", {
             value: data,

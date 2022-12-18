@@ -15,11 +15,10 @@ import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { checkVendor } from "./../Class/auth";
 import { useDispatch } from "react-redux";
-import { useRoute } from "@react-navigation/native";
 
-const BottomBar = (props) => {
+const NewBottomBar = (props) => {
   const navigation = props.navigation;
-  const [route, setRoute] = React.useState(props.state.index);
+  const [route, setRoute] = React.useState(0);
   const [keyboardStatus, setKeyboardStatus] = React.useState(false);
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = useSelector((state) => state.vendor);
@@ -32,8 +31,6 @@ const BottomBar = (props) => {
   const textColor = colors.getTextColor();
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
-  //const routes = useRoute();
-  //console.log(routes.name);
 
   React.useEffect(() => {
     if (vendor) {
@@ -43,11 +40,7 @@ const BottomBar = (props) => {
     }
     //console.log(vendorInfo)
   }, [vendor]);
-  React.useEffect(() => {
-    if (props.state.index) {
-      setRoute(props.state.index);
-    }
-  }, [props.state.index]);
+ 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -94,8 +87,8 @@ const BottomBar = (props) => {
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Home");
-          setRoute(0);
+            navigation.navigate("Home");
+            setRoute(0);
         }}
         style={styles.button}
       >
@@ -121,7 +114,7 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          if (route == 1 && vendor) {
+          if (route == 1&&vendor) {
             try {
               navigation.navigate("VendorOrder");
               return;
@@ -226,7 +219,7 @@ const BottomBar = (props) => {
             } catch (e) {
               navigation.navigate("Profile");
               console.warn(e.message);
-            }
+            } 
             setRoute(4);
           } else {
             navigation.navigate("Profile");
@@ -267,4 +260,4 @@ const BottomBar = (props) => {
   );
 };
 
-export default BottomBar;
+export default NewBottomBar;

@@ -31,7 +31,7 @@ import Appointment from "./Appointment";
 import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
 import BackHeader from "../components/BackHeader";
-import { checkVendor } from "../Class/auth";
+import { checkVendor, getFavoriteCategories } from "../Class/auth";
 import { getJson, storeJson } from "../Class/storage";
 import Home_Next from "./Home_Next";
 import SubHeader from "../components/SubHeader";
@@ -47,6 +47,14 @@ import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import NetInfo from "@react-native-community/netinfo";
 import { ActivityIndicator } from "react-native-paper";
+import CompanyCalendar from "./Seller/CompanyCalendar";
+import OrderDetails from "./Seller/OrderDetails";
+import ManageOrder from "./ManageOrder";
+import FixedOffers from "./Seller/FixedOffers";
+import OfferNow from "./Seller/OfferNow";
+import CategoryList from "./CategoryList";
+import { ViewCart } from "./Vendor/Notice";
+import Notice from "./Notice";
 
 const Tab = createBottomTabNavigator();
 
@@ -74,6 +82,26 @@ const TabRoute = () => {
   const isDark = useSelector((state) => isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
+  const [NewState, setNewState] = React.useState(false);
+  const [Loader, setLoader] = React.useState(false);
+
+  React.useEffect(() => {
+    if (user) {
+      setLoader(true);
+      getFavoriteCategories(user.token)
+        .then((result) => {
+          if (result.data.favouriteCategories.length > 0) {
+            //console.log(result.data.favouriteCategories)
+            setNewState(true);
+            setLoader(false);
+          }
+        })
+        .catch((err) => {
+          console.warn(err);
+          setLoader(false);
+        });
+    }
+  }, [user]);
 
   React.useEffect(() => {
     checkVendor().then((res) => {
@@ -206,7 +234,7 @@ const TabRoute = () => {
       setReload((val) => !val);
     });
   }, []);
-  if (!user || !load || !UserOrders || !VendorOrders) {
+  if (!user || !load || !UserOrders || !VendorOrders || Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="small" color={backgroundColor} />
@@ -214,7 +242,7 @@ const TabRoute = () => {
     );
   }
   return (
-    <View style={{ flex: 1,}}>
+    <View style={{ flex: 1 }}>
       <Tab.Navigator
         tabBar={(props) => {
           if (
@@ -229,16 +257,28 @@ const TabRoute = () => {
       >
         {!vendor &&
           (!Array.isArray(user) && user && load ? (
-            <Tab.Screen
-              options={{
-                headerShown: false,
-                headerStyle: {
-                  backgroundColor: "green",
-                },
-              }}
-              name="Home"
-              component={HomeRoute}
-            />
+            !NewState ? (
+              <Tab.Screen
+                name="Home"
+                options={{
+                  headerShown: false,
+                }}
+                component={Home}
+              />
+            ) : (
+              <Tab.Screen
+                name="Home"
+                options={{
+                  headerShown: false,
+                }}
+                component={Home_Next}
+              />
+            )
+            // <Tab.Screen
+            //   options={{ headerShown: false }}
+            //   name="Feed"
+            //   component={HomeRoute}
+            // />
           ) : (
             <Tab.Screen
               options={{ headerShown: false }}
@@ -297,6 +337,62 @@ const TabRoute = () => {
           }}
           name="Appointment"
           component={Appointment}
+        />
+        <Tab.Screen
+          name="AllPackageList"
+          options={{
+            header: (props) => <SubHeader title="Fixed Price" {...props} />,
+          }}
+          component={AllPackageList}
+        />
+
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="Notice"
+          component={Notice}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="ViewCart"
+          component={ViewCart}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="CategoryList"
+          component={CategoryList}
+        />
+        <Tab.Screen
+          options={{
+            header: (props) => <SubHeader title="Offer Price" {...props} />,
+          }}
+          name="OfferNow"
+          component={OfferNow}
+        />
+        <Tab.Screen
+          options={{
+            header: (props) => <SubHeader title="Confirm Order" {...props} />,
+          }}
+          name="FixedOffers"
+          component={FixedOffers}
+        />
+        <Tab.Screen
+          name="ManageOrder"
+          options={{
+            headerShown: false,
+          }}
+          component={ManageOrder}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="OrderDetails"
+          component={OrderDetails}
+        />
+        <Tab.Screen
+          name="Company Calender"
+          options={{
+            headerShown: false,
+          }}
+          component={CompanyCalendar}
         />
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />

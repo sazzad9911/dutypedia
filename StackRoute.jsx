@@ -165,6 +165,16 @@ export default function StackRoute() {
             component={SearchScreen}
           />
           <Stack.Screen
+            options={{
+              headerStyle: {
+                backgroundColor: "green",
+              },
+              headerShown: false,
+            }}
+            name="OtherProfile"
+            component={OtherProfile}
+          />
+          <Stack.Screen
             options={{ headerShown: false }}
             name="FixedService"
             component={FixedService}

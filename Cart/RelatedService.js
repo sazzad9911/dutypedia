@@ -18,6 +18,7 @@ const { width, height } = Dimensions.get("window");
 import { Canvas, useImage } from "@shopify/react-native-skia";
 
 const RelatedService = (props) => {
+  const onPress=props.onPress;
   const navigation = props.navigation;
   const [Like, seLike] = React.useState(false);
   const data = props.data;
@@ -34,6 +35,7 @@ const RelatedService = (props) => {
     return (
       <TouchableOpacity
         onPress={() => {
+          
           if (navigation) {
             navigation.navigate("OtherProfile", {
               serviceId: data ? data.service.id : null,
@@ -58,7 +60,6 @@ const RelatedService = (props) => {
         <View
           style={{
             width: width / 2 - 30,
-            height: width / 2 - 10,
             overflow: "hidden",
             borderRadius: 10,
             backgroundColor: primaryColor,
@@ -67,7 +68,7 @@ const RelatedService = (props) => {
           <Image
             style={{
               width: "100%",
-              height: "50%",
+              height: (width / 2 - 10)/2,
               opacity: 0.9,
             }}
             source={{
@@ -83,7 +84,7 @@ const RelatedService = (props) => {
             <Text
               numberOfLines={2}
               style={{
-                fontSize: 14,
+                fontSize:Platform.OS=="ios"? 14:13,
                 fontFamily: "Poppins-Medium",
                 lineHeight: 15,
                 color: textColor,
@@ -101,7 +102,7 @@ const RelatedService = (props) => {
             >
               <Text
                 style={{
-                  fontSize: 15,
+                  fontSize:Platform.OS=="ios"? 15:14,
                   fontFamily: "Poppins-Medium",
                   color: "#707070",
                 }}

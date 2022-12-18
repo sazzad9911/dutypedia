@@ -730,6 +730,7 @@ export const ViewCart = (props) => {
           justifyContent: "space-between",
           backgroundColor: primaryColor,
           paddingBottom: 10,
+          paddingTop:10
         }}
       >
         <Ionicons

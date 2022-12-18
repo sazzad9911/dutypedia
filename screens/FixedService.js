@@ -15,6 +15,7 @@ import {
   Animated as Animation,
   Platform,
   Easing,
+  StatusBar as Bar,
 } from "react-native";
 import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
@@ -316,7 +317,10 @@ const FixedService = (props) => {
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-      <StatusBar hidden={false} backgroundColor={"transparent"} />
+      <StatusBar
+        hidden={true}
+        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
+      />
 
       <ScrollView
         scrollEventThrottle={16}
@@ -348,15 +352,15 @@ const FixedService = (props) => {
             //setScrollDirection(false);
             //console.log("down")
           }
-          if (currentOffset > 200) {
-            console.log("white");
-            setScrollEnabled(true);
-          } else {
-            console.log("transparent");
-            setScrollEnabled(false);
-          }
+          // if (currentOffset > 200) {
+          //   console.log("white");
+          //   setScrollEnabled(true);
+          // } else {
+          //   console.log("transparent");
+          //   setScrollEnabled(false);
+          // }
 
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
+          // scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
@@ -369,7 +373,7 @@ const FixedService = (props) => {
           }}
           loop={false}
           width={width}
-          height={400}
+          height={height-((height*30)/100)}
           autoPlay={false}
           data={Images}
           scrollAnimationDuration={500}
@@ -418,16 +422,44 @@ const FixedService = (props) => {
               x={0}
               y={0}
               width={width}
-              height={400}
+              height={height-((height*30)/100)}
               style={{
                 width: width,
-                height: 400,
-                opacity: 0.9,
+                height: height-((height*30)/100),
+                opacity: 0.87,
                 backgroundColor: "black",
               }}
             />
           )}
         />
+        <View
+          style={{
+            position: "absolute",
+            top: 10,
+            paddingHorizontal: 0,
+            flexDirection: "row",
+            zIndex: 2,
+            left: 0,
+            width: width,
+            backgroundColor: "transparent",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              marginVertical: 10,
+              marginHorizontal: 20,
+            }}
+          >
+            <AntDesign
+              name="arrowleft"
+              size={24}
+              color={scrollEnabled ? "black" : primaryColor}
+            />
+          </TouchableOpacity>
+        </View>
         <View
           style={{
             position: "absolute",
@@ -437,7 +469,7 @@ const FixedService = (props) => {
             paddingHorizontal: 10,
             paddingVertical: 3,
             borderRadius: 20,
-            top: 325,
+            top: height-(((height*30)/100)+70),
           }}
         >
           <Text
@@ -455,7 +487,7 @@ const FixedService = (props) => {
             position: "absolute",
             top: 0,
             right: 10,
-            height: 400,
+            height: height-((height*30)/100),
             justifyContent: "center",
             elevation: 2,
             zIndex: 100,
@@ -794,12 +826,12 @@ const FixedService = (props) => {
               backgroundColor: primaryColor,
 
               flexDirection: "row",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               marginHorizontal: 20,
               marginVertical: 25,
             }}
           >
-            {/* <Text
+            <Text
               style={{
                 fontSize: Platform.OS == "ios" ? 17 : 15.5,
                 color: textColor,
@@ -808,7 +840,7 @@ const FixedService = (props) => {
               }}
             >
               From {Price} ৳
-            </Text> */}
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("Service List_1", {
@@ -857,7 +889,7 @@ const FixedService = (props) => {
                 marginTop: 0,
                 height: 40,
               }}
-              title={`Continue ${Price}৳`}
+              title={`Continue`}
             />
           </View>
         </View>
@@ -869,7 +901,7 @@ const FixedService = (props) => {
             marginTop: 15,
           }}
         >
-          {RelatedServices.length > 0 && (
+          {RelatedServices.length > 4 && (
             <View>
               <Text
                 style={{
@@ -945,18 +977,18 @@ const FixedService = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      <View
+      {/* <View
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.325)",
           width: width,
-          height:Platform.OS=="ios"? 20:21,
+          height:25,
           position: "absolute",
           top: 0,
           left: 0,
           zIndex: 200,
         }}
-      />
-      <Animation.View
+      /> */}
+      {/* <Animation.View
         style={[
           {
             top: 0,
@@ -965,40 +997,11 @@ const FixedService = (props) => {
             zIndex: 1,
             width: width,
             position: "absolute",
-            height: 60,
+            height: 70,
             opacity: translateY,
           },
         ]}
-      ></Animation.View>
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          paddingTop: 20,
-          paddingHorizontal: 0,
-          flexDirection: "row",
-          zIndex: 2,
-          left: 0,
-          width: width,
-          backgroundColor: "transparent",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          style={{
-            marginVertical: 10,
-            marginHorizontal: 20,
-          }}
-        >
-          <AntDesign
-            name="arrowleft"
-            size={24}
-            color={scrollEnabled ? "black" : primaryColor}
-          />
-        </TouchableOpacity>
-      </View>
+      ></Animation.View> */}
     </View>
   );
 };

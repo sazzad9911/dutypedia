@@ -47,7 +47,7 @@ const ServiceCart = ({ data, onPress }) => {
       <View
         style={{
           width: width / 2 - 30,
-          height: width / 2 - 10,
+          
           overflow: "hidden",
           borderRadius: 10,
           backgroundColor: primaryColor,
@@ -56,7 +56,7 @@ const ServiceCart = ({ data, onPress }) => {
         <Image
           style={{
             width: "100%",
-            height: "50%",
+            height: (width / 2 - 10)/2,
             opacity:.9
           }}
           source={{

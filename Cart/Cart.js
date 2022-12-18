@@ -7,6 +7,7 @@ import { useDispatch,useSelector} from 'react-redux';
 const { width, height } = Dimensions.get("window");
 function Cart(props) {
   const data=props.data;
+  const onPress=props.onPress;
   const dispatch = useDispatch();
   const navigation = props.navigation;
   const isDark=useSelector((state) => state.isDark);
@@ -18,6 +19,10 @@ function Cart(props) {
   return (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity onPress={()=>{
+        if(onPress){
+          onPress(data.title)
+        }
+        return
         if(navigation){
           navigation.navigate('CategoryList',{title:data?data.title:null })
         }

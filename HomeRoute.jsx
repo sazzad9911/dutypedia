@@ -87,7 +87,7 @@ const HomeRoute = ({ navigation }) => {
     <Stack.Navigator>
       {!NewState ? (
         <Stack.Screen
-          name="Feed"
+          name="Home"
           options={{
             headerShown: false,
           }}
@@ -95,7 +95,7 @@ const HomeRoute = ({ navigation }) => {
         />
       ) : (
         <Stack.Screen
-          name="Feed"
+          name="Home"
           options={{
             headerShown: false,
           }}
@@ -108,16 +108,6 @@ const HomeRoute = ({ navigation }) => {
           header: (props) => <SubHeader title="Fixed Price" {...props} />,
         }}
         component={AllPackageList}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            backgroundColor: "green",
-          },
-          headerShown:false
-        }}
-        name="OtherProfile"
-        component={OtherProfile}
       />
       
       <Stack.Screen
@@ -168,6 +158,21 @@ const HomeRoute = ({ navigation }) => {
         }}
         component={CompanyCalendar}
       />
+      <Stack.Screen
+            options={{
+              headerStyle: {
+                backgroundColor: "green",
+              },
+              headerShown: false,
+            }}
+            name="OtherProfile"
+            component={OtherProfile}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="FixedService"
+            component={FixedService}
+          />
     </Stack.Navigator>
   );
 };

@@ -78,6 +78,8 @@ import Swiper from "react-native-swiper";
 import { StatusBar } from "expo-status-bar";
 import CustomAppStatusBar from "../Hooks/AppBar";
 import { TabbedHeaderPager } from "react-native-sticky-parallax-header";
+import BottomBar from "../components/BottomBar";
+import NewBottomBar from "../components/NewBottomBar";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -592,12 +594,12 @@ const OtherProfile = (props) => {
          <View style={{height:25}}/>
          
         </Animation.View> */}
-        <Canvas style={{ width: width, height: 400 }}>
+        <Canvas style={{ width: width, height: height-((height*30)/100) }}>
           <Fill color={primaryColor} />
           <Box
             box={rrect(rect(0, 0, width - 3, 390), 5, 5)}
             color={primaryColor}
-          >
+          > 
             <BoxShadow
               dx={30}
               dy={30}
@@ -632,7 +634,7 @@ const OtherProfile = (props) => {
               x={0}
               y={0}
               width={width}
-              height={400}
+              height={height-((height*30)/100)}
             />
           )}
         </Canvas>
@@ -642,7 +644,7 @@ const OtherProfile = (props) => {
             position: "absolute",
             top: 0,
             right: 10,
-            height: 400,
+            height: height-((height*30)/100),
             justifyContent: "center",
             elevation: 2,
             zIndex: 100,
@@ -1270,6 +1272,7 @@ const OtherProfile = (props) => {
           width:width
         }}/>
       )} */}
+      {/* <NewBottomBar {...props}/> */}
     </View>
   );
 };

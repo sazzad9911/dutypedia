@@ -376,7 +376,9 @@ const Home_Next = (props) => {
         <View style={{ width: 15 }} />
         {PopularCategory &&
           PopularCategory.map((doc, i) => (
-            <Cart data={doc} key={i} navigation={navigation} />
+            <Cart onPress={(title)=>{
+              navigation.navigate('CategoryList',{title:title })
+            }} data={doc} key={i} navigation={navigation} />
           ))}
         {!PopularCategory && (
           <View

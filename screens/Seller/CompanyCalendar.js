@@ -18,6 +18,7 @@ import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 import IconButton from "../../components/IconButton";
 import { updateData } from "../../Class/update";
 import { vendorLogin } from "../../Class/auth";
+import { StatusBar } from "expo-status-bar";
 
 const CompanyCalendar = (props) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -46,6 +47,7 @@ const CompanyCalendar = (props) => {
   ];
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar />
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
@@ -64,6 +66,7 @@ const CompanyCalendar = (props) => {
           backgroundColor: primaryColor,
           flexDirection: "row",
           alignItems: "center",
+          paddingTop:10
         }}
       >
         <AntDesign name="left" size={24} color={assentColor} />
