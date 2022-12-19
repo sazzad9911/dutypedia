@@ -145,6 +145,8 @@ export default function VendorAppointmentList({ navigation, route }) {
   }
   return (
     <View style={{ flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       <View
         style={{
           flexDirection: "row",
@@ -197,6 +199,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           active={Active == "Request" ? true : false}
         />
       </View>
+      </ScrollView>
       {Data.length == 0 ? <NoAppointment /> : null}
       {Data.map((doc, i) => (
         <Cart
@@ -217,6 +220,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           username={doc.user.username}
         />
       ))}
+      </ScrollView>
 
       <FAB
         color="#FFFFFF"

@@ -138,6 +138,7 @@ const Notice = (props) => {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
+            
           }}
         >
           <AntDesign name="plus" size={50} color="#707070" />
@@ -730,7 +731,7 @@ export const ViewCart = (props) => {
           justifyContent: "space-between",
           backgroundColor: primaryColor,
           paddingBottom: 10,
-          paddingTop:10
+          paddingTop:32
         }}
       >
         <Ionicons

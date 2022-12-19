@@ -23,6 +23,7 @@ import {
   setListData,
 } from "../../action";
 import InputModal from "./InputModal";
+import IconButton from "../../components/IconButton";
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
@@ -197,7 +198,7 @@ const SubCategories = ({ navigation, route }) => {
 
         <View style={{ height: 10 }} />
       </ScrollView>
-      <Button
+      <IconButton
         disabled={listData && listData.length > 0 ? false : true}
         onPress={() => {
           if (route.name === "SubCategories") {

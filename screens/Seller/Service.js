@@ -28,6 +28,7 @@ import { CheckBox } from "./Pricing";
 import { createOtherService } from "../../Class/service";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
+import IconButton from "../../components/IconButton";
 
 const Service = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -445,7 +446,7 @@ const Service = ({ navigation, route }) => {
               {FacilitiesError}
             </Text>
           )}
-          <Button
+          <IconButton
             onPress={() => {
               checkValidity();
             }}
@@ -486,10 +487,10 @@ export const ImageButton = ({ style, onChange, value }) => {
 
     //console.log(result);
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
       if (onChange) {
-        onChange(result);
+        onChange(result.assets[0]);
       }
     }
   };

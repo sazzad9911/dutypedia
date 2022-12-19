@@ -47,6 +47,7 @@ import { createService, getService, getDashboard } from "../../Class/service";
 import { StackActions } from "@react-navigation/native";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import { vendorLogin } from "../../Class/auth.js";
+import IconButton from "../../components/IconButton.js";
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -77,7 +78,7 @@ const Review = (props) => {
       quality: 1,
     });
     if (!result.cancelled) {
-      return result;
+      return result.assets[0];
     }
     return null;
   };
@@ -720,7 +721,7 @@ const Review = (props) => {
           }}
           title="I agree with all the terms and conditions"
         />
-        <Button
+        <IconButton
           onPress={confirm}
           disabled={ButtonPress ? false : true}
           style={{
@@ -730,6 +731,7 @@ const Review = (props) => {
             borderRadius: 5,
             backgroundColor: ButtonPress ? backgroundColor : "#707070",
             borderWidth: 0,
+            color:ButtonPress ? "white" : "black",
           }}
           title="Confirm"
         />

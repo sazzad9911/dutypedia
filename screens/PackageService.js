@@ -61,6 +61,7 @@ import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import FixedBackHeader from "./Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
 const PackageService = (props) => {
@@ -326,7 +327,7 @@ const PackageService = (props) => {
        <View style={{height:25}}/>
       )} */}
       <StatusBar
-        hidden={true}
+        hidden={false}
         backgroundColor={scrollEnabled ? primaryColor : "transparent"}
       />
 
@@ -360,15 +361,15 @@ const PackageService = (props) => {
             //setScrollDirection(false);
             //console.log("down")
           }
-          // if (currentOffset > 200) {
-          //   console.log("white");
-          //   setScrollEnabled(true);
-          // } else {
-          //   console.log("transparent");
-          //   setScrollEnabled(false);
-          // }
+          if (currentOffset > 200) {
+            //console.log("white");
+            setScrollEnabled(true);
+          } else {
+            //console.log("transparent");
+            setScrollEnabled(false);
+          }
 
-          // scrollY.setValue(e.nativeEvent.contentOffset.y);
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
@@ -440,35 +441,7 @@ const PackageService = (props) => {
             />
           )}
         />
-        <View
-          style={{
-            position: "absolute",
-            top: 10,
-            paddingHorizontal: 0,
-            flexDirection: "row",
-            zIndex: 2,
-            left: 0,
-            width: width,
-            backgroundColor: "transparent",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              //dispatch(setHideBottomBar(true))
-              navigation.goBack();
-            }}
-            style={{
-              marginVertical: 10,
-              marginHorizontal: 20,
-            }}
-          >
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={scrollEnabled ? "black" : primaryColor}
-            />
-          </TouchableOpacity>
-        </View>
+       
         <View
           style={{
             position: "absolute",
@@ -1049,6 +1022,7 @@ const PackageService = (props) => {
           </Pressable>
         </Animated.View>
       )}
+       <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
     </View>
   );
 };

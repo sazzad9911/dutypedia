@@ -807,7 +807,7 @@ const Pricing = ({ navigation, route }) => {
               style={{}}
             />
           )}
-          <Button
+          <IconButton
             onPress={() => {
               setButtonVisible(true);
             }}
@@ -831,7 +831,7 @@ const Pricing = ({ navigation, route }) => {
             title={"Add More"}
           />
         </View>
-        <Button
+        <IconButton
           onPress={() => {
             CheckValidity();
           }}
@@ -939,6 +939,7 @@ const styles = StyleSheet.create({
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./../../components/Button";
 import { Paragraph, Dialog, Portal, Snackbar } from "react-native-paper";
+import IconButton from "../../components/IconButton";
 
 export const Days = ({
   title,

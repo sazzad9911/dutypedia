@@ -190,6 +190,8 @@ const VendorOrder = ({ navigation, route }) => {
           margin: 0,
           padding: 0,
           width: 120,
+          paddingTop:32,
+          paddingBottom:10
         },
         tabBarIndicatorStyle: {
           backgroundColor: "#AC5DCB",

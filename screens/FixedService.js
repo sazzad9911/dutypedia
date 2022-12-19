@@ -66,6 +66,7 @@ import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import FixedBackHeader from "./Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -129,12 +130,7 @@ const FixedService = (props) => {
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
-  const scrollY = new Animation.Value(0);
-  const diffClamp = Animation.diffClamp(scrollY, 0, 250);
-  const translateY = diffClamp.interpolate({
-    inputRange: [200, 250],
-    outputRange: [0, 1],
-  });
+  
 
   const { handleScroll, showButton } = useHandleScroll();
   const [Specialty, setSpecialty] = React.useState(
@@ -153,6 +149,7 @@ const FixedService = (props) => {
 
   React.useEffect(()=>{
     if(isFocused){
+      
       dispatch(setHideBottomBar(true))
     }else{
       dispatch(setHideBottomBar(false))
@@ -305,9 +302,7 @@ const FixedService = (props) => {
     }
   }, [Data]);
 
-  React.useEffect(() => {
-    console.log(scrollEnabled);
-  }, [scrollEnabled]);
+  
 
   if (
     Loader ||
@@ -328,10 +323,7 @@ const FixedService = (props) => {
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-      <StatusBar
-        hidden={true}
-        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
-      />
+      
 
       <ScrollView
         scrollEventThrottle={16}
@@ -363,15 +355,7 @@ const FixedService = (props) => {
             //setScrollDirection(false);
             //console.log("down")
           }
-          // if (currentOffset > 200) {
-          //   console.log("white");
-          //   setScrollEnabled(true);
-          // } else {
-          //   console.log("transparent");
-          //   setScrollEnabled(false);
-          // }
-
-          // scrollY.setValue(e.nativeEvent.contentOffset.y);
+          
           setOffset(currentOffset);
         }}
       >
@@ -443,35 +427,7 @@ const FixedService = (props) => {
             />
           )}
         />
-        <View
-          style={{
-            position: "absolute",
-            top: 10,
-            paddingHorizontal: 0,
-            flexDirection: "row",
-            zIndex: 2,
-            left: 0,
-            width: width,
-            backgroundColor: "transparent",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-              //dispatch(setHideBottomBar(false))
-            }}
-            style={{
-              marginVertical: 10,
-              marginHorizontal: 20,
-            }}
-          >
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={scrollEnabled ? "black" : primaryColor}
-            />
-          </TouchableOpacity>
-        </View>
+        
         <View
           style={{
             position: "absolute",
@@ -990,31 +946,7 @@ const FixedService = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      {/* <View
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.325)",
-          width: width,
-          height:25,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 200,
-        }}
-      /> */}
-      {/* <Animation.View
-        style={[
-          {
-            top: 0,
-            left: 0,
-            backgroundColor: primaryColor,
-            zIndex: 1,
-            width: width,
-            position: "absolute",
-            height: 70,
-            opacity: translateY,
-          },
-        ]}
-      ></Animation.View> */}
+      <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
     </View>
   );
 };

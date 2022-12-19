@@ -477,6 +477,7 @@ import Button from "./../../components/Button";
 import DateTime from "./../Seller/DateTime";
 import AlertModal from "./components/AlertModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import IconButton from "../../components/IconButton";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -722,7 +723,7 @@ export const AddExpenses = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <Button
+          <IconButton
             onPress={() => {
               setVisible(true);
             }}
@@ -746,7 +747,7 @@ export const AddExpenses = (props) => {
             onCancel={() => setVisible(false)}
           />
         </View>
-        <Button
+        <IconButton
           onPress={() => {
             if (onChange) {
               onChange({
@@ -769,6 +770,8 @@ export const AddExpenses = (props) => {
             borderWidth: 0,
             height: 45,
             marginTop: 25,
+            color:
+              Day && Name && Amount ? "white" : "black",
           }}
           title="Save"
         />

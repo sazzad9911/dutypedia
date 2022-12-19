@@ -49,10 +49,11 @@ import { uploadFile } from "../../Class/upload";
 import { useSelector, useDispatch } from "react-redux";
 import { Snackbar } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
+import IconButton from "../../components/IconButton";
 
 const Member = () => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,paddingTop:32 }}>
       
       <Tab.Navigator
         screenOptions={{
@@ -201,9 +202,9 @@ const DutyPediaUser = (props) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
-  const onChange = (data) => {
+  const onChange = React.useCallback((data) => {
     setLoader(!Loader);
-  };
+  });
   React.useEffect(() => {
     setLoader(true);
     if (vendor && user) {
@@ -1054,7 +1055,7 @@ export const AddOfflineUser = (props) => {
           style={offlineStyles.input}
           placeholder="Phone Number"
         />
-        <Button
+        <IconButton
           onPress={() => {
             setVisible(!Visible);
           }}
@@ -1107,7 +1108,7 @@ export const AddOfflineUser = (props) => {
             />
           </Animated.View>
         )}
-        <Button
+        <IconButton
           onPress={() => {
             if (data) {
               save();
@@ -1124,6 +1125,8 @@ export const AddOfflineUser = (props) => {
             marginVertical: 10,
             marginHorizontal: 20,
             borderWidth: 0,
+            color:
+              Name && Gender && Phone ? "white":"black",
           }}
           title={data ? "Save Changes" : "Add Member"}
         />
@@ -1354,7 +1357,7 @@ const CartView = ({ doc, onChange }) => {
           </Text>
         </View>
       </View>
-      <Button
+      <IconButton
         onPress={() => {
           setSend(true);
           if (onChange) {
@@ -1366,6 +1369,7 @@ const CartView = ({ doc, onChange }) => {
           borderRadius: 5,
           backgroundColor: Send ? "#707070" : backgroundColor,
           borderWidth: 0,
+          color: Send ? "black" : "white",
         }}
         title={Send ? "Request Sent" : "Add Member"}
       />

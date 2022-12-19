@@ -29,6 +29,7 @@ import {
 import { SvgXml } from "react-native-svg";
 import { logOut, logoutVendor } from "../../Class/auth";
 import Button from "./../../components/Button";
+import IconButton from "../../components/IconButton";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -235,7 +236,7 @@ const Menu = ({ navigation }) => {
           )}
         />
       </View>
-      <Button
+      <IconButton
         style={{
           borderWidth: 0,
           marginHorizontal: 20,

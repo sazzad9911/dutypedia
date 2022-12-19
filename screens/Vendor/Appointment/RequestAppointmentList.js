@@ -37,13 +37,13 @@ const status = [
     color: "#6366F1",
   },
   {
-    title:"Approved",
-    color:"#6366F1"
+    title: "Approved",
+    color: "#6366F1",
   },
   {
-    title:"Rejected",
-    color:"#DA1E37"
-  }
+    title: "Rejected",
+    color: "#DA1E37",
+  },
 ];
 
 export default function RequestAppointmentList({ navigation, route }) {
@@ -56,58 +56,56 @@ export default function RequestAppointmentList({ navigation, route }) {
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
   const vendor = useSelector((state) => state.vendor);
-  const [Upcoming,setUpcoming]=React.useState()
-  const [Previous,setPrevious]=React.useState()
+  const [Upcoming, setUpcoming] = React.useState();
+  const [Previous, setPrevious] = React.useState();
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-    if(Active=="All"){
+    if (Active == "All") {
       setLoader(true);
       getVendorAppointment(user.token, "upcoming", vendor.service.id)
         .then((res) => {
           setLoader(false);
-          let arr=[]
+          let arr = [];
           //console.log(res.data.appointments)
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            
-          })
-          setUpcoming(arr)
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setUpcoming(arr);
         })
         .catch((err) => {
           setLoader(false);
           console.warn(err.response.data.msg);
         });
-        getVendorAppointment(user.token, "previous", vendor.service.id)
+      getVendorAppointment(user.token, "previous", vendor.service.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-          })
-          setPrevious(arr)
+          let arr = [];
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setPrevious(arr);
         })
         .catch((err) => {
           setLoader(false);
           console.warn(err.response.data.msg);
         });
-        return
+      return;
     }
-    if (user && vendor && Active &&Active!="Request") {
+    if (user && vendor && Active && Active != "Request") {
       setLoader(true);
       getVendorAppointment(user.token, Active, vendor.service.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            if(doc.createdBy=="VENDOR"){
-              
+          let arr = [];
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+            if (doc.createdBy == "VENDOR") {
             }
-          })
-          setData(arr)
+          });
+          setData(arr);
         })
         .catch((err) => {
           setLoader(false);
@@ -115,18 +113,18 @@ export default function RequestAppointmentList({ navigation, route }) {
         });
     }
   }, [isFocused + Active]);
-  React.useLayoutEffect(()=>{
-    if(Upcoming&&Previous){
-      let arr=[];
-      Upcoming.map((doc,i)=>{
-        arr.push(doc)
-      })
-      Previous.map((doc,i)=>{
-        arr.push(doc)
-      })
-      setData(arr)
+  React.useLayoutEffect(() => {
+    if (Upcoming && Previous) {
+      let arr = [];
+      Upcoming.map((doc, i) => {
+        arr.push(doc);
+      });
+      Previous.map((doc, i) => {
+        arr.push(doc);
+      });
+      setData(arr);
     }
-  },[Loader])
+  }, [Loader]);
   //console.log(data.service.serviceCenterName)
   if (Loader) {
     return (
@@ -143,55 +141,62 @@ export default function RequestAppointmentList({ navigation, route }) {
   }
   return (
     <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-        }}
-      >
-        <Chip
-          style={{ width: 70 }}
-          onPress={() => {
-            setActive("Sent");
-          }}
-          title={"Sent"}
-          active={Active == "Sent" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Receive");
-          }}
-          title={"Receive"}
-          active={Active == "Receive" ? true : false}
-        />
-      </View>
-      {Data.length == 0 ? <NoAppointment /> : null}
-      {Data.map((doc, i) => (
-        <Cart
-          key={i}
-          onPress={() => {
-            //console.log(doc)
-            navigation.navigate("VendorAppointmentListDetails", {
+      <ScrollView>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+            }}
+          >
+            <Chip
+              style={{ width: 70, height: 35 }}
+              onPress={() => {
+                setActive("Sent");
+              }}
+              title={"Sent"}
+              active={Active == "Sent" ? true : false}
+            />
+            <View
+              style={{
+                width: 10,
+              }}
+            />
+            <Chip
+              onPress={() => {
+                setActive("Receive");
+              }}
+              title={"Receive"}
+              active={Active == "Receive" ? true : false}
+              style={{
+                height: 35,
+              }}
+            />
+          </View>
+        </ScrollView>
+        {Data.length == 0 ? <NoAppointment /> : null}
+        {Data.map((doc, i) => (
+          <Cart
+            key={i}
+            onPress={() => {
+              //console.log(doc)
+              navigation.navigate("VendorAppointmentListDetails", {
                 data: doc,
-                active:Active=="Receive"?true:false
+                active: Active == "Receive" ? true : false,
               });
-          }}
-          status={
-            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-          }
-          title={doc.title}
-          date={`${doc.date} ${changeTime(doc.startTime)}`}
-          name={`${doc.user.firstName} ${doc.user.lastName}`}
-          image={doc.user.profilePhoto}
-          username={doc.user.username}
-        />
-      ))}
+            }}
+            status={
+              status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+            }
+            title={doc.title}
+            date={`${doc.date} ${changeTime(doc.startTime)}`}
+            name={`${doc.user.firstName} ${doc.user.lastName}`}
+            image={doc.user.profilePhoto}
+            username={doc.user.username}
+          />
+        ))}
+      </ScrollView>
 
       <FAB
         color="#FFFFFF"
@@ -214,7 +219,7 @@ export default function RequestAppointmentList({ navigation, route }) {
     </View>
   );
 }
-const Cart = ({ date, status, title, onPress, image,name,username }) => {
+const Cart = ({ date, status, title, onPress, image, name, username }) => {
   //console.log(status)
   return (
     <TouchableOpacity
@@ -254,11 +259,11 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
       />
       <View
         style={{
-          flex: .5,
+          flex: 0.5,
         }}
       >
-        <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-        <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
+        <Text numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
+        <Text numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
       </View>
       <View
         style={{

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TextInput, Dimensions } from "react-native";
 import Button from "./../../components/Button";
 import { primaryColor, backgroundColor, textColor } from "../../assets/colors";
+import IconButton from "../../components/IconButton";
 const { width, height } = Dimensions.get("window");
 
 const InputModal = ({ Close, onChange }) => {
@@ -68,7 +69,7 @@ const InputModal = ({ Close, onChange }) => {
             marginBottom: 10,
           }}
         >
-          <Button disabled={text?false:true}
+          <IconButton disabled={text?false:true}
             onPress={() => {
               if (onChange) {
                 onChange(text);
@@ -87,7 +88,7 @@ const InputModal = ({ Close, onChange }) => {
             }}
             title="ADD"
           />
-          <Button
+          <IconButton
             onPress={() => {
               if (Close) {
                 Close(false);

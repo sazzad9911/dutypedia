@@ -44,8 +44,9 @@ export default function Notice({ navigation, route }) {
   const [Search, setSearch] = React.useState();
 
   React.useEffect(() => {
-    if (serviceId) {
-      getNotice(user.token, serviceId)
+    
+    if (vendor) {
+      getNotice(user.token, vendor.service.id)
         .then((res) => {
           if (res) {
             setLoader(false);
@@ -58,7 +59,7 @@ export default function Notice({ navigation, route }) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [serviceId + Reload]);
+  }, [vendor + Reload]);
   const onChange = (val) => {
     createNotice(user.token, {
       subject: val.subject,
@@ -114,7 +115,7 @@ export default function Notice({ navigation, route }) {
           shadowOpacity: 0.01,
           shadowColor: "black",
           backgroundColor: primaryColor,
-          paddingTop:15
+          paddingTop:32
         }}
       >
         <TouchableOpacity

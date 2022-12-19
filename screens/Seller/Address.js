@@ -19,6 +19,7 @@ import { AreaList } from "../../Data/area";
 import { DivisionList } from "../../Data/division";
 import { DistrictList } from "../../Data/district";
 import {useSelector,useDispatch} from 'react-redux';
+import IconButton from "../../components/IconButton";
 
 const Address = ({ navigation }) => {
   const DATA = ["Dhaka", "Borishal", "Slyhet"];
@@ -189,7 +190,7 @@ const Address = ({ navigation }) => {
               placeholder="Address"
             />
           </View>
-          <Button
+          <IconButton
             onPress={() => {
               checkValidity();
             }}

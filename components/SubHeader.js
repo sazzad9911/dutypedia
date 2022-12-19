@@ -16,7 +16,7 @@ const SubHeader = (props) => {
 
   return (
     <View style={{
-      paddingTop:0
+      paddingTop:20
     }}>
       
       <View

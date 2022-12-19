@@ -76,10 +76,12 @@ const SaveList = ({ navigation }) => {
           {
             width: width,
             backgroundColor: "#48496D",
-            height: 50,
+            height: 70,
             zIndex: 6,
             flexDirection: "row",
             alignItems: "center",
+            paddingTop:20
+            
           },
         ]}
       >

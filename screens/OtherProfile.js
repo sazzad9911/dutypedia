@@ -81,6 +81,7 @@ import { TabbedHeaderPager } from "react-native-sticky-parallax-header";
 import BottomBar from "../components/BottomBar";
 import NewBottomBar from "../components/NewBottomBar";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import FixedBackHeader from "./Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -204,17 +205,20 @@ const OtherProfile = (props) => {
   }, []);
   React.useEffect(()=>{
     if(isFocused){
-      console.log("hidden")
-     // dispatch(setHideBottomBar(true))
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true))
+      setTimeout(()=>{
+        dispatch(setHideBottomBar(true))
+      },50)
     }else{
-      console.log("seen")
-      //dispatch(setHideBottomBar(false))
+      //console.log("seen")
+      dispatch(setHideBottomBar(false))
     }
   },[isFocused])
 
   React.useEffect(() => {
     setActive("Bargaining");
-    setLoader(true);
+    //setLoader(true);
     setScrollEnabled(false);
 
     if (serviceId && newUser) {
@@ -273,15 +277,17 @@ const OtherProfile = (props) => {
                 )
               );
             } catch (e) {
+              setLoader(false);
               console.warn(e.message);
             }
           }
         })
         .catch((error) => {
+          setLoader(false);
           console.warn(error.response.data);
         });
     }
-  }, [serviceId + Refresh+data]);
+  }, [serviceId +data]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
@@ -343,7 +349,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data + Refresh]);
+  }, [Bargaining + Data ]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -411,7 +417,7 @@ const OtherProfile = (props) => {
   }, [data + newUser + serviceId+Data]);
   React.useEffect(() => {
     if (newUser && data) {
-      setLoader(true);
+      //setLoader(true);
       getRelatedServices(newUser.token, data.service.id, data.service.dashboard)
         .then((response) => {
           if (response.data) {
@@ -574,7 +580,9 @@ const OtherProfile = (props) => {
         alwaysBounceVertical={false}
         ref={scrollRef}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl style={{
+            
+          }} refreshing={refreshing} onRefresh={onRefresh} />
         }
         showsVerticalScrollIndicator={false}
         style={{
@@ -1304,6 +1312,7 @@ const OtherProfile = (props) => {
         }}/>
       )} */}
       {/* <NewBottomBar {...props}/> */}
+      <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
     </View>
   );
 };
