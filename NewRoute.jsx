@@ -51,31 +51,18 @@ import PackageService from "./screens/PackageService";
 
 const Stack = createStackNavigator();
 
-const HomeRoute = ({ navigation }) => {
+const NewRoute = ({ navigation,route }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
   const [NewState, setNewState] = React.useState(false);
   const interestCategory = useSelector((state) => state.interestCategory);
-  const [Loader, setLoader] = React.useState(true);
+  const [Loader, setLoader] = React.useState(false);
   const dispatch = useDispatch();
+  const serviceId=route.params.serviceId;
+  const data=route.params.data;
 
-  React.useEffect(() => {
-    if (user) {
-      getFavoriteCategories(user.token)
-        .then((result) => {
-          if (result.data.favouriteCategories.length > 0) {
-            //console.log(result.data.favouriteCategories)
-            setNewState(true);
-          }
-          setLoader(false);
-        })
-        .catch((err) => {
-          console.warn(err);
-          setLoader(false);
-        });
-    }
-  }, [interestCategory + vendor]);
+
 
   if (Loader) {
     return (
@@ -86,87 +73,7 @@ const HomeRoute = ({ navigation }) => {
   }
   return (
     <Stack.Navigator>
-      {!NewState ? (
-        <Stack.Screen
-          name="Home"
-          options={{
-            headerShown: false,
-          }}
-          component={Home}
-        />
-      ) : (
-        <Stack.Screen
-          name="Home"
-          options={{
-            headerShown: false,
-          }}
-          component={Home_Next}
-        />
-      )}
-      <Stack.Screen
-        name="AllPackageList"
-        options={{
-          header: (props) => <SubHeader title="Fixed Price" {...props} />,
-        }}
-        component={AllPackageList}
-      />
-
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Notice"
-        component={Notice}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="ViewCart"
-        component={ViewCart}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="CategoryList"
-        component={CategoryList}
-      />
-      <Stack.Screen
-        options={{
-          header: (props) => (
-            <SubHeader
-              style={{
-                marginTop: 20,
-              }}
-              title="Offer Price"
-              {...props}
-            />
-          ),
-        }}
-        name="OfferNow"
-        component={OfferNow}
-      />
-      <Stack.Screen
-        options={{
-          header: (props) => <SubHeader title="Confirm Order" {...props} />,
-        }}
-        name="FixedOffers"
-        component={FixedOffers}
-      />
-      <Stack.Screen
-        name="ManageOrder"
-        options={{
-          headerShown: false,
-        }}
-        component={ManageOrder}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="OrderDetails"
-        component={OrderDetails}
-      />
-      <Stack.Screen
-        name="Company Calender"
-        options={{
-          headerShown: false,
-        }}
-        component={CompanyCalendar}
-      />
+      
       <Stack.Screen
         options={{
           headerStyle: {
@@ -174,8 +81,12 @@ const HomeRoute = ({ navigation }) => {
           },
           headerShown: false,
         }}
-        name="OtherProfile"
+        name="BargainingService"
         component={OtherProfile}
+        initialParams={{
+            serviceId:serviceId,
+            data:data
+        }}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -190,7 +101,7 @@ const HomeRoute = ({ navigation }) => {
     </Stack.Navigator>
   );
 };
-export default HomeRoute;
+export default NewRoute;
 const New = () => {
   return <View style={{ flex: 1, backgroundColor: "red" }} />;
 };

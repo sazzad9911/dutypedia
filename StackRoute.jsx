@@ -165,7 +165,7 @@ export default function StackRoute() {
             name="SearchScreen_1"
             component={SearchScreen}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             options={{
               headerStyle: {
                 backgroundColor: "green",
@@ -184,7 +184,7 @@ export default function StackRoute() {
             options={{ headerShown: false }}
             name="PackageService"
             component={PackageService}
-          />
+          /> */}
           <Stack.Screen
             options={{ headerShown: false }}
             name="LogIn"

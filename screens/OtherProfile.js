@@ -80,6 +80,7 @@ import CustomAppStatusBar from "../Hooks/AppBar";
 import { TabbedHeaderPager } from "react-native-sticky-parallax-header";
 import BottomBar from "../components/BottomBar";
 import NewBottomBar from "../components/NewBottomBar";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -189,6 +190,7 @@ const OtherProfile = (props) => {
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState();
   const [statusBarHeight, setStatusBarHeight] = React.useState(0);
+  const isFocused=useIsFocused()
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -200,6 +202,15 @@ const OtherProfile = (props) => {
     setRefresh((val) => !val);
     wait(2000).then(() => setRefreshing(false));
   }, []);
+  React.useEffect(()=>{
+    if(isFocused){
+      console.log("hidden")
+     // dispatch(setHideBottomBar(true))
+    }else{
+      console.log("seen")
+      //dispatch(setHideBottomBar(false))
+    }
+  },[isFocused])
 
   React.useEffect(() => {
     setActive("Bargaining");
@@ -617,7 +628,7 @@ const OtherProfile = (props) => {
         <Canvas style={{ width: width, height: height-((height*30)/100) }}>
           <Fill color={primaryColor} />
           <Box
-            box={rrect(rect(0, 0, width - 3, 390), 5, 5)}
+            box={rrect(rect(0, 0, width - 3, height-(((height*30)/100)+10)), 5, 5)}
             color={primaryColor}
           > 
             <BoxShadow

@@ -64,6 +64,8 @@ import Carousel from "react-native-reanimated-carousel";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
 import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -147,6 +149,15 @@ const FixedService = (props) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
+  const isFocused=useIsFocused()
+
+  React.useEffect(()=>{
+    if(isFocused){
+      dispatch(setHideBottomBar(true))
+    }else{
+      dispatch(setHideBottomBar(false))
+    }
+  },[isFocused])
 
   //console.log(SeeMore)
   const wait = (timeout) => {
@@ -447,6 +458,7 @@ const FixedService = (props) => {
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
+              //dispatch(setHideBottomBar(false))
             }}
             style={{
               marginVertical: 10,
@@ -877,6 +889,7 @@ const FixedService = (props) => {
                 navigation.navigate("OfferNow", {
                   type: "ONETIME",
                   gigs: data,
+                  data:data
                 });
               }}
               style={{

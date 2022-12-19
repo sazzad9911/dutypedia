@@ -814,7 +814,7 @@ const OfferNow = ({ navigation, route }) => {
           title="Yes, I Understand And Agree To The Dutypedia Terms Of Service,
           Including The User Agreement And Privacy Policy"
         />
-        <Button
+        <IconButton
           onPress={() => {
             validate();
           }}

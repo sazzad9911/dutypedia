@@ -59,6 +59,8 @@ import Carousel from "react-native-reanimated-carousel";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
 import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 
 const { width, height } = Dimensions.get("window");
 const PackageService = (props) => {
@@ -135,7 +137,7 @@ const PackageService = (props) => {
   );
   const params = props.route.params;
   const data = params.data;
-  const [newNavigation, setNewNavigation] = React.useState(500);
+  const [newNavigation, setNewNavigation] = React.useState(200);
   const [imageIndex, setImageIndex] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
@@ -143,6 +145,15 @@ const PackageService = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
   const [packageData, setPackageData] = React.useState();
+  const isFocused=useIsFocused()
+
+  React.useEffect(()=>{
+    if(isFocused){
+      dispatch(setHideBottomBar(true))
+    }else{
+      dispatch(setHideBottomBar(false))
+    }
+  },[isFocused])
 
   //console.log(SeeMore)
   const wait = (timeout) => {
@@ -169,8 +180,9 @@ const PackageService = (props) => {
       // img.push(newImage3)
       // img.push(newImage4)
       //console.log(data.images)
+      //console.log(data)
       setImages(data.images);
-      setPrice(data.price);
+      setPrice(data.packageData[0].price);
       setTitle(data.title);
       setDescription(data.description);
       //setNewDataList(response.data.service.gigs[0].services.options)
@@ -442,6 +454,7 @@ const PackageService = (props) => {
         >
           <TouchableOpacity
             onPress={() => {
+              //dispatch(setHideBottomBar(true))
               navigation.goBack();
             }}
             style={{
@@ -657,7 +670,7 @@ const PackageService = (props) => {
               )}
             /> */}
           </View>
-
+          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
           <View
             style={{
               height: newNavigation,
@@ -711,17 +724,19 @@ const PackageService = (props) => {
                     initialParams={{
                       data: doc,
                       setNewNavigation: setNewNavigation,
+                      setPrice:setPrice
                     }}
                     component={Screen}
                   />
                 ))}
             </Tab.Navigator>
           </View>
+          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
           <View
             style={{
               backgroundColor: primaryColor,
               paddingHorizontal: 20,
-              paddingTop: 15,
+              paddingTop: 20,
             }}
           >
             <Text
@@ -857,7 +872,7 @@ const PackageService = (props) => {
                             <Text
                               numberOfLines={1}
                               onLayout={(e) => {
-                                console.log(e.nativeEvent.layout.height);
+                                //console.log(e.nativeEvent.layout.height);
                               }}
                               style={{
                                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -931,8 +946,9 @@ const PackageService = (props) => {
             <IconButton
               onPress={() => {
                 navigation.navigate("OfferNow", {
-                  type: "ONETIME",
+                  type: "PACKAGE",
                   gigs: data,
+                  data:data
                 });
               }}
               style={{
@@ -1278,23 +1294,48 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 const Screen = ({ navigation, route }) => {
   const params = route.params;
   const data = params.data;
+  const setPrice=params.setPrice
   const setNewNavigation = params.setNewNavigation;
   const [feature,setFeature]=React.useState()
+  const isFocused=useIsFocused()
+  const [layoutHeight,setLayoutHeight]=React.useState()
 
   React.useLayoutEffect(()=>{
-    console.log(data)
+    //console.log(data)
     if(data){
         setFeature(data.features)
     }
   },[data])
+  React.useEffect(()=>{
+    if(isFocused&&setPrice){
+      setPrice(data.price)
+    }
+
+  },[isFocused])
+  React.useEffect(()=>{
+    if(layoutHeight){
+      setNewNavigation(val=>{
+        if(val<(layoutHeight+50)){
+          return layoutHeight+50
+        }else{
+          return val
+        }
+      })
+    }
+  },[layoutHeight])
 
   const NewRows=({doc})=>{
     return(
         <View style={{
             flexDirection:"row",
-            justifyContent:"space-between"
+            justifyContent:"space-between",
+            marginVertical:10
         }}>
-            <Text>{doc.title}</Text>
+            <Text style={{
+              fontSize:Platform.OS=="ios"? 16.5:15,
+              fontFamily:"Poppins-Medium",
+              color:textColor
+            }}>{doc.title}</Text>
             <SvgXml xml={doc.isAvailable?Available:notAvailable} height="20" width={"20"}/>
         </View>
     )
@@ -1305,11 +1346,13 @@ const Screen = ({ navigation, route }) => {
       style={{
         paddingHorizontal:20,
         paddingVertical:15,
-       height:200
+        
       }}
       onLayout={(e) => {
         const offsetHeight = e.nativeEvent.layout.height;
-        console.log(offsetHeight)
+        if(!layoutHeight||layoutHeight<offsetHeight){
+          setLayoutHeight(offsetHeight)
+        }
         // setNewNavigation((val) => {
         //   if (!val || val < offsetHeight) {
         //     return offsetHeight;

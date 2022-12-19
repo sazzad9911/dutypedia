@@ -16,16 +16,16 @@ const SubHeader = (props) => {
 
   return (
     <View style={{
-      paddingTop:25
+      paddingTop:0
     }}>
-      <StatusBar/>
+      
       <View
       style={[
         {
           backgroundColor: primaryColor,
           flexDirection: "row",
           alignItems: "center",
-          paddingTop: Platform.OS == "ios" ? 10 : 35,
+          paddingTop: 10,
           paddingBottom: 10,
         },
         props.style,

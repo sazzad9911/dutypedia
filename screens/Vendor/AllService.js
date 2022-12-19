@@ -21,6 +21,7 @@ const AllService = (props) => {
     view: {
       marginHorizontal: 20,
       marginVertical: 10,
+      backgroundColor:"red"
     },
     text: {
       fontFamily: "Poppins-Medium",
@@ -80,6 +81,7 @@ const ComponentScreen = (props) => {
     view: {
       marginHorizontal: 20,
       marginVertical: 10,
+      
     },
     text: {
       fontFamily: "Poppins-Medium",

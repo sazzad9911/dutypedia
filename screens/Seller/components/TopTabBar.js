@@ -50,6 +50,8 @@ const TopTabBar = (props) => {
         shadowColor: "#707070",
         elevation: 3,
         paddingTop: props.id ? 35 : 0,
+        
+       
       }}
     >
       <ScrollView

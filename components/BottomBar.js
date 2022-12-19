@@ -32,6 +32,7 @@ const BottomBar = (props) => {
   const textColor = colors.getTextColor();
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
+  const hideBottomBar = useSelector((state) => state.hideBottomBar);
   //const routes = useRoute();
   //console.log(routes.name);
 
@@ -90,6 +91,9 @@ const BottomBar = (props) => {
     },
   });
 
+  if (hideBottomBar) {
+    return null;
+  }
   return (
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity

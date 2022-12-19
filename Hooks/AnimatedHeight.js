@@ -25,14 +25,17 @@ function AnimatedHeight({ text, button, id, onChange }) {
   const [minHeight, setMinHeight] = React.useState(100);
 
   React.useEffect(() => {
-    //console.log(width);
+    
     if (width < 400 && Platform.OS == "android") {
-      setSize(100);
+      setSize(113);
       setNewHeight(85);
       setMinHeight(85);
     } else {
       setNewHeight(100);
       setMinHeight(100);
+    }
+    if(width < 350 && Platform.OS == "android"){
+      setSize(100);
     }
     if (width > 400) {
       setNewHeight(85);

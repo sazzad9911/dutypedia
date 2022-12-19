@@ -55,6 +55,9 @@ import OfferNow from "./Seller/OfferNow";
 import CategoryList from "./CategoryList";
 import { ViewCart } from "./Vendor/Notice";
 import Notice from "./Notice";
+import FixedService from "./FixedService";
+import PackageService from "./PackageService";
+import NewRoute from "../NewRoute";
 
 const Tab = createBottomTabNavigator();
 
@@ -257,28 +260,28 @@ const TabRoute = () => {
       >
         {!vendor &&
           (!Array.isArray(user) && user && load ? (
-            !NewState ? (
-              <Tab.Screen
-                name="Home"
-                options={{
-                  headerShown: false,
-                }}
-                component={Home}
-              />
-            ) : (
-              <Tab.Screen
-                name="Home"
-                options={{
-                  headerShown: false,
-                }}
-                component={Home_Next}
-              />
-            )
-            // <Tab.Screen
-            //   options={{ headerShown: false }}
-            //   name="Feed"
-            //   component={HomeRoute}
-            // />
+            // !NewState ? (
+            //   <Tab.Screen
+            //     name="Home"
+            //     options={{
+            //       headerShown: false,
+            //     }}
+            //     component={Home}
+            //   />
+            // ) : (
+            //   <Tab.Screen
+            //     name="Home"
+            //     options={{
+            //       headerShown: false,
+            //     }}
+            //     component={Home_Next}
+            //   />
+            // )
+            <Tab.Screen
+              options={{ headerShown: false }}
+              name="Feed"
+              component={HomeRoute}
+            />
           ) : (
             <Tab.Screen
               options={{ headerShown: false }}
@@ -337,63 +340,90 @@ const TabRoute = () => {
           }}
           name="Appointment"
           component={Appointment}
-        />
-        <Tab.Screen
+        /> 
+        {/* <Tab.Screen
           name="AllPackageList"
           options={{
             header: (props) => <SubHeader title="Fixed Price" {...props} />,
           }}
           component={AllPackageList}
-        />
+        /> */}
 
-        <Tab.Screen
+        {/* <Tab.Screen
           options={{ headerShown: false }}
           name="Notice"
           component={Notice}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           options={{ headerShown: false }}
           name="ViewCart"
           component={ViewCart}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           options={{ headerShown: false }}
           name="CategoryList"
           component={CategoryList}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           options={{
-            header: (props) => <SubHeader title="Offer Price" {...props} />,
+            header: (props) => <SubHeader style={{
+              marginTop:20
+            }} title="Offer Price" {...props} />,
           }}
           name="OfferNow"
           component={OfferNow}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           options={{
             header: (props) => <SubHeader title="Confirm Order" {...props} />,
           }}
           name="FixedOffers"
           component={FixedOffers}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           name="ManageOrder"
           options={{
             headerShown: false,
           }}
           component={ManageOrder}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           options={{ headerShown: false }}
           name="OrderDetails"
           component={OrderDetails}
-        />
-        <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
           name="Company Calender"
           options={{
             headerShown: false,
           }}
           component={CompanyCalendar}
-        />
+        /> */}
+        {/* <Tab.Screen
+            options={{
+              headerStyle: {
+                backgroundColor: "green",
+              },
+              headerShown: false,
+            }}
+            name="OtherProfile"
+            component={OtherProfile}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="FixedService"
+            component={FixedService}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="PackageService"
+            component={PackageService}
+          /> */}
+           {/* <Tab.Screen
+              options={{ headerShown: false }}
+              name="OtherProfile"
+              component={NewRoute}
+            /> */}
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
     </View>

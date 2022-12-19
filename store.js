@@ -22,6 +22,7 @@ import userOrders from "./Reducers/userOrders";
 import vendorOrders from "./Reducers/vendorOrders";
 import packages from "./Reducers/packages";
 import statusBar from "./Reducers/statusBar";
+import hideBottomBar from "./Reducers/hideBottomBar";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -46,7 +47,8 @@ const combine = combineReducers({
   userOrders:userOrders,
   vendorOrders:vendorOrders,
   packages:packages,
-  statusBar:statusBar
+  statusBar:statusBar,
+  hideBottomBar:hideBottomBar
 });
 const store = createStore(combine);
 export default store;

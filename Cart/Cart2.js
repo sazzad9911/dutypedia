@@ -19,12 +19,17 @@ function Cart2(props) {
   const assentColor=colors.getAssentColor();
   const user=useSelector(state=>state.user);
   const [User,setUser]=React.useState()
+  const onPress=props.onPress;
 
   
   return (
     <TouchableOpacity
       onPress={() => {
         dispatch({type: 'SET_INTEREST_CATEGORY',playload:"cart2"})
+        if(onPress){
+          onPress(data)
+          return
+        }
         navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null,data:data})
       }}
       style={{

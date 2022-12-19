@@ -306,7 +306,9 @@ const Home_Next = (props) => {
         )}
         {SomeSuggest &&
           SomeSuggest.map((doc, i) => (
-            <Cart2 key={i} data={doc} navigation={props.navigation} />
+            <Cart2 key={i} data={doc} onPress={data=>{
+              navigation.navigate("OtherProfile",{serviceId:data?data.service.id:null,data:data})
+            }} navigation={props.navigation} />
           ))}
         <View style={{ width: 15 }} />
       </ScrollView>
