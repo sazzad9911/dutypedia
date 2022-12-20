@@ -104,6 +104,7 @@ export default function OfflineProfile({ navigation, route }) {
   }, [Active + AllOrders]);
   return (
     <View style={{ flex: 1 }}>
+      <View style={{height:25,backgroundColor:"#F2F2F6"}}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
