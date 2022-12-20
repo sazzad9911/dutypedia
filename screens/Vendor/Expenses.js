@@ -342,7 +342,7 @@ const Expenses = (props) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        style={{ overflow: "hidden", flex: 1 }}
+        
         scrollEventThrottle={16}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll={true}
@@ -365,9 +365,8 @@ const Expenses = (props) => {
         >
           <View
             style={{
-              height: 150,
-
               backgroundColor: "white",
+              paddingBottom:10
             }}
           >
             <BackHeader
@@ -392,8 +391,7 @@ const Expenses = (props) => {
             />
           </View>
         </Animated.View>
-        <View>
-          <TouchableOpacity
+        <TouchableOpacity
             onPress={() => {
               navigation.navigate("AddExpenses", {
                 onChange: onChange,
@@ -449,7 +447,6 @@ const Expenses = (props) => {
               />
             ))}
           <View style={{ height: 50 }} />
-        </View>
         <View
           style={{
             flexDirection: "row",

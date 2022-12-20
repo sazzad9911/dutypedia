@@ -37,6 +37,7 @@ import {
 import NewTabe from "./Vendor/components/NewTabe";
 import { OrderCart } from "./Vendor/Order";
 import { useIsFocused } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
@@ -70,46 +71,66 @@ const ManageOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ];
-  const userOrders=useSelector(state=>state.userOrders)
-  const type=route.params&&route.params.type?route.params.type:null
+  const userOrders = useSelector((state) => state.userOrders);
+  const type = route.params && route.params.type ? route.params.type : null;
 
-  if(!isFocused){
-    return(
-      <View style={{
-        flex:1,
-        justifyContent:"center",
-        alignItems:"center"
-      }}>
+  if (!isFocused) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text>Loading...</Text>
       </View>
-    )
+    );
   }
   //console.log(type)
   return (
-    <View style={{
-      flex:1,
-      paddingTop:25
+    <SafeAreaView style={{
+      flex:1
     }}>
-      <Tab.Navigator initialRouteName={type} screenOptions={{
-      tabBarLabelStyle: { fontSize: 12 },
-      tabBarItemStyle: {
-      margin:0,
-      padding:0,
-      width:120,
-     },
-      tabBarIndicatorStyle: {
-        backgroundColor: "#AC5DCB",
-      },
-      tabBarScrollEnabled: true,
-      
-    }}>
-      {initialState.map((doc, i) => (
-        <Tab.Screen options={{
-          title:`${initialState[i].title}(${userOrders ? userOrders.filter(d=>d.type==initialState[i].type).length : "0"})`
-        }} key={i} name={doc.type} component={Screens} />
-      ))}
-    </Tab.Navigator>
-    </View>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 0,
+        }}
+      >
+        <Tab.Navigator
+          initialRouteName={type}
+          screenOptions={{
+            tabBarLabelStyle: { fontSize: 12 },
+            tabBarItemStyle: {
+              margin: 0,
+              padding: 0,
+              width: 120,
+            },
+            tabBarIndicatorStyle: {
+              backgroundColor: "#AC5DCB",
+            },
+            tabBarScrollEnabled: true,
+          }}
+        >
+          {initialState.map((doc, i) => (
+            <Tab.Screen
+              options={{
+                title: `${initialState[i].title}(${
+                  userOrders
+                    ? userOrders.filter((d) => d.type == initialState[i].type)
+                        .length
+                    : "0"
+                })`,
+              }}
+              key={i}
+              name={doc.type}
+              component={Screens}
+            />
+          ))}
+        </Tab.Navigator>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -239,7 +260,7 @@ const Screens = ({ navigation, route }) => {
       const arr = res.data.orders.filter((d) => d.type == route.name);
       setAllOrders(arr);
       setOrders(arr);
-    } catch (e) { 
+    } catch (e) {
       console.warn(e.message);
     }
   };
@@ -287,7 +308,7 @@ const Screens = ({ navigation, route }) => {
               marginVertical: 0,
               justifyContent: "space-between",
               marginBottom: 15,
-              marginTop:20
+              marginTop: 20,
             }}
           >
             <View

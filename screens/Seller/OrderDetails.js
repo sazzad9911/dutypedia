@@ -28,6 +28,7 @@ import Toast from "react-native-root-toast";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { socket } from "../../Class/socket";
 import IconButton from "../../components/IconButton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -185,13 +186,11 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     );
   }
   return (
-    <View style={{
+    <SafeAreaView style={{
       flex:1,
 
     }}>
-      <View style={{
-        height:25
-      }}/>
+      
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -353,7 +352,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             >
               <Barcode
                 height="50"
-                width="150"
+                width="120"
                 value={data ? data.id : "dsfff"}
                 options={{ format: "CODE128", background: primaryColor }}
                 rotation={0}
@@ -632,6 +631,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     marginVertical: 20,
                     borderWidth: 0,
                     marginRight: 20,
+                    
                   }}
                   title="Accept"
                 />
@@ -835,7 +835,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           </Text>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 export default OrderDetails;

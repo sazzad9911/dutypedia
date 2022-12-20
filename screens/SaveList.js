@@ -8,6 +8,7 @@ import {
   Dimensions,
   StyleSheet,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { Bear } from "./../assets/icon";
 import { SvgXml } from "react-native-svg";
@@ -30,7 +31,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const PARALLAX_HEIGHT = 330;
-const HEADER_BAR_HEIGHT = 92;
+const HEADER_BAR_HEIGHT =Platform.OS=="ios"?55:45;
 const SNAP_START_THRESHOLD = 50;
 const SNAP_STOP_THRESHOLD = 330;
 
@@ -62,26 +63,24 @@ const SaveList = ({ navigation }) => {
     return {
       opacity: interpolate(
         scrollValue.value,
-        [0,100 ],
+        [0,150 ],
         [0, 1],
         Extrapolate.CLAMP
       ),
     };
   });
   return (
-    <View style={screenStyles.screenContainer}>
+    <SafeAreaView style={screenStyles.screenContainer}>
+      
       <View
         style={[
           styles.headerBarContainer,
           {
             width: width,
             backgroundColor: "#48496D",
-            height: 70,
             zIndex: 6,
             flexDirection: "row",
             alignItems: "center",
-            paddingTop:20
-            
           },
         ]}
       >
@@ -92,7 +91,7 @@ const SaveList = ({ navigation }) => {
           style={{   
             alignSelf: "flex-start",
             marginLeft: 10,
-            marginTop:11
+            marginTop:Platform.OS=="ios"?0:5
           }}
           name="left"
           size={24}
@@ -104,7 +103,9 @@ const SaveList = ({ navigation }) => {
               color: primaryColor,
               fontSize: 15,
               marginLeft: 20,
-              fontFamily: 'Poppins-Light'
+              fontFamily: 'Poppins-Light',
+              marginTop:Platform.OS=="ios"?-6:-10,
+
             }}
           >
             Created By Easin Arafat
@@ -130,6 +131,7 @@ const SaveList = ({ navigation }) => {
                   height: 240,
                 }}
               >
+                <StatusBar backgroundColor={'#48496D'}/>
                 {/* <Foreground scrollValue={scrollValue} /> */}
                 <Animated.View
                   style={[
@@ -191,7 +193,7 @@ const SaveList = ({ navigation }) => {
           </SafeAreaView>
         </StickyHeaderScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -211,6 +213,8 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "hidden",
     zIndex: 3,
+    paddingTop:Platform.OS=="ios"?25:0,
+    
   },
   tabContainer: {
     paddingTop: HEADER_BAR_HEIGHT,

@@ -304,7 +304,7 @@ const AlertDesign = ({ visible }) => {
         Your request has been successfully sent our team will contact with you
         in 3 business day.
       </Text>
-      <Button
+      <IconButton
         onPress={() => visible(false)}
         style={{
           width: 100,

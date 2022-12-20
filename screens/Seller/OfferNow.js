@@ -336,7 +336,9 @@ const OfferNow = ({ navigation, route }) => {
             >
               {ListData.length > 0 ? (
                 ListData.map((doc, i) => (
-                  <Text key={i}>
+                  <Text style={{
+                    fontSize:16
+                  }} key={i}>
                     {i == 0 ? "" : ", "}
                     {doc.data.title}
                   </Text>

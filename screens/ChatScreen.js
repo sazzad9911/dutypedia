@@ -77,7 +77,7 @@ const ChatScreen = (props) => {
   const backgroundColor=colors.getBackgroundColor();
   const secondaryColor=colors.getSecondaryColor();
   const params=props.route.params;
-  const data=params.data;
+  const data=params&&params.data?params.data:null;
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",

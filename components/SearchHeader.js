@@ -29,7 +29,7 @@ const SearchHeader = (props) => {
       paddingHorizontal: 20,
       alignItems: "center",
       backgroundColor: primaryColor,
-      paddingTop:25
+      paddingTop:0
     },
     icon: {
       flex: 1,

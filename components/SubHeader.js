@@ -4,6 +4,7 @@ import { Color } from "./../assets/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SubHeader = (props) => {
   const navigation = props.navigation;
@@ -15,51 +16,54 @@ const SubHeader = (props) => {
   const assentColor = colors.getAssentColor();
 
   return (
-    <View style={{
-      paddingTop:20
-    }}>
-      
+    <SafeAreaView>
       <View
-      style={[
-        {
-          backgroundColor: primaryColor,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingTop: 10,
-          paddingBottom: 10,
-        },
-        props.style,
-      ]}
-    >
-      <AntDesign
-        onPress={() => {
-          if (props.onPress) {
-            return props.onPress();
-          }
-          navigation.goBack();
-        }}
         style={{
-          marginLeft: 20,
-        }}
-        name="left"
-        size={25}
-        color={assentColor}
-      />
-      <Text
-        style={{
-          fontSize: 18,
-          fontFamily: "Poppins-Medium",
-          flex: 1,
-          textAlign: "center",
-          marginLeft: -50,
-          zIndex: -1,
-          color: textColor,
+          paddingTop: 0,
         }}
       >
-        {props.title ? props.title : params.title ? params.title : ""}
-      </Text>
-    </View>
-    </View>
+        <View
+          style={[
+            {
+              backgroundColor: primaryColor,
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: 10,
+              paddingBottom: 10,
+            },
+            props.style,
+          ]}
+        >
+          <AntDesign
+            onPress={() => {
+              if (props.onPress) {
+                return props.onPress();
+              }
+              navigation.goBack();
+            }}
+            style={{
+              marginLeft: 20,
+            }}
+            name="left"
+            size={25}
+            color={assentColor}
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "Poppins-Medium",
+              flex: 1,
+              textAlign: "center",
+              marginLeft: -50,
+              zIndex: -1,
+              color: textColor,
+            }}
+          >
+            {props.title ? props.title : params.title ? params.title : ""}
+          </Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import {Color} from '../assets/colors'
 import {useDispatch,useSelector} from 'react-redux'
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ChatHeader = () => {
   const isDark=useSelector((state) => state.isDark);
@@ -15,7 +16,7 @@ const ChatHeader = () => {
     box: {
       justifyContent: "center",
       alignItems: "center",
-      paddingTop:10
+      paddingTop:0
     },
     text: {
       color: textColor,
@@ -23,7 +24,7 @@ const ChatHeader = () => {
       fontWeight: "bold",
     },
     input: {
-      margin: 20,
+      margin: 10,
       backgroundColor: primaryColor,
       height: 40,
       width: "90%",
@@ -31,12 +32,13 @@ const ChatHeader = () => {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 15,
+      marginTop: 10,
     },
   });
   
   return (
-    <View style={styles.box}>
+   <SafeAreaView>
+     <View style={styles.box}>
       <TouchableOpacity style={styles.input}>
         <EvilIcons
           style={{
@@ -52,6 +54,7 @@ const ChatHeader = () => {
         }}>Search Chat</Text>
       </TouchableOpacity>
     </View>
+   </SafeAreaView>
   );
 };
 

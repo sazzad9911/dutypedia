@@ -64,6 +64,7 @@ import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
 import Note, { AddNote, ViewNote } from "./Vendor/Note";
 import AddPackage, { AddScreen } from "./services/AddPackage";
+import { SafeAreaView } from "react-native-safe-area-context";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -270,7 +271,7 @@ const Profile = ({ navigation }) => {
         name="AddServiceList_1"
         component={AddServiceList}
       />
-      
+
       <Stack.Screen
         name="Vendor Calender"
         options={{
@@ -342,7 +343,7 @@ const MainProfile = (props) => {
   const [Loader, setLoader] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
-  const userOrders=useSelector(state=>state.userOrders);
+  const userOrders = useSelector((state) => state.userOrders);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -476,349 +477,309 @@ const MainProfile = (props) => {
     );
   }
   return (
-    <ScrollView showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: "#F2F2F6" }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => {
-            //setPageChange(true);
-            onRefresh();
-          }}
-        />
-      }
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
     >
-      <StatusBar backgroundColor={primaryColor} />
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            storeJson("theme", !isDark);
-            dispatch({ type: "SET_THEME", playload: !isDark });
-          }}
-          style={[styles.iconTop]}
-        >
-          <SvgXml xml={lightIcon} height="30" width="30" />
-        </TouchableOpacity>
-        {backgroundImage ? (
-          <Image
-            source={{ uri: backgroundImage }}
-            style={styles.backgroundContainer}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: "#F2F2F6" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
           />
-        ) : (
-          <LinearGradient
-            style={styles.backgroundContainer}
-            colors={["#F2F2F6", "#F2F2F6", "#F2F2F6"]}
-          ></LinearGradient>
-        )}
-
-        <TouchableOpacity
-          onPress={() => {
-            pickImage();
-          }}
-          style={styles.profile}
-        >
-          {image ? (
-            <Image style={styles.image} source={{ uri: image }} />
+        }
+      >
+        <StatusBar backgroundColor={primaryColor} />
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => {
+              storeJson("theme", !isDark);
+              dispatch({ type: "SET_THEME", playload: !isDark });
+            }}
+            style={[styles.iconTop]}
+          >
+            <SvgXml xml={lightIcon} height="30" width="30" />
+          </TouchableOpacity>
+          {backgroundImage ? (
+            <Image
+              source={{ uri: backgroundImage }}
+              style={styles.backgroundContainer}
+            />
           ) : (
-            <FontAwesome name="user" size={80} color="#983C85" />
+            <LinearGradient
+              style={styles.backgroundContainer}
+              colors={["#F2F2F6", "#F2F2F6", "#F2F2F6"]}
+            ></LinearGradient>
           )}
-        </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              pickImage();
+            }}
+            style={styles.profile}
+          >
+            {image ? (
+              <Image style={styles.image} source={{ uri: image }} />
+            ) : (
+              <FontAwesome name="user" size={80} color="#983C85" />
+            )}
+          </TouchableOpacity>
+          <View
+            style={{
+              alignSelf: "center",
+            }}
+          >
+            <Text style={styles.headLine}>
+              {user ? user.user.firstName + " " + user.user.lastName : "-"}
+              <Text
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                {" "}
+                (
+                {user && user.user.gender
+                  ? user.user.gender.toUpperCase()
+                  : "N/A"}
+                )
+              </Text>
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                {
+                  marginTop: -2,
+                  color: "#6366F1",
+                },
+              ]}
+            >
+              @{user ? user.user.username : ""}
+            </Text>
+          </View>
+        </View>
         <View
           style={{
-            alignSelf: "center",
+            backgroundColor: primaryColor,
+            paddingVertical: 10,
+            marginHorizontal: 20,
+            marginVertical: 20,
+            borderRadius: 10,
+            paddingLeft: 10,
           }}
         >
-          <Text style={styles.headLine}>
-            {user ? user.user.firstName + " " + user.user.lastName : "-"}
+          <View
+            style={{
+              borderColor: "#F1EFEF",
+              borderBottomWidth: 0.5,
+            }}
+          >
             <Text
               style={{
                 fontSize: 12,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+                marginBottom: 5,
               }}
             >
-              {" "}
-              (
-              {user && user.user.gender
-                ? user.user.gender.toUpperCase()
-                : "N/A"}
-              )
+              Mobile
             </Text>
-          </Text>
-          <Text
-            style={[
-              styles.text,
-              {
-                marginTop: -2,
+            <Text
+              style={{
+                fontSize: 16,
                 color: "#6366F1",
-              },
-            ]}
-          >
-            @{user ? user.user.username : ""}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingVertical: 10,
-          marginHorizontal: 20,
-          marginVertical: 20,
-          borderRadius: 10,
-          paddingLeft: 10,
-        }}
-      >
-        <View
-          style={{
-            borderColor: "#F1EFEF",
-            borderBottomWidth: 0.5,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              marginBottom: 5,
-            }}
-          >
-            Mobile
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#6366F1",
-              fontFamily: "Poppins-Medium",
-              marginBottom: 10,
-            }}
-          >
-            {user && user.user.phone ? user.user.phone : "N/A"}
-          </Text>
-        </View>
-        <View style={{ height: 10 }} />
-        <View
-          style={{
-            borderColor: "#F1EFEF",
-            borderBottomWidth: 0.5,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              marginBottom: 5,
-            }}
-          >
-            Email
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#6366F1",
-              fontFamily: "Poppins-Medium",
-              marginBottom: 10,
-            }}
-          >
-            {user && user.user.email ? user.user.email : "N/A"}
-          </Text>
-        </View>
-        <View style={{ height: 10 }} />
-        <View
-          style={{
-            borderColor: "#F1EFEF",
-            borderBottomWidth: 0,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12,
-              color: textColor,
-              fontFamily: "Poppins-Medium",
-              marginBottom: 5,
-            }}
-          >
-            Address
-          </Text>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "#6366F1",
-              fontFamily: "Poppins-Medium",
-              marginBottom: 5,
-            }}
-          >
-            {user && user.user.address ? user.user.address : "N/A"}
-          </Text>
-        </View>
-        <Pressable
-          style={{
-            position: "absolute",
-            right: 10,
-            bottom: 15,
-          }}
-        >
-          <Text> Edit</Text>
-        </Pressable>
-      </View>
-
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingVertical: 10,
-          marginHorizontal: 20,
-          borderRadius: 10,
-          paddingLeft: 10,
-        }}
-      >
-        <ProfileOption
-          style={{
-            paddingHorizontal: 0,
-          }}
-          badge={Orders ? Orders.length : false}
-          onPress={() => {
-            navigation.navigate("ManageOrder");
-          }}
-          Icon={() => (
-            <View
-              style={{
-                backgroundColor: "#379DF1",
-                width: 25,
-                height: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
+                fontFamily: "Poppins-Medium",
+                marginBottom: 10,
               }}
             >
-              <SvgXml xml={orderIcon} height="15" width="15" />
-            </View>
-          )}
-          title="Manage Order"
-        />
-        <ProfileOption
-          style={{ paddingHorizontal: 0 }}
-          onPress={() => {
-            navigation.navigate("UserAppointmentList");
-          }}
-          Icon={() => (
-            <View
-              style={{
-                backgroundColor: "#7611D2",
-                width: 25,
-                height: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
-              }}
-            >
-              <SvgXml xml={calenderIcon} height="15" width="15" />
-            </View>
-          )}
-          title="Appointment"
-        />
-        <ProfileOption
-          style={{ paddingHorizontal: 0 }}
-          onPress={() => {
-            navigation.navigate("SaveList");
-          }}
-          Icon={() => (
-            <View
-              style={{
-                backgroundColor: "#E2E2E2",
-                width: 25,
-                height: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
-              }}
-            >
-              <SvgXml xml={loveIcon} height="15" width="15" />
-            </View>
-          )}
-          title="Saved"
-        />
-        <ProfileOption
-          action={true}
-          style={{ paddingHorizontal: 0 }}
-          onPress={() => {
-            navigation.navigate("AccountBalance")
-          }}
-          Icon={() => (
-            <View
-              style={{
-                backgroundColor: "#E2E2E2",
-                width: 25,
-                height: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
-              }}
-            >
-              <SvgXml xml={accountIcon} height="15" width="15" />
-            </View>
-          )}
-          title="Account Balance"
-        />
-      </View>
-      <View style={{ height: 20 }} />
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingVertical: 10,
-          marginHorizontal: 20,
-          borderRadius: 10,
-          paddingLeft: 10,
-        }}
-      >
-        {vendorInfo && (
+              {user && user.user.phone ? user.user.phone : "N/A"}
+            </Text>
+          </View>
+          <View style={{ height: 10 }} />
           <View
             style={{
-              paddingHorizontal: 0,
-              flexDirection: "row",
+              borderColor: "#F1EFEF",
+              borderBottomWidth: 0.5,
             }}
           >
-            <View
+            <Text
               style={{
-                backgroundColor: "#12668F",
-                width: 25,
-                height: 25,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 10,
+                fontSize: 12,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+                marginBottom: 5,
               }}
             >
-              <SvgXml xml={dashboardIcon} height="15" width="15" />
-            </View>
-            <View
+              Email
+            </Text>
+            <Text
               style={{
-                borderColor: "#F1EFEF",
-                borderBottomWidth: .5,
-                marginLeft: 10,
-                flex: 1,
-                paddingBottom: 10,
+                fontSize: 16,
+                color: "#6366F1",
+                fontFamily: "Poppins-Medium",
+                marginBottom: 10,
               }}
             >
-              <Text
+              {user && user.user.email ? user.user.email : "N/A"}
+            </Text>
+          </View>
+          <View style={{ height: 10 }} />
+          <View
+            style={{
+              borderColor: "#F1EFEF",
+              borderBottomWidth: 0,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                color: textColor,
+                fontFamily: "Poppins-Medium",
+                marginBottom: 5,
+              }}
+            >
+              Address
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "#6366F1",
+                fontFamily: "Poppins-Medium",
+                marginBottom: 5,
+              }}
+            >
+              {user && user.user.address ? user.user.address : "N/A"}
+            </Text>
+          </View>
+          <Pressable
+            style={{
+              position: "absolute",
+              right: 10,
+              bottom: 15,
+            }}
+          >
+            <Text> Edit</Text>
+          </Pressable>
+        </View>
+
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            paddingVertical: 10,
+            marginHorizontal: 20,
+            borderRadius: 10,
+            paddingLeft: 10,
+          }}
+        >
+          <ProfileOption
+            style={{
+              paddingHorizontal: 0,
+            }}
+            badge={Orders ? Orders.length : false}
+            onPress={() => {
+              navigation.navigate("ManageOrder");
+            }}
+            Icon={() => (
+              <View
                 style={{
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  fontSize: 16,
+                  backgroundColor: "#379DF1",
+                  width: 25,
+                  height: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 10,
                 }}
               >
-                Login To Business Account
-              </Text>
-            </View>
-          </View>
-        )}
-        {vendorInfo &&
-          vendorInfo.map((doc, i) => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("DashboardList", { data: doc });
-              }}
-              key={i}
+                <SvgXml xml={orderIcon} height="15" width="15" />
+              </View>
+            )}
+            title="Manage Order"
+          />
+          <ProfileOption
+            style={{ paddingHorizontal: 0 }}
+            onPress={() => {
+              navigation.navigate("UserAppointmentList");
+            }}
+            Icon={() => (
+              <View
+                style={{
+                  backgroundColor: "#7611D2",
+                  width: 25,
+                  height: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <SvgXml xml={calenderIcon} height="15" width="15" />
+              </View>
+            )}
+            title="Appointment"
+          />
+          <ProfileOption
+            style={{ paddingHorizontal: 0 }}
+            onPress={() => {
+              navigation.navigate("SaveList");
+            }}
+            Icon={() => (
+              <View
+                style={{
+                  backgroundColor: "#E2E2E2",
+                  width: 25,
+                  height: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <SvgXml xml={loveIcon} height="15" width="15" />
+              </View>
+            )}
+            title="Saved"
+          />
+          <ProfileOption
+            action={true}
+            style={{ paddingHorizontal: 0 }}
+            onPress={() => {
+              navigation.navigate("AccountBalance");
+            }}
+            Icon={() => (
+              <View
+                style={{
+                  backgroundColor: "#E2E2E2",
+                  width: 25,
+                  height: 25,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <SvgXml xml={accountIcon} height="15" width="15" />
+              </View>
+            )}
+            title="Account Balance"
+          />
+        </View>
+        <View style={{ height: 20 }} />
+        <View
+          style={{
+            backgroundColor: primaryColor,
+            paddingVertical: 10,
+            marginHorizontal: 20,
+            borderRadius: 10,
+            paddingLeft: 10,
+          }}
+        >
+          {vendorInfo && (
+            <View
               style={{
                 paddingHorizontal: 0,
                 flexDirection: "row",
-                marginTop: 10,
               }}
             >
               <View
@@ -828,22 +789,15 @@ const MainProfile = (props) => {
                   height: 25,
                   justifyContent: "center",
                   alignItems: "center",
-                  borderRadius: 20,
+                  borderRadius: 10,
                 }}
               >
-                <Image
-                  source={{ uri: doc.image }}
-                  style={{
-                    height: 15,
-                    width: 15,
-                    borderRadius: 10,
-                  }}
-                />
+                <SvgXml xml={dashboardIcon} height="15" width="15" />
               </View>
               <View
                 style={{
                   borderColor: "#F1EFEF",
-                  borderBottomWidth: .5,
+                  borderBottomWidth: 0.5,
                   marginLeft: 10,
                   flex: 1,
                   paddingBottom: 10,
@@ -856,136 +810,189 @@ const MainProfile = (props) => {
                     fontSize: 16,
                   }}
                 >
-                  {doc.name}
+                  Login To Business Account
                 </Text>
               </View>
-            </TouchableOpacity>
-          ))}
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Category");
-          }}
-          style={{
-            flexDirection: "row",
-            marginVertical: 10,
-          }}
-        >
-          <AntDesign name="plus" size={20} color="#6366F1" />
-          <Text
+            </View>
+          )}
+          {vendorInfo &&
+            vendorInfo.map((doc, i) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("DashboardList", { data: doc });
+                }}
+                key={i}
+                style={{
+                  paddingHorizontal: 0,
+                  flexDirection: "row",
+                  marginTop: 10,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#12668F",
+                    width: 25,
+                    height: 25,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 20,
+                  }}
+                >
+                  <Image
+                    source={{ uri: doc.image }}
+                    style={{
+                      height: 15,
+                      width: 15,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    borderColor: "#F1EFEF",
+                    borderBottomWidth: 0.5,
+                    marginLeft: 10,
+                    flex: 1,
+                    paddingBottom: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Poppins-SemiBold",
+                      color: textColor,
+                      fontSize: 16,
+                    }}
+                  >
+                    {doc.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Category");
+            }}
             style={{
-              marginLeft: 10,
-              fontFamily: "Poppins-SemiBold",
-              fontSize: 16,
-              color: "#6366F1",
+              flexDirection: "row",
+              marginVertical: 10,
             }}
           >
-            Add Account
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ height: 20 }} />
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingVertical: 10,
-          marginHorizontal: 20,
-          borderRadius: 10,
-          paddingLeft: 10,
-          marginBottom:20
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            setLogOut(true);
-            logOut();
-            logoutVendor();
-            dispatch({ type: "SET_VENDOR", playload: false });
-            dispatch({ type: "SET_USER", playload: [] });
-            dispatch({ type: "SET_VENDOR_INFO", playload: false });
-            navigation.navigate("Home");
-          }}
-          style={{
-            paddingHorizontal: 0,
-            flexDirection: "row",
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#C1D3F7",
-              width: 25,
-              height: 25,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
-            }}
-          >
-            <SvgXml xml={logoutIcon} height="15" width="15" />
-          </View>
-          <View
-            style={{
-              borderColor: "#F1EFEF",
-              borderBottomWidth: .5,
-              marginLeft: 10,
-              flex: 1,
-              paddingBottom: 10,
-            }}
-          >
+            <AntDesign name="plus" size={20} color="#6366F1" />
             <Text
               style={{
+                marginLeft: 10,
                 fontFamily: "Poppins-SemiBold",
-                color: textColor,
                 fontSize: 16,
+                color: "#6366F1",
               }}
             >
-              Log Out
+              Add Account
             </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Support");
-          }}
+          </TouchableOpacity>
+        </View>
+        <View style={{ height: 20 }} />
+        <View
           style={{
-            paddingHorizontal: 0,
-            flexDirection: "row",
-            marginTop:10
+            backgroundColor: primaryColor,
+            paddingVertical: 10,
+            marginHorizontal: 20,
+            borderRadius: 10,
+            paddingLeft: 10,
+            marginBottom: 20,
           }}
         >
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              setLogOut(true);
+              logOut();
+              logoutVendor();
+              dispatch({ type: "SET_VENDOR", playload: false });
+              dispatch({ type: "SET_USER", playload: [] });
+              dispatch({ type: "SET_VENDOR_INFO", playload: false });
+              navigation.navigate("Home");
+            }}
             style={{
-              backgroundColor: "#F1EFEF",
-              width: 25,
-              height: 25,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10,
+              paddingHorizontal: 0,
+              flexDirection: "row",
             }}
           >
-            <SvgXml xml={supportIcon} height="15" width="15" />
-          </View>
-          <View
-            style={{
-              borderColor: "#E2E2E2",
-              borderBottomWidth: 0,
-              marginLeft: 10,
-              flex: 1,
-              paddingBottom: 10,
-            }}
-          >
-            <Text
+            <View
               style={{
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                fontSize: 16,
+                backgroundColor: "#C1D3F7",
+                width: 25,
+                height: 25,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 10,
               }}
             >
-              Support
-            </Text>
-          </View>
-        </TouchableOpacity>
-       
-      </View>
-    </ScrollView>
+              <SvgXml xml={logoutIcon} height="15" width="15" />
+            </View>
+            <View
+              style={{
+                borderColor: "#F1EFEF",
+                borderBottomWidth: 0.5,
+                marginLeft: 10,
+                flex: 1,
+                paddingBottom: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  fontSize: 16,
+                }}
+              >
+                Log Out
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Support");
+            }}
+            style={{
+              paddingHorizontal: 0,
+              flexDirection: "row",
+              marginTop: 10,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#F1EFEF",
+                width: 25,
+                height: 25,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 10,
+              }}
+            >
+              <SvgXml xml={supportIcon} height="15" width="15" />
+            </View>
+            <View
+              style={{
+                borderColor: "#E2E2E2",
+                borderBottomWidth: 0,
+                marginLeft: 10,
+                flex: 1,
+                paddingBottom: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  fontSize: 16,
+                }}
+              >
+                Support
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
