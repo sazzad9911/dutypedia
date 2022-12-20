@@ -45,8 +45,8 @@ export default function Notice({ navigation, route }) {
 
   React.useEffect(() => {
     
-    if (vendor) {
-      getNotice(user.token, vendor.service.id)
+    if (vendor || serviceId) {
+      getNotice(user.token, serviceId?serviceId:vendor.service.id)
         .then((res) => {
           if (res) {
             setLoader(false);
@@ -59,7 +59,7 @@ export default function Notice({ navigation, route }) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [vendor + Reload]);
+  }, [vendor + Reload+serviceId]);
   const onChange = (val) => {
     createNotice(user.token, {
       subject: val.subject,
@@ -115,7 +115,8 @@ export default function Notice({ navigation, route }) {
           shadowOpacity: 0.01,
           shadowColor: "black",
           backgroundColor: primaryColor,
-          paddingTop:32
+          paddingTop:32,
+          
         }}
       >
         <TouchableOpacity

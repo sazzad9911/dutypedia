@@ -50,13 +50,16 @@ export default function VendorServiceList({navigation,route}) {
   return (
     <Tab.Navigator screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },
-      tabBarItemStyle: { width: width/4,
+      tabBarItemStyle: { width: 120,
       margin:0,
       padding:0,
+      paddingTop:32,
+      paddingBottom:10
      },
       tabBarIndicatorStyle: {
         backgroundColor: "#AC5DCB",
       },
+      tabBarScrollEnabled: true,
     }}>
       {initialState.map((doc, i) => (
         <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId}} component={Screens} />

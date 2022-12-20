@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, StyleSheet, TouchableOpacity,Alert } from "react-native";
+import { View, ScrollView, StyleSheet, TouchableOpacity,Alert,StatusBar as Bar } from "react-native";
 import { Text } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -47,7 +47,7 @@ const CompanyCalendar = (props) => {
   ];
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar />
+      <StatusBar backgroundColor={"white"} />
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
@@ -66,7 +66,7 @@ const CompanyCalendar = (props) => {
           backgroundColor: primaryColor,
           flexDirection: "row",
           alignItems: "center",
-          paddingTop:10
+          paddingTop:32
         }}
       >
         <AntDesign name="left" size={24} color={assentColor} />
@@ -162,6 +162,7 @@ const CompanyCalendar = (props) => {
             ))}
           </Animated.View>
         )}
+        <View style={{height:20}}/>
       </ScrollView>
     </View>
   );

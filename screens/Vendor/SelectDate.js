@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "../../components/Button";
 import { convertDate, dateConverter } from "../../action";
+import IconButton from "../../components/IconButton";
 const {width,height}=Dimensions.get("window")
 
 export default function SelectDate({onChange,navigation,route}) {
@@ -131,7 +132,7 @@ export default function SelectDate({onChange,navigation,route}) {
           marginHorizontal:20
         }}>{Error}</Text>
       )}
-      <Button onPress={()=>{
+      <IconButton onPress={()=>{
         if(!OpeningTime || !ClosingTime){
           setError("Please select date")
           return;

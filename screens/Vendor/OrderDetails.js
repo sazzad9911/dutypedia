@@ -744,7 +744,7 @@ const OrderDetails = ({ navigation, route }) => {
           &&data.status!="COMPLETED"&&
           data.status!="REFUNDED"&&
           data.status != "CANCELLED" && (
-            <Button
+            <IconButton
               onPress={() => {
                 try {
                   setLoader(true);
@@ -787,7 +787,7 @@ const OrderDetails = ({ navigation, route }) => {
               Customer request for refund
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <Button
+              <IconButton
                 onPress={() => {
                   try {
                     setLoader(true);
@@ -813,7 +813,7 @@ const OrderDetails = ({ navigation, route }) => {
                 }}
                 title="Accept Refund"
               />
-              <Button
+              <IconButton
                 onPress={() => {
                   try {
                     setLoader(true);
@@ -850,7 +850,7 @@ const OrderDetails = ({ navigation, route }) => {
         }}
       >
         {data.status === "WAITING_FOR_ACCEPT" && (
-          <Button
+          <IconButton
             onPress={() => {
               try {
                 validate();
@@ -872,7 +872,7 @@ const OrderDetails = ({ navigation, route }) => {
         {data.status == "PROCESSING"&&
          !data.requestedDeliveryDate&&
          !data.refundRequestByUser&& (
-          <Button
+          <IconButton
             onPress={() => {
               setRefound(true);
             }}
@@ -894,7 +894,7 @@ const OrderDetails = ({ navigation, route }) => {
           data.status != "REFUNDED" &&
           data.status != "COMPLETED"&&
           !data.refundRequestByUser && (
-            <Button
+            <IconButton
               onPress={() => {
                 Alert.alert("Hey!", "Are you want to cancel this order?", [
                   {

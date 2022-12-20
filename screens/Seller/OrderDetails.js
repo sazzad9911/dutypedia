@@ -27,6 +27,7 @@ import { serverToLocal } from "../../Class/dataConverter";
 import Toast from "react-native-root-toast";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { socket } from "../../Class/socket";
+import IconButton from "../../components/IconButton";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -588,7 +589,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               Requested Delivery Date: {data.requestedDeliveryDate}
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <Button
+              <IconButton
                 onPress={() => {
                   setLoader(true);
                   acceptTimeRequest(
@@ -622,7 +623,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 }}
                 title="Accept"
               />
-              <Button
+              <IconButton
                 onPress={() => {
                   setLoader(true);
                   acceptTimeRequest(
@@ -668,7 +669,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         }}
       >
         {data && data.status == "ACCEPTED" && (
-          <Button
+          <IconButton
             onPress={() => {
               setLoader(true);
               makePayment(user.token, data.id)
@@ -705,7 +706,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data.status != "DELIVERED" &&
           data.status != "COMPLETED" &&
           (!data.refundRequestByUser) && (
-            <Button
+            <IconButton
               onPress={() => {
                 Alert.alert("Hey!", "Are you want to cancel this order?", [
                   {
@@ -765,7 +766,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             If you Received then Click
           </Text>
-          <Button
+          <IconButton
             onPress={() => {
               setLoader(true);
               completeOrder(user.token, data.id)

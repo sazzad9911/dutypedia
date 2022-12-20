@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { IconButton } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { Color } from "../../assets/colors";
 import Button from "../../components/Button";
+import IconButton from "../../components/IconButton";
 
 export default function AccountBalance() {
   const isDark = useSelector((state) => state.isDark);
@@ -55,7 +55,7 @@ export default function AccountBalance() {
             100৳
           </Text>
         </View>
-        <Button
+        <IconButton
           style={{
             backgroundColor: "#FEA31C",
             color: textColor,

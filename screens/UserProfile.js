@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, Dimensions, Image } from "react-native";
+import { View, Text, ScrollView, Dimensions, Image, StatusBar } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SvgXml } from "react-native-svg";
 import { useSelector, useDispatch } from "react-redux";
@@ -57,6 +57,7 @@ export default function UserProfile({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
+      
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{

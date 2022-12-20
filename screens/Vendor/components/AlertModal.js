@@ -5,6 +5,7 @@ import {
   backgroundColor,
   textColor,
 } from "../../../assets/colors";
+import IconButton from "../../../components/IconButton";
 const { width, height } = Dimensions.get("window");
 import Button from "./../../../components/Button";
 
@@ -50,7 +51,7 @@ const AlertModal = ({ title, subTitle, onChange }) => {
          justifyContent: "space-between",
          marginTop: 10
           }}>
-          <Button onPress={() => {
+          <IconButton onPress={() => {
             if(onChange){
                 onChange('ok')
             }
@@ -59,16 +60,18 @@ const AlertModal = ({ title, subTitle, onChange }) => {
               backgroundColor: backgroundColor,
               color: "white",
               marginRight:30,
-              borderWidth:0
+              borderWidth:0,
+              width:120
             }}
             title="Ok"
           />
-          <Button onPress={()=>{
+          <IconButton onPress={()=>{
             if(onChange){
                 onChange('cancel')
             }
           }} style={{
             color:textColor,
+            width:120
           }} title="Cancel" />
         </View>
       </View>

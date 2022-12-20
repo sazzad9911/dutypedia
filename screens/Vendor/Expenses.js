@@ -12,6 +12,7 @@ import {
   Animated,
   Alert,
   RefreshControl,
+  StatusBar
 } from "react-native";
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
@@ -114,8 +115,8 @@ const Expenses = (props) => {
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 200);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, -200],
+    inputRange: [10, 200],
+    outputRange: [0, -300],
   });
   const newScrollY = new Animated.Value(0);
   const [Loader, setLoader] = React.useState(true);
@@ -131,10 +132,10 @@ const Expenses = (props) => {
   ];
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const textColor= colors.getTextColor()
-  const primaryColor =colors.getPrimaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
 
@@ -159,7 +160,6 @@ const Expenses = (props) => {
       borderWidth: 1,
     },
   });
-  
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -193,9 +193,10 @@ const Expenses = (props) => {
   //     isScrolling.value = false;
   //   },
   // });
+  const isFocused=useIsFocused()
   React.useEffect(() => {
     if (user && vendor) {
-      setLoader(true);
+      //setLoader(true);
       getExpenses(user.token, vendor.service.id)
         .then((res) => {
           if (res) {
@@ -210,7 +211,7 @@ const Expenses = (props) => {
           Alert.alert("Opps!", err.response.data.msg);
         });
     }
-  }, [Refresh]);
+  }, [Refresh+isFocused]);
   const search = (value) => {
     let arr = AllData.filter((d) => {
       if (d.title.toUpperCase().match(value.toUpperCase())) {
@@ -283,7 +284,7 @@ const Expenses = (props) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{color:textColor}}>Loading...</Text>
+        <Text style={{ color: textColor }}>Loading...</Text>
       </View>
     );
   }
@@ -333,138 +334,142 @@ const Expenses = (props) => {
   );
 
   return (
-    <Animated.ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      style={{ overflow: "hidden", flex: 1 }}
-      scrollEventThrottle={16}
-      onScroll={(e) => {
-        scrollY.setValue(e.nativeEvent.contentOffset.y);
-        //scroll;
-      }}
-      showsVerticalScrollIndicator={false}
-    >
-      <View>
-        <View style={{ height: 190 }} />
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("AddExpenses", {
-              onChange: onChange,
-              value: null,
-            });
-          }}
+    <View style={{
+      flex:1,
+    }}>
+      <View style={{height:25}}/>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        style={{ overflow: "hidden", flex: 1 }}
+        scrollEventThrottle={16}
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll={true}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+          //scroll;
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Animated.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              backgroundColor: "#f5f5f5",
+              paddingTop: 0,
+              left: 0,
+              right: 0,
+            },
+          ]}
         >
+          <View
+            style={{
+              height: 150,
+
+              backgroundColor: "white",
+            }}
+          >
+            <BackHeader
+              onChange={(val) => {
+                setData(search(val));
+              }}
+              placeholder="Search"
+              {...props}
+              inputWidth={80}
+              title="Expenses"
+            />
+            <DropDown
+              onChange={(val) => {
+                let index = OPTIONS.indexOf(val);
+                setData(filter(index));
+              }}
+              DATA={OPTIONS}
+              style={{
+                marginHorizontal: 20,
+              }}
+              placeholder="Filter By"
+            />
+          </View>
+        </Animated.View>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("AddExpenses", {
+                onChange: onChange,
+                value: null,
+              });
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                marginHorizontal: 20,
+                marginVertical: 10,
+                marginTop: 20,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                Add Expenses
+              </Text>
+              <View style={{ width: 10 }} />
+              <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
+            </View>
+          </TouchableOpacity>
           <View
             style={{
               flexDirection: "row",
               marginHorizontal: 20,
+              alignItems: "center",
               marginVertical: 10,
-              marginTop: 20,
+              backgroundColor: backgroundColor,
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5,
+              paddingVertical: 10,
             }}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              Add Expenses
-            </Text>
-            <View style={{ width: 10 }} />
-            <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
+            <Text style={styles.text}>Date</Text>
+            <Text style={styles.text}>Name Of Expenses</Text>
+            <Text style={styles.text}>Amount</Text>
           </View>
-        </TouchableOpacity>
+          {Data &&
+            Data.map((doc, i) => (
+              <Cart
+                {...props}
+                value={doc}
+                key={i}
+                setData={setLoader}
+                Data={Data}
+                i={i}
+              />
+            ))}
+          <View style={{ height: 50 }} />
+        </View>
         <View
           style={{
             flexDirection: "row",
             marginHorizontal: 20,
-            alignItems: "center",
-            marginVertical: 10,
+            marginVertical: 0,
             backgroundColor: backgroundColor,
-            borderTopLeftRadius: 5,
-            borderTopRightRadius: 5,
-            paddingVertical: 10,
-          }}
-        >
-          <Text style={styles.text}>Date</Text>
-          <Text style={styles.text}>Name Of Expenses</Text>
-          <Text style={styles.text}>Amount</Text>
-        </View>
-        {Data &&
-          Data.map((doc, i) => (
-            <Cart
-              {...props}
-              value={doc}
-              key={i}
-              setData={setLoader}
-              Data={Data}
-              i={i}
-            />
-          ))}
-        <View style={{ height: 50 }} />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginHorizontal: 20,
-          marginVertical: 0,
-          backgroundColor: backgroundColor,
-          borderRadius: 5,
-          paddingHorizontal: 5,
-          paddingVertical: 5,
-          bottom: 0,
-          marginBottom: 10,
-          position: "absolute",
-        }}
-      >
-        <Text style={styles.text}>Total :</Text>
-        <Text style={styles.text}></Text>
-        <Text style={styles.text}>{total(Data)}৳</Text>
-      </View>
-      <Animated.View
-        style={[
-          {
-            transform: [{ translateY: translateY }],
-            backgroundColor: "#f5f5f5",
+            borderRadius: 5,
+            paddingHorizontal: 5,
+            paddingVertical: 5,
+            bottom: 0,
+            marginBottom: 10,
             position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        ]}
-      >
-        <View
-          style={{
-            height: 200,
-
-            backgroundColor: "#fbfbfb",
           }}
         >
-          <BackHeader
-            onChange={(val) => {
-              setData(search(val));
-            }}
-            placeholder="Search"
-            {...props}
-            inputWidth={80}
-            title="Expenses"
-          />
-          <DropDown
-            onChange={(val) => {
-              let index = OPTIONS.indexOf(val);
-              setData(filter(index));
-            }}
-            DATA={OPTIONS}
-            style={{
-              marginHorizontal: 20,
-            }}
-            placeholder="Filter By"
-          />
+          <Text style={styles.text}>Total :</Text>
+          <Text style={styles.text}></Text>
+          <Text style={styles.text}>{total(Data)}৳</Text>
         </View>
-      </Animated.View>
-    </Animated.ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -478,6 +483,7 @@ import DateTime from "./../Seller/DateTime";
 import AlertModal from "./components/AlertModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import IconButton from "../../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -485,10 +491,10 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const textColor= colors.getTextColor()
-  const primaryColor =colors.getPrimaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
 
@@ -636,10 +642,10 @@ export const AddExpenses = (props) => {
   const [Amount, setAmount] = React.useState();
   const [Visible, setVisible] = React.useState(false);
   const navigation = props.navigation;
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const textColor= colors.getTextColor()
-  const primaryColor =colors.getPrimaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
   const styles = StyleSheet.create({
@@ -770,8 +776,7 @@ export const AddExpenses = (props) => {
             borderWidth: 0,
             height: 45,
             marginTop: 25,
-            color:
-              Day && Name && Amount ? "white" : "black",
+            color: Day && Name && Amount ? "white" : "black",
           }}
           title="Save"
         />
@@ -784,10 +789,10 @@ export const AddExpenses = (props) => {
 };
 const InstructionCart = ({ title }) => {
   const [Visible, setVisible] = React.useState(false);
-  const isDark= useSelector((state) => state.isDark);
-  const colors=new Color(isDark)
-  const textColor= colors.getTextColor()
-  const primaryColor =colors.getPrimaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
   return (

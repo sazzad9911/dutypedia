@@ -115,6 +115,7 @@ export default function Note({ navigation, route }) {
           borderColor: "#F1EFEF",
           borderBottomWidth: 0.5,
           paddingVertical: 5,
+          paddingTop:32
         }}
       >
         <AntDesign
@@ -468,6 +469,7 @@ export const AddNote = ({ navigation, route }) => {
           borderColor: "#F1EFEF",
           borderBottomWidth: 0.5,
           paddingVertical: 5,
+          paddingTop:32
         }}
       >
         <AntDesign
@@ -694,6 +696,7 @@ export const ViewNote = ({ navigation, route }) => {
           borderBottomWidth: 0.5,
           paddingVertical: 5,
           justifyContent: "space-between",
+          paddingTop:32
         }}
       >
         <View

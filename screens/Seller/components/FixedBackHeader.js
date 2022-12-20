@@ -35,7 +35,7 @@ export default function FixedBackHeader({ Yoffset, navigation }) {
         hidden={false}
         backgroundColor={scrollEnabled ? "white" : "transparent"}
       />
-      <View
+      {/* <View
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.325)",
           width: width,
@@ -45,7 +45,7 @@ export default function FixedBackHeader({ Yoffset, navigation }) {
           left: 0,
           zIndex: 200,
         }}
-      />
+      /> */}
       <View
         style={{
           position: "absolute",
