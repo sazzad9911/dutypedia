@@ -30,6 +30,7 @@ import { SvgXml } from "react-native-svg";
 import { logOut, logoutVendor } from "../../Class/auth";
 import Button from "./../../components/Button";
 import IconButton from "../../components/IconButton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -43,18 +44,18 @@ const Menu = ({ navigation }) => {
   const backgroundColor = colors.getBackgroundColor();
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}
     >
-     
+     <StatusBar barStyle="dark-content" backgroundColor={primaryColor}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: secondaryColor }}
       >
         <TouchableOpacity
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 0 }}
           onPress={() => {
             navigation.navigate("VendorProfile");
           }}
@@ -263,7 +264,7 @@ const Menu = ({ navigation }) => {
           title="Logout From Dashboard"
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

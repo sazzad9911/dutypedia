@@ -13,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
 import Carousel from "react-native-snap-carousel";
 import { TabBar } from "./UserProfile";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -75,12 +76,13 @@ export default function OfflineProfile({ navigation, route }) {
       >
         <SvgXml xml={Icon} height="22" width="22" />
         {title && (
-          <Text
+          <Text numberOfLines={1}
             style={{
-              fontSize: 10,
+              fontSize:width<350?8:10,
               color: textColor,
               fontFamily: "Poppins-Medium",
-              marginTop: 8,
+              marginTop: 9,
+              
             }}
           >
             {title}
@@ -103,8 +105,8 @@ export default function OfflineProfile({ navigation, route }) {
     }
   }, [Active + AllOrders]);
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{height:25,backgroundColor:"#F2F2F6"}}/>
+    <SafeAreaView style={{ flex: 1 }}>
+      
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -367,7 +369,7 @@ export default function OfflineProfile({ navigation, route }) {
           navigation.navigate("VendorServiceList",{userId:user.id})
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 const emptyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="143.873" height="144" viewBox="0 0 143.873 144">

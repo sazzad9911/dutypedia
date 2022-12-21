@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -80,12 +81,12 @@ const OrderDetails = ({ navigation, route }) => {
       justifyContent: "center",
     },
     text: {
-      fontSize: 20,
+      fontSize:width<350?18: 20,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
     smallText: {
-      fontSize: 14,
+      fontSize:width<350?13: 14,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
@@ -109,18 +110,18 @@ const OrderDetails = ({ navigation, route }) => {
 
   const stringDate = (d) => {
     const Months = [
-      "January",
-      "February",
-      "March",
-      "April",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
       "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     let date = new Date(d);
     //console.log(date.getDate());
@@ -308,7 +309,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 18,
+                fontSize:width<350?16: 18,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -321,7 +322,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 1,
@@ -346,7 +347,7 @@ const OrderDetails = ({ navigation, route }) => {
                   textAlign: "center",
                   marginVertical: 10,
                   fontFamily: "Poppins-Medium",
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   marginTop: 0,
                 }}
               >
@@ -369,7 +370,7 @@ const OrderDetails = ({ navigation, route }) => {
           <View>
             <Text
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -384,7 +385,7 @@ const OrderDetails = ({ navigation, route }) => {
           >
             <View
               style={{
-                width: 150,
+                width: width/3,
                 height: 50,
                 overflow: "hidden",
               }}
@@ -403,11 +404,13 @@ const OrderDetails = ({ navigation, route }) => {
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
+                width:width/3,
+                marginLeft:5
               }}
             >
               {data
                 ? data.id.split("").map((doc, i) => {
-                    return ` ${doc}`;
+                    return `${doc}`;
                   })
                 : "Unknown"}
             </Text>
@@ -423,7 +426,7 @@ const OrderDetails = ({ navigation, route }) => {
           >
             <Text
               style={{
-                fontSize: 20,
+                fontSize:width<350?18: 20,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -433,7 +436,7 @@ const OrderDetails = ({ navigation, route }) => {
 
             <Text
               style={{
-                fontSize: 14,
+                fontSize:width<350?13: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -452,25 +455,25 @@ const OrderDetails = ({ navigation, route }) => {
               marginVertical: 10,
             }}
           />
-          <Text style={[styles.smallText, { fontSize: 14, marginBottom: 5 }]}>
+          <Text style={[styles.smallText, { fontSize:width<350?14: 16, marginBottom: 5 }]}>
             Add What Service Do You Want To Sell
           </Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {ListData &&
               ListData.map((doc, i) =>
                 i == 0 ? (
-                  <Text style={{ color: textColor }} key={i}>
+                  <Text style={{ color: textColor,fontSize:width<350?14: 16, }} key={i}>
                     {doc.data.title}
                   </Text>
                 ) : (
-                  <Text style={{ color: textColor }} key={i}>
+                  <Text style={{ color: textColor,fontSize:width<350?14: 16, }} key={i}>
                     {", "}
                     {doc.data.title}
                   </Text>
                 )
               )}
             {ListData.length == 0 && (
-              <Text style={{ color: "#606060", fontSize: 18 }}>N/A</Text>
+              <Text style={{ color: "#606060", fontSize:width<350?16: 18, }}>N/A</Text>
             )}
           </View>
           {data &&
@@ -524,6 +527,7 @@ const OrderDetails = ({ navigation, route }) => {
                   height: 30,
                   width: 80,
                   marginVertical: 20,
+                  
                 }}
                 LeftIcon={() => (
                   <AntDesign name="plus" size={24} color={textColor} />
@@ -544,7 +548,7 @@ const OrderDetails = ({ navigation, route }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <Text
             style={{
-              fontSize: 20,
+              fontSize:width<350?18: 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
               marginVertical: 10,
@@ -601,7 +605,7 @@ const OrderDetails = ({ navigation, route }) => {
                   >{`${i + 1}. ${doc.title}`}</Text>
                 ))}
             {FacilitiesError && (
-              <Text style={{ color: "red" }}>{FacilitiesError}</Text>
+              <Text style={{ color: "red",fontSize:width<350?14: 16, }}>{FacilitiesError}</Text>
             )}
           </View>
         </View>
@@ -622,7 +626,7 @@ const OrderDetails = ({ navigation, route }) => {
               styles.text,
               {
                 color: "#666666",
-                fontSize: 18,
+                fontSize:width<350?16: 18,
               },
             ]}
           >
@@ -691,7 +695,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               style={{
                 color: "white",
-                fontSize: 15,
+                fontSize:width<350?14: 15,
                 fontFamily: "Poppins-Medium",
               }}
             >
@@ -713,7 +717,7 @@ const OrderDetails = ({ navigation, route }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 18 }]}>Service Status</Text>
+          <Text style={[styles.text, { fontSize:width<350?16: 18, }]}>Service Status</Text>
           <Text style={[styles.smallText, { marginTop: 5 }]}>
             {data ? exporters(data.status) : "Unknown"}
           </Text>
@@ -728,7 +732,7 @@ const OrderDetails = ({ navigation, route }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 22 }]}>Introduction</Text>
+          <Text style={[styles.text, { fontSize:width<350?20: 22, }]}>Introduction</Text>
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
@@ -745,7 +749,7 @@ const OrderDetails = ({ navigation, route }) => {
             data.status != "CANCELLED" && (
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   color: textColor,
                 }}
               >
@@ -783,6 +787,8 @@ const OrderDetails = ({ navigation, route }) => {
                   borderWidth: 0,
                   marginRight: 20,
                   width: 120,
+                  fontSize:16,
+                  padding:10,
                 }}
                 title="Yes I Delivered"
               />
@@ -795,7 +801,7 @@ const OrderDetails = ({ navigation, route }) => {
             <View style={{ marginHorizontal: 20 }}>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -825,7 +831,7 @@ const OrderDetails = ({ navigation, route }) => {
                     marginVertical: 20,
                     borderWidth: 0,
                     marginRight: 20,
-                    width: 140,
+                    width: 120,
                   }}
                   title="Accept Refund"
                 />
@@ -851,7 +857,8 @@ const OrderDetails = ({ navigation, route }) => {
                     marginVertical: 20,
                     borderWidth: 0,
                     marginRight: 20,
-                    width: 140,
+                    width: 120,
+                    
                   }}
                   title="Cancel Refund"
                 />
@@ -959,7 +966,7 @@ const OrderDetails = ({ navigation, route }) => {
           !data.refundRequestByUser && (
             <Text
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 color: backgroundColor,
                 textAlign: "center",
                 marginBottom: 30,
@@ -1006,7 +1013,7 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             style={{
               color: backgroundColor,
-              fontSize: 16,
+              fontSize:width<350?14: 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginHorizontal: 20,
@@ -1020,7 +1027,7 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             style={{
               color: "green",
-              fontSize: 16,
+              fontSize:width<350?14: 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginVertical: 20,

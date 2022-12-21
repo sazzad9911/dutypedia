@@ -147,6 +147,8 @@ const PackageService = (props) => {
   const [scrollDirection, setScrollDirection] = React.useState(false);
   const [packageData, setPackageData] = React.useState();
   const isFocused=useIsFocused()
+  const [selectedPackage,setSelectedPackage]=React.useState()
+  const [services,setServices]=React.useState()
 
   React.useEffect(()=>{
     if(isFocused){
@@ -697,7 +699,8 @@ const PackageService = (props) => {
                     initialParams={{
                       data: doc,
                       setNewNavigation: setNewNavigation,
-                      setPrice:setPrice
+                      setPrice:setPrice,
+                      setSelectedPackage:setSelectedPackage
                     }}
                     component={Screen}
                   />
@@ -921,7 +924,10 @@ const PackageService = (props) => {
                 navigation.navigate("OfferNow", {
                   type: "PACKAGE",
                   gigs: data,
-                  data:data
+                  data:data,
+                  selectedPackage:selectedPackage,
+                  services:data.services,
+                  category:Category
                 });
               }}
               style={{
@@ -1268,7 +1274,8 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 const Screen = ({ navigation, route }) => {
   const params = route.params;
   const data = params.data;
-  const setPrice=params.setPrice
+  const setPrice=params.setPrice;
+  const setSelectedPackage=params.setSelectedPackage;
   const setNewNavigation = params.setNewNavigation;
   const [feature,setFeature]=React.useState()
   const isFocused=useIsFocused()
@@ -1282,6 +1289,7 @@ const Screen = ({ navigation, route }) => {
   },[data])
   React.useEffect(()=>{
     if(isFocused&&setPrice){
+      setSelectedPackage(data)
       setPrice(data.price)
     }
 

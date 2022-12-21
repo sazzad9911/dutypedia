@@ -43,6 +43,7 @@ const AlertModal = ({ title, subTitle, onChange }) => {
           style={{
             fontSize: 15,
             fontFamily: "Poppins-Light",
+            marginVertical:10
           }}
         >
           {subTitle}
@@ -59,9 +60,9 @@ const AlertModal = ({ title, subTitle, onChange }) => {
             style={{
               backgroundColor: backgroundColor,
               color: "white",
-              marginRight:30,
+              marginRight:"5%",
               borderWidth:0,
-              width:120
+              width:"40%"
             }}
             title="Ok"
           />
@@ -71,7 +72,7 @@ const AlertModal = ({ title, subTitle, onChange }) => {
             }
           }} style={{
             color:textColor,
-            width:120
+            width:"40%"
           }} title="Cancel" />
         </View>
       </View>

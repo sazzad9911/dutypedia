@@ -76,12 +76,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       borderTopWidth: 0,
     },
     text: {
-      fontSize: 16,
+      fontSize:width<350?14: 16,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
     smallText: {
-      fontSize: 14,
+      fontSize:width<350?13: 14,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
@@ -153,18 +153,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
 
   const stringDate = (d) => {
     const Months = [
-      "January",
-      "February",
-      "March",
-      "April",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
       "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     let date = new Date(d);
     // console.log(date.getDate());
@@ -239,7 +239,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 20,
+                fontSize:width<350?18: 20,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginBottom: 2,
@@ -252,7 +252,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 0,
@@ -265,7 +265,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize: 14,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -288,7 +288,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   textAlign: "center",
                   marginVertical: 10,
                   fontFamily: "Poppins-Medium",
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   marginTop: 0,
                   marginTop: 20,
                 }}
@@ -316,7 +316,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             <Text
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -325,7 +325,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             </Text>
             <Text
               style={{
-                fontSize: 14,
+                fontSize:width<350?13: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -341,13 +341,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View
             style={{
               justifyContent: "center",
+              alignItems:"center"
             }}
           >
             <View
               style={{
-                width: 150,
+                width: width/3,
                 height: 50,
                 overflow: "hidden",
+                
               }}
             >
               <Barcode
@@ -364,11 +366,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
+               width:width/3,
+               marginLeft:5
               }}
             >
               {data
                 ? data.id.split("").map((doc, i) => {
-                    return ` ${doc}`;
+                    return `${doc}`;
                   })
                 : "Unknown"}
             </Text>
@@ -385,7 +389,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         >
           <Text
             style={{
-              fontSize: 18,
+              fontSize:width<350?16: 18,
               fontFamily: "Poppins-Medium",
               color: textColor,
             }}
@@ -397,7 +401,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             {ListData && ListData.length > 0 ? (
               ListData.map((doc, i) => (
-                <Text key={i}>
+                <Text style={{
+                  fontSize:width<350?14: 16,
+                }} key={i}>
                   {i == 0 ? "" : ", "}
                   {doc.data.title}
                 </Text>
@@ -424,7 +430,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         >
           <Text
             style={{
-              fontSize: 20,
+              fontSize:width<350?18: 20,
               color: textColor,
               fontFamily: "Poppins-Medium",
             }}
@@ -434,7 +440,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View style={{ marginTop: 10 }}>
             {Facilities && Facilities.length > 0 ? (
               Facilities.map((doc, i) => (
-                <Text key={i}>
+                <Text style={{
+                  fontSize:width<350?14: 16,
+                }} key={i}>
                   {i + 1 + ". "}
                   {doc.title}
                 </Text>
@@ -461,7 +469,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginTop: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 20 }]}>Price</Text>
+          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Price</Text>
           <Text style={styles.text}>
             Basic Price :{" "}
             {data
@@ -479,7 +487,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 20 }]}>Delivery Date</Text>
+          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Delivery Date</Text>
           <View
             style={{
               flexDirection: "row",
@@ -508,7 +516,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 20 }]}>Payment Status</Text>
+          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Payment Status</Text>
           <View
             style={{
               padding: 3,
@@ -528,7 +536,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               style={{
                 color: "white",
-                fontSize: 15,
+                fontSize:width<350?14: 15,
                 fontFamily: "Poppins-Medium",
               }}
             >
@@ -550,7 +558,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 20 }]}>Service Status</Text>
+          <Text style={[styles.text, { fontSize:width<350?16: 18, }]}>Service Status</Text>
           <Text style={[styles.smallText, { marginTop: 5 }]}>
             {data ? exporters(data.status) : "Unknown"}
           </Text>
@@ -565,7 +573,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize: 22 }]}>Introduction</Text>
+          <Text style={[styles.text, { fontSize:width<350?20: 22, }]}>Introduction</Text>
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
@@ -583,7 +591,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -592,7 +600,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               </Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize:width<350?14: 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -754,7 +762,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   marginHorizontal: 20,
                   borderWidth: 1,
                   color: textColor,
-                  width: 120,
+                  width: 130,
                 }}
                 title={data && data.paid ? "Cancel & Refund" : "Cancel Order"}
               />
@@ -769,7 +777,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             <Text
               style={{
-                fontSize: 16,
+                fontSize:width<350?14: 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -814,7 +822,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text
             style={{
               color: "green",
-              fontSize: 16,
+              fontSize:width<350?14: 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginVertical: 20,

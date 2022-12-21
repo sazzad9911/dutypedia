@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, KeyboardAvoidingView,Platform } from "react-native";
+import { ScrollView, KeyboardAvoidingView,Platform,View } from "react-native";
 import MainCategoryCart from "./../../Cart/Seller/MainCategoryCart";
 import { useSelector, useDispatch } from "react-redux";
 import BackHeader from "./../../components/BackHeader";
@@ -108,6 +108,7 @@ const Category = (props) => {
             color={data.color}
           />
         ))}
+        <View style={{height:10}}/>
       </ScrollView>
     </KeyboardAvoidingView>
   );

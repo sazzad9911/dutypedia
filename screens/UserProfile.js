@@ -13,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
 import Carousel from "react-native-snap-carousel";
 import NewTabe from "./Vendor/components/NewTabe";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -42,7 +43,7 @@ export default function UserProfile({ navigation, route }) {
         {title && (
           <Text
             style={{
-              fontSize: 10,
+              fontSize:width>350? 10:8,
               color: textColor,
               fontFamily: "Poppins-Medium",
               marginTop: 8,
@@ -56,11 +57,8 @@ export default function UserProfile({ navigation, route }) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{
-        height:25,
-        backgroundColor:"#F2F2F6"
-      }}/>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -416,7 +414,7 @@ export default function UserProfile({ navigation, route }) {
           navigation.navigate("VendorServiceList",{userId:user.user.id})
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 const emptyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="143.873" height="144" viewBox="0 0 143.873 144">
@@ -580,7 +578,7 @@ const Screens = ({ navigation, route }) => {
   }, [AllOrders + route.name]);
   return (
     <View>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         {Orders &&
           Orders.map((doc, i) => (
             <OrderCart

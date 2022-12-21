@@ -279,7 +279,7 @@ const TabRoute = () => {
             // )
             <Tab.Screen
               options={{ headerShown: false }}
-              name="Home"
+              name="Feed"
               component={HomeRoute}
             />
           ) : (

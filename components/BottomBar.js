@@ -98,8 +98,13 @@ const BottomBar = (props) => {
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Home");
+          if(route==0){
+            navigation.navigate("Home");
           setRoute(0);
+          }else{
+            navigation.navigate("Feed");
+          setRoute(0);
+          }
         }}
         style={styles.button}
       >

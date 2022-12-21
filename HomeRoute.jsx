@@ -128,15 +128,7 @@ const HomeRoute = ({ navigation }) => {
       />
       <Stack.Screen
         options={{
-          header: (props) => (
-            <SubHeader
-              style={{
-                marginTop: 20,
-              }}
-              title="Offer Price"
-              {...props}
-            />
-          ),
+          headerShown:false
         }}
         name="OfferNow"
         component={OfferNow}

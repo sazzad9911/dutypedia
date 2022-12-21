@@ -142,61 +142,63 @@ export default function UserAppointmentList({ navigation, route }) {
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar/>
-      <ScrollView style={{ flex: 1 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-          }}
-        >
-          <Chip
-            style={{ width: 70 }}
-            onPress={() => {
-              setActive("All");
-            }}
-            title={"All"}
-            active={Active == "All" ? true : false}
-          />
+    <View style={{ flex: 1 }}>
+      
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <View
             style={{
-              width: 10,
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              paddingVertical: 10,
             }}
-          />
-          <Chip
-            onPress={() => {
-              setActive("Upcoming");
-            }}
-            title={"Upcoming"}
-            active={Active == "Upcoming" ? true : false}
-          />
-          <View
-            style={{
-              width: 10,
-            }}
-          />
-          <Chip
-            onPress={() => {
-              setActive("Previous");
-            }}
-            title={"Previous"}
-            active={Active == "Previous" ? true : false}
-          />
-          <View
-            style={{
-              width: 10,
-            }}
-          />
-          <Chip
-            onPress={() => {
-              navigation.navigate("UserRequestAppointment");
-            }}
-            title={"Request"}
-            active={Active == "Request" ? true : false}
-          />
-        </View>
+          >
+            <Chip
+              style={{ width: 70 }}
+              onPress={() => {
+                setActive("All");
+              }}
+              title={"All"}
+              active={Active == "All" ? true : false}
+            />
+            <View
+              style={{
+                width: 10,
+              }}
+            />
+            <Chip
+              onPress={() => {
+                setActive("Upcoming");
+              }}
+              title={"Upcoming"}
+              active={Active == "Upcoming" ? true : false}
+            />
+            <View
+              style={{
+                width: 10,
+              }}
+            />
+            <Chip
+              onPress={() => {
+                setActive("Previous");
+              }}
+              title={"Previous"}
+              active={Active == "Previous" ? true : false}
+            />
+            <View
+              style={{
+                width: 10,
+              }}
+            />
+            <Chip
+              onPress={() => {
+                navigation.navigate("UserRequestAppointment");
+              }}
+              title={"Request"}
+              active={Active == "Request" ? true : false}
+            />
+          </View>
+        </ScrollView>
         {Data.length == 0 ? <NoAppointment /> : null}
         {Data.map((doc, i) => (
           <Cart
@@ -220,8 +222,9 @@ export default function UserAppointmentList({ navigation, route }) {
             position={doc.service.providerInfo.position}
           />
         ))}
+        <View style={{height:10}}/>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 const Cart = ({ date, status, title, onPress, image, name, username }) => {
@@ -231,11 +234,11 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
       onPress={onPress}
       style={{
         flexDirection: "row",
-        width: width - 10,
-        marginHorizontal: 5,
+        width: width,
+        marginHorizontal: 0,
         justifyContent: "space-between",
         paddingHorizontal: 5,
-        paddingVertical: 20,
+        paddingVertical: 10,
         shadowColor: "#333333",
         shadowOffset: {
           width: 1,
@@ -252,8 +255,8 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
     >
       <Avatar
         style={{
-          width: 55,
-          height: 55,
+          width: 40,
+          height: 40,
         }}
         source={{ uri: image }}
       />
@@ -267,20 +270,25 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
           flex: 0.5,
         }}
       >
-        <Text numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
-        <Text numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
+        <Text style={{
+          fontSize:12
+        }} numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
+        <Text style={{
+          fontSize:12
+        }} numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
       </View>
       <View
         style={{
           width: 1,
-          height: 40,
+          height: 30,
           backgroundColor: "#E2E2E2",
-          marginHorizontal: 15,
+          marginHorizontal: 5,
         }}
       />
       <View
         style={{
-          flex: 2,
+          flex: 1.5,
+          marginLeft:5
         }}
       >
         <View
@@ -288,17 +296,17 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
             flexDirection: "row",
           }}
         >
-          <Text
+          <Text numberOfLines={1}
             style={{
-              fontSize: 14,
+              fontSize: 12,
             }}
           >
             {date}
           </Text>
-          <Text
+          <Text numberOfLines={1}
             style={{
               color: status ? status.color : "red",
-              fontSize: 14,
+              fontSize: 12,
               marginLeft: 10,
             }}
           >{`(${status ? status.title : "Invalid"})`}</Text>

@@ -220,6 +220,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           username={doc.user.username}
         />
       ))}
+      <View style={{height:80}}/>
       </ScrollView>
 
       <FAB
@@ -250,11 +251,11 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
       onPress={onPress}
       style={{
         flexDirection: "row",
-        width: width - 10,
-        marginHorizontal: 5,
+        width: width,
+        marginHorizontal: 0,
         justifyContent: "space-between",
         paddingHorizontal: 5,
-        paddingVertical: 20,
+        paddingVertical: 15,
         shadowColor: "#333333",
         shadowOffset: {
           width: 1,
@@ -271,8 +272,8 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
     >
       <Avatar
         style={{
-          width: 55,
-          height: 55,
+          width: 40,
+          height: 40,
         }}
         source={{ uri: image }}
       />
@@ -286,20 +287,25 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
           flex: .5,
         }}
       >
-        <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-        <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
+        <Text style={{
+          fontSize:12
+        }} numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
+        <Text style={{
+          fontSize:12
+        }} numberOfLines={1}>@{username?username:"easinarafat"}</Text>
       </View>
       <View
         style={{
           width: 1,
           height: 40,
           backgroundColor: "#E2E2E2",
-          marginHorizontal: 15,
+          marginHorizontal: 5,
         }}
       />
       <View
         style={{
           flex: 2,
+          marginLeft:5
         }}
       >
         <View
@@ -309,7 +315,7 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
         >
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 12,
             }}
           >
             {date}
@@ -317,14 +323,14 @@ const Cart = ({ date, status, title, onPress, image,name,username }) => {
           <Text
             style={{
               color: status ? status.color : "red",
-              fontSize: 14,
+              fontSize: 12,
               marginLeft: 10,
             }}
           >{`(${status ? status.title : "Invalid"})`}</Text>
         </View>
         <Text
           style={{
-            fontSize: 14,
+            fontSize: 12,
           }}
           numberOfLines={1}
         >

@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Color } from "../assets/colors";
 import { CheckBox } from "./Seller/Pricing";
 import Button from "./../components/Button";
+import IconButton from "../components/IconButton";
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get("window");
 
@@ -106,7 +107,7 @@ const AddServiceList = (props) => {
         {DataError && (
           <Text style={{ color: "red", textAlign: "center" }}>{DataError}</Text>
         )}
-        <Button
+        <IconButton
           onPress={() => {
             try {
               setDataError(null);
@@ -192,7 +193,7 @@ const ComponentScreen = (props) => {
     }
   }, [props.route.name]);
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       {Array.isArray(Services) && Services.length > 0 ? (
         Services.map((doc, i) => (
           <View style={styles.view} key={i}>

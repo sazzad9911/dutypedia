@@ -1,11 +1,12 @@
 import React from "react";
 import { View,Text,StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function AppointmentHeader({ title,navigation }) {
   return (
-    <View>
+    <SafeAreaView>
       
       <View style={{
         flexDirection:"row",
@@ -14,7 +15,7 @@ export default function AppointmentHeader({ title,navigation }) {
         paddingHorizontal:20,
         alignItems:"center",
         height:45,
-        marginTop:25,
+        marginTop:0,
     }}>
       <AntDesign onPress={()=>{
         navigation.goBack()
@@ -26,6 +27,6 @@ export default function AppointmentHeader({ title,navigation }) {
         color:"#333333"
       }}>{title}</Text>
     </View>
-    </View>
+    </SafeAreaView>
   );
 }

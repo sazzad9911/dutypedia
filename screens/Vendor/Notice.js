@@ -157,12 +157,12 @@ const Notice = (props) => {
     );
   }
   return (
-    <Animated.ScrollView
+    <ScrollView
       scrollEnabled={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{ overflow: "hidden", flex: 1 }}
+      
       scrollEventThrottle={16}
       onScroll={(e) => {
         scrollY.setValue(e.nativeEvent.contentOffset.y);
@@ -273,7 +273,7 @@ const Notice = (props) => {
           /> */}
         </View>
       </Animated.View>
-    </Animated.ScrollView>
+    </ScrollView>
   );
 };
 
@@ -315,6 +315,7 @@ import AlertModal from "./components/AlertModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import TextArea from "./../../components/TextArea";
 import SuggestionBox, { MainOptions } from "./../../components/SuggestionBox";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -723,7 +724,7 @@ export const ViewCart = (props) => {
       });
   };
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
@@ -731,7 +732,7 @@ export const ViewCart = (props) => {
           justifyContent: "space-between",
           backgroundColor: primaryColor,
           paddingBottom: 10,
-          paddingTop:32
+          paddingTop:10
         }}
       >
         <Ionicons
@@ -878,6 +879,6 @@ export const ViewCart = (props) => {
           }}
         />
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };

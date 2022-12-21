@@ -5,7 +5,7 @@ export class Color {
   secondaryColor = "#fbfbfb";
   textColor = "#000000";
   assentColor = "#808080";
-  backgroundColor = "#DA1E37";
+  backgroundColor = "#4ADE80";
 
   constructor(isDark) {
     if (isDark) {
@@ -13,13 +13,13 @@ export class Color {
       this.secondaryColor = "#202020";
       this.textColor = "#ffff";
       this.assentColor = "#E2E2E2";
-      this.backgroundColor = "#DA1E78";
+      this.backgroundColor = "#4ADE80";
     } else {
       this.primaryColor = "#ffffff";
       this.secondaryColor = "#ffff";
       this.textColor = "#000000";
       this.assentColor = "#4A4A4A";
-      this.backgroundColor = "#DA1E37";
+      this.backgroundColor = "#4ADE80";
     }
   }
   getPrimaryColor() {

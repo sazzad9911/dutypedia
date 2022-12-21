@@ -11,6 +11,7 @@ import {
   TextInput,
   Dimensions,
   Pressable,
+  Platform,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,6 +53,8 @@ import OfflineProfile from "../OfflineProfile";
 import Notice from "../Notice";
 import Note, { AddNote, ViewNote } from "./Note";
 import { ActivityIndicator } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -183,38 +186,43 @@ const VendorOrder = ({ navigation, route }) => {
     return <ActivityLoader />;
   }
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarLabelStyle: { fontSize: 12 },
-        tabBarItemStyle: {
-          margin: 0,
-          padding: 0,
-          width: 120,
-          paddingTop:32,
-          paddingBottom:10
-        },
-        tabBarIndicatorStyle: {
-          backgroundColor: "#AC5DCB",
-        },
-        tabBarScrollEnabled: true,
-      }}
-    >
-      {initialState.map((doc, i) => (
-        <Tab.Screen
-          options={{
-            title: `${initialState[i].title}(${
-              vendorOrders
-                ? vendorOrders.filter((d) => d.type == initialState[i].type)
-                    .length
-                : "0"
-            })`,
-          }}
-          key={i}
-          name={doc.type}
-          component={Screens}
-        />
-      ))}
-    </Tab.Navigator>
+    <SafeAreaView style={{
+      flex:1
+    }}>
+      <StatusBar/>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarItemStyle: {
+            margin: 0,
+            padding: 0,
+            width: 120,
+            paddingTop: 0,
+            paddingBottom: 10,
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#AC5DCB",
+          },
+          tabBarScrollEnabled: true,
+        }}
+      >
+        {initialState.map((doc, i) => (
+          <Tab.Screen
+            options={{
+              title: `${initialState[i].title}(${
+                vendorOrders
+                  ? vendorOrders.filter((d) => d.type == initialState[i].type)
+                      .length
+                  : "0"
+              })`,
+            }}
+            key={i}
+            name={doc.type}
+            component={Screens}
+          />
+        ))}
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
@@ -226,7 +234,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize: 11,
+    fontSize:Platform.OS=="ios"? 11:9,
     marginTop: 2,
   },
 });
@@ -670,8 +678,8 @@ export const Screens = ({ navigation, route }) => {
     //console.log("handleSheetChanges", index);
     setIndex(index);
   }, []);
-  if(!vendorOrders){
-    return(
+  if (!vendorOrders) {
+    return (
       <View
         style={{
           flex: 1,
@@ -681,7 +689,7 @@ export const Screens = ({ navigation, route }) => {
       >
         <ActivityIndicator size="small" color={backgroundColor} />
       </View>
-    )
+    );
   }
   return (
     <View style={{ flex: 1 }}>

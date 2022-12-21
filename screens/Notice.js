@@ -21,6 +21,7 @@ import Animated, { SlideInRight } from "react-native-reanimated";
 import { ScrollView } from "react-native-gesture-handler";
 import OutsideView from "react-native-detect-press-outside";
 import IconButton from "../components/IconButton";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Notice({ navigation, route }) {
   const serviceId =
@@ -44,9 +45,8 @@ export default function Notice({ navigation, route }) {
   const [Search, setSearch] = React.useState();
 
   React.useEffect(() => {
-    
     if (vendor || serviceId) {
-      getNotice(user.token, serviceId?serviceId:vendor.service.id)
+      getNotice(user.token, serviceId ? serviceId : vendor.service.id)
         .then((res) => {
           if (res) {
             setLoader(false);
@@ -59,7 +59,7 @@ export default function Notice({ navigation, route }) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [vendor + Reload+serviceId]);
+  }, [vendor + Reload + serviceId]);
   const onChange = (val) => {
     createNotice(user.token, {
       subject: val.subject,
@@ -96,167 +96,171 @@ export default function Notice({ navigation, route }) {
   }, [Search]);
   const childRef = React.useRef();
   return (
-    <OutsideView style={{flex:1}}
-    childRef={childRef}
+    <OutsideView
+      style={{ flex: 1 }}
+      childRef={childRef}
       onPressOutside={() => {
         //console.log("eee");
         setSearchOpen(false);
       }}
     >
-      <View
-        style={{
-          flexDirection: "row",
-          paddingLeft: 20,
-          paddingVertical: 10,
-          justifyContent: "space-between",
-          shadowOffset: { height: 1, width: 1 },
-          shadowRadius: 2,
-          elevation: 1,
-          shadowOpacity: 0.01,
-          shadowColor: "black",
-          backgroundColor: primaryColor,
-          paddingTop:32,
-          
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-          style={{ flexDirection: "row" }}
-        >
-          <AntDesign name="left" size={22} color={"#C2D5F6"} />
-          <Text
-            style={{
-              color: "#C2D5F6",
-              fontSize: 16,
-              marginLeft: 10,
-            }}
-          >
-            Notice
-          </Text>
-        </TouchableOpacity>
+      <SafeAreaView style={{
+        flex:1
+      }}>
         <View
           style={{
             flexDirection: "row",
+            paddingLeft: 20,
+            paddingVertical: 10,
             justifyContent: "space-between",
+            shadowOffset: { height: 1, width: 1 },
+            shadowRadius: 2,
+            elevation: 1,
+            shadowOpacity: 0.01,
+            shadowColor: "black",
+            backgroundColor: primaryColor,
+            
           }}
         >
-          {SearchOpen && (
-            <Animated.View ref={childRef} entering={SlideInRight}>
-              <TextInput
-                autoFocus={true}
-                onBlur={() => {
-                  setSearchOpen(false);
-                }}
-                value={Search}
-                onChangeText={(e) => setSearch(e)}
-                ref={(ref) => setRef(ref)}
-                style={{
-                  width: width / 2 - 20,
-                  borderColor: "#C2D5F6",
-                  borderBottomWidth: 1,
-                  height: 25,
-                }}
-                placeholder="Search"
-              />
-            </Animated.View>
-          )}
-
-          <View style={{ backgroundColor: primaryColor, paddingRight: 20 }}>
-            <AntDesign
-              onPress={() => {
-                setSearchOpen((val) => !val);
-              }}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{ flexDirection: "row" }}
+          >
+            <AntDesign name="left" size={22} color={"#C2D5F6"} />
+            <Text
               style={{
+                color: "#C2D5F6",
+                fontSize: 16,
                 marginLeft: 10,
               }}
-              name="search1"
-              size={24}
-              color={"#C2D5F6"}
-            />
-          </View>
-        </View>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            paddingHorizontal: 5,
-          }}
-        >
-          <SvgXml
-            style={{ marginLeft: "5%", marginBottom: 20 }}
-            xml={noticeVector}
-            height="250"
-            width={"90%"}
-          />
+            >
+              Notice
+            </Text>
+          </TouchableOpacity>
           <View
             style={{
-              width: "100%",
-              alignItems: "center",
-              marginTop: "10%",
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            {Loader && <ActivityLoader />}
-          </View>
-          {Data &&
-            Data.map((doc, i) => (
-              <NoticeCart
-                setData={setReload}
-                navigation={navigation}
-                key={i}
-                data={doc}
+            {SearchOpen && (
+              <Animated.View ref={childRef} entering={SlideInRight}>
+                <TextInput
+                  autoFocus={true}
+                  onBlur={() => {
+                    setSearchOpen(false);
+                  }}
+                  value={Search}
+                  onChangeText={(e) => setSearch(e)}
+                  ref={(ref) => setRef(ref)}
+                  style={{
+                    width: width / 2 - 20,
+                    borderColor: "#C2D5F6",
+                    borderBottomWidth: 1,
+                    height: 25,
+                  }}
+                  placeholder="Search"
+                />
+              </Animated.View>
+            )}
+
+            <View style={{ backgroundColor: primaryColor, paddingRight: 20 }}>
+              <AntDesign
+                onPress={() => {
+                  setSearchOpen((val) => !val);
+                }}
+                style={{
+                  marginLeft: 10,
+                }}
+                name="search1"
+                size={24}
+                color={"#C2D5F6"}
               />
-            ))}
-          {Data && Data.length == 0 && !Loader && (
+            </View>
+          </View>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 5,
+            }}
+          >
+            <SvgXml
+              style={{ marginLeft: "5%", marginBottom: 20 }}
+              xml={noticeVector}
+              height="250"
+              width={"90%"}
+            />
             <View
               style={{
-                justifyContent: "center",
-                alignItems: "center",
                 width: "100%",
+                alignItems: "center",
+                marginTop: "10%",
               }}
             >
-              <Text
+              {Loader && <ActivityLoader />}
+            </View>
+            {Data &&
+              Data.map((doc, i) => (
+                <NoticeCart
+                  setData={setReload}
+                  navigation={navigation}
+                  key={i}
+                  data={doc}
+                />
+              ))}
+            {Data && Data.length == 0 && !Loader && (
+              <View
                 style={{
-                  color: textColor,
-                  fontSize: 18,
-                  fontFamily: "Poppins-Medium",
-                  marginTop: "30%",
-                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
                 }}
               >
-                No Notice Found
-              </Text>
-            </View>
-          )}
-        </View>
-        <View style={{ height: 20 }} />
-      </ScrollView>
-      {Vendor && (
-        <FAB
-          color="#FFFFFF"
-          icon="plus"
-          style={{
-            position: "absolute",
-            borderRadius: 30,
-            backgroundColor: "#43B05C",
-            bottom: 20,
-            right: 20,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => {
-            navigation.navigate("AddNotice", {
-              onChange: onChange,
-              value: null,
-            });
-          }}
-        />
-      )}
+                <Text
+                  style={{
+                    color: textColor,
+                    fontSize: 18,
+                    fontFamily: "Poppins-Medium",
+                    marginTop: "30%",
+                    textAlign: "center",
+                  }}
+                >
+                  No Notice Found
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={{ height: 20 }} />
+        </ScrollView>
+        {Vendor && (
+          <FAB
+            color="#FFFFFF"
+            icon="plus"
+            style={{
+              position: "absolute",
+              borderRadius: 30,
+              backgroundColor: "#43B05C",
+              bottom: 20,
+              right: 20,
+              width: 50,
+              height: 50,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => {
+              navigation.navigate("AddNotice", {
+                onChange: onChange,
+                value: null,
+              });
+            }}
+          />
+        )}
+      </SafeAreaView>
     </OutsideView>
   );
 }
@@ -274,7 +278,6 @@ const NoticeCart = ({ data, navigation, setData }) => {
         padding: 10,
         width: width / 2 - 15,
         margin: 5,
-        
       }}
     >
       <Text

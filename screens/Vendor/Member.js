@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   RefreshControl,
+  Dimensions,
 } from "react-native";
 import { Text } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -50,11 +51,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { Snackbar } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import IconButton from "../../components/IconButton";
+import { SafeAreaView } from "react-native-safe-area-context";
+const {width,height}=Dimensions.get("window")
 
 const Member = () => {
   return (
-    <View style={{ flex: 1,paddingTop:32 }}>
-      
+    <SafeAreaView style={{ flex: 1, paddingTop: 0 }}>
       <Tab.Navigator
         screenOptions={{
           tabBarIndicatorStyle: {
@@ -65,7 +67,7 @@ const Member = () => {
         <Tab.Screen name="Dutypedia User" component={DutyPediaUser} />
         <Tab.Screen name="Offline User" component={OfflineUser} />
       </Tab.Navigator>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -211,7 +213,7 @@ const DutyPediaUser = (props) => {
       getOnlineUser(user.token, vendor.service.id).then((res) => {
         setLoader(false);
         if (res) {
-          console.log(res)
+          console.log(res);
           setData(res.members);
           setAllData(res.members);
         }
@@ -267,7 +269,7 @@ const DutyPediaUser = (props) => {
     );
   }
   return (
-    <ScrollView
+    <ScrollView showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -350,26 +352,34 @@ const DutyPediaUser = (props) => {
         <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
       ) : (
         Data.map((doc, i) => (
-          <OnlineCart onPress={()=>{  
-            navigation.navigate("UserProfile",{user:doc})
-          }} doc={doc} i={i} key={i} reload={onChange} />
+          <OnlineCart
+            onPress={() => {
+              navigation.navigate("UserProfile", { user: doc });
+            }}
+            doc={doc}
+            i={i}
+            key={i}
+            reload={onChange}
+          />
         ))
       )}
+      <View style={{ height: 10 }} />
     </ScrollView>
   );
 };
-const OnlineCart = ({ doc, i, reload,onPress }) => {
+const OnlineCart = ({ doc, i, reload, onPress }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
-  
+
   return (
-    <TouchableOpacity onPress={()=>{
-      if(onPress){
-        onPress()
-      }
-    }}
-        style={{
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}
+      style={{
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 5,
@@ -424,7 +434,9 @@ const OnlineCart = ({ doc, i, reload,onPress }) => {
             fontFamily: "Poppins-Medium",
           }}
         >
-          {doc.user.firstName ? doc.user.firstName+" "+doc.user.lastName : "Easin Arafat"}
+          {doc.user.firstName
+            ? doc.user.firstName + " " + doc.user.lastName
+            : "Easin Arafat"}
         </Text>
       </View>
       <View style={{ flexDirection: "row" }}>
@@ -554,7 +566,7 @@ const OfflineUser = (props) => {
     );
   }
   return (
-    <ScrollView
+    <ScrollView showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -643,22 +655,30 @@ const OfflineUser = (props) => {
           <Text style={{ textAlign: "center" }}>Loading...</Text>
         ) : (
           Data.map((doc, i) => (
-            <OfflineCart onPress={()=>{
-              navigation.navigate("OfflineProfile",{user:doc})
-            }}  {...props} i={i} doc={doc} key={i} reload={reload} />
+            <OfflineCart
+              onPress={() => {
+                navigation.navigate("OfflineProfile", { user: doc });
+              }}
+              {...props}
+              i={i}
+              doc={doc}
+              key={i}
+              reload={reload}
+            />
           ))
         )}
       </View>
     </ScrollView>
   );
 };
-const OfflineCart = ({ doc, i, navigation, reload,onPress }) => {
+const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
-  
+
   return (
-    <TouchableOpacity  onPress={onPress}
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -950,7 +970,7 @@ export const AddOfflineUser = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           {backgroundImage ? (
             <Image
@@ -1125,14 +1145,13 @@ export const AddOfflineUser = (props) => {
             marginVertical: 10,
             marginHorizontal: 20,
             borderWidth: 0,
-            color:
-              Name && Gender && Phone ? "white":"black",
+            color: Name && Gender && Phone ? "white" : "black",
           }}
           title={data ? "Save Changes" : "Add Member"}
         />
       </ScrollView>
     </KeyboardAvoidingView>
-  );
+  ); 
 };
 const offlineStyles = StyleSheet.create({
   input: {
@@ -1170,38 +1189,44 @@ export const AddOnlineUser = () => {
 
   React.useEffect(() => {
     if (user) {
-      getRandomUser(user.token,vendor.service.id).then((res) => {
-        if (res) {
-          setLoader(false);
-          //console.log(res.users)
-          return setData(res.users);
-        }
-      }).catch(err=>{
-        console.warn(err.response.data.msg)
-      })
+      getRandomUser(user.token, vendor.service.id)
+        .then((res) => {
+          if (res) {
+            setLoader(false);
+            //console.log(res.users)
+            return setData(res.users);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
     }
   }, [user]);
 
   React.useEffect(() => {
     setLoader(true);
     if (SearchValue) {
-      getUserByName(user.token, SearchValue).then((res) => {
-        setLoader(false);
-        if (res) {
-          return setData(res.users);
-        }
-      }).catch(err=>{
-        console.warn(err.response.data.msg)
-      })
-    } else {
-      getRandomUser(user.token,vendor.service.id).then((res) => {
-        if (res) {
+      getUserByName(user.token, SearchValue)
+        .then((res) => {
           setLoader(false);
-          return setData(res.users);
-        }
-      }).catch(err=>{
-        console.warn(err.response.data.msg)
-      })
+          if (res) {
+            return setData(res.users);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
+    } else {
+      getRandomUser(user.token, vendor.service.id)
+        .then((res) => {
+          if (res) {
+            setLoader(false);
+            return setData(res.users);
+          }
+        })
+        .catch((err) => {
+          console.warn(err.response.data.msg);
+        });
     }
   }, [SearchValue]);
   const sendRequest = (id) => {
@@ -1222,12 +1247,12 @@ export const AddOnlineUser = () => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
         }}
       >
-        <View style={{ height: 35, backgroundColor: primaryColor }} />
+        <View style={{ height: 5, backgroundColor: primaryColor }} />
         <View
           style={{
             backgroundColor: primaryColor,
@@ -1284,7 +1309,7 @@ export const AddOnlineUser = () => {
         >
           {Message}
         </Snackbar>
-      </View>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -1334,7 +1359,12 @@ const CartView = ({ doc, onChange }) => {
             <FontAwesome name="user" size={30} color="#983C85" />
           )}
         </View>
-        <View>
+        <View
+          style={{
+            marginLeft: 5,
+            width:width-230
+          }}
+        >
           <Text
             numberOfLines={1}
             style={{
@@ -1357,22 +1387,25 @@ const CartView = ({ doc, onChange }) => {
           </Text>
         </View>
       </View>
-      <IconButton
-        onPress={() => {
-          setSend(true);
-          if (onChange) {
-            onChange(doc.id);
-          }
-        }}
-        disabled={Send ? true : false}
-        style={{
-          borderRadius: 5,
-          backgroundColor: Send ? "#707070" : backgroundColor,
-          borderWidth: 0,
-          color: Send ? "black" : "white",
-        }}
-        title={Send ? "Request Sent" : "Add Member"}
-      />
+        <IconButton
+          onPress={() => {
+            setSend(true);
+            if (onChange) {
+              onChange(doc.id);
+            }
+          }}
+          disabled={Send ? true : false}
+          style={{
+            borderRadius: 5,
+            backgroundColor: Send ? "#707070" : backgroundColor,
+            borderWidth: 0,
+            color: Send ? "black" : "white",
+            width:110,
+            fontSize:14,
+          }}
+          title={Send ? "Request Sent" : "Add Member"}
+        />
+      
     </View>
   );
 };
