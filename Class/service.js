@@ -282,7 +282,8 @@ export const createOrder = async (
   selectedServices,
   facilites,
   selectedPackage,
-  packageData
+  packageData,
+  id
 ) => {
   const data={
     serviceId: serviceId,
@@ -304,10 +305,8 @@ export const createOrder = async (
     data,
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  socket.emit("newOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
+  //console.log(res)
   return res;
 };
 export const getOrders = async (token, type, id) => {
@@ -335,10 +334,7 @@ export const cancelOrder = async (token, orderId, status, type) => {
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const acceptOrder = async (token, data) => {
@@ -346,10 +342,7 @@ export const acceptOrder = async (token, data) => {
   const res = await axios.post(`${url}/server/orders/accept`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const getLastOrder = async (token, serviceId) => {
@@ -371,10 +364,7 @@ export const makePayment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const requestForTime = async (token, orderId, newTime) => {
@@ -388,10 +378,7 @@ export const requestForTime = async (token, orderId, newTime) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const acceptTimeRequest = async (token, orderId, newTime, action) => {
@@ -404,10 +391,7 @@ export const acceptTimeRequest = async (token, orderId, newTime, action) => {
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const completeOrderDelivery = async (token, orderId) => {
@@ -420,10 +404,10 @@ export const completeOrderDelivery = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  // socket.emit("updateOrder", {
+  //   receiverId: res.data.receiverId,
+  //   order: res.data.order,
+  // });
   return res;
 };
 export const orderRefound = async (token, orderId, action) => {
@@ -437,10 +421,7 @@ export const orderRefound = async (token, orderId, action) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    socket.emit("updateOrder", {
-      receiverId: res.data.receiverId,
-      order: res.data.order,
-    });
+    
     return res;
   } else {
     const res = await axios.post(
@@ -452,10 +433,7 @@ export const orderRefound = async (token, orderId, action) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    socket.emit("updateOrder", {
-      receiverId: res.data.receiverId,
-      order: res.data.order,
-    });
+    
     return res;
   }
 };
@@ -469,10 +447,7 @@ export const completeOrder = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  socket.emit("updateOrder", {
-    receiverId: res.data.receiverId,
-    order: res.data.order,
-  });
+  
   return res;
 };
 export const createVendorOrder = async (
@@ -528,10 +503,7 @@ export const createVendorOrder = async (
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  socket.emit("newOrder", {
-    receiverId: userId,
-    order: res.data.order,
-  });
+  
   return res
 };
 export const getMemberId=async(token,serviceId,userId)=>{

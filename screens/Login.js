@@ -31,7 +31,7 @@ const Login = ({navigation}) => {
         //console.log(res);
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
-          navigation.navigate("Home")
+          navigation.navigate("Feed")
           getDashboard(res.token).then((result) => {
             if (result && result.data &&result.data.dashboards) {
               dispatch({ type: "SET_VENDOR_INFO", playload: result.data.dashboards });

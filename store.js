@@ -23,6 +23,7 @@ import vendorOrders from "./Reducers/vendorOrders";
 import packages from "./Reducers/packages";
 import statusBar from "./Reducers/statusBar";
 import hideBottomBar from "./Reducers/hideBottomBar";
+import isOffline from "./Reducers/isOffline";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -48,7 +49,8 @@ const combine = combineReducers({
   vendorOrders:vendorOrders,
   packages:packages,
   statusBar:statusBar,
-  hideBottomBar:hideBottomBar
+  hideBottomBar:hideBottomBar,
+  isOffline:isOffline
 });
 const store = createStore(combine);
 export default store;

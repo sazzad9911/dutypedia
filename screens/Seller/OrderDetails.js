@@ -29,6 +29,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { socket } from "../../Class/socket";
 import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ActivityLoader from "../../components/ActivityLoader";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -76,12 +77,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       borderTopWidth: 0,
     },
     text: {
-      fontSize:width<350?14: 16,
+      fontSize: width < 350 ? 14 : 16,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
     smallText: {
-      fontSize:width<350?13: 14,
+      fontSize: width < 350 ? 13 : 14,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
@@ -94,10 +95,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const userOrders = useSelector((state) => state.userOrders);
   const dispatch = useDispatch();
   const [Refresh, setRefresh] = React.useState(false);
+  const [Timer, setTimer] = React.useState(true);
 
   React.useEffect(() => {
-    //console.log(user.token);
-    console.log(data.selectedServices);
+    //console.log(data.serviceId);
+    //console.log()
+    //console.log(data.selectedServices);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -129,27 +132,25 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       setFacilities(data.facilites);
     }
   }, [data]);
-  const loadData = async () => {
+  const loadData = async (receiverId, serviceId) => {
     //setLoader(false);
     try {
-      const res = await getOrders(user.token, "user");
-      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+      const res = await getOrders(user.token, "vendor", serviceId);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
       let arr = res.data.orders.filter((order) => order.id == data.id);
-      setData(arr[0]);
+      socket.emit("updateOrder", {
+        receiverId: receiverId,
+        order: {
+          type: "vendor",
+          data: arr[0],
+        },
+      });
       //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
       console.warn(e.message);
     }
   };
-  React.useState(() => {
-    //console.log("user order details")
-    if (data) {
-      let arr = userOrders.filter((d) => d.id == data.id);
-      setData(arr[0]);
-    }
-  }, [userOrders[userOrders.indexOf(data)]]);
 
   const stringDate = (d) => {
     const Months = [
@@ -172,25 +173,20 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
-  React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      loadData();
-    });
-  }, []);
 
   if (Loader) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityLoader />
       </View>
     );
   }
   return (
-    <SafeAreaView style={{
-      flex:1,
-
-    }}>
-      
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -239,7 +235,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize:width<350?18: 20,
+                fontSize: width < 350 ? 18 : 20,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginBottom: 2,
@@ -252,7 +248,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 0,
@@ -265,7 +261,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -288,7 +284,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   textAlign: "center",
                   marginVertical: 10,
                   fontFamily: "Poppins-Medium",
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   marginTop: 0,
                   marginTop: 20,
                 }}
@@ -316,7 +312,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             <Text
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -325,7 +321,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             </Text>
             <Text
               style={{
-                fontSize:width<350?13: 14,
+                fontSize: width < 350 ? 13 : 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -341,15 +337,14 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View
             style={{
               justifyContent: "center",
-              alignItems:"center"
+              alignItems: "center",
             }}
           >
             <View
               style={{
-                width: width/3,
+                width: width / 3,
                 height: 50,
                 overflow: "hidden",
-                
               }}
             >
               <Barcode
@@ -366,8 +361,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-               width:width/3,
-               marginLeft:5
+                width: width / 3,
+                marginLeft: 5,
               }}
             >
               {data
@@ -389,7 +384,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         >
           <Text
             style={{
-              fontSize:width<350?16: 18,
+              fontSize: width < 350 ? 16 : 18,
               fontFamily: "Poppins-Medium",
               color: textColor,
             }}
@@ -401,9 +396,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             {ListData && ListData.length > 0 ? (
               ListData.map((doc, i) => (
-                <Text style={{
-                  fontSize:width<350?14: 16,
-                }} key={i}>
+                <Text
+                  style={{
+                    fontSize: width < 350 ? 14 : 16,
+                  }}
+                  key={i}
+                >
                   {i == 0 ? "" : ", "}
                   {doc.data.title}
                 </Text>
@@ -430,7 +428,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         >
           <Text
             style={{
-              fontSize:width<350?18: 20,
+              fontSize: width < 350 ? 18 : 20,
               color: textColor,
               fontFamily: "Poppins-Medium",
             }}
@@ -440,9 +438,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <View style={{ marginTop: 10 }}>
             {Facilities && Facilities.length > 0 ? (
               Facilities.map((doc, i) => (
-                <Text style={{
-                  fontSize:width<350?14: 16,
-                }} key={i}>
+                <Text
+                  style={{
+                    fontSize: width < 350 ? 14 : 16,
+                  }}
+                  key={i}
+                >
                   {i + 1 + ". "}
                   {doc.title}
                 </Text>
@@ -469,7 +470,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginTop: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Price</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Price
+          </Text>
           <Text style={styles.text}>
             Basic Price :{" "}
             {data
@@ -487,7 +490,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Delivery Date</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Delivery Date
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -516,7 +521,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?18: 20, }]}>Payment Status</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Payment Status
+          </Text>
           <View
             style={{
               padding: 3,
@@ -525,6 +532,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   ? "green"
                   : data && data.paid && data.status == "REFUNDED"
                   ? "#FA1ABA"
+                  : data && !data.paid
+                  ? "red"
                   : backgroundColor,
               justifyContent: "center",
               alignItems: "center",
@@ -536,7 +545,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text
               style={{
                 color: "white",
-                fontSize:width<350?14: 15,
+                fontSize: width < 350 ? 14 : 15,
                 fontFamily: "Poppins-Medium",
               }}
             >
@@ -558,7 +567,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?16: 18, }]}>Service Status</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 16 : 18 }]}>
+            Service Status
+          </Text>
           <Text style={[styles.smallText, { marginTop: 5 }]}>
             {data ? exporters(data.status) : "Unknown"}
           </Text>
@@ -573,7 +584,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?20: 22, }]}>Introduction</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 20 : 22 }]}>
+            Introduction
+          </Text>
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
@@ -591,7 +604,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             >
               <Text
                 style={{
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -600,7 +613,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               </Text>
               <Text
                 style={{
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -622,7 +635,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           Toast.show("Request Accepted", {
                             duration: Toast.durations.LONG,
                           });
-                          loadData();
+                          loadData(
+                            res.data.receiverId,
+                            res.data.order.serviceId
+                          );
+                          socket.emit("updateOrder", {
+                            receiverId: user.user.id,
+                            order: {
+                              type: "user",
+                              data: res.data.order,
+                            },
+                          });
+                          setData(res.data.order);
                         }
                       })
                       .catch((err) => {
@@ -639,7 +663,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     marginVertical: 20,
                     borderWidth: 0,
                     marginRight: 20,
-                    
+                    width: 100,
+                    height: 40,
                   }}
                   title="Accept"
                 />
@@ -657,7 +682,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           Toast.show("Request CANCELLED", {
                             duration: Toast.durations.LONG,
                           });
-                          loadData();
+                          loadData(
+                            res.data.receiverId,
+                            res.data.order.serviceId
+                          );
+                          socket.emit("updateOrder", {
+                            receiverId: user.user.id,
+                            order: {
+                              type: "user",
+                              data: res.data.order,
+                            },
+                          });
+                          setData(res.data.order);
                         }
                       })
                       .catch((err) => {
@@ -676,6 +712,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     marginRight: 20,
                     borderWidth: 1,
                     color: textColor,
+                    width: 100,
+                    height: 40,
                   }}
                   title="Cancel"
                 />
@@ -698,7 +736,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       Toast.show("Payment success", {
                         duration: Toast.durations.LONG,
                       });
-                      loadData();
+                      loadData(res.data.receiverId, res.data.order.serviceId);
+                      socket.emit("updateOrder", {
+                        receiverId: user.user.id,
+                        order: {
+                          type: "user",
+                          data: res.data.order,
+                        },
+                      });
+                      setData(res.data.order);
                     }
                   })
                   .catch((err) => {
@@ -714,8 +760,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 alignSelf: "flex-end",
                 marginVertical: 20,
                 borderWidth: 0,
-                marginRight: 20,
+                marginRight: 0,
                 width: 120,
+                height: 40,
               }}
               title="Make Payment"
             />
@@ -743,7 +790,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                             Toast.show("Successfully request send", {
                               duration: Toast.durations.LONG,
                             });
-                            loadData();
+                            loadData(
+                              res.data.receiverId,
+                              res.data.order.serviceId
+                            );
+                            socket.emit("updateOrder", {
+                              receiverId: user.user.id,
+                              order: {
+                                type: "user",
+                                data: res.data.order,
+                              },
+                            });
+                            setData(res.data.order);
                           })
                           .catch((err) => {
                             setLoader(false);
@@ -763,6 +821,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   borderWidth: 1,
                   color: textColor,
                   width: 130,
+                  height: 40,
                 }}
                 title={data && data.paid ? "Cancel & Refund" : "Cancel Order"}
               />
@@ -777,7 +836,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             <Text
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -795,7 +854,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       Toast.show("Successful", {
                         duration: Toast.durations.LONG,
                       });
-                      loadData();
+                      loadData(res.data.receiverId, res.data.order.serviceId);
+                      socket.emit("updateOrder", {
+                        receiverId: user.user.id,
+                        order: {
+                          type: "user",
+                          data: res.data.order,
+                        },
+                      });
+                      setData(res.data.order);
                     }
                   })
                   .catch((err) => {
@@ -810,9 +877,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 borderRadius: 5,
                 marginVertical: 20,
                 borderWidth: 0,
-                marginRight: 20,
                 width: 120,
                 marginBottom: 20,
+                height: 40,
               }}
               title="Yes I Received"
             />
@@ -822,7 +889,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text
             style={{
               color: "green",
-              fontSize:width<350?14: 16,
+              fontSize: width < 350 ? 14 : 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginVertical: 20,

@@ -39,6 +39,7 @@ import { createOrder, getOrders } from "../../Class/service";
 import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SubHeader from "../../components/SubHeader";
+import { socket } from "../../Class/socket";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -78,7 +79,7 @@ const OfferNow = (props) => {
   const category = params.category;
 
   React.useEffect(() => {
-    //console.log(service);
+    //console.log(type);
     if (category && service) {
       try {
         setServices(serverToLocal(service.options, service.category));
@@ -101,7 +102,7 @@ const OfferNow = (props) => {
       }
       setFacilities(gigs.facilites.selectedOptions);
     }
-    if (selectedPackage && services) {
+    if (selectedPackage) {
       setPrice(selectedPackage.price);
     }
   }, [gigs]);
@@ -144,7 +145,8 @@ const OfferNow = (props) => {
       service ? service : gigs ? gigs.services : "",
       service ? [] : gigs ? gigs.facilites.selectedOptions : "",
       selectedPackage ? selectedPackage : undefined,
-      params.packageData
+      params.packageData,
+      user.user.id
     )
       .then((res) => {
         if (res) {
@@ -154,6 +156,7 @@ const OfferNow = (props) => {
             setLoader(false);
             console.warn(e.message);
           }
+          
         }
       })
       .catch((err) => {
@@ -170,6 +173,7 @@ const OfferNow = (props) => {
         active: gigs ? gigs.type : data.service.gigs[0].type,
         type: type,
       });
+      
       dispatch({ type: "USER_ORDERS", playload: res.data.orders });
       dispatch({ type: "SET_ORDER_SOCKET", playload: res });
     } catch (e) {
@@ -372,7 +376,7 @@ const OfferNow = (props) => {
               </View>
               <View
                 style={{
-                  flexDirection: "row",
+                   flexDirection: "row",
                   justifyContent: "space-between",
                   marginHorizontal: 20,
                   backgroundColor: "#e5e5e5",
@@ -699,6 +703,7 @@ const OfferNow = (props) => {
               placeholderTextColor={assentColor}
               style={{
                 width: width - 80,
+                
               }}
               placeholder="Your Requirements"
             />
@@ -864,7 +869,7 @@ const OfferNow = (props) => {
                 Price && From && To && Check ? "#FEA31E" : primaryColor,
               borderWidth: Price && From && To && Check ? 0 : 1,
             }}
-            title="Offer Your Price"
+            title={type=="STARTING"?"Offer Your Price":"Continue"}
           />
         </View>
       </ScrollView>

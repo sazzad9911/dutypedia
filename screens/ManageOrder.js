@@ -38,6 +38,7 @@ import NewTabe from "./Vendor/components/NewTabe";
 import { OrderCart } from "./Vendor/Order";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
@@ -74,62 +75,46 @@ const ManageOrder = ({ navigation, route }) => {
   const userOrders = useSelector((state) => state.userOrders);
   const type = route.params && route.params.type ? route.params.type : null;
 
-  if (!isFocused) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
   //console.log(type)
   return (
-    <SafeAreaView style={{
-      flex:1
-    }}>
-      <View
-        style={{
-          flex: 1,
-          paddingTop: 0,
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      <StatusBar />
+      <Tab.Navigator
+        initialRouteName={type}
+        screenOptions={{
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarItemStyle: {
+            margin: 0,
+            padding: 0,
+            width: 120,
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#AC5DCB",
+          },
+          tabBarScrollEnabled: true,
+          tabBarPressColor: "white",
         }}
       >
-        <Tab.Navigator
-          initialRouteName={type}
-          screenOptions={{
-            tabBarLabelStyle: { fontSize: 12 },
-            tabBarItemStyle: {
-              margin: 0,
-              padding: 0,
-              width: 120,
-            },
-            tabBarIndicatorStyle: {
-              backgroundColor: "#AC5DCB",
-            },
-            tabBarScrollEnabled: true,
-          }}
-        >
-          {initialState.map((doc, i) => (
-            <Tab.Screen
-              options={{
-                title: `${initialState[i].title}(${
-                  userOrders
-                    ? userOrders.filter((d) => d.type == initialState[i].type)
-                        .length
-                    : "0"
-                })`,
-              }}
-              key={i}
-              name={doc.type}
-              component={Screens}
-            />
-          ))}
-        </Tab.Navigator>
-      </View>
+        {initialState.map((doc, i) => (
+          <Tab.Screen
+            options={{
+              title: `${initialState[i].title}(${
+                userOrders
+                  ? userOrders.filter((d) => d.type == initialState[i].type)
+                      .length
+                  : "0"
+              })`,
+            }}
+            key={i}
+            name={doc.type}
+            component={Screens}
+          />
+        ))}
+      </Tab.Navigator>
     </SafeAreaView>
   );
 };
@@ -209,6 +194,8 @@ const Screens = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [AllOrders, setAllOrders] = React.useState();
+  const isFocused = useIsFocused();
+  const [Open, setOpen] = React.useState();
 
   const bottomSheetRef = React.useRef(null);
 
@@ -220,10 +207,30 @@ const Screens = ({ navigation, route }) => {
     setIndex(index);
   }, []);
   React.useEffect(() => {
-    let arr = userOrders.filter((d) => d.type == route.name);
-    setAllOrders(arr);
-    setOrders(arr);
-  }, [userOrders.length + orderSocket + Refresh + route.name + AllOrders]);
+    if (userOrders) {
+      let arr = userOrders.filter((d) => d.type == route.name);
+      setAllOrders(arr);
+      setOrders(arr);
+    }
+    socket.on("getOrder", (e) => {
+      setTimeout(()=>{
+        if (userOrders) {
+          let arr = userOrders.filter((d) => d.type == route.name);
+          setAllOrders(arr);
+          setOrders(arr);
+        }
+      },100)
+    });
+    socket.on("updateOrder", (e) => {
+      setTimeout(()=>{
+        if (userOrders) {
+          let arr = userOrders.filter((d) => d.type == route.name);
+          setAllOrders(arr);
+          setOrders(arr);
+        }
+      },100)
+    });
+  }, [route.name + isFocused]);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {
@@ -252,21 +259,7 @@ const Screens = ({ navigation, route }) => {
       }
     }
   }, [Search]);
-  const getNewOrder = async () => {
-    try {
-      const res = await getOrders(user.token, "user");
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-      const arr = res.data.orders.filter((d) => d.type == route.name);
-      setAllOrders(arr);
-      setOrders(arr);
-    } catch (e) {
-      console.warn(e.message);
-    }
-  };
-  React.useEffect(() => {
-    setRefresh((val) => !val);
-  }, [orderSocket]);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -274,15 +267,15 @@ const Screens = ({ navigation, route }) => {
         stickyHeaderIndices={[0]}
         scrollEventThrottle={16}
         stickyHeaderHiddenOnScroll={true}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              //setPageChange(true);
-              onRefresh();
-            }}
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={() => {
+        //       //setPageChange(true);
+        //       onRefresh();
+        //     }}
+        //   />
+        // }
         showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
@@ -359,8 +352,15 @@ const Screens = ({ navigation, route }) => {
           Orders.map((doc, i) => (
             <OrderCart
               onSelect={(e) => {
+                setOpen((val) => {
+                  if (e == val) {
+                    return null;
+                  } else {
+                    return e;
+                  }
+                });
                 //console.log(e)
-                dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
                 //dispatch({ type: "ORDER_STATE", playload: e });
               }}
               onPress={() => {
@@ -371,6 +371,7 @@ const Screens = ({ navigation, route }) => {
               key={i}
               data={doc}
               user={true}
+              open={Open == doc.id ? true : false}
             />
           ))}
 
@@ -413,258 +414,6 @@ const Screens = ({ navigation, route }) => {
     </View>
   );
 };
-
-// const OrderCart = ({ data, onPress }) => {
-//   const isDark = useSelector((state) => state.isDark);
-//   const colors = new Color(isDark);
-//   const primaryColor = colors.getPrimaryColor();
-//   const secondaryColor = colors.getSecondaryColor();
-//   const textColor = colors.getTextColor();
-//   const backgroundColor = colors.getBackgroundColor();
-//   const assentColor = colors.getAssentColor();
-
-//   return (
-//     <TouchableOpacity
-//       onPress={() => {
-//         if (onPress) {
-//           onPress();
-//         }
-//       }}
-//     >
-//       <View
-//         style={{
-//           backgroundColor: primaryColor,
-//           marginHorizontal: 10,
-//           marginVertical: 5,
-//           paddingHorizontal: 10,
-//           paddingVertical: 10,
-//           borderRadius: 5,
-//           shadowOffset: {
-//             height: 1,
-//             width: 1,
-//           },
-//           shadowOpacity: 0.4,
-//           shadowRadius: 5,
-//           elevation: 2,
-//           shadowColor: "#d5d5d5",
-//         }}
-//       >
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             justifyContent: "space-between",
-//             alignItems: "center",
-//           }}
-//         >
-//           <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-//             <View
-//               style={{
-//                 borderWidth: 1,
-//                 width: 50,
-//                 height: 50,
-//                 borderRadius: 25,
-//                 justifyContent: "center",
-//                 alignItems: "center",
-//                 overflow: "hidden",
-//                 borderColor: "#e5e5e5",
-//               }}
-//             >
-//               {data && data.service.profilePhoto ? (
-//                 <Image
-//                   style={{
-//                     height: 50,
-//                     width: 50,
-//                   }}
-//                   source={{ uri: data.service.profilePhoto }}
-//                 />
-//               ) : (
-//                 <FontAwesome name="user" size={35} color={assentColor} />
-//               )}
-//             </View>
-//             <View
-//               style={{
-//                 marginLeft: 10,
-//                 flex: 1,
-//                 marginRight: 20,
-//               }}
-//             >
-//               <Text
-//                 numberOfLines={1}
-//                 style={{
-//                   color: textColor,
-//                   fontSize: 18,
-//                   fontFamily: "Poppins-Medium",
-//                 }}
-//               >
-//                 {data ? data.service.serviceCenterName : "Unknown Service Name"}{" "}
-//               </Text>
-//               <Text
-//                 numberOfLines={1}
-//                 style={{
-//                   color: textColor,
-//                   fontSize: 15,
-//                   fontFamily: "Poppins-Medium",
-//                 }}
-//               >
-//                 {data ? data.service.providerInfo.title : "Um"}{" "}
-//                 {data ? data.service.providerInfo.name : "Unknown Person"}
-//                 {`(${data ? data.service.providerInfo.gender : "Unspecified"})`}
-//               </Text>
-//               <Text
-//                 numberOfLines={1}
-//                 style={{
-//                   fontSize: 15,
-//                   color: textColor,
-//                   fontFamily: "Poppins-Medium",
-//                 }}
-//               >
-//                 {data ? data.service.providerInfo.position : "Empty position"}
-//               </Text>
-//             </View>
-//           </View>
-//           <SvgXml xml={icon} height="24" width="24" />
-//         </View>
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             marginTop: 20,
-//           }}
-//         >
-//           <View style={{ flex: 1 }}>
-//             <Text
-//               style={{
-//                 fontSize: 16,
-//                 fontFamily: "Poppins-Medium",
-//                 color: textColor,
-//                 textAlign: "center",
-//               }}
-//             >
-//               Service Name
-//             </Text>
-//           </View>
-//           <View style={{ flex: 1 }}>
-//             <Text
-//               style={{
-//                 fontSize: 16,
-//                 fontFamily: "Poppins-Medium",
-//                 color: textColor,
-//                 textAlign: "center",
-//               }}
-//             >
-//               Price
-//             </Text>
-//           </View>
-//           <View style={{ flex: 1 }}>
-//             <Text
-//               style={{
-//                 fontSize: 16,
-//                 fontFamily: "Poppins-Medium",
-//                 color: textColor,
-//                 marginLeft: 15,
-//                 textAlign: "center",
-//               }}
-//             >
-//               Status
-//             </Text>
-//           </View>
-//         </View>
-//         <View
-//           style={{
-//             flexDirection: "row",
-//             alignItems: "flex-start",
-//             justifyContent: "center",
-//             marginTop: 10,
-//           }}
-//         >
-//           <View
-//             style={{ flex: 1, alignItems: "center", paddingHorizontal: 10 }}
-//           >
-//             <Text
-//               numberOfLines={2}
-//               style={{
-//                 color: textColor,
-//                 fontSize: 14,
-//                 fontFamily: "Poppins-Medium",
-//               }}
-//             >
-//               {data
-//                 ? data.service.gigs[0].title
-//                 : "I will give you a best service"}
-//             </Text>
-//           </View>
-//           <View
-//             style={{
-//               width: 1,
-//               backgroundColor: "#e5e5e5",
-//               height: "50%",
-//               marginHorizontal: 10,
-//             }}
-//           />
-//           <View
-//             style={{ flex: 1, alignItems: "center", paddingHorizontal: 10 }}
-//           >
-//             <Text
-//               numberOfLines={1}
-//               style={{
-//                 fontSize: 14,
-//                 color: textColor,
-//                 fontFamily: "Poppins-Medium",
-//               }}
-//             >
-//               Offer Price {data ? data.service.gigs[0].price : "0"}৳
-//             </Text>
-//             <View
-//               style={{
-//                 padding: 3,
-//                 backgroundColor:
-//                   data && data.paid && data.status != "REFUNDED"
-//                     ? "green"
-//                     : data && data.paid && data.status == "REFUNDED"
-//                     ? "#FA1ABA"
-//                     : backgroundColor,
-//                 justifyContent: "center",
-//                 alignItems: "center",
-//                 borderRadius: 15,
-//                 paddingHorizontal: 15,
-//                 marginVertical: 10,
-//                 flex: 1,
-//               }}
-//             >
-//               <Text
-//                 numberOfLines={1}
-//                 style={{
-//                   color: "white",
-//                   fontSize: 15,
-//                   fontFamily: "Poppins-Medium",
-//                 }}
-//               >
-//                 {data && data.paid && data.status != "REFUNDED"
-//                   ? "Paid"
-//                   : data && data.paid && data.status == "REFUNDED"
-//                   ? "Refunded"
-//                   : "Due"}
-//               </Text>
-//             </View>
-//           </View>
-//           <View
-//             style={{ width: 1, backgroundColor: "#e5e5e5", height: "50%" }}
-//           />
-//           <View
-//             style={{
-//               flex: 1,
-//               alignItems: "center",
-//               paddingHorizontal: 10,
-//             }}
-//           >
-//             <Text>
-//               {data && data.status ? exporters(data.status) : "Unknown"}
-//             </Text>
-//           </View>
-//         </View>
-//       </View>
-//     </TouchableOpacity>
-//   );
-// };
 
 const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="15.069" height="14.313" viewBox="0 0 15.069 14.313">
 <path id="Path_19954" data-name="Path 19954" d="M4.449,13.449a8.24,8.24,0,0,1,7.364.606,7.274,7.274,0,0,1,1.894,1.7,6.332,6.332,0,0,1,1.362,3.8v.184a6.279,6.279,0,0,1-.98,3.24,7.185,7.185,0,0,1-2.454,2.345,8.242,8.242,0,0,1-7.168.506A10.731,10.731,0,0,1,2.5,26.65a15.434,15.434,0,0,1-2.2.512.262.262,0,0,1-.295-.2V26.9a.414.414,0,0,1,.114-.213A3.522,3.522,0,0,0,.8,25.4a10.3,10.3,0,0,0,.4-2.1,6.516,6.516,0,0,1-.956-1.975A6.37,6.37,0,0,1,0,19.728v-.179a6.332,6.332,0,0,1,1.376-3.817,7.444,7.444,0,0,1,3.072-2.284m-.635,5.2a1,1,0,1,0,1.1.535,1.007,1.007,0,0,0-1.1-.535m3.531,0a1,1,0,1,0,1.072.509,1.008,1.008,0,0,0-1.072-.509m3.5,0a1,1,0,1,0,1.08.5A1.007,1.007,0,0,0,10.847,18.651Z" transform="translate(0 -12.853)" fill="#546a79"/>

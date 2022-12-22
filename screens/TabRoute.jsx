@@ -32,7 +32,7 @@ import OtherProfile from "./OtherProfile";
 import OtherProfileHeader from "../components/OtherProfileHeader";
 import BackHeader from "../components/BackHeader";
 import { checkVendor, getFavoriteCategories } from "../Class/auth";
-import { getJson, storeJson } from "../Class/storage";
+import { getData, getJson, storeJson } from "../Class/storage";
 import Home_Next from "./Home_Next";
 import SubHeader from "../components/SubHeader";
 import AllPackageList from "./Seller/AllPackageList";
@@ -58,6 +58,19 @@ import Notice from "./Notice";
 import FixedService from "./FixedService";
 import PackageService from "./PackageService";
 import NewRoute from "../NewRoute";
+import { setIsOnline } from "../Reducers/isOffline";
+import {
+  addUserOrder,
+  getUserOrdersOffline,
+  setUserOrdersOffline,
+  updateUserOrder,
+} from "../Reducers/userOrders";
+import {
+  addVendorOrder,
+  getVendorOrdersOffline,
+  setVendorOrdersOffline,
+  updateVendorOrder,
+} from "../Reducers/vendorOrders";
 
 const Tab = createBottomTabNavigator();
 
@@ -77,8 +90,6 @@ const TabRoute = () => {
   const vendor = useSelector((state) => state.vendor);
   const [load, setLoad] = React.useState(false);
   const [reload, setReload] = React.useState(false);
-  const [VendorOrders, setVendorOrders] = React.useState();
-  const [UserOrders, setUserOrders] = React.useState();
   const [isRegistered, setIsRegistered] = React.useState(false);
   const [status, setStatus] = React.useState(null);
   const [isOffline, setOfflineStatus] = React.useState(false);
@@ -87,6 +98,8 @@ const TabRoute = () => {
   const backgroundColor = colors.getBackgroundColor();
   const [NewState, setNewState] = React.useState(false);
   const [Loader, setLoader] = React.useState(false);
+  const newUserOrders = useSelector((state) => state.userOrders);
+  const newVendorOrders = useSelector((state) => state.vendorOrders);
 
   React.useEffect(() => {
     if (user) {
@@ -155,57 +168,85 @@ const TabRoute = () => {
     const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
       const offline = !(state.isConnected && state.isInternetReachable);
       setOfflineStatus(offline);
+      dispatch(setIsOnline(offline));
     });
     //setReload((val) => !val);
     return () => removeNetInfoSubscription();
   }, []);
+  const userOrders = async () => {
+    const data = await getUserOrdersOffline();
+    if (data) {
+      dispatch({ type: "USER_ORDERS", playload: data });
+    } else {
+      const res = await getOrders(user.token, "user");
+      setUserOrdersOffline(res.data.orders);
+      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+    }
+  };
+  const vendorOrders = async () => {
+    const data = await getVendorOrdersOffline();
+    if (data) {
+      
+      dispatch({ type: "VENDOR_ORDERS", playload: data });
+    } else {
+      const res = await getOrders(user.token, "vendor", vendor.service.id);
+      setVendorOrdersOffline(res.data.orders);
+      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+    }
+  };
   React.useEffect(() => {
     if (user && !isOffline) {
-      getOrders(user.token, "user")
-        .then((res) => {
-          dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-          dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-          setUserOrders("dfrgrg");
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-          setUserOrders("dfrgrg");
-        });
-    } else {
-      setUserOrders("dfrgrg");
+      userOrders();
     }
   }, [user + reload + socket + isOffline]);
   React.useEffect(() => {
     if (user && vendor && vendor.service && !isOffline) {
-      getOrders(user.token, "vendor", vendor.service.id)
-        .then((res) => {
-          dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-          dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-          setVendorOrders("dssedf");
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-          setVendorOrders("fdfdfdfd");
-        });
-    } else {
-      setVendorOrders("fdfdfdfd");
+      vendorOrders();
     }
   }, [user + vendor + reload + socket + isOffline]);
-
+  React.useEffect(() => {
+    socket.on("getOrder", (e) => {
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(addUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(addVendorOrder(e.data));
+      }
+    });
+    socket.on("updateOrder", (e) => {
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(updateUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(updateVendorOrder(e.data));
+      }
+    });
+  }, []);
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
     });
     socket.on("getOrder", (e) => {
-      setReload((val) => !val);
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(addUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(addVendorOrder(e.data));
+      }
     });
     socket.on("updateOrder", (e) => {
-      setReload((val) => !val);
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(updateUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(updateVendorOrder(e.data));
+      }
     });
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
+
   async function registerBackgroundFetchAsync() {
     return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
       minimumInterval: 60 * 15, // 15 minutes
@@ -229,15 +270,7 @@ const TabRoute = () => {
     setIsRegistered(isRegistered);
   };
 
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      setReload((val) => !val);
-    });
-    socket.on("updateOrder", (e) => {
-      setReload((val) => !val);
-    });
-  }, []);
-  if (!user || !load || !UserOrders || !VendorOrders || Loader) {
+  if (!user || !load || Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="small" color={backgroundColor} />
@@ -340,7 +373,7 @@ const TabRoute = () => {
           }}
           name="Appointment"
           component={Appointment}
-        /> 
+        />
         {/* <Tab.Screen
           name="AllPackageList"
           options={{
@@ -419,7 +452,7 @@ const TabRoute = () => {
             name="PackageService"
             component={PackageService}
           /> */}
-           {/* <Tab.Screen
+        {/* <Tab.Screen
               options={{ headerShown: false }}
               name="OtherProfile"
               component={NewRoute}

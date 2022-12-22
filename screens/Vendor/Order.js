@@ -55,6 +55,7 @@ import Note, { AddNote, ViewNote } from "./Note";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { useIsFocused } from "@react-navigation/native";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -204,6 +205,7 @@ const VendorOrder = ({ navigation, route }) => {
             backgroundColor: "#AC5DCB",
           },
           tabBarScrollEnabled: true,
+          tabBarPressColor: "white",
         }}
       >
         {initialState.map((doc, i) => (
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const OrderCart = ({ data, onPress, onSelect, user }) => {
+export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -252,12 +254,12 @@ export const OrderCart = ({ data, onPress, onSelect, user }) => {
   const orderState = useSelector((state) => state.orderState);
 
   //console.log(data.service)
-  React.useEffect(() => {
-    //console.log(orderState)
-    if (orderState && data && orderState != data.id) {
-      setOpen(false);
-    }
-  }, [orderState]);
+  // React.useEffect(() => {
+  //   //console.log(orderState)
+  //   if (orderState && data && orderState != data.id) {
+  //     setOpen(false);
+  //   }
+  // }, [orderState]);
 
   return (
     <Pressable
@@ -270,7 +272,7 @@ export const OrderCart = ({ data, onPress, onSelect, user }) => {
     >
       <View
         style={{
-          backgroundColor: Open ? "#F2F2F6" : primaryColor,
+          backgroundColor: open ? "#F2F2F6" : primaryColor,
           paddingHorizontal: 10,
           paddingVertical: 0,
           paddingTop: 0,
@@ -382,7 +384,7 @@ export const OrderCart = ({ data, onPress, onSelect, user }) => {
               <Text
                 numberOfLines={1}
                 style={{
-                  color: backgroundColor,
+                  color:data.paid? backgroundColor:"red",
                   fontSize: 15,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -404,7 +406,7 @@ export const OrderCart = ({ data, onPress, onSelect, user }) => {
             marginTop: 10,
           }}
         />
-        {Open && (
+        {open && (
           <Animated.View entering={StretchInY}>
             <View
               style={{
@@ -613,6 +615,8 @@ export const Screens = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
+  const [Open,setOpen]=React.useState()
+  const isFocused=useIsFocused()
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -626,7 +630,25 @@ export const Screens = ({ navigation, route }) => {
       setAllOrders(arr);
       setNewOrders(arr);
     }
-  }, [vendorOrders && vendorOrders.length + orderSocket + Refresh]);
+    socket.on("getOrder", (e) => {
+      setTimeout(()=>{
+        if (vendorOrders) {
+          let arr = vendorOrders.filter((d) => d.type == route.name);
+          setAllOrders(arr);
+          setNewOrders(arr);
+        }
+      },200)
+    });
+    socket.on("updateOrder", (e) => {
+      setTimeout(()=>{
+        if (vendorOrders) {
+          let arr = vendorOrders.filter((d) => d.type == route.name);
+          setAllOrders(arr);
+          setNewOrders(arr);
+        }
+      },200)
+    });
+  }, [ route.name + isFocused]);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {
@@ -655,22 +677,7 @@ export const Screens = ({ navigation, route }) => {
       }
     }
   }, [Search]);
-  const getNewOrder = async () => {
-    try {
-      const res = await getOrders(user.token, "vendor", vendor.service.id);
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-      const arr = res.data.orders.filter((d) => d.type == route.name);
-      setAllOrders(arr);
-      setNewOrders(arr);
-    } catch (e) {
-      console.warn(e.message);
-    }
-  };
-  React.useEffect(() => {
-    setRefresh((val) => !val);
-  }, [orderSocket]);
-
+  
   const snapPoints = React.useMemo(() => ["25%", "60%"], []);
 
   // callbacks
@@ -698,15 +705,15 @@ export const Screens = ({ navigation, route }) => {
         stickyHeaderIndices={[0]}
         scrollEventThrottle={16}
         stickyHeaderHiddenOnScroll={true}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              //setPageChange(true);
-              onRefresh();
-            }}
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={() => {
+        //       //setPageChange(true);
+        //       onRefresh();
+        //     }}
+        //   />
+        // }
         showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
@@ -790,8 +797,15 @@ export const Screens = ({ navigation, route }) => {
             <OrderCart
               onSelect={(e) => {
                 //console.log(e)
-                dispatch({ type: "ORDER_STATE", playload: e });
                 //dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
+                setOpen(val=>{
+                  if(val!=e){
+                    return e
+                  }else{
+                    return null
+                  }
+                })
               }}
               onPress={() => {
                 navigation.navigate("VendorOrderDetails", {
@@ -800,6 +814,7 @@ export const Screens = ({ navigation, route }) => {
               }}
               key={i}
               data={doc}
+              open={Open==doc.id?true:false}
             />
           ))}
 

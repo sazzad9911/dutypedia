@@ -33,6 +33,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
 import { convertDate, dateConverter, dateDifference } from "../../action";
 import { socket } from "../../Class/socket";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const OrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
@@ -107,6 +108,7 @@ const OrderDetails = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
+  const [Timer,setTimer]=React.useState(true)
 
   const stringDate = (d) => {
     const Months = [
@@ -135,7 +137,7 @@ const OrderDetails = ({ navigation, route }) => {
     }, [ListSelection])
   );
   React.useEffect(() => {
-    console.log(data.selectedServices);
+    //console.log(data.selectedServices);
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -218,14 +220,20 @@ const OrderDetails = ({ navigation, route }) => {
       .catch((err) => {
         console.log(err.response.data.msg);
       });
+    
+  }, [orderSocket]);
+  React.useEffect(()=>{
     if (data) {
       let arr = vendorOrders.filter((d) => d.id == data.id);
       setData(arr[0]);
+      //console.log(arr[0])
     }
-  }, [orderSocket]);
+  },[])
+  
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      loadData();
+      //console.log(e)
+      //loadData();
     });
   }, []);
   const loadData = async () => {
@@ -251,11 +259,10 @@ const OrderDetails = ({ navigation, route }) => {
     );
   }
   return (
-    <View style={{
+    <SafeAreaView style={{
       flex:1,
       
     }}>
-      <View style={{height:25}}/>
       <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -683,7 +690,7 @@ const OrderDetails = ({ navigation, route }) => {
                 data && data.paid && data.status != "REFUNDED"
                   ? "green"
                   : data && data.paid && data.status == "REFUNDED"
-                  ? "#FA1ABA"
+                  ? "#FA1ABA":data&&!data.paid?"red"
                   : backgroundColor,
               justifyContent: "center",
               alignItems: "center",
@@ -779,6 +786,10 @@ const OrderDetails = ({ navigation, route }) => {
                   } catch (e) {
                     console.warn(e.message);
                   }
+                  socket.emit("updateOrder", {
+                    receiverId: user.user.id,
+                    order: data,
+                  });
                 }}
                 style={{
                   backgroundColor: "#4ADE80",
@@ -789,6 +800,7 @@ const OrderDetails = ({ navigation, route }) => {
                   width: 120,
                   fontSize:16,
                   padding:10,
+                  height:40
                 }}
                 title="Yes I Delivered"
               />
@@ -824,6 +836,10 @@ const OrderDetails = ({ navigation, route }) => {
                     } catch (e) {
                       console.warn(e.message);
                     }
+                    socket.emit("updateOrder", {
+                      receiverId: user.user.id,
+                      order: data,
+                    });
                   }}
                   style={{
                     backgroundColor: "#4ADE80",
@@ -832,6 +848,7 @@ const OrderDetails = ({ navigation, route }) => {
                     borderWidth: 0,
                     marginRight: 20,
                     width: 120,
+                    height:40
                   }}
                   title="Accept Refund"
                 />
@@ -841,6 +858,7 @@ const OrderDetails = ({ navigation, route }) => {
                       setLoader(true);
                       orderRefound(user.token, data.id, false)
                         .then((res) => {
+                          console.log(res.data)
                           loadData();
                         })
                         .catch((err) => {
@@ -850,6 +868,10 @@ const OrderDetails = ({ navigation, route }) => {
                     } catch (e) {
                       console.warn(e.message);
                     }
+                    socket.emit("updateOrder", {
+                      receiverId: user.user.id,
+                      order: data,
+                    });
                   }}
                   style={{
                     backgroundColor: "#4ADE80",
@@ -858,13 +880,13 @@ const OrderDetails = ({ navigation, route }) => {
                     borderWidth: 0,
                     marginRight: 20,
                     width: 120,
-                    
+                    height:40
                   }}
                   title="Cancel Refund"
                 />
               </View>
             </View>
-          )}
+          )} 
         <View
           style={{
             flexDirection: "row",
@@ -880,6 +902,10 @@ const OrderDetails = ({ navigation, route }) => {
                 } catch (e) {
                   console.warn(e.message);
                 }
+                socket.emit("updateOrder", {
+                  receiverId: user.user.id,
+                  order: data,
+                });
               }}
               style={{
                 backgroundColor: "#4ADE80",
@@ -888,6 +914,8 @@ const OrderDetails = ({ navigation, route }) => {
                 marginVertical: 30,
                 borderWidth: 0,
                 marginRight: 20,
+                width:100,
+                height:40
               }}
               title="Accept"
             />
@@ -906,7 +934,8 @@ const OrderDetails = ({ navigation, route }) => {
                   marginVertical: 30,
                   borderWidth: 0,
                   marginRight: 20,
-                  width: 140,
+                  width: 150,
+                  height:40
                 }}
                 title="Request Extra Time"
               />
@@ -941,6 +970,10 @@ const OrderDetails = ({ navigation, route }) => {
                       },
                     },
                   ]);
+                  socket.emit("updateOrder", {
+                    receiverId: user.user.id,
+                    order: data,
+                  });
                 }}
                 style={{
                   backgroundColor: primaryColor,
@@ -952,6 +985,8 @@ const OrderDetails = ({ navigation, route }) => {
                   borderColor: backgroundColor,
                   borderWidth: 1,
                   color: backgroundColor,
+                  width:100,
+                  height:40
                 }}
                 title="Cancel"
               />
@@ -997,6 +1032,10 @@ const OrderDetails = ({ navigation, route }) => {
               } catch (err) {
                 console.warn(err.message);
               }
+              socket.emit("updateOrder", {
+                receiverId: user.user.id,
+                order: data,
+              });
             } else {
               setRefound(false);
               Alert.alert(
@@ -1037,7 +1076,7 @@ const OrderDetails = ({ navigation, route }) => {
           </Text>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 export default OrderDetails;
