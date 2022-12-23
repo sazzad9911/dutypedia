@@ -17,6 +17,7 @@ import {
 } from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
+import { socket } from "../../Class/socket";
 
 const AcceptOrder = (props) => {
   const isDark = useSelector((state) => state.isDark);
@@ -204,16 +205,34 @@ const AcceptOrder = (props) => {
         }
       )
         .then((res) => {
-          getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
-            if (ress.data) {
-              dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-              dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-              setLoader(false);
-              navigation.navigate(data.type, { reload: res });
-              //console.log(res.data.orders);
-              //console.log(res.data.orders[0].service.serviceCenterName);
-            }
+          socket.emit("getOrder", {
+            receiverId: user.user.id,
+            order: {
+              type: "vendor",
+              data: res.data.order,
+            },
           });
+          socket.emit("getOrder", {
+            receiverId: res.data.receiverId,
+            order: {
+              type: "user",
+              data: res.data.order,
+            },
+          });
+          setTimeout(() => {
+            setLoader(false);
+            navigation.navigate(data.type, { reload: res });
+          }, 300);
+          // getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
+          //   if (ress.data) {
+          //     dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
+          //     dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+          //     setLoader(false);
+          //     navigation.navigate(data.type, { reload: res });
+          //     //console.log(res.data.orders);
+          //     //console.log(res.data.orders[0].service.serviceCenterName);
+          //   }
+          // });
         })
         .catch((err) => {
           setLoader(false);
@@ -238,17 +257,35 @@ const AcceptOrder = (props) => {
       courierServiceAreaName: CourierServiceAddress,
       otherServiceType: OtherService,
     })
-      .then((response) => {
-        getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
-          if (ress.data) {
-            dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-            dispatch({ type: "SET_ORDER_SOCKET", playload: ress.data });
-            setLoader(false);
-            navigation.navigate("VendorOrder", { reload: response });
-            //console.log(res.data.orders);
-            //console.log(res.data.orders[0].service.serviceCenterName);
-          }
+      .then((res) => {
+        socket.emit("updateOrder", {
+          receiverId: user.user.id,
+          order: {
+            type: "vendor",
+            data: res.data.order,
+          },
         });
+        socket.emit("updateOrder", {
+          receiverId: res.data.receiverId,
+          order: {
+            type: "user",
+            data: res.data.order,
+          },
+        });
+        setTimeout(() => {
+          setLoader(false);
+          navigation.navigate("VendorOrder", { reload: res });
+        }, 300);
+        // getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
+        //   if (ress.data) {
+        //     dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
+        //     dispatch({ type: "SET_ORDER_SOCKET", playload: ress.data });
+        //     setLoader(false);
+        //     navigation.navigate("VendorOrder", { reload: response });
+        //     //console.log(res.data.orders);
+        //     //console.log(res.data.orders[0].service.serviceCenterName);
+        //   }
+        // });
       })
       .catch((error) => {
         setLoader(false);

@@ -149,14 +149,14 @@ const OfferNow = (props) => {
       user.user.id
     )
       .then((res) => {
+        console.log(res.data)
         if (res) {
           try {
-            getNewOrderUser();
+            getNewOrderUser(res);
           } catch (e) {
             setLoader(false);
             console.warn(e.message);
           }
-          
         }
       })
       .catch((err) => {
@@ -164,16 +164,39 @@ const OfferNow = (props) => {
         console.warn(err.response.data.msg);
       });
   };
-  const getNewOrderUser = async () => {
-    try {
-      const res = await getOrders(user.token, "user");
+  const getNewOrderUser = (res) => {
+    socket.emit("getOrder", {
+      receiverId: user.user.id,
+      order: {
+        type: "user",
+        data: res.data.order,
+      },
+    });
+    socket.emit("getOrder", {
+      receiverId: res.data.receiverId,
+      order: {
+        type: "vendor",
+        data: res.data.order,
+      },
+    });
+    setTimeout(() => {
       setLoader(false);
       navigation.navigate("ManageOrder", {
         reload: res,
         active: gigs ? gigs.type : data.service.gigs[0].type,
         type: type,
       });
-      
+    }, 300);
+    return
+    try {
+      const res =  getOrders(user.token, "user");
+      setLoader(false);
+      navigation.navigate("ManageOrder", {
+        reload: res,
+        active: gigs ? gigs.type : data.service.gigs[0].type,
+        type: type,
+      });
+
       dispatch({ type: "USER_ORDERS", playload: res.data.orders });
       dispatch({ type: "SET_ORDER_SOCKET", playload: res });
     } catch (e) {
@@ -193,8 +216,16 @@ const OfferNow = (props) => {
         flex: 1,
       }}
     >
-      <SubHeader title={type=="ONETIME"?"Fixed Service":
-      type=="PACKAGE"?"Package Service":"Offer Price"} {...props} />
+      <SubHeader
+        title={
+          type == "ONETIME"
+            ? "Fixed Service"
+            : type == "PACKAGE"
+            ? "Package Service"
+            : "Offer Price"
+        }
+        {...props}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -250,7 +281,7 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   flex: 1,
-                  width:"120%"
+                  width: "120%",
                 }}
               >
                 <Text
@@ -259,19 +290,17 @@ const OfferNow = (props) => {
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
                     color: textColor,
-                    flex:1
+                    flex: 1,
                   }}
                 >
                   {data ? data.service.providerInfo.title : ""}{" "}
                   {data ? data.service.providerInfo.name : "Sazzad Hossain"}
                   <Text
-                    
                     style={{
                       fontSize: 16,
                       fontFamily: "Poppins-Medium",
                       color: textColor,
                       marginLeft: 5,
-                      
                     }}
                   >
                     (
@@ -376,7 +405,7 @@ const OfferNow = (props) => {
               </View>
               <View
                 style={{
-                   flexDirection: "row",
+                  flexDirection: "row",
                   justifyContent: "space-between",
                   marginHorizontal: 20,
                   backgroundColor: "#e5e5e5",
@@ -579,11 +608,12 @@ const OfferNow = (props) => {
                 }}
               >
                 {services.map((doc, i) => (
-                  <Text style={{
-                    fontSize:16
-                  }} key={i}>{`${i != 0 ? ", " : ""}${
-                    doc.data.title
-                  }`}</Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                    }}
+                    key={i}
+                  >{`${i != 0 ? ", " : ""}${doc.data.title}`}</Text>
                 ))}
               </View>
             </>
@@ -703,7 +733,6 @@ const OfferNow = (props) => {
               placeholderTextColor={assentColor}
               style={{
                 width: width - 80,
-                
               }}
               placeholder="Your Requirements"
             />
@@ -869,7 +898,7 @@ const OfferNow = (props) => {
                 Price && From && To && Check ? "#FEA31E" : primaryColor,
               borderWidth: Price && From && To && Check ? 0 : 1,
             }}
-            title={type=="STARTING"?"Offer Your Price":"Continue"}
+            title={type == "STARTING" ? "Offer Your Price" : "Continue"}
           />
         </View>
       </ScrollView>

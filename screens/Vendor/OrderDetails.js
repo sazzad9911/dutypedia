@@ -82,12 +82,12 @@ const OrderDetails = ({ navigation, route }) => {
       justifyContent: "center",
     },
     text: {
-      fontSize:width<350?18: 20,
+      fontSize: width < 350 ? 18 : 20,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
     smallText: {
-      fontSize:width<350?13: 14,
+      fontSize: width < 350 ? 13 : 14,
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
@@ -108,7 +108,6 @@ const OrderDetails = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
-  const [Timer,setTimer]=React.useState(true)
 
   const stringDate = (d) => {
     const Months = [
@@ -138,6 +137,7 @@ const OrderDetails = ({ navigation, route }) => {
   );
   React.useEffect(() => {
     //console.log(data.selectedServices);
+    // console.warn(data)
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -215,41 +215,49 @@ const OrderDetails = ({ navigation, route }) => {
     getMemberId(user.token, vendor.service.id, data.user.id)
       .then((res) => {
         setMemberId(res.data.member);
-        //console.log(res.data)
+        //console.log(res.data);
       })
       .catch((err) => {
         console.log(err.response.data.msg);
       });
-    
   }, [orderSocket]);
-  React.useEffect(()=>{
-    if (data) {
-      let arr = vendorOrders.filter((d) => d.id == data.id);
-      setData(arr[0]);
-      //console.log(arr[0])
-    }
-  },[])
-  
-  React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      //console.log(e)
-      //loadData();
+
+  const loadData = async (receiverId, order) => {
+    socket.emit("updateOrder", {
+      receiverId: user.user.id,
+      order: {
+        type: "vendor",
+        data: order,
+      },
     });
-  }, []);
-  const loadData = async () => {
-    //setLoader(false);
-    try {
-      const res = await getOrders(user.token, "vendor", vendor.service.id);
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-      dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-      let arr = res.data.orders.filter((order) => order.id == data.id);
-      setData(arr[0]);
-      //route.params.onRefresh();
-      setLoader(false);
-    } catch (e) {
-      console.warn(e.message);
-    }
+    socket.emit("updateOrder", {
+      receiverId: receiverId,
+      order: {
+        type: "user",
+        data: order,
+      },
+    });
+    setLoader(false);
+    // try {
+    //   const res = await getOrders(user.token, "user", vendor.service.id);
+    //   dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+    //   dispatch({ type: "SET_ORDER_SOCKET", playload: res });
+    //   let arr = res.data.orders.filter((order) => order.id == data.id);
+    //   setData(arr[0]);
+    //   //route.params.onRefresh();
+    //   setLoader(false);
+    // } catch (e) {
+    //   console.warn(e.message);
+    // }
   };
+  React.useEffect(()=>{
+    socket.on("updateOrder", (e) => {
+      e=e.order;
+      if (e.type === "vendor"&&e.data.id==data.id) {
+        setData(e.data)
+      }
+    });
+  },[])
 
   if (Loader) {
     return (
@@ -259,10 +267,11 @@ const OrderDetails = ({ navigation, route }) => {
     );
   }
   return (
-    <SafeAreaView style={{
-      flex:1,
-      
-    }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -316,7 +325,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize:width<350?16: 18,
+                fontSize: width < 350 ? 16 : 18,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -329,7 +338,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               numberOfLines={1}
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 1,
@@ -354,7 +363,7 @@ const OrderDetails = ({ navigation, route }) => {
                   textAlign: "center",
                   marginVertical: 10,
                   fontFamily: "Poppins-Medium",
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   marginTop: 0,
                 }}
               >
@@ -377,7 +386,7 @@ const OrderDetails = ({ navigation, route }) => {
           <View>
             <Text
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -392,7 +401,7 @@ const OrderDetails = ({ navigation, route }) => {
           >
             <View
               style={{
-                width: width/3,
+                width: width / 3,
                 height: 50,
                 overflow: "hidden",
               }}
@@ -411,8 +420,8 @@ const OrderDetails = ({ navigation, route }) => {
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-                width:width/3,
-                marginLeft:5
+                width: width / 3,
+                marginLeft: 5,
               }}
             >
               {data
@@ -433,7 +442,7 @@ const OrderDetails = ({ navigation, route }) => {
           >
             <Text
               style={{
-                fontSize:width<350?18: 20,
+                fontSize: width < 350 ? 18 : 20,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}
@@ -443,7 +452,7 @@ const OrderDetails = ({ navigation, route }) => {
 
             <Text
               style={{
-                fontSize:width<350?13: 14,
+                fontSize: width < 350 ? 13 : 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 textAlign: "center",
@@ -462,25 +471,46 @@ const OrderDetails = ({ navigation, route }) => {
               marginVertical: 10,
             }}
           />
-          <Text style={[styles.smallText, { fontSize:width<350?14: 16, marginBottom: 5 }]}>
+          <Text
+            style={[
+              styles.smallText,
+              { fontSize: width < 350 ? 14 : 16, marginBottom: 5 },
+            ]}
+          >
             Add What Service Do You Want To Sell
           </Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {ListData &&
               ListData.map((doc, i) =>
                 i == 0 ? (
-                  <Text style={{ color: textColor,fontSize:width<350?14: 16, }} key={i}>
+                  <Text
+                    style={{
+                      color: textColor,
+                      fontSize: width < 350 ? 14 : 16,
+                    }}
+                    key={i}
+                  >
                     {doc.data.title}
                   </Text>
                 ) : (
-                  <Text style={{ color: textColor,fontSize:width<350?14: 16, }} key={i}>
+                  <Text
+                    style={{
+                      color: textColor,
+                      fontSize: width < 350 ? 14 : 16,
+                    }}
+                    key={i}
+                  >
                     {", "}
                     {doc.data.title}
                   </Text>
                 )
               )}
             {ListData.length == 0 && (
-              <Text style={{ color: "#606060", fontSize:width<350?16: 18, }}>N/A</Text>
+              <Text
+                style={{ color: "#606060", fontSize: width < 350 ? 16 : 18 }}
+              >
+                N/A
+              </Text>
             )}
           </View>
           {data &&
@@ -534,7 +564,6 @@ const OrderDetails = ({ navigation, route }) => {
                   height: 30,
                   width: 80,
                   marginVertical: 20,
-                  
                 }}
                 LeftIcon={() => (
                   <AntDesign name="plus" size={24} color={textColor} />
@@ -555,7 +584,7 @@ const OrderDetails = ({ navigation, route }) => {
         <View style={{ paddingHorizontal: 10 }}>
           <Text
             style={{
-              fontSize:width<350?18: 20,
+              fontSize: width < 350 ? 18 : 20,
               fontFamily: "Poppins-Medium",
               color: textColor,
               marginVertical: 10,
@@ -612,7 +641,9 @@ const OrderDetails = ({ navigation, route }) => {
                   >{`${i + 1}. ${doc.title}`}</Text>
                 ))}
             {FacilitiesError && (
-              <Text style={{ color: "red",fontSize:width<350?14: 16, }}>{FacilitiesError}</Text>
+              <Text style={{ color: "red", fontSize: width < 350 ? 14 : 16 }}>
+                {FacilitiesError}
+              </Text>
             )}
           </View>
         </View>
@@ -633,7 +664,7 @@ const OrderDetails = ({ navigation, route }) => {
               styles.text,
               {
                 color: "#666666",
-                fontSize:width<350?16: 18,
+                fontSize: width < 350 ? 16 : 18,
               },
             ]}
           >
@@ -690,7 +721,9 @@ const OrderDetails = ({ navigation, route }) => {
                 data && data.paid && data.status != "REFUNDED"
                   ? "green"
                   : data && data.paid && data.status == "REFUNDED"
-                  ? "#FA1ABA":data&&!data.paid?"red"
+                  ? "#FA1ABA"
+                  : data && !data.paid
+                  ? "red"
                   : backgroundColor,
               justifyContent: "center",
               alignItems: "center",
@@ -702,7 +735,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               style={{
                 color: "white",
-                fontSize:width<350?14: 15,
+                fontSize: width < 350 ? 14 : 15,
                 fontFamily: "Poppins-Medium",
               }}
             >
@@ -724,7 +757,9 @@ const OrderDetails = ({ navigation, route }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?16: 18, }]}>Service Status</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 16 : 18 }]}>
+            Service Status
+          </Text>
           <Text style={[styles.smallText, { marginTop: 5 }]}>
             {data ? exporters(data.status) : "Unknown"}
           </Text>
@@ -739,7 +774,9 @@ const OrderDetails = ({ navigation, route }) => {
             marginHorizontal: 20,
           }}
         >
-          <Text style={[styles.text, { fontSize:width<350?20: 22, }]}>Introduction</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 20 : 22 }]}>
+            Introduction
+          </Text>
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
@@ -756,7 +793,7 @@ const OrderDetails = ({ navigation, route }) => {
             data.status != "CANCELLED" && (
               <Text
                 style={{
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   color: textColor,
                 }}
               >
@@ -777,7 +814,8 @@ const OrderDetails = ({ navigation, route }) => {
                     setLoader(true);
                     completeOrderDelivery(user.token, data.id)
                       .then((res) => {
-                        loadData();
+                        loadData(res.data.receiverId, res.data.order);
+                        setData(res.data.order);
                       })
                       .catch((err) => {
                         setLoader(false);
@@ -786,10 +824,6 @@ const OrderDetails = ({ navigation, route }) => {
                   } catch (e) {
                     console.warn(e.message);
                   }
-                  socket.emit("updateOrder", {
-                    receiverId: user.user.id,
-                    order: data,
-                  });
                 }}
                 style={{
                   backgroundColor: "#4ADE80",
@@ -798,9 +832,9 @@ const OrderDetails = ({ navigation, route }) => {
                   borderWidth: 0,
                   marginRight: 20,
                   width: 120,
-                  fontSize:16,
-                  padding:10,
-                  height:40
+                  fontSize: 16,
+                  padding: 10,
+                  height: 40,
                 }}
                 title="Yes I Delivered"
               />
@@ -813,7 +847,7 @@ const OrderDetails = ({ navigation, route }) => {
             <View style={{ marginHorizontal: 20 }}>
               <Text
                 style={{
-                  fontSize:width<350?14: 16,
+                  fontSize: width < 350 ? 14 : 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
                 }}
@@ -827,7 +861,8 @@ const OrderDetails = ({ navigation, route }) => {
                       setLoader(true);
                       orderRefound(user.token, data.id, true)
                         .then((res) => {
-                          loadData();
+                          loadData(res.data.receiverId, res.data.order);
+                          setData(res.data.order);
                         })
                         .catch((err) => {
                           setLoader(false);
@@ -848,7 +883,7 @@ const OrderDetails = ({ navigation, route }) => {
                     borderWidth: 0,
                     marginRight: 20,
                     width: 120,
-                    height:40
+                    height: 40,
                   }}
                   title="Accept Refund"
                 />
@@ -858,8 +893,8 @@ const OrderDetails = ({ navigation, route }) => {
                       setLoader(true);
                       orderRefound(user.token, data.id, false)
                         .then((res) => {
-                          console.log(res.data)
-                          loadData();
+                          loadData(res.data.receiverId, res.data.order);
+                          setData(res.data.order);
                         })
                         .catch((err) => {
                           setLoader(false);
@@ -880,13 +915,13 @@ const OrderDetails = ({ navigation, route }) => {
                     borderWidth: 0,
                     marginRight: 20,
                     width: 120,
-                    height:40
+                    height: 40,
                   }}
                   title="Cancel Refund"
                 />
               </View>
             </View>
-          )} 
+          )}
         <View
           style={{
             flexDirection: "row",
@@ -902,10 +937,6 @@ const OrderDetails = ({ navigation, route }) => {
                 } catch (e) {
                   console.warn(e.message);
                 }
-                socket.emit("updateOrder", {
-                  receiverId: user.user.id,
-                  order: data,
-                });
               }}
               style={{
                 backgroundColor: "#4ADE80",
@@ -914,8 +945,8 @@ const OrderDetails = ({ navigation, route }) => {
                 marginVertical: 30,
                 borderWidth: 0,
                 marginRight: 20,
-                width:100,
-                height:40
+                width: 100,
+                height: 40,
               }}
               title="Accept"
             />
@@ -935,7 +966,7 @@ const OrderDetails = ({ navigation, route }) => {
                   borderWidth: 0,
                   marginRight: 20,
                   width: 150,
-                  height:40
+                  height: 40,
                 }}
                 title="Request Extra Time"
               />
@@ -959,9 +990,9 @@ const OrderDetails = ({ navigation, route }) => {
                       onPress: () => {
                         setLoader(true);
                         cancelOrder(user.token, data.id, "CANCELLED", "vendor")
-                          .then((response) => {
-                            setLoader(false);
-                            loadData();
+                          .then((res) => {
+                            loadData(res.data.receiverId, res.data.order);
+                            setData(res.data.order);
                           })
                           .catch((err) => {
                             setLoader(false);
@@ -970,10 +1001,6 @@ const OrderDetails = ({ navigation, route }) => {
                       },
                     },
                   ]);
-                  socket.emit("updateOrder", {
-                    receiverId: user.user.id,
-                    order: data,
-                  });
                 }}
                 style={{
                   backgroundColor: primaryColor,
@@ -985,8 +1012,8 @@ const OrderDetails = ({ navigation, route }) => {
                   borderColor: backgroundColor,
                   borderWidth: 1,
                   color: backgroundColor,
-                  width:100,
-                  height:40
+                  width: 100,
+                  height: 40,
                 }}
                 title="Cancel"
               />
@@ -1001,7 +1028,7 @@ const OrderDetails = ({ navigation, route }) => {
           !data.refundRequestByUser && (
             <Text
               style={{
-                fontSize:width<350?14: 16,
+                fontSize: width < 350 ? 14 : 16,
                 color: backgroundColor,
                 textAlign: "center",
                 marginBottom: 30,
@@ -1022,8 +1049,9 @@ const OrderDetails = ({ navigation, route }) => {
                 setRefound(false);
                 setLoader(true);
                 requestForTime(user.token, data.id, dateConverter(e))
-                  .then((response) => {
-                    loadData();
+                  .then((res) => {
+                    loadData(res.data.receiverId, res.data.order);
+                    setData(res.data.order);
                   })
                   .catch((error) => {
                     setLoader(false);
@@ -1052,7 +1080,7 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             style={{
               color: backgroundColor,
-              fontSize:width<350?14: 16,
+              fontSize: width < 350 ? 14 : 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginHorizontal: 20,
@@ -1066,7 +1094,7 @@ const OrderDetails = ({ navigation, route }) => {
           <Text
             style={{
               color: "green",
-              fontSize:width<350?14: 16,
+              fontSize: width < 350 ? 14 : 16,
               fontFamily: "Poppins-Medium",
               textAlign: "center",
               marginVertical: 20,

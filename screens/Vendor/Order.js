@@ -56,6 +56,8 @@ import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from "@react-navigation/native";
+import { addUserOrder, updateUserOrder } from "../../Reducers/userOrders";
+import { addVendorOrder, updateVendorOrder } from "../../Reducers/vendorOrders";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -182,10 +184,11 @@ const VendorOrder = ({ navigation, route }) => {
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch = useDispatch();
   const vendorOrders = useSelector((state) => state.vendorOrders);
-
+  //console.log(vendorOrders)
   if (Loader) {
     return <ActivityLoader />;
   }
+  
   return (
     <SafeAreaView style={{
       flex:1
@@ -630,25 +633,39 @@ export const Screens = ({ navigation, route }) => {
       setAllOrders(arr);
       setNewOrders(arr);
     }
+    
+    
+  }, [ route.name + isFocused]);
+  React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      setTimeout(()=>{
-        if (vendorOrders) {
-          let arr = vendorOrders.filter((d) => d.type == route.name);
-          setAllOrders(arr);
-          setNewOrders(arr);
-        }
-      },200)
+      e=e.order;
+      setNewOrders(null)
+      if (e.type === "vendor") {
+        dispatch(addVendorOrder(e.data));
+        let orders=AllOrders;
+        orders.push(e.data)
+        setAllOrders(orders)
+        setNewOrders(orders)
+      }
     });
     socket.on("updateOrder", (e) => {
-      setTimeout(()=>{
-        if (vendorOrders) {
-          let arr = vendorOrders.filter((d) => d.type == route.name);
-          setAllOrders(arr);
-          setNewOrders(arr);
-        }
-      },200)
+      setNewOrders(null)
+      e=e.order;
+      if (e.type === "vendor") {
+        dispatch(updateVendorOrder(e.data));
+        let arr=[]
+        AllOrders.forEach((doc,i)=>{
+          if(doc.id===e.data.id){
+            arr.push(e.data)
+          }else{
+            arr.push(doc)
+          }
+        })
+        setAllOrders(arr)
+        setNewOrders(arr)
+      }
     });
-  }, [ route.name + isFocused]);
+  }, []);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {

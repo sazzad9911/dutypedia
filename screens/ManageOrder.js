@@ -212,25 +212,39 @@ const Screens = ({ navigation, route }) => {
       setAllOrders(arr);
       setOrders(arr);
     }
+    
+  }, [route.name + isFocused]);
+  React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      setTimeout(()=>{
-        if (userOrders) {
-          let arr = userOrders.filter((d) => d.type == route.name);
-          setAllOrders(arr);
-          setOrders(arr);
-        }
-      },100)
+      console.log(e.type)
+      e=e.order;
+      setOrders(null)
+      if (e.type === "user") {
+        dispatch(addVendorOrder(e.data));
+        let orders=AllOrders;
+        orders.push(e.data)
+        setAllOrders(orders)
+        setOrders(orders)
+      }
     });
     socket.on("updateOrder", (e) => {
-      setTimeout(()=>{
-        if (userOrders) {
-          let arr = userOrders.filter((d) => d.type == route.name);
-          setAllOrders(arr);
-          setOrders(arr);
-        }
-      },100)
+      setOrders(null)
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(updateVendorOrder(e.data));
+        let arr=[]
+        AllOrders.forEach((doc,i)=>{
+          if(doc.id===e.data.id){
+            arr.push(e.data)
+          }else{
+            arr.push(doc)
+          }
+        })
+        setAllOrders(arr)
+        setOrders(arr)
+      }
     });
-  }, [route.name + isFocused]);
+  }, []);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {

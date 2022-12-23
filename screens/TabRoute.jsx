@@ -174,8 +174,12 @@ const TabRoute = () => {
     return () => removeNetInfoSubscription();
   }, []);
   const userOrders = async () => {
+    const res = await getOrders(user.token, "user");
+    setUserOrdersOffline(res.data.orders);
+    dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+    return
     const data = await getUserOrdersOffline();
-    if (data) {
+    if (data) {  
       dispatch({ type: "USER_ORDERS", playload: data });
     } else {
       const res = await getOrders(user.token, "user");
@@ -184,9 +188,12 @@ const TabRoute = () => {
     }
   };
   const vendorOrders = async () => {
+    const res = await getOrders(user.token, "vendor", vendor.service.id);
+      setVendorOrdersOffline(res.data.orders);
+      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+      return
     const data = await getVendorOrdersOffline();
     if (data) {
-      
       dispatch({ type: "VENDOR_ORDERS", playload: data });
     } else {
       const res = await getOrders(user.token, "vendor", vendor.service.id);
@@ -204,24 +211,7 @@ const TabRoute = () => {
       vendorOrders();
     }
   }, [user + vendor + reload + socket + isOffline]);
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      e=e.order;
-      if (e.type === "user") {
-        dispatch(addUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(addVendorOrder(e.data));
-      }
-    });
-    socket.on("updateOrder", (e) => {
-      e=e.order;
-      if (e.type === "user") {
-        dispatch(updateUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(updateVendorOrder(e.data));
-      }
-    });
-  }, []);
+ 
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
@@ -325,7 +315,7 @@ const TabRoute = () => {
         {vendor && (
           <Tab.Screen
             options={{ headerShown: false }}
-            name="Home"
+            name="Feed"
             component={Dashboard}
           />
         )}

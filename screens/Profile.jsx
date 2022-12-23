@@ -363,7 +363,7 @@ const MainProfile = (props) => {
   }, [user]);
   React.useEffect(() => {
     setOrders(userOrders);
-  }, [userOrders.length + Refresh]);
+  }, [userOrders + Refresh]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

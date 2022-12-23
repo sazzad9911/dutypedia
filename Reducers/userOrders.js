@@ -9,7 +9,7 @@ const userOrders=(state=initialState,action)=>{
     }
     if(action.type=="ADD_USER_ORDER"){
         //storeData("USER_ORDERS",[...state,action.playload])
-        setUserOrdersOffline([...state,action.playload])
+        //setUserOrdersOffline([...state,action.playload])
         return [...state,action.playload]
     }
     if(action.type=="UPDATE_USER_ORDER"){
@@ -21,7 +21,7 @@ const userOrders=(state=initialState,action)=>{
                 arr.push(doc)
             }
         })
-        setUserOrdersOffline(arr)
+        //setUserOrdersOffline(arr)
         //storeData("USER_ORDERS",arr)
         return arr
     }
@@ -44,7 +44,11 @@ export const updateUserOrder=(data)=>{
 }
 export const getUserOrdersOffline=async()=>{
     const data=await getJson("USER_ORDERS")
-    return data
+    if(Array.isArray(data)){
+        return data
+    }
+    setUserOrdersOffline(null)
+    return null
 }
 export const setUserOrdersOffline=async(data)=>{
     const res=await storeJson("USER_ORDERS",data)

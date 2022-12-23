@@ -132,17 +132,17 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       setFacilities(data.facilites);
     }
   }, [data]);
-  const loadData = async (receiverId, serviceId) => {
+  const loadData = async (receiverId, order) => {
     //setLoader(false);
     try {
-      const res = await getOrders(user.token, "vendor", serviceId);
+      //const res = await getOrders(user.token, "vendor", serviceId);
       //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-      let arr = res.data.orders.filter((order) => order.id == data.id);
+     // let arr = res.data.orders.filter((order) => order.id == data.id);
       socket.emit("updateOrder", {
         receiverId: receiverId,
         order: {
           type: "vendor",
-          data: arr[0],
+          data: order,
         },
       });
       //route.params.onRefresh();
@@ -151,6 +151,14 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       console.warn(e.message);
     }
   };
+  React.useEffect(()=>{
+    socket.on("updateOrder", (e) => {
+      e=e.order;
+      if (e.type === "user"&&e.data.id==data.id) {
+        setData(e.data)
+      }
+    });
+  },[])
 
   const stringDate = (d) => {
     const Months = [
@@ -637,7 +645,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           });
                           loadData(
                             res.data.receiverId,
-                            res.data.order.serviceId
+                            res.data.order
                           );
                           socket.emit("updateOrder", {
                             receiverId: user.user.id,
@@ -684,7 +692,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           });
                           loadData(
                             res.data.receiverId,
-                            res.data.order.serviceId
+                            res.data.order
                           );
                           socket.emit("updateOrder", {
                             receiverId: user.user.id,
@@ -736,7 +744,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       Toast.show("Payment success", {
                         duration: Toast.durations.LONG,
                       });
-                      loadData(res.data.receiverId, res.data.order.serviceId);
+                      loadData(res.data.receiverId, res.data.order);
                       socket.emit("updateOrder", {
                         receiverId: user.user.id,
                         order: {
@@ -792,7 +800,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                             });
                             loadData(
                               res.data.receiverId,
-                              res.data.order.serviceId
+                              res.data.order
                             );
                             socket.emit("updateOrder", {
                               receiverId: user.user.id,
@@ -854,7 +862,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       Toast.show("Successful", {
                         duration: Toast.durations.LONG,
                       });
-                      loadData(res.data.receiverId, res.data.order.serviceId);
+                      loadData(res.data.receiverId, res.data.order);
                       socket.emit("updateOrder", {
                         receiverId: user.user.id,
                         order: {

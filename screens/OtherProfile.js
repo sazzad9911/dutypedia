@@ -1006,6 +1006,7 @@ const OtherProfile = (props) => {
                       doc={doc}
                       i={i}
                       arr={Specialty}
+                      key={i}
                     />
                   ))}
 

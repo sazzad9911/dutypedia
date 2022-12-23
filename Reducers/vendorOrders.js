@@ -6,7 +6,7 @@ const vendorOrders=(state=initialState,action)=>{
         return action.playload
     }
     if(action.type=="ADD_VENDOR_ORDERS"){
-        setVendorOrdersOffline([...state,action.playload])
+        //setVendorOrdersOffline([...state,action.playload])
         return [...state,action.playload]
     }
     if(action.type=="UPDATE_VENDOR_ORDERS"){
@@ -18,7 +18,7 @@ const vendorOrders=(state=initialState,action)=>{
                 arr.push(doc)
             }
         })
-        setVendorOrdersOffline(arr)
+        //setVendorOrdersOffline(arr)
         return arr
     }
     return state
@@ -38,10 +38,14 @@ export const updateVendorOrder=(data)=>{
     }
 }
 export const getVendorOrdersOffline=async()=>{
-    const data=await getJson("VENDOR_ORDERS")
-    return data
+    const data=await getJson("VENDOR_ORDERSs")
+    if(Array.isArray(data)){
+        return data
+    }
+    setVendorOrdersOffline(null)
+    return null
 }
 export const setVendorOrdersOffline=async(data)=>{
-    const res=await storeJson("VENDOR_ORDERS",data)
+    const res=await storeJson("VENDOR_ORDERSs",data)
     return res
 }
