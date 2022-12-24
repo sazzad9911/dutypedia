@@ -23,8 +23,11 @@ export default function SelectDate({onChange,navigation,route}) {
   const [Error,setError]=React.useState()
   const data=route.params.data?route.params.data:null;
   const userId=route.params.userId;
+  const params=route.params;
+  const selectedPackage=params.selectedPackage;
   //console.log(userId)
   //console.log(data)
+  
 
   return (
     <View
@@ -144,7 +147,8 @@ export default function SelectDate({onChange,navigation,route}) {
           vendor:true,
           from:dateConverter(OpeningTime),
           to:dateConverter(ClosingTime),
-          userId:userId
+          userId:userId,
+          selectedPackage:selectedPackage
         });
       }} style={{
         borderRadius:5,

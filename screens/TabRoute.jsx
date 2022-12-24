@@ -222,6 +222,9 @@ const TabRoute = () => {
         dispatch(addUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(addVendorOrder(e.data));
+      }else if(!e.type){
+        dispatch(addUserOrder(e));
+        dispatch(addVendorOrder(e));
       }
     });
     socket.on("updateOrder", (e) => {
@@ -230,12 +233,39 @@ const TabRoute = () => {
         dispatch(updateUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(updateVendorOrder(e.data));
+      }else if(!e.type){
+        dispatch(addUserOrder(e));
+        dispatch(addVendorOrder(e));
       }
     });
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
+  React.useEffect(()=>{
+    socket.on("getOrder", (e) => {
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(addUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(addVendorOrder(e.data));
+      }else if(!e.type){
+        dispatch(addUserOrder(e));
+        dispatch(addVendorOrder(e));
+      }
+    });
+    socket.on("updateOrder", (e) => {
+      e=e.order;
+      if (e.type === "user") {
+        dispatch(updateUserOrder(e.data));
+      } else if (e.type === "vendor") {
+        dispatch(updateVendorOrder(e.data));
+      }else if(!e.type){
+        dispatch(addUserOrder(e));
+        dispatch(addVendorOrder(e));
+      }
+    });
+  },[])
 
   async function registerBackgroundFetchAsync() {
     return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {

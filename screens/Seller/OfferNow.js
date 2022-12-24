@@ -149,15 +149,7 @@ const OfferNow = (props) => {
       user.user.id
     )
       .then((res) => {
-        console.log(res.data)
-        if (res) {
-          try {
-            getNewOrderUser(res);
-          } catch (e) {
-            setLoader(false);
-            console.warn(e.message);
-          }
-        }
+        getNewOrderUser(res);
       })
       .catch((err) => {
         setLoader(false);
@@ -165,14 +157,14 @@ const OfferNow = (props) => {
       });
   };
   const getNewOrderUser = (res) => {
-    socket.emit("getOrder", {
+    socket.emit("newOrder", {
       receiverId: user.user.id,
       order: {
         type: "user",
         data: res.data.order,
       },
     });
-    socket.emit("getOrder", {
+    socket.emit("newOrder", {
       receiverId: res.data.receiverId,
       order: {
         type: "vendor",

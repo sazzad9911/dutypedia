@@ -58,6 +58,7 @@ import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from "@react-navigation/native";
 import { addUserOrder, updateUserOrder } from "../../Reducers/userOrders";
 import { addVendorOrder, updateVendorOrder } from "../../Reducers/vendorOrders";
+import PackageList from "./PackageList";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -124,6 +125,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="SelectDate"
         component={SelectDate}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="PackageList"
+        component={PackageList}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -310,7 +316,7 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
                   }}
                   source={{ uri: data.user.profilePhoto }}
                 />
-              ) : data && user && data.service.profilePhoto ? (
+              ) : data && user&&data.service && data.service.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
@@ -633,39 +639,17 @@ export const Screens = ({ navigation, route }) => {
       setAllOrders(arr);
       setNewOrders(arr);
     }
-    
-    
-  }, [ route.name + isFocused]);
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      e=e.order;
-      setNewOrders(null)
-      if (e.type === "vendor") {
-        dispatch(addVendorOrder(e.data));
-        let orders=AllOrders;
-        orders.push(e.data)
-        setAllOrders(orders)
-        setNewOrders(orders)
-      }
-    });
+  }, [ route.name + isFocused+vendorOrders+Refresh]);
+
+  React.useEffect(()=>{
     socket.on("updateOrder", (e) => {
-      setNewOrders(null)
       e=e.order;
-      if (e.type === "vendor") {
-        dispatch(updateVendorOrder(e.data));
-        let arr=[]
-        AllOrders.forEach((doc,i)=>{
-          if(doc.id===e.data.id){
-            arr.push(e.data)
-          }else{
-            arr.push(doc)
-          }
-        })
-        setAllOrders(arr)
-        setNewOrders(arr)
-      }
+      setTimeout(()=>{
+        setRefresh(val=>(!val))
+      },100)
     });
-  }, []);
+  },[])
+
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {

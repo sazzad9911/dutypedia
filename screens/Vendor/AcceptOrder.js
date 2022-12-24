@@ -75,6 +75,7 @@ const AcceptOrder = (props) => {
   const data = params.data;
   const userId = params.userId;
   const dispatch = useDispatch();
+  const selectedPackage=params.selectedPackage
   //console.log(userId)
   //console.log(data)
 
@@ -188,9 +189,9 @@ const AcceptOrder = (props) => {
         data.services,
         data.service.id,
         data.type,
-        data.price,
+        parseInt(selectedPackage?selectedPackage.price:data.price),
         Description,
-        data.price,
+        parseInt(selectedPackage?selectedPackage.price:data.price),
         params.from,
         params.to,
         "VENDOR",
@@ -202,17 +203,20 @@ const AcceptOrder = (props) => {
           otherServiceType: OtherService,
           deliverBy: Deliver,
           serviceType: Service,
-        }
+        },
+        selectedPackage
       )
         .then((res) => {
-          socket.emit("getOrder", {
+          //getLoadData(res.data.receiverId,res.data.order)
+          //console.log(res.data.order)
+          socket.emit("newOrder", {
             receiverId: user.user.id,
             order: {
               type: "vendor",
               data: res.data.order,
             },
           });
-          socket.emit("getOrder", {
+          socket.emit("newOrder", {
             receiverId: res.data.receiverId,
             order: {
               type: "user",
@@ -223,16 +227,6 @@ const AcceptOrder = (props) => {
             setLoader(false);
             navigation.navigate(data.type, { reload: res });
           }, 300);
-          // getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
-          //   if (ress.data) {
-          //     dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-          //     dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-          //     setLoader(false);
-          //     navigation.navigate(data.type, { reload: res });
-          //     //console.log(res.data.orders);
-          //     //console.log(res.data.orders[0].service.serviceCenterName);
-          //   }
-          // });
         })
         .catch((err) => {
           setLoader(false);
@@ -295,6 +289,30 @@ const AcceptOrder = (props) => {
         //console.warn(error.response.data.msg);
       });
   };
+  const getLoadData=async(receiverId,order)=>{
+    const res=await getOrders(user.token,"vendor",order.serviceId);
+    if(res.data){
+      const newOrder=res.data.orders.filter(d=>d.id==order.id);
+      socket.emit("updateOrder", {
+        receiverId: user.user.id,
+        order: {
+          type: "vendor",
+          data: newOrder[0],
+        },
+      });
+      socket.emit("updateOrder", {
+        receiverId: receiverId,
+        order: {
+          type: "user",
+          data: newOrder[0],
+        },
+      });
+      setTimeout(() => {
+        setLoader(false);
+        navigation.navigate(data.type, { reload: res });
+      }, 300);
+    }
+  }
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -303,8 +321,8 @@ const AcceptOrder = (props) => {
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <SubHeader title="Order Confirmation" {...props} />
+    <View style={{ flex: 1 }}>
+      <SubHeader  title="Order Confirmation" {...props} />
       <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -668,7 +686,7 @@ const AcceptOrder = (props) => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 export default AcceptOrder;

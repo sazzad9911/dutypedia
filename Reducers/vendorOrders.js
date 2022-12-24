@@ -7,7 +7,7 @@ const vendorOrders=(state=initialState,action)=>{
     }
     if(action.type=="ADD_VENDOR_ORDERS"){
         //setVendorOrdersOffline([...state,action.playload])
-        return [...state,action.playload]
+        return [action.playload,...state]
     }
     if(action.type=="UPDATE_VENDOR_ORDERS"){
         let arr=[]

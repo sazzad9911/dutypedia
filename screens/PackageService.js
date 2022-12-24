@@ -871,7 +871,6 @@ const PackageService = (props) => {
           <View
             style={{
               backgroundColor: primaryColor,
-
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: 20,
@@ -1271,7 +1270,7 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 </g>
 </svg>
 `;
-const Screen = ({ navigation, route }) => {
+export const Screen = ({ navigation, route }) => {
   const params = route.params;
   const data = params.data;
   const setPrice=params.setPrice;
@@ -1282,7 +1281,7 @@ const Screen = ({ navigation, route }) => {
   const [layoutHeight,setLayoutHeight]=React.useState()
 
   React.useLayoutEffect(()=>{
-    //console.log(data)
+    
     if(data){
         setFeature(data.features)
     }

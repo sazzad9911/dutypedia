@@ -39,6 +39,7 @@ import { OrderCart } from "./Vendor/Order";
 import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator } from "react-native-paper";
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
@@ -208,43 +209,22 @@ const Screens = ({ navigation, route }) => {
   }, []);
   React.useEffect(() => {
     if (userOrders) {
+      //console.warn(userOrders[0])
       let arr = userOrders.filter((d) => d.type == route.name);
       setAllOrders(arr);
       setOrders(arr);
     }
     
-  }, [route.name + isFocused]);
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      console.log(e.type)
-      e=e.order;
-      setOrders(null)
-      if (e.type === "user") {
-        dispatch(addVendorOrder(e.data));
-        let orders=AllOrders;
-        orders.push(e.data)
-        setAllOrders(orders)
-        setOrders(orders)
-      }
-    });
+  }, [route.name + isFocused+userOrders+Refresh]);
+  React.useEffect(()=>{
     socket.on("updateOrder", (e) => {
-      setOrders(null)
       e=e.order;
-      if (e.type === "user") {
-        dispatch(updateVendorOrder(e.data));
-        let arr=[]
-        AllOrders.forEach((doc,i)=>{
-          if(doc.id===e.data.id){
-            arr.push(e.data)
-          }else{
-            arr.push(doc)
-          }
-        })
-        setAllOrders(arr)
-        setOrders(arr)
-      }
+      setTimeout(()=>{
+        setRefresh(val=>(!val))
+      },100)
     });
-  }, []);
+  },[])
+  
   React.useEffect(() => {
     if (AllOrders) {
       if (!Filter) {
@@ -273,7 +253,19 @@ const Screens = ({ navigation, route }) => {
       }
     }
   }, [Search]);
-
+  if (!userOrders) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="small" color={backgroundColor} />
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <ScrollView

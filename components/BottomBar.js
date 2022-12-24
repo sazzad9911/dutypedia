@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   Keyboard,
+  Platform,
 } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
@@ -16,6 +17,7 @@ import { useSelector } from "react-redux";
 import { checkVendor } from "./../Class/auth";
 import { useDispatch } from "react-redux";
 import { useRoute } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
@@ -98,12 +100,12 @@ const BottomBar = (props) => {
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
-          if(route==0){
+          if (route == 0) {
             navigation.navigate("Home");
-          setRoute(0);
-          }else{
+            setRoute(0);
+          } else {
             navigation.navigate("Feed");
-          setRoute(0);
+            setRoute(0);
           }
         }}
         style={styles.button}
@@ -189,7 +191,10 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Notification" });
+          dispatch({
+            type: "SET_INTEREST_CATEGORY",
+            playload: "Notification",
+          });
           if (Array.isArray(user)) {
             navigation.navigate("LogIn");
             setRoute(3);
@@ -223,7 +228,10 @@ const BottomBar = (props) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          dispatch({ type: "SET_INTEREST_CATEGORY", playload: "MainProfile" });
+          dispatch({
+            type: "SET_INTEREST_CATEGORY",
+            playload: "MainProfile",
+          });
           if (Array.isArray(user)) {
             setRoute(4);
             navigation.navigate("LogIn");

@@ -13,6 +13,7 @@ import ServiceCart from "../../Cart/ServiceCart";
 import ActivityLoader from "../../components/ActivityLoader";
 import { textColor } from "../../assets/colors";
 import { serverToLocal } from "../../Class/dataConverter";
+import { SafeAreaView } from "react-native-safe-area-context";
 const {width,height}=Dimensions.get("window")
 
 const Tab = createMaterialTopTabNavigator();
@@ -48,7 +49,10 @@ export default function VendorServiceList({navigation,route}) {
  
   // tabBar={(props) => <ListHeader {...props} />}
   return (
-    <Tab.Navigator screenOptions={{
+    <SafeAreaView style={{
+      flex:1
+    }}>
+      <Tab.Navigator screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },
       tabBarItemStyle: { width: 120,
       margin:0,
@@ -65,6 +69,7 @@ export default function VendorServiceList({navigation,route}) {
         <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId}} component={Screens} />
       ))}
     </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 const wait = (timeout) => {
@@ -105,7 +110,7 @@ const Screens = ({ navigation, route }) => {
     return (
       <View
         style={{
-          flex: 1,
+          flex: 1, 
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -187,7 +192,13 @@ const Screens = ({ navigation, route }) => {
       }}>
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{
-            navigation.navigate("SelectDate",{data:doc,userId:userId})
+            if(doc.type=="ONETIME"){
+              navigation.navigate("SelectDate",{data:doc,userId:userId})
+            }else if(doc.type=="PACKAGE"){
+              navigation.navigate("PackageList",{data:doc,userId:userId})
+            }
+            //console.log(doc.type)
+            //navigation.navigate("SelectDate",{data:doc,userId:userId})
           }} key={i} data={doc} />
         ))}
       </View>

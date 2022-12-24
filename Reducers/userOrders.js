@@ -10,7 +10,7 @@ const userOrders=(state=initialState,action)=>{
     if(action.type=="ADD_USER_ORDER"){
         //storeData("USER_ORDERS",[...state,action.playload])
         //setUserOrdersOffline([...state,action.playload])
-        return [...state,action.playload]
+        return [action.playload,...state]
     }
     if(action.type=="UPDATE_USER_ORDER"){
         let arr=[]
