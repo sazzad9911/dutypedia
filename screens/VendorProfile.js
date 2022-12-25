@@ -24,6 +24,7 @@ import {
   assentColor,
   secondaryColor,
   textColor,
+  Color,
 } from "./../assets/colors";
 import ProfileOption from "./../components/ProfileOption";
 import { AntDesign } from "@expo/vector-icons";
@@ -36,7 +37,6 @@ import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
 import IconButton from "./../components/IconButton";
 import { Menu } from "react-native-paper";
-import { Rows, ServiceTable, TabBar, TabScreen } from "./VendorProfile";
 import Animated, {
   FadeIn,
   StretchInY,
@@ -1041,11 +1041,13 @@ const VendorProfile = (props) => {
               backgroundColor: primaryColor,
             }}
           >
-            <View style={{
-              flexDirection:"row",
-              justifyContent:"space-between",
-              alignItems:"center"
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text
                 style={{
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
@@ -1627,6 +1629,7 @@ const BargainingScreen = ({ navigation, route }) => {
           style={{
             marginHorizontal: 20,
             marginVertical: 15,
+            marginBottom: 0,
           }}
         >
           <AnimatedHeight
@@ -1638,6 +1641,19 @@ const BargainingScreen = ({ navigation, route }) => {
             button={true}
             text={Description}
           />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "flex-end",
+            marginVertical: 0,
+            marginTop: -15,
+          }}
+        >
+          <TouchableOpacity style={{}}>
+            <SvgXml xml={editIcon} height="50" width={"50"} />
+          </TouchableOpacity>
         </View>
         <Carousel
           panGestureHandlerProps={{
@@ -1667,17 +1683,26 @@ const BargainingScreen = ({ navigation, route }) => {
           paddingHorizontal: 20,
         }}
       >
-        <Text
-          style={{
-            fontFamily: "Poppins-SemiBold",
-            fontSize: Platform.OS == "ios" ? 22 : 20.5,
-            marginBottom: 20,
-            marginTop: 35,
-            color: "#535353",
-          }}
-        >
-          Service List
-        </Text>
+        <View style={{
+          flexDirection:"row",
+          justifyContent:"space-between",
+          alignItems:"center"
+        }}>
+          <Text
+            style={{
+              fontFamily: "Poppins-SemiBold",
+              fontSize: Platform.OS == "ios" ? 22 : 20.5,
+              marginBottom: 20,
+              marginTop: 35,
+              color: "#535353",
+            }}
+          >
+            Service List
+          </Text>
+          <TouchableOpacity style={{}}>
+            <SvgXml xml={editIcon} height="50" width={"50"} />
+          </TouchableOpacity>
+        </View>
 
         <View
           style={{
@@ -1756,6 +1781,26 @@ const BargainingScreen = ({ navigation, route }) => {
             <View
               style={{ flex: 2, marginRight: 0, maxHeight: ServiceTableHeight }}
             >
+              {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
+                SubServiceList.map((item, i) => (
+                  <ServiceTable
+                    key={i}
+                    item={item}
+                    i={i}
+                    name={ActiveService}
+                    NewDataList={NewDataList}
+                    height={ServiceTableHeight}
+                  />
+                ))
+              ) : ActiveService != "Extra Facilities" ? (
+                <ServiceTable
+                  height={ServiceTableHeight}
+                  NewDataList={NewDataList}
+                  name={ActiveService}
+                />
+              ) : (
+                <></>
+              )}
               {ActiveService == "Extra Facilities" && (
                 <View>
                   <Text
@@ -1795,14 +1840,14 @@ const BargainingScreen = ({ navigation, route }) => {
           </View>
         </View>
       </View>
-      {/*   <View
+      <View
         style={{
           backgroundColor: primaryColor,
 
           flexDirection: "row",
           justifyContent: "space-between",
           marginHorizontal: 20,
-          marginVertical: 25,
+          marginVertical: 15,
         }}
       >
         <Text
@@ -1845,7 +1890,7 @@ const BargainingScreen = ({ navigation, route }) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{ backgroundColor: primaryColor }}>
+      {/* <View style={{ backgroundColor: primaryColor }}>
         <IconButton
           onPress={() => {
             navigation.navigate("OfferNow", {
@@ -1866,6 +1911,7 @@ const BargainingScreen = ({ navigation, route }) => {
           title="Offer Now"
         />
       </View> */}
+      <View style={{ height: 70 }} />
     </View>
   );
 };
@@ -2437,6 +2483,382 @@ const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="41.275" height=
       <path id="Path_20921" data-name="Path 20921" d="M61.72,510.974c1.514,0,3.027,0,4.541,0,1.131,0,2.262,0,3.393,0l.027.018H61.72Z" transform="translate(-61.72 -510.971)" fill="#86939b" stroke="#86939b" stroke-width="0.2" opacity="0.55"/>
     </g>
   </g>
+</g>
+</svg>
+`;
+
+export const ServiceTable = ({
+  item,
+  i,
+  name,
+  NewDataList,
+  onLayout,
+  height,
+}) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const [Data, setData] = React.useState([]);
+  const [TableName, setTableName] = React.useState();
+  const [contentHeight, setContentHeight] = React.useState(
+    height ? height : 60
+  );
+  //console.log(`total ${contentHeight}`)
+  React.useEffect(() => {
+    if (NewDataList) {
+      setData([]);
+      let arr = [];
+      if (item) {
+        NewDataList.forEach((data) => {
+          if (data.subTitle && data.subTitle == item) {
+            arr.push(data.tableName);
+          }
+        });
+      } else {
+        NewDataList.forEach((item) => {
+          if (item.title && item.title == name) {
+            arr.push(item.tableName);
+          }
+        });
+      }
+      if (arr.length > 0) {
+        setData(uniq(arr));
+      }
+    }
+  }, [name]);
+
+  React.useLayoutEffect(() => {
+    if (height) {
+      setContentHeight(height);
+    }
+  }, [height]);
+  return (
+    <View
+      onLayout={(e) => {
+        //console.log(e.nativeEvent.layout.height)
+        //setContentHeight(e.nativeEvent.layout.height);
+      }}
+      style={{
+        paddingBottom: 5,
+        borderColor: "#e5e5e5",
+        minHeight: 10,
+      }}
+      key={i}
+    >
+      {item && contentHeight > 30 && (
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: "Poppins-SemiBold",
+            fontSize: Platform.OS == "ios" ? 16.5 : 15,
+            margin: 0,
+            color: "#535353",
+            lineHeight: 30,
+          }}
+        >
+          {item}
+        </Text>
+      )}
+      {Data.length > 0 ? (
+        Data.map(
+          (doc, i) =>
+            i == 0 && (
+              <View key={i}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontFamily: "Poppins-Medium",
+                    fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                    color: "#95979D",
+                    lineHeight: 30,
+                  }}
+                >
+                  {doc}
+                </Text>
+                <Rows
+                  index={i}
+                  height={item ? contentHeight - 60 : contentHeight - 30}
+                  item={doc}
+                  name={name}
+                  NewDataList={NewDataList}
+                />
+              </View>
+            )
+        )
+      ) : (
+        <View>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontFamily: "Poppins-Medium",
+              fontSize: Platform.OS == "ios" ? 16.5 : 15,
+              color: "#95979D",
+              lineHeight: 30,
+            }}
+          >
+            {name}
+          </Text>
+          <Rows
+            index={0}
+            height={item ? contentHeight - 60 : contentHeight - 30}
+            NewDataList={NewDataList}
+            name={name}
+          />
+        </View>
+      )}
+    </View>
+  );
+};
+
+export const Rows = ({ title, item, name, NewDataList, height, index }) => {
+  const [text, setText] = React.useState();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+
+  React.useEffect(() => {
+    //console.log(item);
+    if (!NewDataList) {
+      return;
+    }
+    let count = 0;
+    let word = "";
+    NewDataList.map((doc, j) => {
+      if (doc.title && doc.tableName.match(item) && doc.title.match(name)) {
+        word = word + `${count != 0 ? ", " : ""}${doc.data.title}`;
+        count++;
+      } else if (doc.title && doc.title.match(name)) {
+        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        count++;
+      } else if (doc.mainTitle && doc.mainTitle.match(name)) {
+        word = word + `${count != 0 ? "," : ""} ${doc.data.title}`;
+        count++;
+      }
+    });
+    setText(word);
+  }, [item + title + NewDataList]);
+  //console.log(`index ${index+1} ${height}`)
+
+  if (height < 15) {
+    return null;
+  }
+
+  return (
+    <Text
+      numberOfLines={1}
+      style={{
+        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+        fontFamily: "Poppins-Medium",
+        color: textColor,
+        lineHeight: 25,
+        maxHeight: 160,
+      }}
+    >
+      {text}
+    </Text>
+  );
+};
+
+export const ServiceCarts = () => {
+  return <TouchableOpacity></TouchableOpacity>;
+};
+
+export const TabBar = ({
+  state,
+  descriptors,
+  navigation,
+  position,
+  onClick,
+  onPress,
+  data,
+  onChange,
+}) => {
+  const ref = React.useRef();
+  const packages = data;
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    //console.log(packages[state.index-1])
+    //console.log(state.index);
+    if (onChange) {
+      onChange(packages[state.index]);
+    }
+    if (ref) {
+      ref.current.scrollTo({ x: state.index * 80, animated: true });
+    }
+  }, [state.index]);
+
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        borderBottomColor: "#E9E6E6",
+        borderBottomWidth: 0.5,
+      }}
+    >
+      <ScrollView
+        ref={ref}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        {packages.map((doc, index) => {
+          const isFocused = state.index === index;
+
+          const [Visible, setVisible] = React.useState(false);
+          const [Title, setTitle] = React.useState();
+          const [id, setId] = React.useState();
+          React.useEffect(() => {
+            //console.log(packages[state.index-1])
+            if (packages.length > index) {
+              setTitle(`${packages[index].name} ${packages[index].price}৳`);
+              setId(packages[index].id);
+            }
+          }, [index]);
+          return (
+            <View key={index}>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate(doc.id);
+                }}
+                style={{
+                  borderBottomColor: "#707070",
+                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginLeft: 5,
+                  height: 40,
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  {Title}
+
+                  {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
+                </Text>
+
+                {/* <Menu
+                  contentStyle={{
+                    backgroundColor: "white",
+                  }}
+                  visible={Visible}
+                  onDismiss={() => setVisible(!Visible)}
+                  anchor={
+                    <Entypo
+                      onPress={() => {
+                        setVisible(true);
+                      }}
+                      style={{
+                        marginLeft: 10,
+                      }}
+                      name="dots-three-vertical"
+                      size={18}
+                      color="black"
+                    />
+                  }
+                >
+                  <Menu.Item
+                    onPress={() => {
+                      onClick(packages[index]);
+                      setVisible(false);
+                    }}
+                    title="Edit"
+                  />
+                  <Menu.Item
+                    onPress={() => {
+                      onPress(id);
+                      setVisible(false);
+                    }}
+                    title="Delete"
+                  />
+                </Menu> */}
+              </Pressable>
+              {isFocused && (
+                <View
+                  style={{
+                    height: 2,
+                    backgroundColor: "#707070",
+                    width: "80%",
+                    alignSelf: "center",
+                  }}
+                />
+              )}
+            </View>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+};
+export const TabScreen = ({ navigation, route }) => {
+  const data = route.params.data;
+
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      {data.features.map((doc, i) => (
+        <View
+          style={{
+            flexDirection: "row",
+            marginHorizontal: 20,
+            justifyContent: "space-between",
+            marginVertical: 5,
+            borderBottomColor: "#F1F1F1",
+            borderBottomWidth: data.features.length - 1 == i ? 0 : 1,
+          }}
+          key={i}
+        >
+          {doc.isAvailable ? (
+            <SvgXml xml={right} height="30" width={"30"} />
+          ) : (
+            <Entypo
+              style={{
+                marginBottom: 8,
+              }}
+              name="cross"
+              size={20}
+              color="red"
+            />
+          )}
+          <Text
+            style={{
+              fontSize: 14,
+              color: "#666666",
+            }}
+          >
+            {doc.title}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+const right = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30.605" height="27.993" viewBox="0 0 30.605 27.993">
+<defs>
+  <filter id="Path_20808" x="0" y="0" width="30.605" height="27.993" filterUnits="userSpaceOnUse">
+    <feOffset dy="3" input="SourceAlpha"/>
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feFlood flood-opacity="0.059"/>
+    <feComposite operator="in" in2="blur"/>
+    <feComposite in="SourceGraphic"/>
+  </filter>
+</defs>
+<g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_20808)">
+  <path id="Path_20808-2" data-name="Path 20808" d="M-1914.146,1248.438a2.381,2.381,0,0,1,1.1-.082,3.952,3.952,0,0,1,3.039,1.914l.306.491a13.771,13.771,0,0,1,8.1-6.767l.053.046c-.041.048-.078.1-.122.144-.976.977-1.964,1.943-2.926,2.931a22.819,22.819,0,0,0-2.99,3.7c-.429.681-.823,1.382-1.237,2.071-.17.283-.351.559-.53.837a1.017,1.017,0,0,1-.122.149c-.156.163-.245.161-.361-.031q-.482-.794-.945-1.6a13.755,13.755,0,0,0-1.538-2.3,7.365,7.365,0,0,0-1.763-1.467Z" transform="translate(1923.15 -1237.99)" fill="#0d9e21"/>
 </g>
 </svg>
 `;
