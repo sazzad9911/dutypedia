@@ -82,6 +82,8 @@ import BottomBar from "../components/BottomBar";
 import NewBottomBar from "../components/NewBottomBar";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
+import ServiceSettings from "./Vendor/ServiceSettings";
+import ActivityLoader from "../components/ActivityLoader";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -177,9 +179,7 @@ const VendorProfile = (props) => {
     new Animation.Value(aboutHeight)
   );
   const { handleScroll, showButton } = useHandleScroll();
-  const [Specialty, setSpecialty] = React.useState(
-    "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
-  );
+  const [Specialty, setSpecialty] = React.useState();
   const params = props.route.params;
   const data = useSelector((state) => state.vendor);
   const [newNavigation, setNewNavigation] = React.useState(1100);
@@ -189,6 +189,10 @@ const VendorProfile = (props) => {
   const [offset, setOffset] = React.useState();
   const [statusBarHeight, setStatusBarHeight] = React.useState(0);
   const isFocused = useIsFocused();
+  const [ScreenName, setScreenName] = React.useState(false);
+  const changeScreenName = React.useCallback((val) => {
+    setScreenName(val);
+  });
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -404,38 +408,7 @@ const VendorProfile = (props) => {
         });
     }
   }, [data + newUser + vendor + Data]);
-  React.useEffect(() => {
-    if (newUser && data) {
-      //setLoader(true);
-      getRelatedServices(newUser.token, data.service.id, data.service.dashboard)
-        .then((response) => {
-          if (response.data) {
-            setLoader(false);
-            setRelatedServices(response.data.gigs);
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response);
-          setLoader(false);
-        });
-      setLoader(true);
-      getUnRelatedServices(
-        newUser.token,
-        data.service.id,
-        data.service.dashboard
-      )
-        .then((response) => {
-          if (response.data) {
-            setLoader(false);
-            setUnRelatedServices(response.data.gigs);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response);
-        });
-    }
-  }, [data + vendor + Data]);
+  
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -538,13 +511,12 @@ const VendorProfile = (props) => {
     !Data ||
     !Array.isArray(FixedService) ||
     !Array.isArray(PackageService) ||
-    !RelatedServices ||
-    !UnRelatedServices ||
-    !NewDataList
+    !NewDataList ||
+    !Specialty
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader/>
       </View>
     );
   }
@@ -670,48 +642,7 @@ const VendorProfile = (props) => {
             zIndex: 100,
           }}
         >
-          <Menu
-            contentStyle={{
-              backgroundColor: primaryColor,
-            }}
-            visible={Visible}
-            onDismiss={() => {
-              setVisible(!Visible);
-            }}
-            anchor={
-              <SvgXml
-                onPress={() => {
-                  setVisible(!Visible);
-                  console.log("sadfa");
-                }}
-                style={{
-                  shadowOffset: {
-                    width: 0,
-                    height: 3,
-                  },
-                  shadowColor: "#DDDDDD",
-                  shadowRadius: Platform.OS == "ios" ? 4 : 20,
-                  elevation: 0,
-                  shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-                  marginLeft: 0,
-                }}
-                xml={threeDot}
-                height={Platform.OS == "ios" ? "50" : "45"}
-                width={Platform.OS == "ios" ? "50" : "45"}
-              />
-            }
-          >
-            <Menu.Item
-              onPress={() => {
-                navigation.navigate("Support_1");
-                setVisible(!Visible);
-              }}
-              title="Report"
-            />
-            <Menu.Item onPress={() => {}} title="Copy URL" />
-          </Menu>
-
-          <SvgXml
+          {/* <SvgXml
             style={{
               shadowOffset: {
                 width: 0,
@@ -740,7 +671,7 @@ const VendorProfile = (props) => {
             xml={shareIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
+          /> */}
 
           <SvgXml
             onPress={() => {
@@ -1162,7 +1093,7 @@ const VendorProfile = (props) => {
               tabBarItemStyle: {
                 margin: 0,
                 padding: 0,
-                width: 120,
+                width: 150,
                 borderTopWidth: 0,
                 borderTopColor: "#F0F0F0",
               },
@@ -1207,6 +1138,7 @@ const VendorProfile = (props) => {
                 UnRelatedServices: UnRelatedServices,
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
               }}
               component={BargainingScreen}
             />
@@ -1243,6 +1175,7 @@ const VendorProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
               }}
               component={FixedScreen}
             />
@@ -1279,13 +1212,64 @@ const VendorProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
               }}
               component={PackageScreen}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: focused ? "#4ADE80" : "black",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 18 : 17,
+                        marginRight: 10,
+                      }}
+                    >
+                      Settings
+                    </Text>
+                    <SvgXml
+                      xml={focused ? settingsActiveIcon : settingsIcon}
+                      height="15"
+                      width="15"
+                    />
+                  </View>
+                ),
+              }}
+              name={"Vendor Settings"}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickPackage,
+                PackageService: PackageService,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
+              }}
+              component={ServiceSettings}
             />
           </Tab.Navigator>
         </View>
       </ScrollView>
-      {showButton && (
+      {showButton && ScreenName == "ONETIME" && (
         <Animated.View
           entering={FadeIn}
           style={{
@@ -1302,14 +1286,117 @@ const VendorProfile = (props) => {
             bottom: 20,
             backgroundColor: "#4ADE80",
             borderRadius: 25,
+            width: 50,
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Pressable
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+              if (vendor.service.gigs[0].services.category) {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "ONETIME",
+                });
+              } else {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "ONETIME",
+                });
+              }
             }}
           >
-            <SvgXml xml={messageIcon} height="50" width={"50"} />
+            <AntDesign name="plus" size={25} color="white" />
+          </Pressable>
+        </Animated.View>
+      )}
+      {showButton && ScreenName == "PACKAGE" && (
+        <Animated.View
+          entering={FadeIn}
+          style={{
+            shadowOffset: {
+              width: 1,
+              height: 1,
+            },
+            shadowColor: "#707070",
+            shadowRadius: 3,
+            elevation: 0,
+            shadowOpacity: 0.3,
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+            backgroundColor: "#4ADE80",
+            borderRadius: 25,
+            width: 50,
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              dispatch({ type: "SET_PACKAGES", playload: [] });
+              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+              if (vendor.service.gigs[0].services.category) {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "PACKAGE",
+                });
+              } else {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "PACKAGE",
+                });
+              }
+            }}
+          >
+            <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </Animated.View>
       )}
@@ -1516,6 +1603,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
+  const changeScreenName = params.changeScreenName;
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1581,6 +1669,7 @@ const BargainingScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (navHeight && isFocused) {
       //console.log(textHeight)
+      changeScreenName("BARGAINING");
       setTimeout(() => {
         setNewNavigation(navHeight + textHeight);
       }, 0);
@@ -1683,11 +1772,13 @@ const BargainingScreen = ({ navigation, route }) => {
           paddingHorizontal: 20,
         }}
       >
-        <View style={{
-          flexDirection:"row",
-          justifyContent:"space-between",
-          alignItems:"center"
-        }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Text
             style={{
               fontFamily: "Poppins-SemiBold",
@@ -2044,11 +2135,13 @@ const FixedScreen = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
+  const changeScreenName = params.changeScreenName;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
       setNewNavigation(layoutHeight + 50);
+      changeScreenName("ONETIME");
       //setNewNavigation(layoutHeight + 70);
       setTimeout(() => {
         //setNewNavigation(layoutHeight + 140);
@@ -2227,10 +2320,12 @@ const PackageScreen = ({ navigation, route }) => {
   const setNewNavigation = params.setNewNavigation;
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
+  const changeScreenName = params.changeScreenName;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
+      changeScreenName("PACKAGE");
       setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);
@@ -2464,7 +2559,9 @@ const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
     </View>
   );
 };
-
+const SettingsScreen = () => {
+  return <View></View>;
+};
 const refreshIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14.646" height="12.902" viewBox="0 0 14.646 12.902">
 <g id="_000000ff" data-name="#000000ff" transform="translate(-6.437 -13.36)">
   <path id="Path_20932" data-name="Path 20932" d="M7.3,16.648A6.652,6.652,0,0,1,12,13.435a6.386,6.386,0,0,1,4.863,1.255A6.488,6.488,0,0,1,19.4,19.44a6.819,6.819,0,0,1-.251,2.145,5.047,5.047,0,0,1,1.385-.372.691.691,0,0,1,.219,1.262c-.91.363-1.858.638-2.789.947a.672.672,0,0,1-.862-.43c-.329-.936-.676-1.868-.974-2.814a.688.688,0,0,1,1.185-.581,11.864,11.864,0,0,1,.537,1.431,5.132,5.132,0,0,0-3.427-6.068,5.005,5.005,0,0,0-3.255.068,5.167,5.167,0,0,0-3.194,3.459,5.033,5.033,0,0,0,.641,4.083,5.243,5.243,0,0,0,4.394,2.364c.7.033.752,1.186.08,1.318a6.477,6.477,0,0,1-6.378-4.575A6.315,6.315,0,0,1,7.3,16.648Z" transform="translate(0)" fill="#4ade80"/>
@@ -2860,5 +2957,13 @@ const right = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w
 <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_20808)">
   <path id="Path_20808-2" data-name="Path 20808" d="M-1914.146,1248.438a2.381,2.381,0,0,1,1.1-.082,3.952,3.952,0,0,1,3.039,1.914l.306.491a13.771,13.771,0,0,1,8.1-6.767l.053.046c-.041.048-.078.1-.122.144-.976.977-1.964,1.943-2.926,2.931a22.819,22.819,0,0,0-2.99,3.7c-.429.681-.823,1.382-1.237,2.071-.17.283-.351.559-.53.837a1.017,1.017,0,0,1-.122.149c-.156.163-.245.161-.361-.031q-.482-.794-.945-1.6a13.755,13.755,0,0,0-1.538-2.3,7.365,7.365,0,0,0-1.763-1.467Z" transform="translate(1923.15 -1237.99)" fill="#0d9e21"/>
 </g>
+</svg>
+`;
+const settingsIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11.861" height="11.864" viewBox="0 0 11.861 11.864">
+<path id="ios-settings" d="M15.382,10.431a1.526,1.526,0,0,1,.979-1.424,6.065,6.065,0,0,0-.732-1.764,1.545,1.545,0,0,1-.621.133,1.523,1.523,0,0,1-1.393-2.143A6.024,6.024,0,0,0,11.855,4.5a1.525,1.525,0,0,1-2.848,0,6.065,6.065,0,0,0-1.764.732A1.523,1.523,0,0,1,5.85,7.375a1.5,1.5,0,0,1-.621-.133A6.184,6.184,0,0,0,4.5,9.01a1.526,1.526,0,0,1,0,2.848,6.065,6.065,0,0,0,.732,1.764,1.523,1.523,0,0,1,2.011,2.011,6.078,6.078,0,0,0,1.764.732,1.522,1.522,0,0,1,2.841,0,6.065,6.065,0,0,0,1.764-.732,1.525,1.525,0,0,1,2.011-2.011,6.078,6.078,0,0,0,.732-1.764,1.533,1.533,0,0,1-.976-1.427ZM10.458,12.9a2.471,2.471,0,1,1,2.471-2.471A2.47,2.47,0,0,1,10.458,12.9Z" transform="translate(-4.5 -4.5)" fill="#666"/>
+</svg>
+`;
+const settingsActiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11.861" height="11.864" viewBox="0 0 11.861 11.864">
+<path id="ios-settings" d="M15.382,10.431a1.526,1.526,0,0,1,.979-1.424,6.065,6.065,0,0,0-.732-1.764,1.545,1.545,0,0,1-.621.133,1.523,1.523,0,0,1-1.393-2.143A6.024,6.024,0,0,0,11.855,4.5a1.525,1.525,0,0,1-2.848,0,6.065,6.065,0,0,0-1.764.732A1.523,1.523,0,0,1,5.85,7.375a1.5,1.5,0,0,1-.621-.133A6.184,6.184,0,0,0,4.5,9.01a1.526,1.526,0,0,1,0,2.848,6.065,6.065,0,0,0,.732,1.764,1.523,1.523,0,0,1,2.011,2.011,6.078,6.078,0,0,0,1.764.732,1.522,1.522,0,0,1,2.841,0,6.065,6.065,0,0,0,1.764-.732,1.525,1.525,0,0,1,2.011-2.011,6.078,6.078,0,0,0,.732-1.764,1.533,1.533,0,0,1-.976-1.427ZM10.458,12.9a2.471,2.471,0,1,1,2.471-2.471A2.47,2.47,0,0,1,10.458,12.9Z" transform="translate(-4.5 -4.5)" fill="#4ade80"/>
 </svg>
 `;

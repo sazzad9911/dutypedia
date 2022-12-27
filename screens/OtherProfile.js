@@ -2092,8 +2092,12 @@ const FixedScreen = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
+  const data=params.Data;
+  const [Active,setActive]=React.useState(false)
+
 
   React.useEffect(() => {
+    
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
       setNewNavigation(layoutHeight + 50);
@@ -2103,6 +2107,17 @@ const FixedScreen = ({ navigation, route }) => {
       }, 50);
     }
   }, [isFocused + layoutHeight]);
+  React.useEffect(()=>{
+    if(data){
+      data.service.activeServiceTypes.map((doc,i)=>{
+        if(doc==="ONETIME"){
+          setActive(true)
+        }else{
+          //setActive(false)
+        }
+      })
+    }
+  },[data+isFocused])
 
   //console.log(FixedService)
   return (
@@ -2133,13 +2148,13 @@ const FixedScreen = ({ navigation, route }) => {
           marginVertical: 20,
         }}
       >
-        {FixedService.map(
+        {Active&&FixedService.map(
           (doc, i) =>
             i < content && (
               <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
             )
         )}
-        {FixedService.length > content && (
+        {Active&&FixedService.length > content && (
           <View
             style={{
               justifyContent: "center",
@@ -2160,7 +2175,7 @@ const FixedScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {FixedService.length == 0 && (
+        {FixedService.length == 0||!Active && (
           <Animated.View
             style={{
               flexDirection: "row",
@@ -2277,6 +2292,8 @@ const PackageScreen = ({ navigation, route }) => {
   const setNewNavigation = params.setNewNavigation;
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
+  const data=params.Data;
+  const [Active,setActive]=React.useState(false)
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2285,6 +2302,17 @@ const PackageScreen = ({ navigation, route }) => {
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
+  React.useEffect(()=>{
+    if(data){
+      data.service.activeServiceTypes.map((doc,i)=>{
+        if(doc==="PACKAGE"){
+          setActive(true)
+        }else{
+          //setActive(false)
+        }
+      })
+    }
+  },[data+isFocused])
   return (
     <View
       scrollEventThrottle={16}
@@ -2315,7 +2343,7 @@ const PackageScreen = ({ navigation, route }) => {
           marginVertical: 20,
         }}
       >
-        {PackageService.map(
+        {Active&&PackageService.map(
           (doc, i) =>
             i < content && <ServiceCart onPress={()=>{
               if(onPress){
@@ -2323,7 +2351,7 @@ const PackageScreen = ({ navigation, route }) => {
               }
             }} key={i} data={doc} />
         )}
-        {PackageService.length > content && (
+        {Active&&PackageService.length > content && (
           <View
             style={{
               justifyContent: "center",
@@ -2344,7 +2372,7 @@ const PackageScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {PackageService.length == 0 && (
+        {PackageService.length == 0||!Active && (
           <Animated.View
             style={{
               flexDirection: "row",

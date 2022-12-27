@@ -19,6 +19,7 @@ import IconButton from "../../components/IconButton";
 import { updateData } from "../../Class/update";
 import { vendorLogin } from "../../Class/auth";
 import { StatusBar } from "expo-status-bar";
+import ActivityLoader from "../../components/ActivityLoader";
 
 const CompanyCalendar = (props) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -29,6 +30,7 @@ const CompanyCalendar = (props) => {
   const newVendor = useSelector((state) => state.vendor);
   const [Visible, setVisible] = React.useState(false);
   const [Edit, setEdit] = React.useState(false);
+  const [Loader,setLoader]=React.useState(false)
 
   React.useEffect(() => {
     if (vendor && vendor.service && vendor.service.workingTime.length == 0) {
@@ -45,6 +47,8 @@ const CompanyCalendar = (props) => {
     "Thursday",
     "Friday",
   ];
+
+  
   return (
     <View style={{ flex: 1 }}>
       <StatusBar backgroundColor={"white"} />
@@ -230,6 +234,13 @@ const ViewBox = ({ setEdit, times,navigation }) => {
       Alert.alert("Opp!",err.response.data)
     })
   };
+  if(Loader){
+    return (
+      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <Animated.View
       style={{

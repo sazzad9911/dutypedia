@@ -318,6 +318,13 @@ const Profile = ({ navigation }) => {
         }}
         component={OnlineUserProfile}
       />
+      <Stack.Screen
+        name="Company Calender"
+        options={{
+          headerShown: false,
+        }}
+        component={CompanyCalendar}
+      />
     </Stack.Navigator>
   );
 };

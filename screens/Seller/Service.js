@@ -451,7 +451,7 @@ const Service = ({ navigation, route }) => {
               checkValidity();
             }}
             style={{
-              marginTop: 10,
+              marginTop: 30,
               backgroundColor: backgroundColor,
               color: "white",
               borderWidth: 0,
