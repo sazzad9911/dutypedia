@@ -95,7 +95,7 @@ const ChatHead = (props) => {
           size={24}
           color={textColor}
         />
-        <Avatar style={styles.image} source={{uri:data.service.profilePhoto}}/>
+        <Avatar style={styles.image} source={{uri:data?data.service.profilePhoto:null}}/>
         {/* <Image
           style={styles.image}
           source={{

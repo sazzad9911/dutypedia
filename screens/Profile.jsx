@@ -65,6 +65,8 @@ import OfflineProfile from "./OfflineProfile";
 import Note, { AddNote, ViewNote } from "./Vendor/Note";
 import AddPackage, { AddScreen } from "./services/AddPackage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import VendorFixedService from "./Vendor/VendorFixedService";
+import VendorPackageService from "./Vendor/VendorPackageService";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -101,9 +103,23 @@ const Profile = ({ navigation }) => {
         component={VendorProfile}
       />
       <Stack.Screen
+        name="VendorFixedService"
+        options={{
+          headerShown: false, 
+        }}
+        component={VendorFixedService}
+      />
+      <Stack.Screen
+        name="VendorPackageService"
+        options={{
+          headerShown: false, 
+        }}
+        component={VendorPackageService}
+      />
+      <Stack.Screen
         name="ManageOrder"
         options={{
-          headerShown: false,
+          headerShown: false, 
         }}
         component={ManageOrder}
       />

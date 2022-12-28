@@ -74,7 +74,7 @@ const ChatCart = (props) => {
   
   return (
     <TouchableOpacity
-      onPress={() => navigation.push("ChatScreen")}
+      onPress={() => navigation.navigate("ChatScreen")}
       style={styles.outBox}
     >
       <Image

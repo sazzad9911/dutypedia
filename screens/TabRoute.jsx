@@ -365,7 +365,7 @@ const TabRoute = () => {
         <Tab.Screen
           options={{
             lazy: false,
-            header: (props) => <ChatHeader {...props} />,
+            headerShown:false,
           }}
           name="Message"
           component={Message}

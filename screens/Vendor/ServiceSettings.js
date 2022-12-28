@@ -10,11 +10,7 @@ const {width,height}=Dimensions.get("window")
 const ServiceSettings = ({ navigation, route }) => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
   const initialState = [
-    {
-      title: "Bargaining",
-      value: true,
-      type: "STARTING",
-    },
+    
     {
       title: "Fixed",
       value: false,
@@ -68,9 +64,9 @@ const ServiceSettings = ({ navigation, route }) => {
     if (layoutHeight && isFocused) {
       changeScreenName("Settings");
       if(width<350&&Platform.OS=="android"){
-        setNewNavigation(450);
-      }else{
         setNewNavigation(400);
+      }else{
+        setNewNavigation(350);
       }
     }
   }, [layoutHeight + isFocused]);
