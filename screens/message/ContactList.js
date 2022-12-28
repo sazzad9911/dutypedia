@@ -3,7 +3,9 @@ import { View, Animated } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import ChatMemberCart from "../../Cart/ChatMemberCart";
+import { getConversation } from "../../Class/message";
 import { getOnlineUsers } from "../../Class/socket";
+import ActivityLoader from "../../components/ActivityLoader";
 import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
 
@@ -16,12 +18,32 @@ export default function ContactList(props) {
   });
   const [Members,setMembers]=React.useState()
   const user=useSelector(state=>state.user)
+  const [Loader,setLoader]=React.useState(false)
 
   React.useEffect(()=>{
     if(user){
-     
+      setLoader(true)
+     getConversation(user.token).then(res=>{
+      setLoader(false)
+      setMembers(res.data.conversations)
+     }).catch(err=>{
+      setLoader(false)
+      console.warn(err.response.data.msg)
+     })
     }
-  },[])
+  },[user])
+
+  if(Loader){
+    return (
+      <View style={{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+      }}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView style={{flex:1}}
       scrollEventThrottle={16}
@@ -52,9 +74,10 @@ export default function ContactList(props) {
           paddingHorizontal: 20,
         }}
       >
+        
         <ChatMemberCart active={true} name="Easin Arafat" username={"@easinarafat"} />
-        <ChatMemberCart name="Easin Arafat" username={"@easinarafat"}/>
-        <ChatMemberCart name="Easin Arafat" username={"@easinarafat"}/>
+        <ChatMemberCart  active={true} name="Easin Arafat" username={"@easinarafat"} />
+        <ChatMemberCart  active={true} name="Easin Arafat" username={"@easinarafat"} />
       </View>
     </ScrollView>
   );

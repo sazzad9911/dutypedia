@@ -19,8 +19,12 @@ import { Switch } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
 
-const ChatHead = (props) => {
-  const navigation = props.navigation;
+const ChatHead = ({
+  navigation,
+  name,
+  image
+}) => {
+  
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -75,7 +79,7 @@ const ChatHead = (props) => {
       marginVertical: 5,
     },
   });
-  const data = props.data;
+  
   //console.log(data)
   return (
     <View
@@ -95,7 +99,7 @@ const ChatHead = (props) => {
           size={24}
           color={textColor}
         />
-        <Avatar style={styles.image} source={{uri:data?data.service.profilePhoto:null}}/>
+        <Avatar style={styles.image} source={{uri:image?image:null}}/>
         {/* <Image
           style={styles.image}
           source={{
@@ -105,10 +109,8 @@ const ChatHead = (props) => {
           }}
         /> */}
         <Text style={styles.text}>
-          {data
-            ? `${data.service.providerInfo.title} ${
-                data.service.providerInfo.name
-              }`
+          {name
+            ? `${name}`
             : "Sefa Khandakar"}
         </Text>
       </View>

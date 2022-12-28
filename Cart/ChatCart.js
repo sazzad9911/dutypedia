@@ -10,6 +10,8 @@ import {
 import { Color } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 import {useSelector,useDispatch} from 'react-redux';
+import Avatar from "../components/Avatar";
+import { serverTimeToLocal } from "../action";
 
 const ChatCart = (props) => {
   const [Active, setActive] = React.useState(props.active);
@@ -19,6 +21,11 @@ const ChatCart = (props) => {
   const primaryColor =colors.getPrimaryColor();
   const secondaryColor=colors.getSecondaryColor();
   const textColor = colors.getTextColor();
+  const data=props.data;
+  const user=useSelector(state=>state.user);
+  const [UserInfo,setUserInfo]=React.useState()
+  const [LastMessage,setLastMessage]=React.useState()
+
   const styles = StyleSheet.create({
     outBox: {
       marginHorizontal: 20,
@@ -71,18 +78,28 @@ const ChatCart = (props) => {
       borderColor: "white",
     },
   });
+  React.useEffect(()=>{
+    if(data){
+      data.users.map((doc)=>{
+        if(doc.user.id!=user.user.id){
+          setUserInfo(doc.user)
+        }
+      })
+      setLastMessage(data.messages[data.messages.length-1])
+    }
+  },[data])
+  if(!UserInfo){
+    return null
+  }
   
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("ChatScreen")}
+      onPress={() => navigation.navigate("ChatScreen",{data:data,username:UserInfo.username})}
       style={styles.outBox}
     >
-      <Image
-        style={styles.image}
-        source={{
-          uri: "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
-        }}
-      />
+      <Avatar style={styles.image} source={{
+        uri:UserInfo.profilePhoto?UserInfo.profilePhoto:null
+      }}/>
       <View style={styles.box}>
         <View
           style={{
@@ -90,12 +107,11 @@ const ChatCart = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={styles.head}>Sefa Khandakar</Text>
-          <Text style={styles.date}>Jul 21 2:30 Pm</Text>
+        <Text style={styles.head}>{UserInfo?`${UserInfo.firstName} ${UserInfo.lastName}`:"Sefa Khandakar"}</Text>
+          <Text style={styles.date}>{LastMessage?`${serverTimeToLocal(LastMessage.updatedAt)}`:"Jul 21 2:30 Pm"}</Text>
         </View>
         <Text style={styles.text}>
-          While you’re developing your project, of a you’re writing code on your
-          computer
+          {LastMessage?LastMessage.text:null}
         </Text>
       </View>
       {props.active ? <View style={styles.active} /> : <></>}

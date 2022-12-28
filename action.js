@@ -154,3 +154,26 @@ export const changeTime=(time)=>{
   var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
 }
+export const serverTimeToLocal=(date)=>{
+  let months=[
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ]
+  let time=timeConverter(date)
+  date=new Date(date)
+  let day=date.getDate()<10?`0${date.getDate()}`:`${date.getDate()}`
+  let year=date.getFullYear();
+  let month=date.getMonth()
+  return `${months[month]} ${day} ${time}`
+
+}

@@ -1,6 +1,9 @@
 import React from "react";
-import { View,Animated,ScrollView } from "react-native";
+import { View, Animated, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
 import ChatCart from "../../Cart/ChatCart";
+import { getConversation } from "../../Class/message";
+import ActivityLoader from "../../components/ActivityLoader";
 import SearchBar from "../../components/SearchBar";
 
 export default function ChatList(props) {
@@ -10,6 +13,35 @@ export default function ChatList(props) {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
+  const [Conversations,setConversations]=React.useState()
+  const user=useSelector(state=>state.user)
+  const [Loader,setLoader]=React.useState(false)
+
+  React.useEffect(()=>{
+    if(user){
+      setLoader(true)
+     getConversation(user.token).then(res=>{
+      setLoader(false)
+      setConversations(res.data.conversations)
+      //console.log(res.data.conversations)
+     }).catch(err=>{
+      setLoader(false)
+      console.warn(err.response.data.msg)
+     })
+    }
+  },[user])
+
+  if(Loader){
+    return (
+      <View style={{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+      }}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -36,10 +68,7 @@ export default function ChatList(props) {
         <SearchBar />
       </Animated.View>
 
-      <ChatCart {...props}/>
-      <ChatCart {...props}/>
-      <ChatCart {...props}/>
-      <ChatCart {...props}/>
+      {Conversations && Conversations.map((doc, i) => <ChatCart data={doc} key={i} {...props} />)}
     </ScrollView>
   );
 }

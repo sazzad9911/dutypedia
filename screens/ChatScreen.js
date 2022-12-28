@@ -17,41 +17,14 @@ import { Ionicons } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
-import {Color} from '../assets/colors'
-import {useDispatch,useSelector} from 'react-redux'
+import { Color } from "../assets/colors";
+import { useDispatch, useSelector } from "react-redux";
 import ChatHead from "../components/ChatHead";
-
+import ActivityLoader from "../components/ActivityLoader";
+import { createConversation, sendMessage } from "../Class/message";
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
-  const [Messages, setMessages] = React.useState([
-    {
-      message:
-        "In publishing and graphic design, Lorem ipsum is a placeholder text",
-      send: true,
-      id: 1,
-    },
-    {
-      message: `In publishing and graphic design, Lorem ipsum is a placeholder text
-    commonly used to demonstrate the visual form of a document or a
-    typeface without relying on meaningful content. Lorem ipsum may be
-    used as a placeholder before final copy is available.`,
-      send: false,
-      id: 2,
-    },
-    {
-      message:
-        "In publishing and graphic design, Lorem ipsum is a placeholder text",
-      send: true,
-      id: 3,
-    },
-    {
-      message:
-        "In publishing and graphic design, Lorem ipsum is a placeholder text",
-      send: false,
-      id: 4,
-    },
-  ]);
   const onPressTouch = () => {
     // scrollRef.current?.scrollTo({
     //   y: height-60 ,
@@ -59,25 +32,16 @@ const ChatScreen = (props) => {
     // });
     scrollRef.current?.scrollToEnd({ animated: true });
   };
-  React.useEffect(() => {
-    onPressTouch();
-  }, [Messages.length]);
 
-  const sendMessage = async (message) => {
-    await setMessages((val) => [
-      ...val,
-      { message: message, send: true, id: val.length + 1 },
-    ]);
-  };
-  const isDark=useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
-  const params=props.route.params;
-  const data=params&&params.data?params.data:null;
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const params = props.route.params;
+  const data = params && params.data ? params.data : null;
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",
@@ -106,26 +70,85 @@ const ChatScreen = (props) => {
       fontSize: 14,
       borderRadius: 20,
       paddingHorizontal: 10,
-      fontFamily: 'Poppins-Light'
+      fontFamily: "Poppins-Light",
     },
   });
+  const [UserInfo, setUserInfo] = React.useState();
+  const user = useSelector((state) => state.user);
+  const [Messages, setMessages] = React.useState();
+  const [Loader, setLoader] = React.useState(false);
+  const [Id, setId] = React.useState();
+  const username=params && params.username ? params.username : null;
+  React.useEffect(() => {
+    if (data) {
+      data.users.map((doc) => {
+        if (doc.user.id != user.user.id) {
+          setUserInfo(doc.user);
+        }
+      });
+      console.log(username)
+      setId(data.id);
+      setMessages(data.messages);
+      //setLastMessage(data.messages[data.messages.length-1])
+    }
+  }, [data]);
+  React.useEffect(()=>{
+    if(username){
+      createConversation(user.token,username).then(res=>{
+        console.log(res)
+      }).catch(err=>{
+        console.error(err.response)
+      })
+    }
+  },[username])
+  React.useEffect(() => {
+    onPressTouch();
+  }, [Messages ? Messages.length : null]);
+
+  const send = async (message, image) => {
+   const res=await sendMessage(user.token, message, image, Id);
+   if(res.data){
+    setMessages((val) => [...val, res.data.message]);
+   }
+  };
+
+  if (!Messages) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+    >
+      <ChatHead
+        name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
+        image={UserInfo ? UserInfo.profilePhoto : null}
+        {...props}
+      />
       <View style={{ flex: 1 }}>
-      <ChatHead data={data} {...props} />
         <FlatList
           ref={scrollRef}
           data={Messages}
           renderItem={({ item }) => {
             return (
-              <ChatBox key={item.id} message={item.message} send={item.send} />
+              <ChatBox data={item} key={item} message={null} send={null} />
             );
           }}
           keyExtractor={(item) => item.id}
         />
 
-        <BottomBar onSend={sendMessage} />
+        <BottomBar onSend={send} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -135,13 +158,13 @@ export default ChatScreen;
 
 const BottomBar = (props) => {
   const [Message, setMessage] = React.useState();
-  const isDark=useSelector((state) => state.isDark);
-  const colors = new Color(isDark)
-  const primaryColor =colors.getPrimaryColor();
-  const textColor=colors.getTextColor();
-  const assentColor=colors.getAssentColor();
-  const backgroundColor=colors.getBackgroundColor();
-  const secondaryColor=colors.getSecondaryColor();
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const textColor = colors.getTextColor();
+  const assentColor = colors.getAssentColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const secondaryColor = colors.getSecondaryColor();
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",
@@ -170,9 +193,10 @@ const BottomBar = (props) => {
       fontSize: 14,
       borderRadius: 20,
       paddingHorizontal: 10,
-      fontFamily: 'Poppins-Light'
+      fontFamily: "Poppins-Light",
     },
   });
+
   return (
     <View style={styles.view}>
       <TouchableOpacity style={styles.icon}>
@@ -206,4 +230,3 @@ const BottomBar = (props) => {
     </View>
   );
 };
-
