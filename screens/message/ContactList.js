@@ -12,6 +12,10 @@ export default function ContactList(props) {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
+  const [Members,setMembers]=React.useState()
+  React.useEffect(()=>{
+
+  },[])
   return (
     <ScrollView style={{flex:1}}
       scrollEventThrottle={16}
