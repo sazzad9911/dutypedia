@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Animated } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 import ChatMemberCart from "../../Cart/ChatMemberCart";
+import { getOnlineUsers } from "../../Class/socket";
 import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
 
@@ -13,8 +15,12 @@ export default function ContactList(props) {
     outputRange: [0, -300],
   });
   const [Members,setMembers]=React.useState()
-  React.useEffect(()=>{
+  const user=useSelector(state=>state.user)
 
+  React.useEffect(()=>{
+    if(user){
+     
+    }
   },[])
   return (
     <ScrollView style={{flex:1}}
