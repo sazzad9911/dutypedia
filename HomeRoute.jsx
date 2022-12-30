@@ -48,6 +48,7 @@ import CreateAppointment from "./screens/Seller/Appointment/CreateAppointment";
 import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails";
 import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
+import ChatScreen from "./screens/ChatScreen";
 
 const Stack = createStackNavigator();
 
@@ -128,7 +129,7 @@ const HomeRoute = ({ navigation }) => {
       />
       <Stack.Screen
         options={{
-          headerShown:false
+          headerShown: false,
         }}
         name="OfferNow"
         component={OfferNow}
@@ -179,6 +180,7 @@ const HomeRoute = ({ navigation }) => {
         name="PackageService"
         component={PackageService}
       />
+      
     </Stack.Navigator>
   );
 };

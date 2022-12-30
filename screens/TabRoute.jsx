@@ -71,6 +71,7 @@ import {
   setVendorOrdersOffline,
   updateVendorOrder,
 } from "../Reducers/vendorOrders";
+import ChatScreen from "./ChatScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -394,6 +395,7 @@ const TabRoute = () => {
           name="Appointment"
           component={Appointment}
         />
+        
         {/* <Tab.Screen
           name="AllPackageList"
           options={{
@@ -477,6 +479,7 @@ const TabRoute = () => {
               name="OtherProfile"
               component={NewRoute}
             /> */}
+
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
     </View>

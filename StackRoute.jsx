@@ -190,13 +190,13 @@ export default function StackRoute() {
             name="LogIn"
             component={Login}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             options={{
               headerShown: false,
             }}
             name="ChatScreen"
             component={ChatScreen}
-          />
+          /> */}
 
           <Stack.Screen
             options={{

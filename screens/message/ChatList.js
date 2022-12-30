@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React from "react";
 import { View, Animated, ScrollView } from "react-native";
 import { useSelector } from "react-redux";
@@ -16,6 +17,7 @@ export default function ChatList(props) {
   const [Conversations,setConversations]=React.useState()
   const user=useSelector(state=>state.user)
   const [Loader,setLoader]=React.useState(false)
+  const isFocused=useIsFocused()
 
   React.useEffect(()=>{
     if(user){
@@ -29,7 +31,7 @@ export default function ChatList(props) {
       console.warn(err.response.data.msg)
      })
     }
-  },[user])
+  },[user+isFocused])
 
   if(Loader){
     return (

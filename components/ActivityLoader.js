@@ -14,7 +14,6 @@ const ActivityLoader = ({}) => {
       style={{
         borderRadius: 50,
         padding: 4,
-        backgroundColor: primaryColor,
         justifyContent:"center",
         alignItems:"center"
       }}

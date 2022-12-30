@@ -34,7 +34,11 @@ const ChatBox = (props) => {
   
   if (send) {
     return (
-      <View
+      <View onLayout={e=>{
+        if(props.onLayout){
+          props.onLayout(e)
+        }
+      }}
         style={{
           margin: 10,
         }}
@@ -103,7 +107,11 @@ const ChatBox = (props) => {
     );
   }
   return (
-    <View>
+    <View onLayout={e=>{
+      if(props.onLayout){
+        props.onLayout(e)
+      }
+    }}>
       <View
         style={{
           margin: 10,
@@ -136,7 +144,8 @@ const ChatBox = (props) => {
           {image&&(
             <Image style={{
               width:"100%",
-              height:width/2-80
+              height:width/2-80,
+              
             }} source={{uri:image}}/>
           )}
           <View
@@ -145,6 +154,7 @@ const ChatBox = (props) => {
               justifyContent: "flex-end",
               alignItems: "center",
               width: "100%",
+              
             }}
           >
             <AntDesign

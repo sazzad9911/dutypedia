@@ -10,7 +10,7 @@ import {
   FlatList,
   StatusBar,
   SafeAreaView,
-  Alert,
+  Alert, 
   Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -38,7 +38,6 @@ import ReviewCart from "./../../Cart/ReviewCart";
 import RelatedService from "./../../Cart/RelatedService";
 import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "../../screens/Seller/Pricing";
-import { SliderBox } from "react-native-image-slider-box";
 import { Badge } from "react-native-paper";
 import ProfileOption from "./../../components/ProfileOption";
 import { fileFromURL } from "./../../action";
@@ -48,6 +47,8 @@ import { StackActions } from "@react-navigation/native";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import { vendorLogin } from "../../Class/auth.js";
 import IconButton from "../../components/IconButton.js";
+import Carousel from "react-native-reanimated-carousel";
+
 
 const { width, height } = Dimensions.get("window");
 const Review = (props) => {
@@ -441,7 +442,28 @@ const Review = (props) => {
         />
 
         <View style={{ backgroundColor: primaryColor }}>
-          <SliderBox
+        <Carousel
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
+          loop={false}
+          width={width}
+          height={width + 30}
+          autoPlay={false}
+          data={Images}
+          scrollAnimationDuration={500}
+          onSnapToItem={(index) => {}}
+          renderItem={({ index }) => (
+            <Image
+              style={{
+                width: width,
+                height: width + 30,
+              }}
+              source={{ uri: Images[index] }}
+            />
+          )}
+        />
+          {/* <SliderBox
             images={Images}
             sliderBoxHeight={250}
             dotColor="#232F6D"
@@ -455,7 +477,7 @@ const Review = (props) => {
               margin: 0,
               backgroundColor: "rgba(128, 128, 128, 0.92)",
             }}
-          />
+          /> */}
           <Text
             style={{
               marginHorizontal: 20,

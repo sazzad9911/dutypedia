@@ -11,7 +11,6 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
-import Carousel from "react-native-snap-carousel";
 import { TabBar } from "./UserProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
 
