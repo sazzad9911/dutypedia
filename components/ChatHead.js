@@ -18,6 +18,7 @@ import OutsideView from "react-native-detect-press-outside";
 import { Switch } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ChatHead = ({
   navigation,
@@ -39,7 +40,7 @@ const ChatHead = ({
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingTop: 25,
+      paddingTop: 0,
     },
     image: {
       width: 40,
@@ -82,7 +83,7 @@ const ChatHead = ({
   
   //console.log(data)
   return (
-    <View
+    <SafeAreaView
       style={{
         minHeight: 50,
         paddingVertical: 5,
@@ -151,7 +152,7 @@ const ChatHead = ({
       >
         <MenuBar setVisible={setVisible} />
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

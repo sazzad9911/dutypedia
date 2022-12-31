@@ -140,7 +140,6 @@ const ChatScreen = (props) => {
     if(Messages){
       onPressTouch();
     }
-    
   }, [Messages + isFocused]);
 
   const send = async (message, image) => {
@@ -161,6 +160,7 @@ const ChatScreen = (props) => {
           });
         }
       } else {
+        console.log(result)
         Alert.alert("Opps!", "Faild to send picture");
       }
       onPressTouch();
