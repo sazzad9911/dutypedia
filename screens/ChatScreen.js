@@ -33,6 +33,8 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import CallingScreen from "./CallingScreen";
+import AudioCallScreen from "./AudioCallScreen";
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -146,6 +148,7 @@ const ChatScreen = (props) => {
     if (image) {
       let blobImages = [];
       blobImages.push(fileFromURL(image));
+      //console.log(blobImages)
       const result = await uploadFile(blobImages, user.token);
       if (result) {
         const res = await sendMessage(user.token, message, result[0], Id);
@@ -160,7 +163,7 @@ const ChatScreen = (props) => {
           });
         }
       } else {
-        console.log(result)
+        //console.log(result)
         Alert.alert("Opps!", "Faild to send picture");
       }
       onPressTouch();
@@ -194,7 +197,8 @@ const ChatScreen = (props) => {
       </View>
     );
   }
-
+  //return <CallingScreen audio={true}/>
+  //return <AudioCallScreen user={UserInfo}/>
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

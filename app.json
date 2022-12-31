@@ -10,6 +10,13 @@
       ],
       [
         "react-native-background-fetch"
+      ],
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "cameraPermission": "Allow Dutypedia to access your camera",
+          "microphonePermission": "Allow Dutypedia to access your microphone"
+        }
       ]
     ],
     "name": "dutypedia",
@@ -35,7 +42,9 @@
           "fetch",
           "processing"
         ]
-      }
+      },
+      "bitcode": false,
+      "bundleIdentifier": "com.sazzad991.dutypedia"
     },
     "android": {
       "adaptiveIcon": {
@@ -45,7 +54,14 @@
       "package": "com.sazzad991.dutypedia",
       "versionCode": 1,
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.BLUETOOTH",
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.WAKE_LOCK"
       ]
     },
     "web": {
