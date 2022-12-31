@@ -197,10 +197,10 @@ const ChatScreen = (props) => {
       </View>
     );
   }
-  //return <CallingScreen audio={true}/>
+  //return <CallingScreen audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
   return (
-    <KeyboardAvoidingView
+    <KeyboardAvoidingView 
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}

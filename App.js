@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StatusBar,
   DevSettings,
+  Modal,
 } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -23,7 +24,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MD3LightTheme as Default,
   Provider as PaperProvider,
@@ -35,6 +36,17 @@ import { Color } from "./assets/colors";
 import { RootSiblingParent } from "react-native-root-siblings";
 import * as Network from "expo-network";
 import CustomAppStatusBar from "./Hooks/AppBar";
+import {
+  ScreenCapturePickerView,
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription,
+  RTCView,
+  MediaStream,
+  MediaStreamTrack,
+  mediaDevices,
+  registerGlobals,
+} from "react-native-webrtc";
 
 export default function App() {
   const MyTheme = {
@@ -94,8 +106,16 @@ const Views = () => {
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
   const textColor = colors.getTextColor();
-  const statusBar=useSelector(state=>state.statusBar)
+  const statusBar = useSelector((state) => state.statusBar);
   //console.log(statusBar)
+  useEffect(() => {
+    (async () => {
+      const device = await getAvailableMediaDevice();
+      console.log(device);
+      const media = await getUserMedia();
+      console.log(media);
+    })();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -106,4 +126,48 @@ const Views = () => {
       <StackRoute />
     </GestureHandlerRootView>
   );
+};
+
+const getAvailableMediaDevice = async () => {
+  let cameraCount = 0;
+
+  try {
+    const devices = await mediaDevices.enumerateDevices();
+
+    devices.map((device) => {
+      if (device.kind != "videoinput") {
+        return;
+      }
+
+      cameraCount = cameraCount + 1;
+    });
+  } catch (err) {
+    // Handle Error
+  }
+  return cameraCount;
+};
+const getUserMedia = async () => {
+  let mediaConstraints = {
+    audio: true,
+    video: {
+      frameRate: 30,
+      facingMode: "user",
+    },
+  };
+  let localMediaStream;
+  let isVoiceOnly = false;
+
+  try {
+    const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
+
+    if (isVoiceOnly) {
+      let videoTrack = await mediaStream.getVideoTracks()[0];
+      videoTrack.enabled = false;
+    }
+
+    localMediaStream = mediaStream;
+  } catch (err) {
+    // Handle Error
+  }
+  return localMediaStream;
 };

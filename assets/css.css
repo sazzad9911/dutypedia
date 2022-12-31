@@ -2,3 +2,16 @@
     color: rgba(0, 0, 0, 0.427);
     color: #0000004b;
 }
+
+config: {
+    iceServers: [
+      {
+        urls: "stun:stun.dutybazar.com:5349",
+      },
+      {
+        urls: "turn:turn.dutybazar.com:5349",
+        username: "duty",
+        credential: "1229",
+      },
+    ],
+  },
