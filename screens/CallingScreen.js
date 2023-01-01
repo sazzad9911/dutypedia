@@ -16,6 +16,21 @@ import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import Avatar from "../components/Avatar";
+import {
+  ScreenCapturePickerView,
+  RTCPeerConnection,
+  RTCIceCandidate,
+  RTCSessionDescription,
+  RTCView,
+  MediaStream,
+  MediaStreamTrack,
+  mediaDevices,
+  registerGlobals,
+} from "react-native-webrtc";
+import { getStream } from "../Utils";
+import { useSelector } from "react-redux";
+import Peer from "react-native-peerjs";
+import { socket } from "../Class/socket";
 
 export default function CallingScreen({ audio, user }) {
   const [remoteStream, setRemoteStream] = useState(null);
@@ -26,6 +41,124 @@ export default function CallingScreen({ audio, user }) {
   const [status, setStatus] = React.useState({});
   const [videoOff, setVideoOff] = React.useState(false);
   const [audioOff, setAudioOff] = React.useState(false);
+  const newUser = useSelector((state) => state.user);
+  //const peerConnection=;
+  //const localMediaStream=;
+
+  function createPeerr(userToSignal, callerID, stream) {
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
+      config: {
+        iceServers: [
+          {
+            urls: "stun:stun.dutybazar.com:5349",
+          },
+          {
+            urls: "turn:turn.dutybazar.com:5349",
+            username: "duty",
+            credential: "1229",
+          },
+        ],
+      },
+    });
+
+    peer.on("signal", (signal) => {
+      socket?.emit("sending signal", {
+        userToSignal,
+        callerID,
+        signal,
+      });
+    });
+
+    return peer;
+  }
+
+  function addPeer(incomingSignal, callerID, stream) {
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+      config: {
+        iceServers: [
+          {
+            urls: "stun:stun.dutybazar.com:5349",
+          },
+          {
+            urls: "turn:turn.dutybazar.com:5349",
+            username: "duty",
+            credential: "1229",
+          },
+        ],
+      },
+    });
+
+    peer.on("signal", (signal) => {
+      socket?.emit("returning signal", { signal, callerID });
+    });
+
+    peer.signal(incomingSignal);
+
+    return peer;
+  }
+  var peerConstraints = {
+    iceServers: [
+      {
+        urls: "stun:stun.dutybazar.com:5349",
+      },
+      {
+        urls: "turn:turn.dutybazar.com:5349",
+        username: "duty",
+        credential: "1229",
+      },
+    ],
+    iceTransportPolicy: 'all',
+    bundlePolicy: 'max-bundle',
+    rtcpMuxPolicy: 'require'
+};
+
+function createPeer() {
+    peerConnection = new RTCPeerConnection( peerConstraints );
+
+    peerConnection.onicecandidate = ( iceEvent ) => {
+        console.log( 'onicecandidate', iceEvent );
+    };
+
+    peerConnection.onicecandidateerror = ( err ) => {
+        console.error( 'onicecandidateerror', err );
+    };
+
+    peerConnection.oniceconnectionstatechange = ( event ) => {
+        console.log( 'oniceconnectionstatechange', event );
+    };
+
+    peerConnection.onsignalingstatechange = ( event ) => {
+        console.log( 'onsignalingstatechange', event );
+    };
+
+    peerConnection.onnegotiationneeded = () => {
+        console.log( 'onnegotiationneeded' );
+    };
+
+    peerConnection.onaddstream = ( streamEvent ) => {
+        console.log( 'onaddstream', streamEvent );
+    };
+
+    peerConnection.onremovestream = ( streamEvent ) => {
+        console.log( 'onremovestream', streamEvent );
+    };
+
+    peerConnection.addStream( localMediaStream );
+};
+
+  useEffect(() => {
+    (async () => {
+      let stream = await getStream();
+      setLocalStream(stream);
+      createPeer();
+    })();
+  }, []);
 
   if (audio) {
     return (
@@ -62,10 +195,9 @@ export default function CallingScreen({ audio, user }) {
             flexDirection: "row",
             paddingHorizontal: "33%",
             justifyContent: "space-between",
-            width:width
+            width: width,
           }}
         >
-         
           <IconButton
             onPress={() => {
               setAudioOff((val) => !val);
@@ -105,34 +237,33 @@ export default function CallingScreen({ audio, user }) {
         alignItems: "center",
       }}
     >
+      <RTCPeerConnection/>
+      <MediaStream />
       <View>
-        <Video
-          ref={video}
-          style={{
-            width: width,
-            height: height - 20,
-          }}
-          source={{
-            uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-          }}
-          resizeMode="cover"
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
+        {remoteStream && (
+          <RTCView
+            style={{
+              width: width,
+              height: height - 20,
+            }}
+            resizeMode="cover"
+            streamURL={remoteStream.toURL()}
+          />
+        )}
       </View>
       {!videoOff && (
         <View style={styles.selfVideoContainer}>
-          <Video
-            ref={video}
-            style={{
-              width: 150,
-              height: 250,
-            }}
-            source={{
-              uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-            }}
-            resizeMode="cover"
-            onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-          />
+          {localStream && (
+            <RTCView
+              style={{
+                width: 150,
+                height: 250,
+              }}
+              streamURL={localStream.toURL()}
+              resizeMode="cover"
+              onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+            />
+          )}
         </View>
       )}
       <View
@@ -217,7 +348,6 @@ export default function CallingScreen({ audio, user }) {
       </View>
     </SafeAreaView>
   );
-  
 }
 const styles = StyleSheet.create({
   selfVideoContainer: {

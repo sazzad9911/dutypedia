@@ -24,6 +24,7 @@ import packages from "./Reducers/packages";
 import statusBar from "./Reducers/statusBar";
 import hideBottomBar from "./Reducers/hideBottomBar";
 import isOffline from "./Reducers/isOffline";
+import callingScreen from "./Reducers/callingScreen";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -50,7 +51,8 @@ const combine = combineReducers({
   packages:packages,
   statusBar:statusBar,
   hideBottomBar:hideBottomBar,
-  isOffline:isOffline
+  isOffline:isOffline,
+  callingScreen:callingScreen
 });
 const store = createStore(combine);
 export default store;

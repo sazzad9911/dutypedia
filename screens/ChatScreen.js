@@ -197,7 +197,7 @@ const ChatScreen = (props) => {
       </View>
     );
   }
-  //return <CallingScreen audio={false}/>
+  return <CallingScreen user={UserInfo} audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
   return (
     <KeyboardAvoidingView 
