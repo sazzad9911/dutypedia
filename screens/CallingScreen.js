@@ -45,7 +45,7 @@ export default function CallingScreen({ audio, user }) {
   //const peerConnection=;
   //const localMediaStream=;
 
-  function createPeerr(userToSignal, callerID, stream) {
+  function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -97,6 +97,7 @@ export default function CallingScreen({ audio, user }) {
     peer.on("signal", (signal) => {
       socket?.emit("returning signal", { signal, callerID });
     });
+    console.log(incomingSignal)
 
     peer.signal(incomingSignal);
 
@@ -113,50 +114,18 @@ export default function CallingScreen({ audio, user }) {
         credential: "1229",
       },
     ],
-    iceTransportPolicy: 'all',
-    bundlePolicy: 'max-bundle',
-    rtcpMuxPolicy: 'require'
-};
-
-function createPeer() {
-    peerConnection = new RTCPeerConnection( peerConstraints );
-
-    peerConnection.onicecandidate = ( iceEvent ) => {
-        console.log( 'onicecandidate', iceEvent );
-    };
-
-    peerConnection.onicecandidateerror = ( err ) => {
-        console.error( 'onicecandidateerror', err );
-    };
-
-    peerConnection.oniceconnectionstatechange = ( event ) => {
-        console.log( 'oniceconnectionstatechange', event );
-    };
-
-    peerConnection.onsignalingstatechange = ( event ) => {
-        console.log( 'onsignalingstatechange', event );
-    };
-
-    peerConnection.onnegotiationneeded = () => {
-        console.log( 'onnegotiationneeded' );
-    };
-
-    peerConnection.onaddstream = ( streamEvent ) => {
-        console.log( 'onaddstream', streamEvent );
-    };
-
-    peerConnection.onremovestream = ( streamEvent ) => {
-        console.log( 'onremovestream', streamEvent );
-    };
-
-    peerConnection.addStream( localMediaStream );
-};
+    iceTransportPolicy: "all",
+    bundlePolicy: "max-bundle",
+    rtcpMuxPolicy: "require",
+  };
 
   useEffect(() => {
     (async () => {
       let stream = await getStream();
       setLocalStream(stream);
-      createPeer();
+      let peerConnection = new RTCPeerConnection( peerConstraints );
+      //createPeer();
+      //addPeer()
     })();
   }, []);
 
@@ -237,7 +206,7 @@ function createPeer() {
         alignItems: "center",
       }}
     >
-      <RTCPeerConnection/>
+      <RTCPeerConnection />
       <MediaStream />
       <View>
         {remoteStream && (
