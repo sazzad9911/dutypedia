@@ -5,7 +5,7 @@ import { Zocial } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 
 
-export default function AudioCallScreen({ user }) {
+export default function AudioCallScreen({ user,onAccept,onCancel }) {
   //console.log(user)
   
   return (
@@ -33,9 +33,17 @@ export default function AudioCallScreen({ user }) {
       <View style={{
         flexDirection:"row"
       }}>
-        <CallButton color={"green"}/>
+        <CallButton onPress={()=>{
+          if(onAccept){
+            onAccept()
+          }
+        }} color={"green"}/>
         <View style={{width:50}}/>
-        <CallButton color={"red"}/>
+        <CallButton onPress={()=>{
+          if(onCancel){
+            onCancel()
+          }
+        }} color={"red"}/>
       </View>
     </View>
   );

@@ -198,8 +198,8 @@ const ChatScreen = (props) => {
       </View>
     );
   }
-  return <VideoCallingScreen/>
-  return <CallingScreen user={UserInfo} audio={false}/>
+  //return <VideoCallingScreen/>
+  //return <CallingScreen user={UserInfo} audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
   return (
     <KeyboardAvoidingView 
@@ -207,7 +207,7 @@ const ChatScreen = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
     >
-      <ChatHead
+      <ChatHead user={UserInfo}
         name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}

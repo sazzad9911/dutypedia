@@ -102,6 +102,7 @@ const Views = () => {
   const textColor = colors.getTextColor();
   const statusBar = useSelector((state) => state.statusBar);
   const [ModalVisible, setModalVisible] = React.useState(false);
+
   
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

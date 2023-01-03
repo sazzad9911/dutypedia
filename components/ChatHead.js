@@ -19,13 +19,12 @@ import { Switch } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CallingScreen from "../screens/CallingScreen";
+import AudioCallScreen from "../screens/AudioCallScreen";
+import { setCallingScreen } from "../Reducers/callingScreen";
+import { socket } from "../Class/socket";
 
-const ChatHead = ({
-  navigation,
-  name,
-  image
-}) => {
-  
+const ChatHead = ({ navigation, name, image, user }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -80,7 +79,54 @@ const ChatHead = ({
       marginVertical: 5,
     },
   });
-  
+  const [CallingScreenVisible, setCallingScreenVisible] = React.useState(false);
+  const dispatch = useDispatch();
+  const newUser = useSelector((state) => state.user);
+  const callingScreen = useSelector((state) => state.callingScreen);
+  //const [AudioOnly,setAudioOnly]=React.useState(false)
+  //console.log(newUser.user)
+
+  const makeVideoCall = () => {
+    dispatch(
+      setCallingScreen({
+        callerId: user.id,
+        roomId: user.id,
+        callerName: name,
+        audioOnly: false,
+      })
+    );
+    setCallingScreenVisible(true);
+    socket?.emit("callUser", {
+      receiverId: user.id,
+      data: {
+        roomId: newUser.user.id,
+        from: newUser.user.id,
+        name: `${newUser.firstName} ${newUser.lastName}`,
+        audioOnly: false,
+      },
+    });
+  };
+  const makeAudioCall = () => {
+    dispatch(
+      setCallingScreen({
+        callerId: user.id,
+        roomId: user.id,
+        callerName: name,
+        audioOnly: true,
+      })
+    );
+    setCallingScreenVisible(true);
+    socket?.emit("callUser", {
+      receiverId: user.id,
+      data: {
+        roomId: newUser.user.id,
+        from: newUser.user.id,
+        name: `${newUser.firstName} ${newUser.lastName}`,
+        audioOnly: true,
+      },
+    });
+  };
+
   //console.log(data)
   return (
     <SafeAreaView
@@ -100,7 +146,7 @@ const ChatHead = ({
           size={24}
           color={textColor}
         />
-        <Avatar style={styles.image} source={{uri:image?image:null}}/>
+        <Avatar style={styles.image} source={{ uri: image ? image : null }} />
         {/* <Image
           style={styles.image}
           source={{
@@ -109,11 +155,7 @@ const ChatHead = ({
               : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
           }}
         /> */}
-        <Text style={styles.text}>
-          {name
-            ? `${name}`
-            : "Sefa Khandakar"}
-        </Text>
+        <Text style={styles.text}>{name ? `${name}` : "Sefa Khandakar"}</Text>
       </View>
       <View
         style={[
@@ -123,10 +165,10 @@ const ChatHead = ({
           },
         ]}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={makeAudioCall}>
           <Zocial style={styles.icon} name="call" size={24} color={textColor} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={makeVideoCall}>
           <MaterialIcons
             style={styles.icon}
             name="videocam"
@@ -151,6 +193,14 @@ const ChatHead = ({
         }}
       >
         <MenuBar setVisible={setVisible} />
+      </Modal>
+      <Modal visible={CallingScreenVisible}>
+        {callingScreen && (
+          <CallingScreen setVisible={()=>{
+            dispatch(setCallingScreen(null))
+            setCallingScreenVisible(false)
+          }} user={user.id} audio={callingScreen.audioOnly} />
+        )}
       </Modal>
     </SafeAreaView>
   );

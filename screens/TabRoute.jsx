@@ -18,6 +18,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   BackHandler,
+  Modal,
 } from "react-native";
 import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -72,6 +73,9 @@ import {
   updateVendorOrder,
 } from "../Reducers/vendorOrders";
 import ChatScreen from "./ChatScreen";
+import AudioCallScreen from "./AudioCallScreen";
+import CallingScreen from "./CallingScreen";
+import { setCallingScreen } from "../Reducers/callingScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -101,6 +105,12 @@ const TabRoute = () => {
   const [Loader, setLoader] = React.useState(false);
   const newUserOrders = useSelector((state) => state.userOrders);
   const newVendorOrders = useSelector((state) => state.vendorOrders);
+  const callingScreen = useSelector((state) => state.callingScreen);
+  const [callingScreenVisible, setCallingScreenVisible] = React.useState(false);
+  const [CallerId,setCallerId]=React.useState()
+  const [RoomId,setRoomId]=React.useState()
+  const [CallerName,setCallerName]=React.useState()
+  const [AudioCall,setAudioCall]=React.useState()
 
   React.useEffect(() => {
     if (user) {
@@ -178,9 +188,9 @@ const TabRoute = () => {
     const res = await getOrders(user.token, "user");
     setUserOrdersOffline(res.data.orders);
     dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-    return
+    return;
     const data = await getUserOrdersOffline();
-    if (data) {  
+    if (data) {
       dispatch({ type: "USER_ORDERS", playload: data });
     } else {
       const res = await getOrders(user.token, "user");
@@ -190,9 +200,9 @@ const TabRoute = () => {
   };
   const vendorOrders = async () => {
     const res = await getOrders(user.token, "vendor", vendor.service.id);
-      setVendorOrdersOffline(res.data.orders);
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-      return
+    setVendorOrdersOffline(res.data.orders);
+    dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
+    return;
     const data = await getVendorOrdersOffline();
     if (data) {
       dispatch({ type: "VENDOR_ORDERS", playload: data });
@@ -212,61 +222,83 @@ const TabRoute = () => {
       vendorOrders();
     }
   }, [user + vendor + reload + socket + isOffline]);
- 
+
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
     });
     socket.on("getOrder", (e) => {
-      e=e.order;
+      e = e.order;
       if (e.type === "user") {
         dispatch(addUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(addVendorOrder(e.data));
-      }else if(!e.type){
+      } else if (!e.type) {
         dispatch(addUserOrder(e));
         dispatch(addVendorOrder(e));
       }
     });
     socket.on("updateOrder", (e) => {
-      e=e.order;
+      e = e.order;
       if (e.type === "user") {
         dispatch(updateUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(updateVendorOrder(e.data));
-      }else if(!e.type){
+      } else if (!e.type) {
         dispatch(addUserOrder(e));
         dispatch(addVendorOrder(e));
       }
+    });
+    socket.on("incomingCall", (data) => {
+      if (callingScreen) {
+        socket?.emit("busy", data.from);
+        return;
+      }
+      setCallerId(data.from)
+      setRoomId(data.roomId)
+      setCallerName(data.name)
+      setAudioCall(data.audioOnly)
+      setCallingScreenVisible(true);
     });
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
-  React.useEffect(()=>{
+  React.useEffect(() => {
     socket.on("getOrder", (e) => {
-      e=e.order;
+      e = e.order;
       if (e.type === "user") {
         dispatch(addUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(addVendorOrder(e.data));
-      }else if(!e.type){
+      } else if (!e.type) {
         dispatch(addUserOrder(e));
         dispatch(addVendorOrder(e));
       }
     });
     socket.on("updateOrder", (e) => {
-      e=e.order;
+      e = e.order;
       if (e.type === "user") {
         dispatch(updateUserOrder(e.data));
       } else if (e.type === "vendor") {
         dispatch(updateVendorOrder(e.data));
-      }else if(!e.type){
+      } else if (!e.type) {
         dispatch(addUserOrder(e));
         dispatch(addVendorOrder(e));
       }
     });
-  },[])
+    socket.on("incomingCall", (data) => {
+      if (callingScreen) {
+        socket?.emit("busy", data.from);
+        return;
+      }
+      setCallerId(data.from)
+      setRoomId(data.roomId)
+      setCallerName(data.name)
+      setAudioCall(data.audioOnly)
+      setCallingScreenVisible(true);
+    });
+  }, []);
 
   async function registerBackgroundFetchAsync() {
     return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
@@ -366,7 +398,7 @@ const TabRoute = () => {
         <Tab.Screen
           options={{
             lazy: false,
-            headerShown:false,
+            headerShown: false,
           }}
           name="Message"
           component={Message}
@@ -395,7 +427,7 @@ const TabRoute = () => {
           name="Appointment"
           component={Appointment}
         />
-        
+
         {/* <Tab.Screen
           name="AllPackageList"
           options={{
@@ -479,9 +511,32 @@ const TabRoute = () => {
               name="OtherProfile"
               component={NewRoute}
             /> */}
-
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
+      <Modal visible={callingScreenVisible}>
+        {callingScreen ? <CallingScreen setVisible={()=>{
+          setCallingScreenVisible(false)
+        }} user={RoomId} audio={callingScreen.audioOnly} /> : <AudioCallScreen onCancel={()=>{
+          dispatch(setCallingScreen(null))
+          setCallingScreenVisible(false)
+          socket?.emit("rejectCall",{
+            userId:CallerId
+          })
+        }} onAccept={()=>{
+          dispatch(setCallingScreen({
+            callerId:CallerId,
+            roomId:RoomId,
+            callerName:CallerName,
+            audioOnly:AudioCall
+          }))
+          socket?.emit("answerCall", {
+            userId: CallerId,
+            data: {
+              roomId: RoomId,
+            },
+          });
+        }} />}
+      </Modal>
     </View>
   );
 };
