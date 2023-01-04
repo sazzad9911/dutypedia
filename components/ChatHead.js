@@ -101,7 +101,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
       data: {
         roomId: newUser.user.id,
         from: newUser.user.id,
-        name: `${newUser.firstName} ${newUser.lastName}`,
+        name: `${newUser.user.firstName} ${newUser.user.lastName}`,
         audioOnly: false,
       },
     });
@@ -121,7 +121,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
       data: {
         roomId: newUser.user.id,
         from: newUser.user.id,
-        name: `${newUser.firstName} ${newUser.lastName}`,
+        name: `${newUser.user.firstName} ${newUser.user.lastName}`,
         audioOnly: true,
       },
     });

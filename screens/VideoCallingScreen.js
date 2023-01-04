@@ -195,11 +195,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "40%",
     width: "80%",
-    backgroundColor: "black",
+    
   },
   rtc: {
     width: "80%",
     height: "100%",
+    backgroundColor: "black",
   },
   toggleButtons: {
     width: "100%",
