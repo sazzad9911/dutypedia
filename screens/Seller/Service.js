@@ -10,6 +10,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  Modal,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 //import { services } from "../../assets/icon";
@@ -83,6 +84,11 @@ const Service = ({ navigation, route }) => {
     route.params && route.params.direct ? route.params.direct : false;
   const [change, setChange] = React.useState(false);
   const [Loader, setLoader] = React.useState(false);
+  const [ModalVisible, setModalVisible] = React.useState(false);
+  const params = route.params;
+  const type = params.type;
+  console.log(type)
+
   React.useEffect(() => {
     setFacilitiesCounter(0);
     Facilities.forEach((doc, i) => {
@@ -145,11 +151,11 @@ const Service = ({ navigation, route }) => {
       setImageError("*All picture must be upload");
       return;
     }
-    if (!Price && direct) {
+    if (!Price && direct && type != "SUBS") {
       setPriceError("Price field is required");
       return;
     }
-    if (FacilitiesCounter == 0 && direct) {
+    if (FacilitiesCounter == 0 && direct &&type!="SUBS") {
       setFacilitiesError("Please select any facilities");
       return;
     }
@@ -165,6 +171,7 @@ const Service = ({ navigation, route }) => {
       dispatch({ type: "PRICE", playload: Price });
       dispatch({ type: "FACILITIES", playload: Facilities });
     }
+    
     if (direct) {
       //ongoing function-------------
       setLoader(true);
@@ -181,7 +188,7 @@ const Service = ({ navigation, route }) => {
           route.params.data ? route.params.data : listData,
           result,
           vendor.service.id,
-          direct
+          direct,
         )
           .then((res) => {
             navigation.navigate("VendorProfile", { direct: businessForm });
@@ -237,8 +244,8 @@ const Service = ({ navigation, route }) => {
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    fontFamily: "Poppins-SemiBold",
+                    fontSize: 22,
+                    fontFamily: "Poppins-Bold",
                     color: "black",
                     lineHeight: 25,
                   }}
@@ -247,8 +254,8 @@ const Service = ({ navigation, route }) => {
                 </Text>
                 <Text
                   style={{
-                    fontSize: 20,
-                    fontFamily: "Poppins-SemiBold",
+                    fontSize: 22,
+                    fontFamily: "Poppins-Bold",
                     color: "#DA1E37",
                     lineHeight: 25,
                   }}
@@ -257,8 +264,8 @@ const Service = ({ navigation, route }) => {
                 </Text>
                 <Text
                   style={{
-                    fontSize: 20,
-                    fontFamily: "Poppins-SemiBold",
+                    fontSize: 22,
+                    fontFamily: "Poppins-Bold",
                     color: "black",
                     lineHeight: 25,
                   }}
@@ -366,6 +373,7 @@ const Service = ({ navigation, route }) => {
                 style={{
                   borderWidth: 1,
                   marginTop: 0,
+                  marginLeft: 20,
                 }}
                 placeholder="Service title"
               />
@@ -397,31 +405,33 @@ const Service = ({ navigation, route }) => {
               />
             )}
             <View style={{ height: 10 }} />
-            <TextArea
-              style={{
-                marginHorizontal: 20,
-              }}
-              value={Description}
-              innerRef={descriptionRef}
-              returnKeyType="next"
-              error={DescriptionError}
-              onChange={(val) => {
-                setDescriptionError(null);
-                if (val.length <= 2000) {
-                  setDescription(val);
-                } else {
-                  setDescriptionError("*Character must be between 2000");
-                }
-              }}
-              onSubmitEditing={() => {
-                if (aboutRef.current && !direct) {
-                  aboutRef.current.focus();
-                } else if (priceRef && priceRef.current && direct) {
-                  priceRef.current.focus();
-                }
-              }}
-              placeholder="Description"
-            />
+            <View style={{
+              marginHorizontal:20
+            }}>
+              <TextArea
+                style={{}}
+                value={Description}
+                innerRef={descriptionRef}
+                returnKeyType="next"
+                error={DescriptionError}
+                onChange={(val) => {
+                  setDescriptionError(null);
+                  if (val.length <= 2000) {
+                    setDescription(val);
+                  } else {
+                    setDescriptionError("*Character must be between 2000");
+                  }
+                }}
+                onSubmitEditing={() => {
+                  if (aboutRef.current && !direct) {
+                    aboutRef.current.focus();
+                  } else if (priceRef && priceRef.current && direct) {
+                    priceRef.current.focus();
+                  }
+                }}
+                placeholder="Description"
+              />
+            </View>
             <View style={{ height: 10 }} />
             {!direct && (
               <TextArea
@@ -446,7 +456,7 @@ const Service = ({ navigation, route }) => {
                 placeholder="About Company"
               />
             )}
-            {direct && (
+            {direct && type != "SUBS" ? (
               <Input
                 innerRef={priceRef}
                 value={Price}
@@ -463,7 +473,7 @@ const Service = ({ navigation, route }) => {
                 }}
                 placeholder="Price"
               />
-            )}
+            ) : null}
 
             {direct && (
               <Text
@@ -476,7 +486,7 @@ const Service = ({ navigation, route }) => {
                   },
                 ]}
               >
-                Choose your facilities
+                Choose your facilities (Optional)
               </Text>
             )}
             {Array.isArray(Facilities) &&
@@ -511,13 +521,16 @@ const Service = ({ navigation, route }) => {
                 }}
               >
                 <IconButton
+                  onPress={() => {
+                    setModalVisible(true);
+                  }}
                   LeftIcon={() => (
                     <AntDesign name="pluscircleo" size={20} color="black" />
                   )}
                   style={{
                     borderWidth: 0,
                     marginHorizontal: 10,
-                    marginVertical:5
+                    marginVertical: 5,
                   }}
                   title={"Add More"}
                 />
@@ -527,10 +540,11 @@ const Service = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: 12,
-                  marginLeft: 2,
+                  marginLeft: 20,
                   fontFamily: "Poppins-Light",
                   color: "red",
                   marginTop: 3,
+                  
                 }}
               >
                 {FacilitiesError}
@@ -573,6 +587,30 @@ const Service = ({ navigation, route }) => {
           </View>
         </ScrollView>
       </SafeAreaView>
+      <Modal
+        transparent={true}
+        visible={ModalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <AddFacilities
+          onConfirm={(e) => {
+            setFacilities((val) => [
+              ...val,
+              {
+                id: val.length + 1,
+                title: e,
+                checked: true,
+              },
+            ]);
+            setModalVisible(false);
+          }}
+          onCancel={() => {
+            setModalVisible(false);
+          }}
+        />
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -883,3 +921,88 @@ const addIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.261" height="
 </g>
 </svg>
 `;
+const AddFacilities = ({ onCancel, onConfirm }) => {
+  const [Name, setName] = React.useState();
+  const [NameError, setNameError] = React.useState();
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.427)",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <View
+        style={{
+          width: width - 40,
+
+          backgroundColor: "white",
+          borderRadius: 10,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "400",
+            textAlign: "center",
+            marginVertical: 20,
+          }}
+        >
+          Add Facilities
+        </Text>
+        <Input
+          error={NameError}
+          value={Name}
+          onChange={setName}
+          style={{
+            borderWidth: 1,
+            width: "80%",
+            marginLeft: "10%",
+          }}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: 20,
+          }}
+        >
+          <IconButton
+            onPress={() => {
+              setNameError();
+              if (!Name) {
+                setNameError("*This field is required");
+                return;
+              }
+              if (onConfirm) {
+                onConfirm(Name);
+              }
+            }}
+            style={{
+              width: "38%",
+              marginLeft: "10%",
+              backgroundColor: "#4ADE80",
+              color: "white",
+            }}
+            title={"Confirm"}
+          />
+          <IconButton
+            onPress={() => {
+              if (onCancel) {
+                onCancel();
+              }
+            }}
+            style={{
+              width: "38%",
+              marginLeft: "4%",
+              backgroundColor: "#FF0000",
+              color: "white",
+            }}
+            title={"Cancel"}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};

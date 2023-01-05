@@ -8,9 +8,9 @@ import {
   Dimensions,
   TouchableOpacity,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
-import Animated,{FadeIn} from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
@@ -21,12 +21,25 @@ import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { CheckBox } from "../Seller/Pricing";
 const { width, height } = Dimensions.get("window");
 
-export default function AddSubscription({ navigation }) {
+export default function AddSubscription({ navigation, route }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const [SubscriptionType, setSubscriptionType] = React.useState();
   const [PayAsGo, setPayAsGo] = React.useState(false);
   const [OtherCharge, setOtherCharge] = React.useState(false);
+  const params = route.params;
+  const data = params.data;
+  const [Amount, setAmount] = React.useState(0);
+  const [OtherName, setOtherName] = React.useState();
+  const [Duration, setDuration] = React.useState(0);
+  const [OtherAmount, setOtherAmount] = React.useState();
+  const [SubscriptionTypeError, setSubscriptionTypeError] = React.useState();
+  const [AmountError, setAmountError] = React.useState();
+  const [DurationError, setDurationError] = React.useState();
+  const [OtherNameError, setOtherNameError] = React.useState();
+  const [OtherAmountError, setOtherAmountError] = React.useState();
+
+  //console.log(data)
 
   React.useEffect(() => {
     if (isFocused) {
@@ -128,10 +141,12 @@ export default function AddSubscription({ navigation }) {
                 alignItems: "center",
               }}
             >
-              <DropDown value={SubscriptionType}
+              <DropDown
+                error={SubscriptionTypeError}
+                value={SubscriptionType}
                 onChange={(e) => {
                   setSubscriptionType(e);
-                  setPayAsGo(false)
+                  setPayAsGo(false);
                 }}
                 style={{
                   width: width / 2 - 30,
@@ -141,17 +156,23 @@ export default function AddSubscription({ navigation }) {
                 DATA={["Weekly", "Monthly", "Yearly"]}
               />
               <Input
-                keyboardType={"number-pad"}
+                returnKeyType={"done"}
+                error={AmountError}
+                value={Amount}
+                onChange={setAmount}
+                keyboardType="number-pad"
                 placeholder={"0.00৳"}
                 level={"Amount"}
                 style={{
                   width: width / 2 - 30,
                   borderWidth: 1,
                   height: 47,
+                  marginHorizontal: 0,
+                  marginLeft: 20,
                 }}
               />
             </View>
-            {SubscriptionType && (
+            {SubscriptionType && !PayAsGo && (
               <View
                 style={{
                   paddingVertical: 20,
@@ -160,11 +181,17 @@ export default function AddSubscription({ navigation }) {
                 }}
               >
                 <Input
+                  returnKeyType={"done"}
+                  error={DurationError}
+                  value={Duration}
+                  onChange={setDuration}
                   keyboardType={"number-pad"}
                   level={"Duration"}
                   style={{
                     borderWidth: 1,
                     width: width / 2 - 30,
+                    marginHorizontal: 0,
+                    marginLeft: 20,
                   }}
                   placeholder={"Duration"}
                 />
@@ -172,6 +199,7 @@ export default function AddSubscription({ navigation }) {
                   style={{
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
+                    marginLeft: 20,
                   }}
                 >
                   {SubscriptionType}
@@ -217,9 +245,6 @@ export default function AddSubscription({ navigation }) {
                 value={PayAsGo}
                 onChange={() => {
                   setPayAsGo(!PayAsGo);
-                  if(!PayAsGo){
-                    setSubscriptionType(null)
-                  }
                 }}
                 style={{
                   width: 120,
@@ -231,15 +256,16 @@ export default function AddSubscription({ navigation }) {
                   flexDirection: "row",
                   alignItems: "center",
                   marginTop: 15,
-                  flexWrap:"wrap"
+                  flexWrap: "wrap",
                 }}
               >
-                <CheckBox value={OtherCharge}
+                <CheckBox
+                  value={OtherCharge}
                   style={{
                     width: 135,
                   }}
-                  onChange={()=>{
-                    setOtherCharge(!OtherCharge)
+                  onChange={() => {
+                    setOtherCharge(!OtherCharge);
                   }}
                   title={"Other Charge"}
                 />
@@ -252,63 +278,119 @@ export default function AddSubscription({ navigation }) {
                 </Text>
               </View>
             </View>
-            {OtherCharge&&(
-                <Animated.View style={{
-                    flexDirection:"row",
-                    paddingVertical:5
-                }} entering={FadeIn}>
-                    <Input level={"Name"} placeholder={"Abcd"} style={{
-                        borderWidth:1,
-                        width:width/2-30,
-                        marginRight:0
-                    }}/>
-                    <Input level={"Amount"} placeholder={"100 ৳"} style={{
-                        borderWidth:1,
-                        width:width/2-30,
-                    }}/>
-                </Animated.View>
+            {OtherCharge && (
+              <Animated.View
+                style={{
+                  flexDirection: "row",
+                  paddingVertical: 5,
+                }}
+                entering={FadeIn}
+              >
+                <Input
+                  error={OtherNameError}
+                  value={OtherName}
+                  onChange={setOtherName}
+                  level={"Name"}
+                  placeholder={"Abcd"}
+                  style={{
+                    borderWidth: 1,
+                    width: width / 2 - 30,
+                    marginHorizontal: 0,
+                    marginLeft: 20,
+                  }}
+                />
+                <Input
+                  keyboardType={"number-pad"}
+                  error={OtherAmountError}
+                  value={OtherAmount}
+                  onChange={setOtherAmount}
+                  level={"Amount"}
+                  placeholder={"100 ৳"}
+                  style={{
+                    borderWidth: 1,
+                    width: width / 2 - 30,
+                    marginHorizontal: 0,
+                    marginLeft: 20,
+                  }}
+                />
+              </Animated.View>
             )}
-            <View style={{
-                height:100
-            }}/>
-          </ScrollView>
-
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              justifySelf: "flex-end",
-              position: "absolute",
-              bottom: 10,
-            }}
-          >
-            <IconButton onPress={()=>{
-                navigation.navigate("Service",{direct:true,type:"SUBSCRIPTION"})
-            }}
+           
+            <View
               style={{
-                marginHorizontal: 20,
-                height: 35,
-                backgroundColor: "#4ADE80",
-                width: width - 40,
-              }}
-              title={"Continue"}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
+                justifyContent: "center",
+                alignItems: "center",
+                justifySelf: "flex-end",
+                marginVertical:30
               }}
             >
-              <Text
+              <IconButton
+                onPress={() => {
+                  setSubscriptionTypeError();
+                  setAmountError();
+                  setDurationError();
+                  setOtherNameError();
+                  setOtherAmountError();
+                  if (!PayAsGo && !SubscriptionType) {
+                    setSubscriptionTypeError("*This field is required");
+                    return;
+                  }
+                  if (!PayAsGo && !Amount) {
+                    setAmountError("*This field is require");
+                    return;
+                  }
+                  if (!PayAsGo && !Duration) {
+                    setDurationError("*This field is required");
+                    return;
+                  }
+                  if (OtherCharge && !OtherName) {
+                    setOtherNameError("*This field is required");
+                    return;
+                  }
+                  if (OtherCharge && !OtherAmount) {
+                    setOtherAmountError("*This field is required");
+                    return;
+                  }
+                  navigation.navigate("Service", {
+                    direct: true,
+                    type: "SUBS",
+                    data: data,
+                    subsData: {
+                      amount: Amount,
+                      payAsYouGo: PayAsGo,
+                      otherCharge: OtherCharge,
+                      totalDuration: Duration,
+                      otherChargeName: OtherName,
+                      subscriptionType: SubscriptionType,
+                      otherChargeName: OtherAmount,
+                    },
+                  });
+                }}
                 style={{
-                  fontSize: 16,
-                  marginVertical: 10,
-                  textDecorationLine: 1,
+                  marginHorizontal: 20,
+                  height: 35,
+                  backgroundColor: "#4ADE80",
+                  width: width - 40,
+                }}
+                title={"Continue"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
                 }}
               >
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    marginVertical: 10,
+                    textDecorationLine: 1,
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -528,8 +610,8 @@ const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="13.678" height="13.
 `;
 const styles = StyleSheet.create({
   text: {
-    fontSize: 20,
-    fontFamily: "Poppins-SemiBold",
+    fontSize: 22,
+    fontFamily: "Poppins-Bold",
     lineHeight: 30,
   },
 });

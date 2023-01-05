@@ -184,6 +184,42 @@ export const createOtherService = async (
   });
   return res;
 };
+export const createOtherServiceIndividual = async (
+  token,
+  businessForm,
+  listData,
+  images,
+  serviceId,
+  type,
+  packageData,
+  subsData
+) => {
+  const data = {
+    title: businessForm.serviceTitle,
+    price: parseInt(businessForm.price),
+    facilites: {
+      title: "Choose Your Facilities",
+      selectedOptions: Array.isArray(businessForm.facilities)
+        ? businessForm.facilities.filter((data) => data.checked == true)
+        : [],
+    },
+    services: {
+      category: getDashboardTitle(listData[0].mainTitle),
+      type: listData[0].subTitle ? 3 : listData[0].title ? 2 : 1,
+      options: localOptionsToServer(listData),
+    },
+    description: businessForm.description,
+    images: images,
+    serviceId: serviceId,
+    type: type,
+    packageData:packageData,
+    subsData:subsData
+  };
+  const res = await axios.post(`${url}/server/services/create/gig`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
 export const getOtherServices = async (token, serviceId, type) => {
   const res = await axios.get(
     `${url}/server/services/get/gigs?serviceId=${serviceId}&type=${type}`,
