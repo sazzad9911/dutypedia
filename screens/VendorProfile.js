@@ -408,7 +408,6 @@ const VendorProfile = (props) => {
         });
     }
   }, [data + newUser + vendor + Data]);
-  
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -516,7 +515,7 @@ const VendorProfile = (props) => {
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader/>
+        <ActivityLoader />
       </View>
     );
   }
@@ -672,7 +671,7 @@ const VendorProfile = (props) => {
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
           /> */}
-
+{/* 
           <SvgXml
             onPress={() => {
               navigation.navigate("AppointmentList", { data: Data });
@@ -690,8 +689,8 @@ const VendorProfile = (props) => {
             xml={newCalender}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
-          <SvgXml
+          /> */}
+          {/* <SvgXml
             onPress={() => {
               navigation.navigate("ChatScreen", { data: Data });
             }}
@@ -708,7 +707,7 @@ const VendorProfile = (props) => {
             xml={messageIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
+          /> */}
         </View>
         <View
           style={{
@@ -1218,6 +1217,43 @@ const VendorProfile = (props) => {
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
+                  <Text
+                    style={{
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                    }}
+                  >
+                    {initialState[4].title}
+                  </Text>
+                ),
+              }}
+              name={initialState[4].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickPackage,
+                PackageService: PackageService,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
+              }}
+              component={Subscriptions}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
                   <View
                     style={{
                       flexDirection: "row",
@@ -1393,6 +1429,73 @@ const VendorProfile = (props) => {
                   data: "PACKAGE",
                 });
               }
+            }}
+          >
+            <AntDesign name="plus" size={25} color="white" />
+          </Pressable>
+        </Animated.View>
+      )}
+      {showButton && ScreenName == "SUBSCRIPTION" && (
+        <Animated.View
+          entering={FadeIn}
+          style={{
+            shadowOffset: {
+              width: 1,
+              height: 1,
+            },
+            shadowColor: "#707070",
+            shadowRadius: 3,
+            elevation: 0,
+            shadowOpacity: 0.3,
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+            backgroundColor: "#4ADE80",
+            borderRadius: 25,
+            width: 50,
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              dispatch({ type: "SET_PACKAGES", playload: [] });
+              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+              if (vendor.service.gigs[0].services.category) {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "SUBSCRIPTION",
+                });
+              } else {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "SUBSCRIPTION",
+                });
+              }
+              
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -2845,3 +2948,193 @@ const settingsActiveIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="11.86
 <path id="ios-settings" d="M15.382,10.431a1.526,1.526,0,0,1,.979-1.424,6.065,6.065,0,0,0-.732-1.764,1.545,1.545,0,0,1-.621.133,1.523,1.523,0,0,1-1.393-2.143A6.024,6.024,0,0,0,11.855,4.5a1.525,1.525,0,0,1-2.848,0,6.065,6.065,0,0,0-1.764.732A1.523,1.523,0,0,1,5.85,7.375a1.5,1.5,0,0,1-.621-.133A6.184,6.184,0,0,0,4.5,9.01a1.526,1.526,0,0,1,0,2.848,6.065,6.065,0,0,0,.732,1.764,1.523,1.523,0,0,1,2.011,2.011,6.078,6.078,0,0,0,1.764.732,1.522,1.522,0,0,1,2.841,0,6.065,6.065,0,0,0,1.764-.732,1.525,1.525,0,0,1,2.011-2.011,6.078,6.078,0,0,0,.732-1.764,1.533,1.533,0,0,1-.976-1.427ZM10.458,12.9a2.471,2.471,0,1,1,2.471-2.471A2.47,2.47,0,0,1,10.458,12.9Z" transform="translate(-4.5 -4.5)" fill="#4ade80"/>
 </svg>
 `;
+const Subscriptions = ({ navigation, route }) => {
+  const params = route.params;
+  //const PackageService = params.PackageService;
+  const PackageService = [];
+  const onPress = route.params.onPress;
+  const RelatedServices = params.RelatedServices;
+  const UnRelatedServices = params.UnRelatedServices;
+  const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
+  const isFocused = useIsFocused();
+  const setNewNavigation = params.setNewNavigation;
+  const scrollTo = params.scrollTo;
+  const [offset, setOffset] = React.useState(0);
+  const changeScreenName = params.changeScreenName;
+
+  React.useEffect(() => {
+    if (layoutHeight && isFocused) {
+      //console.log(layoutHeight);
+      changeScreenName("SUBSCRIPTION");
+      setNewNavigation(layoutHeight + 50);
+    }
+  }, [layoutHeight + isFocused]);
+  //console.log(FixedService)
+  return (
+    <View
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
+      }}
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
+      nestedScrollEnabled={true}
+    >
+      <View
+        style={{
+          marginHorizontal: 10,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginVertical: 20,
+        }}
+      >
+        {PackageService.map((doc, i) => (
+          <ServiceCart
+            onPress={() => {
+              if (onPress) {
+                onPress(doc);
+              }
+            }}
+            key={i}
+            data={doc}
+          />
+        ))}
+        {/* {PackageService.length > content && (
+          <View
+            style={{
+              justifyContent: "center",
+              marginVertical: 15,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <IconButton
+              onPress={() => {
+                setContent((val) => val + 2);
+              }}
+              style={{
+                borderWidth: 0,
+              }}
+              Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
+              title="Load More"
+            />
+          </View>
+        )}
+            */}
+        {PackageService.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        {/* <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+          }}
+        >
+          {RelatedServices.length > 2 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {RelatedServices.map((doc, i) =>
+                  i < 6 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {UnRelatedServices.map((doc, i) =>
+                  i < 50 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+        </View> */}
+      </View>
+      <View style={{ height: 70 }} />
+    </View>
+  );
+};

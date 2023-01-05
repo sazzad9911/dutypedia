@@ -73,8 +73,8 @@ import {
   updateVendorOrder,
 } from "../Reducers/vendorOrders";
 import ChatScreen from "./ChatScreen";
-import AudioCallScreen from "./AudioCallScreen";
-import CallingScreen from "./CallingScreen";
+//import AudioCallScreen from "./AudioCallScreen";
+//import CallingScreen from "./CallingScreen";
 import { setCallingScreen } from "../Reducers/callingScreen";
 
 const Tab = createBottomTabNavigator();
@@ -514,7 +514,7 @@ const TabRoute = () => {
       </Tab.Navigator>
       <Bottom bottomSheetRef={bottomSheetRef} />
       <Modal visible={callingScreenVisible}>
-        {callingScreen ? <CallingScreen setVisible={()=>{
+        {/* {callingScreen ? <CallingScreen setVisible={()=>{
           setCallingScreenVisible(false)
         }} user={RoomId} audio={callingScreen.audioOnly} /> : <AudioCallScreen onCancel={()=>{
           dispatch(setCallingScreen(null))
@@ -535,7 +535,7 @@ const TabRoute = () => {
               roomId: RoomId,
             },
           });
-        }} />}
+        }} />} */}
       </Modal>
     </View>
   );
@@ -684,6 +684,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-const New = () => {
-  return <View style={{ flex: 1, backgroundColor: "red" }} />;
-};
+

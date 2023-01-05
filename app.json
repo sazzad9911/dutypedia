@@ -10,13 +10,6 @@
       ],
       [
         "react-native-background-fetch"
-      ],
-      [
-        "@config-plugins/react-native-webrtc",
-        {
-          "cameraPermission": "Allow Dutypedia to access your camera",
-          "microphonePermission": "Allow Dutypedia to access your microphone"
-        }
       ]
     ],
     "name": "dutypedia",

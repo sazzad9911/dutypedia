@@ -33,9 +33,7 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
-import CallingScreen from "./CallingScreen";
-import AudioCallScreen from "./AudioCallScreen";
-import VideoCallingScreen from "./VideoCallingScreen";
+
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();

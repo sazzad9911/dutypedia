@@ -17,18 +17,19 @@ import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Zocial } from "@expo/vector-icons";
 import Avatar from "../components/Avatar";
-import { getStream } from "../Utils";
+//import { getStream } from "../Utils";
 import { useSelector } from "react-redux";
 import Peer from "react-native-peerjs";
 import { socket } from "../Class/socket";
-import { RTCPeerConnection, RTCView, mediaDevices,
-  RTCIceCandidate,RTCSessionDescription } from "react-native-webrtc";
+// import { RTCPeerConnection, RTCView, mediaDevices,
+//   RTCIceCandidate,RTCSessionDescription } from "react-native-webrtc";
 import { getUserInfo } from "../Class/member";
 import ActivityLoader from "../components/ActivityLoader";
-import VideoCallingScreen from "./VideoCallingScreen";
+//import VideoCallingScreen from "./VideoCallingScreen";
 import { url } from "../action";
 
 export default function CallingScreen({ audio, user, setVisible }) {
+  return null;
   const [remoteStream, setRemoteStream] = useState(null);
   const [localStream, setLocalStream] = useState(null);
   const [cachedLocalPC, setCachedLocalPC] = React.useState();
@@ -36,8 +37,8 @@ export default function CallingScreen({ audio, user, setVisible }) {
   const [status, setStatus] = React.useState({});
   const [videoOff, setVideoOff] = React.useState(false);
   const [audioOff, setAudioOff] = React.useState(false);
-  const [remoteCandidates,setRemoteCandidates]=React.useState([])
-  const  [peerConnection,setPeerConnection]=React.useState()
+  const [remoteCandidates, setRemoteCandidates] = React.useState([]);
+  const [peerConnection, setPeerConnection] = React.useState();
   const newUser = useSelector((state) => state.user);
   //const peerConnection=;//
   //const localMediaStream=;//
@@ -48,22 +49,26 @@ export default function CallingScreen({ audio, user, setVisible }) {
       setUserData(res.data.user);
     });
   }, []);
-function handleRemoteCandidate( iceCandidate,peerConnection ) {
-    iceCandidate = new RTCIceCandidate( iceCandidate );
-  
-    if ( peerConnection.remoteDescription == null ) {
-      return remoteCandidates.push( iceCandidate );
-    };
-  
-    return peerConnection.addIceCandidate( iceCandidate );
-  };
-  
-function processCandidates() {
-    if ( remoteCandidates.length < 1 ) { return; };
-  
-    remoteCandidates.map( candidate => peerConnection.addIceCandidate( candidate ) );
+  function handleRemoteCandidate(iceCandidate, peerConnection) {
+    iceCandidate = new RTCIceCandidate(iceCandidate);
+
+    if (peerConnection.remoteDescription == null) {
+      return remoteCandidates.push(iceCandidate);
+    }
+
+    return peerConnection.addIceCandidate(iceCandidate);
+  }
+
+  function processCandidates() {
+    if (remoteCandidates.length < 1) {
+      return;
+    }
+
+    remoteCandidates.map((candidate) =>
+      peerConnection.addIceCandidate(candidate)
+    );
     remoteCandidates = [];
-  };
+  }
 
   const startLocalStream = async () => {
     // isFront will determine if the initial camera should face user or environment
@@ -138,7 +143,7 @@ function processCandidates() {
       if (!event.candidate) {
         return;
       }
-      handleRemoteCandidate(event.candidate,peerConnection)
+      handleRemoteCandidate(event.candidate, peerConnection);
       // Send the event.candidate onto the person you're calling.
       // Keeping to Trickle ICE Standards, you should send the candidates immediately.
     });
@@ -146,16 +151,18 @@ function processCandidates() {
     peerConnection.addEventListener("icecandidateerror", (event) => {
       // You can ignore some candidate errors.
       // Connections can still be made even when errors occur.
-      console.warn(event)
+      console.warn(event);
     });
 
     peerConnection.addEventListener("iceconnectionstatechange", (event) => {
       switch (peerConnection.iceConnectionState) {
-        case "connected":handleRemoteCandidate(event.candidate,peerConnection)
-        case "completed": handleRemoteCandidate(event.candidate,peerConnection)
+        case "connected":
+          handleRemoteCandidate(event.candidate, peerConnection);
+        case "completed":
+          handleRemoteCandidate(event.candidate, peerConnection);
           // You can handle the call being connected here.
           // Like setting the video streams to visible.
-         
+
           break;
       }
     });
@@ -176,7 +183,7 @@ function processCandidates() {
 
     peerConnection.addEventListener("addstream", (event) => {
       // Grab the remote stream from the connected participant.
-      setRemoteStream(event.stream)
+      setRemoteStream(event.stream);
     });
 
     // Add our stream to the peer connection.
@@ -184,45 +191,49 @@ function processCandidates() {
       .getTracks()
       .forEach((track) => peerConnection.addTrack(track, localStream));
     //peerConnection.addStream(localStream);
-    setPeerConnection(peerConnection)
+    setPeerConnection(peerConnection);
     let sessionConstraints = {
       mandatory: {
         OfferToReceiveAudio: true,
         OfferToReceiveVideo: true,
-        VoiceActivityDetection: true
-      }
+        VoiceActivityDetection: true,
+      },
     };
-    
+
     try {
-      const offerDescription = await peerConnection.createOffer( sessionConstraints );
-      await peerConnection.setLocalDescription( offerDescription );
-    
+      const offerDescription = await peerConnection.createOffer(
+        sessionConstraints
+      );
+      await peerConnection.setLocalDescription(offerDescription);
+
       // Send the offerDescription to the other participant.
-    } catch( err ) {
+    } catch (err) {
       // Handle Errors
-    };
+    }
     try {
       // Use the received offerDescription
-      const offerDescription = new RTCSessionDescription( offerDescription );
-      await peerConnection.setRemoteDescription( offerDescription );
-    
-      const answerDescription = await peerConnection.createAnswer( sessionConstraints );
-      await peerConnection.setLocalDescription( answerDescription );
-    
+      const offerDescription = new RTCSessionDescription(offerDescription);
+      await peerConnection.setRemoteDescription(offerDescription);
+
+      const answerDescription = await peerConnection.createAnswer(
+        sessionConstraints
+      );
+      await peerConnection.setLocalDescription(answerDescription);
+
       // Here is a good place to process candidates.
       processCandidates();
-    
+
       // Send the answerDescription back as a response to the offerDescription.
-    } catch( err ) {
+    } catch (err) {
       // Handle Errors
-    };
+    }
     try {
       // Use the received answerDescription
-      const answerDescription = new RTCSessionDescription( answerDescription );
-      await peerConnection.setRemoteDescription( answerDescription );
-    } catch( err ) {
+      const answerDescription = new RTCSessionDescription(answerDescription);
+      await peerConnection.setRemoteDescription(answerDescription);
+    } catch (err) {
       // Handle Error
-    };
+    }
 
     //setCachedLocalPC(localPC);
     //setCachedRemotePC(remotePC);
@@ -283,8 +294,8 @@ function processCandidates() {
     })();
   }, []);
   React.useEffect(() => {
-    if(localStream){
-      startCall()
+    if (localStream) {
+      startCall();
     }
   }, [localStream]);
   React.useEffect(() => {

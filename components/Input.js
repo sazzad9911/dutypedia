@@ -93,8 +93,8 @@ const Input = ({
         <Text
           style={{
             position: "absolute",
-            top: -5,
-            right: 20,
+            top: -3,
+            left: 30,
             backgroundColor: primaryColor,
             fontFamily: "Poppins-Light",
             color: textColor,

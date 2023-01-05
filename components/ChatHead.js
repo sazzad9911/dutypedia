@@ -19,8 +19,8 @@ import { Switch } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CallingScreen from "../screens/CallingScreen";
-import AudioCallScreen from "../screens/AudioCallScreen";
+//import CallingScreen from "../screens/CallingScreen";
+//import AudioCallScreen from "../screens/AudioCallScreen";
 import { setCallingScreen } from "../Reducers/callingScreen";
 import { socket } from "../Class/socket";
 
@@ -195,12 +195,12 @@ const ChatHead = ({ navigation, name, image, user }) => {
         <MenuBar setVisible={setVisible} />
       </Modal>
       <Modal visible={CallingScreenVisible}>
-        {callingScreen && (
+        {/* {callingScreen && (
           <CallingScreen setVisible={()=>{
             dispatch(setCallingScreen(null))
             setCallingScreenVisible(false)
           }} user={user.id} audio={callingScreen.audioOnly} />
-        )}
+        )} */}
       </Modal>
     </SafeAreaView>
   );

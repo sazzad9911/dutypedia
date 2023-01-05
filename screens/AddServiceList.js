@@ -122,11 +122,17 @@ const AddServiceList = (props) => {
                   setDataError("You must need at least one service");
                   return;
                 }
-                if(params.data=="PACKAGE"){
-                  navigation.navigate("AddPackage",{
-                    data:Data
-                  })
-                  return
+                if (params.data == "PACKAGE") {
+                  navigation.navigate("AddPackage", {
+                    data: Data,
+                  });
+                  return;
+                }
+                if (params.data == "SUBSCRIPTION") {
+                  navigation.navigate("AddSubscription", {
+                    data: Data,
+                  });
+                  return;
                 }
                 navigation.navigate("Service", {
                   direct: params.data,
@@ -214,7 +220,7 @@ const ComponentScreen = (props) => {
           <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
-      <View style={{height:80}}/>
+      <View style={{ height: 80 }} />
     </ScrollView>
   );
 };
@@ -374,7 +380,7 @@ const Rows = ({ title, item, name, setData, Data }) => {
           <CheckBox
             style={{
               marginTop: 5,
-              width:width/2-30,
+              width: width / 2 - 30,
             }}
             key={i}
             value={

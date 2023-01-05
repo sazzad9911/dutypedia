@@ -38,8 +38,7 @@ import * as Network from "expo-network";
 import CustomAppStatusBar from "./Hooks/AppBar";
 import Button from "./components/Button";
 import IconButton from "./components/IconButton";
-import { getStream } from "./Utils";
-import Peer from "react-native-peerjs";
+//import { getStream } from "./Utils";
 import { socket } from "./Class/socket";
 
 export default function App() {

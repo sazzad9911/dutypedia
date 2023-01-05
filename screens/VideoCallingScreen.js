@@ -1,7 +1,7 @@
 import React from "react";
 import { View, SafeAreaView, Button, StyleSheet } from "react-native";
 
-import { RTCPeerConnection, RTCView, mediaDevices } from "react-native-webrtc";
+//import { RTCPeerConnection, RTCView, mediaDevices } from "react-native-webrtc";
 
 export default function VideoCallingScreen() {
   const [localStream, setLocalStream] = React.useState();

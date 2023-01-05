@@ -245,7 +245,8 @@ export default function StackRoute() {
           <Stack.Screen
             name="Service"
             options={{
-              header: (props) => <SubHeader title="Service" {...props} />,
+              headerShown:false,
+             // : (props) => <SubHeader title="Service" {...props} />
             }}
             component={Service}
           />

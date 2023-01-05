@@ -1193,8 +1193,8 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
               marginLeft: 7,
             }}
             xml={tick}
-            height="20"
-            width="20"
+            height="50"
+            width="50"
           />
         )}
       </View>
@@ -1221,9 +1221,19 @@ const clock = `<svg xmlns="http://www.w3.org/2000/svg" width="14.3" height="14.3
 </g>
 </svg>
 `;
-const tick = `<svg xmlns="http://www.w3.org/2000/svg" width="13.109" height="9.415" viewBox="0 0 13.109 9.415">
-<g id="_000000ff" data-name="#000000ff" transform="translate(0 -18.031)">
-  <path id="Path_20337" data-name="Path 20337" d="M11.244,18.416a1.113,1.113,0,0,1,1.07-.352,1.077,1.077,0,0,1,.795.944v.09a1.385,1.385,0,0,1-.447.844Q9.128,23.471,5.6,27a1.275,1.275,0,0,1-.779.433,1.131,1.131,0,0,1-.929-.382Q2.164,25.338.444,23.617A1.406,1.406,0,0,1,0,22.787V22.7a1.075,1.075,0,0,1,.807-.961A1.118,1.118,0,0,1,1.87,22.1c.951.945,1.9,1.9,2.847,2.844Q7.985,21.682,11.244,18.416Z" transform="translate(0 0)" fill="#666"/>
+const tick = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="43.062" height="37.867" viewBox="0 0 43.062 37.867">
+<defs>
+  <filter id="Path_20930" x="0" y="0" width="43.062" height="37.867" filterUnits="userSpaceOnUse">
+    <feOffset dy="3" input="SourceAlpha"/>
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feFlood flood-opacity="0.059"/>
+    <feComposite operator="in" in2="blur"/>
+    <feComposite in="SourceGraphic"/>
+  </filter>
+</defs>
+<g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_20930)">
+  <path id="Path_20930-2" data-name="Path 20930" d="M-1914.146,1252.83a4.731,4.731,0,0,1,2.195-.164,7.856,7.856,0,0,1,6.042,3.806c.193.312.388.622.609.977,3.6-6.416,8.727-11.142,16.11-13.454l.106.091c-.081.1-.155.2-.243.286-1.94,1.942-3.906,3.863-5.817,5.828a45.363,45.363,0,0,0-5.944,7.349c-.854,1.353-1.635,2.748-2.459,4.118-.337.562-.7,1.112-1.054,1.664a2.008,2.008,0,0,1-.242.3c-.311.324-.487.321-.718-.062q-.958-1.579-1.88-3.177a27.337,27.337,0,0,0-3.057-4.565,14.639,14.639,0,0,0-3.506-2.917C-1914.035,1252.887-1914.065,1252.873-1914.146,1252.83Z" transform="translate(1923.15 -1237.99)" fill="#0d9e21"/>
 </g>
 </svg>
+
 `;

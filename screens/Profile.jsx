@@ -67,6 +67,7 @@ import AddPackage, { AddScreen } from "./services/AddPackage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import VendorFixedService from "./Vendor/VendorFixedService";
 import VendorPackageService from "./Vendor/VendorPackageService";
+import AddSubscription from "./services/AddSubscription";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -340,6 +341,11 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={CompanyCalendar}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddSubscription"
+        component={AddSubscription}
       />
     </Stack.Navigator>
   );

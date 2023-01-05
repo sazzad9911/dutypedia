@@ -15,7 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
 import { primaryColor, textColor } from "./../assets/colors";
 
-const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,message }) => {
+const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,message,label }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
@@ -65,6 +65,16 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,mes
   return (
     <View>
       <View style={[styles.viewBox, style]}>
+        {label&&(
+          <Text numberOfLines={1} style={{
+            position:"absolute",
+            top:-8,
+            fontSize:12,
+            left:10,
+            backgroundColor:"white",
+            zIndex:300
+          }}>{label}</Text>
+        )}
         <TouchableOpacity
           onPress={() => {
             setFocus(!Focus);
