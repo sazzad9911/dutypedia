@@ -1027,7 +1027,14 @@ const PackageService = (props) => {
           </Pressable>
         </Animated.View>
       )}
+       <View style={{
+        position:"absolute",
+        top:0,
+        left:0,
+        zIndex:100
+       }}>
        <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
+       </View>
     </View>
   );
 };

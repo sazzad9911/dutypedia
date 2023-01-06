@@ -7,8 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   Image,
-  FlatList,
-  SafeAreaView,
   RefreshControl,
   Alert,
   Pressable,
@@ -27,12 +25,9 @@ import {
   secondaryColor,
   textColor,
 } from "./../assets/colors";
-import ProfileOption from "./../components/ProfileOption";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import Button from "./../components/Button";
-import RatingView from "./../components/RatingView";
-import { user, calenderIcon, noticeIcon, serviceIcon } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import ReviewCart from "./../Cart/ReviewCart";
 import RelatedService from "./../Cart/RelatedService";
@@ -69,7 +64,7 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
-const FixedService = (props) => {
+const SubscriptionService = (props) => {
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -130,6 +125,12 @@ const FixedService = (props) => {
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
+  const scrollY = new Animation.Value(0);
+  const diffClamp = Animation.diffClamp(scrollY, 0, 250);
+  const translateY = diffClamp.interpolate({
+    inputRange: [200, 250],
+    outputRange: [0, 1],
+  });
 
   const { handleScroll, showButton } = useHandleScroll();
   const [Specialty, setSpecialty] = React.useState(
@@ -137,22 +138,25 @@ const FixedService = (props) => {
   );
   const params = props.route.params;
   const data = params.data;
-  const [newNavigation, setNewNavigation] = React.useState(1100);
+  const [newNavigation, setNewNavigation] = React.useState(200);
   const [imageIndex, setImageIndex] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
-  const isFocused = useIsFocused();
+  const [subsData, setSubsData] = React.useState();
+  const isFocused=useIsFocused()
+  const [selectedPackage,setSelectedPackage]=React.useState()
+  const [services,setServices]=React.useState()
 
-  React.useEffect(() => {
-    if (isFocused) {
-      dispatch(setHideBottomBar(true));
-    } else {
-      dispatch(setHideBottomBar(false));
+  React.useEffect(()=>{
+    if(isFocused){
+      dispatch(setHideBottomBar(true))
+    }else{
+      dispatch(setHideBottomBar(false))
     }
-  }, [isFocused]);
+  },[isFocused])
 
   //console.log(SeeMore)
   const wait = (timeout) => {
@@ -167,7 +171,7 @@ const FixedService = (props) => {
   React.useEffect(() => {
     setScrollEnabled(false);
     setActiveServiceData(null);
-    //console.log(data);
+    setSubsData(data.subsData);
     if (data) {
       setData(data);
       setSpecialty(data.service.speciality);
@@ -179,9 +183,13 @@ const FixedService = (props) => {
       // img.push(newImage3)
       // img.push(newImage4)
       //console.log(data.images)
+      //console.log(data)
       setImages(data.images);
-      setPrice(data.price);
+      //console.log(data.subsData)
+      setPrice(data.subsData.amount);
+      setSubsData(data.subsData)
       setTitle(data.title);
+      //console.log(data.subsData)
       setDescription(data.description);
       //setNewDataList(response.data.service.gigs[0].services.options)
       setFacilities(data.facilites.selectedOptions);
@@ -300,12 +308,16 @@ const FixedService = (props) => {
     }
   }, [Data]);
 
+  React.useEffect(() => {
+    console.log(scrollEnabled);
+  }, [scrollEnabled]);
+
   if (
     Loader ||
     !Data ||
     !RelatedServices ||
     !UnRelatedServices ||
-    !NewDataList
+    !NewDataList 
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -314,11 +326,16 @@ const FixedService = (props) => {
     );
   }
 
+
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
+      <StatusBar
+        hidden={false}
+        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
+      />
 
       <ScrollView
         scrollEventThrottle={16}
@@ -350,7 +367,15 @@ const FixedService = (props) => {
             //setScrollDirection(false);
             //console.log("down")
           }
+          if (currentOffset > 200) {
+            //console.log("white");
+            setScrollEnabled(true);
+          } else {
+            //console.log("transparent");
+            setScrollEnabled(false);
+          }
 
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
@@ -422,7 +447,7 @@ const FixedService = (props) => {
             />
           )}
         />
-
+       
         <View
           style={{
             position: "absolute",
@@ -572,7 +597,7 @@ const FixedService = (props) => {
                 marginTop: 20,
               }}
             >
-              #Fixed Service
+              #Subscription Service
             </Text>
             <View style={{ flex: 0.5 }} />
           </View>
@@ -624,11 +649,74 @@ const FixedService = (props) => {
               )}
             /> */}
           </View>
+          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
+          {/* <View
+            style={{
+              height: newNavigation,
+            }}
+          >
+            <Tab.Navigator
+              screenOptions={{
+                tabBarStyle: {
+                  paddingLeft: 0,
+                  elevation: 0,
+                  borderBottomColor: "#FAFAFA",
+                  borderBottomWidth: 2,
+                  backgroundColor: primaryColor,
+                },
+                tabBarLabelStyle: {
+                  fontSize: Platform.OS == "ios" ? 12 : 10.5,
+                },
+                tabBarItemStyle: {
+                  margin: 0,
+                  padding: 0,
+                  width: 120,
+                  borderTopWidth: 0,
+                  borderTopColor: "#F0F0F0",
+                },
+                tabBarIndicatorStyle: {
+                  backgroundColor: "#4ADE80",
+                  marginLeft: 0,
+                },
+                tabBarScrollEnabled: true,
+                tabBarPressColor: primaryColor,
+                swipeEnabled: false,
+              }}
+            >
+              {subsData &&
+                subsData.map((doc, i) => (
+                  <Tab.Screen options={{
+                    tabBarLabel: ({ focused, color, size }) => (
+                      <Text
+                        style={{
+                          color: focused ? "#4ADE80" : "black",
+                          fontFamily: "Poppins-SemiBold",
+                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                        }}
+                      >
+                        {doc.price}৳
+                      </Text>
+                    ),
+                  }}
+                    key={i}
+                    name={doc.id}
+                    initialParams={{
+                      data: doc,
+                      setNewNavigation: setNewNavigation,
+                      setPrice:setPrice,
+                      setSelectedPackage:setSelectedPackage
+                    }}
+                    component={Screen}
+                  />
+                ))}
+            </Tab.Navigator>
+          </View> */}
+          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
           <View
             style={{
               backgroundColor: primaryColor,
               paddingHorizontal: 20,
-              paddingTop: 15,
+              paddingTop: 20,
             }}
           >
             <Text
@@ -764,7 +852,7 @@ const FixedService = (props) => {
                             <Text
                               numberOfLines={1}
                               onLayout={(e) => {
-                                console.log(e.nativeEvent.layout.height);
+                                //console.log(e.nativeEvent.layout.height);
                               }}
                               style={{
                                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -787,22 +875,21 @@ const FixedService = (props) => {
           <View
             style={{
               backgroundColor: primaryColor,
-
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: 20,
               marginVertical: 25,
+              marginBottom:0
             }}
           >
             <Text
               style={{
-                fontSize: Platform.OS == "ios" ? 17 : 15.5,
-                color: textColor,
-
-                fontFamily: "Poppins-SemiBold",
+                fontSize: Platform.OS == "ios" ? 15 : 14,
+                color: "black",
+                fontFamily: "Poppins-Medium",
               }}
             >
-              From {Price} ৳
+              {data.subsData.subscriptionType} {Price} ৳
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -834,24 +921,43 @@ const FixedService = (props) => {
               />
             </TouchableOpacity>
           </View>
+          <View style={{
+            flexDirection:"row",
+            justifyContent:"space-between",
+            paddingHorizontal:20,
+            marginBottom:25,
+            marginTop:5
+          }}>
+            <Text style={{
+                fontSize:Platform.OS == "ios" ? 15 : 14
+            }}>Duration ({data.subsData.payAsYouGo?"Pay As Go":data.subsData.totalDuration+" "+`${data.subsData.subscriptionType=="Monthly"?"Month":data.subsData.subscriptionType=="Yearly"?"Year":"Week"}`})</Text>
+            {data&&data.subsData.otherChargeName&&(
+                <Text style={{
+                    fontSize:Platform.OS == "ios" ? 15 : 14,
+                }}>{data.subsData.otherChargeName} {data.subsData.otherChargeAmount}৳</Text>
+            )}
+          </View>
           <View style={{ backgroundColor: primaryColor }}>
             <IconButton
               onPress={() => {
                 navigation.navigate("OfferNow", {
-                  type: "ONETIME",
+                  type: "PACKAGE",
                   gigs: data,
-                  data: data,
+                  data:data,
+                  selectedPackage:selectedPackage,
+                  services:data.services,
+                  category:Category
                 });
               }}
               style={{
                 borderRadius: 5,
                 marginHorizontal: 20,
-                backgroundColor: "#FEA31E",
+                backgroundColor: "#4ADE80",
                 borderWidth: 0,
                 marginVertical: 0,
                 color: textColor,
                 marginTop: 0,
-                height: 40,
+                height: 35,
               }}
               title={`Continue`}
             />
@@ -941,24 +1047,19 @@ const FixedService = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 100,
-        }}
-      >
-        <FixedBackHeader
-          navigation={navigation}
-          Yoffset={offset ? offset : 0}
-        />
-      </View>
+       <View style={{
+        position:"absolute",
+        top:0,
+        left:0,
+        zIndex:100
+       }}>
+       <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
+       </View>
     </View>
   );
 };
 
-export default FixedService;
+export default SubscriptionService;
 const styles = StyleSheet.create({
   activeContent: {
     position: "absolute",
@@ -1196,3 +1297,92 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 </g>
 </svg>
 `;
+export const Screen = ({ navigation, route }) => {
+  const params = route.params;
+  const data = params.data;
+  const setPrice=params.setPrice;
+  const setSelectedPackage=params.setSelectedPackage;
+  const setNewNavigation = params.setNewNavigation;
+  const [feature,setFeature]=React.useState()
+  const isFocused=useIsFocused()
+  const [layoutHeight,setLayoutHeight]=React.useState()
+
+  React.useLayoutEffect(()=>{
+    
+    if(data){
+        setFeature(data.features)
+    }
+  },[data])
+  React.useEffect(()=>{
+    if(isFocused&&setPrice){
+      setSelectedPackage(data)
+      setPrice(data.price)
+    }
+
+  },[isFocused])
+  React.useEffect(()=>{
+    if(layoutHeight){
+      setNewNavigation(val=>{
+        if(val<(layoutHeight+50)){
+          return layoutHeight+50
+        }else{
+          return val
+        }
+      })
+    }
+  },[layoutHeight])
+
+  const NewRows=({doc})=>{
+    return(
+        <View style={{
+            flexDirection:"row",
+            justifyContent:"space-between",
+            marginVertical:10
+        }}>
+            <Text style={{
+              fontSize:Platform.OS=="ios"? 16.5:15,
+              fontFamily:"Poppins-Medium",
+              color:textColor
+            }}>{doc.title}</Text>
+            <SvgXml xml={doc.isAvailable?Available:notAvailable} height="20" width={"20"}/>
+        </View>
+    )
+  }
+
+  return (
+    <View
+      style={{
+        paddingHorizontal:20,
+        paddingVertical:15,
+        
+      }}
+      onLayout={(e) => {
+        const offsetHeight = e.nativeEvent.layout.height;
+        if(!layoutHeight||layoutHeight<offsetHeight){
+          setLayoutHeight(offsetHeight)
+        }
+        // setNewNavigation((val) => {
+        //   if (!val || val < offsetHeight) {
+        //     return offsetHeight;
+        //   } else {
+        //     val;
+        //   }
+        // });
+      }}
+    >
+        {
+            feature&&feature.map((doc,i)=>(
+                <NewRows key={i} doc={doc}/> 
+            ))
+        }
+    </View>
+  );
+};
+const notAvailable=`<svg xmlns="http://www.w3.org/2000/svg" width="17" height="3" viewBox="0 0 17 3">
+<line id="Line_5979" data-name="Line 5979" x2="14" transform="translate(1.5 1.5)" fill="none" stroke="#666" stroke-linecap="round" stroke-width="3"/>
+</svg>
+`
+const Available=`<svg xmlns="http://www.w3.org/2000/svg" width="14.889" height="14.515" viewBox="0 0 14.889 14.515">
+<path id="Path_20918" data-name="Path 20918" d="M45.921,37.151a.439.439,0,0,1,.456.619q-4.083,6.579-8.168,13.156a1.53,1.53,0,0,1-1.056.715,1.423,1.423,0,0,1-1.326-.507l-3.935-4.82a1.551,1.551,0,0,1,.326-2.272,1.536,1.536,0,0,1,1.155-.239,1.552,1.552,0,0,1,.771.393q1.366,1.24,2.729,2.482a.364.364,0,0,0,.52-.049L45.646,37.3A.44.44,0,0,1,45.921,37.151Z" transform="translate(-31.537 -37.144)" fill="#4ade80"/>
+</svg>
+`

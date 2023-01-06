@@ -82,6 +82,7 @@ import BottomBar from "../components/BottomBar";
 import NewBottomBar from "../components/NewBottomBar";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
+import ActivityLoader from "../components/ActivityLoader";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -515,6 +516,27 @@ const OtherProfile = (props) => {
     }
     console.log("ok");
     navigation.navigate("PackageService", { data: doc });
+  };
+  const clickSubs = (doc) => {
+    setClick(true);
+    setImages(doc.images);
+    setGigs(doc);
+    //console.log(doc.services);
+    setPrice(doc.price);
+    setFacilities(doc.facilites.selectedOptions);
+    setTitle(doc.title);
+    setDescription(doc.description);
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(doc.services, Category),
+      });
+      setNewDataList(serverToLocal(doc.services, Category));
+    } catch (e) {
+      console.log(e.message);
+    }
+    console.log("ok");
+    navigation.navigate("SubscriptionService", { data: doc });
   };
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
@@ -1269,6 +1291,44 @@ const OtherProfile = (props) => {
                 scrollTo: scrollTo,
               }}
               component={PackageScreen}
+            />
+            
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
+                  <Text
+                    style={{
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                    }}
+                  >
+                    {initialState[4].title}
+                  </Text>
+                ),
+              }}
+              name={initialState[4].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickSubs,
+                PackageService: PackageService,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
+                data:data
+              }}
+              component={Subscriptions}
             />
           </Tab.Navigator>
         </View>
@@ -2547,3 +2607,214 @@ const refreshIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14.646" heig
 </g>
 </svg>
 `;
+const Subscriptions = ({ navigation, route }) => {
+  const params = route.params;
+  //const PackageService = params.PackageService;
+  const PackageService = [];
+  const onPress = route.params.onPress;
+  const RelatedServices = params.RelatedServices;
+  const UnRelatedServices = params.UnRelatedServices;
+  const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
+  const isFocused = useIsFocused();
+  const setNewNavigation = params.setNewNavigation;
+  const scrollTo = params.scrollTo;
+  const [offset, setOffset] = React.useState(0);
+  const changeScreenName = params.changeScreenName;
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const [SubsCription,setSubscription]=React.useState()
+  const data=params.data;
+
+  React.useEffect(() => {
+    if (layoutHeight && isFocused) {
+      //console.log(layoutHeight);
+      //changeScreenName("SUBS");
+      setNewNavigation(layoutHeight + 50);
+    }
+  }, [layoutHeight + isFocused]);
+  React.useEffect(() => {
+    //console.log(Data)
+    if (user && data) {
+      getOtherServices(user.token, data.service.id, "SUBS")
+        .then((res) => {
+          setSubscription(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setSubscription([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused, user, vendor]);
+  //console.log(FixedService)
+  if(!SubsCription){
+    return <ActivityLoader/>
+  }
+  return (
+    <View
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
+      }}
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
+      nestedScrollEnabled={true}
+    >
+      <View
+        style={{
+          marginHorizontal: 10,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginVertical: 20,
+        }}
+      >
+        {SubsCription&&SubsCription.map((doc, i) => (
+          <ServiceCart
+            onPress={() => {
+              if (onPress) {
+                onPress(doc);
+              }
+            }}
+            key={i}
+            data={doc}
+          />
+        ))}
+        {/* {PackageService.length > content && (
+          <View
+            style={{
+              justifyContent: "center",
+              marginVertical: 15,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <IconButton
+              onPress={() => {
+                setContent((val) => val + 2);
+              }}
+              style={{
+                borderWidth: 0,
+              }}
+              Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
+              title="Load More"
+            />
+          </View>
+        )}
+            */}
+        {SubsCription&&SubsCription.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        {/* <View
+          style={{
+            backgroundColor: primaryColor,
+            marginTop: 0,
+          }}
+        >
+          {RelatedServices.length > 2 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                Related Service
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {RelatedServices.map((doc, i) =>
+                  i < 6 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+
+          {UnRelatedServices.length > 0 && (
+            <View>
+              <Text
+                style={{
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  fontFamily: "Poppins-SemiBold",
+                  color: textColor,
+                  paddingHorizontal: 10,
+                  paddingVertical: 15,
+                }}
+              >
+                You Might Also Like
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                }}
+              >
+                {UnRelatedServices.map((doc, i) =>
+                  i < 50 ? (
+                    <RelatedService
+                      squire={true}
+                      data={doc}
+                      key={i}
+                      navigation={navigation}
+                    />
+                  ) : null
+                )}
+              </View>
+            </View>
+          )}
+        </View> */}
+      </View>
+      <View style={{ height: 70 }} />
+    </View>
+  );
+};

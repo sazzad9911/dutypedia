@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Modal,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 //import { services } from "../../assets/icon";
@@ -26,7 +27,10 @@ import { EvilIcons } from "@expo/vector-icons";
 import Button from "./../../components/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { CheckBox } from "./Pricing";
-import { createOtherService } from "../../Class/service";
+import {
+  createOtherService,
+  createOtherServiceIndividual,
+} from "../../Class/service";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
 import IconButton from "../../components/IconButton";
@@ -87,7 +91,8 @@ const Service = ({ navigation, route }) => {
   const [ModalVisible, setModalVisible] = React.useState(false);
   const params = route.params;
   const type = params.type;
-  console.log(type)
+  const subsData = params.subsData;
+  //console.log(type)
 
   React.useEffect(() => {
     setFacilitiesCounter(0);
@@ -155,7 +160,7 @@ const Service = ({ navigation, route }) => {
       setPriceError("Price field is required");
       return;
     }
-    if (FacilitiesCounter == 0 && direct &&type!="SUBS") {
+    if (FacilitiesCounter == 0 && direct && type != "SUBS") {
       setFacilitiesError("Please select any facilities");
       return;
     }
@@ -171,7 +176,7 @@ const Service = ({ navigation, route }) => {
       dispatch({ type: "PRICE", playload: Price });
       dispatch({ type: "FACILITIES", playload: Facilities });
     }
-    
+
     if (direct) {
       //ongoing function-------------
       setLoader(true);
@@ -182,13 +187,38 @@ const Service = ({ navigation, route }) => {
       blobImages.push(fileFromURL(ForthImage));
       const result = await uploadFile(blobImages, user.token);
       if (result) {
+        if (type) {
+          if (!subsData) {
+            Alert.alert("Invalid Data format");
+            return;
+          }
+          createOtherServiceIndividual(
+            user.token,
+            businessForm,
+            route.params.data ? route.params.data : listData,
+            result,
+            vendor.service.id,
+            type,
+            undefined,
+            subsData
+          )
+            .then((res) => {
+              navigation.navigate("VendorProfile", { direct: businessForm });
+              setLoader(false);
+            })
+            .catch((err) => {
+              console.warn(err.response);
+              setLoader(false);
+            });
+          return;
+        }
         createOtherService(
           user.token,
           businessForm,
           route.params.data ? route.params.data : listData,
           result,
           vendor.service.id,
-          direct,
+          direct
         )
           .then((res) => {
             navigation.navigate("VendorProfile", { direct: businessForm });
@@ -405,9 +435,11 @@ const Service = ({ navigation, route }) => {
               />
             )}
             <View style={{ height: 10 }} />
-            <View style={{
-              marginHorizontal:20
-            }}>
+            <View
+              style={{
+                marginHorizontal: 20,
+              }}
+            >
               <TextArea
                 style={{}}
                 value={Description}
@@ -544,7 +576,6 @@ const Service = ({ navigation, route }) => {
                   fontFamily: "Poppins-Light",
                   color: "red",
                   marginTop: 3,
-                  
                 }}
               >
                 {FacilitiesError}
@@ -578,7 +609,7 @@ const Service = ({ navigation, route }) => {
               <Text
                 style={{
                   fontSize: 16,
-                  textDecorationLine: 1,
+                  
                 }}
               >
                 Back

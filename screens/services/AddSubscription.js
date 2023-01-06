@@ -53,6 +53,7 @@ export default function AddSubscription({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -145,6 +146,7 @@ export default function AddSubscription({ navigation, route }) {
                 error={SubscriptionTypeError}
                 value={SubscriptionType}
                 onChange={(e) => {
+                  console.log(e)
                   setSubscriptionType(e);
                   setPayAsGo(false);
                 }}
@@ -383,7 +385,7 @@ export default function AddSubscription({ navigation, route }) {
                   style={{
                     fontSize: 16,
                     marginVertical: 10,
-                    textDecorationLine: 1,
+                 
                   }}
                 >
                   Cancel

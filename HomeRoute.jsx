@@ -49,6 +49,7 @@ import AppointmentDetails from "./screens/Seller/Appointment/AppointmentDetails"
 import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
 import ChatScreen from "./screens/ChatScreen";
+import SubscriptionService from "./screens/SubscriptionService";
 
 const Stack = createStackNavigator();
 
@@ -180,7 +181,11 @@ const HomeRoute = ({ navigation }) => {
         name="PackageService"
         component={PackageService}
       />
-      
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SubscriptionService"
+        component={SubscriptionService}
+      />
     </Stack.Navigator>
   );
 };

@@ -671,7 +671,7 @@ const VendorProfile = (props) => {
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
           /> */}
-{/* 
+          {/* 
           <SvgXml
             onPress={() => {
               navigation.navigate("AppointmentList", { data: Data });
@@ -1495,7 +1495,6 @@ const VendorProfile = (props) => {
                   data: "SUBSCRIPTION",
                 });
               }
-              
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -2962,6 +2961,9 @@ const Subscriptions = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
   const changeScreenName = params.changeScreenName;
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const [SubsCription,setSubscription]=React.useState()
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2970,7 +2972,23 @@ const Subscriptions = ({ navigation, route }) => {
       setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);
+  React.useEffect(() => {
+    if (user && vendor) {
+      getOtherServices(user.token, vendor.service.id, "SUBS")
+        .then((res) => {
+          setSubscription(res.data.gigs);
+          console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setSubscription([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused, user, vendor]);
   //console.log(FixedService)
+  if(!SubsCription){
+    return <ActivityLoader/>
+  }
   return (
     <View
       scrollEventThrottle={16}
@@ -3000,7 +3018,7 @@ const Subscriptions = ({ navigation, route }) => {
           marginVertical: 20,
         }}
       >
-        {PackageService.map((doc, i) => (
+        {SubsCription&&SubsCription.map((doc, i) => (
           <ServiceCart
             onPress={() => {
               if (onPress) {
@@ -3033,7 +3051,7 @@ const Subscriptions = ({ navigation, route }) => {
           </View>
         )}
             */}
-        {PackageService.length == 0 && (
+        {SubsCription&&SubsCription.length == 0 && (
           <Animated.View
             style={{
               flexDirection: "row",
