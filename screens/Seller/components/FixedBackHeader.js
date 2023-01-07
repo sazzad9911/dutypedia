@@ -3,7 +3,7 @@ import React from "react";
 import { View, Animated as Animation, StatusBar, Dimensions,TouchableOpacity } from "react-native";
 const {width,height}=Dimensions.get("window")
 
-export default function FixedBackHeader({ Yoffset, navigation }) {
+export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize }) {
   const primaryColor = "white";
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const scrollY = new Animation.Value(0);
@@ -24,13 +24,13 @@ export default function FixedBackHeader({ Yoffset, navigation }) {
     scrollY.setValue(Yoffset);
   }, [Yoffset]);
   return (
-    <View style={{
+    <View style={[{
        width:width,
        height:100,
        position:"absolute",
        top:0
         
-    }}>
+    },style]}>
       <StatusBar
         hidden={false}
         backgroundColor={scrollEnabled ? "white" : "transparent"}
@@ -68,7 +68,15 @@ export default function FixedBackHeader({ Yoffset, navigation }) {
             marginHorizontal: 20,
           }}
         >
-          <AntDesign
+          <AntDesign style={{
+            shadowOffset:{
+              height:1,width:1
+            },
+            shadowColor:"black",
+            shadowOpacity:.2,
+            shadowRadius:5,
+            elevation:5
+          }}
             name="arrowleft"
             size={24}
             color={scrollEnabled ? "black" : primaryColor}

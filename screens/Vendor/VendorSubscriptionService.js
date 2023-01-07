@@ -7,6 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  FlatList,
+  SafeAreaView,
   RefreshControl,
   Alert,
   Pressable,
@@ -24,16 +26,19 @@ import {
   assentColor,
   secondaryColor,
   textColor,
-} from "./../assets/colors";
+} from "../../assets/colors";
+import ProfileOption from "../../components/ProfileOption";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import Button from "./../components/Button";
+import Button from "../../components/Button";
+import RatingView from "../../components/RatingView";
+import { user, calenderIcon, noticeIcon, serviceIcon } from "../../assets/icon";
 import { SvgXml } from "react-native-svg";
-import ReviewCart from "./../Cart/ReviewCart";
-import RelatedService from "./../Cart/RelatedService";
-import IconButton from "./../components/IconButton";
+import ReviewCart from "../../Cart/ReviewCart";
+import RelatedService from "../../Cart/RelatedService";
+import IconButton from "../../components/IconButton";
 import { Menu } from "react-native-paper";
-import { Rows, ServiceTable, TabBar, TabScreen } from "./VendorProfile";
+import { Rows, ServiceTable, TabBar, TabScreen } from "../VendorProfile";
 import Animated, {
   FadeIn,
   StretchInY,
@@ -43,28 +48,28 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import ServiceCart from "./../Cart/ServiceCart";
+import ServiceCart from "../../Cart/ServiceCart";
 import {
   getService,
   getOtherServices,
   getRelatedServices,
   getUnRelatedServices,
-} from "../Class/service";
+} from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { serverToLocal } from "../Class/dataConverter";
+import { serverToLocal } from "../../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
-import useHandleScroll from "../components/constants/FabView";
+import useHandleScroll from "../../components/constants/FabView";
 import Carousel from "react-native-reanimated-carousel";
-import AnimatedHeight from "../Hooks/AnimatedHeight";
+import AnimatedHeight from "../../Hooks/AnimatedHeight";
 import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
-import { setHideBottomBar } from "../Reducers/hideBottomBar";
-import FixedBackHeader from "./Seller/components/FixedBackHeader";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import FixedBackHeader from "../Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
-const SubscriptionService = (props) => {
+const VendorSubscriptionService = (props) => {
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -125,12 +130,6 @@ const SubscriptionService = (props) => {
   const scrollRef = React.useRef();
   const [isActionButtonVisible, setIsActionButtonVisible] =
     React.useState(false);
-  const scrollY = new Animation.Value(0);
-  const diffClamp = Animation.diffClamp(scrollY, 0, 250);
-  const translateY = diffClamp.interpolate({
-    inputRange: [200, 250],
-    outputRange: [0, 1],
-  });
 
   const { handleScroll, showButton } = useHandleScroll();
   const [Specialty, setSpecialty] = React.useState(
@@ -138,25 +137,23 @@ const SubscriptionService = (props) => {
   );
   const params = props.route.params;
   const data = params.data;
-  const [newNavigation, setNewNavigation] = React.useState(200);
+  const [newNavigation, setNewNavigation] = React.useState(1100);
   const [imageIndex, setImageIndex] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
+  const isFocused = useIsFocused();
   const [subsData, setSubsData] = React.useState();
-  const isFocused=useIsFocused()
-  const [selectedPackage,setSelectedPackage]=React.useState()
-  const [services,setServices]=React.useState()
 
-  React.useEffect(()=>{
-    if(isFocused){
-      dispatch(setHideBottomBar(true))
-    }else{
-      dispatch(setHideBottomBar(false))
+  React.useEffect(() => {
+    if (isFocused) {
+      dispatch(setHideBottomBar(true));
+    } else {
+      dispatch(setHideBottomBar(false));
     }
-  },[isFocused])
+  }, [isFocused]);
 
   //console.log(SeeMore)
   const wait = (timeout) => {
@@ -171,25 +168,23 @@ const SubscriptionService = (props) => {
   React.useEffect(() => {
     setScrollEnabled(false);
     setActiveServiceData(null);
-    setSubsData(data.subsData);
+    //console.log(data);
     if (data) {
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
       setImage(data.service.profilePhoto);
+      setSubsData(data.subsData);
+      //console.log(data.subsData)
       let img = [];
       // img.push(newImage1)
       // img.push(newImage2)
       // img.push(newImage3)
       // img.push(newImage4)
       //console.log(data.images)
-      //console.log(data)
       setImages(data.images);
-      //console.log(data.subsData)
-      setPrice(data.subsData.amount);
-      setSubsData(data.subsData)
+      setPrice(data.price);
       setTitle(data.title);
-      //console.log(data.subsData)
       setDescription(data.description);
       //setNewDataList(response.data.service.gigs[0].services.options)
       setFacilities(data.facilites.selectedOptions);
@@ -308,16 +303,12 @@ const SubscriptionService = (props) => {
     }
   }, [Data]);
 
-  React.useEffect(() => {
-    console.log(scrollEnabled);
-  }, [scrollEnabled]);
-
   if (
     Loader ||
     !Data ||
     !RelatedServices ||
     !UnRelatedServices ||
-    !NewDataList 
+    !NewDataList
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -326,16 +317,11 @@ const SubscriptionService = (props) => {
     );
   }
 
-
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
        <View style={{height:25}}/>
       )} */}
-      <StatusBar
-        hidden={false}
-        backgroundColor={scrollEnabled ? primaryColor : "transparent"}
-      />
 
       <ScrollView
         scrollEventThrottle={16}
@@ -367,15 +353,7 @@ const SubscriptionService = (props) => {
             //setScrollDirection(false);
             //console.log("down")
           }
-          if (currentOffset > 200) {
-            //console.log("white");
-            setScrollEnabled(true);
-          } else {
-            //console.log("transparent");
-            setScrollEnabled(false);
-          }
 
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
         }}
       >
@@ -447,7 +425,7 @@ const SubscriptionService = (props) => {
             />
           )}
         />
-       
+
         <View
           style={{
             position: "absolute",
@@ -587,6 +565,9 @@ const SubscriptionService = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 0,
               backgroundColor: primaryColor,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
             <Text
@@ -599,7 +580,10 @@ const SubscriptionService = (props) => {
             >
               #Subscription Service
             </Text>
-            <View style={{ flex: 0.5 }} />
+
+            <TouchableOpacity>
+              <SvgXml xml={editIcon} height="50" width={"50"} />
+            </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
             <Text
@@ -649,87 +633,35 @@ const SubscriptionService = (props) => {
               )}
             /> */}
           </View>
-          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
-          {/* <View
-            style={{
-              height: newNavigation,
-            }}
-          >
-            <Tab.Navigator
-              screenOptions={{
-                tabBarStyle: {
-                  paddingLeft: 0,
-                  elevation: 0,
-                  borderBottomColor: "#FAFAFA",
-                  borderBottomWidth: 2,
-                  backgroundColor: primaryColor,
-                },
-                tabBarLabelStyle: {
-                  fontSize: Platform.OS == "ios" ? 12 : 10.5,
-                },
-                tabBarItemStyle: {
-                  margin: 0,
-                  padding: 0,
-                  width: 120,
-                  borderTopWidth: 0,
-                  borderTopColor: "#F0F0F0",
-                },
-                tabBarIndicatorStyle: {
-                  backgroundColor: "#4ADE80",
-                  marginLeft: 0,
-                },
-                tabBarScrollEnabled: true,
-                tabBarPressColor: primaryColor,
-                swipeEnabled: false,
-              }}
-            >
-              {subsData &&
-                subsData.map((doc, i) => (
-                  <Tab.Screen options={{
-                    tabBarLabel: ({ focused, color, size }) => (
-                      <Text
-                        style={{
-                          color: focused ? "#4ADE80" : "black",
-                          fontFamily: "Poppins-SemiBold",
-                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                        }}
-                      >
-                        {doc.price}৳
-                      </Text>
-                    ),
-                  }}
-                    key={i}
-                    name={doc.id}
-                    initialParams={{
-                      data: doc,
-                      setNewNavigation: setNewNavigation,
-                      setPrice:setPrice,
-                      setSelectedPackage:setSelectedPackage
-                    }}
-                    component={Screen}
-                  />
-                ))}
-            </Tab.Navigator>
-          </View> */}
-          <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
           <View
             style={{
               backgroundColor: primaryColor,
               paddingHorizontal: 20,
-              paddingTop: 20,
+              paddingTop: 15,
             }}
           >
-            <Text
+            <View
               style={{
-                fontFamily: "Poppins-SemiBold",
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                marginBottom: 20,
-                marginTop: 0,
-                color: "#535353",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              Service List
-            </Text>
+              <Text
+                style={{
+                  fontFamily: "Poppins-SemiBold",
+                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                  marginBottom: 20,
+                  marginTop: 0,
+                  color: "#535353",
+                }}
+              >
+                Service List
+              </Text>
+              <TouchableOpacity>
+                <SvgXml xml={editIcon} height="50" width={"50"} />
+              </TouchableOpacity>
+            </View>
 
             <View
               style={{
@@ -852,7 +784,7 @@ const SubscriptionService = (props) => {
                             <Text
                               numberOfLines={1}
                               onLayout={(e) => {
-                                //console.log(e.nativeEvent.layout.height);
+                                console.log(e.nativeEvent.layout.height);
                               }}
                               style={{
                                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -875,11 +807,12 @@ const SubscriptionService = (props) => {
           <View
             style={{
               backgroundColor: primaryColor,
+
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: 20,
-              marginVertical: 25,
-              marginBottom:0
+              marginVertical: 0,
+              marginTop: 20,
             }}
           >
             <Text
@@ -921,145 +854,56 @@ const SubscriptionService = (props) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{
-            flexDirection:"row",
-            justifyContent:"space-between",
-            paddingHorizontal:20,
-            marginBottom:25,
-            marginTop:5
-          }}>
-            <Text style={{
-                fontSize:Platform.OS == "ios" ? 15 : 14
-            }}>Duration ({data.subsData.payAsYouGo?"Pay As Go":data.subsData.totalDuration+" "+`${data.subsData.subscriptionType=="Monthly"?"Month":data.subsData.subscriptionType=="Yearly"?"Year":"Week"}`})</Text>
-            {data&&data.subsData.otherChargeName&&(
-                <Text style={{
-                    fontSize:Platform.OS == "ios" ? 15 : 14,
-                }}>{data.subsData.otherChargeName} {data.subsData.otherChargeAmount}৳</Text>
-            )}
-          </View>
-          <View style={{ backgroundColor: primaryColor }}>
-            <IconButton
-              onPress={() => {
-                navigation.navigate("OfferNow", {
-                  type: "SUBS",
-                  gigs: data,
-                  data:data,
-                  selectedPackage:selectedPackage,
-                  services:data.services,
-                  category:Category
-                });
-              }}
-              style={{
-                borderRadius: 5,
-                marginHorizontal: 20,
-                backgroundColor: "#4ADE80",
-                borderWidth: 0,
-                marginVertical: 0,
-                color: textColor,
-                marginTop: 0,
-                height: 35,
-              }}
-              title={`Continue`}
-            />
-          </View>
         </View>
 
-        <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
+        {/* <View style={{ height: 2, backgroundColor: "#FAFAFA" }} /> */}
+
         <View
           style={{
-            backgroundColor: primaryColor,
-            marginTop: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: 20,
+            marginBottom: 25,
+            marginTop: 5,
           }}
         >
-          {RelatedServices.length > 4 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                Related Service
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {RelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-              </ScrollView>
-            </View>
-          )}
-
-          {UnRelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                You Might Also Like
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {UnRelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-                <View style={{ width: 10 }} />
-              </ScrollView>
-            </View>
-          )}
-        </View>
-
-        <View style={{ height: 70 }} />
-      </ScrollView>
-      {showButton && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-          }}
-        >
-          <Pressable
-            onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+          <Text
+            style={{
+              fontSize: Platform.OS == "ios" ? 15 : 14,
             }}
           >
-            <SvgXml xml={messageIcon} height="50" width={"50"} />
-          </Pressable>
-        </Animated.View>
-      )}
-       <View style={{
-        position:"absolute",
-        top:0,
-        left:0,
-        zIndex:100
-       }}>
-       <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
-       </View>
+            Duration (
+            {data.subsData.payAsYouGo
+              ? "Pay As Go"
+              : data.subsData.totalDuration +
+                " " +
+                `${
+                  data.subsData.subscriptionType == "Monthly"
+                    ? "Month"
+                    : data.subsData.subscriptionType == "Yearly"
+                    ? "Year"
+                    : "Week"
+                }`}
+            )
+          </Text>
+          {data && data.subsData.otherChargeName && (
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 15 : 14,
+              }}
+            >
+              {data.subsData.otherChargeName} {data.subsData.otherChargeAmount}৳
+            </Text>
+          )}
+        </View>
+        <View style={{ height: 40 }} />
+      </ScrollView>
+      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
     </View>
   );
 };
 
-export default SubscriptionService;
+export default VendorSubscriptionService;
 const styles = StyleSheet.create({
   activeContent: {
     position: "absolute",
@@ -1297,92 +1141,18 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 </g>
 </svg>
 `;
-export const Screen = ({ navigation, route }) => {
-  const params = route.params;
-  const data = params.data;
-  const setPrice=params.setPrice;
-  const setSelectedPackage=params.setSelectedPackage;
-  const setNewNavigation = params.setNewNavigation;
-  const [feature,setFeature]=React.useState()
-  const isFocused=useIsFocused()
-  const [layoutHeight,setLayoutHeight]=React.useState()
-
-  React.useLayoutEffect(()=>{
-    
-    if(data){
-        setFeature(data.features)
-    }
-  },[data])
-  React.useEffect(()=>{
-    if(isFocused&&setPrice){
-      setSelectedPackage(data)
-      setPrice(data.price)
-    }
-
-  },[isFocused])
-  React.useEffect(()=>{
-    if(layoutHeight){
-      setNewNavigation(val=>{
-        if(val<(layoutHeight+50)){
-          return layoutHeight+50
-        }else{
-          return val
-        }
-      })
-    }
-  },[layoutHeight])
-
-  const NewRows=({doc})=>{
-    return(
-        <View style={{
-            flexDirection:"row",
-            justifyContent:"space-between",
-            marginVertical:10
-        }}>
-            <Text style={{
-              fontSize:Platform.OS=="ios"? 16.5:15,
-              fontFamily:"Poppins-Medium",
-              color:textColor
-            }}>{doc.title}</Text>
-            <SvgXml xml={doc.isAvailable?Available:notAvailable} height="20" width={"20"}/>
-        </View>
-    )
-  }
-
-  return (
-    <View
-      style={{
-        paddingHorizontal:20,
-        paddingVertical:15,
-        
-      }}
-      onLayout={(e) => {
-        const offsetHeight = e.nativeEvent.layout.height;
-        if(!layoutHeight||layoutHeight<offsetHeight){
-          setLayoutHeight(offsetHeight)
-        }
-        // setNewNavigation((val) => {
-        //   if (!val || val < offsetHeight) {
-        //     return offsetHeight;
-        //   } else {
-        //     val;
-        //   }
-        // });
-      }}
-    >
-        {
-            feature&&feature.map((doc,i)=>(
-                <NewRows key={i} doc={doc}/> 
-            ))
-        }
-    </View>
-  );
-};
-const notAvailable=`<svg xmlns="http://www.w3.org/2000/svg" width="17" height="3" viewBox="0 0 17 3">
-<line id="Line_5979" data-name="Line 5979" x2="14" transform="translate(1.5 1.5)" fill="none" stroke="#666" stroke-linecap="round" stroke-width="3"/>
+const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="41.275" height="19" viewBox="0 0 41.275 19">
+<g id="Group_10263" data-name="Group 10263" transform="translate(-118.725 -664)">
+  <text id="edit" transform="translate(135 679)" fill="#86939b" font-size="14" font-weight="500"><tspan x="0" y="0">Edit</tspan></text>
+  <g id="_1159633" data-name="1159633" transform="translate(118.825 667.001)">
+    <g id="_000000ff" data-name="#000000ff" transform="translate(0 1.999)">
+      <path id="Path_20919" data-name="Path 20919" d="M144.311,2.057a1.269,1.269,0,0,1,1,.1,3.066,3.066,0,0,1,.586.518,1.284,1.284,0,0,1,.39.871v.095a1.294,1.294,0,0,1-.2.625,2.273,2.273,0,0,1-.342.387l-4.733,4.733a.574.574,0,0,1-.239.18q-1.172.327-2.345.651a.293.293,0,0,1-.286-.056.283.283,0,0,1-.081-.292c.213-.776.43-1.551.643-2.327a.371.371,0,0,1,.1-.185l4.965-4.966a1.293,1.293,0,0,1,.54-.336m.165.538c-.246.076-.394.3-.578.465.435.444.88.878,1.316,1.322.113-.1.215-.207.319-.315a.7.7,0,0,0,.134-.745,2.041,2.041,0,0,0-.447-.525.715.715,0,0,0-.745-.2M139.4,7.557c.436.445.882.88,1.319,1.324.4-.393.795-.794,1.193-1.19l2.91-2.91L143.5,3.46q-2.052,2.048-4.1,4.1m-.265.533q-.2.73-.4,1.461c.486-.134.972-.27,1.458-.4C139.842,8.792,139.487,8.443,139.136,8.091Z" transform="translate(-135.009 -1.999)" fill="#86939b" stroke="#86939b" stroke-width="0.2"/>
+      <path id="Path_20920" data-name="Path 20920" d="M.276,52.1a1.4,1.4,0,0,1,.909-.553,2.832,2.832,0,0,1,.445-.019H3.742a1.209,1.209,0,0,1,.222.009.281.281,0,0,1-.088.552H1.629a1.654,1.654,0,0,0-.452.034.836.836,0,0,0-.488.368.883.883,0,0,0-.128.477q0,3.611,0,7.222A1.023,1.023,0,0,0,.6,60.5a.84.84,0,0,0,.532.546,1.844,1.844,0,0,0,.582.048H9.25a.854.854,0,0,0,.784-.468,1.472,1.472,0,0,0,.091-.695q0-1.08,0-2.16a.281.281,0,1,1,.561,0q0,1.233,0,2.466a1.412,1.412,0,0,1-.39.983,1.379,1.379,0,0,1-1,.431c-1.131-.008-2.262,0-3.393,0-1.514,0-3.027,0-4.541,0a1.37,1.37,0,0,1-.981-.442A1.421,1.421,0,0,1,0,60.294v-7.4A1.422,1.422,0,0,1,.276,52.1Z" transform="translate(0 -50.438)" fill="#86939b" stroke="#86939b" stroke-width="0.2"/>
+    </g>
+    <g id="_0000008c" data-name="#0000008c" transform="translate(1.359 13.207)">
+      <path id="Path_20921" data-name="Path 20921" d="M61.72,510.974c1.514,0,3.027,0,4.541,0,1.131,0,2.262,0,3.393,0l.027.018H61.72Z" transform="translate(-61.72 -510.971)" fill="#86939b" stroke="#86939b" stroke-width="0.2" opacity="0.55"/>
+    </g>
+  </g>
+</g>
 </svg>
-`
-const Available=`<svg xmlns="http://www.w3.org/2000/svg" width="14.889" height="14.515" viewBox="0 0 14.889 14.515">
-<path id="Path_20918" data-name="Path 20918" d="M45.921,37.151a.439.439,0,0,1,.456.619q-4.083,6.579-8.168,13.156a1.53,1.53,0,0,1-1.056.715,1.423,1.423,0,0,1-1.326-.507l-3.935-4.82a1.551,1.551,0,0,1,.326-2.272,1.536,1.536,0,0,1,1.155-.239,1.552,1.552,0,0,1,.771.393q1.366,1.24,2.729,2.482a.364.364,0,0,0,.52-.049L45.646,37.3A.44.44,0,0,1,45.921,37.151Z" transform="translate(-31.537 -37.144)" fill="#4ade80"/>
-</svg>
-`
+`;

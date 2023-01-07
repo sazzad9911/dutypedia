@@ -40,6 +40,8 @@ import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SubHeader from "../../components/SubHeader";
 import { socket } from "../../Class/socket";
+import ActivityLoader from "../../components/ActivityLoader";
+import FixedBackHeader from "./components/FixedBackHeader";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -77,6 +79,7 @@ const OfferNow = (props) => {
   const [services, setServices] = React.useState();
   const service = params.services;
   const category = params.category;
+  const [Offset, setOffset] = React.useState(0);
 
   React.useEffect(() => {
     //console.log(type);
@@ -179,9 +182,9 @@ const OfferNow = (props) => {
         type: type,
       });
     }, 300);
-    return
+    return;
     try {
-      const res =  getOrders(user.token, "user");
+      const res = getOrders(user.token, "user");
       setLoader(false);
       navigation.navigate("ManageOrder", {
         reload: res,
@@ -198,7 +201,7 @@ const OfferNow = (props) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: textColor }}>Loading....</Text>
+        <ActivityLoader />
       </View>
     );
   }
@@ -208,7 +211,7 @@ const OfferNow = (props) => {
         flex: 1,
       }}
     >
-      <SubHeader
+      {/* <SubHeader
         title={
           type == "ONETIME"
             ? "Fixed Service"
@@ -217,14 +220,23 @@ const OfferNow = (props) => {
             : "Offer Price"
         }
         {...props}
-      />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      /> */}
+
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={(e) => {
+          const currentOffset = e.nativeEvent.contentOffset.y;
+          setOffset(currentOffset);
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ height: 60 }} />
         <View
           style={{
             marginHorizontal: 20,
             marginVertical: 20,
             borderWidth: 1,
-            borderColor: "#e5e5e5",
+            borderColor: "#C0FFD7",
             borderRadius: 5,
             paddingVertical: 20,
             paddingBottom: 5,
@@ -246,7 +258,7 @@ const OfferNow = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderWidth: 1,
-                borderColor: "#e5e5e5",
+                borderColor: "#C0FFD7",
               }}
             >
               {data && data.service.profilePhoto ? (
@@ -316,7 +328,7 @@ const OfferNow = (props) => {
             </View>
           </View>
           <View
-            style={{ height: 1, backgroundColor: "#e5e5e5", marginTop: 20 }}
+            style={{ height: 0, backgroundColor: "#e5e5e5", marginTop: 20 }}
           />
           {gigs && !selectedPackage && (
             <>
@@ -380,17 +392,16 @@ const OfferNow = (props) => {
                 }}
               >
                 {ListData.length > 0 ? (
-                  ListData.map((doc, i) => (
-                    <Text
-                      style={{
-                        fontSize: 16,
-                      }}
-                      key={i}
-                    >
-                      {i == 0 ? "" : ", "}
-                      {doc.data.title}
-                    </Text>
-                  ))
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color:"#535353"
+                    }}
+                  >
+                    {ListData.map((doc, i) => {
+                      return `${i == 0 ? "" : ", "}${doc.data.title}`;
+                    })}
+                  </Text>
                 ) : (
                   <Text>N/A</Text>
                 )}
@@ -426,17 +437,16 @@ const OfferNow = (props) => {
                 }}
               >
                 {Facilities.length > 0 ? (
-                  Facilities.map((doc, i) => (
-                    <Text
-                      style={{
-                        fontSize: 16,
-                      }}
-                      key={i}
-                    >
-                      {i == 0 ? "" : ", "}
-                      {doc.title}
-                    </Text>
-                  ))
+                  <Text
+                  style={{
+                    fontSize: 16,
+                    color:"#535353"
+                  }}
+                >
+                  {Facilities.map((doc, i) => {
+                    return `${i == 0 ? "" : ", "}${doc.title}`
+                  })}
+                  </Text>
                 ) : (
                   <Text>N/A</Text>
                 )}
@@ -580,7 +590,7 @@ const OfferNow = (props) => {
                   backgroundColor: "#e5e5e5",
                   padding: 5,
                   borderRadius: 5,
-                  marginBottom: 10,
+                  marginBottom: 5,
                 }}
               >
                 <Text
@@ -596,17 +606,25 @@ const OfferNow = (props) => {
               <View
                 style={{
                   marginHorizontal: 20,
-                  marginVertical: 5,
+                  marginVertical: 0,
+                  marginBottom:5
                 }}
               >
-                {services.map((doc, i) => (
+                {services ? (
                   <Text
                     style={{
                       fontSize: 16,
+                      marginHorizontal:5,
+                      color:"#535353"
                     }}
-                    key={i}
-                  >{`${i != 0 ? ", " : ""}${doc.data.title}`}</Text>
-                ))}
+                  >
+                    {services.map((doc, i) => {
+                      return `${i != 0 ? ", " : ""}${doc.data.title}`;
+                    })}
+                  </Text>
+                ) : (
+                  <Text>N/A</Text>
+                )}
               </View>
             </>
           )}
@@ -725,6 +743,7 @@ const OfferNow = (props) => {
               placeholderTextColor={assentColor}
               style={{
                 width: width - 80,
+                borderColor: "#C0FFD7",
               }}
               placeholder="Your Requirements"
             />
@@ -742,24 +761,43 @@ const OfferNow = (props) => {
             </Text>
           </View>
           {!Document ? (
-            <IconButton
-              onPress={() => {
-                pickDocument().then((res) => {
-                  if (res) {
-                    setDocument(fileFromURL(res));
-                  }
-                });
-              }}
-              style={{
-                marginHorizontal: 20,
-                marginVertical: 20,
-                marginTop: 25,
-              }}
-              LeftIcon={() => (
-                <Ionicons name="md-attach" size={24} color={assentColor} />
-              )}
-              title="Attachment"
-            />
+            <View>
+              <IconButton
+                onPress={() => {
+                  pickDocument().then((res) => {
+                    if (res) {
+                      setDocument(fileFromURL(res));
+                    }
+                  });
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginTop: 20,
+                  marginTop: 25,
+                  borderColor: "#C0FFD7",
+                  borderRadius: 20,
+                  height: 35,
+                  width: 150,
+                }}
+                LeftIcon={() => (
+                  <Ionicons name="md-attach" size={24} color={assentColor} />
+                )}
+                title="Attachment"
+              />
+              <Text
+                style={{
+                  marginVertical: 10,
+                  marginHorizontal: 20,
+                  color: "#606060",
+                  fontFamily: "Poppins-Medium",
+                  lineHeight: 20,
+                  fontSize: 14,
+                  fontStyle: "italic",
+                }}
+              >
+                Max file size: 25 MB
+              </Text>
+            </View>
           ) : (
             <View
               style={{
@@ -791,7 +829,7 @@ const OfferNow = (props) => {
               paddingHorizontal: 20,
               borderTopWidth: 1,
               paddingTop: 10,
-              borderTopColor: "#e5e5e5",
+              borderTopColor: "#C0FFD7",
             }}
           >
             <TouchableOpacity
@@ -816,7 +854,7 @@ const OfferNow = (props) => {
               <Entypo
                 name={`chevron-thin-${Visible ? "up" : "down"}`}
                 size={20}
-                color={assentColor}
+                color={"#4ADE80"}
               />
             </TouchableOpacity>
             {Visible && (
@@ -859,7 +897,7 @@ const OfferNow = (props) => {
         <View
           style={{
             borderWidth: 1,
-            borderColor: "#e5e5e5",
+            borderColor: "#C0FFD7",
             marginHorizontal: 20,
             marginVertical: 10,
             borderRadius: 5,
@@ -867,33 +905,94 @@ const OfferNow = (props) => {
             paddingVertical: 10,
           }}
         >
-          <CheckBox
-            value={Check}
-            style={{ color: textColor, fontSize: 14 }}
-            onChange={() => {
-              setCheck((v) => !v);
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
             }}
-            title="Yes, I Understand And Agree To The Dutypedia Terms Of Service,
-          Including The User Agreement And Privacy Policy"
-          />
+          >
+            <CheckBox
+              value={Check}
+              style={{ color: textColor, fontSize: 14, width: 30 }}
+              onChange={() => {
+                setCheck((v) => !v);
+              }}
+              title=""
+            />
+            <Text
+              style={{
+                fontSize: 15,
+                color: "#666666",
+                width: width - 85,
+              }}
+            >
+              Yes, I Understand And Agree To The{" "}
+              <Text
+                style={{
+                  color: "#174296",
+                }}
+              >
+                Dutypedia Terms Of Service
+              </Text>
+              , Including{" "}
+              <Text
+                style={{
+                  color: "#174296",
+                }}
+              >
+                The User Agreement
+              </Text>{" "}
+              And{" "}
+              <Text
+                style={{
+                  color: "#174296",
+                }}
+              >
+                Privacy Policy
+              </Text>
+            </Text>
+          </View>
           <IconButton
             onPress={() => {
               validate();
             }}
-            disabled={Price && From && To && Check ? false : true}
             style={{
               color: textColor,
-              marginTop: 15,
-              marginBottom: 10,
+              marginTop: 20,
+              marginBottom: 0,
               borderRadius: 5,
-              backgroundColor:
-                Price && From && To && Check ? "#FEA31E" : primaryColor,
-              borderWidth: Price && From && To && Check ? 0 : 1,
+              backgroundColor: "#4ADE80",
+              height: 35,
+              width: "80%",
+              marginLeft: "10%",
+              color: "white",
             }}
-            title={type == "STARTING" ? "Offer Your Price" : "Continue"}
+            title={
+              type == "STARTING" ? "Offer Your Price" : "Send Order Request"
+            }
           />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              alignSelf: "center",
+              marginVertical: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                textDecorationLine: "underline",
+                color: "#666666",
+              }}
+            >
+              Cancel Order
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
+      <FixedBackHeader navigation={navigation} Yoffset={Offset} />
     </View>
   );
 };

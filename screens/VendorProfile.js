@@ -477,6 +477,27 @@ const VendorProfile = (props) => {
     //console.log("ok");
     navigation.navigate("VendorPackageService", { data: doc });
   };
+  const clickSubscription = (doc) => {
+    setClick(true);
+    setImages(doc.images);
+    setGigs(doc);
+    //console.log(doc.services);
+    setPrice(doc.price);
+    setFacilities(doc.facilites.selectedOptions);
+    setTitle(doc.title);
+    setDescription(doc.description);
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(doc.services, Category),
+      });
+      setNewDataList(serverToLocal(doc.services, Category));
+    } catch (e) {
+      console.log(e.message);
+    }
+    //console.log("ok");
+    navigation.navigate("VendorSubscriptionService", { data: doc });
+  };
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -1241,7 +1262,7 @@ const VendorProfile = (props) => {
                 Facilities: Facilities,
                 Data: Data,
                 Price: Price,
-                onPress: clickPackage,
+                onPress: clickSubscription,
                 PackageService: PackageService,
                 setNewNavigation: setNewNavigation,
                 RelatedServices: RelatedServices,
@@ -1435,7 +1456,7 @@ const VendorProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      {showButton && ScreenName == "SUBSCRIPTION" && (
+      {showButton && ScreenName == "SUBS" && (
         <Animated.View
           entering={FadeIn}
           style={{
@@ -2968,7 +2989,7 @@ const Subscriptions = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      changeScreenName("SUBSCRIPTION");
+      changeScreenName("SUBS");
       setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);
@@ -2977,7 +2998,7 @@ const Subscriptions = ({ navigation, route }) => {
       getOtherServices(user.token, vendor.service.id, "SUBS")
         .then((res) => {
           setSubscription(res.data.gigs);
-          console.log(res.data.gigs);
+          //console.log(res.data.gigs);
         })
         .catch((err) => {
           setSubscription([]);
