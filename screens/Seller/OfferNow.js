@@ -19,6 +19,7 @@ import {
   dateDifference,
   convertDate,
   fileFromURL,
+  serverTimeToLocalDate,
 } from "../../action";
 import TextArea from "./../../components/TextArea";
 import IconButton from "./../../components/IconButton";
@@ -80,6 +81,7 @@ const OfferNow = (props) => {
   const service = params.services;
   const category = params.category;
   const [Offset, setOffset] = React.useState(0);
+  const [TotalDuration, setTotalDuration] = React.useState([]);
 
   React.useEffect(() => {
     //console.log(type);
@@ -91,6 +93,7 @@ const OfferNow = (props) => {
       }
     }
     if (gigs) {
+      //console.log(data.subsData)
       setPrice(gigs.price);
       try {
         if (gigs.services.category) {
@@ -109,6 +112,15 @@ const OfferNow = (props) => {
       setPrice(selectedPackage.price);
     }
   }, [gigs]);
+  React.useEffect(() => {
+    if (data && data.subsData && data.subsData.totalDuration) {
+      let arr = [];
+      for (let i = 0; i < parseInt(data.subsData.totalDuration); i++) {
+        arr.push(i);
+      }
+      setTotalDuration(arr);
+    }
+  }, [data]);
   const pickDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync();
     if (result.type === "success") {
@@ -233,7 +245,7 @@ const OfferNow = (props) => {
         <View style={{ height: 60 }} />
         <View
           style={{
-            marginHorizontal: 20,
+            marginHorizontal: 10,
             marginVertical: 20,
             borderWidth: 1,
             borderColor: "#C0FFD7",
@@ -328,7 +340,7 @@ const OfferNow = (props) => {
             </View>
           </View>
           <View
-            style={{ height: 0, backgroundColor: "#e5e5e5", marginTop: 20 }}
+            style={{ height: 0, backgroundColor: "#F8F8F8", marginTop: 20 }}
           />
           {gigs && !selectedPackage && (
             <>
@@ -336,9 +348,9 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginTop: 20,
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                 }}
@@ -359,15 +371,119 @@ const OfferNow = (props) => {
                     fontFamily: "Poppins-Medium",
                   }}
                 >
+                  {gigs.subsData ? gigs.subsData.subscriptionType : ""}{" "}
                   {gigs.price}৳
                 </Text>
               </View>
+              {type == "SUBS" && (
+                <>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginHorizontal: 10,
+                      marginTop: 10,
+                      backgroundColor: "white",
+                      padding: 5,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "Poppins-Medium",
+                      }}
+                    >
+                      Duration
+                    </Text>
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "Poppins-Medium",
+                      }}
+                    >
+                      {data && data.subsData && data.subsData.payAsYouGo
+                        ? "Pay As Go"
+                        : `${data.subsData.totalDuration}`}
+                      {data.subsData.subscriptionType == "Monthly"
+                        ? " Months"
+                        : data.subsData.subscriptionType == "Weekly"
+                        ? " Weeks"
+                        : " Years"}
+                    </Text>
+                  </View>
+                  {data.subsData.otherChargeName && (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                        backgroundColor: "white",
+                        padding: 5,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                          fontFamily: "Poppins-Medium",
+                        }}
+                      >
+                        Service Charge
+                      </Text>
+                      <Text
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                          fontFamily: "Poppins-Medium",
+                        }}
+                      >
+                        {data.subsData.otherChargeAmount}৳
+                      </Text>
+                    </View>
+                  )}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginHorizontal: 10,
+                      marginTop: 10,
+                      backgroundColor: "#F8F8F8",
+                      padding: 5,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "Poppins-Medium",
+                      }}
+                    >
+                      Total
+                    </Text>
+                    <Text
+                      style={{
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "Poppins-Medium",
+                      }}
+                    >
+                      {data.subsData.amount}৳
+                    </Text>
+                  </View>
+                </>
+              )}
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
-                  backgroundColor: "#e5e5e5",
+                  marginHorizontal: 10,
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                   marginTop: 20,
@@ -395,7 +511,7 @@ const OfferNow = (props) => {
                   <Text
                     style={{
                       fontSize: 16,
-                      color:"#535353"
+                      color: "#535353",
                     }}
                   >
                     {ListData.map((doc, i) => {
@@ -410,8 +526,8 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
-                  backgroundColor: "#e5e5e5",
+                  marginHorizontal: 10,
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                   marginTop: 15,
@@ -438,14 +554,14 @@ const OfferNow = (props) => {
               >
                 {Facilities.length > 0 ? (
                   <Text
-                  style={{
-                    fontSize: 16,
-                    color:"#535353"
-                  }}
-                >
-                  {Facilities.map((doc, i) => {
-                    return `${i == 0 ? "" : ", "}${doc.title}`
-                  })}
+                    style={{
+                      fontSize: 16,
+                      color: "#535353",
+                    }}
+                  >
+                    {Facilities.map((doc, i) => {
+                      return `${i == 0 ? "" : ", "}${doc.title}`;
+                    })}
                   </Text>
                 ) : (
                   <Text>N/A</Text>
@@ -459,9 +575,9 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginTop: 20,
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                 }}
@@ -516,9 +632,9 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginTop: 20,
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                 }}
@@ -550,9 +666,9 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginTop: 20,
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                   marginBottom: 10,
@@ -585,9 +701,9 @@ const OfferNow = (props) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginTop: 10,
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
                   marginBottom: 5,
@@ -605,17 +721,17 @@ const OfferNow = (props) => {
               </View>
               <View
                 style={{
-                  marginHorizontal: 20,
+                  marginHorizontal: 10,
                   marginVertical: 0,
-                  marginBottom:5
+                  marginBottom: 5,
                 }}
               >
                 {services ? (
                   <Text
                     style={{
                       fontSize: 16,
-                      marginHorizontal:5,
-                      color:"#535353"
+                      marginHorizontal: 5,
+                      color: "#535353",
                     }}
                   >
                     {services.map((doc, i) => {
@@ -632,9 +748,9 @@ const OfferNow = (props) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              marginHorizontal: 20,
+              marginHorizontal: 10,
               marginTop: 10,
-              backgroundColor: "#e5e5e5",
+              backgroundColor: "#F8F8F8",
               padding: 5,
               borderRadius: 5,
             }}
@@ -646,24 +762,116 @@ const OfferNow = (props) => {
                 fontFamily: "Poppins-Medium",
               }}
             >
-              Delivery Time
+              {type != "SUBS"
+                ? "Delivery Time"
+                : "Choose A Date When You Want To Start Using Service"}
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-            }}
-          >
+          {type != "SUBS" ? (
+            <View
+              style={{
+                flexDirection: "row",
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <IconButton
+                  onPress={() => {
+                    setFromVisible(true);
+                  }}
+                  style={{
+                    color: textColor,
+                    borderRadius: 5,
+                  }}
+                  title={From ? From : "Select Date"}
+                />
+                {FromDateError && (
+                  <Text style={{ color: "red", marginTop: 2 }}>
+                    {FromDateError}
+                  </Text>
+                )}
+                <DateTimePickerModal
+                  date={new Date()}
+                  isVisible={FromVisible}
+                  mode="date"
+                  onConfirm={(date) => {
+                    let newDate = dateConverter(new Date());
+                    let oldDate = dateConverter(date);
+                    if (dateDifference(newDate, oldDate) >= 0) {
+                      setFromDateError(null);
+                      setFrom(dateConverter(date));
+                      setFromVisible(false);
+                    } else {
+                      setFromDateError(
+                        "Please select current and current date"
+                      );
+                      setFromVisible(false);
+                    }
+                  }}
+                  onCancel={() => setFromVisible(false)}
+                />
+              </View>
+              <Text
+                style={{
+                  marginHorizontal: 10,
+                  marginTop: 8,
+                  color: textColor,
+                }}
+              >
+                TO
+              </Text>
+              <View style={{ flex: 1 }}>
+                <IconButton
+                  onPress={() => {
+                    setToVisible(true);
+                  }}
+                  style={{
+                    color: textColor,
+                    borderRadius: 5,
+                  }}
+                  title={To ? To : "Select Date"}
+                />
+                {ToDateError && (
+                  <Text style={{ color: "red", marginTop: 2 }}>
+                    {ToDateError}
+                  </Text>
+                )}
+                <DateTimePickerModal
+                  date={new Date()}
+                  isVisible={ToVisible}
+                  mode="date"
+                  onConfirm={(date) => {
+                    let newDate = dateConverter(new Date(From));
+                    let oldDate = dateConverter(date);
+                    if (dateDifference(newDate, oldDate) >= 0) {
+                      setToDateError(null);
+                      setTo(dateConverter(date));
+                      setToVisible(false);
+                    } else {
+                      setToDateError("Please select current and current date");
+                      setToVisible(false);
+                    }
+                  }}
+                  onCancel={() => setToVisible(false)}
+                />
+              </View>
+            </View>
+          ) : (
             <View style={{ flex: 1 }}>
               <IconButton
+                Icon={() => <Entypo name="calendar" size={24} color="black" />}
                 onPress={() => {
                   setFromVisible(true);
                 }}
                 style={{
                   color: textColor,
                   borderRadius: 5,
+                  marginHorizontal: 10,
+                  width: width / 2,
+                  marginVertical: 20,
+                  justifyContent: "space-between",
+                  paddingHorizontal: 20,
                 }}
                 title={From ? From : "Select Date"}
               />
@@ -691,58 +899,160 @@ const OfferNow = (props) => {
                 onCancel={() => setFromVisible(false)}
               />
             </View>
-            <Text
-              style={{
-                marginHorizontal: 20,
-                marginTop: 8,
-                color: textColor,
-              }}
-            >
-              TO
-            </Text>
-            <View style={{ flex: 1 }}>
-              <IconButton
-                onPress={() => {
-                  setToVisible(true);
-                }}
+          )}
+          {type == "SUBS" && From && (
+            <>
+              <View
                 style={{
-                  color: textColor,
-                  borderRadius: 5,
+                  backgroundColor: "#F8F8F8",
+                  marginHorizontal: 10,
+                  flexDirection: "row",
+                  flexWrap: "wrap",
                 }}
-                title={To ? To : "Select Date"}
-              />
-              {ToDateError && (
-                <Text style={{ color: "red", marginTop: 2 }}>
-                  {ToDateError}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                    margin: 5,
+                  }}
+                >
+                  1St Delivery Date
                 </Text>
-              )}
-              <DateTimePickerModal
-                date={new Date()}
-                isVisible={ToVisible}
-                mode="date"
-                onConfirm={(date) => {
-                  let newDate = dateConverter(new Date(From));
-                  let oldDate = dateConverter(date);
-                  if (dateDifference(newDate, oldDate) >= 0) {
-                    setToDateError(null);
-                    setTo(dateConverter(date));
-                    setToVisible(false);
-                  } else {
-                    setToDateError("Please select current and current date");
-                    setToVisible(false);
-                  }
+                <Text
+                  style={{
+                    fontSize: 10,
+                    margin: 5,
+                    marginTop: 0,
+                  }}
+                >
+                  *Delivery Date Count From Your Selected Date
+                </Text>
+              </View>
+              <Text
+                style={{
+                  marginHorizontal: 15,
+                  fontSize: 16,
+                  marginVertical: 10,
+                  color: "#535353",
                 }}
-                onCancel={() => setToVisible(false)}
-              />
-            </View>
-          </View>
-          <View style={{ marginHorizontal: 20 }}>
+              >
+                {serverTimeToLocalDate(From)} to{" "}
+                {serverTimeToLocalDate(
+                  From,
+                  data.subsData.subscriptionType == "Monthly"
+                    ? 30
+                    : data.subsData.subscriptionType == "Yearly"
+                    ? 360
+                    : 7
+                )}{" "}
+                ={" "}
+                {data.subsData.subscriptionType == "Monthly"
+                  ? "30 day"
+                  : data.subsData.subscriptionType == "Yearly"
+                  ? `360 day`
+                  : "7 day"}
+              </Text>
+              <Text
+                style={{
+                  textAlign: "right",
+                  marginHorizontal: 10,
+                  textDecorationLine: "underline",
+                  marginVertical: 5,
+                }}
+              >
+                View all delivery date
+              </Text>
+
+              <View
+                style={{
+                  backgroundColor: "#F8F8F8",
+                  marginHorizontal: 10,
+                  padding: 5,
+                  flexDirection: "row",
+                  marginVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}
+                >
+                  Payment Date
+                </Text>
+              </View>
+              {TotalDuration.map((doc, i) =>
+                i < 2 ? (
+                  <View
+                    key={i}
+                    style={{
+                      flexDirection: "row",
+                      marginHorizontal: 15,
+                      justifyContent: "space-between",
+                      marginVertical: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: "Poppins-SemiBold",
+                      }}
+                    >
+                      1St Month
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                      }}
+                    >
+                      {serverTimeToLocalDate(From)} to{" "}
+                      {serverTimeToLocalDate(
+                        From,
+                        data.subsData.subscriptionType == "Monthly"
+                          ? 30
+                          : data.subsData.subscriptionType == "Yearly"
+                          ? 360
+                          : 7
+                      )}{" "}
+                      ={" "}
+                      {data.subsData.subscriptionType == "Monthly"
+                        ? "30 day"
+                        : data.subsData.subscriptionType == "Yearly"
+                        ? `360 day`
+                        : "7 day"}
+                    </Text>
+                  </View>
+                ) : (
+                  <View key={i} />
+                )
+              )}
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("SubscriptionDates",{subsData:data.subsData,date:From})
+              }}
+                style={{
+                  alignSelf: "flex-end",
+                  marginHorizontal: 10,
+                  marginVertical: 10,
+                  marginBottom: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all delivery date
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+          <View style={{ marginHorizontal: 10 }}>
             <TextArea
               onChange={(e) => setDescription(e)}
               value={Description}
               placeholderTextColor={assentColor}
               style={{
-                width: width - 80,
+                width: width - 40,
                 borderColor: "#C0FFD7",
               }}
               placeholder="Your Requirements"
@@ -801,7 +1111,7 @@ const OfferNow = (props) => {
           ) : (
             <View
               style={{
-                marginHorizontal: 20,
+                marginHorizontal: 10,
                 marginVertical: 20,
                 flexDirection: "row",
                 alignItems: "center",
@@ -898,7 +1208,7 @@ const OfferNow = (props) => {
           style={{
             borderWidth: 1,
             borderColor: "#C0FFD7",
-            marginHorizontal: 20,
+            marginHorizontal: 10,
             marginVertical: 10,
             borderRadius: 5,
             paddingHorizontal: 10,
@@ -1052,3 +1362,15 @@ const Cart = ({ Icon, description, i }) => {
     </View>
   );
 };
+const calenderIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21.38" height="21.38" viewBox="0 0 21.38 21.38">
+<g id="Group_10275" data-name="Group 10275" transform="translate(-230.839 -566.307)">
+  <path id="Path_27339" data-name="Path 27339" d="M5.582,5.625H20.3A2.207,2.207,0,0,1,22.5,7.832V21.076A2.207,2.207,0,0,1,20.3,23.283H5.582a2.207,2.207,0,0,1-2.207-2.207V7.832A2.207,2.207,0,0,1,5.582,5.625Z" transform="translate(228.589 563.278)" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="2.25"/>
+  <path id="Path_27340" data-name="Path 27340" d="M19.462,5.625H6.418a3.071,3.071,0,0,0-3.043,3.09v2.8h.736A1.582,1.582,0,0,1,5.582,10.04H20.3a1.582,1.582,0,0,1,1.472,1.472H22.5v-2.8a3.071,3.071,0,0,0-3.043-3.09Z" transform="translate(228.589 563.278)"/>
+  <path id="Path_27341" data-name="Path 27341" d="M21.332,15.743a1.1,1.1,0,1,1-1.1-1.077A1.1,1.1,0,0,1,21.332,15.743Z" transform="translate(223.14 560.151)"/>
+  <path id="Path_27343" data-name="Path 27343" d="M26.957,15.743a1.1,1.1,0,1,1-1.1-1.077A1.1,1.1,0,0,1,26.957,15.743Z" transform="translate(221.193 560.151)"/>
+  <path id="Path_27342" data-name="Path 27342" d="M9,3.375V4.847" transform="translate(226.643 564.057)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25"/>
+  <path id="Path_27344" data-name="Path 27344" d="M27,3.375V4.847" transform="translate(220.415 564.057)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25"/>
+</g>
+</svg>
+
+`;

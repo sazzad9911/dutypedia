@@ -63,6 +63,7 @@ import UserAppointmentDetails from "./screens/Seller/UserAppointment/UserAppoint
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
+import { SubscriptionDates } from "./screens/Seller/SubscriptionDates";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -404,6 +405,13 @@ export default function StackRoute() {
             }}
             name="UserAppointmentDetails"
             component={UserAppointmentDetails}
+          />
+          <Stack.Screen
+            options={{
+              headerShown:false
+            }}
+            name="SubscriptionDates"
+            component={SubscriptionDates}
           />
         </Stack.Navigator>
       </NavigationContainer>

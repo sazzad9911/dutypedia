@@ -177,3 +177,29 @@ export const serverTimeToLocal=(date)=>{
   return `${months[month]} ${day} ${time}`
 
 }
+export const serverTimeToLocalDate=(date,dayPlus)=>{
+  let months=[
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ]
+  
+  date=new Date(date)
+  if(dayPlus){
+    date.setDate(date.getDate()+dayPlus)
+  }
+  let day=date.getDate()<10?`0${date.getDate()}`:`${date.getDate()}`
+  let year=date.getFullYear();
+  let month=date.getMonth()
+  return `${months[month]} ${day} ${year}`
+
+}

@@ -944,8 +944,8 @@ const SubscriptionService = (props) => {
                   type: "SUBS",
                   gigs: data,
                   data:data,
-                  selectedPackage:selectedPackage,
-                  services:data.services,
+                  selectedPackage:null,
+                  services:null,
                   category:Category
                 });
               }}

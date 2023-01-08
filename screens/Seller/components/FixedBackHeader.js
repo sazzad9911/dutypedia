@@ -3,7 +3,7 @@ import React from "react";
 import { View, Animated as Animation, StatusBar, Dimensions,TouchableOpacity } from "react-native";
 const {width,height}=Dimensions.get("window")
 
-export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize }) {
+export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,color }) {
   const primaryColor = "white";
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const scrollY = new Animation.Value(0);
@@ -79,7 +79,7 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize }
           }}
             name="arrowleft"
             size={24}
-            color={scrollEnabled ? "black" : primaryColor}
+            color={scrollEnabled ? "black" : color?color:primaryColor}
           />
         </TouchableOpacity>
       </View>

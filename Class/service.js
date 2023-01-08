@@ -319,7 +319,8 @@ export const createOrder = async (
   facilites,
   selectedPackage,
   packageData,
-  id
+  id,
+  subsData
 ) => {
   const data={
     serviceId: serviceId,
@@ -333,7 +334,8 @@ export const createOrder = async (
     selectedServices: selectedServices,
     facilites: facilites,
     selectedPackage:selectedPackage,
-    packageData:packageData
+    packageData:packageData,
+    subsData:subsData
   }
   //console.log(data)
   const res = await axios.post(
