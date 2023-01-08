@@ -82,6 +82,7 @@ const OfferNow = (props) => {
   const category = params.category;
   const [Offset, setOffset] = React.useState(0);
   const [TotalDuration, setTotalDuration] = React.useState([]);
+  
 
   React.useEffect(() => {
     //console.log(type);
@@ -133,7 +134,7 @@ const OfferNow = (props) => {
       setFromDateError("Invalid date");
       return;
     }
-    if (!To) {
+    if (!To &&type!="SUBS") {
       setToDateError("Invalid date");
       return;
     }
@@ -161,7 +162,8 @@ const OfferNow = (props) => {
       service ? [] : gigs ? gigs.facilites.selectedOptions : "",
       selectedPackage ? selectedPackage : undefined,
       params.packageData,
-      user.user.id
+      user.user.id,
+      data.subsData?data.subsData:undefined
     )
       .then((res) => {
         getNewOrderUser(res);
@@ -942,16 +944,19 @@ const OfferNow = (props) => {
                   data.subsData.subscriptionType == "Monthly"
                     ? 30
                     : data.subsData.subscriptionType == "Yearly"
-                    ? 360
+                    ? 365
                     : 7
                 )}{" "}
                 ={" "}
                 {data.subsData.subscriptionType == "Monthly"
                   ? "30 day"
                   : data.subsData.subscriptionType == "Yearly"
-                  ? `360 day`
+                  ? `365 day`
                   : "7 day"}
               </Text>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("SubscriptionDates",{subsData:data.subsData,date:From})
+              }}>
               <Text
                 style={{
                   textAlign: "right",
@@ -962,6 +967,7 @@ const OfferNow = (props) => {
               >
                 View all delivery date
               </Text>
+              </TouchableOpacity>
 
               <View
                 style={{
@@ -1010,14 +1016,14 @@ const OfferNow = (props) => {
                         data.subsData.subscriptionType == "Monthly"
                           ? 30
                           : data.subsData.subscriptionType == "Yearly"
-                          ? 360
+                          ? 365
                           : 7
                       )}{" "}
                       ={" "}
                       {data.subsData.subscriptionType == "Monthly"
                         ? "30 day"
                         : data.subsData.subscriptionType == "Yearly"
-                        ? `360 day`
+                        ? `365 day`
                         : "7 day"}
                     </Text>
                   </View>

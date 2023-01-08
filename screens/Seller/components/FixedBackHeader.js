@@ -1,9 +1,10 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { View, Animated as Animation, StatusBar, Dimensions,TouchableOpacity } from "react-native";
+import { View, Animated as Animation, 
+  StatusBar, Dimensions,TouchableOpacity,Text } from "react-native";
 const {width,height}=Dimensions.get("window")
 
-export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,color }) {
+export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,color,title }) {
   const primaryColor = "white";
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const scrollY = new Animation.Value(0);
@@ -28,24 +29,20 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,c
        width:width,
        height:100,
        position:"absolute",
-       top:0
+       top:0,
+       justifyContent:"center",
+       alignItems:"center"
         
     },style]}>
       <StatusBar
         hidden={false}
         backgroundColor={scrollEnabled ? "white" : "transparent"}
       />
-      {/* <View
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.325)",
-          width: width,
-          height: 25,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 200,
-        }}
-      /> */}
+      {title&&(
+        <Text style={{
+          fontSize:18
+        }}>{title}</Text>
+      )}
       <View
         style={{
           position: "absolute",

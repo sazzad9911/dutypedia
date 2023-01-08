@@ -261,6 +261,8 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
   const dispatch = useDispatch();
   const [Open, setOpen] = React.useState(false);
   const orderState = useSelector((state) => state.orderState);
+  const type=data.type
+  //console.warn(data)
 
   //console.log(data.service)
   // React.useEffect(() => {

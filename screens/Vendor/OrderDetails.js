@@ -31,7 +31,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
-import { convertDate, dateConverter, dateDifference } from "../../action";
+import { convertDate, dateConverter, dateDifference, serverTimeToLocalDate } from "../../action";
 import { socket } from "../../Class/socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -108,6 +108,7 @@ const OrderDetails = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
+  const type=newData.type;
 
   const stringDate = (d) => {
     const Months = [
@@ -466,7 +467,7 @@ const OrderDetails = ({ navigation, route }) => {
           </View>
           <View
             style={{
-              height: 1,
+              height: 0,
               backgroundColor: "#ECECEC",
               marginVertical: 10,
             }}
@@ -516,7 +517,7 @@ const OrderDetails = ({ navigation, route }) => {
           {data &&
             data.status == "WAITING_FOR_ACCEPT" &&
             data.type != "ONETIME" &&
-            data.type != "PACKAGE" && (
+            data.type != "PACKAGE" && type!="SUBS"&& (
               <IconButton
                 onPress={() => {
                   if (data.service.gigs[0].services.category) {
@@ -575,7 +576,7 @@ const OrderDetails = ({ navigation, route }) => {
           {ServiceError && <Text style={{ color: "red" }}>{ServiceError}</Text>}
           <View
             style={{
-              height: 1,
+              height: 0,
               backgroundColor: "#ECECEC",
               marginVertical: 10,
             }}
@@ -647,44 +648,131 @@ const OrderDetails = ({ navigation, route }) => {
             )}
           </View>
         </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
-            paddingVertical: 20,
-            marginHorizontal: 20,
-            marginTop: 0,
-          }}
-        >
-          <Text style={[styles.text]}>Price</Text>
-          <Text
-            style={[
-              styles.text,
-              {
-                color: "#666666",
-                fontSize: width < 350 ? 16 : 18,
-              },
-            ]}
+        {type != "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
           >
-            Basic Price :{" "}
-            {data
-              ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
-              : "Pice is empty"}
-          </Text>
-        </View>
-        <View
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              Price
+            </Text>
+            <Text style={styles.text}>
+              Basic Price :{" "}
+              {data
+                ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
+                : "Pice is empty"}
+            </Text>
+          </View>
+        )}
+        {type == "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              {data ? data.subsData.subscriptionType : ""}{" "}
+              {data ? data.subsData.amount + "৳" : "Pice is empty"}
+            </Text>
+            {data.subsData.otherChargeName ? (
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#666666",
+                  marginVertical: 5,
+                }}
+              >
+                {data.subsData.otherChargeName}{" "}
+                {data.subsData.otherChargeAmount}৳
+              </Text>
+            ) : null}
+            <View
+              style={{
+                width: "60%",
+                height: 1,
+                backgroundColor: "#F1EFEF",
+                marginVertical: 10,
+              }}
+            />
+            <View
+              style={{
+                width: "60%",
+                justifyContent: "space-between",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={styles.newText}>Total</Text>
+              <Text style={styles.newText}>
+                {data.subsData.amount +
+                  parseInt(
+                    data.subsData.otherChargeAmount
+                      ? data.subsData.otherChargeAmount
+                      : 0
+                  )}
+                ৳
+              </Text>
+            </View>
+          </View>
+        )}
+        {type == "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 0,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={[
+                styles.text,
+                { fontSize: width < 350 ? 18 : 20, marginBottom: 10 },
+              ]}
+            >
+              Duration
+            </Text>
+            <Text style={[styles.newText, { marginBottom: 20 }]}>
+              {data.subsData.payAsYouGo
+                ? "Pay As Go"
+                : `${data.subsData.totalDuration} ${
+                    data.subsData.subscriptionType == "Monthly"
+                      ? "Months"
+                      : data.subsData.subscriptionType == "Yearly"
+                      ? "Years"
+                      : "Days"
+                  }`}
+            </Text>
+          </View>
+        )}
+         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
         >
-          <Text style={styles.text}>Delivery Date</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Delivery Date
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -693,27 +781,67 @@ const OrderDetails = ({ navigation, route }) => {
             }}
           >
             <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? stringDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
+              {data ? serverTimeToLocalDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
             </Text>
             <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
               To
             </Text>
-            <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? stringDate(data.deliveryDateTo) : "Unavailable Date"}
-            </Text>
+            {data && data.subsData ? (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data ? serverTimeToLocalDate(data.deliveryDateFrom,
+                  (data.subsData.totalDuration?(data.subsData.totalDuration*(
+                    data.subsData.subscriptionType=="Monthly"?30:
+                    data.subsData.subscriptionType=="Yearly"?365:7
+                  )):0)) : "Unavailable Date"}
+              </Text>
+            ) : (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data ? serverTimeToLocalDate(data.deliveryDateTo) : "Unavailable Date"}
+              </Text>
+            )}
           </View>
+          {type=="SUBS"&&(
+            <View
+            style={{
+              width: "100%",
+              alignItems: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SubscriptionDates", {
+                  subsData: data.subsData,
+                  date: data.deliveryDateFrom,
+                  
+                });
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                  textDecorationLine: "underline",
+                }}
+              >
+                View all delivery date
+              </Text>
+            </TouchableOpacity>
+          </View>
+          )}
         </View>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
         >
-          <Text style={styles.text}>Payment Status</Text>
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Payment Status
+          </Text>
           <View
             style={{
               padding: 3,
@@ -746,13 +874,41 @@ const OrderDetails = ({ navigation, route }) => {
                 : "Due"}
             </Text>
           </View>
+          {type=="SUBS"&&(
+            <View
+            style={{
+              width: "100%",
+              alignItems: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SubscriptionDates", {
+                  subsData: data.subsData,
+                  date: data.deliveryDateFrom,
+                  name:"Payment Date"
+                });
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                  textDecorationLine: "underline",
+                }}
+              >
+                View all delivery date
+              </Text>
+            </TouchableOpacity>
+          </View>
+          )}
         </View>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
@@ -769,7 +925,7 @@ const OrderDetails = ({ navigation, route }) => {
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}

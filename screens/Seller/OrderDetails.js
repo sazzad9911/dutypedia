@@ -30,6 +30,7 @@ import { socket } from "../../Class/socket";
 import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityLoader from "../../components/ActivityLoader";
+import { serverTimeToLocalDate } from "../../action";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -72,7 +73,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     view: {
       flex: 1,
       borderBottomWidth: 1,
-      borderBottomColor: "#F1EFEF",
+      borderBottomColor: "#C0FFD7",
       justifyContent: "center",
       borderTopWidth: 0,
     },
@@ -86,6 +87,10 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       fontFamily: "Poppins-Medium",
       color: textColor,
     },
+    newText: {
+      fontSize: 16,
+      color: "#666666",
+    },
   });
   const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
@@ -96,6 +101,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const dispatch = useDispatch();
   const [Refresh, setRefresh] = React.useState(false);
   const [Timer, setTimer] = React.useState(true);
+  const type = oldData.type;
+  //console.log(oldData.subsData)
 
   React.useEffect(() => {
     //console.log(data.serviceId);
@@ -137,7 +144,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     try {
       //const res = await getOrders(user.token, "vendor", serviceId);
       //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-     // let arr = res.data.orders.filter((order) => order.id == data.id);
+      // let arr = res.data.orders.filter((order) => order.id == data.id);
       socket.emit("updateOrder", {
         receiverId: receiverId,
         order: {
@@ -151,14 +158,14 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       console.warn(e.message);
     }
   };
-  React.useEffect(()=>{
+  React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e=e.order;
-      if (e.type === "user"&&e.data.id==data.id) {
-        setData(e.data)
+      e = e.order;
+      if (e.type === "user" && e.data.id == data.id) {
+        setData(e.data);
       }
     });
-  },[])
+  }, []);
 
   const stringDate = (d) => {
     const Months = [
@@ -384,7 +391,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         <View
           style={{
             borderBottomWidth: 0,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
             marginTop: 20,
@@ -428,7 +435,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         <View
           style={{
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
             marginTop: 20,
@@ -467,33 +474,124 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             )}
           </View>
         </View>
+        {type != "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              Price
+            </Text>
+            <Text style={styles.text}>
+              Basic Price :{" "}
+              {data
+                ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
+                : "Pice is empty"}
+            </Text>
+          </View>
+        )}
+        {type == "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              {data ? data.subsData.subscriptionType : ""}{" "}
+              {data ? data.subsData.amount + "৳" : "Pice is empty"}
+            </Text>
+            {data.subsData.otherChargeName ? (
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#666666",
+                  marginVertical: 5,
+                }}
+              >
+                {data.subsData.otherChargeName}{" "}
+                {data.subsData.otherChargeAmount}৳
+              </Text>
+            ) : null}
+            <View
+              style={{
+                width: "60%",
+                height: 1,
+                backgroundColor: "#F1EFEF",
+                marginVertical: 10,
+              }}
+            />
+            <View
+              style={{
+                width: "60%",
+                justifyContent: "space-between",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={styles.newText}>Total</Text>
+              <Text style={styles.newText}>
+                {data.subsData.amount +
+                  parseInt(
+                    data.subsData.otherChargeAmount
+                      ? data.subsData.otherChargeAmount
+                      : 0
+                  )}
+                ৳
+              </Text>
+            </View>
+          </View>
+        )}
+        {type == "SUBS" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 0,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={[
+                styles.text,
+                { fontSize: width < 350 ? 18 : 20, marginBottom: 10 },
+              ]}
+            >
+              Duration
+            </Text>
+            <Text style={[styles.newText, { marginBottom: 20 }]}>
+              {data.subsData.payAsYouGo
+                ? "Pay As Go"
+                : `${data.subsData.totalDuration} ${
+                    data.subsData.subscriptionType == "Monthly"
+                      ? "Months"
+                      : data.subsData.subscriptionType == "Yearly"
+                      ? "Years"
+                      : "Days"
+                  }`}
+            </Text>
+          </View>
+        )}
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
-            paddingVertical: 20,
-            marginHorizontal: 20,
-            marginTop: 20,
-          }}
-        >
-          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
-            Price
-          </Text>
-          <Text style={styles.text}>
-            Basic Price :{" "}
-            {data
-              ? (data.offerPrice ? data.offerPrice : data.amount) + "৳"
-              : "Pice is empty"}
-          </Text>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
@@ -509,22 +607,60 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             }}
           >
             <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? stringDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
+              {data ? serverTimeToLocalDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
             </Text>
             <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
               To
             </Text>
-            <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? stringDate(data.deliveryDateTo) : "Unavailable Date"}
-            </Text>
+            {data && data.subsData ? (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data ? serverTimeToLocalDate(data.deliveryDateFrom,
+                  (data.subsData.totalDuration?(data.subsData.totalDuration*(
+                    data.subsData.subscriptionType=="Monthly"?30:
+                    data.subsData.subscriptionType=="Yearly"?365:7
+                  )):0)) : "Unavailable Date"}
+              </Text>
+            ) : (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data ? serverTimeToLocalDate(data.deliveryDateTo) : "Unavailable Date"}
+              </Text>
+            )}
           </View>
+          {type=="SUBS"&&(
+            <View
+            style={{
+              width: "100%",
+              alignItems: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SubscriptionDates", {
+                  subsData: data.subsData,
+                  date: data.deliveryDateFrom,
+                  
+                });
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                  textDecorationLine: "underline",
+                }}
+              >
+                View all delivery date
+              </Text>
+            </TouchableOpacity>
+          </View>
+          )}
         </View>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
@@ -564,13 +700,41 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 : "Due"}
             </Text>
           </View>
+          {type=="SUBS"&&(
+            <View
+            style={{
+              width: "100%",
+              alignItems: "flex-end",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("SubscriptionDates", {
+                  subsData: data.subsData,
+                  date: data.deliveryDateFrom,
+                  name:"Payment Date"
+                });
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  marginTop: 10,
+                  textDecorationLine: "underline",
+                }}
+              >
+                View all delivery date
+              </Text>
+            </TouchableOpacity>
+          </View>
+          )}
         </View>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
@@ -587,7 +751,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             justifyContent: "center",
             alignItems: "center",
             borderBottomWidth: 1,
-            borderBottomColor: "#F1EFEF",
+            borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
           }}
@@ -643,10 +807,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           Toast.show("Request Accepted", {
                             duration: Toast.durations.LONG,
                           });
-                          loadData(
-                            res.data.receiverId,
-                            res.data.order
-                          );
+                          loadData(res.data.receiverId, res.data.order);
                           socket.emit("updateOrder", {
                             receiverId: user.user.id,
                             order: {
@@ -690,10 +851,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           Toast.show("Request CANCELLED", {
                             duration: Toast.durations.LONG,
                           });
-                          loadData(
-                            res.data.receiverId,
-                            res.data.order
-                          );
+                          loadData(res.data.receiverId, res.data.order);
                           socket.emit("updateOrder", {
                             receiverId: user.user.id,
                             order: {
@@ -798,10 +956,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                             Toast.show("Successfully request send", {
                               duration: Toast.durations.LONG,
                             });
-                            loadData(
-                              res.data.receiverId,
-                              res.data.order
-                            );
+                            loadData(res.data.receiverId, res.data.order);
                             socket.emit("updateOrder", {
                               receiverId: user.user.id,
                               order: {
@@ -917,6 +1072,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             You requested for refund
           </Text>
         )}
+        <View style={{height:20}}/>
       </ScrollView>
     </SafeAreaView>
   );
