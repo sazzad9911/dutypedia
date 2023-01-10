@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
@@ -21,6 +21,7 @@ import {
   orderRefound,
   acceptTimeRequest,
   completeOrder,
+  makePaymentSubscription,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -102,12 +103,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [Timer, setTimer] = React.useState(true);
   const type = oldData.type;
+  const [dateFrom,setDateFrom]=useState()
+  const [dateTo,setDateTo]=useState()
   //console.log(oldData.subsData)
 
   React.useEffect(() => {
     //console.log(data.serviceId);
     //console.log()
     //console.log(data.selectedServices);
+    
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -896,6 +900,33 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <IconButton
               onPress={() => {
                 setLoader(true);
+                if(type=="SUBS"){
+                  makePaymentSubscription(user.token, data.id)
+
+                  .then((res) => {
+                    if (res) {
+                      Toast.show("Payment success", {
+                        duration: Toast.durations.LONG,
+                      });
+                      loadData(res.data.receiverId, res.data.order);
+                      socket.emit("updateOrder", {
+                        receiverId: user.user.id,
+                        order: {
+                          type: "user",
+                          data: res.data.order,
+                        },
+                      });
+                      setData(res.data.order);
+                    }
+                  })
+                  .catch((err) => {
+                    Toast.show(err.response.data.msg, {
+                      duration: Toast.durations.LONG,
+                    });
+                    setLoader(false);
+                  });
+                  return
+                }
                 makePayment(user.token, data.id)
                   .then((res) => {
                     if (res) {

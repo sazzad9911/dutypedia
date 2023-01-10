@@ -59,6 +59,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { addUserOrder, updateUserOrder } from "../../Reducers/userOrders";
 import { addVendorOrder, updateVendorOrder } from "../../Reducers/vendorOrders";
 import PackageList from "./PackageList";
+import SubscriptionScript from "../services/SubscriptionScript";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -136,6 +137,11 @@ const Order = () => {
         name="AddServiceList_1"
         component={AddServiceList}
       />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SubscriptionScript"
+        component={SubscriptionScript}
+      />
     </Stack.Navigator>
   );
 };
@@ -194,12 +200,14 @@ const VendorOrder = ({ navigation, route }) => {
   if (Loader) {
     return <ActivityLoader />;
   }
-  
+
   return (
-    <SafeAreaView style={{
-      flex:1
-    }}>
-      <StatusBar/>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      <StatusBar />
       <Tab.Navigator
         screenOptions={{
           tabBarLabelStyle: { fontSize: 12 },
@@ -245,12 +253,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize:Platform.OS=="ios"? 11:9,
+    fontSize: Platform.OS == "ios" ? 11 : 9,
     marginTop: 2,
   },
 });
 
-export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
+export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -261,7 +269,7 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
   const dispatch = useDispatch();
   const [Open, setOpen] = React.useState(false);
   const orderState = useSelector((state) => state.orderState);
-  const type=data.type
+  const type = data.type;
   //console.warn(data)
 
   //console.log(data.service)
@@ -275,6 +283,11 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
   return (
     <Pressable
       onPress={() => {
+        if (onPress) {
+          onPress();
+          dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+        }
+        return;
         setOpen((val) => !val);
         if (onSelect) {
           onSelect(data.id);
@@ -297,7 +310,9 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
             paddingTop: 5,
           }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+          <View
+            style={{ flexDirection: "row", alignItems: "center", flex: 1.3 }}
+          >
             <View
               style={{
                 borderWidth: 1,
@@ -318,7 +333,7 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
                   }}
                   source={{ uri: data.user.profilePhoto }}
                 />
-              ) : data && user&&data.service && data.service.profilePhoto ? (
+              ) : data && user && data.service && data.service.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
@@ -373,39 +388,85 @@ export const OrderCart = ({ data, onPress, onSelect, user,open }) => {
               </Text>
             </View>
           </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Text>Status</Text>
+            <Text style={{ color: "#4ADE80", textAlign: "center" }}>
+              {data && data.status ? exporters(data.status) : "Unknown"}
+            </Text>
+          </View>
           <View style={{ flex: 1, alignItems: "flex-end" }}>
             <View
               style={{
                 alignItems: "center",
                 paddingVertical: 10,
-                width: 120,
+                width: "100%",
+                justifyContent: "center",
               }}
             >
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 14,
-                  color: textColor,
-                  fontFamily: "Poppins-Medium",
-                }}
-              >
-                Offer Price {data ? data.offerPrice : "0"}৳
-              </Text>
+              {type == "SUBS" ? (
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  {data.subsData.subscriptionType}{" "}
+                  {data ? data.subsData.amount : "0"}৳
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  Offer Price {data ? data.offerPrice : "0"}৳
+                </Text>
+              )}
 
-              <Text
-                numberOfLines={1}
+              <View
                 style={{
-                  color:data.paid? backgroundColor:"red",
-                  fontSize: 15,
-                  fontFamily: "Poppins-Medium",
+                  flexDirection: "row",
                 }}
               >
-                {data && data.paid && data.status != "REFUNDED"
-                  ? "Paid"
-                  : data && data.paid && data.status == "REFUNDED"
-                  ? "Refunded"
-                  : "Due"}
-              </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: data.paid ? backgroundColor : "red",
+                    fontSize: 15,
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  {data && data.paid && data.status != "REFUNDED"
+                    ? "Paid"
+                    : data && data.paid && data.status == "REFUNDED"
+                    ? "Refunded"
+                    : "Due"}
+                </Text>
+                <View style={{ width: 10 }} />
+                {type == "SUBS" && (
+                  <SvgXml xml={notify} height="15" width={"15"} />
+                )}
+              </View>
+              {/* {type=="SUBS"&&(
+                <Text numberOfLines={1} style={{
+                  color:"#E01A1A",
+                  fontSize:14,
+                  marginTop:2
+                }}>(1 delivery incomplete)</Text>
+              )} */}
             </View>
           </View>
         </View>
@@ -626,8 +687,8 @@ export const Screens = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
-  const [Open,setOpen]=React.useState()
-  const isFocused=useIsFocused()
+  const [Open, setOpen] = React.useState();
+  const isFocused = useIsFocused();
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -641,16 +702,16 @@ export const Screens = ({ navigation, route }) => {
       setAllOrders(arr);
       setNewOrders(arr);
     }
-  }, [ route.name + isFocused+vendorOrders+Refresh]);
+  }, [route.name + isFocused + vendorOrders + Refresh]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e=e.order;
-      setTimeout(()=>{
-        setRefresh(val=>(!val))
-      },100)
+      e = e.order;
+      setTimeout(() => {
+        setRefresh((val) => !val);
+      }, 100);
     });
-  },[])
+  }, []);
 
   React.useEffect(() => {
     if (AllOrders) {
@@ -680,7 +741,7 @@ export const Screens = ({ navigation, route }) => {
       }
     }
   }, [Search]);
-  
+
   const snapPoints = React.useMemo(() => ["25%", "60%"], []);
 
   // callbacks
@@ -688,6 +749,7 @@ export const Screens = ({ navigation, route }) => {
     //console.log("handleSheetChanges", index);
     setIndex(index);
   }, []);
+
   if (!vendorOrders) {
     return (
       <View
@@ -802,22 +864,26 @@ export const Screens = ({ navigation, route }) => {
                 //console.log(e)
                 //dispatch({ type: "ORDER_STATE", playload: e });
                 //dispatch({ type: "ORDER_STATE", playload: e });
-                setOpen(val=>{
-                  if(val!=e){
-                    return e
-                  }else{
-                    return null
+                setOpen((val) => {
+                  if (val != e) {
+                    return e;
+                  } else {
+                    return null;
                   }
-                })
+                });
               }}
               onPress={() => {
+                if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("SubscriptionScript", { data: doc });
+                  return;
+                }
                 navigation.navigate("VendorOrderDetails", {
                   data: doc,
                 });
               }}
               key={i}
               data={doc}
-              open={Open==doc.id?true:false}
+              open={Open == doc.id ? true : false}
             />
           ))}
 
@@ -909,3 +975,14 @@ export const Screens = ({ navigation, route }) => {
     </View>
   );
 };
+const notify = `<svg xmlns="http://www.w3.org/2000/svg" width="10.924" height="11.104" viewBox="0 0 10.924 11.104">
+<g id="_8023573" data-name="8023573" transform="translate(-16.046 -16.182)">
+  <g id="_011839ff" data-name="#011839ff" transform="translate(16.046 16.182)">
+    <path id="Path_28021" data-name="Path 28021" d="M19.963,16.211a1.273,1.273,0,0,1,1.19.366.6.6,0,0,1,.194.326.364.364,0,0,1-.666.237.543.543,0,0,0-.945.526,2.035,2.035,0,0,1,.658-.028.366.366,0,0,1-.046.724,2.468,2.468,0,0,0-1.617.543,2.352,2.352,0,0,0-.862,1.732c-.006.38,0,.759,0,1.139a5.818,5.818,0,0,1-.777,2.777h6.3a5.52,5.52,0,0,1-.475-1.055.366.366,0,0,1,.218-.444.37.37,0,0,1,.481.241,5.069,5.069,0,0,0,.738,1.4.367.367,0,0,1-.021.466.372.372,0,0,1-.29.12h-1.8a2,2,0,0,1-4.007,0h-1.8a.366.366,0,0,1-.3-.6,5.072,5.072,0,0,0,.956-2.312,11.87,11.87,0,0,0,.052-1.595,3.084,3.084,0,0,1,1.9-2.9,1.272,1.272,0,0,1,.928-1.667m-.986,9.072a1.279,1.279,0,0,0,2.531,0Z" transform="translate(-16.046 -16.182)" fill="#011839"/>
+  </g>
+  <g id="_7738c8ff" data-name="#7738c8ff" transform="translate(21.144 16.542)">
+    <path id="Path_28022" data-name="Path 28022" d="M242.612,32.025a2.916,2.916,0,1,1-.986.286,2.914,2.914,0,0,1,.986-.286m.059,1.511c-.125.051-.252.1-.376.152a.367.367,0,0,0-.179.465.374.374,0,0,0,.437.214q0,.642,0,1.283a.536.536,0,0,0-.242.033.364.364,0,0,0,.15.7h.887a.365.365,0,0,0,.174-.7.541.541,0,0,0-.241-.033q0-.854,0-1.708a.646.646,0,0,0-.026-.245.364.364,0,0,0-.338-.232A.652.652,0,0,0,242.671,33.536Z" transform="translate(-240.004 -32.009)" fill="#333"/>
+  </g>
+</g>
+</svg>
+`;

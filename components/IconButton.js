@@ -45,7 +45,7 @@ const IconButton = ({
         <Text
           style={{
             fontFamily: "Poppins-SemiBold",
-            fontSize: 14,
+            fontSize:style&&style.fontSize?style.fontSize: 14,
             color: active? "white": style&&style.color?style.color:textColor,
 
           }}

@@ -354,7 +354,7 @@ export const getOrders = async (token, type, id) => {
       {
         headers: { Authorization: `Bearer ${token}` },
       }
-    );
+    ); 
     return res;
   } else {
     const res = await axios.get(`${url}/server/orders/${type}/get`, {
@@ -397,6 +397,22 @@ export const makePayment = async (token, orderId) => {
     `${url}/server/orders/make-payment`,
     {
       orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const makePaymentSubscription = async (token, orderId,subscriptionType,dateFrom,dateTo) => {
+  const res = await axios.post(
+    `${url}/server/orders/make-payment-subs`,
+    {
+      orderId: orderId,
+      subscriptionType:subscriptionType,
+      dateFrom:dateFrom,
+      dateTo:dateTo
     },
     {
       headers: { Authorization: `Bearer ${token}` },
