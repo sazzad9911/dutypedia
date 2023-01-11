@@ -105,6 +105,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const type = oldData.type;
   const [dateFrom,setDateFrom]=useState()
   const [dateTo,setDateTo]=useState()
+  const subsOrder=route.params&&route.params.subsOrder?route.params.subsOrder:null;
   //console.log(oldData.subsData)
 
   React.useEffect(() => {

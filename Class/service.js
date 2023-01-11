@@ -566,3 +566,81 @@ export const getMemberId=async(token,serviceId,userId)=>{
   });
   return res
 }
+export const deliverySubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/delivered-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const receiveSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/received-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const refoundSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/refunded-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const rejectRefoundSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/reject-refund-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const vendorCancelSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/vendor/cancel-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const userCancelSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/user/cancel-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+}; 

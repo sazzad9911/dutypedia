@@ -37,7 +37,7 @@ export default function SubscriptionScript({ navigation, route }) {
         flex: 1,
       }}
     >
-      <SubHeader title="Subscription" />
+      <SubHeader navigation={navigation} title="Subscription" />
       <ScrollView>
         <View
           style={{
@@ -187,10 +187,12 @@ export default function SubscriptionScript({ navigation, route }) {
                 if (vendor) {
                   navigation.navigate("VendorOrderDetails", {
                     data: data,
+                    subsOrder:doc
                   });
                 } else {
                   navigation.navigate("OrderDetails", {
                     data: data,
+                    subsOrder:doc
                   });
                 }
               }}

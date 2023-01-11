@@ -53,7 +53,7 @@ export default function AddSubscription({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -76,11 +76,12 @@ export default function AddSubscription({ navigation, route }) {
                 flexDirection: "row",
                 paddingHorizontal: 20,
                 paddingVertical: 10,
+                justifyContent:"space-between"
               }}
             >
               <View
                 style={{
-                  flex: 1,
+                  
                 }}
               >
                 <SvgXml xml={icon} height="18" width={"18"} />
@@ -128,10 +129,10 @@ export default function AddSubscription({ navigation, route }) {
               </View>
               <View
                 style={{
-                  flex: 1.5,
+                  marginRight:0
                 }}
               >
-                <SvgXml xml={vectorImage} height="190" width={"250"} />
+                <SvgXml xml={vectorImage} height="190" width={width/2} />
               </View>
             </View>
             <View
@@ -146,7 +147,7 @@ export default function AddSubscription({ navigation, route }) {
                 error={SubscriptionTypeError}
                 value={SubscriptionType}
                 onChange={(e) => {
-                  console.log(e)
+                  console.log(e);
                   setSubscriptionType(e);
                   setPayAsGo(false);
                 }}
@@ -208,78 +209,82 @@ export default function AddSubscription({ navigation, route }) {
                 </Text>
               </View>
             )}
-            <View
-              style={{
-                flexDirection: "row",
-                paddingHorizontal: 20,
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  width: (width / 2 - 30) / 2 - 15,
-                  backgroundColor: "#F1EFEF",
-                  height: 1,
-                }}
-              />
-              <Text
-                style={{
-                  marginHorizontal: 10,
-                }}
-              >
-                Or
-              </Text>
-              <View
-                style={{
-                  width: (width / 2 - 30) / 2 - 15,
-                  backgroundColor: "#F1EFEF",
-                  height: 1,
-                }}
-              />
-            </View>
-            <View
-              style={{
-                paddingHorizontal: 20,
-                paddingVertical: 20,
-              }}
-            >
-              <CheckBox
-                value={PayAsGo}
-                onChange={() => {
-                  setPayAsGo(!PayAsGo);
-                }}
-                style={{
-                  width: 120,
-                }}
-                title={"Pay As Go"}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 15,
-                  flexWrap: "wrap",
-                }}
-              >
-                <CheckBox
-                  value={OtherCharge}
+            {SubscriptionType && (
+              <>
+                <View
                   style={{
-                    width: 135,
-                  }}
-                  onChange={() => {
-                    setOtherCharge(!OtherCharge);
-                  }}
-                  title={"Other Charge"}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
+                    flexDirection: "row",
+                    paddingHorizontal: 20,
+                    alignItems: "center",
                   }}
                 >
-                  (This Charge Only For First Month)
-                </Text>
-              </View>
-            </View>
+                  <View
+                    style={{
+                      width: (width / 2 - 30) / 2 - 15,
+                      backgroundColor: "#F1EFEF",
+                      height: 1,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      marginHorizontal: 10,
+                    }}
+                  >
+                    Or
+                  </Text>
+                  <View
+                    style={{
+                      width: (width / 2 - 30) / 2 - 15,
+                      backgroundColor: "#F1EFEF",
+                      height: 1,
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 20,
+                  }}
+                >
+                  <CheckBox
+                    value={PayAsGo}
+                    onChange={() => {
+                      setPayAsGo(!PayAsGo);
+                    }}
+                    style={{
+                      width: 120,
+                    }}
+                    title={"Pay As Go"}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: 15,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <CheckBox
+                      value={OtherCharge}
+                      style={{
+                        width: 135,
+                      }}
+                      onChange={() => {
+                        setOtherCharge(!OtherCharge);
+                      }}
+                      title={"Other Charge"}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                      }}
+                    >
+                      (This Charge Only For First Month)
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
             {OtherCharge && (
               <Animated.View
                 style={{
@@ -317,13 +322,13 @@ export default function AddSubscription({ navigation, route }) {
                 />
               </Animated.View>
             )}
-           
+
             <View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
                 justifySelf: "flex-end",
-                marginVertical:30
+                marginVertical: 30,
               }}
             >
               <IconButton
@@ -385,7 +390,6 @@ export default function AddSubscription({ navigation, route }) {
                   style={{
                     fontSize: 16,
                     marginVertical: 10,
-                 
                   }}
                 >
                   Cancel
@@ -612,7 +616,7 @@ const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="13.678" height="13.
 `;
 const styles = StyleSheet.create({
   text: {
-    fontSize: 22,
+    fontSize: 23,
     fontFamily: "Poppins-Bold",
     lineHeight: 30,
   },

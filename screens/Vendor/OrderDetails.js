@@ -23,6 +23,9 @@ import {
   requestForTime,
   orderRefound,
   getMemberId,
+  deliverySubs,
+  refoundSubs,
+  vendorCancelSubs,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -31,7 +34,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
-import { convertDate, dateConverter, dateDifference, serverTimeToLocalDate } from "../../action";
+import {
+  convertDate,
+  dateConverter,
+  dateDifference,
+  serverTimeToLocalDate,
+} from "../../action";
 import { socket } from "../../Class/socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -108,7 +116,9 @@ const OrderDetails = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
-  const type=newData.type;
+  const type = newData.type;
+  const subsOrder =
+    route.params && route.params.subsOrder ? route.params.subsOrder : null;
 
   const stringDate = (d) => {
     const Months = [
@@ -138,7 +148,7 @@ const OrderDetails = ({ navigation, route }) => {
   );
   React.useEffect(() => {
     //console.log(data.selectedServices);
-    // console.warn(data)
+    //console.warn(subsOrder)
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -251,14 +261,14 @@ const OrderDetails = ({ navigation, route }) => {
     //   console.warn(e.message);
     // }
   };
-  React.useEffect(()=>{
+  React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e=e.order;
-      if (e.type === "vendor"&&e.data.id==data.id) {
-        setData(e.data)
+      e = e.order;
+      if (e.type === "vendor" && e.data.id == data.id) {
+        setData(e.data);
       }
     });
-  },[])
+  }, []);
 
   if (Loader) {
     return (
@@ -517,7 +527,8 @@ const OrderDetails = ({ navigation, route }) => {
           {data &&
             data.status == "WAITING_FOR_ACCEPT" &&
             data.type != "ONETIME" &&
-            data.type != "PACKAGE" && type!="SUBS"&& (
+            data.type != "PACKAGE" &&
+            type != "SUBS" && (
               <IconButton
                 onPress={() => {
                   if (data.service.gigs[0].services.category) {
@@ -760,7 +771,7 @@ const OrderDetails = ({ navigation, route }) => {
             </Text>
           </View>
         )}
-         <View
+        <View
           style={{
             justifyContent: "center",
             alignItems: "center",
@@ -781,52 +792,63 @@ const OrderDetails = ({ navigation, route }) => {
             }}
           >
             <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? serverTimeToLocalDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
+              {data
+                ? serverTimeToLocalDate(data.deliveryDateFrom)
+                : "Unavailable Date"}{" "}
             </Text>
             <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
               To
             </Text>
             {data && data.subsData ? (
               <Text style={[styles.smallText, { flex: 0 }]}>
-                {data ? serverTimeToLocalDate(data.deliveryDateFrom,
-                  (data.subsData.totalDuration?(data.subsData.totalDuration*(
-                    data.subsData.subscriptionType=="Monthly"?30:
-                    data.subsData.subscriptionType=="Yearly"?365:7
-                  )):0)) : "Unavailable Date"}
+                {data
+                  ? serverTimeToLocalDate(
+                      data.deliveryDateFrom,
+                      data.subsData.totalDuration
+                        ? data.subsData.totalDuration *
+                            (data.subsData.subscriptionType == "Monthly"
+                              ? 30
+                              : data.subsData.subscriptionType == "Yearly"
+                              ? 365
+                              : 7)
+                        : 0
+                    )
+                  : "Unavailable Date"}
               </Text>
             ) : (
               <Text style={[styles.smallText, { flex: 0 }]}>
-                {data ? serverTimeToLocalDate(data.deliveryDateTo) : "Unavailable Date"}
+                {data
+                  ? serverTimeToLocalDate(data.deliveryDateTo)
+                  : "Unavailable Date"}
               </Text>
             )}
           </View>
-          {type=="SUBS"&&(
+          {type == "SUBS" && (
             <View
-            style={{
-              width: "100%",
-              alignItems: "flex-end",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("SubscriptionDates", {
-                  subsData: data.subsData,
-                  date: data.deliveryDateFrom,
-                  
-                });
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginTop: 10,
-                  textDecorationLine: "underline",
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: data.deliveryDateFrom,
+                  });
                 }}
               >
-                View all delivery date
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 10,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all delivery date
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <View
@@ -874,33 +896,33 @@ const OrderDetails = ({ navigation, route }) => {
                 : "Due"}
             </Text>
           </View>
-          {type=="SUBS"&&(
+          {type == "SUBS" && (
             <View
-            style={{
-              width: "100%",
-              alignItems: "flex-end",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("SubscriptionDates", {
-                  subsData: data.subsData,
-                  date: data.deliveryDateFrom,
-                  name:"Payment Date"
-                });
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginTop: 10,
-                  textDecorationLine: "underline",
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: data.deliveryDateFrom,
+                    name: "Payment Date",
+                  });
                 }}
               >
-                View all delivery date
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 10,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all delivery date
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <View
@@ -966,6 +988,23 @@ const OrderDetails = ({ navigation, route }) => {
             data.status != "CANCELLED" && (
               <IconButton
                 onPress={() => {
+                  if (subsOrder) {
+                    try {
+                      setLoader(true);
+                      deliverySubs(user.token, subsOrder.id)
+                        .then((res) => {
+                          loadData(res.data.receiverId, res.data.order);
+                          setData(res.data.order);
+                        })
+                        .catch((err) => {
+                          setLoader(false);
+                          console.warn(err.message);
+                        });
+                    } catch (e) {
+                      console.warn(e.message);
+                    }
+                    return;
+                  }
                   try {
                     setLoader(true);
                     completeOrderDelivery(user.token, data.id)
@@ -1013,19 +1052,36 @@ const OrderDetails = ({ navigation, route }) => {
               <View style={{ flexDirection: "row" }}>
                 <IconButton
                   onPress={() => {
-                    try {
-                      setLoader(true);
-                      orderRefound(user.token, data.id, true)
-                        .then((res) => {
-                          loadData(res.data.receiverId, res.data.order);
-                          setData(res.data.order);
-                        })
-                        .catch((err) => {
-                          setLoader(false);
-                          console.warn(err.message);
-                        });
-                    } catch (e) {
-                      console.warn(e.message);
+                    if (subsOrder) {
+                      try {
+                        setLoader(true);
+                        refoundSubs(user.token,subsOrder.id)
+                          .then((res) => {
+                            loadData(res.data.receiverId, res.data.order);
+                            setData(res.data.order);
+                          })
+                          .catch((err) => {
+                            setLoader(false);
+                            console.warn(err.message);
+                          });
+                      } catch (e) {
+                        console.warn(e.message);
+                      }
+                    } else {
+                      try {
+                        setLoader(true);
+                        orderRefound(user.token, data.id, true)
+                          .then((res) => {
+                            loadData(res.data.receiverId, res.data.order);
+                            setData(res.data.order);
+                          })
+                          .catch((err) => {
+                            setLoader(false);
+                            console.warn(err.message);
+                          });
+                      } catch (e) {
+                        console.warn(e.message);
+                      }
                     }
                     socket.emit("updateOrder", {
                       receiverId: user.user.id,
@@ -1144,6 +1200,21 @@ const OrderDetails = ({ navigation, route }) => {
                     {
                       text: "OK",
                       onPress: () => {
+                        if(subsOrder){
+                          setLoader(true);
+                        vendorCancelSubs(user.token, subsOrder.id)
+                          .then((res) => {
+                            console.log(res.data)
+
+                            loadData(res.data.receiverId, res.data.order);
+                            setData(res.data.order);
+                          })
+                          .catch((err) => {
+                            setLoader(false);
+                            console.warn(err.response.data);
+                          });
+                          return
+                        }
                         setLoader(true);
                         cancelOrder(user.token, data.id, "CANCELLED", "vendor")
                           .then((res) => {
