@@ -69,7 +69,7 @@ export default function SubscriptionScript({ navigation, route }) {
     }
   }, [subsOrders&&subsOrders.length]);
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
       }}
@@ -254,7 +254,7 @@ export default function SubscriptionScript({ navigation, route }) {
           height:20
         }}/>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({

@@ -124,7 +124,7 @@ const OrderDetails = ({ navigation, route }) => {
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
   const index = route.params && route.params.index ? route.params.index : 0;
   const [subsOrder, setSubsOrder] = useState(sOrder);
-console.log(index)
+//console.log(index)
   const stringDate = (d) => {
     const Months = [
       "Jan",
@@ -268,7 +268,7 @@ console.log(index)
   };
   const loadDataSubs = async (receiverId, order) => {
     
-    if (!index) {
+    if (index==null) {
       Alert.alert("Some thing went wrong");
       setLoader(false);
       return;
@@ -307,6 +307,7 @@ console.log(index)
       e = e.order;
       if (e.type === "vendor" && e.data.id == data.id) {
         setData(e.data);
+        setSubsOrder(e.data.subsOrders[index]);
       }
     });
   }, []);

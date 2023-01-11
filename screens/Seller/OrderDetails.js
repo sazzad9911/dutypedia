@@ -171,7 +171,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   };
   const loadDataSubs = async (receiverId, order) => {
     //setLoader(false);
-    if (!index) {
+    if (index==null) {
+      setLoader(false);
       Alert.alert("Some thing went wrong");
       return;
     }
@@ -209,6 +210,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       e = e.order;
       if (e.type === "user" && e.data.id == data.id) {
         setData(e.data);
+        setSubsOrder(e.data.subsOrders[index]);
       }
     });
   }, []);
