@@ -187,11 +187,12 @@ const Service = ({ navigation, route }) => {
       blobImages.push(fileFromURL(ForthImage));
       const result = await uploadFile(blobImages, user.token);
       if (result) {
-        if (type) {
+        if (type=="SUBS") {
           if (!subsData) {
             Alert.alert("Invalid Data format");
             return;
           }
+          //console.log("ok")
           createOtherServiceIndividual(
             user.token,
             businessForm,
@@ -229,6 +230,8 @@ const Service = ({ navigation, route }) => {
             setLoader(false);
           });
       }
+
+      Alert.alert("Image save failed")
       return;
     }
     navigation.navigate("Address");

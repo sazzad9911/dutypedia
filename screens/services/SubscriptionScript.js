@@ -1,14 +1,17 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text, Dimensions, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { serverTimeToLocalDate } from "../../action";
+import { localTimeToServerDate, serverTimeToLocalDate } from "../../action";
+import { getSubsOrderById } from "../../Class/service";
 import Avatar from "../../components/Avatar";
 import BackHeader from "../../components/BackHeader";
 import IconButton from "../../components/IconButton";
 import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
+import uuid from "react-native-uuid"
 const { width, height } = Dimensions.get("window");
 
 export default function SubscriptionScript({ navigation, route }) {
@@ -17,20 +20,54 @@ export default function SubscriptionScript({ navigation, route }) {
   const providerInfo = service.providerInfo;
   const user = useSelector((state) => state.user);
   const subsData = data.subsData;
-  const subsOrders = data.subsOrders;
+  const [subsOrders, setSubsOrders] = useState();
   const vendor = useSelector((state) => state.vendor);
-  const [totalPaid,setTotalPaid]=useState()
+  const [totalPaid, setTotalPaid] = useState();
+  const isFocused = useIsFocused();
   //console.log(providerInfo)
-  //console.warn(user.token)
-  useEffect(()=>{
-    let paid=0;
-    subsOrders&&subsOrders.map((doc,i)=>{
-        if(doc.paid){
-            paid=paid+1
-        }
-    })
-    setTotalPaid(paid)
-  },[])
+  //console.warn(subsOrders)
+  useEffect(() => {
+    getSubsOrderById(user.token, data.id)
+      .then((res) => {
+        //console.log(res.data)
+        setSubsOrders(res.data.order.subsOrders);
+        let paid = 0;
+        res.data.order.subsOrders.map((doc, i) => {
+          if (doc.paid) {
+            paid = paid + 1;
+          }
+        });
+        setTotalPaid(paid);
+      })
+      .catch((err) => {
+        console.warn(err.response.data.message);
+      });
+  }, [isFocused]);
+  useEffect(() => {
+    if (subsOrders && subsOrders.length < subsData.totalDuration) {
+      let being = subsData.totalDuration - subsOrders.length;
+      let arr = [];
+      for (let i = 0; i < being; i++) {
+        setSubsOrders(val=>[...val,{
+          createdAt: new Date(),
+          dateFrom: localTimeToServerDate(subsOrders[subsOrders.length-1].dateTo,(i*(subsData.subscriptionType=="Monthly"?30:
+          subsData.subscriptionType=="Yearly"?365:7))),
+          dateTo: localTimeToServerDate(subsOrders[subsOrders.length-1].dateTo,((i+1)*(subsData.subscriptionType=="Monthly"?30:
+          subsData.subscriptionType=="Yearly"?365:7))),
+          delivered: false,
+          deliveredAt: null,
+          id: uuid.v4(),
+          offlineOrderId: null,
+          orderId: null,
+          paid: false,
+          received: false,
+          refundRequestByUser: false,
+          status: "UPCOMING",
+          updatedAt: new Date(),
+        }])
+      }
+    }
+  }, [subsOrders&&subsOrders.length]);
   return (
     <SafeAreaView
       style={{
@@ -38,7 +75,7 @@ export default function SubscriptionScript({ navigation, route }) {
       }}
     >
       <SubHeader navigation={navigation} title="Subscription" />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
             flexDirection: "row",
@@ -65,7 +102,7 @@ export default function SubscriptionScript({ navigation, route }) {
               style={{
                 justifyContent: "center",
                 marginLeft: 10,
-                width:"60%",
+                width: "60%",
               }}
             >
               <Text
@@ -106,24 +143,23 @@ export default function SubscriptionScript({ navigation, route }) {
               }}
             >
               Status{" "}
-              {data.status=="CANCELED"?(
+              {data.status == "CANCELED" ? (
                 <Text
-                style={{
-                  color: "#DA1E37",
-                }}
-              >
-                Inactive
-              </Text>
-              ):(
+                  style={{
+                    color: "#DA1E37",
+                  }}
+                >
+                  Inactive
+                </Text>
+              ) : (
                 <Text
-                style={{
-                  color: "#4CAF50",
-                }}
-              >
-                Active
-              </Text>
+                  style={{
+                    color: "#4CAF50",
+                  }}
+                >
+                  Active
+                </Text>
               )}
-              
             </Text>
             <Text
               style={{
@@ -185,19 +221,23 @@ export default function SubscriptionScript({ navigation, route }) {
             <Cart
               onPress={() => {
                 if (vendor) {
+                  //console.log(i)
                   navigation.navigate("VendorOrderDetails", {
                     data: data,
-                    subsOrder:doc
+                    subsOrder: doc,
+                    index:i
                   });
                 } else {
                   navigation.navigate("OrderDetails", {
                     data: data,
-                    subsOrder:doc
+                    subsOrder: doc,
+                    index:i
                   });
                 }
               }}
               data={doc}
               key={i}
+              index={i}
             />
           ))}
         {subsOrders && subsOrders.length == 0 && (
@@ -210,6 +250,9 @@ export default function SubscriptionScript({ navigation, route }) {
             No Order Found
           </Text>
         )}
+        <View style={{
+          height:20
+        }}/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -224,7 +267,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
 });
-const Cart = ({ data, onPress }) => {
+const Cart = ({ data, onPress, index }) => {
   return (
     <View
       style={{
@@ -232,6 +275,8 @@ const Cart = ({ data, onPress }) => {
         borderColor: "#C0FFD7",
         borderWidth: 1,
         paddingVertical: 10,
+        borderTopWidth: index != 0 ? 0 : 1,
+        opacity:data.orderId?1:.4
       }}
     >
       <View
@@ -241,12 +286,12 @@ const Cart = ({ data, onPress }) => {
           marginTop: 15,
         }}
       >
-        <Text style={styles.smallText}>01</Text>
+        <Text style={styles.smallText}>{index>8?`${(index+1)}`:`0${(index+1)}`}</Text>
         <Text style={styles.smallText}>
           {serverTimeToLocalDate(data.dateFrom)} -{" "}
           {serverTimeToLocalDate(data.dateTo)}
         </Text>
-        <Text style={styles.smallText}>
+        <Text style={[styles.smallText]}>
           {serverTimeToLocalDate(data.dateFrom)} -{" "}
           {serverTimeToLocalDate(data.dateTo)}
         </Text>
@@ -266,8 +311,13 @@ const Cart = ({ data, onPress }) => {
         >
           <Text style={styles.smallText}>
             Payment:{" "}
-            <Text style={{ color: "#4ADE80", textAlign: "center" }}>
-              {data && data.status ? exporters(data.status) : "Unknown"}
+            <Text
+              style={{
+                color: data.paid ? "#4ADE80" : "#DA1E37",
+                textAlign: "center",
+              }}
+            >
+              {data && data.paid ? "Paid" : "Due"}
             </Text>
           </Text>
         </View>
@@ -277,20 +327,30 @@ const Cart = ({ data, onPress }) => {
           }}
         >
           <Text style={styles.smallText}>
-            Status: <Text>Delivered</Text>
+            Status:{" "}
+            <Text
+              style={{
+                color: "#4ADE80",
+              }}
+            >
+              {data && data.status ? exporters(data.status) : "Unknown"}
+            </Text>
           </Text>
         </View>
         <IconButton
           onPress={() => {
-            if (onPress) {
+            if (onPress&&data.orderId) {
               onPress();
             }
           }}
           style={{
             fontSize: 10,
             borderWidth: 0,
-            flex: 1,
-            color:"#6366F1"
+            
+            color: "#6366F1",
+            paddingHorizontal:0,
+            marginHorizontal:0,
+            marginRight:5
           }}
           Icon={() => <SvgXml xml={Icon} height="10" width={"10"} />}
           title={"View Recept"}
@@ -322,6 +382,6 @@ const exporters = (key) => {
     case "COMPLETED":
       return "Completed";
     default:
-      return "Unknown";
+      return "Upcoming";
   }
 };

@@ -370,6 +370,7 @@ const Screens = ({ navigation, route }) => {
                 //dispatch({ type: "ORDER_STATE", playload: e });
               }}
               onPress={() => {
+                //console.log(doc.subsOrders)
                 if(doc.type=="SUBS"&&doc.status!="WAITING_FOR_ACCEPT"){
                   navigation.navigate("SubscriptionScript",{data:doc})
                   return

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -26,6 +26,9 @@ import {
   deliverySubs,
   refoundSubs,
   vendorCancelSubs,
+  getSubsOrderById,
+  acceptRefoundSubs,
+  rejectRefoundSubs,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -117,9 +120,11 @@ const OrderDetails = ({ navigation, route }) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
   const type = newData.type;
-  const subsOrder =
+  const sOrder =
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
-
+  const index = route.params && route.params.index ? route.params.index : 0;
+  const [subsOrder, setSubsOrder] = useState(sOrder);
+console.log(index)
   const stringDate = (d) => {
     const Months = [
       "Jan",
@@ -260,6 +265,42 @@ const OrderDetails = ({ navigation, route }) => {
     // } catch (e) {
     //   console.warn(e.message);
     // }
+  };
+  const loadDataSubs = async (receiverId, order) => {
+    
+    if (!index) {
+      Alert.alert("Some thing went wrong");
+      setLoader(false);
+      return;
+    }
+    try {
+      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
+      //const userRes = await getOrders(user.token, "user");
+      const res = await getSubsOrderById(user.token, data.id);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
+      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
+      socket.emit("updateOrder", {
+        receiverId: user.user.id,
+        order: {
+          type: "vendor",
+          data: res.data.order,
+        },
+      });
+      socket.emit("updateOrder", {
+        receiverId: receiverId,
+        order: {
+          type: "user",
+          data: res.data.order,
+        },
+      });
+      setData(res.data.order);
+      setSubsOrder(res.data.order.subsOrders[index]);
+      //route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
   };
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
@@ -864,38 +905,77 @@ const OrderDetails = ({ navigation, route }) => {
           <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
             Payment Status
           </Text>
-          <View
-            style={{
-              padding: 3,
-              backgroundColor:
-                data && data.paid && data.status != "REFUNDED"
-                  ? "green"
-                  : data && data.paid && data.status == "REFUNDED"
-                  ? "#FA1ABA"
-                  : data && !data.paid
-                  ? "red"
-                  : backgroundColor,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 15,
-              paddingHorizontal: 15,
-              marginVertical: 10,
-            }}
-          >
-            <Text
+          {type == "SUBS" && subsOrder ? (
+            <View
               style={{
-                color: "white",
-                fontSize: width < 350 ? 14 : 15,
-                fontFamily: "Poppins-Medium",
+                padding: 3,
+                backgroundColor:
+                  subsOrder && subsOrder.paid && subsOrder.status != "REFUNDED"
+                    ? "green"
+                    : subsOrder &&
+                      subsOrder.paid &&
+                      subsOrder.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : subsOrder && !subsOrder.paid
+                    ? "red"
+                    : backgroundColor,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                marginVertical: 10,
               }}
             >
-              {data && data.paid && data.status != "REFUNDED"
-                ? "Paid"
-                : data && data.paid && data.status == "REFUNDED"
-                ? "Refunded"
-                : "Due"}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: width < 350 ? 14 : 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {subsOrder && subsOrder.paid && subsOrder.status != "REFUNDED"
+                  ? "Paid"
+                  : subsOrder &&
+                    subsOrder.paid &&
+                    subsOrder.status == "REFUNDED"
+                  ? "Refunded"
+                  : "Due"}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                padding: 3,
+                backgroundColor:
+                  data && data.paid && data.status != "REFUNDED"
+                    ? "green"
+                    : data && data.paid && data.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : data && !data.paid
+                    ? "red"
+                    : backgroundColor,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                marginVertical: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: width < 350 ? 14 : 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {data && data.paid && data.status != "REFUNDED"
+                  ? "Paid"
+                  : data && data.paid && data.status == "REFUNDED"
+                  ? "Refunded"
+                  : "Due"}
+              </Text>
+            </View>
+          )}
           {type == "SUBS" && (
             <View
               style={{
@@ -938,9 +1018,15 @@ const OrderDetails = ({ navigation, route }) => {
           <Text style={[styles.text, { fontSize: width < 350 ? 16 : 18 }]}>
             Service Status
           </Text>
-          <Text style={[styles.smallText, { marginTop: 5 }]}>
-            {data ? exporters(data.status) : "Unknown"}
-          </Text>
+          {type == "SUBS" && subsOrder ? (
+            <Text style={[styles.smallText, { marginTop: 5 }]}>
+              {subsOrder ? exporters(subsOrder.status) : "Unknown"}
+            </Text>
+          ) : (
+            <Text style={[styles.smallText, { marginTop: 5 }]}>
+              {data ? exporters(data.status) : "Unknown"}
+            </Text>
+          )}
         </View>
         <View
           style={{
@@ -960,375 +1046,583 @@ const OrderDetails = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={{ height: 10 }} />
-        <View style={{ marginHorizontal: 20 }}>
-          {data.status == "PROCESSING" &&
-            !data.requestedDeliveryDate &&
-            !data.refundRequestByUser &&
-            !data.requestedDeliveryDate &&
-            data.status != "DELIVERED" &&
-            data.status != "COMPLETED" &&
-            data.status != "REFUNDED" &&
-            data.status != "CANCELLED" && (
-              <Text
-                style={{
-                  fontSize: width < 350 ? 14 : 16,
-                  color: textColor,
-                }}
-              >
-                When Delivered The Order Then Click
-              </Text>
-            )}
-          {data.status == "PROCESSING" &&
-            !data.requestedDeliveryDate &&
-            !data.refundRequestByUser &&
-            !data.requestedDeliveryDate &&
-            data.status != "DELIVERED" &&
-            data.status != "COMPLETED" &&
-            data.status != "REFUNDED" &&
-            data.status != "CANCELLED" && (
-              <IconButton
-                onPress={() => {
-                  if (subsOrder) {
+        {type == "SUBS" && subsOrder ? (
+          <>
+            <View style={{ marginHorizontal: 20 }}>
+              {subsOrder.status == "PROCESSING" &&
+                !subsOrder.requestedDeliveryDate &&
+                !subsOrder.refundRequestByUser &&
+                !subsOrder.requestedDeliveryDate &&
+                subsOrder.status != "DELIVERED" &&
+                subsOrder.status != "COMPLETED" &&
+                subsOrder.status != "REFUNDED" &&
+                subsOrder.status != "CANCELLED" && (
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                    }}
+                  >
+                    When Delivered The Order Then Click
+                  </Text>
+                )}
+              {subsOrder.status == "PROCESSING" &&
+                !subsOrder.requestedDeliveryDate &&
+                !subsOrder.refundRequestByUser &&
+                !subsOrder.requestedDeliveryDate &&
+                subsOrder.status != "DELIVERED" &&
+                subsOrder.status != "COMPLETED" &&
+                subsOrder.status != "REFUNDED" &&
+                subsOrder.status != "CANCELLED" && (
+                  <IconButton
+                    onPress={() => {
+                      try {
+                        setLoader(true);
+                        deliverySubs(user.token, subsOrder.id)
+                          .then((res) => {
+                            loadDataSubs(res.data.receiverId, res.data.order);
+                          })
+                          .catch((err) => {
+                            setLoader(false);
+                            console.warn(err.message);
+                          });
+                      } catch (e) {
+                        console.warn(e.message);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      marginVertical: 10,
+                      borderWidth: 0,
+                      marginRight: 20,
+                      width: 130,
+                      fontSize: 16,
+                      padding: 10,
+                      height: 40,
+                    }}
+                    title="Yes I Delivered"
+                  />
+                )}
+            </View>
+            {subsOrder.refundRequestByUser &&
+              subsOrder.status != "DELIVERED" &&
+              subsOrder.status != "REFUNDED" &&
+              subsOrder.status != "CANCELLED" && (
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Customer request for refund
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <IconButton
+                      onPress={() => {
+                        try {
+                          setLoader(true);
+                          acceptRefoundSubs(user.token, subsOrder.id)
+                            .then((res) => {
+                              loadDataSubs(res.data.receiverId, res.data.order);
+                            })
+                            .catch((err) => {
+                              setLoader(false);
+                              console.warn(err.message);
+                            });
+                        } catch (e) {
+                          console.warn(e.message);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: "#4ADE80",
+                        borderRadius: 5,
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        width: 120,
+                        height: 40,
+                      }}
+                      title="Accept Refund"
+                    />
+                    <IconButton
+                      onPress={() => {
+                        try {
+                          setLoader(true);
+                          rejectRefoundSubs(user.token, subsOrder.id)
+                            .then((res) => {
+                              loadDataSubs(res.data.receiverId, res.data.order);
+                            })
+                            .catch((err) => {
+                              setLoader(false);
+                              console.warn(err.message);
+                            });
+                        } catch (e) {
+                          console.warn(e.message);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: "#4ADE80",
+                        borderRadius: 5,
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        width: 120,
+                        height: 40,
+                      }}
+                      title="Cancel Refund"
+                    />
+                  </View>
+                </View>
+              )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                flexWrap: "wrap",
+              }}
+            >
+              {subsOrder.status === "WAITING_FOR_ACCEPT" && (
+                <IconButton
+                  onPress={() => {
                     try {
-                      setLoader(true);
-                      deliverySubs(user.token, subsOrder.id)
-                        .then((res) => {
-                          loadData(res.data.receiverId, res.data.order);
-                          setData(res.data.order);
-                        })
-                        .catch((err) => {
-                          setLoader(false);
-                          console.warn(err.message);
-                        });
+                      validate();
                     } catch (e) {
                       console.warn(e.message);
                     }
-                    return;
-                  }
+                  }}
+                  style={{
+                    backgroundColor: "#4ADE80",
+                    borderRadius: 5,
+                    alignSelf: "flex-end",
+                    marginVertical: 30,
+                    borderWidth: 0,
+                    marginRight: 20,
+                    width: 100,
+                    height: 40,
+                  }}
+                  title="Accept"
+                />
+              )}
+              {subsOrder.status != "CANCELLED" &&
+                subsOrder.status != "DELIVERED" &&
+                subsOrder.status != "REFUNDED" &&
+                subsOrder.status != "COMPLETED" &&
+                !subsOrder.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      Alert.alert(
+                        "Hey!",
+                        "Are you want to cancel this order?",
+                        [
+                          {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              setLoader(true);
+                              vendorCancelSubs(user.token, subsOrder.id)
+                                .then((res) => {
+                                  //console.log(res.data);
+                                  loadDataSubs(
+                                    res.data.receiverId,
+                                    res.data.order
+                                  );
+                                })
+                                .catch((err) => {
+                                  setLoader(false);
+                                  console.warn(err.response.data);
+                                });
+                            },
+                          },
+                        ]
+                      );
+                    }}
+                    style={{
+                      backgroundColor: primaryColor,
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 30,
+                      borderWidth: 0,
+                      marginRight: 10,
+                      borderColor: backgroundColor,
+                      borderWidth: 1,
+                      color: backgroundColor,
+                      width: 100,
+                      height: 40,
+                    }}
+                    title="Cancel"
+                  />
+                )}
+            </View>
+
+            {subsOrder && subsOrder.status == "REFUNDED" && (
+              <Text
+                style={{
+                  color: backgroundColor,
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginHorizontal: 20,
+                  marginVertical: 20,
+                }}
+              >
+                Order Refund
+              </Text>
+            )}
+            {subsOrder && subsOrder.status == "COMPLETED" && (
+              <Text
+                style={{
+                  color: "green",
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                Order Completed
+              </Text>
+            )}
+          </>
+        ) : (
+          <>
+            <View style={{ marginHorizontal: 20 }}>
+              {data.status == "PROCESSING" &&
+                !data.requestedDeliveryDate &&
+                !data.refundRequestByUser &&
+                !data.requestedDeliveryDate &&
+                data.status != "DELIVERED" &&
+                data.status != "COMPLETED" &&
+                data.status != "REFUNDED" &&
+                data.status != "CANCELLED" && (
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                    }}
+                  >
+                    When Delivered The Order Then Click
+                  </Text>
+                )}
+              {data.status == "PROCESSING" &&
+                !data.requestedDeliveryDate &&
+                !data.refundRequestByUser &&
+                !data.requestedDeliveryDate &&
+                data.status != "DELIVERED" &&
+                data.status != "COMPLETED" &&
+                data.status != "REFUNDED" &&
+                data.status != "CANCELLED" && (
+                  <IconButton
+                    onPress={() => {
+                      try {
+                        setLoader(true);
+                        completeOrderDelivery(user.token, data.id)
+                          .then((res) => {
+                            loadData(res.data.receiverId, res.data.order);
+                            setData(res.data.order);
+                          })
+                          .catch((err) => {
+                            setLoader(false);
+                            console.warn(err.message);
+                          });
+                      } catch (e) {
+                        console.warn(e.message);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      marginVertical: 10,
+                      borderWidth: 0,
+                      marginRight: 20,
+                      width: 130,
+                      fontSize: 16,
+                      padding: 10,
+                      height: 40,
+                    }}
+                    title="Yes I Delivered"
+                  />
+                )}
+            </View>
+            {data.refundRequestByUser &&
+              data.status != "DELIVERED" &&
+              data.status != "REFUNDED" &&
+              data.status != "CANCELLED" && (
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Customer request for refund
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <IconButton
+                      onPress={() => {
+                        try {
+                          setLoader(true);
+                          orderRefound(user.token, data.id, true)
+                            .then((res) => {
+                              loadData(res.data.receiverId, res.data.order);
+                              setData(res.data.order);
+                            })
+                            .catch((err) => {
+                              setLoader(false);
+                              console.warn(err.message);
+                            });
+                        } catch (e) {
+                          console.warn(e.message);
+                        }
+                        socket.emit("updateOrder", {
+                          receiverId: user.user.id,
+                          order: data,
+                        });
+                      }}
+                      style={{
+                        backgroundColor: "#4ADE80",
+                        borderRadius: 5,
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        width: 120,
+                        height: 40,
+                      }}
+                      title="Accept Refund"
+                    />
+                    <IconButton
+                      onPress={() => {
+                        try {
+                          setLoader(true);
+                          orderRefound(user.token, data.id, false)
+                            .then((res) => {
+                              loadData(res.data.receiverId, res.data.order);
+                              setData(res.data.order);
+                            })
+                            .catch((err) => {
+                              setLoader(false);
+                              console.warn(err.message);
+                            });
+                        } catch (e) {
+                          console.warn(e.message);
+                        }
+                        socket.emit("updateOrder", {
+                          receiverId: user.user.id,
+                          order: data,
+                        });
+                      }}
+                      style={{
+                        backgroundColor: "#4ADE80",
+                        borderRadius: 5,
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        width: 120,
+                        height: 40,
+                      }}
+                      title="Cancel Refund"
+                    />
+                  </View>
+                </View>
+              )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                flexWrap: "wrap",
+              }}
+            >
+              {data.status === "WAITING_FOR_ACCEPT" && (
+                <IconButton
+                  onPress={() => {
+                    try {
+                      validate();
+                    } catch (e) {
+                      console.warn(e.message);
+                    }
+                  }}
+                  style={{
+                    backgroundColor: "#4ADE80",
+                    borderRadius: 5,
+                    alignSelf: "flex-end",
+                    marginVertical: 30,
+                    borderWidth: 0,
+                    marginRight: 20,
+                    width: 100,
+                    height: 40,
+                  }}
+                  title="Accept"
+                />
+              )}
+              {data.status == "PROCESSING" &&
+                !data.requestedDeliveryDate &&
+                !data.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      setRefound(true);
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 30,
+                      borderWidth: 0,
+                      marginRight: 20,
+                      width: 150,
+                      height: 40,
+                    }}
+                    title="Request Extra Time"
+                  />
+                )}
+
+              {data.status != "CANCELLED" &&
+                data.status != "DELIVERED" &&
+                data.status != "REFUNDED" &&
+                data.status != "COMPLETED" &&
+                !data.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      Alert.alert(
+                        "Hey!",
+                        "Are you want to cancel this order?",
+                        [
+                          {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              
+                              setLoader(true);
+                              cancelOrder(
+                                user.token,
+                                data.id,
+                                "CANCELLED",
+                                "vendor"
+                              )
+                                .then((res) => {
+                                  loadData(res.data.receiverId, res.data.order);
+                                  setData(res.data.order);
+                                })
+                                .catch((err) => {
+                                  setLoader(false);
+                                  console.warn(err.response.data);
+                                });
+                            },
+                          },
+                        ]
+                      );
+                    }}
+                    style={{
+                      backgroundColor: primaryColor,
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 30,
+                      borderWidth: 0,
+                      marginRight: 10,
+                      borderColor: backgroundColor,
+                      borderWidth: 1,
+                      color: backgroundColor,
+                      width: 100,
+                      height: 40,
+                    }}
+                    title="Cancel"
+                  />
+                )}
+            </View>
+            {data &&
+              data.requestedDeliveryDate &&
+              data.status != "DELIVERED" &&
+              data.status != "COMPLETED" &&
+              data.status != "REFUNDED" &&
+              data.status != "CANCELLED" &&
+              !data.refundRequestByUser && (
+                <Text
+                  style={{
+                    fontSize: width < 350 ? 14 : 16,
+                    color: backgroundColor,
+                    textAlign: "center",
+                    marginBottom: 30,
+                  }}
+                >
+                  You Requested for extra time
+                </Text>
+              )}
+            <DateTimePickerModal
+              date={RefoundDate ? RefoundDate : new Date()}
+              buttonTextColorIOS={backgroundColor}
+              isVisible={Refound}
+              mode="date"
+              onConfirm={(e) => {
+                if (dateDifference(data.deliveryDateTo, e) > 0) {
+                  setRefoundDate(e);
                   try {
+                    setRefound(false);
                     setLoader(true);
-                    completeOrderDelivery(user.token, data.id)
+                    requestForTime(user.token, data.id, dateConverter(e))
                       .then((res) => {
                         loadData(res.data.receiverId, res.data.order);
                         setData(res.data.order);
                       })
-                      .catch((err) => {
+                      .catch((error) => {
                         setLoader(false);
-                        console.warn(err.message);
+                        console.warn(error.message);
                       });
-                  } catch (e) {
-                    console.warn(e.message);
+                  } catch (err) {
+                    console.warn(err.message);
                   }
-                }}
-                style={{
-                  backgroundColor: "#4ADE80",
-                  borderRadius: 5,
-                  marginVertical: 10,
-                  borderWidth: 0,
-                  marginRight: 20,
-                  width: 120,
-                  fontSize: 16,
-                  padding: 10,
-                  height: 40,
-                }}
-                title="Yes I Delivered"
-              />
-            )}
-        </View>
-        {data.refundRequestByUser &&
-          data.status != "DELIVERED" &&
-          data.status != "REFUNDED" &&
-          data.status != "CANCELLED" && (
-            <View style={{ marginHorizontal: 20 }}>
-              <Text
-                style={{
-                  fontSize: width < 350 ? 14 : 16,
-                  color: textColor,
-                  fontFamily: "Poppins-Medium",
-                }}
-              >
-                Customer request for refund
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <IconButton
-                  onPress={() => {
-                    if (subsOrder) {
-                      try {
-                        setLoader(true);
-                        refoundSubs(user.token,subsOrder.id)
-                          .then((res) => {
-                            loadData(res.data.receiverId, res.data.order);
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.message);
-                          });
-                      } catch (e) {
-                        console.warn(e.message);
-                      }
-                    } else {
-                      try {
-                        setLoader(true);
-                        orderRefound(user.token, data.id, true)
-                          .then((res) => {
-                            loadData(res.data.receiverId, res.data.order);
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.message);
-                          });
-                      } catch (e) {
-                        console.warn(e.message);
-                      }
-                    }
-                    socket.emit("updateOrder", {
-                      receiverId: user.user.id,
-                      order: data,
-                    });
-                  }}
-                  style={{
-                    backgroundColor: "#4ADE80",
-                    borderRadius: 5,
-                    marginVertical: 20,
-                    borderWidth: 0,
-                    marginRight: 20,
-                    width: 120,
-                    height: 40,
-                  }}
-                  title="Accept Refund"
-                />
-                <IconButton
-                  onPress={() => {
-                    try {
-                      setLoader(true);
-                      orderRefound(user.token, data.id, false)
-                        .then((res) => {
-                          loadData(res.data.receiverId, res.data.order);
-                          setData(res.data.order);
-                        })
-                        .catch((err) => {
-                          setLoader(false);
-                          console.warn(err.message);
-                        });
-                    } catch (e) {
-                      console.warn(e.message);
-                    }
-                    socket.emit("updateOrder", {
-                      receiverId: user.user.id,
-                      order: data,
-                    });
-                  }}
-                  style={{
-                    backgroundColor: "#4ADE80",
-                    borderRadius: 5,
-                    marginVertical: 20,
-                    borderWidth: 0,
-                    marginRight: 20,
-                    width: 120,
-                    height: 40,
-                  }}
-                  title="Cancel Refund"
-                />
-              </View>
-            </View>
-          )}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            flexWrap: "wrap",
-          }}
-        >
-          {data.status === "WAITING_FOR_ACCEPT" && (
-            <IconButton
-              onPress={() => {
-                try {
-                  validate();
-                } catch (e) {
-                  console.warn(e.message);
+                  socket.emit("updateOrder", {
+                    receiverId: user.user.id,
+                    order: data,
+                  });
+                } else {
+                  setRefound(false);
+                  Alert.alert(
+                    "Opps!",
+                    "You need to select upcoming date from delivery"
+                  );
                 }
               }}
-              style={{
-                backgroundColor: "#4ADE80",
-                borderRadius: 5,
-                alignSelf: "flex-end",
-                marginVertical: 30,
-                borderWidth: 0,
-                marginRight: 20,
-                width: 100,
-                height: 40,
-              }}
-              title="Accept"
-            />
-          )}
-          {data.status == "PROCESSING" &&
-            !data.requestedDeliveryDate &&
-            !data.refundRequestByUser && (
-              <IconButton
-                onPress={() => {
-                  setRefound(true);
-                }}
-                style={{
-                  backgroundColor: "#4ADE80",
-                  borderRadius: 5,
-                  alignSelf: "flex-end",
-                  marginVertical: 30,
-                  borderWidth: 0,
-                  marginRight: 20,
-                  width: 150,
-                  height: 40,
-                }}
-                title="Request Extra Time"
-              />
-            )}
-
-          {data.status != "CANCELLED" &&
-            data.status != "DELIVERED" &&
-            data.status != "REFUNDED" &&
-            data.status != "COMPLETED" &&
-            !data.refundRequestByUser && (
-              <IconButton
-                onPress={() => {
-                  Alert.alert("Hey!", "Are you want to cancel this order?", [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel",
-                    },
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        if(subsOrder){
-                          setLoader(true);
-                        vendorCancelSubs(user.token, subsOrder.id)
-                          .then((res) => {
-                            console.log(res.data)
-
-                            loadData(res.data.receiverId, res.data.order);
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.response.data);
-                          });
-                          return
-                        }
-                        setLoader(true);
-                        cancelOrder(user.token, data.id, "CANCELLED", "vendor")
-                          .then((res) => {
-                            loadData(res.data.receiverId, res.data.order);
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.response.data);
-                          });
-                      },
-                    },
-                  ]);
-                }}
-                style={{
-                  backgroundColor: primaryColor,
-                  borderRadius: 5,
-                  alignSelf: "flex-end",
-                  marginVertical: 30,
-                  borderWidth: 0,
-                  marginRight: 10,
-                  borderColor: backgroundColor,
-                  borderWidth: 1,
-                  color: backgroundColor,
-                  width: 100,
-                  height: 40,
-                }}
-                title="Cancel"
-              />
-            )}
-        </View>
-        {data &&
-          data.requestedDeliveryDate &&
-          data.status != "DELIVERED" &&
-          data.status != "COMPLETED" &&
-          data.status != "REFUNDED" &&
-          data.status != "CANCELLED" &&
-          !data.refundRequestByUser && (
-            <Text
-              style={{
-                fontSize: width < 350 ? 14 : 16,
-                color: backgroundColor,
-                textAlign: "center",
-                marginBottom: 30,
-              }}
-            >
-              You Requested for extra time
-            </Text>
-          )}
-        <DateTimePickerModal
-          date={RefoundDate ? RefoundDate : new Date()}
-          buttonTextColorIOS={backgroundColor}
-          isVisible={Refound}
-          mode="date"
-          onConfirm={(e) => {
-            if (dateDifference(data.deliveryDateTo, e) > 0) {
-              setRefoundDate(e);
-              try {
+              onCancel={() => {
                 setRefound(false);
-                setLoader(true);
-                requestForTime(user.token, data.id, dateConverter(e))
-                  .then((res) => {
-                    loadData(res.data.receiverId, res.data.order);
-                    setData(res.data.order);
-                  })
-                  .catch((error) => {
-                    setLoader(false);
-                    console.warn(error.message);
-                  });
-              } catch (err) {
-                console.warn(err.message);
-              }
-              socket.emit("updateOrder", {
-                receiverId: user.user.id,
-                order: data,
-              });
-            } else {
-              setRefound(false);
-              Alert.alert(
-                "Opps!",
-                "You need to select upcoming date from delivery"
-              );
-            }
-          }}
-          onCancel={() => {
-            setRefound(false);
-          }}
-        />
-        {data && data.status == "REFUNDED" && (
-          <Text
-            style={{
-              color: backgroundColor,
-              fontSize: width < 350 ? 14 : 16,
-              fontFamily: "Poppins-Medium",
-              textAlign: "center",
-              marginHorizontal: 20,
-              marginVertical: 20,
-            }}
-          >
-            Order Refund
-          </Text>
-        )}
-        {data && data.status == "COMPLETED" && (
-          <Text
-            style={{
-              color: "green",
-              fontSize: width < 350 ? 14 : 16,
-              fontFamily: "Poppins-Medium",
-              textAlign: "center",
-              marginVertical: 20,
-            }}
-          >
-            Order Completed
-          </Text>
+              }}
+            />
+            {data && data.status == "REFUNDED" && (
+              <Text
+                style={{
+                  color: backgroundColor,
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginHorizontal: 20,
+                  marginVertical: 20,
+                }}
+              >
+                Order Refund
+              </Text>
+            )}
+            {data && data.status == "COMPLETED" && (
+              <Text
+                style={{
+                  color: "green",
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                Order Completed
+              </Text>
+            )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>

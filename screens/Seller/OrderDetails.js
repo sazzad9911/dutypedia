@@ -22,6 +22,9 @@ import {
   acceptTimeRequest,
   completeOrder,
   makePaymentSubscription,
+  getSubsOrderById,
+  userCancelSubs,
+  receiveSubs,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -31,7 +34,7 @@ import { socket } from "../../Class/socket";
 import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityLoader from "../../components/ActivityLoader";
-import { serverTimeToLocalDate } from "../../action";
+import { localTimeToServerDate, serverTimeToLocalDate } from "../../action";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -103,16 +106,19 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [Refresh, setRefresh] = React.useState(false);
   const [Timer, setTimer] = React.useState(true);
   const type = oldData.type;
-  const [dateFrom,setDateFrom]=useState()
-  const [dateTo,setDateTo]=useState()
-  const subsOrder=route.params&&route.params.subsOrder?route.params.subsOrder:null;
-  //console.log(oldData.subsData)
+  const [dateFrom, setDateFrom] = useState();
+  const [dateTo, setDateTo] = useState();
+  const sOrder =
+    route.params && route.params.subsOrder ? route.params.subsOrder : null;
+  const index = route.params && route.params.index ? route.params.index : 0;
+  const [subsOrder, setSubsOrder] = useState(sOrder);
+  //console.log(subsOrder)
 
   React.useEffect(() => {
     //console.log(data.serviceId);
-    //console.log()
+    //console.log(subsOrder)
     //console.log(data.selectedServices);
-    
+
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
         setListData(
@@ -157,6 +163,41 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: order,
         },
       });
+      //route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  const loadDataSubs = async (receiverId, order) => {
+    //setLoader(false);
+    if (!index) {
+      Alert.alert("Some thing went wrong");
+      return;
+    }
+    try {
+      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
+      //const userRes = await getOrders(user.token, "user");
+      const res = await getSubsOrderById(user.token, data.id);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
+      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
+      socket.emit("updateOrder", {
+        receiverId: receiverId,
+        order: {
+          type: "vendor",
+          data: res.data.order,
+        },
+      });
+      socket.emit("updateOrder", {
+        receiverId: user.user.id,
+        order: {
+          type: "user",
+          data: res.data.order,
+        },
+      });
+      setData(res.data.order);
+      setSubsOrder(res.data.order.subsOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
@@ -612,52 +653,63 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             }}
           >
             <Text style={[styles.smallText, { flex: 0 }]}>
-              {data ? serverTimeToLocalDate(data.deliveryDateFrom) : "Unavailable Date"}{" "}
+              {data
+                ? serverTimeToLocalDate(data.deliveryDateFrom)
+                : "Unavailable Date"}{" "}
             </Text>
             <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
               To
             </Text>
             {data && data.subsData ? (
               <Text style={[styles.smallText, { flex: 0 }]}>
-                {data ? serverTimeToLocalDate(data.deliveryDateFrom,
-                  (data.subsData.totalDuration?(data.subsData.totalDuration*(
-                    data.subsData.subscriptionType=="Monthly"?30:
-                    data.subsData.subscriptionType=="Yearly"?365:7
-                  )):0)) : "Unavailable Date"}
+                {data
+                  ? serverTimeToLocalDate(
+                      data.deliveryDateFrom,
+                      data.subsData.totalDuration
+                        ? data.subsData.totalDuration *
+                            (data.subsData.subscriptionType == "Monthly"
+                              ? 30
+                              : data.subsData.subscriptionType == "Yearly"
+                              ? 365
+                              : 7)
+                        : 0
+                    )
+                  : "Unavailable Date"}
               </Text>
             ) : (
               <Text style={[styles.smallText, { flex: 0 }]}>
-                {data ? serverTimeToLocalDate(data.deliveryDateTo) : "Unavailable Date"}
+                {data
+                  ? serverTimeToLocalDate(data.deliveryDateTo)
+                  : "Unavailable Date"}
               </Text>
             )}
           </View>
-          {type=="SUBS"&&(
+          {type == "SUBS" && (
             <View
-            style={{
-              width: "100%",
-              alignItems: "flex-end",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("SubscriptionDates", {
-                  subsData: data.subsData,
-                  date: data.deliveryDateFrom,
-                  
-                });
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginTop: 10,
-                  textDecorationLine: "underline",
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: data.deliveryDateFrom,
+                  });
                 }}
               >
-                View all delivery date
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 10,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all delivery date
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <View
@@ -673,65 +725,104 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
             Payment Status
           </Text>
-          <View
-            style={{
-              padding: 3,
-              backgroundColor:
-                data && data.paid && data.status != "REFUNDED"
-                  ? "green"
-                  : data && data.paid && data.status == "REFUNDED"
-                  ? "#FA1ABA"
-                  : data && !data.paid
-                  ? "red"
-                  : backgroundColor,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 15,
-              paddingHorizontal: 15,
-              marginVertical: 10,
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                fontSize: width < 350 ? 14 : 15,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              {data && data.paid && data.status != "REFUNDED"
-                ? "Paid"
-                : data && data.paid && data.status == "REFUNDED"
-                ? "Refunded"
-                : "Due"}
-            </Text>
-          </View>
-          {type=="SUBS"&&(
+          {type == "SUBS" && subsOrder ? (
             <View
-            style={{
-              width: "100%",
-              alignItems: "flex-end",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("SubscriptionDates", {
-                  subsData: data.subsData,
-                  date: data.deliveryDateFrom,
-                  name:"Payment Date"
-                });
+              style={{
+                padding: 3,
+                backgroundColor:
+                  subsOrder && subsOrder.paid && subsOrder.status != "REFUNDED"
+                    ? "green"
+                    : subsOrder &&
+                      subsOrder.paid &&
+                      subsOrder.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : subsOrder && !subsOrder.paid
+                    ? "red"
+                    : backgroundColor,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                marginVertical: 10,
               }}
             >
               <Text
                 style={{
-                  fontSize: 14,
-                  marginTop: 10,
-                  textDecorationLine: "underline",
+                  color: "white",
+                  fontSize: width < 350 ? 14 : 15,
+                  fontFamily: "Poppins-Medium",
                 }}
               >
-                View all delivery date
+                {subsOrder && subsOrder.paid && subsOrder.status != "REFUNDED"
+                  ? "Paid"
+                  : subsOrder &&
+                    subsOrder.paid &&
+                    subsOrder.status == "REFUNDED"
+                  ? "Refunded"
+                  : "Due"}
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          ) : (
+            <View
+              style={{
+                padding: 3,
+                backgroundColor:
+                  data && data.paid && data.status != "REFUNDED"
+                    ? "green"
+                    : data && data.paid && data.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : data && !data.paid
+                    ? "red"
+                    : backgroundColor,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                marginVertical: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: width < 350 ? 14 : 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {data && data.paid && data.status != "REFUNDED"
+                  ? "Paid"
+                  : data && data.paid && data.status == "REFUNDED"
+                  ? "Refunded"
+                  : "Due"}
+              </Text>
+            </View>
+          )}
+          {type == "SUBS" && (
+            <View
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: data.deliveryDateFrom,
+                    name: "Payment Date",
+                  });
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 10,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all delivery date
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <View
@@ -747,9 +838,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text style={[styles.text, { fontSize: width < 350 ? 16 : 18 }]}>
             Service Status
           </Text>
-          <Text style={[styles.smallText, { marginTop: 5 }]}>
-            {data ? exporters(data.status) : "Unknown"}
-          </Text>
+          {type == "SUBS" && subsOrder ? (
+            <Text style={[styles.smallText, { marginTop: 5 }]}>
+              {subsOrder ? exporters(subsOrder.status) : "Unknown"}
+            </Text>
+          ) : (
+            <Text style={[styles.smallText, { marginTop: 5 }]}>
+              {data ? exporters(data.status) : "Unknown"}
+            </Text>
+          )}
         </View>
         <View
           style={{
@@ -768,48 +865,326 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             {data && data.description ? data.description : "No details found!"}
           </Text>
         </View>
-        {data.requestedDeliveryDate &&
-          data.status != "CANCELLED" &&
-          data.status != "DELIVERED" &&
-          data.status != "COMPLETED" &&
-          data.status != "REFUNDED" && (
+        {type == "SUBS" && subsOrder ? (
+          <>
             <View
               style={{
-                marginHorizontal: 20,
-                marginVertical: 20,
+                flexDirection: "row",
+                justifyContent: "flex-end",
               }}
             >
-              <Text
-                style={{
-                  fontSize: width < 350 ? 14 : 16,
-                  color: textColor,
-                  fontFamily: "Poppins-Medium",
-                }}
-              >
-                Vendor Request Delivery Date
-              </Text>
-              <Text
-                style={{
-                  fontSize: width < 350 ? 14 : 16,
-                  color: textColor,
-                  fontFamily: "Poppins-Medium",
-                }}
-              >
-                Requested Delivery Date: {data.requestedDeliveryDate}
-              </Text>
-              <View style={{ flexDirection: "row" }}>
+              {subsOrder && (subsOrder.status == "ACCEPTED"||
+              subsOrder.status=="WAITING_FOR_PAYMENT") && (
                 <IconButton
                   onPress={() => {
                     setLoader(true);
-                    acceptTimeRequest(
+                    makePaymentSubscription(
                       user.token,
                       data.id,
-                      data.requestedDeliveryDate,
-                      true
+                      data.subsData.subscriptionType,
+                      subsOrder.dateFrom,
+                      subsOrder.dateTo
                     )
                       .then((res) => {
                         if (res) {
-                          Toast.show("Request Accepted", {
+                          Toast.show("Payment success", {
+                            duration: Toast.durations.LONG,
+                          });
+                          //console.log(res.data)
+                          loadDataSubs(res.data.receiverId, res.data.order);
+                        }
+                      })
+                      .catch((err) => {
+                        Toast.show(err.response.data.msg, {
+                          duration: Toast.durations.LONG,
+                        });
+                        setLoader(false);
+                      });
+                  }}
+                  style={{
+                    backgroundColor: "#4ADE80",
+                    borderRadius: 5,
+                    alignSelf: "flex-end",
+                    marginVertical: 20,
+                    borderWidth: 0,
+                    marginRight: 0,
+                    width: 120,
+                    height: 40,
+                  }}
+                  title="Make Payment"
+                />
+              )}
+              {subsOrder &&
+                subsOrder.status != "REFUNDED" &&
+                subsOrder.status != "CANCELLED" &&
+                subsOrder.status != "DELIVERED" &&
+                subsOrder.status != "COMPLETED" &&
+                !subsOrder.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      Alert.alert(
+                        "Hey!",
+                        "Are you want to cancel this order?",
+                        [
+                          {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              setLoader(true);
+                              userCancelSubs(user.token,subsOrder.id)
+                                .then((res) => {
+                                  Toast.show("Successfully request send", {
+                                    duration: Toast.durations.LONG,
+                                  });
+                                  loadDataSubs(res.data.receiverId, res.data.order);      
+                                })
+                                .catch((err) => {
+                                  setLoader(false);
+                                  console.warn(err.response.data);
+                                });
+                            },
+                          },
+                        ]
+                      );
+                    }}
+                    style={{
+                      borderColor: backgroundColor,
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      marginHorizontal: 20,
+                      borderWidth: 1,
+                      color: textColor,
+                      width: 130,
+                      height: 40,
+                    }}
+                    title={
+                      subsOrder && subsOrder.paid ? "Cancel & Refund" : "Cancel Order"
+                    }
+                  />
+                )}
+            </View>
+            {subsOrder &&
+              subsOrder.delivered &&
+              subsOrder.status != "COMPLETED" && (
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      fontFamily: "Poppins-Medium",
+                      color: textColor,
+                      textAlign: "center",
+                      marginTop: 20,
+                    }}
+                  >
+                    If you Received then Click
+                  </Text>
+                  <IconButton
+                    onPress={() => {
+                      setLoader(true);
+                      receiveSubs(user.token,subsOrder.id)
+                        .then((res) => {
+                          if (res) {
+                            Toast.show("Successful", {
+                              duration: Toast.durations.LONG,
+                            });
+                            loadDataSubs(res.data.receiverId, res.data.order);
+                          }
+                        })
+                        .catch((err) => {
+                          Toast.show(err.response.data.msg, {
+                            duration: Toast.durations.LONG,
+                          });
+                          setLoader(false);
+                        });
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      width: 120,
+                      marginBottom: 20,
+                      height: 40,
+                    }}
+                    title="Yes I Received"
+                  />
+                </View>
+              )}
+            {subsOrder && subsOrder.status == "COMPLETED" && (
+              <Text
+                style={{
+                  color: "green",
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                Order Completed
+              </Text>
+            )}
+            {subsOrder.refundRequestByUser && (
+              <Text
+                style={{
+                  color: backgroundColor,
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                You requested for refund
+              </Text>
+            )}
+          </>
+        ) : (
+          <>
+            {data.requestedDeliveryDate &&
+              data.status != "CANCELLED" &&
+              data.status != "DELIVERED" &&
+              data.status != "COMPLETED" &&
+              data.status != "REFUNDED" && (
+                <View
+                  style={{
+                    marginHorizontal: 20,
+                    marginVertical: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Vendor Request Delivery Date
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: width < 350 ? 14 : 16,
+                      color: textColor,
+                      fontFamily: "Poppins-Medium",
+                    }}
+                  >
+                    Requested Delivery Date: {data.requestedDeliveryDate}
+                  </Text>
+                  <View style={{ flexDirection: "row" }}>
+                    <IconButton
+                      onPress={() => {
+                        setLoader(true);
+                        acceptTimeRequest(
+                          user.token,
+                          data.id,
+                          data.requestedDeliveryDate,
+                          true
+                        )
+                          .then((res) => {
+                            if (res) {
+                              Toast.show("Request Accepted", {
+                                duration: Toast.durations.LONG,
+                              });
+                              loadData(res.data.receiverId, res.data.order);
+                              socket.emit("updateOrder", {
+                                receiverId: user.user.id,
+                                order: {
+                                  type: "user",
+                                  data: res.data.order,
+                                },
+                              });
+                              setData(res.data.order);
+                            }
+                          })
+                          .catch((err) => {
+                            Toast.show(err.response.data.msg, {
+                              duration: Toast.durations.LONG,
+                            });
+                            setLoader(false);
+                          });
+                      }}
+                      style={{
+                        backgroundColor: "#4ADE80",
+                        borderRadius: 5,
+                        alignSelf: "flex-end",
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        width: 100,
+                        height: 40,
+                      }}
+                      title="Accept"
+                    />
+                    <IconButton
+                      onPress={() => {
+                        setLoader(true);
+                        acceptTimeRequest(
+                          user.token,
+                          data.id,
+                          data.requestedDeliveryDate,
+                          false
+                        )
+                          .then((res) => {
+                            if (res) {
+                              Toast.show("Request CANCELLED", {
+                                duration: Toast.durations.LONG,
+                              });
+                              loadData(res.data.receiverId, res.data.order);
+                              socket.emit("updateOrder", {
+                                receiverId: user.user.id,
+                                order: {
+                                  type: "user",
+                                  data: res.data.order,
+                                },
+                              });
+                              setData(res.data.order);
+                            }
+                          })
+                          .catch((err) => {
+                            Toast.show(err.response.data.msg, {
+                              duration: Toast.durations.LONG,
+                            });
+                            setLoader(false);
+                          });
+                      }}
+                      style={{
+                        borderColor: backgroundColor,
+                        borderRadius: 5,
+                        alignSelf: "flex-end",
+                        marginVertical: 20,
+                        borderWidth: 0,
+                        marginRight: 20,
+                        borderWidth: 1,
+                        color: textColor,
+                        width: 100,
+                        height: 40,
+                      }}
+                      title="Cancel"
+                    />
+                  </View>
+                </View>
+              )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              {data && data.status == "ACCEPTED" && (
+                <IconButton
+                  onPress={() => {
+                    setLoader(true);
+                    makePayment(user.token, data.id)
+                      .then((res) => {
+                        if (res) {
+                          Toast.show("Payment success", {
                             duration: Toast.durations.LONG,
                           });
                           loadData(res.data.receiverId, res.data.order);
@@ -836,24 +1211,106 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     alignSelf: "flex-end",
                     marginVertical: 20,
                     borderWidth: 0,
-                    marginRight: 20,
-                    width: 100,
+                    marginRight: 0,
+                    width: 120,
                     height: 40,
                   }}
-                  title="Accept"
+                  title="Make Payment"
                 />
+              )}
+              {data &&
+                data.status != "REFUNDED" &&
+                data.status != "CANCELLED" &&
+                data.status != "DELIVERED" &&
+                data.status != "COMPLETED" &&
+                !data.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      Alert.alert(
+                        "Hey!",
+                        "Are you want to cancel this order?",
+                        [
+                          {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              setLoader(true);
+                              cancelOrder(
+                                user.token,
+                                data.id,
+                                "CANCELLED",
+                                "user"
+                              )
+                                .then((res) => {
+                                  Toast.show("Successfully request send", {
+                                    duration: Toast.durations.LONG,
+                                  });
+                                  loadData(res.data.receiverId, res.data.order);
+                                  socket.emit("updateOrder", {
+                                    receiverId: user.user.id,
+                                    order: {
+                                      type: "user",
+                                      data: res.data.order,
+                                    },
+                                  });
+                                  setData(res.data.order);
+                                })
+                                .catch((err) => {
+                                  setLoader(false);
+                                  console.warn(err.response.data);
+                                });
+                            },
+                          },
+                        ]
+                      );
+                    }}
+                    style={{
+                      borderColor: backgroundColor,
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      marginHorizontal: 20,
+                      borderWidth: 1,
+                      color: textColor,
+                      width: 130,
+                      height: 40,
+                    }}
+                    title={
+                      data && data.paid ? "Cancel & Refund" : "Cancel Order"
+                    }
+                  />
+                )}
+            </View>
+            {data && data.delivered && data.status != "COMPLETED" && (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: width < 350 ? 14 : 16,
+                    fontFamily: "Poppins-Medium",
+                    color: textColor,
+                    textAlign: "center",
+                    marginTop: 20,
+                  }}
+                >
+                  If you Received then Click
+                </Text>
                 <IconButton
                   onPress={() => {
                     setLoader(true);
-                    acceptTimeRequest(
-                      user.token,
-                      data.id,
-                      data.requestedDeliveryDate,
-                      false
-                    )
+                    completeOrder(user.token, data.id)
                       .then((res) => {
                         if (res) {
-                          Toast.show("Request CANCELLED", {
+                          Toast.show("Successful", {
                             duration: Toast.durations.LONG,
                           });
                           loadData(res.data.receiverId, res.data.order);
@@ -875,236 +1332,45 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       });
                   }}
                   style={{
-                    borderColor: backgroundColor,
+                    backgroundColor: "#4ADE80",
                     borderRadius: 5,
-                    alignSelf: "flex-end",
                     marginVertical: 20,
                     borderWidth: 0,
-                    marginRight: 20,
-                    borderWidth: 1,
-                    color: textColor,
-                    width: 100,
+                    width: 120,
+                    marginBottom: 20,
                     height: 40,
                   }}
-                  title="Cancel"
+                  title="Yes I Received"
                 />
               </View>
-            </View>
-          )}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
-          {data && data.status == "ACCEPTED" && (
-            <IconButton
-              onPress={() => {
-                setLoader(true);
-                if(type=="SUBS"){
-                  makePaymentSubscription(user.token, data.id)
-
-                  .then((res) => {
-                    if (res) {
-                      Toast.show("Payment success", {
-                        duration: Toast.durations.LONG,
-                      });
-                      loadData(res.data.receiverId, res.data.order);
-                      socket.emit("updateOrder", {
-                        receiverId: user.user.id,
-                        order: {
-                          type: "user",
-                          data: res.data.order,
-                        },
-                      });
-                      setData(res.data.order);
-                    }
-                  })
-                  .catch((err) => {
-                    Toast.show(err.response.data.msg, {
-                      duration: Toast.durations.LONG,
-                    });
-                    setLoader(false);
-                  });
-                  return
-                }
-                makePayment(user.token, data.id)
-                  .then((res) => {
-                    if (res) {
-                      Toast.show("Payment success", {
-                        duration: Toast.durations.LONG,
-                      });
-                      loadData(res.data.receiverId, res.data.order);
-                      socket.emit("updateOrder", {
-                        receiverId: user.user.id,
-                        order: {
-                          type: "user",
-                          data: res.data.order,
-                        },
-                      });
-                      setData(res.data.order);
-                    }
-                  })
-                  .catch((err) => {
-                    Toast.show(err.response.data.msg, {
-                      duration: Toast.durations.LONG,
-                    });
-                    setLoader(false);
-                  });
-              }}
-              style={{
-                backgroundColor: "#4ADE80",
-                borderRadius: 5,
-                alignSelf: "flex-end",
-                marginVertical: 20,
-                borderWidth: 0,
-                marginRight: 0,
-                width: 120,
-                height: 40,
-              }}
-              title="Make Payment"
-            />
-          )}
-          {data &&
-            data.status != "REFUNDED" &&
-            data.status != "CANCELLED" &&
-            data.status != "DELIVERED" &&
-            data.status != "COMPLETED" &&
-            !data.refundRequestByUser && (
-              <IconButton
-                onPress={() => {
-                  Alert.alert("Hey!", "Are you want to cancel this order?", [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel",
-                    },
-                    {
-                      text: "OK",
-                      onPress: () => {
-                        setLoader(true);
-                        cancelOrder(user.token, data.id, "CANCELLED", "user")
-                          .then((res) => {
-                            Toast.show("Successfully request send", {
-                              duration: Toast.durations.LONG,
-                            });
-                            loadData(res.data.receiverId, res.data.order);
-                            socket.emit("updateOrder", {
-                              receiverId: user.user.id,
-                              order: {
-                                type: "user",
-                                data: res.data.order,
-                              },
-                            });
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.response.data);
-                          });
-                      },
-                    },
-                  ]);
-                }}
-                style={{
-                  borderColor: backgroundColor,
-                  borderRadius: 5,
-                  alignSelf: "flex-end",
-                  marginVertical: 20,
-                  borderWidth: 0,
-                  marginHorizontal: 20,
-                  borderWidth: 1,
-                  color: textColor,
-                  width: 130,
-                  height: 40,
-                }}
-                title={data && data.paid ? "Cancel & Refund" : "Cancel Order"}
-              />
             )}
-        </View>
-        {data && data.delivered && data.status != "COMPLETED" && (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: width < 350 ? 14 : 16,
-                fontFamily: "Poppins-Medium",
-                color: textColor,
-                textAlign: "center",
-                marginTop: 20,
-              }}
-            >
-              If you Received then Click
-            </Text>
-            <IconButton
-              onPress={() => {
-                setLoader(true);
-                completeOrder(user.token, data.id)
-                  .then((res) => {
-                    if (res) {
-                      Toast.show("Successful", {
-                        duration: Toast.durations.LONG,
-                      });
-                      loadData(res.data.receiverId, res.data.order);
-                      socket.emit("updateOrder", {
-                        receiverId: user.user.id,
-                        order: {
-                          type: "user",
-                          data: res.data.order,
-                        },
-                      });
-                      setData(res.data.order);
-                    }
-                  })
-                  .catch((err) => {
-                    Toast.show(err.response.data.msg, {
-                      duration: Toast.durations.LONG,
-                    });
-                    setLoader(false);
-                  });
-              }}
-              style={{
-                backgroundColor: "#4ADE80",
-                borderRadius: 5,
-                marginVertical: 20,
-                borderWidth: 0,
-                width: 120,
-                marginBottom: 20,
-                height: 40,
-              }}
-              title="Yes I Received"
-            />
-          </View>
+            {data && data.status == "COMPLETED" && (
+              <Text
+                style={{
+                  color: "green",
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                Order Completed
+              </Text>
+            )}
+            {data.refundRequestByUser && (
+              <Text
+                style={{
+                  color: backgroundColor,
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                You requested for refund
+              </Text>
+            )}
+          </>
         )}
-        {data && data.status == "COMPLETED" && (
-          <Text
-            style={{
-              color: "green",
-              fontSize: width < 350 ? 14 : 16,
-              fontFamily: "Poppins-Medium",
-              textAlign: "center",
-              marginVertical: 20,
-            }}
-          >
-            Order Completed
-          </Text>
-        )}
-        {data.refundRequestByUser && (
-          <Text
-            style={{
-              color: backgroundColor,
-              textAlign: "center",
-              marginVertical: 20,
-            }}
-          >
-            You requested for refund
-          </Text>
-        )}
-        <View style={{height:20}}/>
+        <View style={{ height: 20 }} />
       </ScrollView>
     </SafeAreaView>
   );

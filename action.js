@@ -203,3 +203,14 @@ export const serverTimeToLocalDate=(date,dayPlus)=>{
   return `${months[month]} ${day} ${year}`
 
 }
+export const localTimeToServerDate=(date,dayPlus)=>{
+  date=new Date(date)
+  if(dayPlus){
+    date.setDate(date.getDate()+dayPlus)
+  }
+  let day=date.getDate()<10?`0${date.getDate()}`:`${date.getDate()}`
+  let year=date.getFullYear();
+  let month=date.getMonth()
+  return dateConverter(date)
+
+}

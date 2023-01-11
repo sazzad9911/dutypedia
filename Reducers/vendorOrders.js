@@ -11,13 +11,17 @@ const vendorOrders=(state=initialState,action)=>{
     }
     if(action.type=="UPDATE_VENDOR_ORDERS"){
         let arr=[]
-        state.forEach((doc,i)=>{
-            if(doc.id==action.playload.id){
-                arr.push(action.playload)
-            }else{
-                arr.push(doc)
-            }
-        })
+        if(state){
+            state.forEach((doc,i)=>{
+                if(doc.id==action.playload.id){
+                    arr.push(action.playload)
+                }else{
+                    arr.push(doc)
+                }
+            })
+        }else{
+            arr.push(action.playload)
+        }
         //setVendorOrdersOffline(arr)
         return arr
     }

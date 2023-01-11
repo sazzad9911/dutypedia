@@ -196,7 +196,7 @@ export const createOtherServiceIndividual = async (
 ) => {
   const data = {
     title: businessForm.serviceTitle,
-    price: parseInt(businessForm.price),
+    price: parseInt(subsData.amount),
     facilites: {
       title: "Choose Your Facilities",
       selectedOptions: Array.isArray(businessForm.facilities)
@@ -215,6 +215,7 @@ export const createOtherServiceIndividual = async (
     packageData:packageData,
     subsData:subsData
   };
+  
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -566,6 +567,8 @@ export const getMemberId=async(token,serviceId,userId)=>{
   });
   return res
 }
+
+
 export const deliverySubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/delivered-subs`,
@@ -618,6 +621,19 @@ export const rejectRefoundSubs = async (token, subsOrderId) => {
   
   return res;
 };
+export const acceptRefoundSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/refunded-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
 export const vendorCancelSubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/vendor/cancel-subs`,
@@ -643,4 +659,16 @@ export const userCancelSubs = async (token, subsOrderId) => {
   );
   
   return res;
-}; 
+};
+export const getSubsOrderById = async (token, orderId) => {
+  //console.log(`${url}/server/orders/get-by-id?orderId=${orderId}`)
+  //console.log(token)
+  const res = await axios.get(
+    `${url}/server/orders/get-by-id/${orderId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
