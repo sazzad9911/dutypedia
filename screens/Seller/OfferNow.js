@@ -43,6 +43,7 @@ import SubHeader from "../../components/SubHeader";
 import { socket } from "../../Class/socket";
 import ActivityLoader from "../../components/ActivityLoader";
 import FixedBackHeader from "./components/FixedBackHeader";
+import { uploadFile } from "../../Class/upload";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -129,7 +130,7 @@ const OfferNow = (props) => {
     }
     return false;
   };
-  const validate = () => {
+  const validate = async() => {
     if (!From) {
       setFromDateError("Invalid date");
       return;
@@ -144,6 +145,12 @@ const OfferNow = (props) => {
     }
 
     setLoader(true);
+    let urls;
+    if(Document){
+      let arr=[]
+      arr.push(Document)
+      urls=await uploadFile(arr,user.token)
+    }
     createOrder(
       user.token,
       gigs ? gigs.service.id : data.service.id,
@@ -156,14 +163,15 @@ const OfferNow = (props) => {
       Description,
       parseInt(Price),
       From,
-      To,
+      To, 
       vendor ? "VENDOR" : "USER",
       service ? service : gigs ? gigs.services : "",
       service ? [] : gigs ? gigs.facilites.selectedOptions : "",
       selectedPackage ? selectedPackage : undefined,
       params.packageData,
       user.user.id,
-      data.subsData?data.subsData:undefined
+      data.subsData?data.subsData:undefined,
+      urls?urls[0]:undefined
     )
       .then((res) => {
         getNewOrderUser(res);

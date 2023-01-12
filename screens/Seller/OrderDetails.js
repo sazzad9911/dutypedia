@@ -213,7 +213,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         setSubsOrder(e.data.subsOrders[index]);
       }
     });
-  }, []);
+  }, []); 
 
   const stringDate = (d) => {
     const Months = [
@@ -236,6 +236,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
+  //console.log(data.attachment)
 
   if (Loader) {
     return (
@@ -458,17 +459,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
           >
             {ListData && ListData.length > 0 ? (
-              ListData.map((doc, i) => (
-                <Text
-                  style={{
-                    fontSize: width < 350 ? 14 : 16,
-                  }}
-                  key={i}
-                >
-                  {i == 0 ? "" : ", "}
-                  {doc.data.title}
-                </Text>
-              ))
+              <Text
+              style={{
+                fontSize: width < 350 ? 14 : 16,
+              }}
+             
+            >
+              {
+                ListData.map((doc, i) => {
+                 return`${i == 0 ? "" : ", "}${doc.data.title}`
+                })
+              }
+              </Text>
             ) : (
               <Text
                 style={{
@@ -498,7 +500,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             Facilities
           </Text>
-          <View style={{ marginTop: 10 }}>
+          {/* <View style={{ marginTop: 10 }}>
             {Facilities && Facilities.length > 0 ? (
               Facilities.map((doc, i) => (
                 <Text
@@ -511,6 +513,32 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   {doc.title}
                 </Text>
               ))
+            ) : (
+              <Text
+                style={{
+                  color: "#505050",
+                }}
+              >
+                N/A
+              </Text>
+            )}
+          </View> */}
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
+          >
+            {Facilities && Facilities.length > 0 ? (
+              <Text
+              style={{
+                fontSize: width < 350 ? 14 : 16,
+              }}
+             
+            >
+              {
+                Facilities.map((doc, i) => {
+                 return`${i == 0 ? "" : ", "}${doc.title}`
+                })
+              }
+              </Text>
             ) : (
               <Text
                 style={{
@@ -714,6 +742,86 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             </View>
           )}
         </View>
+        {type=="SUBS"&&(
+          <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: "#C0FFD7",
+            paddingVertical: 20,
+            marginHorizontal: 20,
+          }}
+        >
+          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+            Payment Date
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 10,
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text style={[styles.smallText, { flex: 0 }]}>
+              {data
+                ? serverTimeToLocalDate(data.deliveryDateFrom)
+                : "Unavailable Date"}{" "}
+            </Text>
+            <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
+              To
+            </Text>
+            {data && data.subsData ? (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data
+                  ? serverTimeToLocalDate(
+                      data.deliveryDateFrom,
+                      data.subsData.totalDuration
+                        ? data.subsData.totalDuration *
+                            (data.subsData.subscriptionType == "Monthly"
+                              ? 30
+                              : data.subsData.subscriptionType == "Yearly"
+                              ? 365
+                              : 7)
+                        : 0
+                    )
+                  : "Unavailable Date"}
+              </Text>
+            ) : (
+              <Text style={[styles.smallText, { flex: 0 }]}>
+                {data
+                  ? serverTimeToLocalDate(data.deliveryDateTo)
+                  : "Unavailable Date"}
+              </Text>
+            )}
+          </View>
+          <View
+              style={{
+                width: "100%",
+                alignItems: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: data.deliveryDateFrom,
+                  });
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 10,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  View all payment date
+                </Text>
+              </TouchableOpacity>
+            </View>
+        </View>
+        )}
         <View
           style={{
             justifyContent: "center",
@@ -798,34 +906,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               </Text>
             </View>
           )}
-          {type == "SUBS" && (
-            <View
-              style={{
-                width: "100%",
-                alignItems: "flex-end",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("SubscriptionDates", {
-                    subsData: data.subsData,
-                    date: data.deliveryDateFrom,
-                    name: "Payment Date",
-                  });
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    marginTop: 10,
-                    textDecorationLine: "underline",
-                  }}
-                >
-                  View all delivery date
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          
         </View>
         <View
           style={{
@@ -866,6 +947,26 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
+          {data&&data.attachment&&(
+            <TouchableOpacity onPress={()=>{
+              Linking.openURL(data.attachment)
+            }} style={{
+              width:"100%",
+              flexDirection:"row",
+              alignItems:"center"
+            }}>
+              <AntDesign style={{
+                
+              }} name="file1" size={20} color="black" />
+              <Text  style={{
+                fontSize:16,
+                color:"#4ADE80",
+                marginRight:20,
+                marginVertical:5,
+                marginLeft:10
+              }}>{data.attachment.substring(data.attachment.lastIndexOf('/')+1)}</Text>
+            </TouchableOpacity>
+          )}
         </View>
         {type == "SUBS" && subsOrder ? (
           <>

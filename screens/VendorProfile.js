@@ -1275,6 +1275,43 @@ const VendorProfile = (props) => {
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
+                  <Text
+                    style={{
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                    }}
+                  >
+                    {initialState[3].title}
+                  </Text>
+                ),
+              }}
+              name={initialState[3].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickSubscription,
+                PackageService: PackageService,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
+              }}
+              component={Installment}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
                   <View
                     style={{
                       flexDirection: "row",
@@ -1457,6 +1494,72 @@ const VendorProfile = (props) => {
         </Animated.View>
       )}
       {showButton && ScreenName == "SUBS" && (
+        <Animated.View
+          entering={FadeIn}
+          style={{
+            shadowOffset: {
+              width: 1,
+              height: 1,
+            },
+            shadowColor: "#707070",
+            shadowRadius: 3,
+            elevation: 0,
+            shadowOpacity: 0.3,
+            position: "absolute",
+            right: 20,
+            bottom: 20,
+            backgroundColor: "#4ADE80",
+            borderRadius: 25,
+            width: 50,
+            height: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              dispatch({ type: "SET_PACKAGES", playload: [] });
+              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+              if (vendor.service.gigs[0].services.category) {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services.options,
+                    vendor.service.gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "SUBSCRIPTION",
+                });
+              } else {
+                dispatch({
+                  type: "SET_NEW_LIST_DATA",
+                  playload: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                });
+                navigation.navigate("AddServiceList_1", {
+                  NewDataList: serverToLocal(
+                    vendor.service.gigs[0].services,
+                    vendor.service.gigs[0].dashboard
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "SUBSCRIPTION",
+                });
+              }
+            }}
+          >
+            <AntDesign name="plus" size={25} color="white" />
+          </Pressable>
+        </Animated.View>
+      )}
+      {showButton && ScreenName == "INSTALLMENT" && (
         <Animated.View
           entering={FadeIn}
           style={{
@@ -1971,7 +2074,8 @@ const BargainingScreen = ({ navigation, route }) => {
                   title={NewDataList.length > 0 && NewDataList[0].mainTitle}
                 />
               )}
-              <Button
+              {Facilities&&Facilities.length!=0&&(
+                <Button
                 onPress={() => {
                   setActiveService("Extra Facilities");
                 }}
@@ -1982,6 +2086,7 @@ const BargainingScreen = ({ navigation, route }) => {
                 }
                 title={"Extra Facilities"}
               />
+              )}
             </View>
             <View
               style={{
@@ -3172,6 +3277,123 @@ const Subscriptions = ({ navigation, route }) => {
             </View>
           )}
         </View> */}
+      </View>
+      <View style={{ height: 70 }} />
+    </View>
+  );
+};
+const Installment = ({ navigation, route }) => {
+  const params = route.params;
+  //const PackageService = params.PackageService;
+  const PackageService = [];
+  const onPress = route.params.onPress;
+  const RelatedServices = params.RelatedServices;
+  const UnRelatedServices = params.UnRelatedServices;
+  const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
+  const isFocused = useIsFocused();
+  const setNewNavigation = params.setNewNavigation;
+  const scrollTo = params.scrollTo;
+  const [offset, setOffset] = React.useState(0);
+  const changeScreenName = params.changeScreenName;
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const [SubsCription,setSubscription]=React.useState()
+
+  React.useEffect(() => {
+    if (layoutHeight && isFocused) {
+      //console.log(layoutHeight);
+      changeScreenName("SUBS");
+      setNewNavigation(layoutHeight + 50);
+    }
+  }, [layoutHeight + isFocused]);
+  React.useEffect(() => {
+    if (user && vendor) {
+      getOtherServices(user.token, vendor.service.id, "INSTALLMENT")
+        .then((res) => {
+          setSubscription(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setSubscription([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused, user, vendor]);
+  //console.log(FixedService)
+  if(!SubsCription){
+    return <ActivityLoader/>
+  }
+  return (
+    <View
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
+      }}
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
+      nestedScrollEnabled={true}
+    >
+      <View
+        style={{
+          marginHorizontal: 10,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginVertical: 20,
+        }}
+      >
+        {SubsCription&&SubsCription.map((doc, i) => (
+          <ServiceCart
+            onPress={() => {
+              if (onPress) {
+                onPress(doc);
+              }
+            }}
+            key={i}
+            data={doc}
+          />
+        ))}
+        
+        {SubsCription&&SubsCription.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        
       </View>
       <View style={{ height: 70 }} />
     </View>

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, ScrollView, Text, StyleSheet } from "react-native";
 import { serverTimeToLocalDate } from "../../action";
+import IconButton from "../../components/IconButton";
 import FixedBackHeader from "./components/FixedBackHeader";
 
 export const SubscriptionDates = ({ navigation, route }) => {
@@ -12,9 +13,11 @@ export const SubscriptionDates = ({ navigation, route }) => {
   const [totalDuration, setTotalDuration] = React.useState();
   const [amount, setAmount] = React.useState(0);
   const [subscriptionType, setSubscriptionType] = React.useState();
+  const [counter,setCounter]=useState(10)
 
   React.useEffect(() => {
-    if (subsData) {
+    //console.log(subsData)
+    if (subsData&&!subsData.payAsYouGo) {
       let arr = [];
       for (let i = 0; i < subsData.totalDuration; i++) {
         arr.push(i);
@@ -22,8 +25,16 @@ export const SubscriptionDates = ({ navigation, route }) => {
       setTotalDuration(arr);
       setSubscriptionType(subsData.subscriptionType);
       setAmount(subsData.amount);
+    }else{
+      let arr = [];
+      for (let i = 0; i < counter; i++) {
+        arr.push(i);
+      }
+      setTotalDuration(arr);
+      setSubscriptionType(subsData.subscriptionType);
+      setAmount(subsData.amount);
     }
-  }, [subsData]);
+  }, [subsData,counter]);
   //console.log(subsData)
   return (
     <View
@@ -62,6 +73,21 @@ export const SubscriptionDates = ({ navigation, route }) => {
               key={i}
             />
           ))}
+           {subsData && subsData.payAsYouGo && (
+          <IconButton
+            style={{
+              marginHorizontal: 20,
+              height: 40,
+              borderRadius: 10,
+              backgroundColor: "#4ADE80",
+              marginTop: 20,
+            }}
+            title={"Load More"}
+            onPress={() => {
+              setCounter((val) => (val + 10));
+            }}
+          />
+        )}
           <View style={{height:20}}/>
       </ScrollView>
       <View

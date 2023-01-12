@@ -785,7 +785,8 @@ const SubscriptionService = (props) => {
                       title={NewDataList.length > 0 && NewDataList[0].mainTitle}
                     />
                   )}
-                  <Button
+                  {Facilities&&Facilities.length!=0&&(
+                    <Button
                     onPress={() => {
                       setActiveService("Extra Facilities");
                     }}
@@ -796,6 +797,7 @@ const SubscriptionService = (props) => {
                     }
                     title={"Extra Facilities"}
                   />
+                  )}
                 </View>
                 <View
                   style={{

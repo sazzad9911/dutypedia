@@ -4,14 +4,14 @@ import { ScrollView, View, Text, Dimensions, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { localTimeToServerDate, serverTimeToLocalDate } from "../../action";
+import { dateConverter, localTimeToServerDate, serverTimeToLocalDate } from "../../action";
 import { getSubsOrderById } from "../../Class/service";
 import Avatar from "../../components/Avatar";
 import BackHeader from "../../components/BackHeader";
 import IconButton from "../../components/IconButton";
 import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
-import uuid from "react-native-uuid"
+import uuid from "react-native-uuid";
 const { width, height } = Dimensions.get("window");
 
 export default function SubscriptionScript({ navigation, route }) {
@@ -24,9 +24,11 @@ export default function SubscriptionScript({ navigation, route }) {
   const vendor = useSelector((state) => state.vendor);
   const [totalPaid, setTotalPaid] = useState();
   const isFocused = useIsFocused();
+  const [Counter, setCounter] = useState(10);
   //console.log(providerInfo)
   //console.warn(subsOrders)
   useEffect(() => {
+    setSubsOrders()
     getSubsOrderById(user.token, data.id)
       .then((res) => {
         //console.log(res.data)
@@ -44,30 +46,91 @@ export default function SubscriptionScript({ navigation, route }) {
       });
   }, [isFocused]);
   useEffect(() => {
-    if (subsOrders && subsOrders.length < subsData.totalDuration) {
+    if (
+      subsOrders &&
+      !subsData.payAsYouGo &&
+      subsOrders.length < subsData.totalDuration
+    ) {
       let being = subsData.totalDuration - subsOrders.length;
       let arr = [];
       for (let i = 0; i < being; i++) {
-        setSubsOrders(val=>[...val,{
-          createdAt: new Date(),
-          dateFrom: localTimeToServerDate(subsOrders[subsOrders.length-1].dateTo,(i*(subsData.subscriptionType=="Monthly"?30:
-          subsData.subscriptionType=="Yearly"?365:7))),
-          dateTo: localTimeToServerDate(subsOrders[subsOrders.length-1].dateTo,((i+1)*(subsData.subscriptionType=="Monthly"?30:
-          subsData.subscriptionType=="Yearly"?365:7))),
-          delivered: false,
-          deliveredAt: null,
-          id: uuid.v4(),
-          offlineOrderId: null,
-          orderId: null,
-          paid: false,
-          received: false,
-          refundRequestByUser: false,
-          status: "UPCOMING",
-          updatedAt: new Date(),
-        }])
+        setSubsOrders((val) => [
+          ...val,
+          {
+            createdAt: new Date(),
+            dateFrom: localTimeToServerDate(
+              subsOrders[subsOrders.length - 1].dateTo,
+              i *
+                (subsData.subscriptionType == "Monthly"
+                  ? 30
+                  : subsData.subscriptionType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            dateTo: localTimeToServerDate(
+              subsOrders[subsOrders.length - 1].dateTo,
+              (i + 1) *
+                (subsData.subscriptionType == "Monthly"
+                  ? 30
+                  : subsData.subscriptionType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            delivered: false,
+            deliveredAt: null,
+            id: uuid.v4(),
+            offlineOrderId: null,
+            orderId: null,
+            paid: false,
+            received: false,
+            refundRequestByUser: false,
+            status: "UPCOMING",
+            updatedAt: new Date(),
+          },
+        ]);
       }
+    }else if(subsOrders){
+      //console.log('ee')
+      // let being = subsData.totalDuration - subsOrders.length;
+      let arr = [];
+      arr.push(subsOrders[0])
+      for (let i = 0; i < Counter; i++) {
+        arr.push({
+          createdAt: new Date(),
+            dateFrom: localTimeToServerDate(
+              subsOrders[subsOrders.length - 1].dateTo,
+              i *
+                (subsData.subscriptionType == "Monthly"
+                  ? 30
+                  : subsData.subscriptionType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            dateTo: localTimeToServerDate(
+              subsOrders[subsOrders.length - 1].dateTo,
+              (i + 1) *
+                (subsData.subscriptionType == "Monthly"
+                  ? 30
+                  : subsData.subscriptionType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            delivered: false,
+            deliveredAt: null,
+            id: uuid.v4(),
+            offlineOrderId: null,
+            orderId: null,
+            paid: false,
+            received: false,
+            refundRequestByUser: false,
+            status: "UPCOMING",
+            updatedAt: new Date(),
+        })
+      }
+      setSubsOrders(arr)
     }
-  }, [subsOrders&&subsOrders.length]);
+  }, [subsOrders && subsOrders.length,Counter]);
+  
   return (
     <View
       style={{
@@ -204,17 +267,26 @@ export default function SubscriptionScript({ navigation, route }) {
         <View
           style={{
             flexDirection: "row",
-            paddingHorizontal: 20,
+            paddingHorizontal: 5,
             paddingVertical: 5,
             borderColor: "#C0FFD7",
             borderWidth: 1,
             marginVertical: 10,
-            justifyContent: "space-between",
+           justifyContent:"space-between"
           }}
         >
-          <Text style={styles.text}>SL</Text>
-          <Text style={styles.text}>Payment Date</Text>
-          <Text style={styles.text}>Delivery Date</Text>
+        <Text style={[styles.text,{
+         width:20,
+         textAlign:"center"
+        }]}>SL</Text>
+          <Text style={[styles.text,{
+            width:width/3,
+            textAlign:"center"
+          }]}>Payment Date</Text>
+          <Text style={[styles.text,{
+            width:width/3,
+            textAlign:"center"
+          }]}>Delivery Date</Text>
         </View>
         {subsOrders &&
           subsOrders.map((doc, i) => (
@@ -225,13 +297,13 @@ export default function SubscriptionScript({ navigation, route }) {
                   navigation.navigate("VendorOrderDetails", {
                     data: data,
                     subsOrder: doc,
-                    index:i
+                    index: i,
                   });
                 } else {
                   navigation.navigate("OrderDetails", {
                     data: data,
                     subsOrder: doc,
-                    index:i
+                    index: i,
                   });
                 }
               }}
@@ -250,9 +322,26 @@ export default function SubscriptionScript({ navigation, route }) {
             No Order Found
           </Text>
         )}
-        <View style={{
-          height:20
-        }}/>
+        {subsData && subsData.payAsYouGo && (
+          <IconButton
+            style={{
+              marginHorizontal: 20,
+              height: 40,
+              borderRadius: 10,
+              backgroundColor: "#4ADE80",
+              marginTop: 20,
+            }}
+            title={"Load More"}
+            onPress={() => {
+              setCounter((val) => val + 10);
+            }}
+          />
+        )}
+        <View
+          style={{
+            height: 20,
+          }}
+        />
       </ScrollView>
     </View>
   );
@@ -263,20 +352,21 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold",
   },
   smallText: {
-    fontSize: 11,
-    marginHorizontal: 10,
+    fontSize: 16,
+    marginHorizontal: 0,
+    
   },
 });
 const Cart = ({ data, onPress, index }) => {
   return (
     <View
       style={{
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         borderColor: "#C0FFD7",
         borderWidth: 1,
         paddingVertical: 10,
         borderTopWidth: index != 0 ? 0 : 1,
-        opacity:data.orderId?1:.4
+        opacity: data.orderId ? 1 : 0.4,
       }}
     >
       <View
@@ -284,17 +374,37 @@ const Cart = ({ data, onPress, index }) => {
           flexDirection: "row",
           justifyContent: "space-between",
           marginTop: 15,
+
         }}
       >
-        <Text style={styles.smallText}>{index>8?`${(index+1)}`:`0${(index+1)}`}</Text>
+        <View style={{
+          width:20
+        }}>
         <Text style={styles.smallText}>
-          {serverTimeToLocalDate(data.dateFrom)} -{" "}
-          {serverTimeToLocalDate(data.dateTo)}
+          {index > 8 ? `${index + 1}` : `0${index + 1}`}
         </Text>
-        <Text style={[styles.smallText]}>
-          {serverTimeToLocalDate(data.dateFrom)} -{" "}
-          {serverTimeToLocalDate(data.dateTo)}
+        </View>
+        
+        <View style={{
+          width:width/3
+          
+        }}>
+          <Text style={styles.smallText}>
+          {dateConverter(data.dateFrom)} -{" "}
+          {dateConverter(data.dateTo)}
         </Text>
+        </View>
+        
+       <View style={{
+        justifyContent:"center",
+        flexDirection:"row",
+        width:width/3,
+       }}>
+         <Text style={[styles.smallText]}>
+          {dateConverter(data.dateFrom)} -{" "}
+          {dateConverter(data.dateTo)}
+        </Text>
+       </View>
       </View>
       <View
         style={{
@@ -302,6 +412,7 @@ const Cart = ({ data, onPress, index }) => {
           justifyContent: "space-between",
           marginVertical: 0,
           alignItems: "center",
+          marginTop:10
         }}
       >
         <View
@@ -339,18 +450,18 @@ const Cart = ({ data, onPress, index }) => {
         </View>
         <IconButton
           onPress={() => {
-            if (onPress&&data.orderId) {
+            if (onPress && data.orderId) {
               onPress();
             }
           }}
           style={{
-            fontSize: 10,
+            fontSize: 16,
             borderWidth: 0,
-            
+
             color: "#6366F1",
-            paddingHorizontal:0,
-            marginHorizontal:0,
-            marginRight:5
+            paddingHorizontal: 0,
+            marginHorizontal: 0,
+            marginRight: 5,
           }}
           Icon={() => <SvgXml xml={Icon} height="10" width={"10"} />}
           title={"View Recept"}
