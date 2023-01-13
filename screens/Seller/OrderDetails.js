@@ -9,7 +9,7 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "./../../components/Button";
@@ -171,7 +171,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   };
   const loadDataSubs = async (receiverId, order) => {
     //setLoader(false);
-    if (index==null) {
+    if (index == null) {
       setLoader(false);
       Alert.alert("Some thing went wrong");
       return;
@@ -213,7 +213,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         setSubsOrder(e.data.subsOrders[index]);
       }
     });
-  }, []); 
+  }, []);
 
   const stringDate = (d) => {
     const Months = [
@@ -460,16 +460,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             {ListData && ListData.length > 0 ? (
               <Text
-              style={{
-                fontSize: width < 350 ? 14 : 16,
-              }}
-             
-            >
-              {
-                ListData.map((doc, i) => {
-                 return`${i == 0 ? "" : ", "}${doc.data.title}`
-                })
-              }
+                style={{
+                  fontSize: width < 350 ? 14 : 16,
+                }}
+              >
+                {ListData.map((doc, i) => {
+                  return `${i == 0 ? "" : ", "}${doc.data.title}`;
+                })}
               </Text>
             ) : (
               <Text
@@ -528,16 +525,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           >
             {Facilities && Facilities.length > 0 ? (
               <Text
-              style={{
-                fontSize: width < 350 ? 14 : 16,
-              }}
-             
-            >
-              {
-                Facilities.map((doc, i) => {
-                 return`${i == 0 ? "" : ", "}${doc.title}`
-                })
-              }
+                style={{
+                  fontSize: width < 350 ? 14 : 16,
+                }}
+              >
+                {Facilities.map((doc, i) => {
+                  return `${i == 0 ? "" : ", "}${doc.title}`;
+                })}
               </Text>
             ) : (
               <Text
@@ -590,43 +584,45 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               {data ? data.subsData.amount + "৳" : "Pice is empty"}
             </Text>
             {data.subsData.otherChargeName ? (
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: "#666666",
-                  marginVertical: 5,
-                }}
-              >
-                {data.subsData.otherChargeName}{" "}
-                {data.subsData.otherChargeAmount}৳
-              </Text>
+              <>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#666666",
+                    marginVertical: 5,
+                  }}
+                >
+                  {data.subsData.otherChargeName}{" "}
+                  {data.subsData.otherChargeAmount}৳
+                </Text>
+                <View
+                  style={{
+                    width: "60%",
+                    height: 1,
+                    backgroundColor: "#F1EFEF",
+                    marginVertical: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    width: "60%",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={styles.newText}>Total</Text>
+                  <Text style={styles.newText}>
+                    {data.subsData.amount +
+                      parseInt(
+                        data.subsData.otherChargeAmount
+                          ? data.subsData.otherChargeAmount
+                          : 0
+                      )}
+                    ৳
+                  </Text>
+                </View>
+              </>
             ) : null}
-            <View
-              style={{
-                width: "60%",
-                height: 1,
-                backgroundColor: "#F1EFEF",
-                marginVertical: 10,
-              }}
-            />
-            <View
-              style={{
-                width: "60%",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
-              <Text style={styles.newText}>Total</Text>
-              <Text style={styles.newText}>
-                {data.subsData.amount +
-                  parseInt(
-                    data.subsData.otherChargeAmount
-                      ? data.subsData.otherChargeAmount
-                      : 0
-                  )}
-                ৳
-              </Text>
-            </View>
           </View>
         )}
         {type == "SUBS" && (
@@ -742,60 +738,62 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             </View>
           )}
         </View>
-        {type=="SUBS"&&(
-          <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#C0FFD7",
-            paddingVertical: 20,
-            marginHorizontal: 20,
-          }}
-        >
-          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
-            Payment Date
-          </Text>
+        {type == "SUBS" && (
           <View
             style={{
-              flexDirection: "row",
-              marginTop: 10,
-              paddingHorizontal: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
             }}
           >
-            <Text style={[styles.smallText, { flex: 0 }]}>
-              {data
-                ? serverTimeToLocalDate(data.deliveryDateFrom)
-                : "Unavailable Date"}{" "}
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              Payment Date
             </Text>
-            <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
-              To
-            </Text>
-            {data && data.subsData ? (
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                paddingHorizontal: 20,
+              }}
+            >
               <Text style={[styles.smallText, { flex: 0 }]}>
                 {data
-                  ? serverTimeToLocalDate(
-                      data.deliveryDateFrom,
-                      data.subsData.totalDuration
-                        ? data.subsData.totalDuration *
-                            (data.subsData.subscriptionType == "Monthly"
-                              ? 30
-                              : data.subsData.subscriptionType == "Yearly"
-                              ? 365
-                              : 7)
-                        : 0
-                    )
-                  : "Unavailable Date"}
+                  ? serverTimeToLocalDate(data.deliveryDateFrom)
+                  : "Unavailable Date"}{" "}
               </Text>
-            ) : (
-              <Text style={[styles.smallText, { flex: 0 }]}>
-                {data
-                  ? serverTimeToLocalDate(data.deliveryDateTo)
-                  : "Unavailable Date"}
+              <Text
+                style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}
+              >
+                To
               </Text>
-            )}
-          </View>
-          <View
+              {data && data.subsData ? (
+                <Text style={[styles.smallText, { flex: 0 }]}>
+                  {data
+                    ? serverTimeToLocalDate(
+                        data.deliveryDateFrom,
+                        data.subsData.totalDuration
+                          ? data.subsData.totalDuration *
+                              (data.subsData.subscriptionType == "Monthly"
+                                ? 30
+                                : data.subsData.subscriptionType == "Yearly"
+                                ? 365
+                                : 7)
+                          : 0
+                      )
+                    : "Unavailable Date"}
+                </Text>
+              ) : (
+                <Text style={[styles.smallText, { flex: 0 }]}>
+                  {data
+                    ? serverTimeToLocalDate(data.deliveryDateTo)
+                    : "Unavailable Date"}
+                </Text>
+              )}
+            </View>
+            <View
               style={{
                 width: "100%",
                 alignItems: "flex-end",
@@ -820,7 +818,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-        </View>
+          </View>
         )}
         <View
           style={{
@@ -906,7 +904,6 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               </Text>
             </View>
           )}
-          
         </View>
         <View
           style={{
@@ -947,24 +944,31 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
-          {data&&data.attachment&&(
-            <TouchableOpacity onPress={()=>{
-              Linking.openURL(data.attachment)
-            }} style={{
-              width:"100%",
-              flexDirection:"row",
-              alignItems:"center"
-            }}>
-              <AntDesign style={{
-                
-              }} name="file1" size={20} color="black" />
-              <Text  style={{
-                fontSize:16,
-                color:"#4ADE80",
-                marginRight:20,
-                marginVertical:5,
-                marginLeft:10
-              }}>{data.attachment.substring(data.attachment.lastIndexOf('/')+1)}</Text>
+          {data && data.attachment && (
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(data.attachment);
+              }}
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <AntDesign style={{}} name="file1" size={20} color="black" />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#4ADE80",
+                  marginRight: 20,
+                  marginVertical: 5,
+                  marginLeft: 10,
+                }}
+              >
+                {data.attachment.substring(
+                  data.attachment.lastIndexOf("/") + 1
+                )}
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -976,47 +980,48 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 justifyContent: "flex-end",
               }}
             >
-              {subsOrder && (subsOrder.status == "ACCEPTED"||
-              subsOrder.status=="WAITING_FOR_PAYMENT") && (
-                <IconButton
-                  onPress={() => {
-                    setLoader(true);
-                    makePaymentSubscription(
-                      user.token,
-                      data.id,
-                      data.subsData.subscriptionType,
-                      subsOrder.dateFrom,
-                      subsOrder.dateTo
-                    )
-                      .then((res) => {
-                        if (res) {
-                          Toast.show("Payment success", {
+              {subsOrder &&
+                (subsOrder.status == "ACCEPTED" ||
+                  subsOrder.status == "WAITING_FOR_PAYMENT") && (
+                  <IconButton
+                    onPress={() => {
+                      setLoader(true);
+                      makePaymentSubscription(
+                        user.token,
+                        data.id,
+                        data.subsData.subscriptionType,
+                        subsOrder.dateFrom,
+                        subsOrder.dateTo
+                      )
+                        .then((res) => {
+                          if (res) {
+                            Toast.show("Payment success", {
+                              duration: Toast.durations.LONG,
+                            });
+                            //console.log(res.data)
+                            loadDataSubs(res.data.receiverId, res.data.order);
+                          }
+                        })
+                        .catch((err) => {
+                          Toast.show(err.response.data.msg, {
                             duration: Toast.durations.LONG,
                           });
-                          //console.log(res.data)
-                          loadDataSubs(res.data.receiverId, res.data.order);
-                        }
-                      })
-                      .catch((err) => {
-                        Toast.show(err.response.data.msg, {
-                          duration: Toast.durations.LONG,
+                          setLoader(false);
                         });
-                        setLoader(false);
-                      });
-                  }}
-                  style={{
-                    backgroundColor: "#4ADE80",
-                    borderRadius: 5,
-                    alignSelf: "flex-end",
-                    marginVertical: 20,
-                    borderWidth: 0,
-                    marginRight: 0,
-                    width: 120,
-                    height: 40,
-                  }}
-                  title="Make Payment"
-                />
-              )}
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      marginRight: 0,
+                      width: 120,
+                      height: 40,
+                    }}
+                    title="Make Payment"
+                  />
+                )}
               {subsOrder &&
                 subsOrder.status != "REFUNDED" &&
                 subsOrder.status != "CANCELLED" &&
@@ -1038,12 +1043,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                             text: "OK",
                             onPress: () => {
                               setLoader(true);
-                              userCancelSubs(user.token,subsOrder.id)
+                              userCancelSubs(user.token, subsOrder.id)
                                 .then((res) => {
                                   Toast.show("Successfully request send", {
                                     duration: Toast.durations.LONG,
                                   });
-                                  loadDataSubs(res.data.receiverId, res.data.order);      
+                                  loadDataSubs(
+                                    res.data.receiverId,
+                                    res.data.order
+                                  );
                                 })
                                 .catch((err) => {
                                   setLoader(false);
@@ -1067,7 +1075,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       height: 40,
                     }}
                     title={
-                      subsOrder && subsOrder.paid ? "Cancel & Refund" : "Cancel Order"
+                      subsOrder && subsOrder.paid
+                        ? "Cancel & Refund"
+                        : "Cancel Order"
                     }
                   />
                 )}
@@ -1095,7 +1105,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   <IconButton
                     onPress={() => {
                       setLoader(true);
-                      receiveSubs(user.token,subsOrder.id)
+                      receiveSubs(user.token, subsOrder.id)
                         .then((res) => {
                           if (res) {
                             Toast.show("Successful", {

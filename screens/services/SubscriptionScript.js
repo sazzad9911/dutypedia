@@ -28,7 +28,9 @@ export default function SubscriptionScript({ navigation, route }) {
   const vendor = useSelector((state) => state.vendor);
   const [totalPaid, setTotalPaid] = useState();
   const isFocused = useIsFocused();
-  const [Counter, setCounter] = useState(10);
+  const [Counter, setCounter] = useState(50);
+  const [orders, setOrder] = useState();
+  const [page, setPage] = useState(1);
   //console.log(providerInfo)
   //console.warn(subsOrders)
   useEffect(() => {
@@ -93,7 +95,7 @@ export default function SubscriptionScript({ navigation, route }) {
           },
         ]);
       }
-    } else if (subsOrders) {
+    } else if (subsOrders &&subsData.payAsYouGo) {
       //console.log('ee')
       // let being = subsData.totalDuration - subsOrders.length;
       let arr = [];
@@ -134,6 +136,23 @@ export default function SubscriptionScript({ navigation, route }) {
       setSubsOrders(arr);
     }
   }, [subsOrders && subsOrders.length, Counter]);
+  useEffect(() => {
+    if (Array.isArray(subsOrders)) {
+      //setOrder(null);
+      let arr = [];
+      
+      let lower=(page-1)*12;
+      let upper=page*12;
+      for (let i = 0; i < subsOrders.length; i++) {
+        if (lower <= i && i<= upper) {
+
+          arr.push(subsOrders[i]);
+        }
+      }
+      
+      setOrder(arr);
+    }
+  }, [page,subsOrders]);
 
   return (
     <View
@@ -172,7 +191,8 @@ export default function SubscriptionScript({ navigation, route }) {
                 width: "60%",
               }}
             >
-              <Text numberOfLines={1}
+              <Text
+                numberOfLines={1}
                 style={{
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
@@ -202,15 +222,16 @@ export default function SubscriptionScript({ navigation, route }) {
               justifyContent: "center",
               alignItems: "flex-end",
               flex: 1,
-              marginLeft:"10%"
+              marginLeft: "10%",
             }}
           >
-            <View style={{
-              flexDirection:"row",
-              width:"100%",
-              justifyContent:"space-between",
-              
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
               <Text
                 style={{
                   fontSize: 14,
@@ -236,13 +257,15 @@ export default function SubscriptionScript({ navigation, route }) {
                 </Text>
               )}
             </View>
-            <View style={{
-              flexDirection:"row",
-              justifyContent:"space-between",
-              alignItems:"center",
-              width:"100%",
-              marginTop:5
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                marginTop: 5,
+              }}
+            >
               <Text
                 style={{
                   fontSize: 14,
@@ -298,8 +321,7 @@ export default function SubscriptionScript({ navigation, route }) {
             style={[
               styles.text,
               {
-                flex:1,
-                
+                flex: 1,
               },
             ]}
           >
@@ -309,8 +331,8 @@ export default function SubscriptionScript({ navigation, route }) {
             style={[
               styles.text,
               {
-                flex:3,
-                marginLeft:10
+                flex: 3,
+                marginLeft: 10,
               },
             ]}
           >
@@ -320,16 +342,16 @@ export default function SubscriptionScript({ navigation, route }) {
             style={[
               styles.text,
               {
-                flex:2.5,
-                marginLeft:20
+                flex: 2.5,
+                marginLeft: 20,
               },
             ]}
           >
             Delivery Date
           </Text>
         </View>
-        {subsOrders &&
-          subsOrders.map((doc, i) => (
+        {orders &&
+          orders.map((doc, i) => (
             <Cart
               onPress={() => {
                 if (vendor) {
@@ -350,9 +372,10 @@ export default function SubscriptionScript({ navigation, route }) {
               data={doc}
               key={i}
               index={i}
+              page={page}
             />
           ))}
-        {subsOrders && subsOrders.length == 0 && (
+        {orders && orders.length == 0 && (
           <Text
             style={{
               marginVertical: 10,
@@ -362,21 +385,35 @@ export default function SubscriptionScript({ navigation, route }) {
             No Order Found
           </Text>
         )}
-        {subsData && subsData.payAsYouGo && (
-          <IconButton
-            style={{
-              marginHorizontal: 20,
-              height: 40,
-              borderRadius: 10,
-              backgroundColor: "#4ADE80",
-              marginTop: 20,
-            }}
-            title={"Load More"}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: 20,
+            marginVertical: 10,
+          }}
+        >
+          <IconButton disabled={page>1?false:true}
             onPress={() => {
-              setCounter((val) => val + 10);
+              if (page>1) {
+                //handlePages(page + 1);
+                setPage((val) => val - 1);
+              }
             }}
+            title={"Previous"}
           />
-        )}
+          <IconButton
+            disabled={subsOrders&&subsOrders.length / 12 > page ? false : true}
+            onPress={() => {
+              let pageValue = subsOrders.length / 12;
+              if (pageValue > page) {
+                //handlePages(page + 1);
+                setPage((val) => val + 1);
+              }
+            }}
+            title={"Next"}
+          />
+        </View>
         <View
           style={{
             height: 20,
@@ -396,7 +433,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index }) => {
+const Cart = ({ data, onPress, index,page }) => {
   return (
     <View
       style={{
@@ -412,37 +449,42 @@ const Cart = ({ data, onPress, index }) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems:"center"
+          alignItems: "center",
         }}
       >
         <View
           style={{
-            flex:1,
+            flex: 1,
           }}
         >
           <Text style={styles.smallText}>
-            {index > 8 ? `${index + 1}` : `0${index + 1}`}
+            {((index+1)*page) > 8 ? `${((index+1)*page)}` : `0${((index+1)*page)}`}
           </Text>
         </View>
 
         <View
           style={{
-            flex:3,
-            marginLeft:10
+            flex: 3,
+            marginLeft: 10,
           }}
         >
           <Text style={styles.smallText}>
             {serverTimeToLocalDate(data.dateFrom)} To
           </Text>
-          <Text numberOfLines={1} style={[
-            styles.smallText,{
-              marginTop:3
-            }
-          ]}>{serverTimeToLocalDate(data.dateTo)}
           <Text
+            numberOfLines={1}
+            style={[
+              styles.smallText,
+              {
+                marginTop: 3,
+              },
+            ]}
+          >
+            {serverTimeToLocalDate(data.dateTo)}
+            <Text
               style={{
                 color: data.paid ? "#4ADE80" : "#DA1E37",
-                fontSize:16
+                fontSize: 16,
               }}
             >
               ({data && data.paid ? "Paid" : "Due"})
@@ -452,16 +494,23 @@ const Cart = ({ data, onPress, index }) => {
 
         <View
           style={{
-            flex:2.5,
-            marginLeft:20
+            flex: 2.5,
+            marginLeft: 20,
           }}
         >
           <Text style={[styles.smallText]}>
             {serverTimeToLocalDate(data.dateFrom)} To
           </Text>
-          <Text style={[styles.smallText,{
-            marginTop:3
-          }]}>{serverTimeToLocalDate(data.dateTo)}</Text>
+          <Text
+            style={[
+              styles.smallText,
+              {
+                marginTop: 3,
+              },
+            ]}
+          >
+            {serverTimeToLocalDate(data.dateTo)}
+          </Text>
         </View>
       </View>
       <View
@@ -473,7 +522,6 @@ const Cart = ({ data, onPress, index }) => {
           marginTop: 5,
         }}
       >
-        
         <View
           style={{
             flex: 1,
@@ -503,7 +551,6 @@ const Cart = ({ data, onPress, index }) => {
             color: "#6366F1",
             paddingHorizontal: 0,
             marginHorizontal: 0,
-            
           }}
           Icon={() => <SvgXml xml={Icon} height="13" width={"13"} />}
           title={"View Recept"}

@@ -436,6 +436,7 @@ const OfferNow = (props) => {
                         borderRadius: 5,
                       }}
                     >
+                      <View>
                       <Text
                         style={{
                           color: "black",
@@ -443,8 +444,13 @@ const OfferNow = (props) => {
                           fontFamily: "Poppins-Medium",
                         }}
                       >
-                        Service Charge
+                        {data.subsData.otherChargeName}
                       </Text>
+                      <Text style={{
+                        color:"red",
+                        marginTop:3
+                      }}>*This payment one time only</Text>
+                      </View>
                       <Text
                         style={{
                           color: "black",

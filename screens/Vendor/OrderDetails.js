@@ -126,7 +126,7 @@ const OrderDetails = ({ navigation, route }) => {
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
   const index = route.params && route.params.index ? route.params.index : 0;
   const [subsOrder, setSubsOrder] = useState(sOrder);
-//console.log(index)
+  //console.log(index)
   const stringDate = (d) => {
     const Months = [
       "Jan",
@@ -269,8 +269,7 @@ const OrderDetails = ({ navigation, route }) => {
     // }
   };
   const loadDataSubs = async (receiverId, order) => {
-    
-    if (index==null) {
+    if (index == null) {
       Alert.alert("Some thing went wrong");
       setLoader(false);
       return;
@@ -637,7 +636,8 @@ const OrderDetails = ({ navigation, route }) => {
             }}
           />
         </View>
-        <View style={{ paddingHorizontal: 10 }}>
+        {type=="BARGAINING"?(
+          <View style={{ paddingHorizontal: 10 }}>
           <Text
             style={{
               fontSize: width < 350 ? 18 : 20,
@@ -703,6 +703,74 @@ const OrderDetails = ({ navigation, route }) => {
             )}
           </View>
         </View>
+        ):(
+          <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#C0FFD7",
+            paddingVertical: 20,
+            marginHorizontal: 10,
+            marginTop: 20,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: width < 350 ? 18 : 20,
+              color: textColor,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            Facilities
+          </Text>
+          {/* <View style={{ marginTop: 10 }}>
+            {Facilities && Facilities.length > 0 ? (
+              Facilities.map((doc, i) => (
+                <Text
+                  style={{
+                    fontSize: width < 350 ? 14 : 16,
+                  }}
+                  key={i}
+                >
+                  {i + 1 + ". "}
+                  {doc.title}
+                </Text>
+              ))
+            ) : (
+              <Text
+                style={{
+                  color: "#505050",
+                }}
+              >
+                N/A
+              </Text>
+            )}
+          </View> */}
+          <View
+            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
+          >
+            {Facilities && Facilities.length > 0 ? (
+              <Text
+                style={{
+                  fontSize: width < 350 ? 14 : 16,
+                }}
+              >
+                {Facilities.map((doc, i) => {
+                  return `${i == 0 ? "" : ", "}${doc.title}`;
+                })}
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  color: "#505050",
+                }}
+              >
+                N/A
+              </Text>
+            )}
+          </View>
+        </View>
+        )}
+        
         {type != "SUBS" && (
           <View
             style={{
@@ -743,43 +811,45 @@ const OrderDetails = ({ navigation, route }) => {
               {data ? data.subsData.amount + "৳" : "Pice is empty"}
             </Text>
             {data.subsData.otherChargeName ? (
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: "#666666",
-                  marginVertical: 5,
-                }}
-              >
-                {data.subsData.otherChargeName}{" "}
-                {data.subsData.otherChargeAmount}৳
-              </Text>
+              <>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#666666",
+                    marginVertical: 5,
+                  }}
+                >
+                  {data.subsData.otherChargeName}{" "}
+                  {data.subsData.otherChargeAmount}৳
+                </Text>
+                <View
+                  style={{
+                    width: "60%",
+                    height: 1,
+                    backgroundColor: "#F1EFEF",
+                    marginVertical: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    width: "60%",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={styles.newText}>Total</Text>
+                  <Text style={styles.newText}>
+                    {data.subsData.amount +
+                      parseInt(
+                        data.subsData.otherChargeAmount
+                          ? data.subsData.otherChargeAmount
+                          : 0
+                      )}
+                    ৳
+                  </Text>
+                </View>
+              </>
             ) : null}
-            <View
-              style={{
-                width: "60%",
-                height: 1,
-                backgroundColor: "#F1EFEF",
-                marginVertical: 10,
-              }}
-            />
-            <View
-              style={{
-                width: "60%",
-                justifyContent: "space-between",
-                flexDirection: "row",
-              }}
-            >
-              <Text style={styles.newText}>Total</Text>
-              <Text style={styles.newText}>
-                {data.subsData.amount +
-                  parseInt(
-                    data.subsData.otherChargeAmount
-                      ? data.subsData.otherChargeAmount
-                      : 0
-                  )}
-                ৳
-              </Text>
-            </View>
           </View>
         )}
         {type == "SUBS" && (
@@ -895,60 +965,62 @@ const OrderDetails = ({ navigation, route }) => {
             </View>
           )}
         </View>
-        {type=="SUBS"&&(
-          <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            borderBottomWidth: 1,
-            borderBottomColor: "#C0FFD7",
-            paddingVertical: 20,
-            marginHorizontal: 20,
-          }}
-        >
-          <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
-            Payment Date
-          </Text>
+        {type == "SUBS" && (
           <View
             style={{
-              flexDirection: "row",
-              marginTop: 10,
-              paddingHorizontal: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginHorizontal: 20,
             }}
           >
-            <Text style={[styles.smallText, { flex: 0 }]}>
-              {data
-                ? serverTimeToLocalDate(data.deliveryDateFrom)
-                : "Unavailable Date"}{" "}
+            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
+              Payment Date
             </Text>
-            <Text style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
-              To
-            </Text>
-            {data && data.subsData ? (
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 10,
+                paddingHorizontal: 20,
+              }}
+            >
               <Text style={[styles.smallText, { flex: 0 }]}>
                 {data
-                  ? serverTimeToLocalDate(
-                      data.deliveryDateFrom,
-                      data.subsData.totalDuration
-                        ? data.subsData.totalDuration *
-                            (data.subsData.subscriptionType == "Monthly"
-                              ? 30
-                              : data.subsData.subscriptionType == "Yearly"
-                              ? 365
-                              : 7)
-                        : 0
-                    )
-                  : "Unavailable Date"}
+                  ? serverTimeToLocalDate(data.deliveryDateFrom)
+                  : "Unavailable Date"}{" "}
               </Text>
-            ) : (
-              <Text style={[styles.smallText, { flex: 0 }]}>
-                {data
-                  ? serverTimeToLocalDate(data.deliveryDateTo)
-                  : "Unavailable Date"}
+              <Text
+                style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}
+              >
+                To
               </Text>
-            )}
-          </View>
-          <View
+              {data && data.subsData ? (
+                <Text style={[styles.smallText, { flex: 0 }]}>
+                  {data
+                    ? serverTimeToLocalDate(
+                        data.deliveryDateFrom,
+                        data.subsData.totalDuration
+                          ? data.subsData.totalDuration *
+                              (data.subsData.subscriptionType == "Monthly"
+                                ? 30
+                                : data.subsData.subscriptionType == "Yearly"
+                                ? 365
+                                : 7)
+                          : 0
+                      )
+                    : "Unavailable Date"}
+                </Text>
+              ) : (
+                <Text style={[styles.smallText, { flex: 0 }]}>
+                  {data
+                    ? serverTimeToLocalDate(data.deliveryDateTo)
+                    : "Unavailable Date"}
+                </Text>
+              )}
+            </View>
+            <View
               style={{
                 width: "100%",
                 alignItems: "flex-end",
@@ -973,7 +1045,7 @@ const OrderDetails = ({ navigation, route }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-        </View>
+          </View>
         )}
         <View
           style={{
@@ -1059,7 +1131,6 @@ const OrderDetails = ({ navigation, route }) => {
               </Text>
             </View>
           )}
-         
         </View>
         <View
           style={{
@@ -1100,24 +1171,31 @@ const OrderDetails = ({ navigation, route }) => {
           <Text style={[styles.smallText, { marginTop: 5, marginBottom: 5 }]}>
             {data && data.description ? data.description : "No details found!"}
           </Text>
-          {data&&data.attachment&&(
-            <TouchableOpacity onPress={()=>{
-              Linking.openURL(data.attachment)
-            }} style={{
-              width:"100%",
-              flexDirection:"row",
-              alignItems:"center"
-            }}>
-              <AntDesign style={{
-                
-              }} name="file1" size={20} color="black" />
-              <Text  style={{
-                fontSize:16,
-                color:"#4ADE80",
-                marginRight:20,
-                marginVertical:5,
-                marginLeft:10
-              }}>{data.attachment.substring(data.attachment.lastIndexOf('/')+1)}</Text>
+          {data && data.attachment && (
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(data.attachment);
+              }}
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <AntDesign style={{}} name="file1" size={20} color="black" />
+              <Text
+                style={{
+                  fontSize: 16,
+                  color: "#4ADE80",
+                  marginRight: 20,
+                  marginVertical: 5,
+                  marginLeft: 10,
+                }}
+              >
+                {data.attachment.substring(
+                  data.attachment.lastIndexOf("/") + 1
+                )}
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -1576,7 +1654,6 @@ const OrderDetails = ({ navigation, route }) => {
                           {
                             text: "OK",
                             onPress: () => {
-                              
                               setLoader(true);
                               cancelOrder(
                                 user.token,
@@ -1727,9 +1804,9 @@ const exporters = (key) => {
       return "Unknown";
   }
 };
-const attachmentIcon=`<svg xmlns="http://www.w3.org/2000/svg" width="12.643" height="17.152" viewBox="0 0 12.643 17.152">
+const attachmentIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.643" height="17.152" viewBox="0 0 12.643 17.152">
 <g id="_000000ff" data-name="#000000ff" transform="translate(-16.818)">
   <path id="Path_27803" data-name="Path 27803" d="M16.9,0h6.521a2.254,2.254,0,0,1,1.114.627q2.109,2.107,4.218,4.216a2.1,2.1,0,0,1,.658,1.069A11.016,11.016,0,0,1,29.456,7.5q0,4.422,0,8.843a6.834,6.834,0,0,1-.076.809H16.914a7.326,7.326,0,0,1-.088-1.747c0-1.785,0-3.57,0-5.355a4.882,4.882,0,0,1,.064-1.162.263.263,0,0,1,.431.239c.025,2.507,0,5.016.011,7.524q5.811,0,11.623,0,0-4.639,0-9.277a9.431,9.431,0,0,0-.04-1.348,1.2,1.2,0,0,0-1.1-.981c-1.12-.059-2.246.038-3.366-.051-.059-1.114.013-2.228-.036-3.341A1.249,1.249,0,0,0,23.139.507C21.2.489,19.265.505,17.328.5q0,3.232,0,6.464a8.5,8.5,0,0,1-.036,1.24.278.278,0,0,1-.413.05,2.7,2.7,0,0,1-.06-.614c.009-1.966,0-3.93.005-5.9A9.6,9.6,0,0,1,16.9,0m8.035,1.743q0,1.387,0,2.777,1.389,0,2.779,0Q26.324,3.129,24.932,1.743Z"/>
 </g>
 </svg>
-`
+`;
