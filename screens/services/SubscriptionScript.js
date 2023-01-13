@@ -4,7 +4,11 @@ import { ScrollView, View, Text, Dimensions, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { dateConverter, localTimeToServerDate, serverTimeToLocalDate } from "../../action";
+import {
+  dateConverter,
+  localTimeToServerDate,
+  serverTimeToLocalDate,
+} from "../../action";
 import { getSubsOrderById } from "../../Class/service";
 import Avatar from "../../components/Avatar";
 import BackHeader from "../../components/BackHeader";
@@ -28,7 +32,7 @@ export default function SubscriptionScript({ navigation, route }) {
   //console.log(providerInfo)
   //console.warn(subsOrders)
   useEffect(() => {
-    setSubsOrders()
+    setSubsOrders();
     getSubsOrderById(user.token, data.id)
       .then((res) => {
         //console.log(res.data)
@@ -89,48 +93,48 @@ export default function SubscriptionScript({ navigation, route }) {
           },
         ]);
       }
-    }else if(subsOrders){
+    } else if (subsOrders) {
       //console.log('ee')
       // let being = subsData.totalDuration - subsOrders.length;
       let arr = [];
-      arr.push(subsOrders[0])
+      arr.push(subsOrders[0]);
       for (let i = 0; i < Counter; i++) {
         arr.push({
           createdAt: new Date(),
-            dateFrom: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
-              i *
-                (subsData.subscriptionType == "Monthly"
-                  ? 30
-                  : subsData.subscriptionType == "Yearly"
-                  ? 365
-                  : 7)
-            ),
-            dateTo: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
-              (i + 1) *
-                (subsData.subscriptionType == "Monthly"
-                  ? 30
-                  : subsData.subscriptionType == "Yearly"
-                  ? 365
-                  : 7)
-            ),
-            delivered: false,
-            deliveredAt: null,
-            id: uuid.v4(),
-            offlineOrderId: null,
-            orderId: null,
-            paid: false,
-            received: false,
-            refundRequestByUser: false,
-            status: "UPCOMING",
-            updatedAt: new Date(),
-        })
+          dateFrom: localTimeToServerDate(
+            subsOrders[subsOrders.length - 1].dateTo,
+            i *
+              (subsData.subscriptionType == "Monthly"
+                ? 30
+                : subsData.subscriptionType == "Yearly"
+                ? 365
+                : 7)
+          ),
+          dateTo: localTimeToServerDate(
+            subsOrders[subsOrders.length - 1].dateTo,
+            (i + 1) *
+              (subsData.subscriptionType == "Monthly"
+                ? 30
+                : subsData.subscriptionType == "Yearly"
+                ? 365
+                : 7)
+          ),
+          delivered: false,
+          deliveredAt: null,
+          id: uuid.v4(),
+          offlineOrderId: null,
+          orderId: null,
+          paid: false,
+          received: false,
+          refundRequestByUser: false,
+          status: "UPCOMING",
+          updatedAt: new Date(),
+        });
       }
-      setSubsOrders(arr)
+      setSubsOrders(arr);
     }
-  }, [subsOrders && subsOrders.length,Counter]);
-  
+  }, [subsOrders && subsOrders.length, Counter]);
+
   return (
     <View
       style={{
@@ -168,7 +172,7 @@ export default function SubscriptionScript({ navigation, route }) {
                 width: "60%",
               }}
             >
-              <Text
+              <Text numberOfLines={1}
                 style={{
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
@@ -198,14 +202,22 @@ export default function SubscriptionScript({ navigation, route }) {
               justifyContent: "center",
               alignItems: "flex-end",
               flex: 1,
+              marginLeft:"10%"
             }}
           >
-            <Text
-              style={{
-                fontSize: 14,
-              }}
-            >
-              Status{" "}
+            <View style={{
+              flexDirection:"row",
+              width:"100%",
+              justifyContent:"space-between",
+              
+            }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                }}
+              >
+                Status{" "}
+              </Text>
               {data.status == "CANCELED" ? (
                 <Text
                   style={{
@@ -223,14 +235,21 @@ export default function SubscriptionScript({ navigation, route }) {
                   Active
                 </Text>
               )}
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                marginTop: 5,
-              }}
-            >
-              Total Paid{" "}
+            </View>
+            <View style={{
+              flexDirection:"row",
+              justifyContent:"space-between",
+              alignItems:"center",
+              width:"100%",
+              marginTop:5
+            }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                }}
+              >
+                Total Paid{" "}
+              </Text>
               <Text
                 style={{
                   color: "#8F8F8F",
@@ -238,7 +257,7 @@ export default function SubscriptionScript({ navigation, route }) {
               >
                 {totalPaid}
               </Text>
-            </Text>
+            </View>
           </View>
         </View>
         <View
@@ -267,26 +286,47 @@ export default function SubscriptionScript({ navigation, route }) {
         <View
           style={{
             flexDirection: "row",
-            paddingHorizontal: 5,
+            paddingHorizontal: 20,
             paddingVertical: 5,
             borderColor: "#C0FFD7",
             borderWidth: 1,
             marginVertical: 10,
-           justifyContent:"space-between"
+            justifyContent: "space-between",
           }}
         >
-        <Text style={[styles.text,{
-         width:20,
-         textAlign:"center"
-        }]}>SL</Text>
-          <Text style={[styles.text,{
-            width:width/3,
-            textAlign:"center"
-          }]}>Payment Date</Text>
-          <Text style={[styles.text,{
-            width:width/3,
-            textAlign:"center"
-          }]}>Delivery Date</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                flex:1,
+                
+              },
+            ]}
+          >
+            SL
+          </Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                flex:3,
+                marginLeft:10
+              },
+            ]}
+          >
+            Payment Date
+          </Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                flex:2.5,
+                marginLeft:20
+              },
+            ]}
+          >
+            Delivery Date
+          </Text>
         </View>
         {subsOrders &&
           subsOrders.map((doc, i) => (
@@ -354,14 +394,13 @@ const styles = StyleSheet.create({
   smallText: {
     fontSize: 16,
     marginHorizontal: 0,
-    
   },
 });
 const Cart = ({ data, onPress, index }) => {
   return (
     <View
       style={{
-        paddingHorizontal: 5,
+        paddingHorizontal: 20,
         borderColor: "#C0FFD7",
         borderWidth: 1,
         paddingVertical: 10,
@@ -373,38 +412,57 @@ const Cart = ({ data, onPress, index }) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          marginTop: 15,
-
+          alignItems:"center"
         }}
       >
-        <View style={{
-          width:20
-        }}>
-        <Text style={styles.smallText}>
-          {index > 8 ? `${index + 1}` : `0${index + 1}`}
-        </Text>
-        </View>
-        
-        <View style={{
-          width:width/3
-          
-        }}>
+        <View
+          style={{
+            flex:1,
+          }}
+        >
           <Text style={styles.smallText}>
-          {dateConverter(data.dateFrom)} -{" "}
-          {dateConverter(data.dateTo)}
-        </Text>
+            {index > 8 ? `${index + 1}` : `0${index + 1}`}
+          </Text>
         </View>
-        
-       <View style={{
-        justifyContent:"center",
-        flexDirection:"row",
-        width:width/3,
-       }}>
-         <Text style={[styles.smallText]}>
-          {dateConverter(data.dateFrom)} -{" "}
-          {dateConverter(data.dateTo)}
-        </Text>
-       </View>
+
+        <View
+          style={{
+            flex:3,
+            marginLeft:10
+          }}
+        >
+          <Text style={styles.smallText}>
+            {serverTimeToLocalDate(data.dateFrom)} To
+          </Text>
+          <Text numberOfLines={1} style={[
+            styles.smallText,{
+              marginTop:3
+            }
+          ]}>{serverTimeToLocalDate(data.dateTo)}
+          <Text
+              style={{
+                color: data.paid ? "#4ADE80" : "#DA1E37",
+                fontSize:16
+              }}
+            >
+              ({data && data.paid ? "Paid" : "Due"})
+            </Text>
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flex:2.5,
+            marginLeft:20
+          }}
+        >
+          <Text style={[styles.smallText]}>
+            {serverTimeToLocalDate(data.dateFrom)} To
+          </Text>
+          <Text style={[styles.smallText,{
+            marginTop:3
+          }]}>{serverTimeToLocalDate(data.dateTo)}</Text>
+        </View>
       </View>
       <View
         style={{
@@ -412,32 +470,16 @@ const Cart = ({ data, onPress, index }) => {
           justifyContent: "space-between",
           marginVertical: 0,
           alignItems: "center",
-          marginTop:10
+          marginTop: 5,
         }}
       >
+        
         <View
           style={{
             flex: 1,
           }}
         >
-          <Text style={styles.smallText}>
-            Payment:{" "}
-            <Text
-              style={{
-                color: data.paid ? "#4ADE80" : "#DA1E37",
-                textAlign: "center",
-              }}
-            >
-              {data && data.paid ? "Paid" : "Due"}
-            </Text>
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
-          <Text style={styles.smallText}>
+          <Text numberOfLines={1} style={styles.smallText}>
             Status:{" "}
             <Text
               style={{
@@ -461,9 +503,9 @@ const Cart = ({ data, onPress, index }) => {
             color: "#6366F1",
             paddingHorizontal: 0,
             marginHorizontal: 0,
-            marginRight: 5,
+            
           }}
-          Icon={() => <SvgXml xml={Icon} height="10" width={"10"} />}
+          Icon={() => <SvgXml xml={Icon} height="13" width={"13"} />}
           title={"View Recept"}
         />
       </View>
