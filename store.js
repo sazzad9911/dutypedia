@@ -25,6 +25,7 @@ import statusBar from "./Reducers/statusBar";
 import hideBottomBar from "./Reducers/hideBottomBar";
 import isOffline from "./Reducers/isOffline";
 import callingScreen from "./Reducers/callingScreen";
+import orderListFilter from "./Reducers/orderListFilter";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -52,7 +53,8 @@ const combine = combineReducers({
   statusBar:statusBar,
   hideBottomBar:hideBottomBar,
   isOffline:isOffline,
-  callingScreen:callingScreen
+  callingScreen:callingScreen,
+  orderListFilter:orderListFilter
 });
 const store = createStore(combine);
 export default store;

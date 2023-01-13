@@ -1,6 +1,13 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Text, Dimensions, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
@@ -31,6 +38,7 @@ export default function SubscriptionScript({ navigation, route }) {
   const [Counter, setCounter] = useState(50);
   const [orders, setOrder] = useState();
   const [page, setPage] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
   //console.log(providerInfo)
   //console.warn(subsOrders)
   useEffect(() => {
@@ -39,6 +47,7 @@ export default function SubscriptionScript({ navigation, route }) {
       .then((res) => {
         //console.log(res.data)
         setSubsOrders(res.data.order.subsOrders);
+        setActiveIndex(res.data.order.subsOrders.length - 1);
         let paid = 0;
         res.data.order.subsOrders.map((doc, i) => {
           if (doc.paid) {
@@ -95,7 +104,7 @@ export default function SubscriptionScript({ navigation, route }) {
           },
         ]);
       }
-    } else if (subsOrders &&subsData.payAsYouGo) {
+    } else if (subsOrders && subsData.payAsYouGo) {
       //console.log('ee')
       // let being = subsData.totalDuration - subsOrders.length;
       let arr = [];
@@ -140,19 +149,18 @@ export default function SubscriptionScript({ navigation, route }) {
     if (Array.isArray(subsOrders)) {
       //setOrder(null);
       let arr = [];
-      
-      let lower=(page-1)*12;
-      let upper=page*12;
-      for (let i = 0; i < subsOrders.length; i++) {
-        if (lower <= i && i<= upper) {
 
+      let lower = (page - 1) * 12;
+      let upper = page * 12;
+      for (let i = 0; i < subsOrders.length; i++) {
+        if (lower <= i && i <= upper) {
           arr.push(subsOrders[i]);
         }
       }
-      
+
       setOrder(arr);
     }
-  }, [page,subsOrders]);
+  }, [page, subsOrders]);
 
   return (
     <View
@@ -214,7 +222,7 @@ export default function SubscriptionScript({ navigation, route }) {
             style={{
               width: 1,
               backgroundColor: "#C0FFD7",
-              height: 50,
+              height: 30,
             }}
           />
           <View
@@ -353,6 +361,7 @@ export default function SubscriptionScript({ navigation, route }) {
         {orders &&
           orders.map((doc, i) => (
             <Cart
+              activeIndex={activeIndex}
               onPress={() => {
                 if (vendor) {
                   //console.log(i)
@@ -393,9 +402,10 @@ export default function SubscriptionScript({ navigation, route }) {
             marginVertical: 10,
           }}
         >
-          <IconButton disabled={page>1?false:true}
+          <IconButton
+            disabled={page > 1 ? false : true}
             onPress={() => {
-              if (page>1) {
+              if (page > 1) {
                 //handlePages(page + 1);
                 setPage((val) => val - 1);
               }
@@ -403,7 +413,9 @@ export default function SubscriptionScript({ navigation, route }) {
             title={"Previous"}
           />
           <IconButton
-            disabled={subsOrders&&subsOrders.length / 12 > page ? false : true}
+            disabled={
+              subsOrders && subsOrders.length / 12 > page ? false : true
+            }
             onPress={() => {
               let pageValue = subsOrders.length / 12;
               if (pageValue > page) {
@@ -433,130 +445,138 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index,page }) => {
+const Cart = ({ data, onPress, index, page, activeIndex }) => {
   return (
-    <View
-      style={{
-        paddingHorizontal: 20,
-        borderColor: "#C0FFD7",
-        borderWidth: 1,
-        paddingVertical: 10,
-        borderTopWidth: index != 0 ? 0 : 1,
-        opacity: data.orderId ? 1 : 0.4,
-      }}
-    >
+    <Pressable onPress={()=>{
+      if(onPress){
+        onPress()
+      }
+    }}>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          paddingHorizontal: 20,
+          borderColor: "#C0FFD7",
+          borderWidth: 1,
+          paddingVertical: 10,
+          borderTopWidth: index != 0 ? 0 : 1,
+          opacity: data.orderId ? 1 : 0.4,
+          backgroundColor: activeIndex == index ? "#F2F2F6" : "white",
         }}
       >
         <View
           style={{
-            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Text style={styles.smallText}>
-            {((index+1)*page) > 8 ? `${((index+1)*page)}` : `0${((index+1)*page)}`}
-          </Text>
-        </View>
-
-        <View
-          style={{
-            flex: 3,
-            marginLeft: 10,
-          }}
-        >
-          <Text style={styles.smallText}>
-            {serverTimeToLocalDate(data.dateFrom)} To
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.smallText,
-              {
-                marginTop: 3,
-              },
-            ]}
+          <View
+            style={{
+              flex: 1,
+            }}
           >
-            {serverTimeToLocalDate(data.dateTo)}
-            <Text
-              style={{
-                color: data.paid ? "#4ADE80" : "#DA1E37",
-                fontSize: 16,
-              }}
-            >
-              ({data && data.paid ? "Paid" : "Due"})
+            <Text style={styles.smallText}>
+              {(index + 1) * page > 8
+                ? `${(index + 1) * page}`
+                : `0${(index + 1) * page}`}
             </Text>
-          </Text>
-        </View>
+          </View>
 
+          <View
+            style={{
+              flex: 3,
+              marginLeft: 10,
+            }}
+          >
+            <Text style={styles.smallText}>
+              {serverTimeToLocalDate(data.dateFrom)} To
+            </Text>
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.smallText,
+                {
+                  marginTop: 3,
+                },
+              ]}
+            >
+              {serverTimeToLocalDate(data.dateTo)}
+              <Text
+                style={{
+                  color: data.paid ? "#4ADE80" : "#DA1E37",
+                  fontSize: 16,
+                }}
+              >
+                ({data && data.paid ? "Paid" : "Due"})
+              </Text>
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flex: 2.5,
+              marginLeft: 20,
+            }}
+          >
+            <Text style={[styles.smallText]}>
+              {serverTimeToLocalDate(data.dateFrom)} To
+            </Text>
+            <Text
+              style={[
+                styles.smallText,
+                {
+                  marginTop: 3,
+                },
+              ]}
+            >
+              {serverTimeToLocalDate(data.dateTo)}
+            </Text>
+          </View>
+        </View>
         <View
           style={{
-            flex: 2.5,
-            marginLeft: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: 0,
+            alignItems: "center",
+            marginTop: 5,
           }}
         >
-          <Text style={[styles.smallText]}>
-            {serverTimeToLocalDate(data.dateFrom)} To
-          </Text>
-          <Text
-            style={[
-              styles.smallText,
-              {
-                marginTop: 3,
-              },
-            ]}
+          <View
+            style={{
+              flex: 4,
+            }}
           >
-            {serverTimeToLocalDate(data.dateTo)}
-          </Text>
+            <Text numberOfLines={1} style={styles.smallText}>
+              Status:{" "}
+              <Text
+                style={{
+                  color: "#4ADE80",
+                }}
+              >
+                {data && data.status ? exporters(data.status) : "Unknown"}
+              </Text>
+            </Text>
+          </View>
+          <IconButton
+            disabled={true}
+            style={{
+              fontSize: 16,
+              borderWidth: 0,
+
+              color: "#6366F1",
+              paddingHorizontal: 0,
+              marginHorizontal: 0,
+              flex: 2.5,
+              marginLeft: 20,
+              backgroundColor: "transparent",
+            }}
+            Icon={() => <SvgXml xml={Icon} height="13" width={"13"} />}
+            title={"View Recept"}
+          />
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginVertical: 0,
-          alignItems: "center",
-          marginTop: 5,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
-          <Text numberOfLines={1} style={styles.smallText}>
-            Status:{" "}
-            <Text
-              style={{
-                color: "#4ADE80",
-              }}
-            >
-              {data && data.status ? exporters(data.status) : "Unknown"}
-            </Text>
-          </Text>
-        </View>
-        <IconButton
-          onPress={() => {
-            if (onPress && data.orderId) {
-              onPress();
-            }
-          }}
-          style={{
-            fontSize: 16,
-            borderWidth: 0,
-
-            color: "#6366F1",
-            paddingHorizontal: 0,
-            marginHorizontal: 0,
-          }}
-          Icon={() => <SvgXml xml={Icon} height="13" width={"13"} />}
-          title={"View Recept"}
-        />
-      </View>
-    </View>
+    </Pressable>
   );
 };
 const Icon = `<svg xmlns="http://www.w3.org/2000/svg" width="6.391" height="10.282" viewBox="0 0 6.391 10.282">

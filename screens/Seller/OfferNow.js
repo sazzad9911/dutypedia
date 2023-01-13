@@ -758,6 +758,51 @@ const OfferNow = (props) => {
                   <Text>N/A</Text>
                 )}
               </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: 10,
+                  backgroundColor: "#F8F8F8",
+                  padding: 5,
+                  borderRadius: 5,
+                  marginTop: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: 16,
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  Facilities
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  paddingHorizontal: 25,
+                  paddingVertical: 5,
+                  marginBottom: 5,
+                }}
+              >
+                {Facilities.length > 0 ? (
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#535353",
+                    }}
+                  >
+                    {Facilities.map((doc, i) => {
+                      return `${i == 0 ? "" : ", "}${doc.title}`;
+                    })}
+                  </Text>
+                ) : (
+                  <Text>N/A</Text>
+                )}
+              </View>
             </>
           )}
           <View

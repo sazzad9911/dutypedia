@@ -60,6 +60,7 @@ import { addUserOrder, updateUserOrder } from "../../Reducers/userOrders";
 import { addVendorOrder, updateVendorOrder } from "../../Reducers/vendorOrders";
 import PackageList from "./PackageList";
 import SubscriptionScript from "../services/SubscriptionScript";
+import { setOrderListFilter } from "../../Reducers/orderListFilter";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -182,6 +183,40 @@ const VendorOrder = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ]);
+  const [AllStatus, setAllStatus] = React.useState([
+    {
+      title: "Waiting For Accept",
+      icon: waitionIcon,
+    },
+    {
+      title: "Due",
+      icon: dueIcon,
+    },
+    {
+      title: "Paid",
+      icon: paidIcon,
+    },
+    {
+      title: "Processing",
+      icon: processingIcon,
+    },
+    {
+      title: "Delivered",
+      icon: deliveryIcon,
+    },
+    {
+      title: "Completed",
+      icon: completeIcon,
+    },
+    {
+      title: "Canceled",
+      icon: cancelIcon,
+    },
+    {
+      title: "Refund",
+      icon: refundIcon,
+    },
+  ]);
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(false);
   const [Orders, setOrders] = React.useState(null);
@@ -191,11 +226,20 @@ const VendorOrder = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   const reload =
     route.params && route.params.reload ? route.params.reload : null;
-
+  const bottomSheetRef = React.useRef(null);
   const [Change, setChange] = React.useState(false);
   const orderSocket = useSelector((state) => state.orderSocket);
   const dispatch = useDispatch();
+  const [Index, setIndex] = React.useState(-1);
   const vendorOrders = useSelector((state) => state.vendorOrders);
+  const snapPoints = React.useMemo(() => ["25%", "60%"], []);
+  const orderListFilter = useSelector((state) => state.orderListFilter);
+
+  // callbacks
+  const handleSheetChanges = React.useCallback((index) => {
+    //console.log("handleSheetChanges", index);
+    setIndex(index);
+  }, []);
   //console.log(vendorOrders)
   if (Loader) {
     return <ActivityLoader />;
@@ -241,6 +285,86 @@ const VendorOrder = ({ navigation, route }) => {
           />
         ))}
       </Tab.Navigator>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 10,
+          left: 0,
+          zIndex: 0,
+          backgroundColor: primaryColor,
+          marginHorizontal: 55,
+          borderRadius: 25,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: width - 110,
+          shadowOffset: {
+            height: 0,
+            width: 0,
+          },
+          shadowColor: "black",
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 3,
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+          shadowTopRadius: 0,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("MemberList");
+          }}
+          style={styles.view}
+        >
+          <SvgXml xml={plus} height="20" />
+          <Text style={styles.text}>New Order</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.view}>
+          <SvgXml xml={re} height="20" />
+          <Text style={styles.text}>Dutypedia User</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setIndex(1);
+          }}
+          style={styles.view}
+        >
+          <SvgXml xml={sort} height="20" />
+          <Text style={styles.text}>Sort</Text>
+        </TouchableOpacity>
+      </View>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={parseInt(Index)}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetScrollView>
+          {AllStatus.map((doc, i) => (
+            <IconButton
+              onPress={() => {
+                if (orderListFilter == doc.title) {
+                  dispatch(setOrderListFilter(null));
+                  return;
+                }
+                bottomSheetRef.current.close()
+                dispatch(setOrderListFilter(doc.title));
+              }}
+              style={{
+                justifyContent: "flex-start",
+                borderWidth: 0,
+                marginHorizontal: 10,
+                backgroundColor:
+                  orderListFilter == doc.title ? "#F2F2F6" : primaryColor,
+              }}
+              key={i}
+              LeftIcon={() => <SvgXml xml={doc.icon} height="24" />}
+              title={doc.title}
+            />
+          ))}
+        </BottomSheetScrollView>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -689,6 +813,7 @@ export const Screens = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   const [Open, setOpen] = React.useState();
   const isFocused = useIsFocused();
+  const orderListFilter = useSelector((state) => state.orderListFilter);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -715,18 +840,52 @@ export const Screens = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (AllOrders) {
-      if (!Filter) {
-        setNewOrders(AllOrders);
-      } else {
-        let text = Filter;
-        text = text.split(" ").join("_");
-        let arr = AllOrders.filter((d) =>
-          d.status.toUpperCase().match(text.toUpperCase())
-        );
-        setNewOrders(arr);
+      switch (orderListFilter) {
+        case "Waiting For Accept":
+          let text = orderListFilter;
+          text = text.split(" ").join("_");
+          let arr = AllOrders.filter((d) =>
+            d.status.toUpperCase().match(text.toUpperCase())
+          );
+          setNewOrders(arr);
+          break;
+
+        case "Due":
+          let dues = AllOrders.filter((d) => d.paid == false);
+          setNewOrders(dues);
+          break;
+        case "Paid":
+          let paid = AllOrders.filter((d) => d.paid == true);
+          setNewOrders(paid);
+          break;
+        case "Processing":
+          let processing = AllOrders.filter((d) =>
+            d.status.toUpperCase().match("PROCESSING")
+          );
+          setNewOrders(processing);
+          break;
+        case "Delivered":
+          let delivered = AllOrders.filter((d) => d.delivered == true);
+          setNewOrders(delivered);
+          break;
+
+        case "Completed":
+          let completed = AllOrders.filter((d) => d.status == "COMPLETED");
+          setNewOrders(completed);
+          break;
+        case "Canceled":
+          let cancel = AllOrders.filter((d) => d.status == "CANCELLED");
+          setNewOrders(cancel);
+          break;
+        case "Refund":
+          let refund = AllOrders.filter((d) => d.status == "REFUNDED");
+          setNewOrders(refund);
+          break;
+        default:
+          setNewOrders(AllOrders);
       }
     }
-  }, [Filter]);
+  }, [orderListFilter]);
   React.useEffect(() => {
     if (AllOrders) {
       if (!Search) {
@@ -894,84 +1053,6 @@ export const Screens = ({ navigation, route }) => {
         )}
         <View style={{ height: 70 }} />
       </ScrollView>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 0,
-          zIndex: 0,
-          backgroundColor: primaryColor,
-          marginHorizontal: 55,
-          borderRadius: 25,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: width - 110,
-          shadowOffset: {
-            height: 0,
-            width: 0,
-          },
-          shadowColor: "black",
-          shadowOpacity: 0.2,
-          shadowRadius: 5,
-          elevation: 3,
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          shadowTopRadius: 0,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("MemberList");
-          }}
-          style={styles.view}
-        >
-          <SvgXml xml={plus} height="20" />
-          <Text style={styles.text}>New Order</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.view}>
-          <SvgXml xml={re} height="20" />
-          <Text style={styles.text}>Dutypedia User</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setIndex(1);
-          }}
-          style={styles.view}
-        >
-          <SvgXml xml={sort} height="20" />
-          <Text style={styles.text}>Sort</Text>
-        </TouchableOpacity>
-      </View>
-      <BottomSheet
-        enablePanDownToClose={true}
-        ref={bottomSheetRef}
-        index={parseInt(Index)}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-      >
-        <BottomSheetScrollView>
-          {AllStatus.map((doc, i) => (
-            <IconButton
-              onPress={() => {
-                if (Filter == doc.title) {
-                  setFilter(null);
-                  return;
-                }
-                setFilter(doc.title);
-              }}
-              style={{
-                justifyContent: "flex-start",
-                borderWidth: 0,
-                marginHorizontal: 10,
-                backgroundColor: Filter == doc.title ? "#F2F2F6" : primaryColor,
-              }}
-              key={i}
-              LeftIcon={() => <SvgXml xml={doc.icon} height="24" />}
-              title={doc.title}
-            />
-          ))}
-        </BottomSheetScrollView>
-      </BottomSheet>
     </View>
   );
 };

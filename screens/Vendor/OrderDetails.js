@@ -832,12 +832,13 @@ const OrderDetails = ({ navigation, route }) => {
                 />
                 <View
                   style={{
-                    width: "60%",
+                    width: "40%",
                     justifyContent: "space-between",
                     flexDirection: "row",
                   }}
                 >
                   <Text style={styles.newText}>Total</Text>
+                  <Text style={styles.newText}>=</Text>
                   <Text style={styles.newText}>
                     {data.subsData.amount +
                       parseInt(
