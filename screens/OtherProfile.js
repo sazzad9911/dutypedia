@@ -538,6 +538,27 @@ const OtherProfile = (props) => {
     console.log("ok");
     navigation.navigate("SubscriptionService", { data: doc });
   };
+  const clickInstallment = (doc) => {
+    setClick(true);
+    setImages(doc.images);
+    setGigs(doc);
+    //console.log(doc.services);
+    setPrice(doc.price);
+    setFacilities(doc.facilites.selectedOptions);
+    setTitle(doc.title);
+    setDescription(doc.description);
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(doc.services, Category),
+      });
+      setNewDataList(serverToLocal(doc.services, Category));
+    } catch (e) {
+      console.log(e.message);
+    }
+    console.log("ok");
+    navigation.navigate("InstallmentService", { data: doc });
+  };
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -1329,6 +1350,43 @@ const OtherProfile = (props) => {
                 data:data
               }}
               component={Subscriptions}
+            />
+            <Tab.Screen
+              options={{
+                tabBarLabel: ({ focused, color, size }) => (
+                  <Text
+                    style={{
+                      color: focused ? "#4ADE80" : "black",
+                      fontFamily: "Poppins-SemiBold",
+                      fontSize: Platform.OS == "ios" ? 18 : 17,
+                    }}
+                  >
+                    {initialState[3].title}
+                  </Text>
+                ),
+              }}
+              name={initialState[3].title}
+              initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                onPress: clickInstallment,
+                PackageService: PackageService,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                scrollTo: scrollTo,
+                data:data
+              }}
+              component={Installment}
             />
           </Tab.Navigator>
         </View>
@@ -2813,6 +2871,124 @@ const Subscriptions = ({ navigation, route }) => {
             </View>
           )}
         </View> */}
+      </View>
+      <View style={{ height: 70 }} />
+    </View>
+  );
+};
+const Installment = ({ navigation, route }) => {
+  const params = route.params;
+  //const PackageService = params.PackageService;
+  const PackageService = [];
+  const onPress = route.params.onPress;
+  const RelatedServices = params.RelatedServices;
+  const UnRelatedServices = params.UnRelatedServices;
+  const [content, setContent] = React.useState(2);
+  const [layoutHeight, setLayoutHeight] = React.useState();
+  const isFocused = useIsFocused();
+  const setNewNavigation = params.setNewNavigation;
+  const scrollTo = params.scrollTo;
+  const [offset, setOffset] = React.useState(0);
+  const changeScreenName = params.changeScreenName;
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const [SubsCription,setSubscription]=React.useState()
+  const data=params.data;
+
+  React.useEffect(() => {
+    if (layoutHeight && isFocused) {
+      //console.log(layoutHeight);
+      //changeScreenName("SUBS");
+      setNewNavigation(layoutHeight + 50);
+    }
+  }, [layoutHeight + isFocused]);
+  React.useEffect(() => {
+    //console.log(Data)
+    if (user && data) {
+      getOtherServices(user.token, data.service.id, "INSTALLMENT")
+        .then((res) => {
+          setSubscription(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setSubscription([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused, user, vendor]);
+  //console.log(FixedService)
+  if(!SubsCription){
+    return <ActivityLoader/>
+  }
+  return (
+    <View
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        //console.log(e.nativeEvent.contentOffset.y)
+        const currentOffset = e.nativeEvent.contentOffset.y;
+        //console.log(navHeight)
+        if (currentOffset < -80) {
+          //console.log("ok")
+          scrollTo(1);
+        }
+        if (currentOffset > offset && currentOffset > 0) {
+          scrollTo(-10);
+        }
+        setOffset(currentOffset);
+      }}
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
+      nestedScrollEnabled={true}
+    >
+      <View
+        style={{
+          marginHorizontal: 10,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginVertical: 20,
+        }}
+      >
+        {SubsCription&&SubsCription.map((doc, i) => (
+          <ServiceCart
+            onPress={() => {
+              if (onPress) {
+                onPress(doc);
+              }
+            }}
+            key={i}
+            data={doc}
+          />
+        ))}
+       
+        {SubsCription&&SubsCription.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
       </View>
       <View style={{ height: 70 }} />
     </View>

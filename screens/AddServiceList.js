@@ -134,6 +134,14 @@ const AddServiceList = (props) => {
                   });
                   return;
                 }
+                if(params.data=="INSTALLMENT"){
+
+                  //console.log("pp")
+                  navigation.navigate("AddInstallment", {
+                    data: Data,
+                  });
+                  return;
+                }
                 navigation.navigate("Service", {
                   direct: params.data,
                   data: Data,

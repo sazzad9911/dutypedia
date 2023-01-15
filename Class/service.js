@@ -192,11 +192,13 @@ export const createOtherServiceIndividual = async (
   serviceId,
   type,
   packageData,
-  subsData
+  subsData,
+  installmentData,
+  price
 ) => {
   const data = {
     title: businessForm.serviceTitle,
-    price: parseInt(subsData.amount),
+    price: parseInt(subsData?subsData.amount:installmentData?installmentData.totalAmount:price),
     facilites: {
       title: "Choose Your Facilities",
       selectedOptions: Array.isArray(businessForm.facilities)
@@ -213,7 +215,8 @@ export const createOtherServiceIndividual = async (
     serviceId: serviceId,
     type: type,
     packageData:packageData,
-    subsData:subsData
+    subsData:subsData,
+    installmentData:installmentData
   };
   
   const res = await axios.post(`${url}/server/services/create/gig`, data, {

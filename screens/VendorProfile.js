@@ -498,6 +498,27 @@ const VendorProfile = (props) => {
     //console.log("ok");
     navigation.navigate("VendorSubscriptionService", { data: doc });
   };
+  const clickInstallment = (doc) => {
+    setClick(true);
+    setImages(doc.images);
+    setGigs(doc);
+    //console.log(doc.services);
+    setPrice(doc.price);
+    setFacilities(doc.facilites.selectedOptions);
+    setTitle(doc.title);
+    setDescription(doc.description);
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(doc.services, Category),
+      });
+      setNewDataList(serverToLocal(doc.services, Category));
+    } catch (e) {
+      console.log(e.message);
+    }
+    //console.log("ok");
+    navigation.navigate("VendorInstallmentService", { data: doc });
+  };
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -1299,7 +1320,7 @@ const VendorProfile = (props) => {
                 Facilities: Facilities,
                 Data: Data,
                 Price: Price,
-                onPress: clickSubscription,
+                onPress: clickInstallment,
                 PackageService: PackageService,
                 setNewNavigation: setNewNavigation,
                 RelatedServices: RelatedServices,
@@ -1600,7 +1621,7 @@ const VendorProfile = (props) => {
                     vendor.service.gigs[0].services.category
                   ),
                   name: "VendorOrderDetails",
-                  data: "SUBSCRIPTION",
+                  data: "INSTALLMENT",
                 });
               } else {
                 dispatch({
@@ -1616,7 +1637,7 @@ const VendorProfile = (props) => {
                     vendor.service.gigs[0].dashboard
                   ),
                   name: "VendorOrderDetails",
-                  data: "SUBSCRIPTION",
+                  data: "INSTALLMENT",
                 });
               }
             }}
@@ -3303,7 +3324,7 @@ const Installment = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
-      changeScreenName("SUBS");
+      changeScreenName("INSTALLMENT");
       setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);

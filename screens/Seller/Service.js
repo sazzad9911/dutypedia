@@ -92,7 +92,8 @@ const Service = ({ navigation, route }) => {
   const params = route.params;
   const type = params.type;
   const subsData = params.subsData;
-  //console.log(type)
+  const installmentData=params.installmentData
+  
 
   React.useEffect(() => {
     setFacilitiesCounter(0);
@@ -156,7 +157,7 @@ const Service = ({ navigation, route }) => {
       setImageError("*All picture must be upload");
       return;
     }
-    if (!Price && direct && type != "SUBS") {
+    if (!Price && direct && type != "SUBS" && type!="INSTALLMENT") {
       setPriceError("Price field is required");
       return;
     }
@@ -212,6 +213,33 @@ const Service = ({ navigation, route }) => {
               setLoader(false);
             });
           return;
+        }else if(type=="INSTALLMENT"){
+          if (!installmentData) {
+            Alert.alert("Invalid Data format");
+            return;
+          }
+          //console.log("ok")
+          createOtherServiceIndividual(
+            user.token,
+            businessForm,
+            route.params.data ? route.params.data : listData,
+            result,
+            vendor.service.id,
+            type,
+            undefined,
+            undefined,
+            installmentData,
+            0
+          )
+            .then((res) => {
+              navigation.navigate("VendorProfile", { direct: businessForm });
+              setLoader(false);
+            })
+            .catch((err) => {
+              console.warn(err.response);
+              setLoader(false);
+            });
+          return
         }
         createOtherService(
           user.token,
@@ -491,7 +519,7 @@ const Service = ({ navigation, route }) => {
                 placeholder="About Company"
               />
             )}
-            {direct && type != "SUBS" ? (
+            {direct && type != "SUBS"&&type!="INSTALLMENT" ? (
               <Input
                 innerRef={priceRef}
                 value={Price}

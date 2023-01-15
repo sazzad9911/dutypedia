@@ -70,6 +70,8 @@ import VendorPackageService from "./Vendor/VendorPackageService";
 import AddSubscription from "./services/AddSubscription";
 import VendorSubscriptionService from "./Vendor/VendorSubscriptionService";
 import SubscriptionScript from "./services/SubscriptionScript";
+import AddInstallment from "./services/AddInstallment";
+import VendorInstallmentService from "./Vendor/VendorInstallmentService";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -125,6 +127,13 @@ const Profile = ({ navigation }) => {
           headerShown: false, 
         }}
         component={VendorSubscriptionService}
+      />
+      <Stack.Screen
+        name="VendorInstallmentService"
+        options={{
+          headerShown: false, 
+        }}
+        component={VendorInstallmentService}
       />
       <Stack.Screen
         name="ManageOrder"
@@ -355,6 +364,11 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="AddSubscription"
         component={AddSubscription}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AddInstallment"
+        component={AddInstallment}
       />
       <Stack.Screen
         options={{ headerShown: false }}

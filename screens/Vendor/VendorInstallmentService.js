@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -69,7 +69,7 @@ import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
 
 const { width, height } = Dimensions.get("window");
-const VendorFixedService = (props) => {
+const VendorInstallmentService = (props) => {
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
@@ -145,6 +145,8 @@ const VendorFixedService = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
   const isFocused = useIsFocused();
+  const [subsData, setSubsData] = React.useState();
+  const [InstallmentData,setInstallmentData]=useState()
 
   React.useEffect(() => {
     if (isFocused) {
@@ -173,12 +175,15 @@ const VendorFixedService = (props) => {
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
       setImage(data.service.profilePhoto);
+      setSubsData(data.subsData);
+      setInstallmentData(data.installmentData)
+      //console.log(data.subsData)
       let img = [];
       // img.push(newImage1)
       // img.push(newImage2)
       // img.push(newImage3)
       // img.push(newImage4)
-      //console.log(data.images)
+      //console.log(data.installmentData)
       setImages(data.images);
       setPrice(data.price);
       setTitle(data.title);
@@ -529,7 +534,7 @@ const VendorFixedService = (props) => {
               backgroundColor: primaryColor,
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems:"center"
+              alignItems: "center",
             }}
           >
             <Text
@@ -540,7 +545,7 @@ const VendorFixedService = (props) => {
                 marginTop: 20,
               }}
             >
-              #Fixed Service
+              #Installment Service
             </Text>
 
             <TouchableOpacity>
@@ -576,24 +581,7 @@ const VendorFixedService = (props) => {
                 text={Description}
               />
             </View>
-            {/* <Carousel
-              loop={false}
-              width={width}
-              height={width + 30}
-              autoPlay={false}
-              data={Images}
-              scrollAnimationDuration={500}
-              onSnapToItem={(index) => {}}
-              renderItem={({ index }) => (
-                <Image
-                  style={{
-                    width: width,
-                    height: width + 30,
-                  }}
-                  source={{ uri: Images[index] }}
-                />
-              )}
-            /> */}
+            
           </View>
           <View
             style={{
@@ -602,11 +590,13 @@ const VendorFixedService = (props) => {
               paddingTop: 15,
             }}
           >
-            <View style={{
-              flexDirection:"row",
-              justifyContent:"space-between",
-              alignItems:"center"
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text
                 style={{
                   fontFamily: "Poppins-SemiBold",
@@ -628,7 +618,6 @@ const VendorFixedService = (props) => {
                 backgroundColor: primaryColor,
                 overflowY: "hidden",
                 overflow: "hidden",
-
                 height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
               }}
             >
@@ -769,22 +758,21 @@ const VendorFixedService = (props) => {
           <View
             style={{
               backgroundColor: primaryColor,
-
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: 20,
-              marginVertical: 25,
+              marginVertical: 0,
+              marginTop: 20,
             }}
           >
             <Text
               style={{
-                fontSize: Platform.OS == "ios" ? 17 : 15.5,
-                color: textColor,
-
-                fontFamily: "Poppins-SemiBold",
+                fontSize: Platform.OS == "ios" ? 15 : 14,
+                color: "black",
+                fontFamily: "Poppins-Medium",
               }}
             >
-              From {Price} ৳
+              {InstallmentData?.installmentType} {(Price/InstallmentData.installmentCount).toFixed(2)} ৳
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -816,98 +804,37 @@ const VendorFixedService = (props) => {
               />
             </TouchableOpacity>
           </View>
-          
         </View>
 
-        <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
-        {/* <View
+        {/* <View style={{ height: 2, backgroundColor: "#FAFAFA" }} /> */}
+
+        <View
           style={{
-            backgroundColor: primaryColor,
-            marginTop: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: 20,
+            marginBottom: 25,
+            marginTop: 5,
           }}
         >
-          {RelatedServices.length > 4 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                Related Service
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {RelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-              </ScrollView>
-            </View>
+          {InstallmentData && InstallmentData.advancedPaymentAmount && (
+            <Text
+              style={{
+                fontSize: Platform.OS == "ios" ? 15 : 14,
+              }}
+            >
+              Advanced Payment {InstallmentData?.advancedPaymentAmount}৳
+            </Text>
           )}
-
-          {UnRelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 20,
-                  paddingVertical: 15,
-                }}
-              >
-                You Might Also Like
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ width: 10 }} />
-                {UnRelatedServices.map((doc, i) => (
-                  <RelatedService data={doc} key={i} navigation={navigation} />
-                ))}
-                <View style={{ width: 10 }} />
-              </ScrollView>
-            </View>
-          )}
-        </View> */}
-
-        <View style={{ height: 70 }} />
+        </View>
+        <View style={{ height: 40 }} />
       </ScrollView>
-      {/* {showButton && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-          }}
-        >
-          <Pressable
-            onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
-            }}
-          >
-            <SvgXml xml={messageIcon} height="50" width={"50"} />
-          </Pressable>
-        </Animated.View>
-      )} */}
       <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
     </View>
   );
 };
 
-export default VendorFixedService;
+export default VendorInstallmentService;
 const styles = StyleSheet.create({
   activeContent: {
     position: "absolute",

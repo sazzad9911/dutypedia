@@ -273,47 +273,11 @@ const VendorPackageService = (props) => {
   }, [ActiveService + Click + Refresh]);
 
   React.useEffect(() => {
-    if (newUser && Data) {
-      setLoader(true);
-      getRelatedServices(newUser.token, Data.service.id, Data.service.dashboard)
-        .then((response) => {
-          if (response.data) {
-            setLoader(false);
-            setRelatedServices(response.data.gigs);
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response);
-          setLoader(false);
-        });
-      setLoader(true);
-      getUnRelatedServices(
-        newUser.token,
-        Data.service.id,
-        Data.service.dashboard
-      )
-        .then((response) => {
-          if (response.data) {
-            setLoader(false);
-            setUnRelatedServices(response.data.gigs);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response);
-        });
-    }
-  }, [Data]);
-
-  React.useEffect(() => {
     //console.log(scrollEnabled);
   }, [scrollEnabled]);
 
   if (
-    Loader ||
     !Data ||
-    !RelatedServices ||
-    !UnRelatedServices ||
     !NewDataList
   ) {
     return (
