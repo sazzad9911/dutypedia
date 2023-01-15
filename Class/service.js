@@ -325,6 +325,7 @@ export const createOrder = async (
   packageData,
   id,
   subsData,
+  installmentData,
   attachment
 ) => {
   const data={
@@ -341,6 +342,7 @@ export const createOrder = async (
     selectedPackage:selectedPackage,
     packageData:packageData,
     subsData:subsData,
+    installmentData:installmentData,
     attachment:attachment
   }
   //console.log(data)

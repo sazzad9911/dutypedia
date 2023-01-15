@@ -113,7 +113,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
   const index = route.params && route.params.index ? route.params.index : 0;
   const [subsOrder, setSubsOrder] = useState(sOrder);
-  //console.log(subsOrder)
+  const installmentData = data.installmentData ? data.installmentData : null;
 
   React.useEffect(() => {
     //console.log(data.serviceId);
@@ -545,7 +545,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             )}
           </View>
         </View>
-        {type != "SUBS" && (
+        {type != "SUBS" && type != "INSTALLMENT" && (
           <View
             style={{
               justifyContent: "center",
@@ -568,6 +568,116 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             </Text>
           </View>
         )}
+        {type == "INSTALLMENT" && (
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 20,
+              marginVertical: 15,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Pressable
+              style={{
+                alignItems: "flex-end",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}
+                >
+                  {installmentData
+                    ? installmentData.installmentType.replace(/ly/g, "")
+                    : ""}
+                  {" 12 x"}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      fontSize: width < 350 ? 18 : 20,
+                      width: 90,
+                      textAlign: "right",
+                    },
+                  ]}
+                >
+                  {installmentData
+                    ? (
+                        installmentData.totalAmount /
+                        installmentData.installmentCount
+                      ).toFixed(2) + "৳"
+                    : "Pice is empty"}
+                </Text>
+              </View>
+              {installmentData?.advancedPayment && (
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#666666",
+                      marginVertical: 5,
+                    }}
+                  >
+                    Advanced Payment
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#666666",
+                      marginVertical: 5,
+                      textAlign: "right",
+                      width: 90,
+                    }}
+                  >
+                    {installmentData?.advancedPaymentAmount}৳
+                  </Text>
+                </View>
+              )}
+
+              <View
+                style={{
+                  width: 150,
+                  height: 1,
+                  backgroundColor: "#F1EFEF",
+                  marginVertical: 10,
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text style={styles.newText}>Total</Text>
+
+                <Text
+                  style={[
+                    styles.newText,
+                    {
+                      width: 90,
+                      textAlign: "right",
+                    },
+                  ]}
+                >
+                  {installmentData?.totalAmount}৳
+                </Text>
+              </View>
+              <View
+                style={{
+                  height: 10,
+                }}
+              />
+            </Pressable>
+          </View>
+        )}
         {type == "SUBS" && (
           <View
             style={{
@@ -587,17 +697,24 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent:"flex-end",
+                  justifyContent: "flex-end",
                 }}
               >
                 <Text
-                  style={[styles.text, { fontSize: width < 350 ? 18 : 20}]}
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}
                 >
                   {data ? data.subsData.subscriptionType : ""}
                 </Text>
-                
+
                 <Text
-                  style={[styles.text, { fontSize: width < 350 ? 18 : 20,width:80,textAlign:"right" }]}
+                  style={[
+                    styles.text,
+                    {
+                      fontSize: width < 350 ? 18 : 20,
+                      width: 80,
+                      textAlign: "right",
+                    },
+                  ]}
                 >
                   {data ? data.subsData.amount + "৳" : "Pice is empty"}
                 </Text>
@@ -619,8 +736,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                         fontSize: 16,
                         color: "#666666",
                         marginVertical: 5,
-                        textAlign:"right",
-                        width:80
+                        textAlign: "right",
+                        width: 80,
                       }}
                     >
                       {data.subsData.otherChargeAmount}৳
@@ -642,11 +759,16 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     }}
                   >
                     <Text style={styles.newText}>Total</Text>
-                    
-                    <Text style={[styles.newText,{
-                      width:80,
-                      textAlign:"right"
-                    }]}>
+
+                    <Text
+                      style={[
+                        styles.newText,
+                        {
+                          width: 80,
+                          textAlign: "right",
+                        },
+                      ]}
+                    >
                       {data.subsData.amount +
                         parseInt(
                           data.subsData.otherChargeAmount
@@ -664,6 +786,33 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 </>
               ) : null}
             </Pressable>
+          </View>
+        )}
+
+        {type == "INSTALLMENT" && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#C0FFD7",
+              paddingVertical: 0,
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={[
+                styles.text,
+                { fontSize: width < 350 ? 18 : 20, marginBottom: 10 },
+              ]}
+            >
+              Total Installment
+            </Text>
+            <Text style={[styles.newText, { marginBottom: 20 }]}>
+              {installmentData?.installmentCount}{" "}
+              {installmentData.installmentType.replace(/ly/g, "")}
+            </Text>
           </View>
         )}
         {type == "SUBS" && (

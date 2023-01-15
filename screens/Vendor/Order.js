@@ -61,6 +61,7 @@ import { addVendorOrder, updateVendorOrder } from "../../Reducers/vendorOrders";
 import PackageList from "./PackageList";
 import SubscriptionScript from "../services/SubscriptionScript";
 import { setOrderListFilter } from "../../Reducers/orderListFilter";
+import InstallmentScript from "../services/InstallmentScript";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -142,6 +143,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="SubscriptionScript"
         component={SubscriptionScript}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="InstallmentScript"
+        component={InstallmentScript}
       />
     </Stack.Navigator>
   );
@@ -394,7 +400,7 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
   const [Open, setOpen] = React.useState(false);
   const orderState = useSelector((state) => state.orderState);
   const type = data.type;
-  //console.warn(data)
+  //console.warn(data.installmentData)
 
   //console.log(data.service)
   // React.useEffect(() => {
@@ -547,6 +553,19 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
                   {data.subsData.subscriptionType}{" "}
                   {data ? data.subsData.amount : "0"}৳
                 </Text>
+              ):type=="INSTALLMENT"?(
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  {data.installmentData?.installmentType}{" "}
+                  {data ? (data.installmentData?.totalAmount/data.installmentData.installmentCount).toFixed(2) : "0"}৳
+                </Text>
               ) : (
                 <Text
                   style={{
@@ -580,7 +599,7 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
                     : "Due"}
                 </Text>
                 <View style={{ width: 10 }} />
-                {type == "SUBS" && (
+                {type == "SUBS"||type=="INSTALLMENT" && (
                   <SvgXml xml={notify} height="15" width={"15"} />
                 )}
               </View>
@@ -1034,6 +1053,10 @@ export const Screens = ({ navigation, route }) => {
               onPress={() => {
                 if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
                   navigation.navigate("SubscriptionScript", { data: doc });
+                  return;
+                }
+                if (doc.type == "INSTALLMENT" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("InstallmentScript", { data: doc });
                   return;
                 }
                 navigation.navigate("VendorOrderDetails", {

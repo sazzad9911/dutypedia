@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   View,
   ScrollView,
@@ -83,10 +83,10 @@ const OfferNow = (props) => {
   const category = params.category;
   const [Offset, setOffset] = React.useState(0);
   const [TotalDuration, setTotalDuration] = React.useState([]);
-  
+  const [installmentData,setInstallmentData]=useState(data.installmentData?data.installmentData:null)
 
   React.useEffect(() => {
-    //console.log(type);
+   // console.log(data.installmentData);
     if (category && service) {
       try {
         setServices(serverToLocal(service.options, service.category));
@@ -135,7 +135,7 @@ const OfferNow = (props) => {
       setFromDateError("Invalid date");
       return;
     }
-    if (!To &&type!="SUBS") {
+    if (!To &&type!="SUBS"&&type!="INSTALLMENT") {
       setToDateError("Invalid date");
       return;
     }
@@ -171,6 +171,7 @@ const OfferNow = (props) => {
       params.packageData,
       user.user.id,
       data.subsData?data.subsData:undefined,
+      data.installmentData?data.installmentData:undefined,
       urls?urls[0]:undefined
     )
       .then((res) => {
@@ -352,6 +353,106 @@ const OfferNow = (props) => {
           <View
             style={{ height: 0, backgroundColor: "#F8F8F8", marginTop: 20 }}
           />
+          {type=="INSTALLMENT"&&installmentData.advancedPaymentAmount&&(
+            <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 10,
+              marginTop: 20,
+              backgroundColor: "#F8F8F8",
+              padding: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+             Weekly Installment
+            </Text>
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              {(installmentData?.totalAmount/installmentData?.installmentCount).toFixed(2)}৳
+            </Text>
+          </View>
+          )}
+          {type=="INSTALLMENT"&&installmentData.advancedPaymentAmount&&(
+            <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 10,
+              marginTop: 20,
+              backgroundColor: "#F8F8F8",
+              padding: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+             Advanced Payment
+            </Text>
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              {installmentData?.advancedPaymentAmount}৳
+            </Text>
+          </View>
+          )}
+          {type=="INSTALLMENT"&&(
+            <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 10,
+              marginTop: 20,
+              backgroundColor: "#F8F8F8",
+              padding: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+             Total Installment
+            </Text>
+            <Text
+              style={{
+                color: "black",
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+              }}
+            >
+              {installmentData?.installmentCount}{" "}
+              {installmentData.installmentType=="Weekly"?"Week":
+              installmentData.installmentType=="Monthly"?"Month":
+              "Year"}{" x "}
+              {(installmentData.totalAmount/installmentData.installmentCount).toFixed(2)}৳
+            </Text>
+          </View>
+          )}
           {gigs && !selectedPackage && (
             <>
               <View
@@ -372,7 +473,7 @@ const OfferNow = (props) => {
                     fontFamily: "Poppins-Medium",
                   }}
                 >
-                  Price
+                 {type=="INSTALLMENT"?"Total":""} Price
                 </Text>
                 <Text
                   style={{
@@ -823,12 +924,12 @@ const OfferNow = (props) => {
                 fontFamily: "Poppins-Medium",
               }}
             >
-              {type != "SUBS"
+              {type != "SUBS"&&type!="INSTALLMENT"
                 ? "Delivery Time"
                 : "Choose A Date When You Want To Start Using Service"}
             </Text>
           </View>
-          {type != "SUBS" ? (
+          {type != "SUBS"&&type!="INSTALLMENT" ? (
             <View
               style={{
                 flexDirection: "row",

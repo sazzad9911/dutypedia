@@ -375,6 +375,10 @@ const Screens = ({ navigation, route }) => {
                   navigation.navigate("SubscriptionScript",{data:doc})
                   return
                 }
+                if(doc.type=="INSTALLMENT"&&doc.status!="WAITING_FOR_ACCEPT"){
+                  navigation.navigate("InstallmentScript",{data:doc})
+                  return
+                }
                 navigation.navigate("OrderDetails", {
                   data: doc,
                 });
