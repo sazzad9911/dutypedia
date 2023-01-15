@@ -23,6 +23,7 @@ import IconButton from "../../components/IconButton";
 import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
 import uuid from "react-native-uuid";
+import ActivityLoader from "../../components/ActivityLoader";
 const { width, height } = Dimensions.get("window");
 
 export default function SubscriptionScript({ navigation, route }) {
@@ -39,13 +40,16 @@ export default function SubscriptionScript({ navigation, route }) {
   const [orders, setOrder] = useState();
   const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loader,setLoader]=useState(false)
   //console.log(providerInfo)
   //console.warn(subsOrders)
   useEffect(() => {
     setSubsOrders();
+    setLoader(true)
     getSubsOrderById(user.token, data.id)
       .then((res) => {
         //console.log(res.data)
+        setLoader(false)
         setSubsOrders(res.data.order.subsOrders);
         setActiveIndex(res.data.order.subsOrders.length - 1);
         let paid = 0;
@@ -57,6 +61,7 @@ export default function SubscriptionScript({ navigation, route }) {
         setTotalPaid(paid);
       })
       .catch((err) => {
+        setLoader(false)
         console.warn(err.response.data.message);
       });
   }, [isFocused]);
@@ -68,6 +73,7 @@ export default function SubscriptionScript({ navigation, route }) {
     ) {
       let being = subsData.totalDuration - subsOrders.length;
       let arr = [];
+      //console.log(subsOrders[subsOrders.length-1].status)
       for (let i = 0; i < being; i++) {
         setSubsOrders((val) => [
           ...val,
@@ -99,7 +105,7 @@ export default function SubscriptionScript({ navigation, route }) {
             paid: false,
             received: false,
             refundRequestByUser: false,
-            status: "UPCOMING",
+            status:subsOrders[subsOrders.length-1].status=="CANCELLED"?"CANCELLED":"UPCOMING",
             updatedAt: new Date(),
           },
         ]);
@@ -138,7 +144,7 @@ export default function SubscriptionScript({ navigation, route }) {
           paid: false,
           received: false,
           refundRequestByUser: false,
-          status: "UPCOMING",
+          status:subsOrders[subsOrders.length-1].status?"CANCELLED":"UPCOMING",
           updatedAt: new Date(),
         });
       }
@@ -161,6 +167,8 @@ export default function SubscriptionScript({ navigation, route }) {
       setOrder(arr);
     }
   }, [page, subsOrders]);
+
+  
 
   return (
     <View
@@ -330,6 +338,7 @@ export default function SubscriptionScript({ navigation, route }) {
               styles.text,
               {
                 flex: 1,
+                
               },
             ]}
           >
@@ -340,7 +349,8 @@ export default function SubscriptionScript({ navigation, route }) {
               styles.text,
               {
                 flex: 3,
-                marginLeft: 10,
+                marginLeft: 0,
+               
               },
             ]}
           >
@@ -350,8 +360,9 @@ export default function SubscriptionScript({ navigation, route }) {
             style={[
               styles.text,
               {
-                flex: 2.5,
-                marginLeft: 20,
+                flex: 2,
+                marginLeft: 0,
+                
               },
             ]}
           >
@@ -393,6 +404,9 @@ export default function SubscriptionScript({ navigation, route }) {
           >
             No Order Found
           </Text>
+        )}
+        {loader&&(
+          <ActivityLoader/>
         )}
         <View
           style={{
@@ -473,9 +487,12 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
           <View
             style={{
               flex: 1,
+              
             }}
           >
-            <Text style={styles.smallText}>
+            <Text style={[styles.smallText,{
+              
+            }]}>
               {(index + 1) * page > 8
                 ? `${(index + 1) * page}`
                 : `0${(index + 1) * page}`}
@@ -485,10 +502,10 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
           <View
             style={{
               flex: 3,
-              marginLeft: 10,
+              
             }}
           >
-            <Text style={styles.smallText}>
+            <Text style={[styles.smallText]}>
               {serverTimeToLocalDate(data.dateFrom)} To
             </Text>
             <Text
@@ -514,8 +531,9 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
 
           <View
             style={{
-              flex: 2.5,
-              marginLeft: 20,
+              flex: 2,
+              marginLeft: 0,
+              
             }}
           >
             <Text style={[styles.smallText]}>
@@ -563,13 +581,13 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
             style={{
               fontSize: 16,
               borderWidth: 0,
-
               color: "#6366F1",
               paddingHorizontal: 0,
               marginHorizontal: 0,
-              flex: 2.5,
               marginLeft: 20,
               backgroundColor: "transparent",
+              flex:2,
+              marginLeft:0
             }}
             Icon={() => <SvgXml xml={Icon} height="13" width={"13"} />}
             title={"View Recept"}

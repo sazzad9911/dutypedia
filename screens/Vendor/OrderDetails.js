@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Platform,
   Linking,
+  Pressable
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -103,6 +104,10 @@ const OrderDetails = ({ navigation, route }) => {
       fontSize: width < 350 ? 13 : 14,
       fontFamily: "Poppins-Medium",
       color: textColor,
+    },
+    newText: {
+      fontSize: 16,
+      color: "#666666",
     },
   });
   const [ListData, setListData] = React.useState([]);
@@ -797,60 +802,99 @@ const OrderDetails = ({ navigation, route }) => {
         {type == "SUBS" && (
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
               borderBottomWidth: 1,
               borderBottomColor: "#C0FFD7",
               paddingVertical: 20,
-              marginHorizontal: 20,
-              marginTop: 20,
+              marginVertical: 15,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
-              {data ? data.subsData.subscriptionType : ""}{" "}
-              {data ? data.subsData.amount + "৳" : "Pice is empty"}
-            </Text>
-            {data.subsData.otherChargeName ? (
-              <>
+            <Pressable
+              style={{
+                alignItems: "flex-end",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent:"flex-end",
+                }}
+              >
                 <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#666666",
-                    marginVertical: 5,
-                  }}
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20}]}
                 >
-                  {data.subsData.otherChargeName}{" "}
-                  {data.subsData.otherChargeAmount}৳
+                  {data ? data.subsData.subscriptionType : ""}
                 </Text>
-                <View
-                  style={{
-                    width: "60%",
-                    height: 1,
-                    backgroundColor: "#F1EFEF",
-                    marginVertical: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    width: "40%",
-                    justifyContent: "space-between",
-                    flexDirection: "row",
-                  }}
+                
+                <Text
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20,width:80,textAlign:"right" }]}
                 >
-                  <Text style={styles.newText}>Total</Text>
-                  <Text style={styles.newText}>=</Text>
-                  <Text style={styles.newText}>
-                    {data.subsData.amount +
-                      parseInt(
-                        data.subsData.otherChargeAmount
-                          ? data.subsData.otherChargeAmount
-                          : 0
-                      )}
-                    ৳
-                  </Text>
-                </View>
-              </>
-            ) : null}
+                  {data ? data.subsData.amount + "৳" : "Pice is empty"}
+                </Text>
+              </View>
+              {data.subsData.otherChargeName ? (
+                <>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: "#666666",
+                        marginVertical: 5,
+                      }}
+                    >
+                      {data.subsData.otherChargeName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: "#666666",
+                        marginVertical: 5,
+                        textAlign:"right",
+                        width:80
+                      }}
+                    >
+                      {data.subsData.otherChargeAmount}৳
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      width: 150,
+                      height: 1,
+                      backgroundColor: "#F1EFEF",
+                      marginVertical: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Text style={styles.newText}>Total</Text>
+                    
+                    <Text style={[styles.newText,{
+                      width:80,
+                      textAlign:"right"
+                    }]}>
+                      {data.subsData.amount +
+                        parseInt(
+                          data.subsData.otherChargeAmount
+                            ? data.subsData.otherChargeAmount
+                            : 0
+                        )}
+                      ৳
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      height: 10,
+                    }}
+                  />
+                </>
+              ) : null}
+            </Pressable>
           </View>
         )}
         {type == "SUBS" && (
