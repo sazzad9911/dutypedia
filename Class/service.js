@@ -574,8 +574,6 @@ export const getMemberId=async(token,serviceId,userId)=>{
   });
   return res
 }
-
-
 export const deliverySubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/delivered-subs`,
@@ -672,6 +670,87 @@ export const getSubsOrderById = async (token, orderId) => {
   //console.log(token)
   const res = await axios.get(
     `${url}/server/orders/get-by-id/${orderId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const userCancelInstallment=async(token,orderId)=>{
+  const res = await axios.post(
+    `${url}/server/orders/user/cancel-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+}
+export const vendorCancelInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/vendor/cancel-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const makePaymentInstallment = async (token, orderId,installmentType,dateFrom,dateTo) => {
+  const res = await axios.post(
+    `${url}/server/orders/make-payment-installment`,
+    {
+      orderId: orderId,
+      installmentType:installmentType,
+      dateFrom:dateFrom,
+      dateTo:dateTo
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const makeAdvancedPaymentInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/make-advanced-payment-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const refoundInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/refunded-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  
+  return res;
+};
+export const rejectRefoundInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/reject-refund-installment`,
+    {
+      orderId: orderId,
+    },
     {
       headers: { Authorization: `Bearer ${token}` },
     }

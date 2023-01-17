@@ -43,6 +43,7 @@ export default function InstallmentScript({ navigation, route }) {
   const [page, setPage] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loader, setLoader] = useState(false);
+  const [paidAmount,setPaidAmount]=useState(0)
   //console.log(data.createdAt)
   //console.log(providerInfo)
   //console.warn(installmentData)
@@ -56,12 +57,14 @@ export default function InstallmentScript({ navigation, route }) {
         setSubsOrders(res.data.order.installmentOrders);
         setActiveIndex(res.data.order.installmentOrders.length - 1);
         let paid = 0;
+        let total=0;
         res.data.order.installmentOrders.map((doc, i) => {
           if (doc.paid) {
             paid = paid + 1;
+            total=total+(installmentData.totalAmount/installmentData.installmentCount)
           }
         });
-       
+        setPaidAmount(total.toFixed(1))
         setTotalPaid(paid);
       })
       .catch((err) => {
@@ -70,10 +73,7 @@ export default function InstallmentScript({ navigation, route }) {
       });
   }, [isFocused]);
   useEffect(() => {
-    if (
-      subsOrders &&
-      subsOrders.length < installmentData.installmentCount
-    ) {
+    if (subsOrders && subsOrders.length < installmentData.installmentCount) {
       let being = installmentData.installmentCount - subsOrders.length;
       let arr = [];
       //console.log(subsOrders[subsOrders.length-1].status)
@@ -108,19 +108,21 @@ export default function InstallmentScript({ navigation, route }) {
             paid: false,
             received: false,
             refundRequestByUser: false,
-            status:subsOrders[subsOrders.length-1].status=="CANCELLED"?"CANCELLED":"UPCOMING",
+            status:
+              subsOrders[subsOrders.length - 1].status == "CANCELLED"
+                ? "CANCELLED"
+                : "UPCOMING",
             updatedAt: new Date(),
           },
         ]);
       }
-    } 
-  }, [subsOrders && subsOrders.length, Counter]);
-  useEffect(()=>{
-    if(subsOrders){
-      setOrder(subsOrders)
     }
-  },[subsOrders])
-
+  }, [subsOrders && subsOrders.length, Counter]);
+  useEffect(() => {
+    if (subsOrders) {
+      setOrder(subsOrders);
+    }
+  }, [subsOrders]);
 
   return (
     <View
@@ -128,7 +130,92 @@ export default function InstallmentScript({ navigation, route }) {
         flex: 1,
       }}
     >
-      <SubHeader navigation={navigation} title="Subscription" />
+      <SafeAreaView>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderBottomColor: "#E4E4E4",
+            borderBottomWidth: 1,
+            justifyContent: "center",
+          }}
+        >
+          <SvgXml onPress={()=>{
+            navigation.goBack()
+          }}
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 20,
+              zIndex: 100,
+            }}
+            xml={backIcon}
+            width={"20"}
+            height={"20"}
+          />
+          <View
+            style={{
+              alignItems: "center",
+              borderBottomWidth: 2,
+              paddingVertical: 8.5,
+              position: "absolute",
+              borderBottomColor:"#4ADE80"
+            }}
+          >
+            <Text
+              style={{
+                color: "#4ADE80",
+                fontSize: 16,
+              }}
+            >
+              Installment
+            </Text>
+          </View>
+          <View
+            style={{
+              alignItems: "flex-end",
+              width: "100%",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems:"center"
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "600",
+                  marginRight:10
+                }}
+              >
+                Status
+              </Text>
+              {data.status == "CANCELED" ? (
+                <Text
+                  style={{
+                    color: "#DA1E37",
+                    fontSize:13
+                  }}
+                >
+                  Inactive
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: "#4CAF50",
+                    fontSize:13
+                  }}
+                >
+                  Active
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -178,13 +265,7 @@ export default function InstallmentScript({ navigation, route }) {
               </Text>
             </View>
           </View>
-          <View
-            style={{
-              width: 1,
-              backgroundColor: "#C0FFD7",
-              height: 30,
-            }}
-          />
+
           <View
             style={{
               justifyContent: "center",
@@ -193,42 +274,47 @@ export default function InstallmentScript({ navigation, route }) {
               marginLeft: "10%",
             }}
           >
-             <Text style={{
-              fontSize:12,
-              textAlign:"center",
-              width:"100%",
-              marginRight:2,
-              fontWeight:"200",
-              marginVertical:0
-             }}>Date: {serverTimeToLocalDate(data.createdAt)}</Text>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: "center",
+                width: "100%",
+                marginRight: 2,
+                fontWeight: "200",
+                marginVertical: 0,
+              }}
+            >
+              Date: {serverTimeToLocalDate(data.createdAt)}
+            </Text>
             <View
               style={{
                 width: width / 3,
-                height: 50,
+                height: 40,
                 overflow: "hidden",
-                marginTop:0,
-                
+                marginTop: 0,
               }}
             >
-             
               <Barcode
-                height="50"
+                height="40"
                 width="150"
                 value={data ? data.id : "dsfff"}
                 options={{ format: "CODE128", background: "white" }}
                 rotation={0}
               />
             </View>
-            <Text style={{
-              fontSize:12,
-              textAlign:"center",
-              width:"100%",
-              marginRight:2,
-              fontWeight:"200",
-              marginVertical:0
-             }}>{data.id}</Text>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: "center",
+                width: "100%",
+                marginRight: 2,
+                fontWeight: "200",
+                marginVertical: 0,
+              }}
+            >
+              {data.id}
+            </Text>
           </View>
-          
         </View>
         <View
           style={{
@@ -254,7 +340,7 @@ export default function InstallmentScript({ navigation, route }) {
             </Text>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 14,
                 marginTop: 5,
                 marginBottom: 5,
               }}
@@ -273,7 +359,7 @@ export default function InstallmentScript({ navigation, route }) {
             style={{
               justifyContent: "center",
               alignItems: "flex-end",
-              flex: 1,
+              flex: 1.3,
               marginLeft: "10%",
             }}
           >
@@ -287,27 +373,20 @@ export default function InstallmentScript({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 14,
+                  fontWeight:"600"
                 }}
               >
-                Status{" "}
+                Total Paid{" "}
               </Text>
-              {data.status == "CANCELED" ? (
+             
                 <Text
                   style={{
-                    color: "#DA1E37",
+                    color: "#8F8F8F",
                   }}
                 >
-                  Inactive
+                 {totalPaid}
                 </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: "#4CAF50",
-                  }}
-                >
-                  Active
-                </Text>
-              )}
+             
             </View>
             <View
               style={{
@@ -321,16 +400,19 @@ export default function InstallmentScript({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 14,
+                  fontWeight:"600"
                 }}
               >
-                Total Paid{" "}
+                Paid Amount{" "}
               </Text>
               <Text
                 style={{
                   color: "#8F8F8F",
                 }}
               >
-                {totalPaid}
+                {installmentData.advancedPaymentAmount&&
+                totalPaid>0?(amountConverter(parseInt(paidAmount)+parseInt(installmentData.advancedPaymentAmount))):
+                paidAmount}
               </Text>
             </View>
           </View>
@@ -406,6 +488,7 @@ export default function InstallmentScript({ navigation, route }) {
               key={i}
               index={i}
               page={page}
+              installmentData={installmentData}
             />
           ))}
         {subsOrders && subsOrders.length == 0 && (
@@ -418,7 +501,7 @@ export default function InstallmentScript({ navigation, route }) {
             No Order Found
           </Text>
         )}
-        
+
         {loader && <ActivityLoader />}
         <View
           style={{
@@ -472,9 +555,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index, page, activeIndex }) => {
+const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
   return (
-    <Pressable disabled={data.orderId?false:true}
+    <Pressable
+      disabled={data.orderId ? false : true}
       onPress={() => {
         if (onPress) {
           onPress();
@@ -491,8 +575,9 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
           borderBottomColor: "#C0FFD7",
           borderBottomWidth: 1,
           borderTopColor: "#C0FFD7",
-          borderTopWidth:index!=0? 0:1,
-          opacity:data.orderId?1:.3
+          borderTopWidth: index != 0 ? 0 : 1,
+          opacity: data.orderId ? 1 : 0.3,
+          backgroundColor: activeIndex == index ? "#F2F2F6" : "white",
         }}
       >
         <Text
@@ -500,7 +585,11 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
             fontSize: 16,
           }}
         >
-        {index==0?"Advanced":`${index}${shift(index)} Month`}
+          {index == 0 && installmentData.advancedPayment
+            ? "Advanced"
+            : !installmentData.advancedPayment
+            ? `${index + 1}${shift(index + 1)} Month`
+            : `${index}${shift(index)} Month`}
         </Text>
         <View
           style={{
@@ -527,9 +616,10 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
           style={{
             textAlign: "right",
             fontSize: 16,
+            color: data.paid ? "black" : "red",
           }}
         >
-          {data.paid?"Paid":"Due"}
+          {data.paid ? "Paid" : "Due"}
         </Text>
       </View>
     </Pressable>
@@ -561,14 +651,27 @@ const exporters = (key) => {
       return "Upcoming";
   }
 };
-const shift=(index)=>{
-  if(index==1){
-    return 'st'
-  }else if(index==2){
-    return 'nd'
-  }else if(index==3||index==4){
-    return 'rd'
-  }else if(index>=5){
-    return 'th'
+const shift = (index) => {
+  if (index == 1) {
+    return "st";
+  } else if (index == 2) {
+    return "nd";
+  } else if (index == 3 || index == 4) {
+    return "rd";
+  } else if (index >= 5) {
+    return "th";
   }
+};
+const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="10.498" height="18.144" viewBox="0 0 10.498 18.144">
+<path id="arrow-ios-back-outline" d="M20.745,25.642a1.6,1.6,0,0,1-1.17-.479L12.33,17.387a1.163,1.163,0,0,1,0-1.646l7.5-7.775A1.669,1.669,0,0,1,21.945,7.8a1.18,1.18,0,0,1,.195,1.827l-6.7,6.946,6.48,6.946a1.157,1.157,0,0,1,.2,1.386A1.536,1.536,0,0,1,20.745,25.642Z" transform="translate(-11.989 -7.498)" fill="#666"/>
+</svg>
+`;
+const amountConverter=(number)=>{
+  let point=0;
+  if(number>1000){
+    point=number/1000;
+    point=point.toFixed(1)
+    return `${point}k`
+  }
+  return number
 }

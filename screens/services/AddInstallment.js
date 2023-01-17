@@ -339,6 +339,7 @@ export default function AddInstallment({ navigation, route }) {
                       totalAmount:Amount,
                       installmentCount:Duration,
                       advancedPaymentAmount:OtherName,
+                      advancedPayment:true
                     },
                   });
                 }}

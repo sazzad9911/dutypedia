@@ -26,6 +26,8 @@ import {
   getSubsOrderById,
   userCancelSubs,
   receiveSubs,
+  makePaymentInstallment,
+  makeAdvancedPaymentInstallment,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -113,6 +115,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
   const index = route.params && route.params.index ? route.params.index : 0;
   const [subsOrder, setSubsOrder] = useState(sOrder);
+  const [installmentOrder, setInstallmentOrder] = useState(sOrder);
   const installmentData = data.installmentData ? data.installmentData : null;
 
   React.useEffect(() => {
@@ -200,6 +203,42 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       });
       setData(res.data.order);
       setSubsOrder(res.data.order.subsOrders[index]);
+      //route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+  };
+  const loadDataInstallment = async (receiverId, order) => {
+    //setLoader(false);
+    if (index == null) {
+      setLoader(false);
+      Alert.alert("Some thing went wrong");
+      return;
+    }
+    try {
+      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
+      //const userRes = await getOrders(user.token, "user");
+      const res = await getSubsOrderById(user.token, data.id);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
+      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
+      socket.emit("updateOrder", {
+        receiverId: receiverId,
+        order: {
+          type: "vendor",
+          data: res.data.order,
+        },
+      });
+      socket.emit("updateOrder", {
+        receiverId: user.user.id,
+        order: {
+          type: "user",
+          data: res.data.order,
+        },
+      });
+      setData(res.data.order);
+      setInstallmentOrder(res.data.order.installmentOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
@@ -1060,6 +1099,47 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   : "Due"}
               </Text>
             </View>
+          ) : type == "INSTALLMENT" && installmentOrder ? (
+            <View
+              style={{
+                padding: 3,
+                backgroundColor:
+                  installmentOrder &&
+                  installmentOrder.paid &&
+                  installmentOrder.status != "REFUNDED"
+                    ? "green"
+                    : installmentOrder &&
+                      installmentOrder.paid &&
+                      installmentOrder.status == "REFUNDED"
+                    ? "#FA1ABA"
+                    : installmentOrder && !installmentOrder.paid
+                    ? "red"
+                    : backgroundColor,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                marginVertical: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: width < 350 ? 14 : 15,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {installmentOrder &&
+                installmentOrder.paid &&
+                installmentOrder.status != "REFUNDED"
+                  ? "Paid"
+                  : installmentOrder &&
+                    installmentOrder.paid &&
+                    installmentOrder.status == "REFUNDED"
+                  ? "Refunded"
+                  : "Due"}
+              </Text>
+            </View>
           ) : (
             <View
               style={{
@@ -1111,6 +1191,10 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           {type == "SUBS" && subsOrder ? (
             <Text style={[styles.smallText, { marginTop: 5 }]}>
               {subsOrder ? exporters(subsOrder.status) : "Unknown"}
+            </Text>
+          ):type=="INSTALLMENT"&&installmentOrder?(
+            <Text style={[styles.smallText, { marginTop: 5 }]}>
+              {installmentOrder ? exporters(installmentOrder.status) : "Unknown"}
             </Text>
           ) : (
             <Text style={[styles.smallText, { marginTop: 5 }]}>
@@ -1338,6 +1422,168 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               </Text>
             )}
             {subsOrder.refundRequestByUser && (
+              <Text
+                style={{
+                  color: backgroundColor,
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                You requested for refund
+              </Text>
+            )}
+          </>
+        ) : type == "INSTALLMENT" && installmentOrder ? (
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              {installmentOrder &&
+                (installmentOrder.status == "ACCEPTED" ||
+                  installmentOrder.status == "WAITING_FOR_PAYMENT") && (
+                  <IconButton
+                    onPress={() => {
+                      setLoader(true);
+                      //console.log(installmentData)
+                      if (index == 0&&installmentData.advancedPayment) {
+                        makeAdvancedPaymentInstallment(user.token, data.id)
+                          .then((res) => {
+                            if (res) {
+                              Toast.show("Payment success", {
+                                duration: Toast.durations.LONG,
+                              });
+                              //console.log(res.data)
+                              loadDataInstallment(
+                                res.data.receiverId,
+                                res.data.order
+                              );
+                            }
+                          })
+                          .catch((err) => {
+                            Toast.show(err.response.data.msg, {
+                              duration: Toast.durations.LONG,
+                            });
+                            setLoader(false);
+                          });
+                        return;
+                      }
+                      makePaymentInstallment(
+                        user.token,
+                        data.id,
+                        data.installmentData.installmentType,
+                        installmentOrder.dateFrom,
+                        installmentOrder.dateTo
+                      )
+                        .then((res) => {
+                          if (res) {
+                            Toast.show("Payment success", {
+                              duration: Toast.durations.LONG,
+                            });
+                            //console.log(res.data)
+                            loadDataInstallment(
+                              res.data.receiverId,
+                              res.data.order
+                            );
+                          }
+                        })
+                        .catch((err) => {
+                          Toast.show(err.response.data.msg, {
+                            duration: Toast.durations.LONG,
+                          });
+                          setLoader(false);
+                        });
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      marginRight: 0,
+                      width: 120,
+                      height: 40,
+                    }}
+                    title="Make Payment"
+                  />
+                )}
+              {installmentData &&
+                installmentData.status != "REFUNDED" &&
+                installmentOrder.status != "CANCELLED" &&
+                installmentOrder.status != "DELIVERED" &&
+                installmentOrder.status != "COMPLETED" &&
+                !installmentOrder.refundRequestByUser && (
+                  <IconButton
+                    onPress={() => {
+                      Alert.alert(
+                        "Hey!",
+                        "Are you want to cancel this order?",
+                        [
+                          {
+                            text: "Cancel",
+                            onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel",
+                          },
+                          {
+                            text: "OK",
+                            onPress: () => {
+                              setLoader(true);
+                              userCancelSubs(user.token, data.id)
+                                .then((res) => {
+                                  Toast.show("Successfully request send", {
+                                    duration: Toast.durations.LONG,
+                                  });
+                                  loadDataSubs(
+                                    res.data.receiverId,
+                                    res.data.order
+                                  );
+                                })
+                                .catch((err) => {
+                                  setLoader(false);
+                                  console.warn(err.response.data);
+                                });
+                            },
+                          },
+                        ]
+                      );
+                    }}
+                    style={{
+                      borderColor: backgroundColor,
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 20,
+                      borderWidth: 0,
+                      marginHorizontal: 20,
+                      borderWidth: 1,
+                      color: textColor,
+                      width: 130,
+                      height: 40,
+                    }}
+                    title={
+                      installmentData && installmentData.paid
+                        ? "Cancel & Refund"
+                        : "Cancel Order"
+                    }
+                  />
+                )}
+            </View>
+
+            {installmentOrder && installmentOrder.status == "COMPLETED" && (
+              <Text
+                style={{
+                  color: "green",
+                  fontSize: width < 350 ? 14 : 16,
+                  fontFamily: "Poppins-Medium",
+                  textAlign: "center",
+                  marginVertical: 20,
+                }}
+              >
+                Order Completed
+              </Text>
+            )}
+            {installmentOrder.refundRequestByUser && (
               <Text
                 style={{
                   color: backgroundColor,
