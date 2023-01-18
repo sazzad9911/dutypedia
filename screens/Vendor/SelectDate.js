@@ -143,7 +143,7 @@ export default function SelectDate({onChange,navigation,route}) {
         navigation.navigate("AcceptOrder", {
           facilities: data.facilites,
           id: data.id,
-          data: data,
+          data: data, 
           vendor:true,
           from:dateConverter(OpeningTime),
           to:dateConverter(ClosingTime),

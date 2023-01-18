@@ -189,10 +189,10 @@ const Screens = ({ navigation, route }) => {
         flexDirection:"row",
         flexWrap:"wrap",
         paddingHorizontal:10
-      }}>
+      }}> 
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{
-            if(doc.type=="ONETIME"){
+            if(doc.type=="ONETIME"||doc.type=="SUBS"||doc.type=="INSTALLMENT"){
               navigation.navigate("SelectDate",{data:doc,userId:userId})
             }else if(doc.type=="PACKAGE"){
               navigation.navigate("PackageList",{data:doc,userId:userId})

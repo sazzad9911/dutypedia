@@ -16,6 +16,7 @@ const Input = ({
   onFocus,
   innerRef,
   level,
+  rightIcon
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -104,6 +105,7 @@ const Input = ({
          {level}
         </Text>
       )}
+      {rightIcon}
     </Animated.View>
   );
 };

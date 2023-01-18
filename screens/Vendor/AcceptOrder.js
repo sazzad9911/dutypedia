@@ -182,10 +182,11 @@ const AcceptOrder = (props) => {
     }
     setLoader(true);
     if (newVendor) {
+      console.log(data.installmentData)
       createVendorOrder(
         user.token,
         userId,
-        data.facilites,
+        data.facilites, 
         data.services,
         data.service.id,
         data.type,
@@ -204,7 +205,9 @@ const AcceptOrder = (props) => {
           deliverBy: Deliver,
           serviceType: Service,
         },
-        selectedPackage
+        selectedPackage?selectedPackage:undefined,
+        data.subsData?data.subsData:undefined,
+        data.installmentData?data.installmentData:undefined
       )
         .then((res) => {
           //getLoadData(res.data.receiverId,res.data.order)

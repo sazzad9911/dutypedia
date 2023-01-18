@@ -157,7 +157,7 @@ export const createOtherService = async (
   listData,
   images,
   serviceId,
-  type,
+  type
 ) => {
   const data = {
     title: businessForm.serviceTitle,
@@ -177,7 +177,7 @@ export const createOtherService = async (
     images: images,
     serviceId: serviceId,
     type: type,
-    packageData:businessForm.packageData
+    packageData: businessForm.packageData,
   };
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },
@@ -198,7 +198,13 @@ export const createOtherServiceIndividual = async (
 ) => {
   const data = {
     title: businessForm.serviceTitle,
-    price: parseInt(subsData?subsData.amount:installmentData?installmentData.totalAmount:price),
+    price: parseInt(
+      subsData
+        ? subsData.amount
+        : installmentData
+        ? installmentData.totalAmount
+        : price
+    ),
     facilites: {
       title: "Choose Your Facilities",
       selectedOptions: Array.isArray(businessForm.facilities)
@@ -214,11 +220,11 @@ export const createOtherServiceIndividual = async (
     images: images,
     serviceId: serviceId,
     type: type,
-    packageData:packageData,
-    subsData:subsData,
-    installmentData:installmentData
+    packageData: packageData,
+    subsData: subsData,
+    installmentData: installmentData,
   };
-  
+
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -328,7 +334,7 @@ export const createOrder = async (
   installmentData,
   attachment
 ) => {
-  const data={
+  const data = {
     serviceId: serviceId,
     type: type,
     amount: amount,
@@ -339,19 +345,17 @@ export const createOrder = async (
     orderedBy: orderedBy,
     selectedServices: selectedServices,
     facilites: facilites,
-    selectedPackage:selectedPackage,
-    packageData:packageData,
-    subsData:subsData,
-    installmentData:installmentData,
-    attachment:attachment
-  }
+    selectedPackage: selectedPackage,
+    packageData: packageData,
+    subsData: subsData,
+    installmentData: installmentData,
+    attachment: attachment,
+  };
   //console.log(data)
-  const res = await axios.post(
-    `${url}/server/orders/create`,
-    data,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  
+  const res = await axios.post(`${url}/server/orders/create`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   //console.log(res)
   return res;
 };
@@ -362,7 +366,7 @@ export const getOrders = async (token, type, id) => {
       {
         headers: { Authorization: `Bearer ${token}` },
       }
-    ); 
+    );
     return res;
   } else {
     const res = await axios.get(`${url}/server/orders/${type}/get`, {
@@ -380,7 +384,7 @@ export const cancelOrder = async (token, orderId, status, type) => {
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  
+
   return res;
 };
 export const acceptOrder = async (token, data) => {
@@ -388,7 +392,7 @@ export const acceptOrder = async (token, data) => {
   const res = await axios.post(`${url}/server/orders/accept`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  
+
   return res;
 };
 export const getLastOrder = async (token, serviceId) => {
@@ -410,23 +414,29 @@ export const makePayment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
-export const makePaymentSubscription = async (token, orderId,subscriptionType,dateFrom,dateTo) => {
+export const makePaymentSubscription = async (
+  token,
+  orderId,
+  subscriptionType,
+  dateFrom,
+  dateTo
+) => {
   const res = await axios.post(
     `${url}/server/orders/make-payment-subs`,
     {
       orderId: orderId,
-      subscriptionType:subscriptionType,
-      dateFrom:dateFrom,
-      dateTo:dateTo
+      subscriptionType: subscriptionType,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const requestForTime = async (token, orderId, newTime) => {
@@ -440,7 +450,7 @@ export const requestForTime = async (token, orderId, newTime) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const acceptTimeRequest = async (token, orderId, newTime, action) => {
@@ -453,7 +463,7 @@ export const acceptTimeRequest = async (token, orderId, newTime, action) => {
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
-  
+
   return res;
 };
 export const completeOrderDelivery = async (token, orderId) => {
@@ -483,7 +493,7 @@ export const orderRefound = async (token, orderId, action) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    
+
     return res;
   } else {
     const res = await axios.post(
@@ -495,7 +505,7 @@ export const orderRefound = async (token, orderId, action) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    
+
     return res;
   }
 };
@@ -509,7 +519,7 @@ export const completeOrder = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const createVendorOrder = async (
@@ -526,9 +536,11 @@ export const createVendorOrder = async (
   deliveryDateTo,
   orderedBy,
   agreement,
-  selectedPackage
+  selectedPackage,
+  subsData,
+  installmentData
 ) => {
-  const data= {
+  const data = {
     userId: userId,
     facilites: facilites,
     selectedServices: selectedServices,
@@ -542,7 +554,9 @@ export const createVendorOrder = async (
     orderedBy: orderedBy,
     agreement: agreement,
     selectedPackage: selectedPackage,
-  }
+    subsData: subsData,
+    installmentData: installmentData,
+  };
   //console.log(data)
   const res = await axios.post(
     `${url}/server/orders/create-by-vendor`,
@@ -560,20 +574,25 @@ export const createVendorOrder = async (
       orderedBy: orderedBy,
       agreement: agreement,
       selectedPackage: selectedPackage,
+      subsData: subsData,
+      installmentData: installmentData,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
-  return res
+
+  return res;
 };
-export const getMemberId=async(token,serviceId,userId)=>{
-  const res=axios.get(`${url}/server/members/online/get-by-userid?serviceId=${serviceId}&&userId=${userId}`,{
-    headers:{Authorization:`Bearer ${token}`}
-  });
-  return res
-}
+export const getMemberId = async (token, serviceId, userId) => {
+  const res = axios.get(
+    `${url}/server/members/online/get-by-userid?serviceId=${serviceId}&&userId=${userId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
 export const deliverySubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/delivered-subs`,
@@ -584,7 +603,7 @@ export const deliverySubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const receiveSubs = async (token, subsOrderId) => {
@@ -597,7 +616,7 @@ export const receiveSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const refoundSubs = async (token, subsOrderId) => {
@@ -610,7 +629,7 @@ export const refoundSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const rejectRefoundSubs = async (token, subsOrderId) => {
@@ -623,7 +642,7 @@ export const rejectRefoundSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const acceptRefoundSubs = async (token, subsOrderId) => {
@@ -636,7 +655,7 @@ export const acceptRefoundSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const vendorCancelSubs = async (token, subsOrderId) => {
@@ -649,7 +668,7 @@ export const vendorCancelSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const userCancelSubs = async (token, subsOrderId) => {
@@ -662,22 +681,19 @@ export const userCancelSubs = async (token, subsOrderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const getSubsOrderById = async (token, orderId) => {
   //console.log(`${url}/server/orders/get-by-id?orderId=${orderId}`)
   //console.log(token)
-  const res = await axios.get(
-    `${url}/server/orders/get-by-id/${orderId}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-  
+  const res = await axios.get(`${url}/server/orders/get-by-id/${orderId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   return res;
 };
-export const userCancelInstallment=async(token,orderId)=>{
+export const userCancelInstallment = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/user/cancel-installment`,
     {
@@ -687,9 +703,9 @@ export const userCancelInstallment=async(token,orderId)=>{
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
-}
+};
 export const vendorCancelInstallment = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/vendor/cancel-installment`,
@@ -700,23 +716,29 @@ export const vendorCancelInstallment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
-export const makePaymentInstallment = async (token, orderId,installmentType,dateFrom,dateTo) => {
+export const makePaymentInstallment = async (
+  token,
+  orderId,
+  installmentType,
+  dateFrom,
+  dateTo
+) => {
   const res = await axios.post(
     `${url}/server/orders/make-payment-installment`,
     {
       orderId: orderId,
-      installmentType:installmentType,
-      dateFrom:dateFrom,
-      dateTo:dateTo
+      installmentType: installmentType,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const makeAdvancedPaymentInstallment = async (token, orderId) => {
@@ -729,7 +751,7 @@ export const makeAdvancedPaymentInstallment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const refoundInstallment = async (token, orderId) => {
@@ -742,7 +764,7 @@ export const refoundInstallment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
 export const rejectRefoundInstallment = async (token, orderId) => {
@@ -755,6 +777,6 @@ export const rejectRefoundInstallment = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  
+
   return res;
 };
