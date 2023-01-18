@@ -126,3 +126,12 @@ export const getUserInfo=async(token,userId)=>{
     })
     return res
 }
+export const cancelOnlineUser=async(token,userId,serviceId)=>{
+    const res =await axios.post(`${url}/server/members/online/undo`,{
+         userId:userId,
+         serviceId:serviceId
+     },{
+         headers: {Authorization: `Bearer ${token}`}
+     })
+     return res
+ }

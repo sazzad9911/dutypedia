@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -10,6 +10,7 @@ import {
   RefreshControl,
   Dimensions,
   Pressable,
+  Alert,
 } from "react-native";
 import { Text } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -45,6 +46,7 @@ import {
   createOnlineUser,
   getOnlineUser,
   deleteOnlineMember,
+  cancelOnlineUser,
 } from "../../Class/member";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
@@ -407,7 +409,23 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const childRef = useRef();
   const [selectUser, setSelectUser] = useState();
+  const vendorOrders=useSelector(state=>state.vendorOrders)
+  const [totalOrder,setTotalOrder]=useState(0)
 
+  
+
+  useEffect(()=>{
+    if(vendorOrders){
+      let number=0;
+      vendorOrders.map((d,i)=>{    
+        if(d.userId==doc.userId){
+          number=number+1;
+        }
+      })
+      //console.warn(number)
+      setTotalOrder(number)
+    }
+  },[doc])
   return (
     <TouchableOpacity
       disabled={true}
@@ -416,7 +434,6 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
         alignItems: "center",
         marginVertical: 5,
         marginHorizontal: 20,
-
         borderRadius: 5,
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -471,14 +488,11 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
             numberOfLines={1}
             style={{
               marginLeft: 10,
-              fontSize: 16,
+              fontSize: 14,
               fontFamily: "Poppins-Medium",
             }}
           >
-            @
-            {doc.user.firstName
-              ? doc.user.firstName.toLowerCase()
-              : "Easin Arafat"}
+            {totalOrder>0?`${totalOrder} Orders`:"No Order Yet"}
           </Text>
         </View>
       </View>
@@ -1462,6 +1476,8 @@ export const AddOnlineUser = () => {
 };
 const CartView = ({ doc, onChange }) => {
   const [Send, setSend] = React.useState(false);
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
 
   return (
     <View
@@ -1471,7 +1487,7 @@ const CartView = ({ doc, onChange }) => {
         marginVertical: 5,
         marginHorizontal: 20,
         alignItems: "center",
-        borderBottomWidth: 1,
+        borderBottomWidth: 0,
         borderBottomColor: "#e5e5e5",
         paddingBottom: 5,
       }}
@@ -1508,8 +1524,7 @@ const CartView = ({ doc, onChange }) => {
         </View>
         <View
           style={{
-            marginLeft: 5,
-            width: width - 230,
+            marginLeft: 0,
           }}
         >
           <Text
@@ -1537,6 +1552,13 @@ const CartView = ({ doc, onChange }) => {
       <IconButton
         LeftIcon={() => <SvgXml xml={contact} width="20" height={"20"} />}
         onPress={() => {
+          if(Send){
+            cancelOnlineUser(user.token,doc.id,vendor.service.id).then(res=>{
+
+            }).catch(err=>{
+              console.warn(err.response.data.message)
+            })
+          }
           setSend((val) => !val);
           if (onChange) {
             onChange(doc.id);
@@ -1549,6 +1571,7 @@ const CartView = ({ doc, onChange }) => {
           height: 40,
           fontSize: 14,
           borderColor: "#C0FFD7",
+          width:140
         }}
         title={Send ? "Undo" : "Send Request"}
       />
