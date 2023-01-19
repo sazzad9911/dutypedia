@@ -409,23 +409,21 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const childRef = useRef();
   const [selectUser, setSelectUser] = useState();
-  const vendorOrders=useSelector(state=>state.vendorOrders)
-  const [totalOrder,setTotalOrder]=useState(0)
+  const vendorOrders = useSelector((state) => state.vendorOrders);
+  const [totalOrder, setTotalOrder] = useState(0);
 
-  
-
-  useEffect(()=>{
-    if(vendorOrders){
-      let number=0;
-      vendorOrders.map((d,i)=>{    
-        if(d.userId==doc.userId){
-          number=number+1;
+  useEffect(() => {
+    if (vendorOrders) {
+      let number = 0;
+      vendorOrders.map((d, i) => {
+        if (d.userId == doc.userId) {
+          number = number + 1;
         }
-      })
+      });
       //console.warn(number)
-      setTotalOrder(number)
+      setTotalOrder(number);
     }
-  },[doc])
+  }, [doc]);
   return (
     <TouchableOpacity
       disabled={true}
@@ -492,7 +490,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
               fontFamily: "Poppins-Medium",
             }}
           >
-            {totalOrder>0?`${totalOrder} Orders`:"No Order Yet"}
+            {totalOrder > 0 ? `${totalOrder} Orders` : "No Order Yet"}
           </Text>
         </View>
       </View>
@@ -696,117 +694,106 @@ const OfflineUser = (props) => {
     );
   }
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Input
-        onChange={(val) => {
-          if (!val) {
-            setData(AllData);
-            return;
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Input
+          rightIcon={
+            <SvgXml
+              style={{
+                position: "absolute",
+                right: 35,
+                top: 31,
+              }}
+              xml={searchIcon}
+              width="20"
+              height={"20"}
+            />
           }
-          setData(search(val));
-        }}
-        style={{
-          borderWidth: 1,
-          marginVertical: 10,
-          marginTop: 20,
-        }}
-        placeholder="search"
-      />
-      <TouchableOpacity
+          onChange={(val) => {
+            if (!val) {
+              setData(AllData);
+              return;
+            }
+            setData(search(val));
+          }}
+          style={{
+            borderWidth: 1,
+            marginVertical: 10,
+            marginTop: 20,
+            borderRadius: 20,
+            height: 40,
+          }}
+          placeholder="Search By User"
+        />
+
+        <View>
+          {Loader ? (
+            <Text style={{ textAlign: "center" }}>Loading...</Text>
+          ) : (
+            Data.map((doc, i) => (
+              <OfflineCart
+                onPress={() => {
+                  navigation.navigate("OfflineProfile", { user: doc });
+                }}
+                {...props}
+                i={i}
+                doc={doc}
+                key={i}
+                reload={reload}
+              />
+            ))
+          )}
+        </View>
+      </ScrollView>
+      <Pressable
         onPress={() => {
-          // navigation.navigate("AddNotice", {
-          //   onChange: onChange,
-          //   value: null,
-          // });
           navigation.navigate("AddOfflineUser", {
             reload: reload,
             id: null,
           });
         }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            marginHorizontal: 20,
-            marginVertical: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            Add Member
-          </Text>
-          <View style={{ width: 10 }} />
-          <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
-        </View>
-      </TouchableOpacity>
-      <View
         style={{
-          flexDirection: "row",
-          marginHorizontal: 20,
+          width: 60,
+          height: 60,
+          justifyContent: "center",
           alignItems: "center",
-          marginVertical: 10,
-          backgroundColor: backgroundColor,
-          borderTopLeftRadius: 5,
-          borderTopRightRadius: 5,
-          paddingHorizontal: 10,
+          backgroundColor: "#4ADE80",
+          borderRadius: 30,
+          bottom: 20,
+          right: 20,
+          position: "absolute",
         }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            color: "white",
-            margin: 10,
-          }}
-        >
-          S/N
-        </Text>
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            color: "white",
-            margin: 10,
-          }}
-        >
-          Member
-        </Text>
-      </View>
-      <View>
-        {Loader ? (
-          <Text style={{ textAlign: "center" }}>Loading...</Text>
-        ) : (
-          Data.map((doc, i) => (
-            <OfflineCart
-              onPress={() => {
-                navigation.navigate("OfflineProfile", { user: doc });
-              }}
-              {...props}
-              i={i}
-              doc={doc}
-              key={i}
-              reload={reload}
-            />
-          ))
-        )}
-      </View>
-    </ScrollView>
+        <SvgXml xml={whiteContact} height={"20"} width={"20"} />
+      </Pressable>
+    </View>
   );
 };
 const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
   const [Visible, setVisible] = React.useState(false);
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
-
+  const vendorOrders = useSelector((state) => state.vendorOrders);
+  const [totalOrder, setTotalOrder] = useState(0);
+  const childRef = useRef();
+  const [selectUser, setSelectUser] = useState();
+  useEffect(() => {
+    if (vendorOrders) {
+      let number = 0;
+      vendorOrders.map((d, i) => {
+        if (d.userId == doc.id) {
+          number = number + 1;
+        }
+      });
+      //console.warn(number)
+      setTotalOrder(number);
+    }
+  }, [doc]);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -815,7 +802,6 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
         alignItems: "center",
         marginVertical: 5,
         marginHorizontal: 20,
-        backgroundColor: "#e5e5e5",
         borderRadius: 5,
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -823,33 +809,24 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text
-          style={{
-            fontSize: 15,
-            fontFamily: "Poppins-Medium",
-            color: textColor,
-            margin: 10,
-          }}
-        >
-          {i + 1 < 10 ? "0" + (i + 1) : i + 1}
-        </Text>
         <View
           style={{
-            height: 40,
-            width: 40,
-            borderRadius: 20,
+            height: 50,
+            width: 50,
+            borderRadius: 25,
             overflow: "hidden",
             justifyContent: "center",
             alignItems: "center",
             marginLeft: 5,
-            backgroundColor: "#f5f5f5",
+            borderWidth: 1,
+            borderColor: "#e5e5e5",
           }}
         >
           {doc.profilePhoto ? (
             <Image
               style={{
-                height: 40,
-                width: 40,
+                height: 50,
+                width: 50,
               }}
               source={{ uri: doc.profilePhoto }}
             />
@@ -857,19 +834,32 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
             <FontAwesome name="user" size={30} color="#983C85" />
           )}
         </View>
-        <Text
-          numberOfLines={1}
-          style={{
-            marginLeft: 10,
-            fontSize: 15,
-            fontFamily: "Poppins-Medium",
-          }}
-        >
-          {doc.name ? doc.name : "Easin Arafat"}
-        </Text>
+        <View>
+          <Text
+            numberOfLines={1}
+            style={{
+              marginLeft: 10,
+              fontSize: 15,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            {doc.name ? doc.name : "Easin Arafat"}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              marginLeft: 10,
+              fontSize: 13,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            {totalOrder > 0 ? `${totalOrder} Orders` : "No Order Yet"}
+          </Text>
+        </View>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ width: 10 }} />
+       
         <Menu
           contentStyle={{
             backgroundColor: primaryColor,
@@ -878,13 +868,14 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
           onDismiss={() => setVisible(!Visible)}
           anchor={
             <Entypo
-              onPress={() => {
-                setVisible(true);
-              }}
-              name="dots-three-vertical"
-              size={24}
-              color={"#707070"}
-            />
+            onPress={() => {
+              setVisible((val) => !val);
+              setSelectUser(`${doc.name}`);
+            }}
+            name="dots-three-vertical"
+            size={24}
+            color={"#707070"}
+          />
           }
         >
           <Menu.Item
@@ -906,8 +897,8 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
           />
           <Menu.Item
             onPress={() => {
-              //setAlertVisible(true);
-              //setVisible(false);
+              // setAlertVisible(true);
+              // setVisible(false);
             }}
             title="View Profile"
           />
@@ -936,6 +927,72 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
           }}
         />
       </Modal>
+      {/* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={Visible}
+        onRequestClose={() => setVisible(false)}
+      >
+        <OutsideView
+          childRef={childRef}
+          onPressOutside={() => {
+            // handle press outside of childRef event
+            setVisible((val) => !val);
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+                borderColor: "#C0FFD7",
+                borderWidth: 1,
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+              }}
+              ref={childRef}
+            >
+              <IconButton
+                onPress={() => {
+                  setVisible(false);
+                }}
+                LeftIcon={() => (
+                  <SvgXml xml={message} height={"20"} width={"20"} />
+                )}
+                style={{
+                  borderWidth: 0,
+                  justifyContent: "flex-start",
+                  height: 40,
+                }}
+                title={`Send Message To ${selectUser}`}
+              />
+              <IconButton
+                onPress={() => {
+                  setAlertVisible(true);
+                  setVisible(false);
+                }}
+                LeftIcon={() => (
+                  <SvgXml xml={deleteIcon} height={"20"} width={"20"} />
+                )}
+                style={{
+                  borderWidth: 0,
+                  justifyContent: "flex-start",
+                  height: 40,
+                }}
+                title={`Remove Message To ${selectUser}`}
+              />
+            </View>
+          </View>
+        </OutsideView>
+      </Modal> */}
     </TouchableOpacity>
   );
 };
@@ -1476,8 +1533,8 @@ export const AddOnlineUser = () => {
 };
 const CartView = ({ doc, onChange }) => {
   const [Send, setSend] = React.useState(false);
-  const user=useSelector(state=>state.user)
-  const vendor=useSelector(state=>state.vendor)
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
 
   return (
     <View
@@ -1552,12 +1609,12 @@ const CartView = ({ doc, onChange }) => {
       <IconButton
         LeftIcon={() => <SvgXml xml={contact} width="20" height={"20"} />}
         onPress={() => {
-          if(Send){
-            cancelOnlineUser(user.token,doc.id,vendor.service.id).then(res=>{
-
-            }).catch(err=>{
-              console.warn(err.response.data.message)
-            })
+          if (Send) {
+            cancelOnlineUser(user.token, doc.id, vendor.service.id)
+              .then((res) => {})
+              .catch((err) => {
+                console.warn(err.response.data.message);
+              });
           }
           setSend((val) => !val);
           if (onChange) {
@@ -1571,7 +1628,7 @@ const CartView = ({ doc, onChange }) => {
           height: 40,
           fontSize: 14,
           borderColor: "#C0FFD7",
-          width:140
+          width: 140,
         }}
         title={Send ? "Undo" : "Send Request"}
       />
