@@ -88,7 +88,8 @@ export default function App() {
     <Provider store={store}>
       <PaperProvider theme={theme}>
         <RootSiblingParent>
-          <Views />
+          {/* <Views /> */}
+          <WebRTC/>
         </RootSiblingParent>
       </PaperProvider>
     </Provider>
@@ -146,3 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 });
+
+const WebRTC=()=>{
+  return null
+}
