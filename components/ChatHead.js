@@ -37,9 +37,12 @@ const ChatHead = ({ navigation, name, image, user }) => {
     box: {
       flex: 1,
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       alignItems: "center",
       paddingTop: 0,
+      borderBottomWidth:1,
+      paddingBottom:5,
+      borderBottomColor:"#e5e5e5",
     },
     image: {
       width: 40,
@@ -129,7 +132,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
 
   //console.log(data)
   return (
-    <SafeAreaView
+    <View
       style={{
         minHeight: 50,
         paddingVertical: 5,
@@ -157,7 +160,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
         /> */}
         <Text style={styles.text}>{name ? `${name}` : "Sefa Khandakar"}</Text>
       </View>
-      <View
+      {/* <View
         style={[
           styles.box,
           {
@@ -184,7 +187,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
             color={textColor}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Modal
         transparent={true}
         visible={visible}
@@ -202,7 +205,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
           }} user={user.id} audio={callingScreen.audioOnly} />
         )} */}
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

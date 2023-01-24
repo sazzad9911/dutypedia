@@ -33,6 +33,8 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import { GiftedChat } from 'react-native-gifted-chat'
+import { SafeAreaView } from "moti";
 
 
 const ChatScreen = (props) => {
@@ -93,6 +95,7 @@ const ChatScreen = (props) => {
   const username = params && params.username ? params.username : null;
   const isFocused = useIsFocused();
   const [Refresh,setRefresh]=React.useState(false)
+  
   const dispatch=useDispatch()
   React.useEffect(()=>{
     if(isFocused){
@@ -115,33 +118,33 @@ const ChatScreen = (props) => {
       });
       //console.log(username)
       setId(data.id);
+      //console.log(user.user)
       //setMessages(data.messages);
       //setLastMessage(data.messages[data.messages.length-1])
     }
   }, [data]);
   React.useEffect(() => {
-    if (username) {
+    if (username &&data) {
       createConversation(user.token, username)
         .then((res) => {
-          setMessages(res.data.conversation.messages);
+          let arr=[]
+          res.data.conversation.messages.map((doc,i)=>{
+            arr.push(serverMessageToLocal(doc,data.users))
+          })
+          setMessages(arr.reverse());
           //console.log(res.data.conversation.messages)
         })
         .catch((err) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [username + isFocused+Refresh]);
+  }, [username,isFocused]);
   React.useEffect(() => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
-      setRefresh(val=>(!val))
+      setMessages((val) => GiftedChat.append(val,serverMessageToLocal(e.message,data.users)));
     });
   }, []);
-  React.useEffect(() => {
-    if(Messages){
-      onPressTouch();
-    }
-  }, [Messages + isFocused]);
 
   const send = async (message, image) => {
     if (image) {
@@ -152,8 +155,7 @@ const ChatScreen = (props) => {
       if (result) {
         const res = await sendMessage(user.token, message, result[0], Id);
         if (res.data) {
-          setMessages((val) => [...val, res.data.message]);
-          //console.log(user.user.id);
+          setMessages((val) => GiftedChat.append(val,serverMessageToLocal(res.data.message,data.users)));
           //console.log(UserInfo.id);
           socket.emit("sendMessage", {
             senderId: user.user.id,
@@ -165,13 +167,11 @@ const ChatScreen = (props) => {
         //console.log(result)
         Alert.alert("Opps!", "Faild to send picture");
       }
-      onPressTouch();
-
       return;
     }
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
-      setMessages((val) => [...val, res.data.message]);
+      setMessages((val) => GiftedChat.append(val,serverMessageToLocal(res.data.message,data.users)));
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       socket.emit("sendMessage", {
@@ -180,7 +180,6 @@ const ChatScreen = (props) => {
         message: res.data.message,
       });
     }
-    onPressTouch();
   };
 
   if (!Messages) {
@@ -199,8 +198,9 @@ const ChatScreen = (props) => {
   //return <VideoCallingScreen/>
   //return <CallingScreen user={UserInfo} audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
+
   return (
-    <KeyboardAvoidingView 
+    <SafeAreaView 
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
@@ -210,24 +210,20 @@ const ChatScreen = (props) => {
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}
       />
-      <View style={{ flex: 1 }}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          ref={scrollRef}
-          data={Messages}
-          renderItem={({ item }) => {
-            return (
-              <ChatBox onLayout={e=>{
-                onPressTouch();
-              }} data={item} key={item} message={null} send={null} />
-            );
-          }}
-          keyExtractor={(item) => item.id}
-        />
-
-        <BottomBar onSend={send} />
-      </View>
-    </KeyboardAvoidingView>
+      <View style={{
+        marginTop:Platform.OS=="ios"?-20:0
+      }}/>
+      <GiftedChat 
+      renderComposer={()=><BottomBar onSend={send}/>}
+      messages={Messages}
+      onSend={messages => {
+        console.log(messages)
+      }}
+      user={{
+        _id: user.user.id,
+      }}
+    />
+    </SafeAreaView>
   );
 };
 
@@ -468,3 +464,21 @@ const ImageScreen = ({ image, onCancel, onConfirm }) => {
     </View>
   );
 };
+const serverMessageToLocal=(message,users)=>{
+  if(message&&Array.isArray(users)){
+    let user=users.filter(d=>d.userId==message.senderId)[0].user
+    return{
+      _id: message.id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: {
+        _id:user.id,
+        name:`${user.firstName} ${user.lastName}`,
+        avatar:user.profilePhoto
+      },
+      image: message.image,
+      sent: message.seen,
+    }
+  }
+  return null
+}

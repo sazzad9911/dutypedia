@@ -63,6 +63,7 @@
     "react-native-detect-press-outside": "^1.0.4",
     "react-native-fast-image": "^8.6.1",
     "react-native-gesture-handler": "~2.8.0",
+    "react-native-gifted-chat": "^1.1.1",
     "react-native-inset-shadow": "^1.0.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-modal-datetime-picker": "^14.0.0",
