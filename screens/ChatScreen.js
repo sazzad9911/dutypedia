@@ -124,12 +124,12 @@ const ChatScreen = (props) => {
     }
   }, [data]);
   React.useEffect(() => {
-    if (username &&data) {
+    if (username &&UserInfo&&user) {
       createConversation(user.token, username)
         .then((res) => {
           let arr=[]
           res.data.conversation.messages.map((doc,i)=>{
-            arr.push(serverMessageToLocal(doc,data.users))
+            arr.push(serverMessageToLocal(doc,UserInfo.id==doc.senderId?UserInfo:user.user))
           })
           setMessages(arr.reverse());
           //console.log(res.data.conversation.messages)
@@ -138,7 +138,7 @@ const ChatScreen = (props) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [username,isFocused]);
+  }, [username,isFocused,UserInfo,user]);
   React.useEffect(() => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
@@ -464,9 +464,8 @@ const ImageScreen = ({ image, onCancel, onConfirm }) => {
     </View>
   );
 };
-const serverMessageToLocal=(message,users)=>{
-  if(message&&Array.isArray(users)){
-    let user=users.filter(d=>d.userId==message.senderId)[0].user
+const serverMessageToLocal=(message,user)=>{
+  if(message&&user){
     return{
       _id: message.id,
       text: message.text,

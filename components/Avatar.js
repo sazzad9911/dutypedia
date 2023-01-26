@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, Image } from "react-native";
 
-export default function Avatar({ source, style }) {
+export default function Avatar({ source, style,active }) {
   return (
     <View style={[{
       justifyContent:"center",
@@ -24,6 +24,7 @@ export default function Avatar({ source, style }) {
           <FontAwesome name="user" size={style&&style.height?style.height-10:55} color={style&&style.color?style.color:"black"} />
         )
       }
+      
     </View>
   );
 }

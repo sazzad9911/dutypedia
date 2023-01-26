@@ -167,7 +167,7 @@ const FixedService = (props) => {
   React.useEffect(() => {
     setScrollEnabled(false);
     setActiveServiceData(null);
-    //console.log(data);
+   // console.log(data.service.user);
     if (data) {
       setData(data);
       setSpecialty(data.service.speciality);
@@ -528,9 +528,9 @@ const FixedService = (props) => {
             width={Platform.OS == "ios" ? "50" : "45"}
           />
 
-          <SvgXml
+          {/* <SvgXml
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              navigation.navigate("Message", { data: Data });
             }}
             style={{
               shadowOffset: {
@@ -545,7 +545,7 @@ const FixedService = (props) => {
             xml={messageIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
+          /> */}
         </View>
 
         <View
@@ -915,7 +915,7 @@ const FixedService = (props) => {
 
         <View style={{ height: 70 }} />
       </ScrollView>
-      {showButton && (
+      {/* {showButton && (
         <Animated.View
           entering={FadeIn}
           style={{
@@ -936,13 +936,13 @@ const FixedService = (props) => {
         >
           <Pressable
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              navigation.navigate("Message", { data: Data });
             }}
           >
             <SvgXml xml={messageIcon} height="50" width={"50"} />
           </Pressable>
         </Animated.View>
-      )}
+      )} */}
       <View
         style={{
           position: "absolute",

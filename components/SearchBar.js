@@ -2,7 +2,7 @@ import React from "react";
 import { View, Animated, Text, TextInput } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function SearchBar({translateY}) {
+export default function SearchBar({translateY,onChange}) {
   return (
     
       <View
@@ -20,7 +20,7 @@ export default function SearchBar({translateY}) {
         }}
       >
         <AntDesign name="search1" size={24} color="black" />
-        <TextInput
+        <TextInput onChangeText={onChange}
           style={{
             marginLeft: 10,
             fontSize: 16,

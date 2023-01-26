@@ -549,9 +549,9 @@ const PackageService = (props) => {
             width={Platform.OS == "ios" ? "50" : "45"}
           />
 
-          <SvgXml
+          {/* <SvgXml
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              navigation.navigate("Message", { data: Data });
             }}
             style={{
               shadowOffset: {
@@ -566,7 +566,7 @@ const PackageService = (props) => {
             xml={messageIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
+          /> */}
         </View>
 
         <View
@@ -1001,7 +1001,7 @@ const PackageService = (props) => {
 
         <View style={{ height: 70 }} />
       </ScrollView>
-      {showButton && (
+      {/* {showButton && (
         <Animated.View
           entering={FadeIn}
           style={{
@@ -1022,13 +1022,13 @@ const PackageService = (props) => {
         >
           <Pressable
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              navigation.navigate("Message", { data: Data });
             }}
           >
             <SvgXml xml={messageIcon} height="50" width={"50"} />
           </Pressable>
         </Animated.View>
-      )}
+      )} */}
        <View style={{
         position:"absolute",
         top:0,

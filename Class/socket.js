@@ -9,7 +9,7 @@ const getSocket = (id) => {
   socket.emit("join", id);
   return socket;
 };
-const getOnlineUsers = () => {
+const getOnlineUsers = async() => {
   socket.on("getUsers", (users) => {
     //console.log(users)
     return users;

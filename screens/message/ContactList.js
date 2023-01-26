@@ -1,15 +1,17 @@
-import React from "react";
-import { View, Animated } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useState } from "react";
+import { View, Animated,Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import ChatMemberCart from "../../Cart/ChatMemberCart";
+import { getOnlineUser } from "../../Class/member";
 import { getConversation } from "../../Class/message";
-import { getOnlineUsers } from "../../Class/socket";
+import { getOnlineUsers, getSocket } from "../../Class/socket";
 import ActivityLoader from "../../components/ActivityLoader";
 import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
 
-export default function ContactList(props) {
+export default function ContactList({navigation}) {
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
@@ -17,21 +19,40 @@ export default function ContactList(props) {
     outputRange: [0, -300],
   });
   const [Members,setMembers]=React.useState()
+  const [AllMembers,setAllMembers]=useState()
   const user=useSelector(state=>state.user)
-  const [Loader,setLoader]=React.useState(false)
+  const [Loader,setLoader]=React.useState(true)
+  const vendor=useSelector(state=>state.vendor)
+  const isFocused=useIsFocused()
+
 
   React.useEffect(()=>{
-    if(user){
-      setLoader(true)
-     getConversation(user.token).then(res=>{
+    if(user&&vendor){
+      getOnlineUser(user.token,vendor.service.id).then(res=>{
+        setLoader(false)
+        setMembers(res.members)
+        setAllMembers(res.members)
+        //console.log(res.members)
+      }).catch(err=>{
+        setLoader(false)
+        console.warn(err.response.data.msg)
+      })
+      
+    }else{
       setLoader(false)
-      setMembers(res.data.conversations)
-     }).catch(err=>{
-      setLoader(false)
-      console.warn(err.response.data.msg)
-     })
     }
-  },[user])
+    
+    
+  },[user,vendor,isFocused])
+  const search=(val,data)=>{
+    if(!Array.isArray(data)){
+      return []
+    }
+    if(!val){
+      return data
+    }
+    return data.filter(d=>d.user.username.toUpperCase().match(val.toUpperCase()))
+  }
 
   if(Loader){
     return (
@@ -66,7 +87,9 @@ export default function ContactList(props) {
         },
       ]}
     >
-        <SearchBar />
+        <SearchBar onChange={e=>{
+          setMembers(search(e,AllMembers))
+        }} />
     </Animated.View>
       
       <View
@@ -74,10 +97,32 @@ export default function ContactList(props) {
           paddingHorizontal: 20,
         }}
       >
-        
-        <ChatMemberCart active={true} name="Easin Arafat" username={"@easinarafat"} />
-        <ChatMemberCart  active={true} name="Easin Arafat" username={"@easinarafat"} />
-        <ChatMemberCart  active={true} name="Easin Arafat" username={"@easinarafat"} />
+        {Members&&Members.map((doc,i)=>(
+        <ChatMemberCart
+        onPress={()=>{
+          navigation.navigate("ChatScreen",{data:{
+            users:[
+              doc,
+            ]
+          },username:doc.user.username})
+        }} userId={doc.user.id} key={i}  
+        name={`${doc.user.firstName} ${doc.user.lastName}`} 
+        username={`@${doc.user.username}`} image={{uri:doc.user.profilePhoto}} />
+        ))}
+        {Members&&Members.length==0&&(
+          <Text style={{
+            marginVertical:20,
+            textAlign:"center",
+            fontSize:16
+          }}>No Member Added</Text>
+        )}
+        {!Members&&(
+          <Text style={{
+            marginVertical:20,
+            textAlign:"center",
+            fontSize:16
+          }}>Ops! Please logged in as ''Vendor''</Text>
+        )}
       </View>
     </ScrollView>
   );

@@ -18,7 +18,7 @@ const Message = (props) => {
         headerShown:false
       }} name="MessageScreen" component={MessageScreen} />
       <Stack.Screen name="ChatScreen" options={{
-        headerShown:false
+        headerShown:false 
       }} component={ChatScreen} />
     </Stack.Navigator>
   )

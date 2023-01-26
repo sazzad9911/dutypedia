@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   View,
   Text,
@@ -193,6 +193,7 @@ const OtherProfile = (props) => {
   const [offset, setOffset] = React.useState();
   const [statusBarHeight, setStatusBarHeight] = React.useState(0);
   const isFocused=useIsFocused()
+  const [userInfo,setUserInfo]=useState()
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -218,6 +219,7 @@ const OtherProfile = (props) => {
   },[isFocused])
 
   React.useEffect(() => {
+    
     setActive("Bargaining");
     //setLoader(true);
     setScrollEnabled(false);
@@ -263,6 +265,7 @@ const OtherProfile = (props) => {
             });
             setCategory(response.data.service.gigs[0].services.category);
             setActiveServiceData(arr);
+            setUserInfo(response.data.service.user)
             try {
               dispatch({
                 type: "SET_NEW_LIST_DATA",
@@ -585,7 +588,7 @@ const OtherProfile = (props) => {
     }
   });
 
-  //console.log(SeeMore)
+  //console.log(newUser)
 
   if (
     Loader ||
@@ -662,20 +665,6 @@ const OtherProfile = (props) => {
           setOffset(currentOffset);
         }}
       >
-        {/* <Animation.View
-          style={[
-            {
-              transform: [{ translateY: translateY }],
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 500,
-            },
-          ]}
-        >
-         <View style={{height:25}}/>
-         
-        </Animation.View> */}
         <Canvas style={{ width: width, height: height-((height*30)/100) }}>
           <Fill color={primaryColor} />
           <Box
@@ -824,7 +813,23 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              if(!userInfo){
+                Alert.alert("Invalid user!")
+                return
+              }
+              if(newUser.user.id==userInfo.id){
+                Alert.alert("Ops!","Self messaging is not allowed.")
+                return
+              }
+              let user={
+                userId:userInfo.id,
+                user:userInfo
+              }
+              navigation.navigate("ChatScreen", { data: {
+                users:[
+                  user
+                ]
+              } ,username:userInfo.username});
             }}
             style={{
               shadowOffset: {
@@ -1412,7 +1417,23 @@ const OtherProfile = (props) => {
         >
           <Pressable
             onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
+              if(!userInfo){
+                Alert.alert("Invalid user!")
+                return
+              }
+              if(newUser.user.id==userInfo.id){
+                Alert.alert("Ops!","Self messaging is not allowed.")
+                return
+              }
+              let user={
+                userId:userInfo.id,
+                user:userInfo
+              }
+              navigation.navigate("ChatScreen", { data: {
+                users:[
+                  user
+                ]
+              } ,username:userInfo.username});
             }}
           >
             <SvgXml xml={messageIcon} height="50" width={"50"} />

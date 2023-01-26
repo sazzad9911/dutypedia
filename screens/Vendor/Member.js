@@ -251,7 +251,7 @@ const DutyPediaUser = (props) => {
   }, [Refresh]);
   const search = (val) => {
     let arr = AllData.filter((d) => {
-      if (d.name.toUpperCase().match(val.toUpperCase())) {
+      if (d.user.username.toUpperCase().match(val.toUpperCase())) {
         return d;
       }
     });

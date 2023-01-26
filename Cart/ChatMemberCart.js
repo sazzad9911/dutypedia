@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect ,useState} from "react";
 import { View, Text, Pressable } from "react-native";
+import { getSocket } from "../Class/socket";
 import Avatar from "../components/Avatar";
 
-export default function ChatMemberCart({ name, username, active, image }) {
+export default function ChatMemberCart({ name, username, active, image,userId,onPress }) {
+  const [Active,setActive]=useState(false)
+
+  useEffect(()=>{
+    const socket=getSocket(userId)
+    socket.on("getUsers",users=>{
+      if(Array.isArray(users)){
+        let arr=users.filter(d=>d.userId==userId)
+        if(arr.length>0){
+          setActive(true)
+        }
+      }
+    })
+  },[])
   return (
-    <Pressable>
+    <Pressable onPress={()=>{
+      if(onPress){
+        onPress()
+      }
+    }}>
       <View
         style={{
           flexDirection: "row",
@@ -22,7 +40,7 @@ export default function ChatMemberCart({ name, username, active, image }) {
           />
           <View
             style={{
-              backgroundColor: active ? "#4ADE80" : "#F0EFEF",
+              backgroundColor: Active ? "#4ADE80" : "#F0EFEF",
               width: 10,
               height: 10,
               borderRadius: 5,
