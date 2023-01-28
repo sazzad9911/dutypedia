@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Animated,
+  Platform,
 } from "react-native";
 import { Color } from "./../assets/colors";
 import Cart from "../Cart/Cart";
@@ -177,6 +178,7 @@ const Home = (props) => {
               paddingVertical: 20,
               flexDirection: "row",
               justifyContent: "space-between",
+              marginTop:Platform.OS=="ios"?0:10
             }}
           >
             <Text

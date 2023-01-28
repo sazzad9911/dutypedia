@@ -6,6 +6,7 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Color } from "../assets/colors";
@@ -92,6 +93,7 @@ const Feed = ({ navigation, route }) => {
               paddingVertical: 20,
               flexDirection: "row",
               justifyContent: "space-between",
+              marginTop:Platform.OS=="ios"?0:10
             }}
           >
             <Text

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -64,6 +64,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
 import { SubscriptionDates } from "./screens/Seller/SubscriptionDates";
+import * as Network from 'expo-network';
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -81,6 +82,7 @@ export default function StackRoute() {
   const [userId, setUserId] = React.useState();
 
   React.useEffect(() => {
+
     checkUser()
       .then((res) => {
         //console.log(res)
@@ -112,6 +114,12 @@ export default function StackRoute() {
         dispatch({ type: "SET_THEME", playload: data });
       }
     });
+    (async()=>{
+      const net=await Network.getNetworkStateAsync();
+      if(net && !net.isConnected){
+        Alert.alert("Ops!","You are offline")
+      }
+    })()
   }, []);
   React.useEffect(() => {
     if (userId) {
