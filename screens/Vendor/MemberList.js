@@ -37,9 +37,21 @@ export default function MemberList({ navigation, route }) {
     outputRange: [0, -300],
   });
   const [Search, setSearch] = React.useState();
+  const offline=route.params.offline;
+  
 
   React.useEffect(() => {
     if (user && vendor) {
+      if(offline){
+        getOfflineMembers(user.token,vendor.service.id).then(res=>{
+          setLoading(false);
+          setData(res.members);
+        }).catch(err=>{
+          setLoading(false);
+          console.warn(err.response.data.message)
+        })
+        return
+      }
       getOnlineUser(user.token, vendor.service.id)
         .then((res) => {
           setLoading(false);
@@ -154,7 +166,7 @@ export default function MemberList({ navigation, route }) {
       </Text>
       {Data.map((doc, i) => (
         <UserCart onSelect={()=>{
-          navigation.navigate("VendorServiceList",{userId:doc.userId})
+          navigation.navigate("VendorServiceList",{userId:doc.userId?doc.userId:doc.id,offline:offline})
         }} data={doc} key={i} />
       ))}
     </ScrollView>
@@ -214,13 +226,21 @@ const UserCart = ({ data, onSelect }) => {
                 borderColor: "#e5e5e5",
               }}
             >
-              {data && data.user.profilePhoto ? (
+              {data &&data.user&& data.user.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
                     width: 50,
                   }}
                   source={{ uri: data.user.profilePhoto }}
+                />
+              ):data&&data.profilePhoto?(
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  source={{ uri: data.profilePhoto }}
                 />
               ) : (
                 <FontAwesome name="user" size={35} color={assentColor} />
@@ -233,7 +253,8 @@ const UserCart = ({ data, onSelect }) => {
                 marginRight: 20,
               }}
             >
-              <Text
+              {data&&data.user?(
+                <Text
                 numberOfLines={1}
                 style={{
                   color: textColor,
@@ -244,6 +265,16 @@ const UserCart = ({ data, onSelect }) => {
                 {data ? data.user.firstName : "Um"}{" "}
                 {data ? data.user.lastName : "Um"}
               </Text>
+              ):(<Text
+                numberOfLines={1}
+                style={{
+                  color: textColor,
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {data.name}
+              </Text>)}
               <Text
                 numberOfLines={1}
                 style={{
@@ -253,7 +284,7 @@ const UserCart = ({ data, onSelect }) => {
                 }}
               >
                 {"@"}
-                {data ? data.user.username : "Empty position"}
+                {data&&data.user ? data.user.username:data&&data.name?data.name.split(" ")[0].toLowerCase() : "Empty position"}
               </Text>
             </View>
           </View>

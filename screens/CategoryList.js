@@ -298,11 +298,13 @@ const CategoryList = ({ navigation, route }) => {
             {SubCategories.length === 0 && <View style={{ height: 30 }} />}
             {Data &&
               Data.map((doc, i) => (
-                <SearchItem
+                <SearchItem onPress={()=>{
+                  navigation.navigate("OtherProfile",{serviceId:doc?doc.service.id:null,data:doc})
+                }}
                   key={i}
                   data={doc} navigation={navigation}
                   testID={simsScreenTestIDs.contentTestID}
-                />
+                /> 
               ))}
             {Data && Data.length == 0 && (
               <View

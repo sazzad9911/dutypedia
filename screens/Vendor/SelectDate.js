@@ -25,6 +25,7 @@ export default function SelectDate({onChange,navigation,route}) {
   const userId=route.params.userId;
   const params=route.params;
   const selectedPackage=params.selectedPackage;
+  const offline=params.offline;
   //console.log(userId)
   //console.log(data)
   
@@ -139,6 +140,10 @@ export default function SelectDate({onChange,navigation,route}) {
         if(!OpeningTime || !ClosingTime){
           setError("Please select date")
           return;
+        }
+        if(offline){
+          
+          return
         }
         navigation.navigate("AcceptOrder", {
           facilities: data.facilites,

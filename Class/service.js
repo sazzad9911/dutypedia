@@ -316,7 +316,7 @@ export const getPopularCategories = async (token) => {
   return res;
 };
 export const createOrder = async (
-  token,
+  token, 
   serviceId,
   type,
   amount,
@@ -370,6 +370,22 @@ export const getOrders = async (token, type, id) => {
     return res;
   } else {
     const res = await axios.get(`${url}/server/orders/${type}/get`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res;
+  }
+};
+export const getOfflineOrders = async (token, id) => {
+  if (id) {
+    const res = await axios.get(
+      `${url}/server/orders/offline/get?serviceId=${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res;
+  } else {
+    const res = await axios.get(`${url}/server/orders/offline/get`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res;

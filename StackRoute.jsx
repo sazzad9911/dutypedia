@@ -108,6 +108,7 @@ export default function StackRoute() {
       })
       .catch((err) => {
         console.log(err.message);
+        
       });
     getJson("theme").then((data) => {
       if (data) {

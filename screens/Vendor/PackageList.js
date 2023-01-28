@@ -22,6 +22,7 @@ export default function PackageList({ navigation, route }) {
   const params = route.params;
   const userId = params.userId;
   const data = params.data;
+  const offline=params.offline;
   const [packageData, setPackageData] = React.useState();
   const primaryColor = "white";
 
@@ -92,6 +93,7 @@ export default function PackageList({ navigation, route }) {
                 doc: doc,
                 data: data,
                 userId: userId,
+                offline:offline
               }}
               component={Screen}
             />
@@ -105,6 +107,7 @@ export const Screen = ({ navigation, route }) => {
   const data = params.data;
   const doc = params.doc;
   const userId = params.userId;
+  const offline=params.offline;
   const primaryColor = "white";
   const textColor = "black";
   //const setPrice=params.setPrice;
@@ -503,6 +506,7 @@ export const Screen = ({ navigation, route }) => {
             data: data,
             userId: userId,
             selectedPackage: doc,
+            offline:offline
           });
         }}
         style={{

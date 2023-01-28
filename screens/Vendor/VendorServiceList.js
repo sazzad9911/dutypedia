@@ -83,6 +83,7 @@ const Screens = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const dispatch=useDispatch()
   const userId=route.params.userId;
+  const offline=route.params.offline;
   //console.log(userId)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -187,15 +188,15 @@ const Screens = ({ navigation, route }) => {
       }}>Select Service</Text>
       <View style={{
         flexDirection:"row",
-        flexWrap:"wrap",
+        flexWrap:"wrap", 
         paddingHorizontal:10
       }}> 
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{
             if(doc.type=="ONETIME"||doc.type=="SUBS"||doc.type=="INSTALLMENT"){
-              navigation.navigate("SelectDate",{data:doc,userId:userId})
+              navigation.navigate("SelectDate",{data:doc,userId:userId,offline:offline})
             }else if(doc.type=="PACKAGE"){
-              navigation.navigate("PackageList",{data:doc,userId:userId})
+              navigation.navigate("PackageList",{data:doc,userId:userId,offline:offline})
             }
             //console.log(doc.type)
             //navigation.navigate("SelectDate",{data:doc,userId:userId})

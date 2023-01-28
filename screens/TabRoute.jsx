@@ -40,7 +40,7 @@ import AllPackageList from "./Seller/AllPackageList";
 import HomeRoute from "../HomeRoute";
 import Feed from "./Feed";
 import { checkUser } from "../Class/auth";
-import { getService, getDashboard, getOrders } from "../Class/service";
+import { getService, getDashboard, getOrders, getOfflineOrders } from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
 import { getSocket, socket } from "../Class/socket";
@@ -212,6 +212,10 @@ const TabRoute = () => {
       dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
     }
   };
+  const offlineOrders = async () => {
+   // const res = await getOfflineOrders(user.token,vendor.service.id);
+    //console.log(res)
+  };
   React.useEffect(() => {
     if (user && !isOffline) {
       userOrders();
@@ -220,6 +224,7 @@ const TabRoute = () => {
   React.useEffect(() => {
     if (user && vendor && vendor.service && !isOffline) {
       vendorOrders();
+      offlineOrders()
     }
   }, [user + vendor + reload + socket + isOffline]);
 

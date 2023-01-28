@@ -242,7 +242,7 @@ const DutyPediaUser = (props) => {
       getOnlineUser(user.token, vendor.service.id).then((res) => {
         setLoader(false);
         if (res) {
-          console.log(res);
+          //console.log(res);
           setData(res.members);
           setAllData(res.members);
         }
@@ -1362,7 +1362,7 @@ const pickImage = async () => {
     quality: 1,
   });
   if (!result.cancelled) {
-    console.log(result);
+    //console.log(result);
     return result;
   }
   return null;

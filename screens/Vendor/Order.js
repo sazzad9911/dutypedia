@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -240,6 +240,8 @@ const VendorOrder = ({ navigation, route }) => {
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const snapPoints = React.useMemo(() => ["25%", "60%"], []);
   const orderListFilter = useSelector((state) => state.orderListFilter);
+  const [offlineOrder,setOfflineOrder]=useState(false)
+  const offlineOrders=useSelector(state=>state.offlineOrders)
 
   // callbacks
   const handleSheetChanges = React.useCallback((index) => {
@@ -275,7 +277,7 @@ const VendorOrder = ({ navigation, route }) => {
           tabBarPressColor: "white",
         }}
       >
-        {initialState.map((doc, i) => (
+        {!offlineOrder&& initialState.map((doc, i) => (
           <Tab.Screen
             options={{
               title: `${initialState[i].title}(${
@@ -288,6 +290,21 @@ const VendorOrder = ({ navigation, route }) => {
             key={i}
             name={doc.type}
             component={Screens}
+          />
+        ))}
+         {offlineOrder&& initialState.map((doc, i) => (
+          <Tab.Screen
+            options={{
+              title: `${initialState[i].title}(${
+                offlineOrders
+                  ? offlineOrders.filter((d) => d.type == initialState[i].type)
+                      .length
+                  : "0"
+              })`,
+            }}
+            key={i}
+            name={doc.type}
+            component={OfflineScreens}
           />
         ))}
       </Tab.Navigator>
@@ -318,16 +335,18 @@ const VendorOrder = ({ navigation, route }) => {
       >
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MemberList");
-          }}
+            navigation.navigate("MemberList",{offline:offlineOrder});
+          }} 
           style={styles.view}
         >
           <SvgXml xml={plus} height="20" />
           <Text style={styles.text}>New Order</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.view}>
+        <TouchableOpacity onPress={()=>{
+          setOfflineOrder(val=>(!val))
+        }} style={styles.view}>
           <SvgXml xml={re} height="20" />
-          <Text style={styles.text}>Dutypedia User</Text>
+          <Text style={styles.text}>{offlineOrder?"Offline User":"Dutypedia User"}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -1090,3 +1109,322 @@ const notify = `<svg xmlns="http://www.w3.org/2000/svg" width="10.924" height="1
 </g>
 </svg>
 `;
+export const OfflineScreens = ({ navigation, route }) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const textColor = colors.getTextColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const assentColor = colors.getAssentColor();
+  const Order = useSelector((state) => state.orders);
+  //const setRefresh=route.params.setRefresh;
+  const [NewOrders, setNewOrders] = React.useState();
+  const [Index, setIndex] = React.useState(-1);
+  const [AllStatus, setAllStatus] = React.useState([
+    {
+      title: "Waiting For Accept",
+      icon: waitionIcon,
+    },
+    {
+      title: "Due",
+      icon: dueIcon,
+    },
+    {
+      title: "Paid",
+      icon: paidIcon,
+    },
+    {
+      title: "Processing",
+      icon: processingIcon,
+    },
+    {
+      title: "Delivered",
+      icon: deliveryIcon,
+    },
+    {
+      title: "Order Completed",
+      icon: completeIcon,
+    },
+    {
+      title: "Order Canceled",
+      icon: cancelIcon,
+    },
+    {
+      title: "Refund",
+      icon: refundIcon,
+    },
+  ]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const bottomSheetRef = React.useRef(null);
+  const scrollY = new A.Value(0);
+  const diffClamp = A.diffClamp(scrollY, 0, 300);
+  const [Search, setSearch] = React.useState();
+  const [Filter, setFilter] = React.useState();
+  const orderSocket = useSelector((state) => state.orderSocket);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 300],
+    outputRange: [0, -300],
+  });
+  const [Refresh, setRefresh] = React.useState(false);
+  const [Loader, setLoader] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const dispatch = useDispatch();
+  const [AllOrders, setAllOrders] = React.useState();
+  const vendorOrders = useSelector((state) => state.offlineOrders);
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [Open, setOpen] = React.useState();
+  const isFocused = useIsFocused();
+  const orderListFilter = useSelector((state) => state.orderListFilter);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setRefresh((val) => !val);
+    //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+  React.useEffect(() => {
+    if (vendorOrders) {
+      let arr = vendorOrders.filter((d) => d.type == route.name);
+      setAllOrders(arr);
+      setNewOrders(arr);
+    }else{
+      setAllOrders([]);
+      setNewOrders([]);
+    }
+  }, [route.name + isFocused + vendorOrders + Refresh]);
+
+  React.useEffect(() => {
+    socket.on("updateOrder", (e) => {
+      e = e.order;
+      setTimeout(() => {
+        setRefresh((val) => !val);
+      }, 100);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (AllOrders) {
+      switch (orderListFilter) {
+        case "Waiting For Accept":
+          let text = orderListFilter;
+          text = text.split(" ").join("_");
+          let arr = AllOrders.filter((d) =>
+            d.status.toUpperCase().match(text.toUpperCase())
+          );
+          setNewOrders(arr);
+          break;
+
+        case "Due":
+          let dues = AllOrders.filter((d) => d.paid == false);
+          setNewOrders(dues);
+          break;
+        case "Paid":
+          let paid = AllOrders.filter((d) => d.paid == true);
+          setNewOrders(paid);
+          break;
+        case "Processing":
+          let processing = AllOrders.filter((d) =>
+            d.status.toUpperCase().match("PROCESSING")
+          );
+          setNewOrders(processing);
+          break;
+        case "Delivered":
+          let delivered = AllOrders.filter((d) => d.delivered == true);
+          setNewOrders(delivered);
+          break;
+
+        case "Completed":
+          let completed = AllOrders.filter((d) => d.status == "COMPLETED");
+          setNewOrders(completed);
+          break;
+        case "Canceled":
+          let cancel = AllOrders.filter((d) => d.status == "CANCELLED");
+          setNewOrders(cancel);
+          break;
+        case "Refund":
+          let refund = AllOrders.filter((d) => d.status == "REFUNDED");
+          setNewOrders(refund);
+          break;
+        default:
+          setNewOrders(AllOrders);
+      }
+    }
+  }, [orderListFilter]);
+  React.useEffect(() => {
+    if (AllOrders) {
+      if (!Search) {
+        setNewOrders(AllOrders);
+      } else {
+        let text = Search;
+        text = text.split(" ").join("_");
+        let arr = AllOrders.filter((d) =>
+          d.status.toUpperCase().match(text.toUpperCase())
+        );
+        setNewOrders(arr);
+      }
+    }
+  }, [Search]);
+
+  const snapPoints = React.useMemo(() => ["25%", "60%"], []);
+
+  // callbacks
+  const handleSheetChanges = React.useCallback((index) => {
+    //console.log("handleSheetChanges", index);
+    setIndex(index);
+  }, []);
+
+  if (!vendorOrders) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="small" color={backgroundColor} />
+      </View>
+    );
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flexGrow: 1 }}
+        stickyHeaderIndices={[0]}
+        scrollEventThrottle={16}
+        stickyHeaderHiddenOnScroll={true}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={() => {
+        //       //setPageChange(true);
+        //       onRefresh();
+        //     }}
+        //   />
+        // }
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => {
+          scrollY.setValue(e.nativeEvent.contentOffset.y);
+          //scroll;
+        }}
+      >
+        <A.View
+          style={[
+            {
+              transform: [{ translateY: translateY }],
+              top: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: secondaryColor,
+              zIndex: 500,
+            },
+          ]}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              marginHorizontal: 10,
+              marginVertical: 0,
+              justifyContent: "space-between",
+              marginBottom: 15,
+              marginTop: 20,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: "#f5f5f5",
+                paddingHorizontal: 15,
+                paddingVertical: 8,
+                flex: 2,
+                borderRadius: 20,
+                justifyContent: "flex-start",
+              }}
+            >
+              <AntDesign
+                style={{ marginRight: 10 }}
+                name="search1"
+                size={24}
+                color={assentColor}
+              />
+              <TextInput
+                value={Search}
+                onChangeText={(e) => {
+                  setSearch(e);
+                }}
+                placeholderTextColor={assentColor}
+                placeholder="Search Now"
+                returnKeyType="search"
+              />
+            </View>
+            {/* <DropDown
+            value={Filter}
+            onChange={(e) => {
+              setFilter(e);
+            }}
+            style={{
+              marginLeft: 15,
+            }}
+            DATA={[
+              "Waiting for accept",
+              "Accepted",
+              "Canceled",
+              "Refounded",
+              "Processing",
+              "Delivered",
+              "Completed",
+              "Waiting for payment",
+            ]}
+            placeholder={"Select"}
+          /> */}
+          </View>
+        </A.View>
+        {NewOrders &&
+          NewOrders.map((doc, i) => (
+            <OrderCart
+              onSelect={(e) => {
+                //console.log(e)
+                //dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
+                setOpen((val) => {
+                  if (val != e) {
+                    return e;
+                  } else {
+                    return null;
+                  }
+                });
+              }}
+              onPress={() => {
+                if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("SubscriptionScript", { data: doc });
+                  return;
+                }
+                if (doc.type == "INSTALLMENT" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("InstallmentScript", { data: doc });
+                  return;
+                }
+                navigation.navigate("VendorOrderDetails", {
+                  data: doc,
+                });
+              }}
+              key={i}
+              data={doc}
+              open={Open == doc.id ? true : false}
+            />
+          ))}
+
+        {NewOrders && NewOrders.length == 0 && !Loader && (
+          <Text style={{ color: textColor, textAlign: "center" }}>
+            No data available
+          </Text>
+        )}
+        <View style={{ height: 70 }} />
+      </ScrollView>
+    </View>
+  );
+};

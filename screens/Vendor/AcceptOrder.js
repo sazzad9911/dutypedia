@@ -182,7 +182,7 @@ const AcceptOrder = (props) => {
     }
     setLoader(true);
     if (newVendor) {
-      console.log(data.installmentData)
+      //console.log(data.installmentData)
       createVendorOrder(
         user.token,
         userId,

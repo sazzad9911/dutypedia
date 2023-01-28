@@ -4,10 +4,14 @@ import { primaryColor,secondaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
-const SearchItem = ({data,navigation}) => {
+const SearchItem = ({data,navigation,onPress}) => {
     const [Love,setLove]= React.useState(false);
   return (
     <TouchableOpacity onPress={() => {
+      if(onPress){
+        onPress()
+        return
+      }
       if(navigation) {
         navigation.navigate('OtherProfile',{serviceId:data.service.id})
       }
