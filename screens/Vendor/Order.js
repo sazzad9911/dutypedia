@@ -281,7 +281,11 @@ const VendorOrder = ({ navigation, route }) => {
   }, []);
   //console.log(vendorOrders)
   if (Loader) {
-    return <ActivityLoader />;
+    return <View style={{
+      flex:1,
+      justifyContent:"center",
+      alignItems:"center"
+    }}><ActivityLoader /></View>;
   }
 
   return (
@@ -1525,7 +1529,7 @@ export const OrderCartOffline = ({ data, onPress, onSelect, user, open }) => {
       const res=await getOfflineMembers(newUser.token,vendor.service.id)
       setUserInfo(res?res.members.filter(d=>d.id==data.offlineMemberId)[0]:null)
     })()
-  },[])
+  },[data.offlineMemberId])
 
   return (
     <Pressable
@@ -1599,7 +1603,7 @@ export const OrderCartOffline = ({ data, onPress, onSelect, user, open }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {userInfo?.name}
+                {userInfo?userInfo.name:'....'}
               </Text>
               <Text
                 numberOfLines={1}
@@ -1610,7 +1614,7 @@ export const OrderCartOffline = ({ data, onPress, onSelect, user, open }) => {
                 }}
               >
                 
-                {userInfo?.gender}
+                {userInfo?userInfo.gender:'....'}
               </Text>
             </View>
           </View>

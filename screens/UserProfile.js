@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Color, primaryColor } from "../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { OrderCart } from "./Vendor/Order";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { OrderCart, OrderCartOffline } from "./Vendor/Order";
+import { NavigationContainer, DefaultTheme, useIsFocused } from "@react-navigation/native";
 import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
@@ -469,7 +469,7 @@ const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" width="18.448" height=
 </svg>
 `;
 
-export const TabBar = ({ userId }) => {
+export const TabBar = ({ userId,offline }) => {
   const [initialState, setInitialState] = React.useState([
     {
       title: "Bargaining",
@@ -482,9 +482,9 @@ export const TabBar = ({ userId }) => {
       type: "ONETIME",
     },
     {
-      title: "Installment",
+      title: "Package",
       value: false,
-      type: "INSTALLMENT",
+      type: "PACKAGE",
     },
     {
       title: "Subscription",
@@ -492,12 +492,58 @@ export const TabBar = ({ userId }) => {
       type: "SUBS",
     },
     {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+  ]);
+  const [initialStateOffline, setInitialStateOffline] = React.useState([
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
       title: "Package",
       value: false,
       type: "PACKAGE",
     },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
   ]);
-
+  if(offline){
+    return (
+      <Tab.Navigator screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: {
+        margin:0,
+        padding:0,
+        width:120,
+       },
+        tabBarIndicatorStyle: {
+          backgroundColor: "#AC5DCB",
+        },
+        tabBarScrollEnabled: true
+      }}>
+        {initialStateOffline.map((doc, i) => (
+          <Tab.Screen
+            key={i}
+            name={doc.title}
+            initialParams={{ userId: userId }}
+            component={OfflineScreens}
+          />
+        ))}
+      </Tab.Navigator>
+    );
+  }
   return (
     <Tab.Navigator screenOptions={{
       tabBarLabelStyle: { fontSize: 12 },
@@ -589,6 +635,114 @@ const Screens = ({ navigation, route }) => {
               onPress={() => {
                 navigation.navigate("VendorOrderDetails", {
                   data: doc,
+                });
+              }}
+              data={doc}
+              key={i}
+            />
+          ))}
+        <View style={{ height: 100 }} />
+      </ScrollView>
+      {Orders && Orders.length == 0 && (
+        <View
+          style={{
+            height: 400,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <SvgXml xml={emptyIcon} width="100" height="100" />
+          <Text
+            style={{
+              marginTop: 30,
+              color: textColor,
+            }}
+          >
+            No Order Found
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+const OfflineScreens = ({ navigation, route }) => {
+  const vendorOrders = useSelector((state) => state.offlineOrders);
+  const [Orders, setOrders] = React.useState();
+  const [AllOrders, setAllOrders] = React.useState();
+  const userId = route.params.userId;
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const textColor = colors.getTextColor();
+  const primaryColor = colors.getPrimaryColor();
+  const assentColor = colors.getAssentColor();
+  const dispatch = useDispatch();
+  const [initialState, setInitialState] = React.useState([
+    {
+      title: "Bargaining",
+      value: true,
+      type: "STARTING",
+    },
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Package",
+      value: false,
+      type: "PACKAGE",
+    },
+  ]);
+  const isFocused=useIsFocused()
+
+  React.useEffect(() => {
+    if (vendorOrders) {
+      const arr = vendorOrders.filter((d) => d.offlineMemberId == userId);
+      setAllOrders(arr);
+      //setOrders(arr)
+    }
+  }, [vendorOrders,isFocused]);
+  React.useEffect(() => {
+    if (AllOrders) {
+      const type=initialState.filter(d=>d.title==route.name)[0].type
+      const arr = AllOrders.filter((d) => d.type == type);
+      setOrders(arr);
+    }
+  }, [AllOrders, route.name,isFocused]);
+  return (
+    <View>
+      <ScrollView nestedScrollEnabled={true}>
+        {Orders &&
+          Orders.map((doc, i) => (
+            <OrderCartOffline
+              onSelect={(e) => {
+                //console.log(e)
+                dispatch({ type: "ORDER_STATE", playload: e });
+                //dispatch({ type: "ORDER_STATE", playload: e });
+              }}
+              onPress={(userInfo) => {
+                
+                if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("SubscriptionScript", { data: doc });
+                  return;
+                }
+                if (doc.type == "INSTALLMENT" && doc.status != "WAITING_FOR_ACCEPT") {
+                  navigation.navigate("InstallmentScript", { data: doc });
+                  return;
+                }
+                navigation.navigate("VendorOfflineOrderDetails", {
+                  data: doc,
+                  userInfo:userInfo
                 });
               }}
               data={doc}

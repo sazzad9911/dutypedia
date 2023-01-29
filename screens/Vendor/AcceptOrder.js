@@ -14,11 +14,13 @@ import {
   createVendorOrder,
   createVendorOrderOffline,
   getLastOrder,
+  getOfflineOrders,
   getOrders,
 } from "../../Class/service";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
 import { socket } from "../../Class/socket";
+import { setOfflineOrders } from "../../Reducers/offlineOrders";
 
 const AcceptOrder = (props) => {
   const isDark = useSelector((state) => state.isDark);
@@ -214,11 +216,8 @@ const AcceptOrder = (props) => {
         .then((res) => {
           //getLoadData(res.data.receiverId,res.data.order)
           //console.log(res.data.order)
-         
-          setTimeout(() => {
-            setLoader(false);
-            navigation.navigate(data.type, { reload: res });
-          }, 300);
+          getLoadData()
+          
         })
         .catch((err) => {
           setLoader(false);
@@ -337,29 +336,13 @@ const AcceptOrder = (props) => {
         //console.warn(error.response.data.msg);
       });
   };
-  const getLoadData=async(receiverId,order)=>{
-    const res=await getOrders(user.token,"vendor",order.serviceId);
-    if(res.data){
-      const newOrder=res.data.orders.filter(d=>d.id==order.id);
-      socket.emit("updateOrder", {
-        receiverId: user.user.id,
-        order: {
-          type: "vendor",
-          data: newOrder[0],
-        },
-      });
-      socket.emit("updateOrder", {
-        receiverId: receiverId,
-        order: {
-          type: "user",
-          data: newOrder[0],
-        },
-      });
-      setTimeout(() => {
-        setLoader(false);
-        navigation.navigate(data.type, { reload: res });
-      }, 300);
-    }
+  const getLoadData=()=>{
+    getOfflineOrders(user.token,vendor.service.id).then(res=>{
+      dispatch(setOfflineOrders(res.data.orders))
+      navigation.navigate(data.type, { reload: res });
+    }).catch(err=>{
+      console.warn(err.response.data.msg)
+    })
   }
   if (Loader) {
     return (

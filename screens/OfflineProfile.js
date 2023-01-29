@@ -347,7 +347,7 @@ export default function OfflineProfile({ navigation, route }) {
         </View>
         <View style={{height:20}}/>
         <View style={{ minHeight: 500 }}>
-          <TabBar userId={user.id} />
+          <TabBar offline={true} userId={user.id} />
         </View>
       </ScrollView>
       <FAB

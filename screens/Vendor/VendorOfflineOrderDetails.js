@@ -34,6 +34,10 @@ import {
   vendorCancelInstallment,
   rejectRefoundInstallment,
   refoundInstallment,
+  getOfflineOrders,
+  makeOfflinePayment,
+  completeOfflineOrderDelivery,
+  changeOfflineOrderDateDelivery,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -51,6 +55,7 @@ import {
 import { socket } from "../../Class/socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
+import { setOfflineOrders } from "../../Reducers/offlineOrders";
 
 const VendorOfflineOrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
@@ -240,114 +245,19 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
     });
   };
 
-  const loadData = async (receiverId, order) => {
-    socket.emit("updateOrder", {
-      receiverId: user.user.id,
-      order: {
-        type: "vendor",
-        data: order,
-      },
-    });
-    socket.emit("updateOrder", {
-      receiverId: receiverId,
-      order: {
-        type: "user",
-        data: order,
-      },
-    });
-    setLoader(false);
-    // try {
-    //   const res = await getOrders(user.token, "user", vendor.service.id);
-    //   dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-    //   dispatch({ type: "SET_ORDER_SOCKET", playload: res });
-    //   let arr = res.data.orders.filter((order) => order.id == data.id);
-    //   setData(arr[0]);
-    //   //route.params.onRefresh();
-    //   setLoader(false);
-    // } catch (e) {
-    //   console.warn(e.message);
-    // }
+  const loadData = (res) => {
+    setData(res.data.order)
+    getOfflineOrders(user.token,vendor.service.id).then(res=>{
+      dispatch(setOfflineOrders(res.data.orders))
+      setLoader(false);
+    }).catch(err=>{
+      setLoader(false);
+      console.error(err.response.data.msg)
+    })
+    
   };
-  const loadDataSubs = async (receiverId, order) => {
-    if (index == null) {
-      Alert.alert("Some thing went wrong");
-      setLoader(false);
-      return;
-    }
-    try {
-      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
-      //const userRes = await getOrders(user.token, "user");
-      const res = await getSubsOrderById(user.token, data.id);
-      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
-      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
-      socket.emit("updateOrder", {
-        receiverId: user.user.id,
-        order: {
-          type: "vendor",
-          data: res.data.order,
-        },
-      });
-      socket.emit("updateOrder", {
-        receiverId: receiverId,
-        order: {
-          type: "user",
-          data: res.data.order,
-        },
-      });
-      setData(res.data.order);
-      setSubsOrder(res.data.order.subsOrders[index]);
-      //route.params.onRefresh();
-      setLoader(false);
-    } catch (e) {
-      console.warn(e.message);
-    }
-  };
-  const loadDataInstallment = async (receiverId, order) => {
-    if (index == null) {
-      Alert.alert("Some thing went wrong");
-      setLoader(false);
-      return;
-    }
-    try {
-      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
-      //const userRes = await getOrders(user.token, "user");
-      const res = await getSubsOrderById(user.token, data.id);
-      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
-      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
-      socket.emit("updateOrder", {
-        receiverId: user.user.id,
-        order: {
-          type: "vendor",
-          data: res.data.order,
-        },
-      });
-      socket.emit("updateOrder", {
-        receiverId: receiverId,
-        order: {
-          type: "user",
-          data: res.data.order,
-        },
-      });
-      setData(res.data.order);
-      s;
-      setInstallmentOrder(res.data.order.installmentOrders[index]);
-      //route.params.onRefresh();
-      setLoader(false);
-    } catch (e) {
-      console.warn(e.message);
-    }
-  };
-  React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      e = e.order;
-      if (e.type === "vendor" && e.data.id == data.id) {
-        setData(e.data);
-        setSubsOrder(e.data.subsOrders[index]);
-      }
-    });
-  }, []);
+
+
 
   if (Loader) {
     return (
@@ -371,10 +281,8 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
           }}>
           <TouchableOpacity
             onPress={() => {
-              if (MemberId) {
-                navigation.navigate("UserProfile", {
-                  user: MemberId,
-                });
+              if (userInfo) {
+                navigation.navigate("OfflineProfile", { user: userInfo });
               } else {
                 Alert.alert(
                   "Opps!",
@@ -1801,7 +1709,7 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                       fontSize: width < 350 ? 14 : 16,
                       color: textColor,
                     }}>
-                    When Delivered The Order Then Click
+                    When completed the order click complete
                   </Text>
                 )}
               {data.status == "PROCESSING" &&
@@ -1816,15 +1724,11 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                     onPress={() => {
                       try {
                         setLoader(true);
-                        completeOrderDelivery(user.token, data.id)
-                          .then((res) => {
-                            loadData(res.data.receiverId, res.data.order);
-                            setData(res.data.order);
-                          })
-                          .catch((err) => {
-                            setLoader(false);
-                            console.warn(err.message);
-                          });
+                        completeOfflineOrderDelivery(user.token,data.id).then(res=>{
+                          loadData(res)
+                        }).catch(err=>{
+                          console.error(err.response.data.msg)
+                        })
                       } catch (e) {
                         console.warn(e.message);
                       }
@@ -1835,110 +1739,30 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                       marginVertical: 10,
                       borderWidth: 0,
                       marginRight: 20,
-                      width: 130,
+                      width: 140,
                       fontSize: 16,
                       padding: 10,
                       height: 40,
                     }}
-                    title="Yes I Delivered"
+                    title="Complete Order"
                   />
                 )}
             </View>
-            {data.refundRequestByUser &&
-              data.status != "DELIVERED" &&
-              data.status != "REFUNDED" &&
-              data.status != "CANCELLED" && (
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text
-                    style={{
-                      fontSize: width < 350 ? 14 : 16,
-                      color: textColor,
-                      fontFamily: "Poppins-Medium",
-                    }}>
-                    Customer request for refund
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          orderRefound(user.token, data.id, true)
-                            .then((res) => {
-                              loadData(res.data.receiverId, res.data.order);
-                              setData(res.data.order);
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                        socket.emit("updateOrder", {
-                          receiverId: user.user.id,
-                          order: data,
-                        });
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Accept Refund"
-                    />
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          orderRefound(user.token, data.id, false)
-                            .then((res) => {
-                              loadData(res.data.receiverId, res.data.order);
-                              setData(res.data.order);
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                        socket.emit("updateOrder", {
-                          receiverId: user.user.id,
-                          order: data,
-                        });
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Cancel Refund"
-                    />
-                  </View>
-                </View>
-              )}
+            
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
                 flexWrap: "wrap",
               }}>
-              {data.status === "WAITING_FOR_ACCEPT" && (
+              {data.status === "ACCEPTED" && (
                 <IconButton
                   onPress={() => {
-                    try {
-                      validate();
-                    } catch (e) {
-                      console.warn(e.message);
-                    }
+                    makeOfflinePayment(user.token,data.id).then(res=>{
+                      loadData(res)
+                    }).catch(err=>{
+                      console.error(err.response.data.msg)
+                    })
                   }}
                   style={{
                     backgroundColor: "#4ADE80",
@@ -1947,10 +1771,10 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                     marginVertical: 30,
                     borderWidth: 0,
                     marginRight: 20,
-                    width: 100,
+                    width: 110,
                     height: 40,
                   }}
-                  title="Accept"
+                  title="Make It Paid"
                 />
               )}
               {data.status == "PROCESSING" &&
@@ -1967,10 +1791,10 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                       marginVertical: 30,
                       borderWidth: 0,
                       marginRight: 20,
-                      width: 150,
+                      width: 170,
                       height: 40,
                     }}
-                    title="Request Extra Time"
+                    title="Change Delivery Date"
                   />
                 )}
 
@@ -2053,27 +1877,22 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
               isVisible={Refound}
               mode="date"
               onConfirm={(e) => {
+                
                 if (dateDifference(data.deliveryDateTo, e) > 0) {
                   setRefoundDate(e);
                   try {
                     setRefound(false);
                     setLoader(true);
-                    requestForTime(user.token, data.id, dateConverter(e))
-                      .then((res) => {
-                        loadData(res.data.receiverId, res.data.order);
-                        setData(res.data.order);
-                      })
-                      .catch((error) => {
-                        setLoader(false);
-                        console.warn(error.message);
-                      });
+                    changeOfflineOrderDateDelivery(user.token,data.id,dateConverter(e)).then(res=>{
+                      loadData(res)
+                    }).catch(err=>{
+                      setLoader(false);
+                      console.error(err.response.data.msg)
+                    })
                   } catch (err) {
                     console.warn(err.message);
                   }
-                  socket.emit("updateOrder", {
-                    receiverId: user.user.id,
-                    order: data,
-                  });
+                  
                 } else {
                   setRefound(false);
                   Alert.alert(

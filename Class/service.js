@@ -433,6 +433,59 @@ export const makePayment = async (token, orderId) => {
 
   return res;
 };
+export const makeOfflinePayment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/make-payment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
+export const completeOfflineOrderDelivery = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/complete`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
+export const changeOfflineOrderDateDelivery = async (token, orderId,newDate) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/update-date`,
+    {
+      orderId: orderId,
+      newDate:newDate
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
+export const cancelOfflineOrder = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/cancel`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const makePaymentSubscription = async (
   token,
   orderId,
