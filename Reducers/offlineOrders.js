@@ -7,7 +7,7 @@ const offlineOrders=(state=initialState,action)=>{
 }
 export default offlineOrders
 
-export const setOfflineOrdes=(value)=>{
+export const setOfflineOrders=(value)=>{
     return{
         type:"SET_OFFLINE_ORDERS",
         playload:value

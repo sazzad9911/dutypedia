@@ -19,6 +19,7 @@ import {
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
+import { SafeAreaView } from "react-native-safe-area-context";
 const status = [
   {
     title: "Incomplete",
@@ -50,7 +51,7 @@ export default function VendorAppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Upcoming");
   const user = useSelector((state) => state.user);
   const data = route.params && route.params.data ? route.params.data : null;
-  const [Loader, setLoader] = React.useState(false);
+  const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -64,7 +65,7 @@ export default function VendorAppointmentList({ navigation, route }) {
 
   React.useLayoutEffect(() => {
     if(Active=="All"){
-      setLoader(true);
+      //setLoader(true);
       getVendorAppointment(user.token, "upcoming", vendor.service.id)
         .then((res) => {
           setLoader(false);
@@ -97,7 +98,7 @@ export default function VendorAppointmentList({ navigation, route }) {
         return
     }
     if (user && vendor && Active &&Active!="Request") {
-      setLoader(true);
+      //setLoader(true);
       getVendorAppointment(user.token, Active, vendor.service.id)
         .then((res) => {
           setLoader(false);
@@ -144,7 +145,7 @@ export default function VendorAppointmentList({ navigation, route }) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       <View
@@ -241,7 +242,7 @@ export default function VendorAppointmentList({ navigation, route }) {
           navigation.navigate("CreateVendorAppointment", { data: data });
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 const Cart = ({ date, status, title, onPress, image,name,username }) => {

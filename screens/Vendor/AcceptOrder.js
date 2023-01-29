@@ -12,6 +12,7 @@ import {
   acceptOrder,
   createOrder,
   createVendorOrder,
+  createVendorOrderOffline,
   getLastOrder,
   getOrders,
 } from "../../Class/service";
@@ -75,7 +76,8 @@ const AcceptOrder = (props) => {
   const data = params.data;
   const userId = params.userId;
   const dispatch = useDispatch();
-  const selectedPackage=params.selectedPackage
+  const selectedPackage=params.selectedPackage;
+  const userOffline=params.offline;
   //console.log(userId)
   //console.log(data)
 
@@ -177,10 +179,53 @@ const AcceptOrder = (props) => {
       return;
     }
     if (!params.facilities || !params.id) {
-      Alert.alert("Opps!", "Something went wrong. Please try again.");
+      Alert.alert("Ops!", "Something went wrong. Please try again.");
       return;
     }
+    
     setLoader(true);
+    if(userOffline){
+      createVendorOrderOffline(
+        user.token,
+        userId,
+        data.facilites, 
+        data.services,
+        data.service.id,
+        data.type,
+        parseInt(selectedPackage?selectedPackage.price:data.price),
+        Description,
+        parseInt(selectedPackage?selectedPackage.price:data.price),
+        params.from,
+        params.to,
+        "VENDOR",
+        {
+          deliverMethodOnline: Select,
+          selfDeliverMethodOther: Description,
+          courierServiceName: CourierServiceName,
+          courierServiceAreaName: CourierServiceAddress,
+          otherServiceType: OtherService,
+          deliverBy: Deliver,
+          serviceType: Service,
+        },
+        selectedPackage?selectedPackage:undefined,
+        data.subsData?data.subsData:undefined,
+        data.installmentData?data.installmentData:undefined
+      )
+        .then((res) => {
+          //getLoadData(res.data.receiverId,res.data.order)
+          //console.log(res.data.order)
+         
+          setTimeout(() => {
+            setLoader(false);
+            navigation.navigate(data.type, { reload: res });
+          }, 300);
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+      return;
+    }
     if (newVendor) {
       //console.log(data.installmentData)
       createVendorOrder(

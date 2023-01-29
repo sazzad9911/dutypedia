@@ -600,6 +600,52 @@ export const createVendorOrder = async (
 
   return res;
 };
+export const createVendorOrderOffline = async (
+  token,
+  userId,
+  facilites,
+  selectedServices,
+  serviceId,
+  type,
+  amount,
+  description,
+  offerPrice,
+  deliveryDateFrom,
+  deliveryDateTo,
+  orderedBy,
+  agreement,
+  selectedPackage,
+  subsData,
+  installmentData
+) => {
+
+  //console.log(data)
+  const res = await axios.post(
+    `${url}/server/orders/offline/create`,
+    {
+      offlineMemberId: userId,
+      facilites: facilites,
+      selectedServices: selectedServices,
+      serviceId: serviceId,
+      type: type,
+      amount: amount,
+      description: description,
+      offerPrice: offerPrice,
+      deliveryDateFrom: deliveryDateFrom,
+      deliveryDateTo: deliveryDateTo,
+      orderedBy: orderedBy,
+      agreement: agreement,
+      selectedPackage: selectedPackage,
+      subsData: subsData,
+      installmentData: installmentData,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const getMemberId = async (token, serviceId, userId) => {
   const res = axios.get(
     `${url}/server/members/online/get-by-userid?serviceId=${serviceId}&&userId=${userId}`,

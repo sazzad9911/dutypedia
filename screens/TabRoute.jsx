@@ -76,6 +76,9 @@ import ChatScreen from "./ChatScreen";
 //import AudioCallScreen from "./AudioCallScreen";
 //import CallingScreen from "./CallingScreen";
 import { setCallingScreen } from "../Reducers/callingScreen";
+import { setOfflineOrders, setOfflineOrdes } from "../Reducers/offlineOrders";
+import AppointmentHeader from "../components/Appointment/AppointmentHeader";
+import VendorAppointmentList from "./Vendor/Appointment/VendorAppointmentList";
 
 const Tab = createBottomTabNavigator();
 
@@ -213,8 +216,9 @@ const TabRoute = () => {
     }
   };
   const offlineOrders = async () => {
-   // const res = await getOfflineOrders(user.token,vendor.service.id);
-    //console.log(res)
+    const res = await getOfflineOrders(user.token,vendor.service.id);
+    //console.log(res.data.orders)
+    dispatch(setOfflineOrders(res.data.orders))
   };
   React.useEffect(() => {
     if (user && !isOffline) {
@@ -376,7 +380,7 @@ const TabRoute = () => {
           ) : (
             <Tab.Screen
               options={{ headerShown: false }}
-              name="Home"
+              name="Feed"
               component={Feed}
             />
           ))}
@@ -384,14 +388,19 @@ const TabRoute = () => {
           <Tab.Screen
             options={{ headerShown: false }}
             name="Feed"
-            component={Dashboard}
+            component={Order}
           />
-        )}
+        )} 
         {vendor ? (
           <Tab.Screen
-            options={{ lazy: false, headerShown: false }}
+            options={{
+              // header: (props) => (
+              //   <AppointmentHeader title={"Appointment"} {...props} />
+              // ),
+              headerShown:false
+            }}
             name="Search"
-            component={Order}
+            component={VendorAppointmentList}
           />
         ) : (
           <Tab.Screen

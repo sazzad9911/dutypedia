@@ -152,19 +152,19 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Cart
+          {/* <Cart
             onPress={() => {}}
             title="Manage Order"
             Icon={() => <SvgXml xml={manageOrder} height="30" width="30" />}
-          />
-          <Cart
+          /> */}
+          {/* <Cart
             onPress={() => {
               navigation.navigate("VendorAppointmentList");
             }}
             title="Appointment"
             Icon={() => <SvgXml xml={appointment} height="30" width="30" />}
-          />
-          <Cart
+          /> */}
+          {/* <Cart
             onPress={() => {
               navigation.navigate("Expenses");
             }}
@@ -179,7 +179,7 @@ const Menu = ({ navigation }) => {
                 source={require("../../assets/newIcon/expenses.png")}
               />
             )}
-          />
+          /> */}
           <Cart
             onPress={() => {
               navigation.navigate("Notice");

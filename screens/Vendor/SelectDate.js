@@ -141,10 +141,7 @@ export default function SelectDate({onChange,navigation,route}) {
           setError("Please select date")
           return;
         }
-        if(offline){
-          
-          return
-        }
+        
         navigation.navigate("AcceptOrder", {
           facilities: data.facilites,
           id: data.id,
@@ -153,7 +150,8 @@ export default function SelectDate({onChange,navigation,route}) {
           from:dateConverter(OpeningTime),
           to:dateConverter(ClosingTime),
           userId:userId,
-          selectedPackage:selectedPackage
+          selectedPackage:selectedPackage,
+          offline:offline
         });
       }} style={{
         borderRadius:5,

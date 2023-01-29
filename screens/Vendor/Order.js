@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -62,6 +62,8 @@ import PackageList from "./PackageList";
 import SubscriptionScript from "../services/SubscriptionScript";
 import { setOrderListFilter } from "../../Reducers/orderListFilter";
 import InstallmentScript from "../services/InstallmentScript";
+import { getOfflineMembers } from "../../Class/member";
+import VendorOfflineOrderDetails from "./VendorOfflineOrderDetails";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -78,6 +80,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="VendorOrderDetails"
         component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="VendorOfflineOrderDetails"
+        component={VendorOfflineOrderDetails}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -174,9 +181,9 @@ const VendorOrder = ({ navigation, route }) => {
       type: "ONETIME",
     },
     {
-      title: "Installment",
+      title: "Package",
       value: false,
-      type: "INSTALLMENT",
+      type: "PACKAGE",
     },
     {
       title: "Subscription",
@@ -184,10 +191,34 @@ const VendorOrder = ({ navigation, route }) => {
       type: "SUBS",
     },
     {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+    
+  ]);
+  const [initialStateOffline, setInitialStateOffline] = React.useState([
+    {
+      title: "Fixed",
+      value: false,
+      type: "ONETIME",
+    },
+    {
       title: "Package",
       value: false,
       type: "PACKAGE",
     },
+    {
+      title: "Subscription",
+      value: false,
+      type: "SUBS",
+    },
+    {
+      title: "Installment",
+      value: false,
+      type: "INSTALLMENT",
+    },
+  
   ]);
   const [AllStatus, setAllStatus] = React.useState([
     {
@@ -260,7 +291,8 @@ const VendorOrder = ({ navigation, route }) => {
       }}
     >
       <StatusBar />
-      <Tab.Navigator
+      {offlineOrder==false&&(
+        <Tab.Navigator
         screenOptions={{
           tabBarLabelStyle: { fontSize: 12 },
           tabBarItemStyle: {
@@ -277,7 +309,7 @@ const VendorOrder = ({ navigation, route }) => {
           tabBarPressColor: "white",
         }}
       >
-        {!offlineOrder&& initialState.map((doc, i) => (
+        {initialState.map((doc, i) => (
           <Tab.Screen
             options={{
               title: `${initialState[i].title}(${
@@ -292,12 +324,33 @@ const VendorOrder = ({ navigation, route }) => {
             component={Screens}
           />
         ))}
-         {offlineOrder&& initialState.map((doc, i) => (
+         
+      </Tab.Navigator>
+      )}
+      {offlineOrder&&(
+        <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarItemStyle: {
+            margin: 0,
+            padding: 0,
+            width: 120,
+            paddingTop: 0,
+            paddingBottom: 10,
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#AC5DCB",
+          },
+          tabBarScrollEnabled: true,
+          tabBarPressColor: "white",
+        }}
+      >
+         {initialStateOffline.map((doc, i) => (
           <Tab.Screen
             options={{
-              title: `${initialState[i].title}(${
+              title: `${initialStateOffline[i].title}(${
                 offlineOrders
-                  ? offlineOrders.filter((d) => d.type == initialState[i].type)
+                  ? offlineOrders.filter((d) => d.type == initialStateOffline[i].type)
                       .length
                   : "0"
               })`,
@@ -308,6 +361,16 @@ const VendorOrder = ({ navigation, route }) => {
           />
         ))}
       </Tab.Navigator>
+      )}
+      {offlineOrder==null&&(
+        <View style={{
+          flex:1,
+          justifyContent:"center",
+          alignItems:"center"
+        }}>
+          <ActivityLoader/>
+        </View>
+      )}
       <View
         style={{
           position: "absolute",
@@ -335,6 +398,7 @@ const VendorOrder = ({ navigation, route }) => {
       >
         <TouchableOpacity
           onPress={() => {
+            
             navigation.navigate("MemberList",{offline:offlineOrder});
           }} 
           style={styles.view}
@@ -343,7 +407,11 @@ const VendorOrder = ({ navigation, route }) => {
           <Text style={styles.text}>New Order</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>{
-          setOfflineOrder(val=>(!val))
+          let state=offlineOrder;
+          setOfflineOrder(null)
+          setTimeout(()=>{
+            setOfflineOrder(!state)
+          },100)
         }} style={styles.view}>
           <SvgXml xml={re} height="20" />
           <Text style={styles.text}>{offlineOrder?"Offline User":"Dutypedia User"}</Text>
@@ -474,7 +542,7 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
                 borderColor: "#e5e5e5",
               }}
             >
-              {data && !user && data.user.profilePhoto ? (
+              {data && !user &&data.user&& data.user.profilePhoto ? (
                 <Image
                   style={{
                     height: 50,
@@ -1191,11 +1259,8 @@ export const OfflineScreens = ({ navigation, route }) => {
       let arr = vendorOrders.filter((d) => d.type == route.name);
       setAllOrders(arr);
       setNewOrders(arr);
-    }else{
-      setAllOrders([]);
-      setNewOrders([]);
     }
-  }, [route.name + isFocused + vendorOrders + Refresh]);
+  }, [route.name, isFocused , vendorOrders , Refresh]);
 
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
@@ -1386,7 +1451,7 @@ export const OfflineScreens = ({ navigation, route }) => {
         </A.View>
         {NewOrders &&
           NewOrders.map((doc, i) => (
-            <OrderCart
+            <OrderCartOffline
               onSelect={(e) => {
                 //console.log(e)
                 //dispatch({ type: "ORDER_STATE", playload: e });
@@ -1399,7 +1464,8 @@ export const OfflineScreens = ({ navigation, route }) => {
                   }
                 });
               }}
-              onPress={() => {
+              onPress={(userInfo) => {
+                
                 if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
                   navigation.navigate("SubscriptionScript", { data: doc });
                   return;
@@ -1408,13 +1474,15 @@ export const OfflineScreens = ({ navigation, route }) => {
                   navigation.navigate("InstallmentScript", { data: doc });
                   return;
                 }
-                navigation.navigate("VendorOrderDetails", {
+                navigation.navigate("VendorOfflineOrderDetails", {
                   data: doc,
+                  userInfo:userInfo
                 });
               }}
               key={i}
               data={doc}
               open={Open == doc.id ? true : false}
+              user={true}
             />
           ))}
 
@@ -1426,5 +1494,324 @@ export const OfflineScreens = ({ navigation, route }) => {
         <View style={{ height: 70 }} />
       </ScrollView>
     </View>
+  );
+};
+export const OrderCartOffline = ({ data, onPress, onSelect, user, open }) => {
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const primaryColor = colors.getPrimaryColor();
+  const secondaryColor = colors.getSecondaryColor();
+  const textColor = colors.getTextColor();
+  const backgroundColor = colors.getBackgroundColor();
+  const assentColor = colors.getAssentColor();
+  const dispatch = useDispatch();
+  const [Open, setOpen] = React.useState(false);
+  const orderState = useSelector((state) => state.orderState);
+  const type = data.type;
+  const [userInfo,setUserInfo]=useState()
+  const newUser=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  //console.warn(data.installmentData)
+
+  //console.log(data.service)
+  // React.useEffect(() => {
+  //   //console.log(orderState)
+  //   if (orderState && data && orderState != data.id) {
+  //     setOpen(false);
+  //   }
+  // }, [orderState]);
+  useEffect(()=>{
+    (async()=>{
+      const res=await getOfflineMembers(newUser.token,vendor.service.id)
+      setUserInfo(res?res.members.filter(d=>d.id==data.offlineMemberId)[0]:null)
+    })()
+  },[])
+
+  return (
+    <Pressable
+      onPress={() => {
+        if (onPress) {
+          onPress(userInfo);
+          dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+        }
+        return;
+        setOpen((val) => !val);
+        if (onSelect) {
+          onSelect(data.id);
+        }
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: open ? "#F2F2F6" : primaryColor,
+          paddingHorizontal: 10,
+          paddingVertical: 0,
+          paddingTop: 0,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingTop: 5,
+          }}
+        >
+          <View
+            style={{ flexDirection: "row", alignItems: "center", flex: 1.3 }}
+          >
+            <View
+              style={{
+                borderWidth: 1,
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+                borderColor: "#e5e5e5",
+              }}
+            >
+              {data&& data.profilePhoto ? (
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                  }}
+                  source={{ uri: data.profilePhoto }}
+                />
+              ) : (
+                <FontAwesome name="user" size={35} color={assentColor} />
+              )}
+            </View>
+            <View
+              style={{
+                marginLeft: 10,
+                flex: 1,
+                marginRight: 20,
+              }}
+            >
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: textColor,
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                {userInfo?.name}
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: 14,
+                  color: textColor,
+                  fontFamily: "Poppins-Medium",
+                }}
+              >
+                
+                {userInfo?.gender}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Text>Status</Text>
+            <Text style={{ color: "#4ADE80", textAlign: "center" }}>
+              {data && data.status ? exporters(data.status) : "Unknown"}
+            </Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <View
+              style={{
+                alignItems: "center",
+                paddingVertical: 10,
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              {type == "SUBS" ? (
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  {data.subsData.subscriptionType}{" "}
+                  {data ? data.subsData.amount : "0"}৳
+                </Text>
+              ):type=="INSTALLMENT"?(
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  {data.installmentData?.installmentType}{" "}
+                  {data ? (data.installmentData?.totalAmount/data.installmentData.installmentCount).toFixed(2) : "0"}৳
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: textColor,
+                    fontFamily: "Poppins-Medium",
+                    textAlign: "center",
+                  }}
+                >
+                  Price {data ? data.amount : "0"}৳
+                </Text>
+              )}
+
+              <View
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: data.paid ? backgroundColor : "red",
+                    fontSize: 15,
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  {data && data.paid && data.status != "REFUNDED"
+                    ? "Paid"
+                    : data && data.paid && data.status == "REFUNDED"
+                    ? "Refunded"
+                    : "Due"}
+                </Text>
+                <View style={{ width: 10 }} />
+                {type == "SUBS"||type=="INSTALLMENT" && (
+                  <SvgXml xml={notify} height="15" width={"15"} />
+                )}
+              </View>
+              {/* {type=="SUBS"&&(
+                <Text numberOfLines={1} style={{
+                  color:"#E01A1A",
+                  fontSize:14,
+                  marginTop:2
+                }}>(1 delivery incomplete)</Text>
+              )} */}
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: "#F1EFEF",
+            marginLeft: 60,
+            marginTop: 10,
+          }}
+        />
+        {open && (
+          <Animated.View entering={StretchInY}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 20,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: "Poppins-Medium",
+                    color: textColor,
+                    textAlign: "center",
+                  }}
+                >
+                  Service Name
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: "Poppins-Medium",
+                    color: textColor,
+                    marginLeft: 15,
+                    textAlign: "center",
+                  }}
+                >
+                  Status
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}></View>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            >
+              <View
+                style={{ flex: 1, alignItems: "center", paddingHorizontal: 10 }}
+              >
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    color: textColor,
+                    fontSize: 14,
+                    fontFamily: "Poppins-Medium",
+                  }}
+                >
+                  {data
+                    ? data.service.gigs[0].title
+                    : "I will give you a best service"}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  paddingHorizontal: 10,
+                }}
+              >
+                <Text style={{ color: "#4ADE80" }}>
+                  {data && data.status ? exporters(data.status) : "Unknown"}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <IconButton
+                  onPress={() => {
+                    if (onPress) {
+                      onPress();
+                      dispatch({ type: "SET_LIST_SELECTION", playload: [] });
+                    }
+                  }}
+                  Icon={() => (
+                    <AntDesign name="right" size={20} color={assentColor} />
+                  )}
+                  style={{
+                    borderWidth: 0,
+                    color: "#6366F1",
+                    marginTop: -25,
+                    backgroundColor: "transparent",
+                  }}
+                  title={"See More"}
+                />
+              </View>
+            </View>
+          </Animated.View>
+        )}
+      </View>
+    </Pressable>
   );
 };

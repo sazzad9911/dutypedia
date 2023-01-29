@@ -64,7 +64,9 @@ export default function MemberList({ navigation, route }) {
     }
   }, [user + vendor]);
   if (Loading) {
-    return <ActivityLoader />;
+    return <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+      <ActivityLoader />
+    </View>;
   }
 
   if (!Data) {
@@ -166,6 +168,7 @@ export default function MemberList({ navigation, route }) {
       </Text>
       {Data.map((doc, i) => (
         <UserCart onSelect={()=>{
+         
           navigation.navigate("VendorServiceList",{userId:doc.userId?doc.userId:doc.id,offline:offline})
         }} data={doc} key={i} />
       ))}
@@ -283,8 +286,8 @@ const UserCart = ({ data, onSelect }) => {
                   fontFamily: "Poppins-Medium",
                 }}
               >
-                {"@"}
-                {data&&data.user ? data.user.username:data&&data.name?data.name.split(" ")[0].toLowerCase() : "Empty position"}
+                {data.user?"@":""}
+                {data&&data.user ? data.user.username:data&&data.gender?data.gender : "Empty position"}
               </Text>
             </View>
           </View>

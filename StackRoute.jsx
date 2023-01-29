@@ -347,7 +347,7 @@ export default function StackRoute() {
             name="AppointmentDetails"
             component={AppointmentDetails}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             options={{
               header: (props) => (
                 <AppointmentHeader title={"Appointment"} {...props} />
@@ -355,7 +355,7 @@ export default function StackRoute() {
             }}
             name="VendorAppointmentList"
             component={VendorAppointmentList}
-          />
+          /> */}
           <Stack.Screen
             options={{ headerShown: false }}
             name="CreateVendorAppointment"

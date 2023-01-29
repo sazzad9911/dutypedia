@@ -45,7 +45,7 @@ export default function VendorServiceList({navigation,route}) {
   ]);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
-  
+  const offline=route.params.offline;
  
   // tabBar={(props) => <ListHeader {...props} />}
   return (
@@ -66,7 +66,7 @@ export default function VendorServiceList({navigation,route}) {
       tabBarScrollEnabled: true,
     }}>
       {initialState.map((doc, i) => (
-        <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId}} component={Screens} />
+        <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId,offline:offline}} component={Screens} />
       ))}
     </Tab.Navigator>
     </SafeAreaView>
@@ -193,6 +193,7 @@ const Screens = ({ navigation, route }) => {
       }}> 
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{
+            
             if(doc.type=="ONETIME"||doc.type=="SUBS"||doc.type=="INSTALLMENT"){
               navigation.navigate("SelectDate",{data:doc,userId:userId,offline:offline})
             }else if(doc.type=="PACKAGE"){

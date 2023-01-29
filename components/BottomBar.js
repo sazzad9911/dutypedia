@@ -11,7 +11,7 @@ import { Ionicons, Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
 import { Badge } from "react-native-paper";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { dashboard, order } from "../assets/icon";
+import { appointment, dashboard, order,appointmentActive,orderActive } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import { checkVendor } from "./../Class/auth";
@@ -91,6 +91,10 @@ const BottomBar = (props) => {
       color: "#808080",
       fontFamily: "Poppins-Light",
     },
+    active:{
+      color:"#4ADE80",
+      fontFamily:"Poppins-SemiBold"
+    }
   });
 
   if (hideBottomBar) {
@@ -100,8 +104,16 @@ const BottomBar = (props) => {
     <Animated.View entering={FadeIn} style={styles.box}>
       <TouchableOpacity
         onPress={() => {
+          if (route == 0 && vendor) {
+            try {
+              navigation.navigate("VendorOrder");
+              return;
+            } catch (e) {
+              console.warn(e.message);
+            }
+          }
           if (route == 0) {
-            navigation.navigate("Home");
+            navigation.navigate("Feed");
             setRoute(0);
           } else {
             navigation.navigate("Feed");
@@ -113,11 +125,11 @@ const BottomBar = (props) => {
         {vendor ? (
           <>
             {route == 0 ? (
-              <SvgXml xml={dashboard} height="24" width="24" />
-            ) : (
-              <SvgXml xml={dashboard} height="24" width="24" />
-            )}
-            <Text style={styles.text}>Dashboard</Text>
+              <SvgXml xml={orderActive} height="24" width="24" />
+              ) : (
+                <SvgXml xml={order} height="24" width="24" />
+                )}
+            <Text style={[styles.text,route==0?styles.active:null]}>Order</Text>
           </>
         ) : (
           <>
@@ -126,7 +138,7 @@ const BottomBar = (props) => {
             ) : (
               <Ionicons name="home-outline" size={24} color="#808080" />
             )}
-            <Text style={styles.text}>Home</Text>
+            <Text style={[styles.text,route==0?styles.active:null]}>Home</Text>
           </>
         )}
       </TouchableOpacity>
@@ -134,7 +146,7 @@ const BottomBar = (props) => {
         onPress={() => {
           if (route == 1 && vendor) {
             try {
-              navigation.navigate("VendorOrder");
+              navigation.navigate("Search");
               return;
             } catch (e) {
               console.warn(e.message);
@@ -149,11 +161,11 @@ const BottomBar = (props) => {
         {vendor ? (
           <>
             {route == 1 ? (
-              <SvgXml xml={order} height="24" width="24" />
+              <SvgXml xml={appointmentActive} height="21" width="21" />
             ) : (
-              <SvgXml xml={order} height="24" width="24" />
+              <SvgXml xml={appointment} height="21" width="21" />
             )}
-            <Text style={styles.text}>Order</Text>
+            <Text style={[styles.text,route==1?styles.active:null]}>Appointment</Text>
           </>
         ) : (
           <>
@@ -162,7 +174,7 @@ const BottomBar = (props) => {
             ) : (
               <Ionicons name="search-outline" size={24} color="#808080" />
             )}
-            <Text style={styles.text}>Search</Text>
+            <Text style={[styles.text,route==1?styles.active:null]}>Search</Text>
           </>
         )}
       </TouchableOpacity>
@@ -187,7 +199,7 @@ const BottomBar = (props) => {
         ) : (
           <Ionicons name="paper-plane-outline" size={24} color="#808080" />
         )}
-        <Text style={styles.text}>Message</Text>
+        <Text style={[styles.text,route==2?styles.active:null]}>Message</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -224,7 +236,7 @@ const BottomBar = (props) => {
         ) : (
           <Ionicons name="notifications-outline" size={24} color="#808080" />
         )}
-        <Text style={styles.text}>Notification</Text>
+        <Text style={[styles.text,route==3?styles.active:null]}>Notification</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -259,7 +271,7 @@ const BottomBar = (props) => {
             ) : (
               <Ionicons name="menu-outline" size={28} color="#808080" />
             )}
-            <Text style={styles.text}>Menu</Text>
+            <Text style={[styles.text,route==4?styles.active:null]}>Menu</Text>
           </>
         ) : (
           <>
@@ -276,7 +288,7 @@ const BottomBar = (props) => {
                 color="#808080"
               />
             )}
-            <Text style={styles.text}>Profile</Text>
+            <Text style={[styles.text,route==4?styles.active:null]}>Profile</Text>
           </>
         )}
       </TouchableOpacity>

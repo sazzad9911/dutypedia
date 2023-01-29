@@ -52,7 +52,7 @@ import { socket } from "../../Class/socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 
-const OrderDetails = ({ navigation, route }) => {
+const VendorOfflineOrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const dispatch = useDispatch();
@@ -136,6 +136,8 @@ const OrderDetails = ({ navigation, route }) => {
   const [subsOrder, setSubsOrder] = useState(sOrder);
   const installmentData = data.installmentData ? data.installmentData : null;
   const [installmentOrder, setInstallmentOrder] = useState(sOrder);
+  const userInfo = route?.params?.userInfo;
+  //console.log(userInfo)
 
   //console.log(index)
   const stringDate = (d) => {
@@ -237,19 +239,6 @@ const OrderDetails = ({ navigation, route }) => {
       data: data,
     });
   };
-  React.useState(() => {
-    //console.log("------")
-    //console.warn(data.user.id)
-    //console.log(vendor.service.id)
-    getMemberId(user.token, vendor.service.id, data.user.id)
-      .then((res) => {
-        setMemberId(res.data.member);
-        //console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data.msg);
-      });
-  }, [orderSocket]);
 
   const loadData = async (receiverId, order) => {
     socket.emit("updateOrder", {
@@ -403,13 +392,13 @@ const OrderDetails = ({ navigation, route }) => {
               borderColor: "#e5e5e5",
               overflow: "hidden",
             }}>
-            {data && data.user.profilePhoto ? (
+            {userInfo && userInfo.profilePhoto ? (
               <Image
                 style={{
                   width: 70,
                   height: 70,
                 }}
-                source={{ uri: data.user.profilePhoto }}
+                source={{ uri: userInfo.profilePhoto }}
               />
             ) : (
               <FontAwesome name="user" size={50} color={assentColor} />
@@ -426,21 +415,10 @@ const OrderDetails = ({ navigation, route }) => {
                 fontFamily: "Poppins-Medium",
                 color: textColor,
               }}>
-              {data
-                ? `${data.user.firstName + " " + data.user.lastName}`
-                : "--"}{" "}
-              {data ? `(${data.user.gender.toUpperCase()})` : "(-)"}
+              {userInfo ? `${userInfo.name}` : "--"}{" "}
             </Text>
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: width < 350 ? 14 : 16,
-                fontFamily: "Poppins-Medium",
-                color: textColor,
-                marginTop: 1,
-              }}>
-              {"@"}
-              {data ? data.user.username : "-"}
+            <Text>
+              {userInfo ? `${userInfo.gender.toUpperCase()}` : "(-)"}
             </Text>
           </View>
         </View>
@@ -564,7 +542,7 @@ const OrderDetails = ({ navigation, route }) => {
             Add What Service Do You Want To Sell
           </Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {ListData && ListData.length > 0 && (
+          {ListData && ListData.length > 0 && (
               <Text
                 style={{
                   color: "#606060",
@@ -2139,7 +2117,7 @@ const OrderDetails = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
-export default OrderDetails;
+export default VendorOfflineOrderDetails;
 const exporters = (key) => {
   switch (key) {
     case "WAITING_FOR_ACCEPT":
