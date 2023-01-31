@@ -38,6 +38,13 @@ import {
   makeOfflinePayment,
   completeOfflineOrderDelivery,
   changeOfflineOrderDateDelivery,
+  makePaymentOfflineSubscription,
+  cancelOfflineSubs,
+  getSubsOfflineOrderById,
+  completeOfflineSubs,
+  cancelOfflineInstallment,
+  makeOfflineAdvancedPaymentInstallment,
+  makeOfflinePaymentInstallment,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -142,7 +149,7 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
   const installmentData = data.installmentData ? data.installmentData : null;
   const [installmentOrder, setInstallmentOrder] = useState(sOrder);
   const userInfo = route?.params?.userInfo;
-  //console.log(userInfo)
+  //console.log(sOrder)
 
   //console.log(index)
   const stringDate = (d) => {
@@ -256,8 +263,62 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
     })
     
   };
-
-
+  const loadDataSubs = async () => {
+    if (index == null) {
+      Alert.alert("Some thing went wrong");
+      setLoader(false);
+      return;
+    }
+    try {
+      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
+      //const userRes = await getOrders(user.token, "user");
+      const res = await getSubsOfflineOrderById(user.token, data.id);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
+      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
+      setData(res.data.order);
+      setSubsOrder(res.data.order.subsOrders[index]);
+      //route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+    getOfflineOrders(user.token,vendor.service.id).then(res=>{
+      dispatch(setOfflineOrders(res.data.orders))
+      setLoader(false);
+    }).catch(err=>{
+      setLoader(false);
+      console.error(err.response.data.msg)
+    })
+  };
+  const loadDataInstallment = async () => {
+    if (index == null) {
+      Alert.alert("Some thing went wrong");
+      setLoader(false);
+      return;
+    }
+    try {
+      //const vendorRes = await getOrders(user.token, "vendor", order.service.id);
+      //const userRes = await getOrders(user.token, "user");
+      const res = await getSubsOfflineOrderById(user.token, data.id);
+      //dispatch({ type: "USER_ORDERS", playload: res.data.orders });
+      //let userArr = userRes.data.orders.filter((o) => o.id == order.id);
+      //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
+      setData(res.data.order);
+      setInstallmentOrder(res.data.order.installmentOrders[index]);
+      //route.params.onRefresh();
+      setLoader(false);
+    } catch (e) {
+      console.warn(e.message);
+    }
+    getOfflineOrders(user.token,vendor.service.id).then(res=>{
+      dispatch(setOfflineOrders(res.data.orders))
+      setLoader(false);
+    }).catch(err=>{
+      setLoader(false);
+      console.error(err.response.data.msg)
+    })
+  };
 
   if (Loader) {
     return (
@@ -1320,9 +1381,9 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                     onPress={() => {
                       try {
                         setLoader(true);
-                        deliverySubs(user.token, subsOrder.id)
+                        completeOfflineSubs(user.token, subsOrder.id)
                           .then((res) => {
-                            loadDataSubs(res.data.receiverId, res.data.order);
+                            loadDataSubs();
                           })
                           .catch((err) => {
                             setLoader(false);
@@ -1347,91 +1408,23 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                   />
                 )}
             </View>
-            {subsOrder.refundRequestByUser &&
-              subsOrder.status != "DELIVERED" &&
-              subsOrder.status != "REFUNDED" &&
-              subsOrder.status != "CANCELLED" && (
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text
-                    style={{
-                      fontSize: width < 350 ? 14 : 16,
-                      color: textColor,
-                      fontFamily: "Poppins-Medium",
-                    }}>
-                    Customer request for refund
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          acceptRefoundSubs(user.token, subsOrder.id)
-                            .then((res) => {
-                              loadDataSubs(res.data.receiverId, res.data.order);
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Accept Refund"
-                    />
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          rejectRefoundSubs(user.token, subsOrder.id)
-                            .then((res) => {
-                              loadDataSubs(res.data.receiverId, res.data.order);
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Cancel Refund"
-                    />
-                  </View>
-                </View>
-              )}
+            
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
                 flexWrap: "wrap",
               }}>
-              {subsOrder.status === "WAITING_FOR_ACCEPT" && (
+              {subsOrder.status === "WAITING_FOR_PAYMENT" && (
                 <IconButton
                   onPress={() => {
-                    try {
-                      validate();
-                    } catch (e) {
-                      console.warn(e.message);
-                    }
+                    //console.log(data.subsData.subscriptionType)
+                    makePaymentOfflineSubscription(user.token,data.id,data.subsData.subscriptionType,
+                      data.subsData.dateFrom,data.subsData.dateTo).then(res=>{
+                        loadDataSubs()
+                      }).catch(err=>{
+                        console.warn(err.response.data.msg)
+                      })
                   }}
                   style={{
                     backgroundColor: "#4ADE80",
@@ -1443,7 +1436,7 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                     width: 100,
                     height: 40,
                   }}
-                  title="Accept"
+                  title="Make It Paid"
                 />
               )}
               {subsOrder.status != "CANCELLED" &&
@@ -1466,17 +1459,14 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                             text: "OK",
                             onPress: () => {
                               setLoader(true);
-                              vendorCancelSubs(user.token, subsOrder.id)
+                              cancelOfflineSubs(user.token, subsOrder.id)
                                 .then((res) => {
                                   //console.log(res.data);
-                                  loadDataSubs(
-                                    res.data.receiverId,
-                                    res.data.order
-                                  );
+                                  loadDataSubs()
                                 })
                                 .catch((err) => {
                                   setLoader(false);
-                                  console.warn(err.response.data);
+                                  console.warn(err.response.data.msg);
                                 });
                             },
                           },
@@ -1529,89 +1519,77 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
           </>
         ) : type == "INSTALLMENT" && installmentOrder ? (
           <>
-            {installmentOrder.refundRequestByUser &&
-              installmentOrder.status != "DELIVERED" &&
-              installmentOrder.status != "REFUNDED" &&
-              installmentOrder.status != "CANCELLED" && (
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text
-                    style={{
-                      fontSize: width < 350 ? 14 : 16,
-                      color: textColor,
-                      fontFamily: "Poppins-Medium",
-                    }}>
-                    Customer request for refund
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          refoundInstallment(user.token, data.id)
-                            .then((res) => {
-                              loadDataInstallment(
-                                res.data.receiverId,
-                                res.data.order
-                              );
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Accept Refund"
-                    />
-                    <IconButton
-                      onPress={() => {
-                        try {
-                          setLoader(true);
-                          rejectRefoundInstallment(user.token, data.id)
-                            .then((res) => {
-                              loadDataInstallment(
-                                res.data.receiverId,
-                                res.data.order
-                              );
-                            })
-                            .catch((err) => {
-                              setLoader(false);
-                              console.warn(err.message);
-                            });
-                        } catch (e) {
-                          console.warn(e.message);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: "#4ADE80",
-                        borderRadius: 5,
-                        marginVertical: 20,
-                        borderWidth: 0,
-                        marginRight: 20,
-                        width: 120,
-                        height: 40,
-                      }}
-                      title="Cancel Refund"
-                    />
-                  </View>
-                </View>
-              )}
+            
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
                 flexWrap: "wrap",
               }}>
+                {installmentOrder &&
+                (installmentOrder.status == "ACCEPTED" ||
+                  installmentOrder.status == "WAITING_FOR_PAYMENT") && (
+                  <IconButton
+                    onPress={() => {
+                      setLoader(true);
+                      //console.log(installmentData)
+                      if (index == 0&&installmentData.advancedPayment) {
+                        makeOfflineAdvancedPaymentInstallment(user.token, data.id)
+                          .then((res) => {
+                            if (res) {
+                              Alert.alert("Payment success")
+                              
+                              //console.log(res.data)
+                              loadDataInstallment(
+                                res.data.receiverId,
+                                res.data.order
+                              );
+                            }
+                          })
+                          .catch((err) => {
+                            Alert.alert(err.response.data.msg)
+                            
+                            setLoader(false);
+                          });
+                        return;
+                      }
+                      makeOfflinePaymentInstallment(
+                        user.token,
+                        data.id,
+                        data.installmentData.installmentType,
+                        installmentOrder.dateFrom,
+                        installmentOrder.dateTo
+                      )
+                        .then((res) => {
+                          if (res) {
+                            Alert.alert("Payment success")
+                            //console.log(res.data)
+                            loadDataInstallment(
+                              res.data.receiverId,
+                              res.data.order
+                            );
+                          }
+                        })
+                        .catch((err) => {
+                          Alert.alert(err.response.data.msg)
+                          
+                          setLoader(false);
+                        });
+                    }}
+                    style={{
+                      backgroundColor: "#4ADE80",
+                      borderRadius: 5,
+                      alignSelf: "flex-end",
+                      marginVertical: 30,
+                      borderWidth: 0,
+                      marginRight: 0,
+                      width: 120,
+                      height: 40,
+                      marginRight:20
+                    }}
+                    title="Make Paid"
+                  />
+                )}
               {installmentOrder.status != "CANCELLED" &&
                 installmentOrder.status != "DELIVERED" &&
                 installmentOrder.status != "REFUNDED" &&
@@ -1632,7 +1610,7 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
                             text: "OK",
                             onPress: () => {
                               setLoader(true);
-                              vendorCancelInstallment(user.token, data.id)
+                              cancelOfflineInstallment(user.token, data.id)
                                 .then((res) => {
                                   //console.log(res.data);
                                   loadDataInstallment(

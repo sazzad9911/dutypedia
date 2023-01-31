@@ -508,6 +508,28 @@ export const makePaymentSubscription = async (
 
   return res;
 };
+export const makePaymentOfflineSubscription = async (
+  token,
+  orderId,
+  subscriptionType,
+  dateFrom,
+  dateTo
+) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/make-payment-subs`,
+    {
+      orderId: orderId,
+      subscriptionType: subscriptionType,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const requestForTime = async (token, orderId, newTime) => {
   const res = await axios.post(
     `${url}/server/orders/request-new-delivery-date`,
@@ -721,6 +743,19 @@ export const deliverySubs = async (token, subsOrderId) => {
 
   return res;
 };
+export const completeOfflineSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/complete-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const receiveSubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/received-subs`,
@@ -786,6 +821,19 @@ export const vendorCancelSubs = async (token, subsOrderId) => {
 
   return res;
 };
+export const cancelOfflineSubs = async (token, subsOrderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/cancel-subs`,
+    {
+      subsOrderId: subsOrderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const userCancelSubs = async (token, subsOrderId) => {
   const res = await axios.post(
     `${url}/server/orders/user/cancel-subs`,
@@ -808,6 +856,15 @@ export const getSubsOrderById = async (token, orderId) => {
 
   return res;
 };
+export const getSubsOfflineOrderById = async (token, orderId) => {
+  //console.log(`${url}/server/orders/get-by-id?orderId=${orderId}`)
+  //console.log(token)
+  const res = await axios.get(`${url}/server/orders/offline/get-by-id/${orderId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return res;
+};
 export const userCancelInstallment = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/user/cancel-installment`,
@@ -824,6 +881,19 @@ export const userCancelInstallment = async (token, orderId) => {
 export const vendorCancelInstallment = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/vendor/cancel-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
+export const cancelOfflineInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/cancel-installment`,
     {
       orderId: orderId,
     },
@@ -856,9 +926,44 @@ export const makePaymentInstallment = async (
 
   return res;
 };
+export const makeOfflinePaymentInstallment = async (
+  token,
+  orderId,
+  installmentType,
+  dateFrom,
+  dateTo
+) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/make-payment-installment`,
+    {
+      orderId: orderId,
+      installmentType: installmentType,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
 export const makeAdvancedPaymentInstallment = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/make-advanced-payment-installment`,
+    {
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res;
+};
+export const makeOfflineAdvancedPaymentInstallment = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/offline/make-advanced-payment-installment`,
     {
       orderId: orderId,
     },

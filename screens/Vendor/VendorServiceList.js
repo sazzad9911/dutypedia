@@ -28,9 +28,9 @@ export default function VendorServiceList({navigation,route}) {
       type: "ONETIME",
     },
     {
-      title: "Installment",
+      title: "Package",
       value: false,
-      type: "INSTALLMENT",
+      type: "PACKAGE",
     },
     {
       title: "Subscription",
@@ -38,9 +38,9 @@ export default function VendorServiceList({navigation,route}) {
       type: "SUBS",
     },
     {
-      title: "Package",
+      title: "Installment",
       value: false,
-      type: "PACKAGE",
+      type: "INSTALLMENT",
     },
   ]);
   const [Loader, setLoader] = React.useState(true);

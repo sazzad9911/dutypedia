@@ -102,7 +102,9 @@ export default function OfflineProfile({ navigation, route }) {
       const arr = AllOrders.filter((d) => d.type == initialState[Active].type);
       setOrders(arr);
     }
-  }, [Active + AllOrders]);
+  }, [Active, AllOrders]);
+    
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       

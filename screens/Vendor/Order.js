@@ -64,6 +64,8 @@ import { setOrderListFilter } from "../../Reducers/orderListFilter";
 import InstallmentScript from "../services/InstallmentScript";
 import { getOfflineMembers } from "../../Class/member";
 import VendorOfflineOrderDetails from "./VendorOfflineOrderDetails";
+import SubscriptionOfflineScript from "../services/SubscriptionOfflineScript";
+import InstallmentOfflineScript from "../services/InstallmentOfflineScript";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -153,8 +155,18 @@ const Order = () => {
       />
       <Stack.Screen
         options={{ headerShown: false }}
+        name="SubscriptionOfflineScript"
+        component={SubscriptionOfflineScript}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
         name="InstallmentScript"
         component={InstallmentScript}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="InstallmentOfflineScript"
+        component={InstallmentOfflineScript}
       />
     </Stack.Navigator>
   );
@@ -1471,11 +1483,11 @@ export const OfflineScreens = ({ navigation, route }) => {
               onPress={(userInfo) => {
                 
                 if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
-                  navigation.navigate("SubscriptionScript", { data: doc });
+                  navigation.navigate("SubscriptionOfflineScript", { data: doc,userInfo:userInfo });
                   return;
                 }
                 if (doc.type == "INSTALLMENT" && doc.status != "WAITING_FOR_ACCEPT") {
-                  navigation.navigate("InstallmentScript", { data: doc });
+                  navigation.navigate("InstallmentOfflineScript", { data: doc,userInfo:userInfo });
                   return;
                 }
                 navigation.navigate("VendorOfflineOrderDetails", {
