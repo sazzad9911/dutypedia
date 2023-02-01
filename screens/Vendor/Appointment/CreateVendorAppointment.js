@@ -12,13 +12,16 @@ import IconButton from "../../../components/IconButton";
 import { useIsFocused } from "@react-navigation/native";
 import { getOfflineMembers, getOnlineUser } from "../../../Class/member";
 import { Color } from "../../../assets/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateVendorAppointment({ navigation, route }) {
   return (
-    <Tab.Navigator tabBar={(props)=><TabBar {...props}/>}>
+    <SafeAreaView style={{flex:1}}>
+      <Tab.Navigator tabBar={(props)=><TabBar {...props}/>}>
       <Tab.Screen name="Online User" component={Screen} />
       <Tab.Screen name="Offline User" component={Screen} />
     </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 const Screen = ({navigation,route}) => {

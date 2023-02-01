@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -20,6 +20,10 @@ import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import Animated, { FadeIn } from "react-native-reanimated";
+import RequestAppointmentList from "./RequestAppointmentList";
+const Tab = createMaterialTopTabNavigator();
 const status = [
   {
     title: "Incomplete",
@@ -38,192 +42,49 @@ const status = [
     color: "#6366F1",
   },
   {
-    title:"Approved",
-    color:"#6366F1"
+    title: "Approved",
+    color: "#6366F1",
   },
   {
-    title:"Rejected",
-    color:"#DA1E37"
-  }
+    title: "Rejected",
+    color: "#DA1E37",
+  },
 ];
 
 export default function VendorAppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Upcoming");
-  const user = useSelector((state) => state.user);
+
   const data = route.params && route.params.data ? route.params.data : null;
-  const [Loader, setLoader] = React.useState(true);
-  const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
-  const vendor = useSelector((state) => state.vendor);
-  const [Upcoming,setUpcoming]=React.useState()
-  const [Previous,setPrevious]=React.useState()
 
+  const [Upcoming, setUpcoming] = React.useState();
+  const [Previous, setPrevious] = React.useState();
+  const list = ["All", "Upcoming", "Previous", "Request"];
 
-  const isFocused = useIsFocused();
-
-  React.useLayoutEffect(() => {
-    if(Active=="All"){
-      //setLoader(true);
-      getVendorAppointment(user.token, "upcoming", vendor.service.id)
-        .then((res) => {
-          setLoader(false);
-          let arr=[]
-          //console.log(res.data.appointments)
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            
-          })
-          setUpcoming(arr)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-        getVendorAppointment(user.token, "previous", vendor.service.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-          })
-          setPrevious(arr)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-        return
-    }
-    if (user && vendor && Active &&Active!="Request") {
-      //setLoader(true);
-      getVendorAppointment(user.token, Active, vendor.service.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            if(doc.createdBy=="VENDOR"){
-              
-            }
-          })
-          setData(arr)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [isFocused + Active]);
-  React.useLayoutEffect(()=>{
-    if(Upcoming&&Previous){
-      let arr=[];
-      Upcoming.map((doc,i)=>{
-        arr.push(doc)
-      })
-      Previous.map((doc,i)=>{
-        arr.push(doc)
-      })
-      setData(arr)
-    }
-  },[Loader+Upcoming+Previous])
   //console.log(data.service.serviceCenterName)
-  if (Loader) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size={"small"} color={backgroundColor} />
-      </View>
-    );
-  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View
-        style={{
-          flexDirection: "row",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-        }}
-      >
-        <Chip
-          style={{ width: 70 }}
-          onPress={() => {
-            setActive("All");
-          }}
-          title={"All"}
-          active={Active == "All" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Upcoming");
-          }}
-          title={"Upcoming"}
-          active={Active == "Upcoming" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            setActive("Previous");
-          }}
-          title={"Previous"}
-          active={Active == "Previous" ? true : false}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <Chip
-          onPress={() => {
-            navigation.navigate("RequestAppointmentList")
-          }}
-          title={"Request"}
-          active={Active == "Request" ? true : false}
-        />
-      </View>
-      </ScrollView>
-      {Data.length == 0 ? <NoAppointment /> : null}
-      {Data.map((doc, i) => (
-        <Cart
-          key={i}
-          onPress={() => {
-            //console.log(doc)
-            navigation.navigate("VendorAppointmentListDetails", {
-              data: doc,
-            });
-          }}
-          status={
-            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-          }
-          title={doc.title}
-          date={`${doc.date} ${changeTime(doc.startTime)}`}
-          name={`${doc.user.firstName} ${doc.user.lastName}`}
-          image={doc.user.profilePhoto}
-          username={doc.user.username}
-        />
-      ))}
-      <View style={{height:80}}/>
-      </ScrollView>
-
+      <Tab.Navigator
+        screenOptions={{
+          tabBarScrollEnabled: true,
+          tabBarIndicatorStyle: {
+            backgroundColor: backgroundColor,
+          },
+        }}>
+        {list.map((doc, i) => (
+          <Tab.Screen
+            key={i}
+            initialParams={{
+              backgroundColor: backgroundColor,
+            }}
+            name={doc}
+            component={Screen}
+          />
+        ))}
+      </Tab.Navigator>
       <FAB
         color="#FFFFFF"
         icon="plus"
@@ -245,106 +106,196 @@ export default function VendorAppointmentList({ navigation, route }) {
     </SafeAreaView>
   );
 }
-const Cart = ({ date, status, title, onPress, image,name,username }) => {
+const Screen = ({ navigation, route }) => {
+  const name = route.name;
+  const [Loader, setLoader] = useState(false);
+  const [Data, setData] = useState();
+  const backgroundColor = route.params.backgroundColor;
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  // console.log(name)
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    
+    if (isFocused && name == "All") {
+      (async () => {
+        let arr = [];
+        const res = await getVendorAppointment(
+          user.token,
+          "upcoming",
+          vendor.service.id
+        );
+        res.data.appointments.forEach((e) => {
+          arr.push(e);
+        });
+        const ress = await getVendorAppointment(
+          user.token,
+          "previous",
+          vendor.service.id
+        );
+        ress.data.appointments.forEach((e) => {
+          arr.push(e);
+        });
+        setData(arr);
+      })();
+    } else if (isFocused && name!="Request") {
+      (async () => {
+        const res = await getVendorAppointment(
+          user.token,
+          name.toLowerCase(),
+          vendor.service.id
+        );
+        setData(res.data.appointments);
+      })();
+    }
+  }, [isFocused]);
+  if(isFocused&&name=="Request"){
+    return <RequestAppointmentList/>
+  }
+  if (!Data) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <ActivityIndicator size={"small"} color={backgroundColor} />
+      </View>
+    );
+  }
+  if(Data&&Data.length==0){
+    return <NoAppointment />
+  }
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+        
+    {Data.map((doc, i) => (
+      <Cart
+        key={i}
+        onPress={() => {
+          //console.log(doc)
+          navigation.navigate("VendorAppointmentListDetails", {
+            data: doc,
+          });
+        }}
+        status={
+          status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+        }
+        title={doc.title}
+        date={`${doc.date} ${changeTime(doc.startTime)}`}
+        name={`${doc.user.firstName} ${doc.user.lastName}`}
+        image={doc.user.profilePhoto}
+        username={doc.user.username}
+      />
+    ))}
+    <View style={{ height: 80 }} />
+  </ScrollView>
+  );
+};
+const Cart = ({ date, status, title, onPress, image, name, username }) => {
   //console.log(status)
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        flexDirection: "row",
-        width: width,
-        marginHorizontal: 0,
-        justifyContent: "space-between",
-        paddingHorizontal: 5,
-        paddingVertical: 15,
-        shadowColor: "#333333",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        elevation: 3,
-        shadowRadius: 3,
-        backgroundColor: "white",
-        alignItems: "center",
-        marginTop: 10,
-        borderRadius: 5,
-      }}
-    >
-      <Avatar
+    <Animated.View entering={FadeIn}>
+      <TouchableOpacity
+        onPress={onPress}
         style={{
-          width: 40,
-          height: 40,
-        }}
-        source={{ uri: image }}
-      />
-      <View
-        style={{
-          width: 10,
-        }}
-      />
-      <View
-        style={{
-          flex: .5,
-        }}
-      >
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>@{username?username:"easinarafat"}</Text>
-      </View>
-      <View
-        style={{
-          width: 1,
-          height: 40,
-          backgroundColor: "#E2E2E2",
-          marginHorizontal: 5,
-        }}
-      />
-      <View
-        style={{
-          flex: 2,
-          marginLeft:5
-        }}
-      >
+          flexDirection: "row",
+          width: width,
+          marginHorizontal: 0,
+          justifyContent: "space-between",
+          paddingHorizontal: 5,
+          paddingVertical: 15,
+          shadowColor: "#333333",
+          shadowOffset: {
+            width: 1,
+            height: 1,
+          },
+          shadowOpacity: 0.1,
+          elevation: 3,
+          shadowRadius: 3,
+          backgroundColor: "white",
+          alignItems: "center",
+          marginTop: 10,
+          borderRadius: 5,
+        }}>
+        <Avatar
+          style={{
+            width: 40,
+            height: 40,
+          }}
+          source={{ uri: image }}
+        />
         <View
           style={{
-            flexDirection: "row",
+            width: 10,
           }}
-        >
+        />
+        <View
+          style={{
+            flex: 0.5,
+          }}>
           <Text
             style={{
               fontSize: 12,
             }}
-          >
-            {date}
+            numberOfLines={1}>
+            {name ? name : "Easin Arafat"}
           </Text>
           <Text
             style={{
-              color: status ? status.color : "red",
               fontSize: 12,
-              marginLeft: 10,
             }}
-          >{`(${status ? status.title : "Invalid"})`}</Text>
+            numberOfLines={1}>
+            @{username ? username : "easinarafat"}
+          </Text>
         </View>
-        <Text
+        <View
           style={{
-            fontSize: 12,
+            width: 1,
+            height: 40,
+            backgroundColor: "#E2E2E2",
+            marginHorizontal: 5,
           }}
-          numberOfLines={1}
-        >
-          {title ? title : "Invalid"}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: 20,
-        }}
-      />
-      <AntDesign name="right" size={24} color="#666666" />
-    </TouchableOpacity>
+        />
+        <View
+          style={{
+            flex: 2,
+            marginLeft: 5,
+          }}>
+          <View
+            style={{
+              flexDirection: "row",
+            }}>
+            <Text
+              style={{
+                fontSize: 12,
+              }}>
+              {date}
+            </Text>
+            <Text
+              style={{
+                color: status ? status.color : "red",
+                fontSize: 12,
+                marginLeft: 10,
+              }}>{`(${status ? status.title : "Invalid"})`}</Text>
+          </View>
+          <Text
+            style={{
+              fontSize: 12,
+            }}
+            numberOfLines={1}>
+            {title ? title : "Invalid"}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: 20,
+          }}
+        />
+        <AntDesign name="right" size={24} color="#666666" />
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="21.988" height="21.89" viewBox="0 0 21.988 21.89">
@@ -370,13 +321,11 @@ const Chip = ({ title, active, onPress, style }) => {
           alignItems: "center",
         },
         style,
-      ]}
-    >
+      ]}>
       <Text
         style={{
           color: active ? "white" : "black",
-        }}
-      >
+        }}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -384,25 +333,22 @@ const Chip = ({ title, active, onPress, style }) => {
 };
 const NoAppointment = () => {
   return (
-    <View
+    <Animated.View entering={FadeIn}
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        height: height - 250,
-      }}
-    >
+      }}>
       <SvgXml xml={vectorImage} height="200" width="200" />
       <Text
         style={{
           fontSize: 16,
           fontFamily: "Poppins-Medium",
           marginTop: 10,
-        }}
-      >
+        }}>
         No Appointment Found
       </Text>
-    </View>
+    </Animated.View>
   );
 };
 const vectorImage = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="197" height="197" viewBox="0 0 197 197">

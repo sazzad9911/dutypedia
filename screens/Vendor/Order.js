@@ -319,7 +319,7 @@ const VendorOrder = ({ navigation, route }) => {
             paddingBottom: 10,
           },
           tabBarIndicatorStyle: {
-            backgroundColor: "#AC5DCB",
+            backgroundColor: backgroundColor,
           },
           tabBarScrollEnabled: true,
           tabBarPressColor: "white",
@@ -355,7 +355,7 @@ const VendorOrder = ({ navigation, route }) => {
             paddingBottom: 10,
           },
           tabBarIndicatorStyle: {
-            backgroundColor: "#AC5DCB",
+            backgroundColor: backgroundColor,
           },
           tabBarScrollEnabled: true,
           tabBarPressColor: "white",

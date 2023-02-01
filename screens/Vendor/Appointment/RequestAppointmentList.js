@@ -49,7 +49,7 @@ const status = [
 export default function RequestAppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
-  const data = route.params && route.params.data ? route.params.data : null;
+  // const data = route.params && route.params.data ? route.params.data : null;
   const [Loader, setLoader] = React.useState(false);
   const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
@@ -216,7 +216,7 @@ export default function RequestAppointmentList({ navigation, route }) {
           alignItems: "center",
         }}
         onPress={() => {
-          navigation.navigate("CreateVendorAppointment", { data: data });
+          navigation.navigate("CreateVendorAppointment", { data: vendor });
         }}
       />
     </View>
