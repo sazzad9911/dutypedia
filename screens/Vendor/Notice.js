@@ -16,7 +16,7 @@ import {
 import BackHeader from "./../../components/BackHeader";
 import DropDown from "./../../components/DropDown";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { primaryColor, textColor, backgroundColor } from "../../assets/colors";
+import { primaryColor, textColor, backgroundColor, Color } from "../../assets/colors";
 import { Entypo } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 import {
@@ -316,6 +316,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import TextArea from "./../../components/TextArea";
 import SuggestionBox, { MainOptions } from "./../../components/SuggestionBox";
 import { SafeAreaView } from "react-native-safe-area-context";
+import IconButton from "../../components/IconButton";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -358,7 +359,7 @@ const Cart = ({ value, setData, Data, i, navigation }) => {
       <Text numberOfLines={1} style={styles.text2}>
         {value.message}
       </Text>
-      <Button
+      <IconButton
         onPress={() => {
           navigation.navigate("ViewCart", {
             value: value,
@@ -426,6 +427,9 @@ export const AddNotice = (props) => {
   const [Subject, setSubject] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Name, setName] = React.useState();
+  const isDark=useSelector(state=>state.isDark)
+  const colors=new Color(isDark)
+  const backgroundColor=colors.getBackgroundColor()
 
   React.useEffect(() => {
     if (value) {
@@ -463,7 +467,7 @@ export const AddNotice = (props) => {
             justifyContent: "space-between",
           }}
         >
-          <Button
+          <IconButton
             onPress={() => {
               setVisible(true);
             }}
@@ -564,7 +568,7 @@ export const AddNotice = (props) => {
             />
           </View>
         </View>
-        <Button
+        <IconButton
           onPress={() => {
             if (onChange) {
               try {
@@ -748,10 +752,10 @@ export const ViewCart = (props) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              width: 100,
+              width: 70,
             }}
           >
-            <Ionicons name="md-print" size={24} color="#707070" />
+            {/* <Ionicons name="md-print" size={24} color="#707070" /> */}
             <AntDesign
               onPress={() => {
                 navigation.navigate("AddNotice", {

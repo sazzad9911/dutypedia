@@ -22,7 +22,8 @@ const SuggestionBox = ({
   error,
   returnKeyType,
   onSubmitEditing,
-  onSelect
+  onSelect,
+  onFocusOut
 }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
@@ -63,6 +64,7 @@ const SuggestionBox = ({
   return (
     <View style={[styles.viewBox, style]}>
       <TextInput
+      
         returnKeyType={returnKeyType}
         onSubmitEditing={() => {
           if (onSubmitEditing) {
@@ -70,9 +72,7 @@ const SuggestionBox = ({
           }
         }}
         ref={innerRef}
-        style={{
-          fontFamily: "Poppins-Light",
-        }}
+        
         onEndEditing={() => {
           setFocus(false);
         }} 
@@ -95,7 +95,9 @@ const SuggestionBox = ({
             onSelect(val);
           }
         }}
-        style={[styles.input]}
+        style={[styles.input,{
+          fontFamily: "Poppins-Light",
+        }]}
         placeholder={placeholder ? placeholder : "Type here"}
       />
       {error && (

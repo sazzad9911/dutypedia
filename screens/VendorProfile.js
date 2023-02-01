@@ -953,7 +953,9 @@ const VendorProfile = (props) => {
               >
                 Specialty In
               </Text>
-              <TouchableOpacity style={{}}>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("EditVendorInfo",{data:Data})
+              }} style={{}}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
               </TouchableOpacity>
             </View>
@@ -1771,7 +1773,7 @@ const styles = StyleSheet.create({
 const BarOption = ({ icon, title }) => {
   const [lines, setLines] = React.useState(1);
   return (
-    <TouchableOpacity
+    <View
       onPress={() => {
         setLines((d) => {
           if (d === 1) {
@@ -1806,7 +1808,7 @@ const BarOption = ({ icon, title }) => {
           {title}
         </Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 function uniq(a) {

@@ -1418,9 +1418,9 @@ const VendorOfflineOrderDetails = ({ navigation, route }) => {
               {subsOrder.status === "WAITING_FOR_PAYMENT" && (
                 <IconButton
                   onPress={() => {
-                    //console.log(data.subsData.subscriptionType)
+                    //console.log(subsOrder)
                     makePaymentOfflineSubscription(user.token,data.id,data.subsData.subscriptionType,
-                      data.subsData.dateFrom,data.subsData.dateTo).then(res=>{
+                      subsOrder.dateFrom,subsOrder.dateTo).then(res=>{
                         loadDataSubs()
                       }).catch(err=>{
                         console.warn(err.response.data.msg)

@@ -50,7 +50,7 @@ export default function RequestAppointmentList({ navigation, route }) {
   const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
   // const data = route.params && route.params.data ? route.params.data : null;
-  const [Loader, setLoader] = React.useState(false);
+  const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -62,7 +62,7 @@ export default function RequestAppointmentList({ navigation, route }) {
 
   React.useLayoutEffect(() => {
     if (Active == "All") {
-      setLoader(true);
+      //setLoader(true);
       getVendorAppointment(user.token, "upcoming", vendor.service.id)
         .then((res) => {
           setLoader(false);
@@ -94,7 +94,7 @@ export default function RequestAppointmentList({ navigation, route }) {
       return;
     }
     if (user && vendor && Active && Active != "Request") {
-      setLoader(true);
+      //setLoader(true);
       getVendorAppointment(user.token, Active, vendor.service.id)
         .then((res) => {
           setLoader(false);

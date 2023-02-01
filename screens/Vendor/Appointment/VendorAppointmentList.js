@@ -150,7 +150,7 @@ const Screen = ({ navigation, route }) => {
     }
   }, [isFocused]);
   if(isFocused&&name=="Request"){
-    return <RequestAppointmentList/>
+    return <RequestAppointmentList navigation={navigation}/>
   }
   if (!Data) {
     return (

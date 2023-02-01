@@ -132,11 +132,17 @@ const TabRoute = () => {
         });
     }
   }, [user]);
+  const updateVendorInfo=async(id)=>{
+    const res=await getService(user.token,id);
+    if(res){
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+    }
+  }
 
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
-        dispatch({ type: "SET_VENDOR", playload: res });
+        updateVendorInfo(res.service.id)
       }
     });
     getJson("serviceSettings").then((data) => {

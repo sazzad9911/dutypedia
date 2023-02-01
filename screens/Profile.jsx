@@ -73,6 +73,7 @@ import SubscriptionScript from "./services/SubscriptionScript";
 import AddInstallment from "./services/AddInstallment";
 import VendorInstallmentService from "./Vendor/VendorInstallmentService";
 import InstallmentScript from "./services/InstallmentScript";
+import EditVendorInfo from "./Profile/EditVendorInfo";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -107,6 +108,13 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={VendorProfile}
+      />
+      <Stack.Screen
+        name="EditVendorInfo"
+        options={{
+          header: (props) => <SubHeader title="Personal Information" {...props} />
+        }}
+        component={EditVendorInfo}
       />
       <Stack.Screen
         name="VendorFixedService"
