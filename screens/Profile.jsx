@@ -74,6 +74,8 @@ import AddInstallment from "./services/AddInstallment";
 import VendorInstallmentService from "./Vendor/VendorInstallmentService";
 import InstallmentScript from "./services/InstallmentScript";
 import EditVendorInfo from "./Profile/EditVendorInfo";
+import MemberAppointment from "./Vendor/Appointment/MemberAppointment";
+import EditService from "./Profile/EditService";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -117,11 +119,28 @@ const Profile = ({ navigation }) => {
         component={EditVendorInfo}
       />
       <Stack.Screen
+        name="EditService"
+        options={{
+          header: (props) => <SubHeader title="Service Information" {...props} />
+        }}
+        component={EditService}
+      />
+      <Stack.Screen
         name="VendorFixedService"
         options={{
           headerShown: false, 
         }}
         component={VendorFixedService}
+      />
+      <Stack.Screen
+        name="MemberAppointment"
+        options={{
+          header: (props) => <SubHeader style={{
+            paddingBottom: 0,
+            marginBottom:-20
+          }} title="User Appointments" {...props} />
+        }}
+        component={MemberAppointment}
       />
       <Stack.Screen
         name="VendorPackageService"

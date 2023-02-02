@@ -10,6 +10,7 @@ import {
   Modal,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { FAB } from "react-native-paper";
 import { SvgXml } from "react-native-svg";
@@ -39,7 +40,6 @@ import {
   timeConverter,
 } from "../../action";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 
 export default function Note({ navigation, route }) {
@@ -124,8 +124,7 @@ export default function Note({ navigation, route }) {
           borderBottomWidth: 0.5,
           paddingVertical: 5,
           paddingTop: 10,
-        }}
-      >
+        }}>
         <AntDesign
           onPress={() => {
             navigation.goBack();
@@ -140,8 +139,7 @@ export default function Note({ navigation, route }) {
             fontFamily: "Poppins-Medium",
             color: "#C1D3F7",
             marginLeft: 10,
-          }}
-        >
+          }}>
           Note
         </Text>
       </View>
@@ -157,8 +155,7 @@ export default function Note({ navigation, route }) {
                 color: textColor,
                 marginTop: 30,
                 textAlign: "center",
-              }}
-            >
+              }}>
               No Note Found
             </Text>
           )}
@@ -167,8 +164,7 @@ export default function Note({ navigation, route }) {
               flexDirection: "row",
               flexWrap: "wrap",
               marginHorizontal: 20,
-            }}
-          >
+            }}>
             {Data.map(
               (doc, i) =>
                 doc.date && (
@@ -205,15 +201,14 @@ export default function Note({ navigation, route }) {
                 )
             )}
           </View>
-          <View style={{height:80}}/>
+          <View style={{ height: 80 }} />
         </ScrollView>
       ) : (
         <Text
           style={{
             textAlign: "center",
             marginTop: 30,
-          }}
-        >
+          }}>
           Loading...
         </Text>
       )}
@@ -469,149 +464,147 @@ export const AddNote = ({ navigation, route }) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
-      <StatusBar backgroundColor={primaryColor} />
-      <SafeAreaView>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 20,
-            alignItems: "center",
-            borderColor: "#F1EFEF",
-            borderBottomWidth: 0.5,
-            paddingVertical: 5,
-            paddingTop: 0,
-          }}
-        >
-          <AntDesign
-            onPress={() => {
-              navigation.goBack();
-            }}
-            name="left"
-            size={24}
-            color="#C1D3F7"
-          />
-          <Text
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar backgroundColor={primaryColor} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
             style={{
-              fontSize: 16,
-              fontFamily: "Poppins-Medium",
-              color: "#C1D3F7",
-              marginLeft: 10,
-            }}
-          >
-            Note
-          </Text>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 20,
-            paddingVertical: 20,
-          }}
-        >
-          <Text
+              flexDirection: "row",
+              paddingHorizontal: 20,
+              alignItems: "center",
+              borderColor: "#F1EFEF",
+              borderBottomWidth: 0.5,
+              paddingVertical: 10,
+            }}>
+            <AntDesign
+              onPress={() => {
+                navigation.goBack();
+              }}
+              name="left"
+              size={24}
+              color="#C1D3F7"
+            />
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: "Poppins-Medium",
+                color: "#C1D3F7",
+                marginLeft: 10,
+              }}>
+              Note
+            </Text>
+          </View>
+          <View
             style={{
-              fontFamily: "Poppins-Medium",
-              color: textColor,
-              fontSize: 16,
-              marginVertical: 20,
-            }}
-          >
-            Title
-          </Text>
-          <Input
-            value={Title}
-            onChange={(e) => setTitle(e)}
-            error={TitleError}
-            style={{
-              borderWidth: 1,
-              marginHorizontal: 0,
-            }}
-            placeholder={"Title Here.."}
-          />
-          <Text
-            style={{
-              fontFamily: "Poppins-Medium",
-              color: textColor,
-              fontSize: 16,
-              marginVertical: 20,
-            }}
-          >
-            Note
-          </Text>
-          <TextArea
-            value={Description}
-            onChange={(e) => setDescription(e)}
-            error={DescriptionError}
-            placeholder={"Details Here.."}
-          />
-        </View>
-        <IconButton
-          onPress={() => {
-            setTitleError("");
-            setDescriptionError("");
-            if (!Title) {
-              setTitleError("Title is required");
-              return;
-            }
-            if (!Description) {
-              setDescriptionError("Description is required");
-              return;
-            }
-            setLoader(true);
-            if (offline) {
-              createOfflineNote(
-                user.token,
-                Title,
-                newUser.id,
-                vendor.service.id,
-                Description
-              )
-                .then((res) => {
-                  setLoader(false);
-                  //console.log(res)
-                  route.params.save();
-                  navigation.goBack();
-                })
-                .catch((err) => {
-                  setLoader(false);
+              paddingHorizontal: 20,
+              paddingVertical: 20,
+            }}>
+            <Text
+              style={{
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+                fontSize: 16,
+                marginVertical: 20,
+              }}>
+              Title
+            </Text>
+            <Input
+              value={Title}
+              onChange={(e) => setTitle(e)}
+              error={TitleError}
+              style={{
+                borderWidth: 1,
+                marginHorizontal: 0,
+              }}
+              placeholder={"Title Here.."}
+            />
+            <Text
+              style={{
+                fontFamily: "Poppins-Medium",
+                color: textColor,
+                fontSize: 16,
+                marginVertical: 20,
+              }}>
+              Note
+            </Text>
+            <TextArea
+              value={Description}
+              onChange={(e) => setDescription(e)}
+              error={DescriptionError}
+              placeholder={"Details Here.."}
+            />
+          </View>
 
-                  console.warn(err.response.data.msg);
-                });
-            } else {
-              //console.log(newUser)
-              createOnlineNote(
-                user.token,
-                Title,
-                newUser.id,
-                vendor.service.id,
-                Description
-              )
-                .then((res) => {
-                  setLoader(false);
-                  navigation.goBack();
-                  route.params.save();
-                })
-                .catch((err) => {
-                  setLoader(false);
-                  Alert.alert(
-                    "Hey!",
-                    "To create note you need to add member first"
-                  );
-                  console.warn(err.response.data.msg);
-                });
-            }
-          }}
-          style={{
-            backgroundColor: "#4ADE80",
-            marginHorizontal: 20,
-            height: 35,
-            position: "absolute",
-            bottom: 20,
-            width: width - 40,
-          }}
-          title="Save"
-        />
+          <IconButton
+            onPress={() => {
+              setTitleError("");
+              setDescriptionError("");
+              if (!Title) {
+                setTitleError("Title is required");
+                return;
+              }
+              if (!Description) {
+                setDescriptionError("Description is required");
+                return;
+              }
+              setLoader(true);
+              if (offline) {
+                createOfflineNote(
+                  user.token,
+                  Title,
+                  newUser.id,
+                  vendor.service.id,
+                  Description
+                )
+                  .then((res) => {
+                    setLoader(false);
+                    //console.log(res)
+                    route.params.save();
+                    navigation.goBack();
+                  })
+                  .catch((err) => {
+                    setLoader(false);
+
+                    console.warn(err.response.data.msg);
+                  });
+              } else {
+                //console.log(newUser)
+                createOnlineNote(
+                  user.token,
+                  Title,
+                  newUser.id,
+                  vendor.service.id,
+                  Description
+                )
+                  .then((res) => {
+                    setLoader(false);
+                    navigation.goBack();
+                    route.params.save();
+                  })
+                  .catch((err) => {
+                    setLoader(false);
+                    Alert.alert(
+                      "Hey!",
+                      "To create note you need to add member first"
+                    );
+                    console.warn(err.response.data.msg);
+                  });
+              }
+            }}
+            style={{
+              backgroundColor: "#4ADE80",
+              marginHorizontal: 20,
+              height: 35,
+              marginVertical: 10,
+              width: width - 40,
+              bottom: 20,
+            }}
+            title="Save"
+          />
+          
+         
+        </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -640,27 +633,24 @@ const NoteCart = ({ data, onPress, color }) => {
       }}
       style={{
         width: !data.time ? width / 2 - 40 : width - 40,
-        
+
         backgroundColor: newColor,
         margin: 10,
         padding: 20,
-      }}
-    >
+      }}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-        }}
-      >
+        }}>
         <Text
           numberOfLines={1}
           style={{
             fontFamily: "Poppins-SemiBold",
             fontSize: 16,
             color: textColor,
-          }}
-        >
+          }}>
           {data.title}
         </Text>
         {data.date && <SvgXml xml={notificationIcon} height="18" width="18" />}
@@ -672,8 +662,7 @@ const NoteCart = ({ data, onPress, color }) => {
           fontSize: 14,
           color: textColor,
           marginTop: 10,
-        }}
-      >
+        }}>
         {data.description}{" "}
       </Text>
     </TouchableOpacity>
@@ -713,13 +702,11 @@ export const ViewNote = ({ navigation, route }) => {
           paddingVertical: 5,
           justifyContent: "space-between",
           paddingTop: 10,
-        }}
-      >
+        }}>
         <View
           style={{
             flexDirection: "row",
-          }}
-        >
+          }}>
           <AntDesign
             onPress={() => {
               navigation.goBack();
@@ -734,8 +721,7 @@ export const ViewNote = ({ navigation, route }) => {
               fontFamily: "Poppins-Medium",
               color: "#C1D3F7",
               marginLeft: 10,
-            }}
-          >
+            }}>
             Note
           </Text>
         </View>
@@ -758,8 +744,7 @@ export const ViewNote = ({ navigation, route }) => {
               } else {
                 setModalVisible(true);
               }
-            }}
-          >
+            }}>
             <SvgXml
               xml={Notify ? notNotification : notificationIcon}
               height="20"
@@ -772,8 +757,7 @@ export const ViewNote = ({ navigation, route }) => {
             }}
             style={{
               marginLeft: 20,
-            }}
-          >
+            }}>
             <SvgXml xml={deleteIcon} height="20" width="20" />
           </TouchableOpacity>
         </View>
@@ -786,8 +770,7 @@ export const ViewNote = ({ navigation, route }) => {
             fontFamily: "Poppins-SemiBold",
             color: textColor,
             fontSize: 18,
-          }}
-        >
+          }}>
           {data.title}
         </Text>
         <Text
@@ -797,8 +780,7 @@ export const ViewNote = ({ navigation, route }) => {
             fontFamily: "Poppins-Medium",
             color: textColor,
             fontSize: 16,
-          }}
-        >
+          }}>
           {data.description}
         </Text>
       </ScrollView>
@@ -806,16 +788,14 @@ export const ViewNote = ({ navigation, route }) => {
         animationType="fade"
         transparent={true}
         onRequestClose={() => setVisible(!Visible)}
-        visible={Visible}
-      >
+        visible={Visible}>
         <View
           style={{
             flex: 1,
             backgroundColor: "rgba(0, 0, 0, 0.265)",
             paddingTop: "40%",
             alignItems: "center",
-          }}
-        >
+          }}>
           <View
             style={{
               width: width - 60,
@@ -823,15 +803,13 @@ export const ViewNote = ({ navigation, route }) => {
               height: 130,
               borderRadius: 15,
               padding: 30,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 16,
                 color: textColor,
                 fontFamily: "Poppins-Medium",
-              }}
-            >
+              }}>
               Are you sure want to delete this note
             </Text>
             <View
@@ -839,8 +817,7 @@ export const ViewNote = ({ navigation, route }) => {
                 flexDirection: "row",
                 justifyContent: "flex-end",
                 marginTop: 20,
-              }}
-            >
+              }}>
               <IconButton
                 onPress={() => setVisible(false)}
                 style={{
@@ -871,37 +848,32 @@ export const ViewNote = ({ navigation, route }) => {
         animationType="fade"
         transparent={true}
         onRequestClose={() => setModalVisible(!ModalVisible)}
-        visible={ModalVisible}
-      >
+        visible={ModalVisible}>
         <View
           style={{
             flex: 1,
             backgroundColor: "rgba(0, 0, 0, 0.265)",
             paddingTop: "40%",
             alignItems: "center",
-          }}
-        >
+          }}>
           <View
             style={{
               width: width - 60,
               backgroundColor: primaryColor,
               borderRadius: 15,
               padding: 30,
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 16,
                   color: textColor,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
+                }}>
                 Set Notification
               </Text>
               <TouchableOpacity
@@ -916,8 +888,7 @@ export const ViewNote = ({ navigation, route }) => {
                   borderWidth: 1,
                   justifyContent: "center",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <Entypo name="cross" size={24} color="red" />
               </TouchableOpacity>
             </View>
@@ -996,8 +967,7 @@ export const ViewNote = ({ navigation, route }) => {
                 style={{
                   color: "red",
                   marginTop: 10,
-                }}
-              >
+                }}>
                 {Error}
               </Text>
             )}
@@ -1006,8 +976,7 @@ export const ViewNote = ({ navigation, route }) => {
                 flexDirection: "row",
                 justifyContent: "flex-end",
                 marginTop: 20,
-              }}
-            >
+              }}>
               <IconButton
                 onPress={() => {
                   notify(data.id, NewDate, NewTime);

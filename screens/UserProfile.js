@@ -13,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FAB } from "react-native-paper";
 import NewTabe from "./Vendor/components/NewTabe";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { user } from "../assets/icon";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -25,9 +26,9 @@ export default function UserProfile({ navigation, route }) {
   const user = route.params.user;
   const ref = React.useRef();
 
-  const ViewBox = ({ Icon, title }) => {
+  const ViewBox = ({ Icon, title,onPress }) => {
     return (
-      <TouchableOpacity
+      <TouchableOpacity onPress={onPress?onPress:null}
         style={{
           width: width / 4 - 20,
           height: width / 4 - 30,
@@ -133,11 +134,24 @@ export default function UserProfile({ navigation, route }) {
             flexDirection: "row",
             paddingHorizontal: 20,
             marginVertical: 20,
+            justifyContent:"center"
           }}
         >
-          <ViewBox Icon={callIcon} title="Call" />
-          <ViewBox Icon={chatIcon} title="Chat" />
-          <ViewBox Icon={calenderIcon} title="Appointment" />
+          {/* <ViewBox Icon={callIcon} title="Call" /> */}
+          <ViewBox onPress={()=>{
+            let newUser={
+              userId:user.user.id,
+              user:user.user
+            }
+            navigation.navigate("ChatScreen", { data: {
+              users:[
+                newUser
+              ]
+            } ,username:user.user.username});
+          }} Icon={chatIcon} title="Chat" />
+          <ViewBox onPress={()=>{
+            navigation.navigate("MemberAppointment",{user:user.user,offline:false})
+          }} Icon={calenderIcon} title="Appointment" />
           <ViewBox Icon={threeDot} title="" />
         </View>
         <View

@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import DropDown from "../../components/DropDown";
@@ -17,9 +17,10 @@ import SuggestionBox, { MainOptions } from "../../components/SuggestionBox";
 import IconButton from "../../components/IconButton";
 import { useSelector } from "react-redux";
 import { Color } from "../../assets/colors";
+import { Entypo } from '@expo/vector-icons';
 const { width, height } = Dimensions.get("window");
 
-export default function EditVendorInfo({navigation,route}) {
+export default function EditVendorInfo({ navigation, route }) {
   const DATA = [
     {
       title: "Mr",
@@ -90,29 +91,30 @@ export default function EditVendorInfo({navigation,route}) {
   const [Positions, setPositions] = useState([]);
   const [SelectedPositions, setSelectedPositions] = useState();
   const [Position, setPosition] = React.useState();
-  const [TeamNumber,setTeamNumber]=useState("0")
-  const isDark=useSelector(state=>state.isDark)
-  const colors=new Color(isDark)
-  const backgroundColor=colors.getBackgroundColor()
-  const data=route.params.data;
-  const [centerName,setCenterName]=useState()
-  const [name,setName]=useState()
-  const [specialty,setSpecialty]=useState()
-  const [gender,setGender]=useState()
-  
-  useEffect(()=>{
-    if(data){
-        setCenterName(data.service.serviceCenterName)
-        setSelectedItem(data.service.providerInfo.title)
-        setTitle(data.service.providerInfo.title)
-        setName(data.service.providerInfo.name)
-        setGender(data.service.providerInfo.gender)
-        setPosition(data.service.providerInfo.position)
-        setSelectedPositions(data.service.providerInfo.position)
-        setTeamNumber(data.service.worker.toString())
-        setSpecialty(data.service.speciality)
+  const [TeamNumber, setTeamNumber] = useState("0");
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const backgroundColor = colors.getBackgroundColor();
+  const data = route.params.data;
+  const [centerName, setCenterName] = useState();
+  const [name, setName] = useState();
+  const [specialty, setSpecialty] = useState();
+  const [gender, setGender] = useState();
+  const [newSpecialty,setNewSpecialty]=useState([])
+
+  useEffect(() => {
+    if (data) {
+      setCenterName(data.service.serviceCenterName);
+      setSelectedItem(data.service.providerInfo.title);
+      setTitle(data.service.providerInfo.title);
+      setName(data.service.providerInfo.name);
+      setGender(data.service.providerInfo.gender);
+      setPosition(data.service.providerInfo.position);
+      setSelectedPositions(data.service.providerInfo.position);
+      setTeamNumber(data.service.worker.toString());
+      setSpecialty(data.service.speciality);
     }
-  },[data])
+  }, [data]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -125,8 +127,12 @@ export default function EditVendorInfo({navigation,route}) {
           }}>
           <View style={{ height: 15 }} />
           <Text style={styles.levels}>Service Center Name</Text>
-          <Input value={centerName} 
-          onChange={setCenterName} style={styles.input} placeholder={"Center Name"} />
+          <Input
+            value={centerName}
+            onChange={setCenterName}
+            style={styles.input}
+            placeholder={"Center Name"}
+          />
           <Text style={styles.levels}>Service Provider Information</Text>
           <View
             style={{
@@ -154,8 +160,9 @@ export default function EditVendorInfo({navigation,route}) {
               }}
               returnKeyType="next"
             />
-            <Input value={name}
-            onChange={setName}
+            <Input
+              value={name}
+              onChange={setName}
               placeholder={"Name"}
               style={{
                 borderWidth: 1,
@@ -170,7 +177,9 @@ export default function EditVendorInfo({navigation,route}) {
               marginVertical: 5,
             }}>
             <DropDown
-              onChange={(val) => {setGender(val)}}
+              onChange={(val) => {
+                setGender(val);
+              }}
               style={{
                 marginTop: 5,
                 width: 120,
@@ -203,12 +212,16 @@ export default function EditVendorInfo({navigation,route}) {
               fontSize: 16,
               fontFamily: "Poppins-Medium",
               marginTop: 10,
-              marginHorizontal:20
-            }}
-          >
+              marginHorizontal: 20,
+            }}>
             How many team/ Worker do you have?
           </Text>
-          <View style={{ flexDirection: "row", marginTop: 5,marginHorizontal:20 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 5,
+              marginHorizontal: 20,
+            }}>
             <TouchableOpacity
               onPress={() => {
                 setData([]);
@@ -218,8 +231,7 @@ export default function EditVendorInfo({navigation,route}) {
                   setTeamNumber(`${num - 1}`);
                 }
               }}
-              style={styles.button}
-            >
+              style={styles.button}>
               <FontAwesome5 name="minus" size={20} color="#707070" />
             </TouchableOpacity>
             <TextInput
@@ -260,19 +272,66 @@ export default function EditVendorInfo({navigation,route}) {
                 let num = parseInt(TeamNumber) + 1;
                 setTeamNumber(`${num}`);
               }}
-              style={styles.button}
-            >
+              style={styles.button}>
               <FontAwesome name="plus" size={20} color="#707070" />
             </TouchableOpacity>
           </View>
-          <Text style={[styles.levels,{
-            marginTop:5
-          }]}>Specialty{"  "}<Text style={{
-            color:"#707070",
-          }}>(eg. web, mobile, ...)</Text>
+          <Text
+            style={[
+              styles.levels,
+              {
+                marginTop: 5,
+              },
+            ]}>
+            Specialty{"  "}
+            <Text
+              style={{
+                color: "#707070",
+              }}>
+              (max 25 letter)
+            </Text>
           </Text>
-          <Input value={specialty} 
-          onChange={setSpecialty} style={styles.input} placeholder={"Your specialty"} />
+          <View style={{
+            paddingHorizontal:20,
+            flexDirection:"row",
+            flexWrap:"wrap"
+          }}>
+            {newSpecialty.map((doc,i)=>(
+              <Chip key={i} onRemove={()=>{
+                setNewSpecialty(val=>val.filter((e,j)=>j!=i))
+              }} backgroundColor={backgroundColor} title={doc}/>
+            ))}
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+            }}>
+            <Input
+              value={specialty}
+              onChange={e=>{
+                setSpecialty(e)
+                if(e.length>24){
+                  setNewSpecialty(val=>[...val,e])
+                  setSpecialty("")
+                }
+              }}
+              style={{
+                width:width-140,
+                borderWidth:1
+              }}
+              placeholder={"Your specialty"}
+            />
+            <IconButton onPress={()=>{
+              if(specialty){
+                setNewSpecialty(val=>[...val,specialty])
+                setSpecialty("")
+              }
+            }} style={{
+              marginVertical:5,
+              backgroundColor:backgroundColor,
+              width:80
+            }} title={"Add"}/>
+          </View>
           <MainOptions
             setValue={(value) => {
               setSelectedItem(value);
@@ -299,11 +358,14 @@ export default function EditVendorInfo({navigation,route}) {
             }}
             Data={Positions}
           />
-          <IconButton style={{
-            marginHorizontal:20,
-            marginVertical:30,
-            backgroundColor:backgroundColor
-          }} title={"Update"}/>
+          <IconButton
+            style={{
+              marginHorizontal: 20,
+              marginVertical: 30,
+              backgroundColor: backgroundColor,
+            }}
+            title={"Update"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -339,3 +401,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+const Chip=({title,backgroundColor,onRemove})=>{
+  return(
+    <View style={{
+      backgroundColor:backgroundColor,
+      paddingHorizontal:10,
+      paddingVertical:5,
+      borderRadius:20,
+      margin:5,
+      flexDirection:"row",
+      alignItems:"center"
+    }}>
+      
+      <Text style={{
+        color:"black",
+        fontSize:16
+      }}>{title}</Text>
+      <Entypo onPress={onRemove?onRemove:null} style={{
+        marginLeft:5
+      }} name="circle-with-cross" size={24} color="black" />
+    </View>
+  )
+}

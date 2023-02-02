@@ -425,8 +425,12 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
     }
   }, [doc]);
   return (
-    <TouchableOpacity
-      disabled={true}
+    <TouchableOpacity onPress={() => {
+      if (onPress) {
+        onPress();
+      }
+    }}
+     
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -440,11 +444,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Pressable
-          onPress={() => {
-            if (onPress) {
-              onPress();
-            }
-          }}
+          
           style={{
             height: 50,
             width: 50,

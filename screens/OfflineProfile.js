@@ -60,9 +60,9 @@ export default function OfflineProfile({ navigation, route }) {
 
   const dispatch = useDispatch();
 
-  const ViewBox = ({ Icon, title }) => {
+  const ViewBox = ({ Icon, title,onPress }) => {
     return (
-      <TouchableOpacity
+      <TouchableOpacity onPress={onPress?onPress:null}
         style={{
           width: width / 4 - 20,
           height: width / 4 - 30,
@@ -186,7 +186,10 @@ export default function OfflineProfile({ navigation, route }) {
         >
           {/* <ViewBox Icon={callIcon} title="Call" />
         <ViewBox Icon={chatIcon} title="Chat" /> */}
-          <ViewBox Icon={calenderIcon} title="Appointment" />
+          <ViewBox onPress={()=>{
+           
+            navigation.navigate("MemberAppointment",{user:user,offline:true})
+          }} Icon={calenderIcon} title="Appointment" />
           <ViewBox Icon={threeDot} title="" />
         </View>
         <View

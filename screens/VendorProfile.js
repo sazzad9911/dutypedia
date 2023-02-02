@@ -1988,7 +1988,9 @@ const BargainingScreen = ({ navigation, route }) => {
             marginTop: -15,
           }}
         >
-          <TouchableOpacity style={{}}>
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate("EditService",{data:Data})
+          }} style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>
         </View>
@@ -2038,7 +2040,9 @@ const BargainingScreen = ({ navigation, route }) => {
           >
             Service List
           </Text>
-          <TouchableOpacity style={{}}>
+          <TouchableOpacity onPress={()=>{
+            
+          }} style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>
         </View>

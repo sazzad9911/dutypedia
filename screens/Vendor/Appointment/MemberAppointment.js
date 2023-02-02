@@ -23,6 +23,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Animated, { FadeIn } from "react-native-reanimated";
 import RequestAppointmentList from "./RequestAppointmentList";
+import MemberRequestAppointment from "./MemberRequestAppointment";
 const Tab = createMaterialTopTabNavigator();
 const status = [
   {
@@ -51,7 +52,7 @@ const status = [
   },
 ];
 
-export default function VendorAppointmentList({ navigation, route }) {
+export default function MemberAppointment({ navigation, route }) {
   const [Active, setActive] = React.useState("Upcoming");
 
   const data = route.params && route.params.data ? route.params.data : null;
@@ -62,6 +63,9 @@ export default function VendorAppointmentList({ navigation, route }) {
   const [Upcoming, setUpcoming] = React.useState();
   const [Previous, setPrevious] = React.useState();
   const list = ["All", "Upcoming", "Previous", "Request"];
+  const user=route.params.user;
+  const offline=route.params.offline;
+  //console.log(offline)
 
   //console.log(data.service.serviceCenterName)
 
@@ -79,30 +83,15 @@ export default function VendorAppointmentList({ navigation, route }) {
             key={i}
             initialParams={{
               backgroundColor: backgroundColor,
+              offline:offline,
+              user:user
             }}
             name={doc}
             component={Screen}
           />
         ))}
       </Tab.Navigator>
-      <FAB
-        color="#FFFFFF"
-        icon="plus"
-        style={{
-          position: "absolute",
-          borderRadius: 30,
-          backgroundColor: "#43B05C",
-          bottom: 20,
-          right: 20,
-          width: 50,
-          height: 50,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onPress={() => {
-          navigation.navigate("CreateVendorAppointment", { data: data });
-        }}
-      />
+      
     </SafeAreaView>
   );
 }
@@ -115,6 +104,8 @@ const Screen = ({ navigation, route }) => {
   const vendor = useSelector((state) => state.vendor);
   // console.log(name)
   const isFocused = useIsFocused();
+  const User=route.params.user;
+  const offline=route.params.offline;
   useEffect(() => {
     
     if (isFocused && name == "All") {
@@ -128,7 +119,9 @@ const Screen = ({ navigation, route }) => {
           vendor.service.id
         );
         res.data.appointments.forEach((e) => {
-          arr.push(e);
+            if(e.user.id==User.id){
+                arr.push(e);
+            }
         });
         const ress = await getVendorAppointment(
           user.token,
@@ -136,7 +129,10 @@ const Screen = ({ navigation, route }) => {
           vendor.service.id
         );
         ress.data.appointments.forEach((e) => {
-          arr.push(e);
+            if(e.user.id==User.id){
+                arr.push(e);
+            }
+          
         });
         setData(arr);
       })();
@@ -147,12 +143,13 @@ const Screen = ({ navigation, route }) => {
           name.toLowerCase(),
           vendor.service.id
         );
-        setData(res.data.appointments);
+        
+        setData(res.data.appointments.filter(e=>e.user.id==User.id));
       })();
     }
   }, [isFocused]);
   if(isFocused&&name=="Request"){
-    return <RequestAppointmentList navigation={navigation}/>
+    return <MemberRequestAppointment navigation={navigation} newUser={User}  offline={offline}/>
   }
   if (!Data) {
     return (
