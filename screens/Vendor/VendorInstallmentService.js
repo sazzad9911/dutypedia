@@ -548,7 +548,9 @@ const VendorInstallmentService = (props) => {
               #Installment Service
             </Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate("EditInstallmentService",{data:data,gigs:data})
+            }}>
               <SvgXml xml={editIcon} height="50" width={"50"} />
             </TouchableOpacity>
           </View>

@@ -562,7 +562,9 @@ const VendorPackageService = (props) => {
             >
               #Package Service
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate("EditPackageService",{data:data,gigs:data})
+            }}>
               <SvgXml xml={editIcon} height="50" width={"50"} />
             </TouchableOpacity>
           </View>

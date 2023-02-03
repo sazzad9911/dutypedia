@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -33,7 +33,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function AddPackage({ navigation, route }) {
+export default function EditPackageService({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
   const [Title, setTitle] = React.useState();
   const [Description, setDescription] = React.useState();
@@ -54,21 +54,34 @@ export default function AddPackage({ navigation, route }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [Height, setHeight] = React.useState(4);
-  const length =
-    route.params && route.params.length ? route.params.length : null;
-  const params = route.params;
-  const [serverData, setServerData] = React.useState();
+  const length=route.params&&route.params.length?route.params.length:null;
+  const params=route.params;
+  const [serverData,setServerData]=React.useState()
+  const gigs=params.gigs;
 
+  useEffect(()=>{
+    if(gigs){
+        setImage1({uri:gigs.images[0]})
+        setImage2({uri:gigs.images[1]})
+        setImage3({uri:gigs.images[2]})
+        setImage4({uri:gigs.images[3]})
+        setTitle(gigs.title)
+        setDescription(gigs.description)
+        dispatch({ type: "SET_PACKAGES", playload: gigs.packageData });
+    }
+  },[isFocused])
+  
+  
   const deleteData = async (id) => {
     setLoader(true);
     await dispatch({ type: "DELETE_PACKAGE", playload: id });
     setLoader(false);
   };
-  React.useEffect(() => {
-    if (params && params.data) {
-      setServerData(params.data);
+  React.useEffect(()=>{
+    if(params&&params.data){
+      setServerData(params.data)
     }
-  }, []);
+  },[])
   React.useEffect(() => {
     //setLoader(true)
     let max = 0;
@@ -78,15 +91,16 @@ export default function AddPackage({ navigation, route }) {
           max = doc.features.length;
         }
       });
-    if (max < 4) {
-      setHeight(4);
-      return;
-    }
-    setHeight(max);
-    //setLoader(false)
-  }, [packages.length + length]);
+      if(max<4){
+        setHeight(4);
+        return
+      }
+      setHeight(max);
+      //setLoader(false)
+  }, [packages.length+length]);
+  
 
-  if (Loader || !isFocused) {
+  if (Loader|| !isFocused ||packages.length==0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator color={"red"} size="small" />
@@ -98,336 +112,336 @@ export default function AddPackage({ navigation, route }) {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
-      <SafeAreaView style={{ flex: 1 }}>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+    >
+      <SafeAreaView style={{flex:1}}>
+      
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            marginTop: 0,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <SvgXml xml={circle} height="13" width={"13"} />
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "Poppins-SemiBold",
+                marginTop: 10,
+                lineHeight: 28,
+              }}
+            >
+              Add Your Best Package Service
+            </Text>
+          </View>
+          <SvgXml
+            xml={vectorImage}
+            style={{
+              flex: 2,
+            }}
+            height={width / 2 + 35}
+            width={width / 2 + 35}
+          />
+        </View>
         <View
           style={{
             paddingHorizontal: 20,
-            paddingVertical: 5,
-          }}>
-          <AntDesign
-            onPress={() => {
-              navigation.goBack();
+          }}
+        >
+          <Input
+            error={TitleError}
+            value={Title}
+            onChange={(e) => setTitle(e)}
+            style={{
+              borderWidth: 1,
+              marginHorizontal: 0,
             }}
-            name="left"
-            size={24}
-            color="black"
+            placeholder={"Service Title"}
           />
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
+        <View
+          style={{
+            marginHorizontal: 20,
+            marginBottom: 10,
+          }}
+        >
+          <TextArea
+            error={DescriptionError}
+            value={Description}
+            onChange={(e) => setDescription(e)}
             style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
               marginTop: 15,
-            }}>
-            <View
-              style={{
-                flex: 1,
-              }}>
-              <SvgXml xml={circle} height="13" width={"13"} />
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontFamily: "Poppins-SemiBold",
-                  marginTop: 10,
-                  lineHeight: 28,
-                }}>
-                Add Your Best Package Service
-              </Text>
-            </View>
-            <SvgXml
-              xml={vectorImage}
-              style={{
-                flex: 2,
-              }}
-              height={width / 2 + 35}
-              width={width / 2 + 35}
-            />
-          </View>
+            }}
+            placeholder={"Description"}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            marginBottom: 15,
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "Poppins-SemiBold",
+            }}
+          >
+            Add Package
+          </Text>
           <View
             style={{
-              paddingHorizontal: 20,
-            }}>
-            <Input
-              error={TitleError}
-              value={Title}
-              onChange={(e) => setTitle(e)}
+              flex: 1,
+              marginLeft: 50,
+              justifyContent: "center",
+            }}
+          >
+            <Text
               style={{
-                borderWidth: 1,
-                marginHorizontal: 0,
+                fontSize: 12,
+                textAlign: "justify",
               }}
-              placeholder={"Service Title"}
-            />
+            >
+              *minimum Two package and maximum 5 package can add
+            </Text>
           </View>
-          <View
+        </View>
+        
+         {Height?(
+           <View
+           style={{
+             height: Height * 60,
+           }}
+         >
+           <Tab.Navigator initialRouteName={packages.length==0?"Add Package":packages[packages.length-1].id}
+            
+             tabBar={(props) => (
+               <TabBar
+                 onClick={(e) => {
+                   //console.log(e)
+                   navigation.navigate("AddPackageScreen", {
+                     setPackage: setPackage,
+                     data: packages.filter((d) => e.id == d.id)[0],
+                     package: packages,
+                   });
+                 }}
+                 onPress={(e) => {
+                   Alert.alert("Hey!", "Are you want to delete this?", [
+                     {
+                       text: "Cancel",
+                       onPress: () => console.log("Cancel Pressed"),
+                       style: "cancel",
+                     },
+                     {
+                       text: "OK",
+                       onPress: () => {
+                         deleteData(e);
+                       },
+                     },
+                   ]);
+                 }}
+                 {...props}
+               />
+             )}
+             screenOptions={{
+               lazy: true,
+               lazyPreloadDistance: 100,
+             }}
+           >
+             {packages.map((doc, i) => (
+               <Tab.Screen
+                 initialParams={{ data: doc }}
+                 key={i}
+                 name={doc.id}
+                 component={TabScreen}
+               />
+             ))}
+
+             {packages.length < 5 && (
+               <Tab.Screen
+                 name="Add Package"
+                 initialParams={{ setPackage: setPackage }}
+                 component={Screen}
+               />
+             )}
+           </Tab.Navigator>
+         </View>
+         ):(<></>)}
+        
+        {PackageError && (
+          <Text
             style={{
               marginHorizontal: 20,
-              marginBottom: 10,
-            }}>
-            <TextArea
-              error={DescriptionError}
-              value={Description}
-              onChange={(e) => setDescription(e)}
-              style={{
-                marginTop: 15,
-              }}
-              placeholder={"Description"}
-            />
-          </View>
-          <View
+              color: "red",
+              marginVertical: 10,
+            }}
+          >
+            {PackageError}
+          </Text>
+        )}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
             style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              marginBottom: 15,
-              marginTop: 10,
-            }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "Poppins-SemiBold",
-              }}>
-              Add Package
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                marginLeft: 50,
-                justifyContent: "center",
-              }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                  textAlign: "justify",
-                }}>
-                *minimum Two package and maximum 5 package can add
-              </Text>
-            </View>
-          </View>
-
-          {Height ? (
-            <View
-              style={{
-                height: Height * 60,
-              }}>
-              <Tab.Navigator
-                initialRouteName={
-                  packages.length == 0
-                    ? "Add Package"
-                    : packages[packages.length - 1].id
-                }
-                tabBar={(props) => (
-                  <TabBar
-                    onClick={(e) => {
-                      //console.log(e)
-                      navigation.navigate("AddPackageScreen", {
-                        setPackage: setPackage,
-                        data: packages.filter((d) => e.id == d.id)[0],
-                        package: packages,
-                      });
-                    }}
-                    onPress={(e) => {
-                      Alert.alert("Hey!", "Are you want to delete this?", [
-                        {
-                          text: "Cancel",
-                          onPress: () => console.log("Cancel Pressed"),
-                          style: "cancel",
-                        },
-                        {
-                          text: "OK",
-                          onPress: () => {
-                            deleteData(e);
-                          },
-                        },
-                      ]);
-                    }}
-                    {...props}
-                  />
-                )}
-                screenOptions={{
-                  lazy: true,
-                  lazyPreloadDistance: 100,
-                }}>
-                {packages.map((doc, i) => (
-                  <Tab.Screen
-                    initialParams={{ data: doc }}
-                    key={i}
-                    name={doc.id}
-                    component={TabScreen}
-                  />
-                ))}
-
-                {packages.length < 5 && (
-                  <Tab.Screen
-                    name="Add Package"
-                    initialParams={{ setPackage: setPackage }}
-                    component={Screen}
-                  />
-                )}
-              </Tab.Navigator>
-            </View>
-          ) : (
-            <></>
-          )}
-
-          {PackageError && (
-            <Text
-              style={{
-                marginHorizontal: 20,
-                color: "red",
-                marginVertical: 10,
-              }}>
-              {PackageError}
-            </Text>
-          )}
-          <View
+              fontSize: 16,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            Add Photo
+          </Text>
+          <Text
             style={{
-              paddingHorizontal: 20,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}>
-              Add Photo
-            </Text>
-            <Text
-              style={{
-                fontSize: 10,
-                fontFamily: "Poppins-Medium",
-              }}>
-              *maximum 2 mb size
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              justifyContent: "space-between",
-              marginTop: 20,
-            }}>
-            <ImageButton
-              value={Images1}
-              onChange={(e) => {
-                setImage1(e);
-              }}
-            />
-            <ImageButton
-              value={Image2}
-              onChange={(e) => {
-                setImage2(e);
-              }}
-            />
-            <ImageButton
-              value={Image3}
-              onChange={(e) => {
-                setImage3(e);
-              }}
-            />
-            <ImageButton
-              value={Image4}
-              onChange={(e) => {
-                setImage4(e);
-              }}
-            />
-          </View>
-          {ImageError && (
-            <Text
-              style={{
-                color: "red",
-                marginHorizontal: 20,
-              }}>
-              {ImageError}
-            </Text>
-          )}
-          <View
-            style={{
-              height: 20,
+              fontSize: 10,
+              fontFamily: "Poppins-Medium",
+            }}
+          >
+            *maximum 2 mb size
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            justifyContent: "space-between",
+            marginTop: 20,
+          }}
+        >
+          <ImageButton
+            value={Images1}
+            onChange={(e) => {
+              setImage1(e);
             }}
           />
-          <IconButton
-            onPress={async () => {
-              //navigation.goBack()
-              setTitleError("");
-              setDescriptionError("");
-              setImageError("");
-              setPackageError("");
-              if (!Title) {
-                setTitleError("*Title is required");
-                return;
-              }
-              if (!Description) {
-                setDescriptionError("*Description is  required");
-                return;
-              }
-              if (packages.length < 2) {
-                setPackageError("You must select minimum 2 package");
-                return;
-              }
-              if (!Images1 || !Image2 || !Image3 || !Image4) {
-                setImageError("*Image is required");
-                return;
-              }
-              //console.log(serverData)
-              if (!vendor || !serverData) {
-                Alert.alert("Opps!", "Something went wrong");
-                return;
-              }
-
-              //ongoing function-------------
-              setLoader(true);
-              let blobImages = [];
-              blobImages.push(fileFromURL(Images1));
-              blobImages.push(fileFromURL(Image2));
-              blobImages.push(fileFromURL(Image3));
-              blobImages.push(fileFromURL(Image4));
-              const result = await uploadFile(blobImages, user.token);
-
-              if (result) {
-                createOtherService(
-                  user.token,
-                  {
-                    serviceTitle: Title,
-                    price: 0,
-                    description: Description,
-                    packageData: packages,
-                  },
-                  serverData,
-                  result,
-                  vendor.service.id,
-                  "PACKAGE"
-                )
-                  .then((res) => {
-                    navigation.navigate("VendorProfile", { direct: res });
-                    setLoader(false);
-                  })
-                  .catch((err) => {
-                    console.warn(err);
-                    Alert.alert("Opps!", err.response.data.msg);
-                    setLoader(false);
-                  });
-                return;
-              }
-              Alert.alert("Error!", "Can't upload photos");
+          <ImageButton
+            value={Image2}
+            onChange={(e) => {
+              setImage2(e);
+            }}
+          />
+          <ImageButton
+            value={Image3}
+            onChange={(e) => {
+              setImage3(e);
+            }}
+          />
+          <ImageButton
+            value={Image4}
+            onChange={(e) => {
+              setImage4(e);
+            }}
+          />
+        </View>
+        {ImageError && (
+          <Text
+            style={{
+              color: "red",
+              marginHorizontal: 20,
+            }}
+          >
+            {ImageError}
+          </Text>
+        )}
+        <View
+          style={{
+            height: 20,
+          }}
+        />
+        <IconButton
+          onPress={async () => {
+            return
+            //navigation.goBack()
+            setTitleError("");
+            setDescriptionError("");
+            setImageError("");
+            setPackageError("");
+            if (!Title) {
+              setTitleError("*Title is required");
               return;
-            }}
-            style={{
-              backgroundColor: "#4ADE80",
-              marginHorizontal: 20,
-              height: 35,
-              borderWidth: 0,
-            }}
-            title={"Confirm"}
-          />
-          <View
-            style={{
-              height: 20,
-            }}
-          />
-        </ScrollView>
+            }
+            if (!Description) {
+              setDescriptionError("*Description is  required");
+              return;
+            }
+            if (packages.length < 2) {
+              setPackageError("You must select minimum 2 package");
+              return;
+            }
+            if (!Images1 || !Image2 || !Image3 || !Image4) {
+              setImageError("*Image is required");
+              return;
+            }
+            //console.log(serverData)
+            if(!vendor||!serverData){
+              Alert.alert("Opps!","Something went wrong")
+              return
+            }
+            
+            //ongoing function-------------
+            setLoader(true);
+            let blobImages = [];
+            blobImages.push(fileFromURL(Images1));
+            blobImages.push(fileFromURL(Image2));
+            blobImages.push(fileFromURL(Image3));
+            blobImages.push(fileFromURL(Image4));
+            const result = await uploadFile(blobImages, user.token);
+
+            if (result) {
+              createOtherService(
+                user.token,
+                {
+                  serviceTitle: Title,
+                  price: 0,
+                  description: Description,
+                  packageData: packages,
+                },
+                serverData,
+                result,
+                vendor.service.id,
+                "PACKAGE"
+              )
+                .then((res) => {
+                  navigation.navigate("VendorProfile", { direct: res });
+                  setLoader(false);
+                })
+                .catch((err) => {
+                  console.warn(err);
+                  Alert.alert("Opps!", err.response.data.msg);
+                  setLoader(false);
+                });
+              return;
+            }
+            Alert.alert("Error!", "Can't upload photos");
+            return;
+          }}
+          style={{
+            backgroundColor: "#4ADE80",
+            marginHorizontal: 20,
+            height: 35,
+            borderWidth: 0,
+          }}
+          title={"Update"}
+        />
+        <View
+          style={{
+            height: 20,
+          }}
+        />
+      </ScrollView>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -441,7 +455,8 @@ const Screen = ({ navigation, route }) => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-      }}>
+      }}
+    >
       {route.name == "Add Package" && (
         <IconButton
           onPress={() => {
@@ -470,7 +485,8 @@ const TabScreen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       {data.features.map((doc, i) => (
         <View
           style={{
@@ -481,8 +497,9 @@ const TabScreen = ({ navigation, route }) => {
             borderBottomColor: "#F1F1F1",
             borderBottomWidth: data.features.length - 1 == i ? 0 : 1,
           }}
-          key={i}>
-          <View style={{ flex: 1 }}>
+          key={i}
+        >
+          <View style={{flex:1}}>
             {doc.isAvailable ? (
               <SvgXml xml={right} height="30" width={"30"} />
             ) : (
@@ -496,17 +513,17 @@ const TabScreen = ({ navigation, route }) => {
               />
             )}
           </View>
-          <View
-            style={{
-              flex: 1,
-              alignItems: "flex-end",
-            }}>
+          <View style={{
+            flex:1,
+            alignItems:"flex-end"
+          }}>
             <Text
               style={{
                 fontSize: 14,
                 color: "#666666",
-                textAlign: "justify",
-              }}>
+                textAlign:"justify"
+              }}
+            >
               {doc.title ? doc.title : ""}
             </Text>
           </View>
@@ -770,11 +787,13 @@ const TabBar = ({
         flexDirection: "row",
         borderBottomColor: "#E9E6E6",
         borderBottomWidth: 0.5,
-      }}>
+      }}
+    >
       <ScrollView
         ref={ref}
         showsHorizontalScrollIndicator={false}
-        horizontal={true}>
+        horizontal={true}
+      >
         {packages.map((doc, index) => {
           const isFocused = state.index === index;
 
@@ -802,11 +821,13 @@ const TabBar = ({
                   marginLeft: 5,
                   height: 40,
                   justifyContent: "center",
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 16,
-                  }}>
+                  }}
+                >
                   {Title}
 
                   {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
@@ -830,7 +851,8 @@ const TabBar = ({
                       size={18}
                       color="black"
                     />
-                  }>
+                  }
+                >
                   <Menu.Item
                     onPress={() => {
                       onClick(packages[index]);
@@ -865,7 +887,8 @@ const TabBar = ({
             if (ref) {
               ref.current.scrollTo({ x: 10000, animated: true });
             }
-          }}>
+          }}
+        >
           <Pressable
             onPress={() => {
               navigation.navigate("Add Package");
@@ -878,7 +901,8 @@ const TabBar = ({
               marginLeft: 5,
               height: 40,
               justifyContent: "center",
-            }}>
+            }}
+          >
             <SvgXml
               style={{
                 marginRight: 10,
@@ -891,7 +915,8 @@ const TabBar = ({
             <Text
               style={{
                 fontSize: 16,
-              }}>
+              }}
+            >
               Add Package
             </Text>
           </Pressable>
@@ -1124,12 +1149,12 @@ export const AddScreen = ({ navigation, route }) => {
   }, []);
   const removeById = (position) => {
     //const arr = TotalFeature.filter((d) => d != id);
-    let arr = [];
-    TotalFeature.map((doc, i) => {
-      if (i != position - 1) {
-        arr.push(doc);
+    let arr=[];
+    TotalFeature.map((doc,i)=>{
+      if(i!=position-1){
+        arr.push(doc)
       }
-    });
+    })
     setTotalFeature(arr);
     if (position == 1) {
       setFeature1("");
@@ -1158,917 +1183,965 @@ export const AddScreen = ({ navigation, route }) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
-      <SafeAreaView style={{flex:1}}>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <View
+        style={{
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+        }}
+      >
+        <AntDesign
+          onPress={() => {
+            navigation.goBack();
+          }}
+          name="left"
+          size={24}
+          color="black"
+        />
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
+            flexDirection: "row",
             paddingHorizontal: 20,
-            paddingVertical: 5,
-          }}>
-          <AntDesign
-            onPress={() => {
-              navigation.goBack();
+            marginTop: 0,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
             }}
-            name="left"
-            size={24}
-            color="black"
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "Poppins-SemiBold",
+                marginTop: 30,
+                lineHeight: 28,
+              }}
+            >
+              Add Your Package Title, Price & Feature
+            </Text>
+          </View>
+          <SvgXml
+            xml={computer}
+            style={{
+              flex: 2,
+            }}
+            height={width / 2 + 35}
+            width={width / 2 + 35}
           />
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
+        <View style={{ marginHorizontal: 20 }}>
+          <Input
+            value={Name}
+            onChange={(e) => setName(e)}
+            error={NameError}
             style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              marginTop: 0,
-            }}>
-            <View
-              style={{
-                flex: 1,
-              }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontFamily: "Poppins-SemiBold",
-                  marginTop: 30,
-                  lineHeight: 28,
-                }}>
-                Add Your Package Title, Price & Feature
-              </Text>
-            </View>
-            <SvgXml
-              xml={computer}
-              style={{
-                flex: 2,
-              }}
-              height={width / 2 + 35}
-              width={width / 2 + 35}
-            />
-          </View>
-          <View style={{ marginHorizontal: 20 }}>
-            <Input
-              value={Name}
-              onChange={(e) => setName(e)}
-              error={NameError}
-              style={{
-                borderWidth: 1,
-                marginHorizontal: 0,
-              }}
-              placeholder={"Package Name"}
-            />
-          </View>
-          <View style={{ marginHorizontal: 20 }}>
-            <Input
-              value={Price}
-              onChange={(e) => setPrice(e)}
-              error={PriceError}
-              keyboardType={"numeric"}
-              style={{
-                borderWidth: 1,
-                marginTop: 10,
-                marginHorizontal: 0,
-              }}
-              placeholder={"Price"}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              marginTop: 15,
-              marginBottom: 15,
-            }}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "Poppins-SemiBold",
-              }}>
-              Add Feature
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                marginLeft: 50,
-                justifyContent: "center",
-              }}>
-              <Text
-                style={{
-                  fontSize: 12,
-                }}>
-                *minimum one and maximum ten feature can add
-              </Text>
-            </View>
-          </View>
-          {TotalFeature.length >= 1 && (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature1Error}
-                  onChange={(e) => {
-                    setFeature1Error("");
-                    if (e.length > 50) {
-                      setFeature1Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature1(e);
-                  }}
-                  value={Feature1}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check1}
-                  onChange={() => {
-                    setCheck1(!Check1);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(1);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-          {TotalFeature.length >= 2 && (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature2Error}
-                  onChange={(e) => {
-                    setFeature2Error("");
-                    if (e.length > 50) {
-                      setFeature2Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature2(e);
-                  }}
-                  value={Feature2}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check2}
-                  onChange={() => {
-                    setCheck2(!Check2);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(2);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-          {TotalFeature.length >= 3 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature3Error}
-                  onChange={(e) => {
-                    setFeature3Error("");
-                    if (e.length > 50) {
-                      setFeature3Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature3(e);
-                  }}
-                  value={Feature3}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check3}
-                  onChange={() => {
-                    setCheck3(!Check3);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(3);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 4 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature4Error}
-                  onChange={(e) => {
-                    setFeature4Error("");
-                    if (e.length > 50) {
-                      setFeature4Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature4(e);
-                  }}
-                  value={Feature4}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check4}
-                  onChange={() => {
-                    setCheck4(!Check4);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(4);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 5 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature5Error}
-                  onChange={(e) => {
-                    setFeature5Error("");
-                    if (e.length > 50) {
-                      setFeature5Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature5(e);
-                  }}
-                  value={Feature5}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check5}
-                  onChange={() => {
-                    setCheck5(!Check5);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(5);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 6 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature6Error}
-                  onChange={(e) => {
-                    setFeature6Error("");
-                    if (e.length > 50) {
-                      setFeature6Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature6(e);
-                  }}
-                  value={Feature6}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check6}
-                  onChange={() => {
-                    setCheck6(!Check6);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(6);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 7 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature7Error}
-                  onChange={(e) => {
-                    setFeature7Error("");
-                    if (e.length > 50) {
-                      setFeature7Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature7(e);
-                  }}
-                  value={Feature7}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check7}
-                  onChange={() => {
-                    setCheck7(!Check7);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(7);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 8 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature8Error}
-                  onChange={(e) => {
-                    setFeature8Error("");
-                    if (e.length > 50) {
-                      setFeature8Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature8(e);
-                  }}
-                  value={Feature8}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check8}
-                  onChange={() => {
-                    setCheck8(!Check8);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(8);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 9 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature9Error}
-                  onChange={(e) => {
-                    setFeature9Error("");
-                    if (e.length > 50) {
-                      setFeature9Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature9(e);
-                  }}
-                  value={Feature9}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check9}
-                  onChange={() => {
-                    setCheck9(!Check9);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(9);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length >= 10 ? (
-            <View>
-              <View
-                style={{
-                  marginHorizontal: 20,
-                  marginVertical: 5,
-                }}>
-                <Input
-                  level={"Max 50  character"}
-                  error={Feature10Error}
-                  onChange={(e) => {
-                    setFeature10Error("");
-                    if (e.length > 50) {
-                      setFeature10Error("Maximum character 50");
-                      return;
-                    }
-                    setFeature10(e);
-                  }}
-                  value={Feature10}
-                  style={{
-                    borderWidth: 1,
-                    marginHorizontal: 0,
-                  }}
-                  placeholder={"Type here"}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}>
-                <CheckBox
-                  value={Check10}
-                  onChange={() => {
-                    setCheck10(!Check10);
-                  }}
-                  style={{
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    width: 120,
-                  }}
-                  title={"Available"}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    removeById(10);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}>
-                  <AntDesign name="minuscircleo" size={20} color="red" />
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 16,
-                    }}>
-                    Remove
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          {TotalFeature.length != 10 ? (
-            <IconButton
-              onPress={() => {
-                setTotalFeature((val) => [...val, uuid.v4()]);
-              }}
-              LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
-              style={{
-                justifyContent: "flex-start",
-                borderWidth: 0,
-                marginHorizontal: 10,
-                width: 150,
-              }}
-              title={"Add More Feature"}
-            />
-          ) : null}
-          {FeatureError && (
-            <Text
-              style={{
-                color: "red",
-                marginHorizontal: 20,
-              }}>
-              {FeatureError}
-            </Text>
-          )}
-          <View
-            style={{
-              height: 30,
+              borderWidth: 1,
+              marginHorizontal: 0,
             }}
+            placeholder={"Package Name"}
           />
+        </View>
+        <View style={{ marginHorizontal: 20 }}>
+          <Input
+            value={Price}
+            onChange={(e) => setPrice(e)}
+            error={PriceError}
+            keyboardType={"numeric"}
+            style={{
+              borderWidth: 1,
+              marginTop: 10,
+              marginHorizontal: 0,
+            }}
+            placeholder={"Price"}
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 20,
+            marginTop: 15,
+            marginBottom: 15,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "Poppins-SemiBold",
+            }}
+          >
+            Add Feature
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 50,
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+              }}
+            >
+              *minimum one and maximum ten feature can add
+            </Text>
+          </View>
+        </View>
+        {TotalFeature.length >= 1 && (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature1Error}
+                onChange={(e) => {
+                  setFeature1Error("");
+                  if (e.length > 50) {
+                    setFeature1Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature1(e);
+                }}
+                value={Feature1}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check1}
+                onChange={() => {
+                  setCheck1(!Check1);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(1);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {TotalFeature.length >= 2 && (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature2Error}
+                onChange={(e) => {
+                  setFeature2Error("");
+                  if (e.length > 50) {
+                    setFeature2Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature2(e);
+                }}
+                value={Feature2}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check2}
+                onChange={() => {
+                  setCheck2(!Check2);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(2);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {TotalFeature.length >= 3 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature3Error}
+                onChange={(e) => {
+                  setFeature3Error("");
+                  if (e.length > 50) {
+                    setFeature3Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature3(e);
+                }}
+                value={Feature3}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check3}
+                onChange={() => {
+                  setCheck3(!Check3);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(3);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 4 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature4Error}
+                onChange={(e) => {
+                  setFeature4Error("");
+                  if (e.length > 50) {
+                    setFeature4Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature4(e);
+                }}
+                value={Feature4}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check4}
+                onChange={() => {
+                  setCheck4(!Check4);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(4);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 5 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature5Error}
+                onChange={(e) => {
+                  setFeature5Error("");
+                  if (e.length > 50) {
+                    setFeature5Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature5(e);
+                }}
+                value={Feature5}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check5}
+                onChange={() => {
+                  setCheck5(!Check5);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(5);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 6 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature6Error}
+                onChange={(e) => {
+                  setFeature6Error("");
+                  if (e.length > 50) {
+                    setFeature6Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature6(e);
+                }}
+                value={Feature6}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check6}
+                onChange={() => {
+                  setCheck6(!Check6);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(6);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 7 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature7Error}
+                onChange={(e) => {
+                  setFeature7Error("");
+                  if (e.length > 50) {
+                    setFeature7Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature7(e);
+                }}
+                value={Feature7}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check7}
+                onChange={() => {
+                  setCheck7(!Check7);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(7);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 8 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature8Error}
+                onChange={(e) => {
+                  setFeature8Error("");
+                  if (e.length > 50) {
+                    setFeature8Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature8(e);
+                }}
+                value={Feature8}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check8}
+                onChange={() => {
+                  setCheck8(!Check8);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(8);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 9 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature9Error}
+                onChange={(e) => {
+                  setFeature9Error("");
+                  if (e.length > 50) {
+                    setFeature9Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature9(e);
+                }}
+                value={Feature9}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check9}
+                onChange={() => {
+                  setCheck9(!Check9);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(9);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length >= 10 ? (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 5,
+              }}
+            >
+              <Input
+                level={"Max 50  character"}
+                error={Feature10Error}
+                onChange={(e) => {
+                  setFeature10Error("");
+                  if (e.length > 50) {
+                    setFeature10Error("Maximum character 50");
+                    return;
+                  }
+                  setFeature10(e);
+                }}
+                value={Feature10}
+                style={{
+                  borderWidth: 1,
+                  marginHorizontal: 0,
+                }}
+                placeholder={"Type here"}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+              }}
+            >
+              <CheckBox
+                value={Check10}
+                onChange={() => {
+                  setCheck10(!Check10);
+                }}
+                style={{
+                  marginHorizontal: 20,
+                  marginVertical: 10,
+                  width: 120,
+                }}
+                title={"Available"}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  removeById(10);
+                }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="minuscircleo" size={20} color="red" />
+                <Text
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 16,
+                  }}
+                >
+                  Remove
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null}
+        {TotalFeature.length != 10 ? (
           <IconButton
             onPress={() => {
-              let arr = [];
-              //let i=0;
-              if (Feature1) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature1,
-                  isAvailable: Check1,
-                });
-              }
-              if (Feature2) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature2,
-                  isAvailable: Check2,
-                });
-              }
-              if (Feature3) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature3,
-                  isAvailable: Check3,
-                });
-              }
-              if (Feature4) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature4,
-                  isAvailable: Check4,
-                });
-              }
-              if (Feature5) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature5,
-                  isAvailable: Check5,
-                });
-              }
-              if (Feature6) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature6,
-                  isAvailable: Check6,
-                });
-              }
-              if (Feature7) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature7,
-                  isAvailable: Check7,
-                });
-              }
-              if (Feature8) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature8,
-                  isAvailable: Check8,
-                });
-              }
-              if (Feature9) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature9,
-                  isAvailable: Check9,
-                });
-              }
-              if (Feature10) {
-                arr.push({
-                  id: uuid.v4(),
-                  title: Feature10,
-                  isAvailable: Check10,
-                });
-              }
-
-              setNameError(null);
-              setPriceError(null);
-              if (!Name) {
-                setNameError("* Name is required");
-                return;
-              }
-              if (!Price) {
-                setPriceError("* Price is required");
-                return;
-              }
-              if (arr.length != TotalFeature.length) {
-                TotalFeature.map((doc, i) => {
-                  if (i == 0 && !Feature1) {
-                    setFeature1Error("Empty box");
-                  } else if (i == 1 && !Feature2) {
-                    setFeature2Error("Empty box");
-                  } else if (i == 2 && !Feature3) {
-                    setFeature3Error("Empty box");
-                  } else if (i == 3 && !Feature4) {
-                    setFeature4Error("Empty box");
-                  } else if (i == 4 && !Feature5) {
-                    setFeature5Error("Empty box");
-                  } else if (i == 5 && !Feature6) {
-                    setFeature6Error("Empty box");
-                  } else if (i == 6 && !Feature7) {
-                    setFeature7Error("Empty box");
-                  } else if (i == 7 && !Feature8) {
-                    setFeature8Error("Empty box");
-                  } else if (i == 8 && !Feature9) {
-                    setFeature9Error("Empty box");
-                  } else if (i == 9 && !Feature10) {
-                    setFeature10Error("Empty box");
-                  }
-                });
-                return;
-              }
-              if (arr.length == 0) {
-                setFeatureError("Require minimum 1 feature");
-                return;
-              }
-              if (route.params.data) {
-                let packages = route.params.package;
-                let newArr = [];
-                packages.map((doc, i) => {
-                  if (doc.id == route.params.data.id) {
-                    newArr.push({
-                      name: Name,
-                      id: route.params.data.id,
-                      price: Price,
-                      features: arr,
-                    });
-                  } else {
-                    newArr.push(doc);
-                  }
-                });
-
-                dispatch({ type: "SET_PACKAGES", playload: newArr });
-                navigation.navigate("AddPackage", { length: newArr.length });
-                return;
-              }
-              dispatch({
-                type: "ADD_PACKAGE",
-                playload: {
-                  id: uuid.v4(),
-                  name: Name,
-                  price: Price,
-                  features: arr,
-                },
-              });
-              navigation.navigate("AddPackage");
+              setTotalFeature((val) => [...val, uuid.v4()]);
             }}
+            LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
             style={{
-              backgroundColor: "#4ADE80",
-              marginHorizontal: 20,
-              height: 35,
+              justifyContent: "flex-start",
               borderWidth: 0,
+              marginHorizontal: 10,
+              width: 150,
             }}
-            title={"Confirm"}
+            title={"Add More Feature"}
           />
-          <View
+        ) : null}
+        {FeatureError && (
+          <Text
             style={{
-              height: 30,
+              color: "red",
+              marginHorizontal: 20,
             }}
-          />
-        </ScrollView>
-      </SafeAreaView>
+          >
+            {FeatureError}
+          </Text>
+        )}
+        <View
+          style={{
+            height: 30,
+          }}
+        />
+        <IconButton
+          onPress={() => {
+            let arr = [];
+            //let i=0;
+            if (Feature1) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature1,
+                isAvailable: Check1,
+              });
+            }
+            if (Feature2) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature2,
+                isAvailable: Check2,
+              });
+            }
+            if (Feature3) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature3,
+                isAvailable: Check3,
+              });
+            }
+            if (Feature4) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature4,
+                isAvailable: Check4,
+              });
+            }
+            if (Feature5) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature5,
+                isAvailable: Check5,
+              });
+            }
+            if (Feature6) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature6,
+                isAvailable: Check6,
+              });
+            }
+            if (Feature7) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature7,
+                isAvailable: Check7,
+              });
+            }
+            if (Feature8) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature8,
+                isAvailable: Check8,
+              });
+            }
+            if (Feature9) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature9,
+                isAvailable: Check9,
+              });
+            }
+            if (Feature10) {
+              arr.push({
+                id: uuid.v4(),
+                title: Feature10,
+                isAvailable: Check10,
+              });
+            }
+            
+            setNameError(null);
+            setPriceError(null);
+            if (!Name) {
+              setNameError("* Name is required");
+              return;
+            }
+            if (!Price) {
+              setPriceError("* Price is required");
+              return;
+            }
+            if (arr.length != TotalFeature.length) {
+              TotalFeature.map((doc, i) => {
+                if (i == 0 && !Feature1) {
+                  setFeature1Error("Empty box");
+                } else if (i == 1 && !Feature2) {
+                  setFeature2Error("Empty box");
+                } else if (i == 2 && !Feature3) {
+                  setFeature3Error("Empty box");
+                } else if (i == 3 && !Feature4) {
+                  setFeature4Error("Empty box");
+                } else if (i == 4 && !Feature5) {
+                  setFeature5Error("Empty box");
+                } else if (i == 5 && !Feature6) {
+                  setFeature6Error("Empty box");
+                } else if (i == 6 && !Feature7) {
+                  setFeature7Error("Empty box");
+                } else if (i == 7 && !Feature8) {
+                  setFeature8Error("Empty box");
+                } else if (i == 8 && !Feature9) {
+                  setFeature9Error("Empty box");
+                } else if (i == 9 && !Feature10) {
+                  setFeature10Error("Empty box");
+                }
+              });
+              return;
+            }
+            if (arr.length == 0) {
+              setFeatureError("Require minimum 1 feature");
+              return;
+            }
+            if (route.params.data) {
+              let packages = route.params.package;
+              let newArr = [];
+              packages.map((doc, i) => {
+                if (doc.id == route.params.data.id) {
+                  newArr.push({
+                    name: Name,
+                    id: route.params.data.id,
+                    price: Price,
+                    features: arr,
+                  });
+                } else {
+                  newArr.push(doc);
+                }
+              });
+
+              dispatch({ type: "SET_PACKAGES", playload: newArr });
+              navigation.navigate("AddPackage",{length:newArr.length});
+              return;
+            }
+            dispatch({
+              type: "ADD_PACKAGE",
+              playload: {
+                id: uuid.v4(),
+                name: Name,
+                price: Price,
+                features: arr,
+              },
+            });
+            navigation.navigate("AddPackage");
+          }}
+          style={{
+            backgroundColor: "#4ADE80",
+            marginHorizontal: 20,
+            height: 35,
+            borderWidth: 0,
+          }}
+          title={"Confirm"}
+        />
+        <View
+          style={{
+            height: 30,
+          }}
+        />
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

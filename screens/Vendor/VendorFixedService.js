@@ -169,6 +169,7 @@ const VendorFixedService = (props) => {
     setActiveServiceData(null);
     //console.log(data);
     if (data) {
+      //console.log(data);
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
@@ -543,7 +544,10 @@ const VendorFixedService = (props) => {
               #Fixed Service
             </Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              
+              navigation.navigate("EditService",{data:data,gigs:data})
+            }}>
               <SvgXml xml={editIcon} height="50" width={"50"} />
             </TouchableOpacity>
           </View>

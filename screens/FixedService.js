@@ -168,7 +168,9 @@ const FixedService = (props) => {
     setScrollEnabled(false);
     setActiveServiceData(null);
    // console.log(data.service.user);
+   
     if (data) {
+      
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);

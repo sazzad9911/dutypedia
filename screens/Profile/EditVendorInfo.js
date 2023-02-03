@@ -9,15 +9,19 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5,Ionicons } from "@expo/vector-icons";
 import DropDown from "../../components/DropDown";
 import Input from "../../components/Input";
 import SuggestionBox, { MainOptions } from "../../components/SuggestionBox";
 import IconButton from "../../components/IconButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Color } from "../../assets/colors";
 import { Entypo } from '@expo/vector-icons';
+import { updateData } from "../../Class/update";
+import { getService } from "../../Class/service";
+import ActivityLoader from "../../components/ActivityLoader";
 const { width, height } = Dimensions.get("window");
 
 export default function EditVendorInfo({ navigation, route }) {
@@ -101,6 +105,10 @@ export default function EditVendorInfo({ navigation, route }) {
   const [specialty, setSpecialty] = useState();
   const [gender, setGender] = useState();
   const [newSpecialty,setNewSpecialty]=useState([])
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  const dispatch=useDispatch()
+  const [loader,setLoader]=useState(false)
 
   useEffect(() => {
     if (data) {
@@ -115,6 +123,44 @@ export default function EditVendorInfo({ navigation, route }) {
       setSpecialty(data.service.speciality);
     }
   }, [data]);
+  const updateInfo=()=>{
+    setLoader(true)
+    updateData(user.token,{
+      serviceId:vendor.service.id,
+      serviceCenterName:centerName,
+      providerInfo:{
+        title:selectedItem,
+        name:name,
+        gender:gender,
+        position:SelectedPositions
+      },
+      worker:parseInt(TeamNumber)
+    }).then(res=>{
+      updateVendorInfo()
+    }).catch(err=>{
+      setLoader(false)
+      console.error(err.response.data.msg)
+    })
+  }
+  const updateVendorInfo=async()=>{
+    const res=await getService(user.token,vendor.service.id);
+    if(res){
+      setLoader(false)
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      navigation.goBack()
+    }
+  }
+  if(loader){
+    return(
+      <View style={{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+      }}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -322,6 +368,10 @@ export default function EditVendorInfo({ navigation, route }) {
               placeholder={"Your specialty"}
             />
             <IconButton onPress={()=>{
+              if(newSpecialty.length>24){
+                Alert.alert("Specialty can't more then 25")
+                return
+              }
               if(specialty){
                 setNewSpecialty(val=>[...val,specialty])
                 setSpecialty("")
@@ -358,7 +408,7 @@ export default function EditVendorInfo({ navigation, route }) {
             }}
             Data={Positions}
           />
-          <IconButton
+          <IconButton onPress={updateInfo}
             style={{
               marginHorizontal: 20,
               marginVertical: 30,
@@ -404,7 +454,8 @@ const styles = StyleSheet.create({
 const Chip=({title,backgroundColor,onRemove})=>{
   return(
     <View style={{
-      backgroundColor:backgroundColor,
+      borderColor:"#e5e5e5",
+      borderWidth:1,
       paddingHorizontal:10,
       paddingVertical:5,
       borderRadius:20,
@@ -417,9 +468,9 @@ const Chip=({title,backgroundColor,onRemove})=>{
         color:"black",
         fontSize:16
       }}>{title}</Text>
-      <Entypo onPress={onRemove?onRemove:null} style={{
+      <Ionicons onPress={onRemove?onRemove:null} style={{
         marginLeft:5
-      }} name="circle-with-cross" size={24} color="black" />
+      }} name="close-circle-outline" size={21} color="#707070" />
     </View>
   )
 }

@@ -280,7 +280,7 @@ const VendorProfile = (props) => {
         }
       }
     }
-  }, [vendor + data]);
+  }, [vendor + data,isFocused]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
@@ -342,7 +342,7 @@ const VendorProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data]);
+  }, [Bargaining + Data,isFocused]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -364,7 +364,7 @@ const VendorProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList + Click + Refresh]);
+  }, [NewDataList + Click + Refresh,isFocused]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -381,7 +381,7 @@ const VendorProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService + Click + Refresh]);
+  }, [ActiveService + Click + Refresh,isFocused]);
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -394,7 +394,7 @@ const VendorProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + data + newUser + vendor + Data]);
+  }, [Active + data + newUser + vendor + Data,isFocused]);
   React.useEffect(() => {
     if (newUser && data) {
       getOtherServices(newUser.token, data.service.id, "PACKAGE")
@@ -407,14 +407,14 @@ const VendorProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + vendor + Data]);
+  }, [data + newUser + vendor + Data,isFocused]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
-  }, [Specialty]);
+  }, [Specialty,isFocused]);
   const showCart = (doc) => {
     setGigs(doc);
     setClick(true);
@@ -1031,9 +1031,9 @@ const VendorProfile = (props) => {
               >
                 About
               </Text>
-              <TouchableOpacity style={{}}>
+              {/* <TouchableOpacity style={{}}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <AnimatedHeight
               id={Data.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
@@ -1043,7 +1043,7 @@ const VendorProfile = (props) => {
           <Pressable
             onPress={() => {
               if (calenderHeight == 0) {
-                setCalenderHeight(125);
+                setCalenderHeight(150);
               } else {
                 setCalenderHeight(0);
               }
@@ -1100,6 +1100,16 @@ const VendorProfile = (props) => {
               }}
               Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
               title="Notice"
+            />
+            <ProfileOption
+              onPress={() => {
+                //navigation.navigate("Notice", { serviceId: Data.service.id });
+              }}
+              style={{
+                marginBottom: 0,
+              }}
+              Icon={() => <Ionicons name="location-sharp" size={24} color={"#4ADE80"} />}
+              title="Work Location"
             />
             <BarOption
               icon={user}
@@ -1989,7 +1999,7 @@ const BargainingScreen = ({ navigation, route }) => {
           }}
         >
           <TouchableOpacity onPress={()=>{
-            navigation.navigate("EditService",{data:Data})
+            navigation.navigate("EditService",{data:Data,gigs:Data.service.gigs[0]})
           }} style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>

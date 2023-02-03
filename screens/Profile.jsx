@@ -76,6 +76,9 @@ import InstallmentScript from "./services/InstallmentScript";
 import EditVendorInfo from "./Profile/EditVendorInfo";
 import MemberAppointment from "./Vendor/Appointment/MemberAppointment";
 import EditService from "./Profile/EditService";
+import EditPackageService from "./Profile/EditPackageService";
+import EditSubscriptionService from "./Profile/EditSubscriptionService";
+import EditInstallmentService from "./Profile/EditInstallmentService";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -114,59 +117,96 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="EditVendorInfo"
         options={{
-          header: (props) => <SubHeader title="Personal Information" {...props} />
+          header: (props) => (
+            <SubHeader title="Personal Information" {...props} />
+          ),
         }}
         component={EditVendorInfo}
       />
       <Stack.Screen
         name="EditService"
         options={{
-          header: (props) => <SubHeader title="Service Information" {...props} />
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
         }}
         component={EditService}
       />
       <Stack.Screen
+        name="EditPackageService"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditPackageService}
+      />
+      <Stack.Screen
+        name="EditSubscriptionService"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditSubscriptionService}
+      />
+      <Stack.Screen
+        name="EditInstallmentService"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditInstallmentService}
+      />
+      <Stack.Screen
         name="VendorFixedService"
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
         component={VendorFixedService}
       />
       <Stack.Screen
         name="MemberAppointment"
         options={{
-          header: (props) => <SubHeader style={{
-            paddingBottom: 0,
-            marginBottom:-20
-          }} title="User Appointments" {...props} />
+          header: (props) => (
+            <SubHeader
+              style={{
+                paddingBottom: 0,
+                marginBottom: -20,
+              }}
+              title="User Appointments"
+              {...props}
+            />
+          ),
         }}
         component={MemberAppointment}
       />
       <Stack.Screen
         name="VendorPackageService"
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
         component={VendorPackageService}
       />
       <Stack.Screen
         name="VendorSubscriptionService"
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
         component={VendorSubscriptionService}
       />
       <Stack.Screen
         name="VendorInstallmentService"
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
         component={VendorInstallmentService}
       />
       <Stack.Screen
         name="ManageOrder"
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
         component={ManageOrder}
       />
@@ -570,8 +610,7 @@ const MainProfile = (props) => {
     <SafeAreaView
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: "#F2F2F6" }}
@@ -583,8 +622,7 @@ const MainProfile = (props) => {
               onRefresh();
             }}
           />
-        }
-      >
+        }>
         <StatusBar backgroundColor={primaryColor} />
         <View style={styles.container}>
           <TouchableOpacity
@@ -592,8 +630,7 @@ const MainProfile = (props) => {
               storeJson("theme", !isDark);
               dispatch({ type: "SET_THEME", playload: !isDark });
             }}
-            style={[styles.iconTop]}
-          >
+            style={[styles.iconTop]}>
             <SvgXml xml={lightIcon} height="30" width="30" />
           </TouchableOpacity>
           {backgroundImage ? (
@@ -604,16 +641,14 @@ const MainProfile = (props) => {
           ) : (
             <LinearGradient
               style={styles.backgroundContainer}
-              colors={["#F2F2F6", "#F2F2F6", "#F2F2F6"]}
-            ></LinearGradient>
+              colors={["#F2F2F6", "#F2F2F6", "#F2F2F6"]}></LinearGradient>
           )}
 
           <TouchableOpacity
             onPress={() => {
               pickImage();
             }}
-            style={styles.profile}
-          >
+            style={styles.profile}>
             {image ? (
               <Image style={styles.image} source={{ uri: image }} />
             ) : (
@@ -623,15 +658,13 @@ const MainProfile = (props) => {
           <View
             style={{
               alignSelf: "center",
-            }}
-          >
+            }}>
             <Text style={styles.headLine}>
               {user ? user.user.firstName + " " + user.user.lastName : "-"}
               <Text
                 style={{
                   fontSize: 12,
-                }}
-              >
+                }}>
                 {" "}
                 (
                 {user && user.user.gender
@@ -647,8 +680,7 @@ const MainProfile = (props) => {
                   marginTop: -2,
                   color: "#6366F1",
                 },
-              ]}
-            >
+              ]}>
               @{user ? user.user.username : ""}
             </Text>
           </View>
@@ -661,22 +693,19 @@ const MainProfile = (props) => {
             marginVertical: 20,
             borderRadius: 10,
             paddingLeft: 10,
-          }}
-        >
+          }}>
           <View
             style={{
               borderColor: "#F1EFEF",
               borderBottomWidth: 0.5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 12,
                 color: textColor,
                 fontFamily: "Poppins-Medium",
                 marginBottom: 5,
-              }}
-            >
+              }}>
               Mobile
             </Text>
             <Text
@@ -685,8 +714,7 @@ const MainProfile = (props) => {
                 color: "#6366F1",
                 fontFamily: "Poppins-Medium",
                 marginBottom: 10,
-              }}
-            >
+              }}>
               {user && user.user.phone ? user.user.phone : "N/A"}
             </Text>
           </View>
@@ -695,16 +723,14 @@ const MainProfile = (props) => {
             style={{
               borderColor: "#F1EFEF",
               borderBottomWidth: 0.5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 12,
                 color: textColor,
                 fontFamily: "Poppins-Medium",
                 marginBottom: 5,
-              }}
-            >
+              }}>
               Email
             </Text>
             <Text
@@ -713,8 +739,7 @@ const MainProfile = (props) => {
                 color: "#6366F1",
                 fontFamily: "Poppins-Medium",
                 marginBottom: 10,
-              }}
-            >
+              }}>
               {user && user.user.email ? user.user.email : "N/A"}
             </Text>
           </View>
@@ -723,16 +748,14 @@ const MainProfile = (props) => {
             style={{
               borderColor: "#F1EFEF",
               borderBottomWidth: 0,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 12,
                 color: textColor,
                 fontFamily: "Poppins-Medium",
                 marginBottom: 5,
-              }}
-            >
+              }}>
               Address
             </Text>
             <Text
@@ -741,8 +764,7 @@ const MainProfile = (props) => {
                 color: "#6366F1",
                 fontFamily: "Poppins-Medium",
                 marginBottom: 5,
-              }}
-            >
+              }}>
               {user && user.user.address ? user.user.address : "N/A"}
             </Text>
           </View>
@@ -751,8 +773,7 @@ const MainProfile = (props) => {
               position: "absolute",
               right: 10,
               bottom: 15,
-            }}
-          >
+            }}>
             <Text> Edit</Text>
           </Pressable>
         </View>
@@ -764,8 +785,7 @@ const MainProfile = (props) => {
             marginHorizontal: 20,
             borderRadius: 10,
             paddingLeft: 10,
-          }}
-        >
+          }}>
           <ProfileOption
             style={{
               paddingHorizontal: 0,
@@ -783,8 +803,7 @@ const MainProfile = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 10,
-                }}
-              >
+                }}>
                 <SvgXml xml={orderIcon} height="15" width="15" />
               </View>
             )}
@@ -804,8 +823,7 @@ const MainProfile = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 10,
-                }}
-              >
+                }}>
                 <SvgXml xml={calenderIcon} height="15" width="15" />
               </View>
             )}
@@ -825,8 +843,7 @@ const MainProfile = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 10,
-                }}
-              >
+                }}>
                 <SvgXml xml={loveIcon} height="15" width="15" />
               </View>
             )}
@@ -847,8 +864,7 @@ const MainProfile = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 10,
-                }}
-              >
+                }}>
                 <SvgXml xml={accountIcon} height="15" width="15" />
               </View>
             )}
@@ -863,15 +879,13 @@ const MainProfile = (props) => {
             marginHorizontal: 20,
             borderRadius: 10,
             paddingLeft: 10,
-          }}
-        >
+          }}>
           {vendorInfo && (
             <View
               style={{
                 paddingHorizontal: 0,
                 flexDirection: "row",
-              }}
-            >
+              }}>
               <View
                 style={{
                   backgroundColor: "#12668F",
@@ -880,8 +894,7 @@ const MainProfile = (props) => {
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 10,
-                }}
-              >
+                }}>
                 <SvgXml xml={dashboardIcon} height="15" width="15" />
               </View>
               <View
@@ -891,15 +904,13 @@ const MainProfile = (props) => {
                   marginLeft: 10,
                   flex: 1,
                   paddingBottom: 10,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontFamily: "Poppins-SemiBold",
                     color: textColor,
                     fontSize: 16,
-                  }}
-                >
+                  }}>
                   Login To Business Account
                 </Text>
               </View>
@@ -916,8 +927,7 @@ const MainProfile = (props) => {
                   paddingHorizontal: 0,
                   flexDirection: "row",
                   marginTop: 10,
-                }}
-              >
+                }}>
                 <View
                   style={{
                     backgroundColor: "#12668F",
@@ -926,8 +936,7 @@ const MainProfile = (props) => {
                     justifyContent: "center",
                     alignItems: "center",
                     borderRadius: 20,
-                  }}
-                >
+                  }}>
                   <Image
                     source={{ uri: doc.image }}
                     style={{
@@ -944,15 +953,13 @@ const MainProfile = (props) => {
                     marginLeft: 10,
                     flex: 1,
                     paddingBottom: 10,
-                  }}
-                >
+                  }}>
                   <Text
                     style={{
                       fontFamily: "Poppins-SemiBold",
                       color: textColor,
                       fontSize: 16,
-                    }}
-                  >
+                    }}>
                     {doc.name}
                   </Text>
                 </View>
@@ -965,8 +972,7 @@ const MainProfile = (props) => {
             style={{
               flexDirection: "row",
               marginVertical: 10,
-            }}
-          >
+            }}>
             <AntDesign name="plus" size={20} color="#6366F1" />
             <Text
               style={{
@@ -974,8 +980,7 @@ const MainProfile = (props) => {
                 fontFamily: "Poppins-SemiBold",
                 fontSize: 16,
                 color: "#6366F1",
-              }}
-            >
+              }}>
               Add Account
             </Text>
           </TouchableOpacity>
@@ -989,8 +994,7 @@ const MainProfile = (props) => {
             borderRadius: 10,
             paddingLeft: 10,
             marginBottom: 20,
-          }}
-        >
+          }}>
           <TouchableOpacity
             onPress={() => {
               setLogOut(true);
@@ -1004,8 +1008,7 @@ const MainProfile = (props) => {
             style={{
               paddingHorizontal: 0,
               flexDirection: "row",
-            }}
-          >
+            }}>
             <View
               style={{
                 backgroundColor: "#C1D3F7",
@@ -1014,8 +1017,7 @@ const MainProfile = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 10,
-              }}
-            >
+              }}>
               <SvgXml xml={logoutIcon} height="15" width="15" />
             </View>
             <View
@@ -1025,15 +1027,13 @@ const MainProfile = (props) => {
                 marginLeft: 10,
                 flex: 1,
                 paddingBottom: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
                   fontSize: 16,
-                }}
-              >
+                }}>
                 Log Out
               </Text>
             </View>
@@ -1046,8 +1046,7 @@ const MainProfile = (props) => {
               paddingHorizontal: 0,
               flexDirection: "row",
               marginTop: 10,
-            }}
-          >
+            }}>
             <View
               style={{
                 backgroundColor: "#F1EFEF",
@@ -1056,8 +1055,7 @@ const MainProfile = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 10,
-              }}
-            >
+              }}>
               <SvgXml xml={supportIcon} height="15" width="15" />
             </View>
             <View
@@ -1067,15 +1065,13 @@ const MainProfile = (props) => {
                 marginLeft: 10,
                 flex: 1,
                 paddingBottom: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
                   fontSize: 16,
-                }}
-              >
+                }}>
                 Support
               </Text>
             </View>

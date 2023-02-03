@@ -36,6 +36,7 @@ import { uploadFile } from "../../Class/upload";
 import IconButton from "../../components/IconButton";
 import edit from "./../../assets/Images/edit.png";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
 const EditService = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -93,42 +94,28 @@ const EditService = ({ navigation, route }) => {
   const type = params.type;
   const subsData = params.subsData;
   const installmentData=params.installmentData
-  
+  const data=params.data;
+  const isFocused=useIsFocused()
+  const gigs=params.gigs;
+
 
   React.useEffect(() => {
-    setFacilitiesCounter(0);
-    Facilities.forEach((doc, i) => {
-      if (doc.checked) {
-        setFacilitiesCounter((d) => d + 1);
-      }
-    });
-  }, [Facilities.length + change]);
-  React.useEffect(() => {
-    if (businessForm && businessForm.serviceTitle) {
-      setCenterName(businessForm.serviceTitle);
-    }
-    if (businessForm && businessForm.speciality) {
-      setSpeciality(businessForm.speciality);
-    }
-    if (businessForm && businessForm.description) {
-      setDescription(businessForm.description);
-    }
-    if (businessForm && businessForm.about) {
-      setAbout(businessForm.about);
-    }
-    if (businessForm && businessForm.firstImage) {
-      setFirstImage(businessForm.firstImage);
-    }
-    if (businessForm && businessForm.secondImage) {
-      setSecondImage(businessForm.secondImage);
-    }
-    if (businessForm && businessForm.thirdImage) {
-      setThirdImage(businessForm.thirdImage);
-    }
-    if (businessForm && businessForm.forthImage) {
-      setForthImage(businessForm.forthImage);
-    }
-  }, [businessForm]);
+   if(gigs){
+    setFirstImage({uri:gigs.images[0]})
+    setSecondImage({uri:gigs.images[1]})
+    setThirdImage({uri:gigs.images[2]})
+    setForthImage({uri:gigs.images[3]})
+    setCenterName(gigs.title)
+    setDescription(gigs.description)
+    setPrice(gigs.price.toString())
+    //console.log(data.service.gigs[0].images)
+   }
+  }, [isFocused]);
+
+  const updateData=()=>{
+    console.log(FirstImage)
+  }
+ 
 
   const checkValidity = async () => {
     setCenterNameError(null);
@@ -440,31 +427,7 @@ const EditService = ({ navigation, route }) => {
               />
             </View>
             {!direct && <View style={{ height: 10 }} />}
-            {!direct && (
-              <Input
-                value={Speciality}
-                innerRef={specialityRef}
-                returnKeyType="next"
-                error={SpecialityError}
-                onChange={(val) => {
-                  setSpecialityError(null);
-                  if (val.length <= 100) {
-                    setSpeciality(val);
-                  } else {
-                    setSpecialityError("*Character must be between 100");
-                  }
-                }}
-                onSubmitEditing={() => {
-                  if (descriptionRef.current) {
-                    descriptionRef.current.focus();
-                  }
-                }}
-                style={{
-                  borderWidth: 1,
-                }}
-                placeholder="Speciality"
-              />
-            )}
+            
             <View style={{ height: 10 }} />
             <View
               style={{
@@ -496,29 +459,7 @@ const EditService = ({ navigation, route }) => {
               />
             </View>
             <View style={{ height: 10 }} />
-            {!direct && (
-              <TextArea
-                style={{
-                  marginHorizontal: 20,
-                }}
-                value={About}
-                innerRef={aboutRef}
-                returnKeyType="done"
-                onSubmitEditing={() => {
-                  Keyboard.dismiss();
-                }}
-                error={AboutError}
-                onChange={(val) => {
-                  setAboutError(null);
-                  if (val.length <= 2000) {
-                    setAbout(val);
-                  } else {
-                    setAboutError("Character should be between 2000");
-                  }
-                }}
-                placeholder="About Company"
-              />
-            )}
+           
             {direct && type != "SUBS"&&type!="INSTALLMENT" ? (
               <Input
                 innerRef={priceRef}
@@ -614,6 +555,7 @@ const EditService = ({ navigation, route }) => {
             )}
             <IconButton
               onPress={() => {
+                updateData()
                // checkValidity();
               }}
               style={{
@@ -628,24 +570,7 @@ const EditService = ({ navigation, route }) => {
               }}
               title={"Update"}
             />
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}
-              style={{
-                alignSelf: "center",
-                marginVertical: 20,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  
-                }}
-              >
-                Back
-              </Text>
-            </TouchableOpacity>
+            <View style={{height:40}}/>
           </View>
         </ScrollView>
       </SafeAreaView>
