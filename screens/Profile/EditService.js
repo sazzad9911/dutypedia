@@ -30,6 +30,7 @@ import { CheckBox } from "./../Seller/Pricing";
 import {
   createOtherService,
   createOtherServiceIndividual,
+  getService,
 } from "../../Class/service";
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
@@ -37,6 +38,8 @@ import IconButton from "../../components/IconButton";
 import edit from "./../../assets/Images/edit.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused } from "@react-navigation/native";
+import ActivityLoader from "../../components/ActivityLoader";
+import { updateGigsData } from "../../Class/update";
 
 const EditService = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -93,168 +96,87 @@ const EditService = ({ navigation, route }) => {
   const params = route.params;
   const type = params.type;
   const subsData = params.subsData;
-  const installmentData=params.installmentData
-  const data=params.data;
-  const isFocused=useIsFocused()
-  const gigs=params.gigs;
-
+  const installmentData = params.installmentData;
+  const data = params.data;
+  const isFocused = useIsFocused();
+  const gigs = params.gigs;
 
   React.useEffect(() => {
-   if(gigs){
-    setFirstImage({uri:gigs.images[0]})
-    setSecondImage({uri:gigs.images[1]})
-    setThirdImage({uri:gigs.images[2]})
-    setForthImage({uri:gigs.images[3]})
-    setCenterName(gigs.title)
-    setDescription(gigs.description)
-    setPrice(gigs.price.toString())
-    //console.log(data.service.gigs[0].images)
-   }
+    if (gigs) {
+      setFirstImage({ uri: gigs.images[0] });
+      setSecondImage({ uri: gigs.images[1] });
+      setThirdImage({ uri: gigs.images[2] });
+      setForthImage({ uri: gigs.images[3] });
+      setCenterName(gigs.title);
+      setDescription(gigs.description);
+      setPrice(gigs.price.toString());
+      //console.log(data.service.gigs[0].images)
+      //console.log(gigs)
+    }
   }, [isFocused]);
 
-  const updateData=()=>{
-    console.log(FirstImage)
+  const updateData = async () => {
+    setLoader(true);
+    if(FirstImage.type){
+      let arr=[]
+      arr.push(fileFromURL(FirstImage))
+      const res=await uploadFile(arr,user.token);
+      setFirstImage({uri:res[0]})
+    }
+    if(SecondImage.type){
+      let arr=[]
+      arr.push(fileFromURL(SecondImage))
+      const res=await uploadFile(arr,user.token);
+      setSecondImage({uri:res[0]})
+    }
+    if(ThirdImage.type){
+      let arr=[]
+      arr.push(fileFromURL(ThirdImage))
+      const res=await uploadFile(arr,user.token);
+      setThirdImage({uri:res[0]})
+    }
+    if(ForthImage.type){
+      let arr=[]
+      arr.push(fileFromURL(ForthImage))
+      const res=await uploadFile(arr,user.token);
+      setForthImage({uri:res[0]})
+    }
+    let images=[];
+    images.push(FirstImage.uri)
+    images.push(SecondImage.uri)
+    images.push(ThirdImage.uri)
+    images.push(ForthImage.uri)
+    updateGigsData(user.token,{
+      gigId:gigs.id,
+      title:CenterName,
+      description:Description,
+      price:Price?parseInt(Price):undefined,
+      images:images,
+      facilites:{
+        selectedOptions:Facilities.filter(d=>d.checked==true)
+      },
+      subsData:subsData?subsData:undefined,
+      installmentData:installmentData?installmentData:undefined
+    }).then(res=>{
+      updateVendorInfo()
+    }).catch(err=>{
+      setLoader(false)
+      console.error(err.response.data.msg)
+    })
+  };
+  const updateVendorInfo=async()=>{
+    const res=await getService(user.token,vendor.service.id);
+    if(res){
+      setLoader(false)
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      navigation.navigate("VendorProfile");
+    }
   }
  
-
-  const checkValidity = async () => {
-    setCenterNameError(null);
-    setSpecialityError(null);
-    setDescriptionError(null);
-    setAboutError(null);
-    setImageError(null);
-
-    if (!CenterName) {
-      setCenterNameError("This field is required");
-      return;
-    }
-    if (!Speciality && !direct) {
-      setSpecialityError("This field is required");
-      return;
-    }
-    if (!Description) {
-      setDescriptionError("This field is required");
-      return;
-    }
-    if (!About && !direct) {
-      setAboutError("This field is required");
-      return;
-    }
-    if (!FirstImage || !SecondImage || !ThirdImage || !ForthImage) {
-      setImageError("*All picture must be upload");
-      return;
-    }
-    if (!Price && direct && type != "SUBS" && type!="INSTALLMENT") {
-      setPriceError("Price field is required");
-      return;
-    }
-    if (FacilitiesCounter == 0 && direct && type != "SUBS") {
-      setFacilitiesError("Please select any facilities");
-      return;
-    }
-    dispatch({ type: "SERVICE_TITLE", playload: CenterName });
-    dispatch({ type: "SPECIALITY", playload: Speciality });
-    dispatch({ type: "DESCRIPTION", playload: Description });
-    dispatch({ type: "ABOUT", playload: About });
-    dispatch({ type: "FIRST_IMAGE", playload: FirstImage });
-    dispatch({ type: "SECOND_IMAGE", playload: SecondImage });
-    dispatch({ type: "THIRD_IMAGE", playload: ThirdImage });
-    dispatch({ type: "FOURTH_IMAGE", playload: ForthImage });
-    if (direct) {
-      dispatch({ type: "PRICE", playload: Price });
-      dispatch({ type: "FACILITIES", playload: Facilities });
-    }
-
-    if (direct) {
-      //ongoing function-------------
-      setLoader(true);
-      let blobImages = [];
-      blobImages.push(fileFromURL(FirstImage));
-      blobImages.push(fileFromURL(SecondImage));
-      blobImages.push(fileFromURL(ThirdImage));
-      blobImages.push(fileFromURL(ForthImage));
-      const result = await uploadFile(blobImages, user.token);
-      if (result) {
-        if (type=="SUBS") {
-          if (!subsData) {
-            Alert.alert("Invalid Data format");
-            return;
-          }
-          //console.log("ok")
-          createOtherServiceIndividual(
-            user.token,
-            businessForm,
-            route.params.data ? route.params.data : listData,
-            result,
-            vendor.service.id,
-            type,
-            undefined,
-            subsData
-          )
-            .then((res) => {
-              navigation.navigate("VendorProfile", { direct: businessForm });
-              setLoader(false);
-            })
-            .catch((err) => {
-              console.warn(err.response);
-              setLoader(false);
-            });
-          return;
-        }else if(type=="INSTALLMENT"){
-          if (!installmentData) {
-            Alert.alert("Invalid Data format");
-            return;
-          }
-          //console.log("ok")
-          createOtherServiceIndividual(
-            user.token,
-            businessForm,
-            route.params.data ? route.params.data : listData,
-            result,
-            vendor.service.id,
-            type,
-            undefined,
-            undefined,
-            installmentData,
-            0
-          )
-            .then((res) => {
-              navigation.navigate("VendorProfile", { direct: businessForm });
-              setLoader(false);
-            })
-            .catch((err) => {
-              console.warn(err.response);
-              setLoader(false);
-            });
-          return
-        }
-        createOtherService(
-          user.token,
-          businessForm,
-          route.params.data ? route.params.data : listData,
-          result,
-          vendor.service.id,
-          direct
-        )
-          .then((res) => {
-            navigation.navigate("VendorProfile", { direct: businessForm });
-            setLoader(false);
-          })
-          .catch((err) => {
-            console.warn(err.response);
-            setLoader(false);
-          });
-      }
-
-      Alert.alert("Image save failed")
-      return;
-    }
-    navigation.navigate("Address");
-  };
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader />
       </View>
     );
   }
@@ -262,42 +184,36 @@ const EditService = ({ navigation, route }) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
       <SafeAreaView
         style={{
           flex: 1,
-        }}
-      >
+        }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
               backgroundColor: primaryColor,
               paddingHorizontal: 0,
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
                 paddingVertical: 20,
                 alignItems: "center",
                 paddingHorizontal: 20,
-              }}
-            >
+              }}>
               <View
                 style={{
                   flex: 1,
                   justifyContent: "center",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "black",
                     lineHeight: 25,
-                  }}
-                >
+                  }}>
                   Upload Your
                 </Text>
                 <Text
@@ -306,8 +222,7 @@ const EditService = ({ navigation, route }) => {
                     fontFamily: "Poppins-Bold",
                     color: "#DA1E37",
                     lineHeight: 25,
-                  }}
-                >
+                  }}>
                   High
                 </Text>
                 <Text
@@ -316,16 +231,14 @@ const EditService = ({ navigation, route }) => {
                     fontFamily: "Poppins-Bold",
                     color: "black",
                     lineHeight: 25,
-                  }}
-                >
+                  }}>
                   Quality <Text style={{ color: "#6366F1" }}>Photo</Text>
                 </Text>
               </View>
               <View
                 style={{
                   flex: 1,
-                }}
-              >
+                }}>
                 {/* <SvgXml xml={vectorImage} height="200" width={"190"}/> */}
                 <Image
                   style={{
@@ -341,8 +254,7 @@ const EditService = ({ navigation, route }) => {
               style={{
                 flexDirection: "row",
                 paddingHorizontal: 20,
-              }}
-            >
+              }}>
               <ImageButton
                 value={FirstImage}
                 onChange={(value) => {
@@ -380,8 +292,7 @@ const EditService = ({ navigation, route }) => {
                   fontFamily: "Poppins-Light",
                   color: "red",
                   paddingHorizontal: 20,
-                }}
-              >
+                }}>
                 {ImageError}
               </Text>
             )}
@@ -394,8 +305,7 @@ const EditService = ({ navigation, route }) => {
                 marginVertical: 20,
                 color: "black",
                 paddingHorizontal: 20,
-              }}
-            >
+              }}>
               Service Describe
             </Text>
             <View style={{}}>
@@ -427,13 +337,12 @@ const EditService = ({ navigation, route }) => {
               />
             </View>
             {!direct && <View style={{ height: 10 }} />}
-            
+
             <View style={{ height: 10 }} />
             <View
               style={{
                 marginHorizontal: 20,
-              }}
-            >
+              }}>
               <TextArea
                 style={{}}
                 value={Description}
@@ -459,8 +368,8 @@ const EditService = ({ navigation, route }) => {
               />
             </View>
             <View style={{ height: 10 }} />
-           
-            {direct && type != "SUBS"&&type!="INSTALLMENT" ? (
+
+            {direct && type != "SUBS" && type != "INSTALLMENT" ? (
               <Input
                 innerRef={priceRef}
                 value={Price}
@@ -488,8 +397,7 @@ const EditService = ({ navigation, route }) => {
                     fontSize: 16,
                     marginHorizontal: 20,
                   },
-                ]}
-              >
+                ]}>
                 Choose your facilities (Optional)
               </Text>
             )}
@@ -522,8 +430,7 @@ const EditService = ({ navigation, route }) => {
               <View
                 style={{
                   flexDirection: "row",
-                }}
-              >
+                }}>
                 <IconButton
                   onPress={() => {
                     setModalVisible(true);
@@ -548,15 +455,14 @@ const EditService = ({ navigation, route }) => {
                   fontFamily: "Poppins-Light",
                   color: "red",
                   marginTop: 3,
-                }}
-              >
+                }}>
                 {FacilitiesError}
               </Text>
             )}
             <IconButton
               onPress={() => {
-                updateData()
-               // checkValidity();
+                updateData();
+                // checkValidity();
               }}
               style={{
                 marginTop: 30,
@@ -570,7 +476,7 @@ const EditService = ({ navigation, route }) => {
               }}
               title={"Update"}
             />
-            <View style={{height:40}}/>
+            <View style={{ height: 40 }} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -579,8 +485,7 @@ const EditService = ({ navigation, route }) => {
         visible={ModalVisible}
         onRequestClose={() => {
           setModalVisible(false);
-        }}
-      >
+        }}>
         <AddFacilities
           onConfirm={(e) => {
             setFacilities((val) => [
@@ -646,8 +551,7 @@ export const ImageButton = ({ style, onChange, value }) => {
       <View
         style={{
           marginLeft: 7,
-        }}
-      >
+        }}>
         <TouchableOpacity
           onPress={() => {
             setImage(null);
@@ -663,8 +567,7 @@ export const ImageButton = ({ style, onChange, value }) => {
             width: 24,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <EvilIcons name="close-o" size={24} color="red" />
         </TouchableOpacity>
         <Image style={styles.view} source={{ uri: image }} />
@@ -676,8 +579,7 @@ export const ImageButton = ({ style, onChange, value }) => {
       onPress={() => {
         pickImage();
       }}
-      style={[styles.view, style]}
-    >
+      style={[styles.view, style]}>
       <AntDesign name="plus" size={24} color="#707070" />
     </TouchableOpacity>
   );
@@ -919,24 +821,21 @@ const AddFacilities = ({ onCancel, onConfirm }) => {
         backgroundColor: "rgba(0, 0, 0, 0.427)",
         justifyContent: "center",
         alignItems: "center",
-      }}
-    >
+      }}>
       <View
         style={{
           width: width - 40,
 
           backgroundColor: "white",
           borderRadius: 10,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: 18,
             fontWeight: "400",
             textAlign: "center",
             marginVertical: 20,
-          }}
-        >
+          }}>
           Add Facilities
         </Text>
         <Input
@@ -953,8 +852,7 @@ const AddFacilities = ({ onCancel, onConfirm }) => {
           style={{
             flexDirection: "row",
             marginVertical: 20,
-          }}
-        >
+          }}>
           <IconButton
             onPress={() => {
               setNameError();

@@ -27,11 +27,12 @@ import { uploadFile } from "../../Class/upload";
 import { fileFromURL } from "../../action";
 import { useDispatch, useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
-import { createOtherService, createService } from "../../Class/service";
+import { createOtherService, createService, getService } from "../../Class/service";
 import { Menu } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { updateGigsData } from "../../Class/update";
 
 export default function EditPackageService({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
@@ -69,9 +70,61 @@ export default function EditPackageService({ navigation, route }) {
         setDescription(gigs.description)
         dispatch({ type: "SET_PACKAGES", playload: gigs.packageData });
     }
-  },[isFocused])
+  },[gigs.id])
   
-  
+  const updateData = async () => {
+    setLoader(true);
+    if(Images1.type){
+      let arr=[]
+      arr.push(fileFromURL(Images1))
+      const res=await uploadFile(arr,user.token);
+      setImage1({uri:res[0]})
+    }
+    if(Image2.type){
+      let arr=[]
+      arr.push(fileFromURL(Image2))
+      const res=await uploadFile(arr,user.token);
+      setImage2({uri:res[0]})
+    }
+    if(Image3.type){
+      let arr=[]
+      arr.push(fileFromURL(Image3))
+      const res=await uploadFile(arr,user.token);
+      setImage3({uri:res[0]})
+    }
+    if(Image4.type){
+      let arr=[]
+      arr.push(fileFromURL(Image4))
+      const res=await uploadFile(arr,user.token);
+      setImage4({uri:res[0]})
+    }
+    let images=[];
+    images.push(Images1.uri)
+    images.push(Image2.uri)
+    images.push(Image3.uri)
+    images.push(Image4.uri)
+    updateGigsData(user.token,{
+      gigId:gigs.id,
+      title:Title,
+      description:Description,
+      price:0,
+      images:images,
+      packageData:packages
+    }).then(res=>{
+      updateVendorInfo()
+    }).catch(err=>{
+      setLoader(false)
+      console.error(err.response.data.msg)
+    })
+  };
+  const updateVendorInfo=async()=>{
+    const res=await getService(user.token,vendor.service.id);
+    if(res){
+      setLoader(false)
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      navigation.navigate("VendorProfile");
+    }
+  }
   const deleteData = async (id) => {
     setLoader(true);
     await dispatch({ type: "DELETE_PACKAGE", playload: id });
@@ -228,10 +281,11 @@ export default function EditPackageService({ navigation, route }) {
                <TabBar
                  onClick={(e) => {
                    //console.log(e)
-                   navigation.navigate("AddPackageScreen", {
+                   navigation.navigate("EditPackageScreen", {
                      setPackage: setPackage,
                      data: packages.filter((d) => e.id == d.id)[0],
                      package: packages,
+                     gigs:gigs,
                    });
                  }}
                  onPress={(e) => {
@@ -269,7 +323,7 @@ export default function EditPackageService({ navigation, route }) {
              {packages.length < 5 && (
                <Tab.Screen
                  name="Add Package"
-                 initialParams={{ setPackage: setPackage }}
+                 initialParams={{ setPackage: setPackage,gigs:gigs }}
                  component={Screen}
                />
              )}
@@ -362,72 +416,7 @@ export default function EditPackageService({ navigation, route }) {
           }}
         />
         <IconButton
-          onPress={async () => {
-            return
-            //navigation.goBack()
-            setTitleError("");
-            setDescriptionError("");
-            setImageError("");
-            setPackageError("");
-            if (!Title) {
-              setTitleError("*Title is required");
-              return;
-            }
-            if (!Description) {
-              setDescriptionError("*Description is  required");
-              return;
-            }
-            if (packages.length < 2) {
-              setPackageError("You must select minimum 2 package");
-              return;
-            }
-            if (!Images1 || !Image2 || !Image3 || !Image4) {
-              setImageError("*Image is required");
-              return;
-            }
-            //console.log(serverData)
-            if(!vendor||!serverData){
-              Alert.alert("Opps!","Something went wrong")
-              return
-            }
-            
-            //ongoing function-------------
-            setLoader(true);
-            let blobImages = [];
-            blobImages.push(fileFromURL(Images1));
-            blobImages.push(fileFromURL(Image2));
-            blobImages.push(fileFromURL(Image3));
-            blobImages.push(fileFromURL(Image4));
-            const result = await uploadFile(blobImages, user.token);
-
-            if (result) {
-              createOtherService(
-                user.token,
-                {
-                  serviceTitle: Title,
-                  price: 0,
-                  description: Description,
-                  packageData: packages,
-                },
-                serverData,
-                result,
-                vendor.service.id,
-                "PACKAGE"
-              )
-                .then((res) => {
-                  navigation.navigate("VendorProfile", { direct: res });
-                  setLoader(false);
-                })
-                .catch((err) => {
-                  console.warn(err);
-                  Alert.alert("Opps!", err.response.data.msg);
-                  setLoader(false);
-                });
-              return;
-            }
-            Alert.alert("Error!", "Can't upload photos");
-            return;
-          }}
+          onPress={updateData}
           style={{
             backgroundColor: "#4ADE80",
             marginHorizontal: 20,
@@ -449,6 +438,7 @@ export default function EditPackageService({ navigation, route }) {
 const Screen = ({ navigation, route }) => {
   const setPackage =
     route.params && route.params.setPackage ? route.params.setPackage : null;
+    const gigs=route.params.gigs;
   return (
     <View
       style={{
@@ -460,8 +450,9 @@ const Screen = ({ navigation, route }) => {
       {route.name == "Add Package" && (
         <IconButton
           onPress={() => {
-            navigation.navigate("AddPackageScreen", {
+            navigation.navigate("EditPackageScreen", {
               setPackage: setPackage,
+              gigs:gigs
             });
           }}
           Icon={() => <SvgXml xml={rightIcon} height="15" width="15" />}
@@ -1066,7 +1057,7 @@ const plusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.261" height=
 export const AddScreen = ({ navigation, route }) => {
   const setPackage =
     route.params && route.params.setPackage ? route.params.setPackage : null;
-
+  const gigs=route.params.gigs;
   const [TotalFeature, setTotalFeature] = React.useState([uuid.v4()]);
   const [Feature3, setFeature3] = React.useState();
   const [Feature1, setFeature1] = React.useState();
@@ -1106,9 +1097,10 @@ export const AddScreen = ({ navigation, route }) => {
   const [FeatureError, setFeatureError] = React.useState("");
 
   React.useEffect(() => {
+    
     if (route.params.data) {
       const data = route.params.data;
-      //console.log(data);
+      
       setName(data.name);
       setPrice(data.price);
       setTotalFeature(data.features);
@@ -1185,21 +1177,6 @@ export const AddScreen = ({ navigation, route }) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 5,
-        }}
-      >
-        <AntDesign
-          onPress={() => {
-            navigation.goBack();
-          }}
-          name="left"
-          size={24}
-          color="black"
-        />
-      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -2114,7 +2091,7 @@ export const AddScreen = ({ navigation, route }) => {
               });
 
               dispatch({ type: "SET_PACKAGES", playload: newArr });
-              navigation.navigate("AddPackage",{length:newArr.length});
+              navigation.navigate("EditPackageService",{length:newArr.length,gigs:gigs});
               return;
             }
             dispatch({
@@ -2126,7 +2103,7 @@ export const AddScreen = ({ navigation, route }) => {
                 features: arr,
               },
             });
-            navigation.navigate("AddPackage");
+            navigation.navigate("EditPackageService",{gigs:gigs});
           }}
           style={{
             backgroundColor: "#4ADE80",

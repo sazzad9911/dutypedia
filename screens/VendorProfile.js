@@ -221,7 +221,7 @@ const VendorProfile = (props) => {
     setActive("Bargaining");
     //setLoader(true);
     setScrollEnabled(false);
-
+    setNewDataList(null)
     if (vendor && newUser) {
       setActiveServiceData(null);
       setRelatedServices(null);
@@ -231,18 +231,18 @@ const VendorProfile = (props) => {
       let response = { data: vendor };
       if (response.data) {
         setLoader(false);
-
+        const gigs=response.data.service.gigs.filter(d=>d.type=="STARTING")
         setData(response.data);
         setSpecialty(response.data.service.speciality);
 
         setBackgroundImage(response.data.service.wallPhoto);
         setImage(response.data.service.profilePhoto);
-        setImages(response.data.service.gigs[0].images);
-        setPrice(response.data.service.gigs[0].price);
-        setTitle(response.data.service.gigs[0].title);
-        setDescription(response.data.service.gigs[0].description);
+        setImages(gigs[0].images);
+        setPrice(gigs[0].price);
+        setTitle(gigs[0].title);
+        setDescription(gigs[0].description);
         //setNewDataList(response.data.service.gigs[0].services.options)
-        setFacilities(response.data.service.gigs[0].facilites.selectedOptions);
+        setFacilities(gigs[0].facilites.selectedOptions);
         let arr = initialState;
         response.data.service.activeServiceTypes.forEach((doc) => {
           arr = arr.map((d) => {
@@ -258,20 +258,22 @@ const VendorProfile = (props) => {
             }
           });
         });
-        setCategory(response.data.service.gigs[0].services.category);
         setActiveServiceData(arr);
+        
+        //console.log(gigs)
+        setCategory(gigs[0].services.category);
         try {
           dispatch({
             type: "SET_NEW_LIST_DATA",
             playload: serverToLocal(
-              response.data.service.gigs[0].services.options,
-              response.data.service.gigs[0].services.category
+              gigs[0].services.options,
+              gigs[0].services.category
             ),
           });
           setNewDataList(
             serverToLocal(
-              response.data.service.gigs[0].services.options,
-              response.data.service.gigs[0].services.category
+              gigs[0].services.options,
+              gigs[0].services.category
             )
           );
         } catch (e) {
@@ -284,15 +286,19 @@ const VendorProfile = (props) => {
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
+    setNewDataList(null)
     if (Data) {
+      const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
       setBackgroundImage(Data.service.wallPhoto);
       setImage(Data.service.profilePhoto);
-      setImages(Data.service.gigs[0].images);
-      setPrice(Data.service.gigs[0].price);
-      setTitle(Data.service.gigs[0].title);
-      setDescription(Data.service.gigs[0].description);
+
+      setImages(gigs[0].images);
+      setPrice(gigs[0].price);
+      setTitle(gigs[0].title);
+      setDescription(gigs[0].description);
       //setNewDataList(response.data.service.gigs[0].services.options)
-      setFacilities(Data.service.gigs[0].facilites.selectedOptions);
+      //console.log(data.service.gigs[0].facilites.selectedOptions)
+      setFacilities(gigs[0].facilites.selectedOptions);
       let arr = initialState;
       Data.service.activeServiceTypes.forEach((doc) => {
         arr = arr.map((d) => {
@@ -308,21 +314,25 @@ const VendorProfile = (props) => {
           }
         });
       });
-      setCategory(Data.service.gigs[0].services.category);
+      
       setActiveServiceData(arr);
+      
+      setCategory(gigs[0].services.category);
+      //console.warn(gigs)
+      //return
       try {
         //console.log(Data.service.gigs[0].services.options)
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
-            Data.service.gigs[0].services.options,
-            Data.service.gigs[0].services.category
+            gigs[0].services.options,
+            gigs[0].services.category
           ),
         });
         setNewDataList(
           serverToLocal(
-            Data.service.gigs[0].services.options,
-            Data.service.gigs[0].services.category
+            gigs[0].services.options,
+            gigs[0].services.category
           )
         );
       } catch (e) {
@@ -342,7 +352,7 @@ const VendorProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data,isFocused]);
+  }, [Bargaining, Data,isFocused]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -364,7 +374,7 @@ const VendorProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList + Click + Refresh,isFocused]);
+  }, [NewDataList + Click + Refresh]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -1421,39 +1431,22 @@ const VendorProfile = (props) => {
           <Pressable
             onPress={() => {
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              if (vendor.service.gigs[0].services.category) {
+              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 dispatch({
                   type: "SET_NEW_LIST_DATA",
                   playload: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                 });
                 navigation.navigate("AddServiceList_1", {
                   NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                   name: "VendorOrderDetails",
                   data: "ONETIME",
                 });
-              } else {
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "ONETIME",
-                });
-              }
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -1487,39 +1480,22 @@ const VendorProfile = (props) => {
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              if (vendor.service.gigs[0].services.category) {
+              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 dispatch({
                   type: "SET_NEW_LIST_DATA",
                   playload: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                 });
                 navigation.navigate("AddServiceList_1", {
                   NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                   name: "VendorOrderDetails",
                   data: "PACKAGE",
                 });
-              } else {
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "PACKAGE",
-                });
-              }
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -1553,39 +1529,23 @@ const VendorProfile = (props) => {
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              if (vendor.service.gigs[0].services.category) {
+              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 dispatch({
                   type: "SET_NEW_LIST_DATA",
                   playload: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                 });
                 navigation.navigate("AddServiceList_1", {
                   NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                   name: "VendorOrderDetails",
                   data: "SUBSCRIPTION",
                 });
-              } else {
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "SUBSCRIPTION",
-                });
-              }
+              
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -1619,39 +1579,23 @@ const VendorProfile = (props) => {
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              if (vendor.service.gigs[0].services.category) {
+              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 dispatch({
                   type: "SET_NEW_LIST_DATA",
                   playload: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                 });
                 navigation.navigate("AddServiceList_1", {
                   NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services.options,
-                    vendor.service.gigs[0].services.category
+                    gigs[0].services.options,
+                    gigs[0].services.category
                   ),
                   name: "VendorOrderDetails",
                   data: "INSTALLMENT",
                 });
-              } else {
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    vendor.service.gigs[0].services,
-                    vendor.service.gigs[0].dashboard
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "INSTALLMENT",
-                });
-              }
+              
             }}
           >
             <AntDesign name="plus" size={25} color="white" />
@@ -1999,7 +1943,8 @@ const BargainingScreen = ({ navigation, route }) => {
           }}
         >
           <TouchableOpacity onPress={()=>{
-            navigation.navigate("EditService",{data:Data,gigs:Data.service.gigs[0]})
+            const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
+            navigation.navigate("EditService",{data:Data,gigs:gigs[0]})
           }} style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>

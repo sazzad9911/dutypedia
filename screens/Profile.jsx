@@ -63,7 +63,7 @@ import OnlineUserProfile from "./Vendor/OnlineUserProfile";
 import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
 import Note, { AddNote, ViewNote } from "./Vendor/Note";
-import AddPackage, { AddScreen } from "./services/AddPackage";
+import AddPackage from "./services/AddPackage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import VendorFixedService from "./Vendor/VendorFixedService";
 import VendorPackageService from "./Vendor/VendorPackageService";
@@ -76,7 +76,7 @@ import InstallmentScript from "./services/InstallmentScript";
 import EditVendorInfo from "./Profile/EditVendorInfo";
 import MemberAppointment from "./Vendor/Appointment/MemberAppointment";
 import EditService from "./Profile/EditService";
-import EditPackageService from "./Profile/EditPackageService";
+import EditPackageService,{AddScreen} from "./Profile/EditPackageService";
 import EditSubscriptionService from "./Profile/EditSubscriptionService";
 import EditInstallmentService from "./Profile/EditInstallmentService";
 //import { StatusBar } from "expo-status-bar";
@@ -140,6 +140,15 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={EditPackageService}
+      />
+      <Stack.Screen
+        name="EditPackageScreen"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={AddScreen}
       />
       <Stack.Screen
         name="EditSubscriptionService"
