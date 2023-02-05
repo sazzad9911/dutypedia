@@ -722,6 +722,7 @@ export const ImageButton = ({ style, onChange, value }) => {
         <TouchableOpacity
           onPress={() => {
             setImage(null);
+            onChange(null)
           }}
           style={{
             position: "absolute",

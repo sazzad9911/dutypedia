@@ -22,6 +22,8 @@ import { Entypo } from '@expo/vector-icons';
 import { updateData } from "../../Class/update";
 import { getService } from "../../Class/service";
 import ActivityLoader from "../../components/ActivityLoader";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 const { width, height } = Dimensions.get("window");
 
 export default function EditVendorInfo({ navigation, route }) {
@@ -109,7 +111,20 @@ export default function EditVendorInfo({ navigation, route }) {
   const vendor=useSelector(state=>state.vendor)
   const dispatch=useDispatch()
   const [loader,setLoader]=useState(false)
+  const isFocused=useIsFocused()
 
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   useEffect(() => {
     if (data) {
       setCenterName(data.service.serviceCenterName);

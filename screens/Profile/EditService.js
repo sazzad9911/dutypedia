@@ -40,6 +40,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused } from "@react-navigation/native";
 import ActivityLoader from "../../components/ActivityLoader";
 import { updateGigsData } from "../../Class/update";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const EditService = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -100,6 +101,18 @@ const EditService = ({ navigation, route }) => {
   const data = params.data;
   const isFocused = useIsFocused();
   const gigs = params.gigs;
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
     if (gigs) {
@@ -116,6 +129,14 @@ const EditService = ({ navigation, route }) => {
   }, [isFocused]);
 
   const updateData = async () => {
+    if(!FirstImage || !SecondImage||!ThirdImage||!ForthImage){
+      setImageError("*Please add all four images");
+      return
+    }
+    if(!CenterName){
+      setCenterNameError("*Please add center name")
+      return
+    }
     setLoader(true);
     if(FirstImage.type){
       let arr=[]
@@ -141,6 +162,7 @@ const EditService = ({ navigation, route }) => {
       const res=await uploadFile(arr,user.token);
       setForthImage({uri:res[0]})
     }
+    
     let images=[];
     images.push(FirstImage.uri)
     images.push(SecondImage.uri)
@@ -556,6 +578,7 @@ export const ImageButton = ({ style, onChange, value }) => {
         <TouchableOpacity
           onPress={() => {
             setImage(null);
+            onChange(null)
           }}
           style={{
             position: "absolute",

@@ -19,6 +19,7 @@ import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 import { updateData, updateGigsData } from "../../Class/update";
 import { getService } from "../../Class/service";
 import ActivityLoader from "../../components/ActivityLoader";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get("window");
 
@@ -58,6 +59,18 @@ const EditServiceList = (props) => {
   const user=useSelector(state=>state.user)
   const [loader,setLoader]=useState(false)
   const vendor=useSelector(state=>state.vendor)
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
    // console.log(NewDataList.length)

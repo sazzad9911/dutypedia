@@ -42,7 +42,7 @@ import { logOut, logoutVendor } from "../Class/auth";
 import { dashboard, logout } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import DashboardList from "./Vendor/DashboardList";
-import { AddNotice, ViewCart } from "./Vendor/Notice";
+import Notice,{ AddNotice, ViewCart } from "./Vendor/Notice";
 import Member, { AddOfflineUser, AddOnlineUser } from "./Vendor/Member";
 import Expenses, { AddExpenses } from "./Vendor/Expenses";
 import ServiceSettings from "./Vendor/ServiceSettings";
@@ -56,7 +56,7 @@ import { storeJson } from "../Class/storage";
 import { getOrders } from "../Class/service";
 import OrderDetails from "./Seller/OrderDetails";
 import AddServiceList from "./AddServiceList";
-import Notice from "./Notice";
+import UserNotice from "./UserNotice";
 import CompanyCalendar from "./Seller/CompanyCalendar";
 import AccountBalance from "./Seller/AccountBalance";
 import OnlineUserProfile from "./Vendor/OnlineUserProfile";
@@ -80,6 +80,8 @@ import EditPackageService,{AddScreen} from "./Profile/EditPackageService";
 import EditSubscriptionService from "./Profile/EditSubscriptionService";
 import EditInstallmentService from "./Profile/EditInstallmentService";
 import EditServiceList from "./Profile/EditServiceList";
+import EditSubCategory from "./Profile/EditSubCategory";
+import EditTableData from "./Profile/EditTableData";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -177,6 +179,33 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={EditServiceList}
+      />
+      <Stack.Screen
+        name="EditSubCategory"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditSubCategory}
+      />
+      <Stack.Screen
+        name="EditSubCategory_1"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditSubCategory}
+      />
+      <Stack.Screen
+        name="EditTableData"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditTableData}
       />
       <Stack.Screen
         name="VendorFixedService"
@@ -312,6 +341,13 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={Notice}
+      />
+       <Stack.Screen
+        name="UserNotice"
+        options={{
+          headerShown: false,
+        }}
+        component={UserNotice}
       />
       <Stack.Screen
         name="AddNotice"

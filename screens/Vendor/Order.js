@@ -50,7 +50,7 @@ import NewTab from "./components/NewTab";
 import VendorServiceList from "./VendorServiceList";
 import SelectDate from "./SelectDate";
 import OfflineProfile from "../OfflineProfile";
-import Notice from "../Notice";
+import Notice from "../UserNotice";
 import Note, { AddNote, ViewNote } from "./Note";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";

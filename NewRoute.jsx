@@ -36,7 +36,7 @@ import FixedOffers from "./screens/Seller/FixedOffers";
 import ManageOrder from "./screens/ManageOrder";
 import OrderDetails from "./screens/Seller/OrderDetails";
 import { io } from "socket.io-client";
-import Notice from "./screens/Notice";
+import Notice from "./screens/UserNotice";
 import NewHeader from "./components/NewHeader";
 import { ViewCart } from "./screens/Vendor/Notice";
 import CompanyCalendar from "./screens/Seller/CompanyCalendar";

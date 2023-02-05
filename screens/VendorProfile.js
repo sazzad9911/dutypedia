@@ -84,6 +84,8 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import ServiceSettings from "./Vendor/ServiceSettings";
 import ActivityLoader from "../components/ActivityLoader";
+import { AllData } from "../Data/AllData";
+import { setListData } from "../action";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -221,13 +223,13 @@ const VendorProfile = (props) => {
     setActive("Bargaining");
     //setLoader(true);
     setScrollEnabled(false);
-    setNewDataList(null)
+    //setNewDataList(null)
     if (vendor && newUser) {
       setActiveServiceData(null);
       setRelatedServices(null);
       setUnRelatedServices(null);
-      setFixedService(null);
-      setPackageService(null);
+      //setFixedService(null);
+      //setPackageService(null);
       let response = { data: vendor };
       if (response.data) {
         setLoader(false);
@@ -286,7 +288,7 @@ const VendorProfile = (props) => {
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
-    setNewDataList(null)
+   // setNewDataList(null)
     if (Data) {
       const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
       setBackgroundImage(Data.service.wallPhoto);
@@ -376,7 +378,7 @@ const VendorProfile = (props) => {
     }
   }, [NewDataList + Click + Refresh]);
   React.useEffect(() => {
-    setSubServiceList([]);
+    //setSubServiceList([]);
 
     if (Array.isArray(NewDataList)) {
       let arr = [];
@@ -558,7 +560,6 @@ const VendorProfile = (props) => {
   //console.log(SeeMore)
 
   if (
-    Loader ||
     !Data ||
     !Array.isArray(FixedService) ||
     !Array.isArray(PackageService) ||
@@ -1103,7 +1104,7 @@ const VendorProfile = (props) => {
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Notice", { serviceId: Data.service.id });
+                navigation.navigate("UserNotice", { serviceId: Data.service.id });
               }}
               style={{
                 marginBottom: 0,
@@ -1806,6 +1807,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const changeScreenName = params.changeScreenName;
+  const dispatch=useDispatch()
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1996,8 +1998,31 @@ const BargainingScreen = ({ navigation, route }) => {
             Service List
           </Text>
           <TouchableOpacity onPress={()=>{
+            const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
+            const data=AllData.filter(d=>d.key==gigs[0].services.category)[0]
+            const i=AllData.indexOf(data)
+            dispatch(setListData(serverToLocal(gigs[0].services.options,gigs[0].services.category)))
+            if(data.data){
+              navigation.navigate("EditSubCategory",{
+                title: data.title,
+                data: data.data,
+                image: data.image,
+                id: i,
+                mainTitle: data.title,
+                gigs:gigs[0]
+              })
+            }else{
+              navigation.navigate("EditTableData", {
+                title: data.title,
+                list: data.list,
+                exit: true,
+                id: i,
+                mainTitle: data.title,
+                gigs:gigs[0]
+              });
+            }
             
-          }} style={{}}>
+          }}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>
         </View>

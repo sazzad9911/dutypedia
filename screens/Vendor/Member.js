@@ -57,9 +57,12 @@ import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import OutsideView from "react-native-detect-press-outside";
+import ActivityLoader from "../../components/ActivityLoader";
+import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
-const Member = () => {
+const Member = ({ navigation }) => {
+  const [routeName, setRouteName] = useState();
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: 0 }}>
       <Tab.Navigator
@@ -67,35 +70,65 @@ const Member = () => {
           tabBarIndicatorStyle: {
             backgroundColor: "#4ADE80",
           },
-        }}
-      >
+        }}>
         <Tab.Screen
           options={{
             tabBarLabel: ({ focused, color, size }) => (
               <Text
-                style={{ color: focused ? "#4ADE80" : "#333333", fontSize: 16 }}
-              >
+                style={{
+                  color: focused ? "#4ADE80" : "#333333",
+                  fontSize: 16,
+                }}>
                 Dutypedia User
               </Text>
             ),
           }}
           name="Dutypedia User"
           component={DutyPediaUser}
+          initialParams={{
+            setRouteName: setRouteName,
+          }}
         />
         <Tab.Screen
           options={{
             tabBarLabel: ({ focused, color, size }) => (
               <Text
-                style={{ color: focused ? "#4ADE80" : "#333333", fontSize: 16 }}
-              >
+                style={{
+                  color: focused ? "#4ADE80" : "#333333",
+                  fontSize: 16,
+                }}>
                 Offline User
               </Text>
             ),
           }}
           name="Offline User"
           component={OfflineUser}
+          initialParams={{
+            setRouteName: setRouteName,
+          }}
         />
       </Tab.Navigator>
+      <Pressable
+        onPress={() => {
+          if (routeName == "Dutypedia User") {
+            navigation.navigate("AddOnlineUser", { onChange: null });
+          } else if (routeName == "Offline User") {
+            navigation.navigate("AddOfflineUser", { id: null, reload: null });
+          }
+        }}
+        style={{
+          width: 60,
+          height: 60,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#4ADE80",
+          borderRadius: 30,
+          bottom: 20,
+          right: 20,
+          position: "absolute",
+        }}>
+        <SvgXml xml={whiteContact} height={"20"} width={"20"} />
+      </Pressable>
     </SafeAreaView>
   );
 };
@@ -220,7 +253,7 @@ const DutyPediaUser = (props) => {
   const [Loader, setLoader] = React.useState(true);
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [AllData, setAllData] = React.useState([]);
+  const [AllData, setAllData] = React.useState();
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
 
@@ -232,10 +265,12 @@ const DutyPediaUser = (props) => {
     setRefresh((val) => !val);
     wait(1000).then(() => setRefreshing(false));
   }, []);
+  const isFocused = useIsFocused();
 
   const onChange = React.useCallback((data) => {
     setLoader(!Loader);
   });
+
   React.useEffect(() => {
     setLoader(true);
     if (vendor && user) {
@@ -248,7 +283,10 @@ const DutyPediaUser = (props) => {
         }
       });
     }
-  }, [Refresh]);
+    if (isFocused) {
+      props.route.params.setRouteName(props.route.name);
+    }
+  }, [Refresh, isFocused]);
   const search = (val) => {
     let arr = AllData.filter((d) => {
       if (d.user.username.toUpperCase().match(val.toUpperCase())) {
@@ -257,42 +295,21 @@ const DutyPediaUser = (props) => {
     });
     return arr;
   };
-  if (Loader) {
+  if (!AllData) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading..</Text>
+        <ActivityLoader />
       </View>
     );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("AddOnlineUser", {
-              onChange: onChange,
-            });
-          }}
-          style={{
-            width: 80,
-            height: 80,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-          }}
-        >
-          <AntDesign name="plus" size={50} color="#707070" />
-        </TouchableOpacity>
         <Text
           style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            color: textColor,
-            marginTop: 15,
-          }}
-        >
-          Create New Member
+            fontSize: 18,
+          }}>
+          No User Found!
         </Text>
       </View>
     );
@@ -301,14 +318,12 @@ const DutyPediaUser = (props) => {
     <View
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+        }>
         <Input
           rightIcon={
             <SvgXml
@@ -361,9 +376,7 @@ const DutyPediaUser = (props) => {
         </View>
       </TouchableOpacity> */}
 
-        {Loader ? (
-          <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
-        ) : (
+        {Data &&
           Data.map((doc, i) => (
             <OnlineCart
               onPress={() => {
@@ -373,36 +386,16 @@ const DutyPediaUser = (props) => {
               i={i}
               key={i}
               reload={onChange}
+              navigation={navigation}
             />
-          ))
-        )}
+          ))}
         <View style={{ height: 10 }} />
       </ScrollView>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("AddOnlineUser", {
-            onChange: onChange,
-          });
-        }}
-        style={{
-          width: 60,
-          height: 60,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#4ADE80",
-          borderRadius: 30,
-          bottom: 20,
-          right: 20,
-          position: "absolute",
-        }}
-      >
-        <SvgXml xml={whiteContact} height={"20"} width={"20"} />
-      </Pressable>
     </View>
   );
 };
 
-const OnlineCart = ({ doc, i, reload, onPress }) => {
+const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
   const [AlertVisible, setAlertVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
@@ -425,12 +418,12 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
     }
   }, [doc]);
   return (
-    <TouchableOpacity onPress={() => {
-      if (onPress) {
-        onPress();
-      }
-    }}
-     
+    <TouchableOpacity
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -440,11 +433,9 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
         paddingVertical: 10,
         paddingHorizontal: 10,
         justifyContent: "space-between",
-      }}
-    >
+      }}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Pressable
-          
           style={{
             height: 50,
             width: 50,
@@ -455,8 +446,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
             marginLeft: 5,
             borderWidth: 1,
             borderColor: "#e5e5e5",
-          }}
-        >
+          }}>
           {doc.user.profilePhoto ? (
             <Image
               style={{
@@ -476,8 +466,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
               marginLeft: 10,
               fontSize: 16,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             {doc.user.firstName
               ? doc.user.firstName + " " + doc.user.lastName
               : "Easin Arafat"}
@@ -488,8 +477,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
               marginLeft: 10,
               fontSize: 14,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             {totalOrder > 0 ? `${totalOrder} Orders` : "No Order Yet"}
           </Text>
         </View>
@@ -499,8 +487,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
           setModalVisible((val) => !val);
           setSelectUser(`${doc.user.firstName} ${doc.user.lastName}`);
         }}
-        style={{ flexDirection: "row" }}
-      >
+        style={{ flexDirection: "row" }}>
         {/* <Feather name="send" size={22} color={backgroundColor} />
         <View style={{ width: 15 }} />
         <AntDesign
@@ -518,8 +505,7 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
         animationType={"fade"}
         transparent={true}
         visible={AlertVisible}
-        onRequestClose={() => setAlertVisible(false)}
-      >
+        onRequestClose={() => setAlertVisible(false)}>
         <AlertModal
           title="Hey"
           subTitle={"Are you sure want to delete this?"}
@@ -541,22 +527,19 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <OutsideView
           childRef={childRef}
           onPressOutside={() => {
             // handle press outside of childRef event
             setModalVisible((val) => !val);
-          }}
-        >
+          }}>
           <View
             style={{
               width: "100%",
               height: "100%",
               justifyContent: "flex-end",
-            }}
-          >
+            }}>
             <View
               style={{
                 width: "100%",
@@ -566,13 +549,22 @@ const OnlineCart = ({ doc, i, reload, onPress }) => {
                 borderColor: "#C0FFD7",
                 borderWidth: 1,
                 paddingHorizontal: 20,
-                paddingVertical: 10,
+                paddingVertical: 20,
               }}
-              ref={childRef}
-            >
+              ref={childRef}>
               <IconButton
                 onPress={() => {
                   setModalVisible(false);
+                  let newUser = {
+                    userId: doc.user.id,
+                    user: doc.user,
+                  };
+                  navigation.navigate("ChatScreen", {
+                    data: {
+                      users: [newUser],
+                    },
+                    username: doc.user.username,
+                  });
                 }}
                 LeftIcon={() => (
                   <SvgXml xml={message} height={"20"} width={"20"} />
@@ -613,9 +605,10 @@ const OfflineUser = (props) => {
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
-  const [AllData, setAllData] = React.useState([]);
+  const [AllData, setAllData] = React.useState();
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
+  const isFocused = useIsFocused();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -643,7 +636,10 @@ const OfflineUser = (props) => {
         console.warn(res);
       });
     }
-  }, [Reload + vendor + user + Refresh]);
+    if (isFocused) {
+      props.route.params.setRouteName(props.route.name);
+    }
+  }, [Reload + vendor + user + Refresh, isFocused]);
   const search = (val) => {
     let arr = AllData.filter((d) => {
       if (d.name.toUpperCase().match(val.toUpperCase())) {
@@ -652,44 +648,17 @@ const OfflineUser = (props) => {
     });
     return arr;
   };
-  if (Loader) {
+  if (!AllData) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading..</Text>
+        <ActivityLoader />
       </View>
     );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("AddOfflineUser", {
-              reload: reload,
-              id: null,
-            });
-          }}
-          style={{
-            width: 80,
-            height: 80,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-          }}
-        >
-          <AntDesign name="plus" size={50} color="#707070" />
-        </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            color: textColor,
-            marginTop: 15,
-          }}
-        >
-          Create New Member
-        </Text>
+        <Text style={{ fontSize: 18 }}>No User Found!</Text>
       </View>
     );
   }
@@ -699,8 +668,7 @@ const OfflineUser = (props) => {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+        }>
         <Input
           rightIcon={
             <SvgXml
@@ -732,9 +700,7 @@ const OfflineUser = (props) => {
         />
 
         <View>
-          {Loader ? (
-            <Text style={{ textAlign: "center" }}>Loading...</Text>
-          ) : (
+          {Data &&
             Data.map((doc, i) => (
               <OfflineCart
                 onPress={() => {
@@ -746,31 +712,9 @@ const OfflineUser = (props) => {
                 key={i}
                 reload={reload}
               />
-            ))
-          )}
+            ))}
         </View>
       </ScrollView>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("AddOfflineUser", {
-            reload: reload,
-            id: null,
-          });
-        }}
-        style={{
-          width: 60,
-          height: 60,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#4ADE80",
-          borderRadius: 30,
-          bottom: 20,
-          right: 20,
-          position: "absolute",
-        }}
-      >
-        <SvgXml xml={whiteContact} height={"20"} width={"20"} />
-      </Pressable>
     </View>
   );
 };
@@ -806,8 +750,7 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
         paddingVertical: 10,
         paddingHorizontal: 10,
         justifyContent: "space-between",
-      }}
-    >
+      }}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View
           style={{
@@ -820,8 +763,7 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
             marginLeft: 5,
             borderWidth: 1,
             borderColor: "#e5e5e5",
-          }}
-        >
+          }}>
           {doc.profilePhoto ? (
             <Image
               style={{
@@ -841,8 +783,7 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
               marginLeft: 10,
               fontSize: 15,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             {doc.name ? doc.name : "Easin Arafat"}
           </Text>
           <Text
@@ -851,65 +792,28 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
               marginLeft: 10,
               fontSize: 13,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             {totalOrder > 0 ? `${totalOrder} Orders` : "No Order Yet"}
           </Text>
         </View>
       </View>
       <View style={{ flexDirection: "row" }}>
         <View style={{ width: 10 }} />
-       
-        <Menu
-          contentStyle={{
-            backgroundColor: primaryColor,
+        <Entypo
+          onPress={() => {
+            setVisible((val) => !val);
+            setSelectUser(`${doc.name}`);
           }}
-          visible={Visible}
-          onDismiss={() => setVisible(!Visible)}
-          anchor={
-            <Entypo
-            onPress={() => {
-              setVisible((val) => !val);
-              setSelectUser(`${doc.name}`);
-            }}
-            name="dots-three-vertical"
-            size={24}
-            color={"#707070"}
-          />
-          }
-        >
-          <Menu.Item
-            onPress={() => {
-              setVisible(false);
-              navigation.navigate("AddOfflineUser", {
-                reload: reload,
-                id: doc,
-              });
-            }}
-            title="Edit"
-          />
-          <Menu.Item
-            onPress={() => {
-              setAlertVisible(true);
-              setVisible(false);
-            }}
-            title="Delete"
-          />
-          <Menu.Item
-            onPress={() => {
-              // setAlertVisible(true);
-              // setVisible(false);
-            }}
-            title="View Profile"
-          />
-        </Menu>
+          name="dots-three-vertical"
+          size={24}
+          color={"#707070"}
+        />
       </View>
       <Modal
         animationType={"fade"}
         transparent={true}
         visible={AlertVisible}
-        onRequestClose={() => setAlertVisible(false)}
-      >
+        onRequestClose={() => setAlertVisible(false)}>
         <AlertModal
           title="Hey"
           subTitle={"Are you sure want to delete this?"}
@@ -927,26 +831,23 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
           }}
         />
       </Modal>
-      {/* <Modal
+      <Modal
         animationType="slide"
         transparent={true}
         visible={Visible}
-        onRequestClose={() => setVisible(false)}
-      >
+        onRequestClose={() => setVisible(false)}>
         <OutsideView
           childRef={childRef}
           onPressOutside={() => {
             // handle press outside of childRef event
             setVisible((val) => !val);
-          }}
-        >
+          }}>
           <View
             style={{
               width: "100%",
               height: "100%",
               justifyContent: "flex-end",
-            }}
-          >
+            }}>
             <View
               style={{
                 width: "100%",
@@ -956,23 +857,26 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
                 borderColor: "#C0FFD7",
                 borderWidth: 1,
                 paddingHorizontal: 20,
-                paddingVertical: 10,
+                paddingVertical: 20,
               }}
-              ref={childRef}
-            >
+              ref={childRef}>
               <IconButton
                 onPress={() => {
                   setVisible(false);
+                  navigation.navigate("AddOfflineUser", {
+                    reload: reload,
+                    id: doc,
+                  });
                 }}
                 LeftIcon={() => (
-                  <SvgXml xml={message} height={"20"} width={"20"} />
+                  <SvgXml xml={edit} height={"20"} width={"20"} />
                 )}
                 style={{
                   borderWidth: 0,
                   justifyContent: "flex-start",
                   height: 40,
                 }}
-                title={`Send Message To ${selectUser}`}
+                title={`Edit ${selectUser}`}
               />
               <IconButton
                 onPress={() => {
@@ -987,15 +891,19 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
                   justifyContent: "flex-start",
                   height: 40,
                 }}
-                title={`Remove Message To ${selectUser}`}
+                title={`Remove ${selectUser}`}
               />
             </View>
           </View>
         </OutsideView>
-      </Modal> */}
+      </Modal>
     </TouchableOpacity>
   );
 };
+const edit=`<svg xmlns="http://www.w3.org/2000/svg" width="20.25" height="20.409" viewBox="0 0 20.25 20.409">
+<path id="Path_28063" data-name="Path 28063" d="M16.862,4.487,18.549,2.8A1.875,1.875,0,0,1,21.2,5.451L10.582,16.07a4.5,4.5,0,0,1-1.9,1.13L6,18l.8-2.685a4.5,4.5,0,0,1,1.13-1.9l8.932-8.931Zm0,0L19.5,7.125M18,14v4.75A2.25,2.25,0,0,1,15.75,21H5.25A2.25,2.25,0,0,1,3,18.75V8.25A2.25,2.25,0,0,1,5.25,6H10" transform="translate(-2.25 -1.341)" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+</svg>
+`
 export const AddOfflineUser = (props) => {
   const [backgroundImage, setBackgroundImage] = React.useState();
   const [image, setImage] = React.useState();
@@ -1079,7 +987,7 @@ export const AddOfflineUser = (props) => {
       .then((res) => {
         setLoader(false);
         if (res) {
-          reload();
+          //reload();
           navigation.goBack();
           return;
         }
@@ -1133,7 +1041,7 @@ export const AddOfflineUser = (props) => {
       .then((res) => {
         setLoader(false);
         if (res) {
-          reload();
+          //reload();
           navigation.goBack();
           return;
         }
@@ -1148,7 +1056,7 @@ export const AddOfflineUser = (props) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader />
       </View>
     );
   }
@@ -1156,8 +1064,7 @@ export const AddOfflineUser = (props) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           {backgroundImage ? (
@@ -1168,8 +1075,7 @@ export const AddOfflineUser = (props) => {
           ) : (
             <LinearGradient
               style={styles.backgroundContainer}
-              colors={["#983C85", "#983C85", "#983C53"]}
-            ></LinearGradient>
+              colors={["#983C85", "#983C85", "#983C53"]}></LinearGradient>
           )}
 
           <View style={styles.profile}>
@@ -1184,8 +1090,7 @@ export const AddOfflineUser = (props) => {
                 {
                   top: -5,
                 },
-              ]}
-            >
+              ]}>
               <EvilIcons
                 onPress={() => {
                   pickImage().then((result) => {
@@ -1209,8 +1114,7 @@ export const AddOfflineUser = (props) => {
                 height: 30,
                 width: 30,
               },
-            ]}
-          >
+            ]}>
             <EvilIcons
               onPress={() => {
                 pickImage().then((result) => {
@@ -1233,8 +1137,7 @@ export const AddOfflineUser = (props) => {
             marginTop: 20,
             marginBottom: 10,
             marginHorizontal: 20,
-          }}
-        >
+          }}>
           Member Information
         </Text>
         <Input
@@ -1433,26 +1336,22 @@ export const AddOnlineUser = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <SafeAreaView
         style={{
           flex: 1,
-        }}
-      >
+        }}>
         <View
           style={{
             borderBottomWidth: 1,
             paddingVertical: 10,
             alignItems: "center",
             borderBottomColor: "#E2E2E2",
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: 16,
-            }}
-          >
+            }}>
             Dutypedia User
           </Text>
         </View>
@@ -1467,8 +1366,7 @@ export const AddOnlineUser = () => {
             },
             elevation: 1,
             shadowRadius: 1,
-          }}
-        >
+          }}>
           <Input
             rightIcon={
               <SvgXml
@@ -1523,8 +1421,7 @@ export const AddOnlineUser = () => {
             onPress: () => {
               setMessage(null);
             },
-          }}
-        >
+          }}>
           {Message}
         </Snackbar>
       </SafeAreaView>
@@ -1547,14 +1444,12 @@ const CartView = ({ doc, onChange }) => {
         borderBottomWidth: 0,
         borderBottomColor: "#e5e5e5",
         paddingBottom: 5,
-      }}
-    >
+      }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-        }}
-      >
+        }}>
         <View
           style={{
             width: 50,
@@ -1565,8 +1460,7 @@ const CartView = ({ doc, onChange }) => {
             alignItems: "center",
             overflow: "hidden",
             margin: 5,
-          }}
-        >
+          }}>
           {doc.profilePhoto ? (
             <Image
               style={{
@@ -1582,16 +1476,14 @@ const CartView = ({ doc, onChange }) => {
         <View
           style={{
             marginLeft: 0,
-          }}
-        >
+          }}>
           <Text
             numberOfLines={1}
             style={{
               fontSize: 16,
               fontFamily: "Poppins-Medium",
               lineHeight: 20,
-            }}
-          >
+            }}>
             {doc.firstName + " " + doc.lastName}
           </Text>
           <Text
@@ -1600,8 +1492,7 @@ const CartView = ({ doc, onChange }) => {
               fontSize: 13,
               fontFamily: "Poppins-Light",
               lineHeight: 15,
-            }}
-          >
+            }}>
             @{doc.username}
           </Text>
         </View>

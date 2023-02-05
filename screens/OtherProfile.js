@@ -1156,7 +1156,7 @@ const OtherProfile = (props) => {
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Notice", { serviceId: Data.service.id });
+                navigation.navigate("UserNotice", { serviceId: Data.service.id });
               }}
               style={{
                 marginBottom: 0,

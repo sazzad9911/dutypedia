@@ -22,8 +22,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import OutsideView from "react-native-detect-press-outside";
 import IconButton from "../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function Notice({ navigation, route }) {
+export default function UserNotice({ navigation, route }) {
   const serviceId =
     route.params && route.params.serviceId ? route.params.serviceId : null;
   const Vendor =
@@ -43,6 +44,7 @@ export default function Notice({ navigation, route }) {
   const vendor = useSelector((state) => state.vendor);
   const [Data, setData] = React.useState([]);
   const [Search, setSearch] = React.useState();
+  const isFocused = useIsFocused();
 
   React.useEffect(() => {
     if (vendor || serviceId) {
@@ -59,7 +61,7 @@ export default function Notice({ navigation, route }) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [vendor + Reload + serviceId]);
+  }, [vendor + Reload + serviceId, isFocused]);
   const onChange = (val) => {
     createNotice(user.token, {
       subject: val.subject,
@@ -96,18 +98,11 @@ export default function Notice({ navigation, route }) {
   }, [Search]);
   const childRef = React.useRef();
   return (
-    <OutsideView
-      style={{ flex: 1 }}
-      childRef={childRef}
-      onPressOutside={() => {
-        //console.log("eee");
-        setSearchOpen(false);
-      }}
-    >
-      <SafeAreaView style={{
-        flex:1
+    <SafeAreaView
+      style={{
+        flex: 1,
       }}>
-        <View
+      <View
           style={{
             flexDirection: "row",
             paddingLeft: 20,
@@ -119,23 +114,19 @@ export default function Notice({ navigation, route }) {
             shadowOpacity: 0.01,
             shadowColor: "black",
             backgroundColor: primaryColor,
-            
-          }}
-        >
+          }}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
             }}
-            style={{ flexDirection: "row" }}
-          >
+            style={{ flexDirection: "row" }}>
             <AntDesign name="left" size={22} color={"#C2D5F6"} />
             <Text
               style={{
                 color: "#C2D5F6",
                 fontSize: 16,
                 marginLeft: 10,
-              }}
-            >
+              }}>
               Notice
             </Text>
           </TouchableOpacity>
@@ -143,8 +134,7 @@ export default function Notice({ navigation, route }) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-            }}
-          >
+            }}>
             {SearchOpen && (
               <Animated.View ref={childRef} entering={SlideInRight}>
                 <TextInput
@@ -181,14 +171,17 @@ export default function Notice({ navigation, route }) {
             </View>
           </View>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView scrollEventThrottle={16}
+        onScroll={()=>{
+          setSearchOpen(false);
+        }}
+         showsVerticalScrollIndicator={false}>
           <View
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
               paddingHorizontal: 5,
-            }}
-          >
+            }}>
             <SvgXml
               style={{ marginLeft: "5%", marginBottom: 20 }}
               xml={noticeVector}
@@ -200,8 +193,7 @@ export default function Notice({ navigation, route }) {
                 width: "100%",
                 alignItems: "center",
                 marginTop: "10%",
-              }}
-            >
+              }}>
               {Loader && <ActivityLoader />}
             </View>
             {Data &&
@@ -219,8 +211,7 @@ export default function Notice({ navigation, route }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: textColor,
@@ -228,8 +219,7 @@ export default function Notice({ navigation, route }) {
                     fontFamily: "Poppins-Medium",
                     marginTop: "30%",
                     textAlign: "center",
-                  }}
-                >
+                  }}>
                   No Notice Found
                 </Text>
               </View>
@@ -237,7 +227,7 @@ export default function Notice({ navigation, route }) {
           </View>
           <View style={{ height: 20 }} />
         </ScrollView>
-        {Vendor && (
+        {vendor && (
           <FAB
             color="#FFFFFF"
             icon="plus"
@@ -260,8 +250,7 @@ export default function Notice({ navigation, route }) {
             }}
           />
         )}
-      </SafeAreaView>
-    </OutsideView>
+    </SafeAreaView>
   );
 }
 
@@ -278,15 +267,13 @@ const NoticeCart = ({ data, navigation, setData }) => {
         padding: 10,
         width: width / 2 - 15,
         margin: 5,
-      }}
-    >
+      }}>
       <Text
         numberOfLines={1}
         style={{
           fontFamily: "Poppins-Medium",
           fontSize: 16,
-        }}
-      >
+        }}>
         Id/Record No {data.record}
       </Text>
       <Text
@@ -294,8 +281,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
         style={{
           marginTop: 5,
           fontSize: 14,
-        }}
-      >
+        }}>
         {dateConvert(data.date)}
       </Text>
       <Text
@@ -304,8 +290,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
           marginTop: 20,
           fontSize: 12,
           fontFamily: "Poppins-SemiBold",
-        }}
-      >
+        }}>
         {data.subject}
       </Text>
       <Text
@@ -316,8 +301,7 @@ const NoticeCart = ({ data, navigation, setData }) => {
           color: textColor,
           marginTop: 5,
           height: 50,
-        }}
-      >
+        }}>
         {data.message}
       </Text>
       <IconButton

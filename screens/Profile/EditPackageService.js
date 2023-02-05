@@ -33,6 +33,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { localOptionsToServer } from "../../Class/dataConverter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { updateGigsData } from "../../Class/update";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function EditPackageService({ navigation, route }) {
   const [Package, setPackage] = React.useState([]);
@@ -60,6 +61,18 @@ export default function EditPackageService({ navigation, route }) {
   const [serverData,setServerData]=React.useState()
   const gigs=params.gigs;
 
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   useEffect(()=>{
     if(gigs){
         setImage1({uri:gigs.images[0]})
@@ -73,6 +86,18 @@ export default function EditPackageService({ navigation, route }) {
   },[gigs.id])
   
   const updateData = async () => {
+    if(!Images1||!Image2||!Image4||!Image3){
+      setImageError("*Please upload all four images")
+      return
+    }
+    if(!Title){
+      setTitleError("*Please add title")
+      return
+    }
+    if(packages.length<2){
+      setPackageError("*Please add minimum 2 packages")
+      return
+    }
     setLoader(true);
     if(Images1.type){
       let arr=[]

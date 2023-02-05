@@ -182,7 +182,7 @@ const Menu = ({ navigation }) => {
           /> */}
           <Cart
             onPress={() => {
-              navigation.navigate("Notice");
+              navigation.navigate("UserNotice");
             }}
             title="Notice"
             Icon={() => (
@@ -212,10 +212,10 @@ const Menu = ({ navigation }) => {
               />
             )}
           />
-          <Cart
+          {/* <Cart
             title="Staff & Member"
             Icon={() => <SvgXml xml={notice2} height="30" width="30" />}
-          />
+          /> */}
           <Cart
             title="Account Balance"
             Icon={() => (
@@ -233,7 +233,9 @@ const Menu = ({ navigation }) => {
             title="Customer Review"
             Icon={() => <SvgXml xml={review} height="30" width="30" />}
           />
-          <Cart
+          <Cart onPress={()=>{
+            navigation.navigate("Support")
+          }}
             title="Support"
             Icon={() => (
               <Image

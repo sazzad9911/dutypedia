@@ -71,8 +71,10 @@ const Notice = (props) => {
     setRefresh((val) => !val);
     wait(1000).then(() => setRefreshing(false));
   }, []);
+  const isFocused=useIsFocused()
 
   React.useEffect(() => {
+    //console.warn("ok")
     setLoader(true);
     setData([]);
     setAllData([]);
@@ -85,7 +87,7 @@ const Notice = (props) => {
         }
       });
     }
-  }, [Refresh]);
+  }, [Refresh,isFocused]);
 
   const onChange = (val) => {
     createNotice(user.token, {
@@ -114,45 +116,19 @@ const Notice = (props) => {
       }
     });
   };
-  if (Loader) {
+  if (!AllData) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading..</Text>
+       <ActivityLoader/>
       </View>
     );
   }
   if (Array.isArray(AllData) && AllData.length == 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("AddNotice", {
-              onChange: onChange,
-              value: null,
-            });
-          }}
-          style={{
-            width: 80,
-            height: 80,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-            
-          }}
-        >
-          <AntDesign name="plus" size={50} color="#707070" />
-        </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            color: textColor,
-            marginTop: 15,
-          }}
-        >
-          Create New Notice
-        </Text>
+        <Text style={{
+          fontSize:18
+        }}>No Notice Found!</Text>
       </View>
     );
   }
@@ -216,9 +192,7 @@ const Notice = (props) => {
           <Text style={styles.text}>Notice</Text>
           <Text style={styles.text}></Text>
         </View>
-        {Loader ? (
-          <Text style={{ marginTop: 10, textAlign: "center" }}>Loading...</Text>
-        ) : (
+        {Data&&
           Data.map((doc, i) => (
             <Cart
               {...props}
@@ -229,7 +203,7 @@ const Notice = (props) => {
               i={i}
             />
           ))
-        )}
+        }
       </View>
       <Animated.View
         style={[
@@ -317,6 +291,8 @@ import TextArea from "./../../components/TextArea";
 import SuggestionBox, { MainOptions } from "./../../components/SuggestionBox";
 import { SafeAreaView } from "react-native-safe-area-context";
 import IconButton from "../../components/IconButton";
+import ActivityLoader from "../../components/ActivityLoader";
+import { useIsFocused } from "@react-navigation/native";
 
 const Cart = ({ value, setData, Data, i, navigation }) => {
   const [Visible, setVisible] = React.useState(false);
@@ -448,7 +424,7 @@ export const AddNotice = (props) => {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <Text
           style={{
             color: textColor,

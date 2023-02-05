@@ -55,7 +55,7 @@ import FixedOffers from "./Seller/FixedOffers";
 import OfferNow from "./Seller/OfferNow";
 import CategoryList from "./CategoryList";
 import { ViewCart } from "./Vendor/Notice";
-import Notice from "./Notice";
+import Notice from "./UserNotice";
 import FixedService from "./FixedService";
 import PackageService from "./PackageService";
 import NewRoute from "../NewRoute";
