@@ -145,7 +145,7 @@ const VendorFixedService = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
   const isFocused = useIsFocused();
-
+ 
   React.useEffect(() => {
     if (isFocused) {
       dispatch(setHideBottomBar(true));
@@ -220,13 +220,14 @@ const VendorFixedService = (props) => {
             type: "SET_NEW_LIST_DATA",
             playload: serverToLocal(data.services, data.service.category),
           });
+          //console.log(serverToLocal(data.services, data.service.category))
           setNewDataList(serverToLocal(data.services, data.service.category));
         }
       } catch (e) {
         console.warn(e.message);
       }
     }
-  }, [data]);
+  }, [data,isFocused]);
 
   React.useEffect(() => {
     //console.log(NewDataList.length);
@@ -622,7 +623,20 @@ const VendorFixedService = (props) => {
               >
                 Service List
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>{
+                const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
+                
+                navigation.navigate("EditServiceList", {
+                  NewDataList: serverToLocal(
+                    gigs[0].services.options,
+                    gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "ONETIME",
+                  gigs:data
+                });
+               
+              }}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
               </TouchableOpacity>
             </View>

@@ -79,6 +79,7 @@ import EditService from "./Profile/EditService";
 import EditPackageService,{AddScreen} from "./Profile/EditPackageService";
 import EditSubscriptionService from "./Profile/EditSubscriptionService";
 import EditInstallmentService from "./Profile/EditInstallmentService";
+import EditServiceList from "./Profile/EditServiceList";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -167,6 +168,15 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={EditInstallmentService}
+      />
+      <Stack.Screen
+        name="EditServiceList"
+        options={{
+          header: (props) => (
+            <SubHeader title="Service Information" {...props} />
+          ),
+        }}
+        component={EditServiceList}
       />
       <Stack.Screen
         name="VendorFixedService"

@@ -627,7 +627,18 @@ const VendorSubscriptionService = (props) => {
               >
                 Service List
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>{
+                const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
+                navigation.navigate("EditServiceList", {
+                  NewDataList: serverToLocal(
+                    gigs[0].services.options,
+                    gigs[0].services.category
+                  ),
+                  name: "VendorOrderDetails",
+                  data: "SUBSCRIPTION",
+                  gigs:data
+                });
+              }}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
               </TouchableOpacity>
             </View>

@@ -34,7 +34,7 @@ import {
 import { fileFromURL } from "../../action";
 import { uploadFile } from "../../Class/upload";
 import IconButton from "../../components/IconButton";
-import edit from "./../../assets/Images/edit.png";
+import editt from "../../assets/editt.jpg";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Service = ({ navigation, route }) => {
@@ -301,51 +301,47 @@ const Service = ({ navigation, route }) => {
                 style={{
                   flex: 1,
                   justifyContent: "center",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "black",
-                    lineHeight: 25,
-                  }}
-                >
-                  Upload Your
+                    lineHeight: 30,
+                  }}>
+                  Upload{"\n"}Your
                 </Text>
                 <Text
                   style={{
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "#DA1E37",
-                    lineHeight: 25,
-                  }}
-                >
-                  High
+                    lineHeight: 30,
+                  }}>
+                  High <Text style={{color:"black"}}>Quality</Text>
                 </Text>
                 <Text
                   style={{
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
-                    color: "black",
-                    lineHeight: 25,
-                  }}
-                >
-                  Quality <Text style={{ color: "#6366F1" }}>Photo</Text>
+                    color: "#6366F1",
+                    lineHeight: 30,
+                  }}>
+                  Photo
                 </Text>
               </View>
               <View
                 style={{
-                  flex: 1,
-                }}
-              >
+                  flex: 1.5,
+                  alignItems:"flex-end"
+                }}>
                 {/* <SvgXml xml={vectorImage} height="200" width={"190"}/> */}
                 <Image
                   style={{
-                    width: width / 2 - 20,
-                    height: 100,
+                    width: width / 2,
+                    height: 120,
                   }}
-                  source={edit}
+                  source={editt}
                 />
               </View>
             </View>
