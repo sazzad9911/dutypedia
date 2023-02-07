@@ -156,6 +156,7 @@ const EditTableData = (props) => {
             //   image: data.image,
             //   id: id,
             // });
+            dispatch(setListData([]))
             dispatch({ type: "SET_LENGTH", playload: newSelectedData.length });
             //dispatch(setListData([]));
             newSelectedData.forEach((doc) => {
@@ -439,7 +440,7 @@ const Rows = ({
   const [checked, setChecked] = React.useState(false);
   const dispatch = useDispatch();
   const listData = useSelector((state) => state.listData);
-  const [Data, setData] = React.useState(listData);
+  const [Data, setData] = React.useState([]);
   React.useEffect(() => {
     let arr = listData.filter((d) => d.data.id == data.id);
     let neArr=listData.filter(d=>d.data.title==data.title);

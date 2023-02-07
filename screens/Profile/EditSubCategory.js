@@ -50,7 +50,7 @@ const EditSubCategory = ({ navigation, route }) => {
   const [loader,setLoader]=useState(false)
   const user=useSelector(state=>state.user)
   const vendor=useSelector(state=>state.vendor)
-  //console.log(gigs)
+  //console.log(title)
 
   React.useEffect(() => {
     if (isFocused) {

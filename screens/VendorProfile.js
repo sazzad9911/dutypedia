@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import {
   Pressable,
   Animated as Animation,
   Platform,
+  Modal,
+  TouchableHighlight,
 } from "react-native";
 import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,7 +87,10 @@ import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import ServiceSettings from "./Vendor/ServiceSettings";
 import ActivityLoader from "../components/ActivityLoader";
 import { AllData } from "../Data/AllData";
-import { setListData } from "../action";
+import { fileFromURL, setListData } from "../action";
+import * as ImagePicker from "expo-image-picker";
+import { uploadFile } from "../Class/upload";
+import { updateData } from "../Class/update";
 
 const { width, height } = Dimensions.get("window");
 const VendorProfile = (props) => {
@@ -195,9 +200,11 @@ const VendorProfile = (props) => {
   const changeScreenName = React.useCallback((val) => {
     setScreenName(val);
   });
-
+  const [wallPhoto, setWallPhoto] = useState(data.service.wallPhoto);
+  const [modalVisible, setModalVisible] = useState(false);
   //console.log(SeeMore)
-  const newImage = useImage(data.service.wallPhoto);
+  const newImage = useImage(wallPhoto);
+  const [imageUploader, setImageUploader] = useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -233,7 +240,9 @@ const VendorProfile = (props) => {
       let response = { data: vendor };
       if (response.data) {
         setLoader(false);
-        const gigs=response.data.service.gigs.filter(d=>d.type=="STARTING")
+        const gigs = response.data.service.gigs.filter(
+          (d) => d.type == "STARTING"
+        );
         setData(response.data);
         setSpecialty(response.data.service.speciality);
 
@@ -261,7 +270,7 @@ const VendorProfile = (props) => {
           });
         });
         setActiveServiceData(arr);
-        
+
         //console.log(gigs)
         setCategory(gigs[0].services.category);
         try {
@@ -273,10 +282,7 @@ const VendorProfile = (props) => {
             ),
           });
           setNewDataList(
-            serverToLocal(
-              gigs[0].services.options,
-              gigs[0].services.category
-            )
+            serverToLocal(gigs[0].services.options, gigs[0].services.category)
           );
         } catch (e) {
           setLoader(false);
@@ -284,13 +290,13 @@ const VendorProfile = (props) => {
         }
       }
     }
-  }, [vendor + data,isFocused]);
+  }, [vendor + data, isFocused]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
-   // setNewDataList(null)
+    // setNewDataList(null)
     if (Data) {
-      const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
+      const gigs = Data.service.gigs.filter((d) => d.type == "STARTING");
       setBackgroundImage(Data.service.wallPhoto);
       setImage(Data.service.profilePhoto);
 
@@ -316,9 +322,9 @@ const VendorProfile = (props) => {
           }
         });
       });
-      
+
       setActiveServiceData(arr);
-      
+
       setCategory(gigs[0].services.category);
       //console.warn(gigs)
       //return
@@ -332,10 +338,7 @@ const VendorProfile = (props) => {
           ),
         });
         setNewDataList(
-          serverToLocal(
-            gigs[0].services.options,
-            gigs[0].services.category
-          )
+          serverToLocal(gigs[0].services.options, gigs[0].services.category)
         );
       } catch (e) {
         console.warn(e.message);
@@ -354,7 +357,7 @@ const VendorProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining, Data,isFocused]);
+  }, [Bargaining, Data, isFocused]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -393,7 +396,7 @@ const VendorProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService + Click + Refresh,isFocused]);
+  }, [ActiveService + Click + Refresh, isFocused]);
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -406,7 +409,7 @@ const VendorProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + data + newUser + vendor + Data,isFocused]);
+  }, [Active + data + newUser + vendor + Data, isFocused]);
   React.useEffect(() => {
     if (newUser && data) {
       getOtherServices(newUser.token, data.service.id, "PACKAGE")
@@ -419,14 +422,14 @@ const VendorProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + vendor + Data,isFocused]);
+  }, [data + newUser + vendor + Data, isFocused]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
-  }, [Specialty,isFocused]);
+  }, [Specialty, isFocused]);
   const showCart = (doc) => {
     setGigs(doc);
     setClick(true);
@@ -556,7 +559,33 @@ const VendorProfile = (props) => {
       }
     }
   });
-
+  const uploadProfileImage = async (image, isProfile) => {
+    setImageUploader(true);
+    let arr = [];
+    arr.push(fileFromURL(image));
+    const res = await uploadFile(arr, newUser.token);
+    updateData(newUser.token, {
+      serviceId: vendor.service.id,
+      wallPhotoUrl: isProfile ? undefined : res[0],
+      profilePhotoUrl: isProfile ? res[0] : undefined,
+    })
+      .then((res) => {
+        updateVendorInfo();
+      })
+      .catch((err) => {
+        setImageUploader(false);
+        console.error(err.response.data.msg);
+      });
+  };
+  const updateVendorInfo = async () => {
+    const res = await getService(newUser.token, vendor.service.id);
+    if (res) {
+      setImageUploader(false);
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      //navigation.navigate("VendorProfile");
+    }
+    setImageUploader(false);
+  };
   //console.log(SeeMore)
 
   if (
@@ -632,8 +661,7 @@ const VendorProfile = (props) => {
           // }
           // scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
-        }}
-      >
+        }}>
         <Canvas style={{ width: width, height: height - (height * 30) / 100 }}>
           <Fill color={primaryColor} />
           <Box
@@ -642,8 +670,7 @@ const VendorProfile = (props) => {
               5,
               5
             )}
-            color={primaryColor}
-          >
+            color={primaryColor}>
             <BoxShadow
               dx={30}
               dy={30}
@@ -692,76 +719,7 @@ const VendorProfile = (props) => {
             justifyContent: "center",
             elevation: 2,
             zIndex: 100,
-          }}
-        >
-          {/* <SvgXml
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 5,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={loveIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-          <SvgXml
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={shareIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          /> */}
-          {/* 
-          <SvgXml
-            onPress={() => {
-              navigation.navigate("AppointmentList", { data: Data });
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={newCalender}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          /> */}
-          {/* <SvgXml
-            onPress={() => {
-              navigation.navigate("ChatScreen", { data: Data });
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: Platform.OS == "ios" ? "#DDDDDD" : "#000000",
-              shadowRadius: Platform.OS == "ios" ? 4 : 30,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={messageIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          /> */}
-        </View>
+          }}></View>
         <View
           style={{
             backgroundColor: primaryColor,
@@ -769,18 +727,16 @@ const VendorProfile = (props) => {
             borderTopRightRadius: 30,
             marginTop: -30,
             overflow: "hidden",
-          }}
-        >
+          }}>
           <View
             style={{
               alignItems: "flex-end",
               paddingHorizontal: 20,
-              paddingTop: 10,
-            }}
-          >
-            <TouchableOpacity>
+              paddingTop: 20,
+            }}>
+            {/* <TouchableOpacity>
               <SvgXml xml={editIcon} height="50" width={"50"} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View
             style={{
@@ -789,8 +745,7 @@ const VendorProfile = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 5,
               backgroundColor: primaryColor,
-            }}
-          >
+            }}>
             <Text
               numberOfLines={2}
               style={[
@@ -799,8 +754,7 @@ const VendorProfile = (props) => {
                   flex: 3,
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 },
-              ]}
-            >
+              ]}>
               {data
                 ? data.service.serviceCenterName
                 : "Easin Arafat It Consulting Center"}
@@ -809,14 +763,12 @@ const VendorProfile = (props) => {
             <View
               style={{
                 alignItems: "center",
-              }}
-            >
+              }}>
               <View
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <SvgXml
                   xml={newStar}
                   height={Platform.OS == "ios" ? "21" : "19"}
@@ -828,8 +780,7 @@ const VendorProfile = (props) => {
                     fontFamily: "Poppins-Bold",
                     color: "#FFC107",
                     marginLeft: 5,
-                  }}
-                >
+                  }}>
                   4.6
                 </Text>
               </View>
@@ -838,8 +789,7 @@ const VendorProfile = (props) => {
                   fontSize: Platform.OS == "ios" ? 12 : 11,
                   fontFamily: "Poppins-Medium",
                   marginTop: Platform.OS == "ios" ? 5 : 0,
-                }}
-              >
+                }}>
                 Profile Views {Data ? Data.service.views : "00"}
               </Text>
             </View>
@@ -851,21 +801,24 @@ const VendorProfile = (props) => {
               paddingHorizontal: 20,
               marginVertical: 15,
               flex: 1,
-            }}
-          >
-            <Avatar
-              style={{
-                width: 40,
-                height: 40,
-                borderWidth: Data && Data.service.profilePhoto ? 0 : 0.5,
-              }}
-              source={{ uri: Data ? Data.service.profilePhoto : null }}
-            />
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible((val) => !val);
+              }}>
+              <Avatar
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderWidth: Data && Data.service.profilePhoto ? 0 : 0.5,
+                }}
+                source={{ uri: Data ? Data.service.profilePhoto : null }}
+              />
+            </TouchableOpacity>
             <View
               style={{
                 flex: 3,
-              }}
-            >
+              }}>
               <Tooltip
                 enterTouchDelay={10}
                 title={
@@ -874,8 +827,7 @@ const VendorProfile = (props) => {
                         Data.service.providerInfo.name
                       } (${Data.service.providerInfo.gender.toUpperCase()})`
                     : "No"
-                }
-              >
+                }>
                 <View
                   onPress={() => {
                     setNameDropDown((val) => !val);
@@ -888,16 +840,14 @@ const VendorProfile = (props) => {
                     paddingVertical: 10,
                     paddingHorizontal: 10,
                     flex: 1,
-                  }}
-                >
+                  }}>
                   <Text
                     numberOfLines={NameDropDown ? 2 : 1}
                     style={{
                       color: "#6366F1",
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
-                    }}
-                  >
+                    }}>
                     {Data
                       ? `${Data.service.providerInfo.title} ${
                           Data.service.providerInfo.name
@@ -910,12 +860,10 @@ const VendorProfile = (props) => {
             <View
               style={{
                 flex: 2,
-              }}
-            >
+              }}>
               <Tooltip
                 enterTouchDelay={10}
-                title={Data ? Data.service.providerInfo.position : ""}
-              >
+                title={Data ? Data.service.providerInfo.position : ""}>
                 <View
                   style={{
                     flex: 1,
@@ -925,8 +873,7 @@ const VendorProfile = (props) => {
                     borderRadius: 10,
                     justifyContent: "center",
                     justifySelf: "flex-end",
-                  }}
-                >
+                  }}>
                   <Text
                     numberOfLines={PositionDropDown ? 4 : 1}
                     style={{
@@ -934,8 +881,7 @@ const VendorProfile = (props) => {
                       textAlign: "center",
                       fontSize: Platform.OS == "ios" ? 14 : 13,
                       fontFamily: "Poppins-SemiBold",
-                    }}
-                  >
+                    }}>
                     {Data ? Data.service.providerInfo.position : ""}
                   </Text>
                 </View>
@@ -945,28 +891,27 @@ const VendorProfile = (props) => {
           <View
             style={{
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
                   fontFamily: "Poppins-SemiBold",
                   marginVertical: 15,
                   marginTop: 2,
-                }}
-              >
+                }}>
                 Specialty In
               </Text>
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("EditVendorInfo",{data:Data})
-              }} style={{}}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("EditVendorInfo", { data: Data });
+                }}
+                style={{}}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
               </TouchableOpacity>
             </View>
@@ -980,8 +925,7 @@ const VendorProfile = (props) => {
                   flexDirection: "row",
                   flexWrap: "wrap",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 {Array.isArray(Specialty) &&
                   Specialty.map((doc, i) => (
                     <SpecialtyComponent
@@ -1003,15 +947,13 @@ const VendorProfile = (props) => {
                     }}
                     style={{
                       marginVertical: 5,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         fontFamily: "Poppins-SemiBold",
                         fontSize: Platform.OS == "ios" ? 16.5 : 15,
                         color: "#86939B",
-                      }}
-                    >
+                      }}>
                       {!More ? "...Show All" : "...Show Less"}
                     </Text>
                   </Pressable>
@@ -1023,23 +965,20 @@ const VendorProfile = (props) => {
             style={{
               paddingHorizontal: 20,
               backgroundColor: primaryColor,
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
                   fontFamily: "Poppins-SemiBold",
                   marginTop: 15,
                   marginBottom: 10,
-                }}
-              >
+                }}>
                 About
               </Text>
               {/* <TouchableOpacity style={{}}>
@@ -1064,16 +1003,14 @@ const VendorProfile = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 10,
               paddingTop: 5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 color: "#4ADE80",
                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
                 fontFamily: "Poppins-SemiBold",
                 marginBottom: 15,
-              }}
-            >
+              }}>
               ...Company Calender, Notice & Team
             </Text>
           </Pressable>
@@ -1082,8 +1019,7 @@ const VendorProfile = (props) => {
         <MotiView
           transition={{ type: "timing" }}
           animate={{ height: calenderHeight }}
-          style={{ overflow: "hidden" }}
-        >
+          style={{ overflow: "hidden" }}>
           <View
             style={{
               backgroundColor: primaryColor,
@@ -1093,8 +1029,7 @@ const VendorProfile = (props) => {
               if (OpenDetails) {
                 //setCalenderHeight(e.nativeEvent.layout.height);
               }
-            }}
-          >
+            }}>
             <ProfileOption
               onPress={() => {
                 navigation.navigate("Company Calender", { vendor: Data });
@@ -1104,7 +1039,9 @@ const VendorProfile = (props) => {
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("UserNotice", { serviceId: Data.service.id });
+                navigation.navigate("UserNotice", {
+                  serviceId: Data.service.id,
+                });
               }}
               style={{
                 marginBottom: 0,
@@ -1119,7 +1056,9 @@ const VendorProfile = (props) => {
               style={{
                 marginBottom: 0,
               }}
-              Icon={() => <Ionicons name="location-sharp" size={24} color={"#4ADE80"} />}
+              Icon={() => (
+                <Ionicons name="location-sharp" size={24} color={"#4ADE80"} />
+              )}
               title="Work Location"
             />
             <BarOption
@@ -1139,8 +1078,7 @@ const VendorProfile = (props) => {
               overflow: "hidden",
               height: newNavigation,
             },
-          ]}
-        >
+          ]}>
           <Tab.Navigator
             screenOptions={{
               tabBarStyle: {
@@ -1167,8 +1105,7 @@ const VendorProfile = (props) => {
               tabBarScrollEnabled: true,
               tabBarPressColor: primaryColor,
               swipeEnabled: false,
-            }}
-          >
+            }}>
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
@@ -1177,8 +1114,7 @@ const VendorProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                    }}
-                  >
+                    }}>
                     {initialState[0].title}
                   </Text>
                 ),
@@ -1213,8 +1149,7 @@ const VendorProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[1].title}
                   </Text>
                 ),
@@ -1250,8 +1185,7 @@ const VendorProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[2].title}
                   </Text>
                 ),
@@ -1287,8 +1221,7 @@ const VendorProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[4].title}
                   </Text>
                 ),
@@ -1324,8 +1257,7 @@ const VendorProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[3].title}
                   </Text>
                 ),
@@ -1360,16 +1292,14 @@ const VendorProfile = (props) => {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: focused ? "#4ADE80" : "black",
                         fontFamily: "Poppins-SemiBold",
                         fontSize: Platform.OS == "ios" ? 18 : 17,
                         marginRight: 10,
-                      }}
-                    >
+                      }}>
                       Settings
                     </Text>
                     <SvgXml
@@ -1427,29 +1357,29 @@ const VendorProfile = (props) => {
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Pressable
             onPress={() => {
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "ONETIME",
-                });
-            }}
-          >
+              const gigs = vendor.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+              });
+            }}>
             <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </Animated.View>
@@ -1475,30 +1405,30 @@ const VendorProfile = (props) => {
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Pressable
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "PACKAGE",
-                });
-            }}
-          >
+              const gigs = vendor.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "PACKAGE",
+              });
+            }}>
             <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </Animated.View>
@@ -1524,31 +1454,30 @@ const VendorProfile = (props) => {
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Pressable
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "SUBSCRIPTION",
-                });
-              
-            }}
-          >
+              const gigs = vendor.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "SUBSCRIPTION",
+              });
+            }}>
             <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </Animated.View>
@@ -1574,48 +1503,83 @@ const VendorProfile = (props) => {
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Pressable
             onPress={() => {
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
-                dispatch({
-                  type: "SET_NEW_LIST_DATA",
-                  playload: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                });
-                navigation.navigate("AddServiceList_1", {
-                  NewDataList: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                  name: "VendorOrderDetails",
-                  data: "INSTALLMENT",
-                });
-              
-            }}
-          >
+              const gigs = vendor.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              dispatch({
+                type: "SET_NEW_LIST_DATA",
+                playload: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+              });
+              navigation.navigate("AddServiceList_1", {
+                NewDataList: serverToLocal(
+                  gigs[0].services.options,
+                  gigs[0].services.category
+                ),
+                name: "VendorOrderDetails",
+                data: "INSTALLMENT",
+              });
+            }}>
             <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </Animated.View>
       )}
-      {/* {Platform.OS=="ios"&&(
-        <View style={{
-          position:"absolute",
-          left:0,
-          top:0,
-          height:24,
-          backgroundColor:scrollEnabled? primaryColor:"transparent",
-          zIndex:600,
-          width:width
-        }}/>
-      )} */}
-      {/* <NewBottomBar {...props}/> */}
+      {offset < 100 && offset > -1 && (
+        <Animated.View
+          style={{
+            backgroundColor: "#F0F0F0",
+            position: "absolute",
+            top: 20,
+            right: 20,
+            padding: 5,
+            borderRadius: 5,
+            zIndex: 50,
+          }}
+          layout={FadeIn}>
+          <Pressable
+            onPress={async () => {
+              //console.log("ok");
+              const res = await pickImage();
+              setWallPhoto(res.uri);
+              uploadProfileImage(res,false)
+            }}>
+            <SvgXml xml={cameraIcon} height="20" width={"20"} />
+          </Pressable>
+        </Animated.View>
+      )}
       <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible((val) => !val)}>
+        <ImageScreen
+          uri={image}
+          onClose={setModalVisible}
+          onChange={(image) => {
+            setModalVisible(false)
+            setImage(image.uri);
+            uploadProfileImage(image,true)
+          }}
+        />
+      </Modal>
+      <Modal transparent={true} visible={imageUploader}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "transparent",
+          }}>
+          <ActivityLoader />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -1742,15 +1706,13 @@ const BarOption = ({ icon, title }) => {
         flexDirection: "row",
         backgroundColor: primaryColor,
         paddingVertical: 5,
-      }}
-    >
+      }}>
       <SvgXml xml={icon} height="22" width="22" />
       <View
         style={{
           flex: 6,
           marginLeft: 10,
-        }}
-      >
+        }}>
         <Text
           numberOfLines={lines}
           style={{
@@ -1758,8 +1720,7 @@ const BarOption = ({ icon, title }) => {
             marginBottom: 5,
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             color: "#333333",
-          }}
-        >
+          }}>
           {title}
         </Text>
       </View>
@@ -1807,7 +1768,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const changeScreenName = params.changeScreenName;
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1903,8 +1864,7 @@ const BargainingScreen = ({ navigation, route }) => {
 
         setOffset(currentOffset);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
         <Text
           style={{
@@ -1913,8 +1873,7 @@ const BargainingScreen = ({ navigation, route }) => {
             color: textColor,
             paddingHorizontal: 20,
             marginTop: 20,
-          }}
-        >
+          }}>
           {Title}
         </Text>
 
@@ -1923,8 +1882,7 @@ const BargainingScreen = ({ navigation, route }) => {
             marginHorizontal: 20,
             marginVertical: 15,
             marginBottom: 0,
-          }}
-        >
+          }}>
           <AnimatedHeight
             onChange={(height) => {
               //setNewNavigation(newHeight + 55 + height);
@@ -1942,12 +1900,15 @@ const BargainingScreen = ({ navigation, route }) => {
             justifyContent: "flex-end",
             marginVertical: 0,
             marginTop: -15,
-          }}
-        >
-          <TouchableOpacity onPress={()=>{
-            const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
-            navigation.navigate("EditService",{data:Data,gigs:gigs[0]})
-          }} style={{}}>
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              const gigs = Data.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              navigation.navigate("EditService", { data: Data, gigs: gigs[0] });
+            }}
+            style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>
         </View>
@@ -1977,15 +1938,13 @@ const BargainingScreen = ({ navigation, route }) => {
         style={{
           backgroundColor: primaryColor,
           paddingHorizontal: 20,
-        }}
-      >
+        }}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Text
             style={{
               fontFamily: "Poppins-SemiBold",
@@ -1993,36 +1952,46 @@ const BargainingScreen = ({ navigation, route }) => {
               marginBottom: 20,
               marginTop: 35,
               color: "#535353",
-            }}
-          >
+            }}>
             Service List
           </Text>
-          <TouchableOpacity onPress={()=>{
-            const gigs=Data.service.gigs.filter(d=>d.type=="STARTING")
-            const data=AllData.filter(d=>d.key==gigs[0].services.category)[0]
-            const i=AllData.indexOf(data)
-            dispatch(setListData(serverToLocal(gigs[0].services.options,gigs[0].services.category)))
-            if(data.data){
-              navigation.navigate("EditSubCategory",{
-                title: data.title,
-                data: data.data,
-                image: data.image,
-                id: i,
-                mainTitle: data.title,
-                gigs:gigs[0]
-              })
-            }else{
-              navigation.navigate("EditTableData", {
-                title: data.title,
-                list: data.list,
-                exit: true,
-                id: i,
-                mainTitle: data.title,
-                gigs:gigs[0]
-              });
-            }
-            
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              const gigs = Data.service.gigs.filter(
+                (d) => d.type == "STARTING"
+              );
+              const data = AllData.filter(
+                (d) => d.key == gigs[0].services.category
+              )[0];
+              const i = AllData.indexOf(data);
+              dispatch(
+                setListData(
+                  serverToLocal(
+                    gigs[0].services.options,
+                    gigs[0].services.category
+                  )
+                )
+              );
+              if (data.data) {
+                navigation.navigate("EditSubCategory", {
+                  title: data.title,
+                  data: data.data,
+                  image: data.image,
+                  id: i,
+                  mainTitle: data.title,
+                  gigs: gigs[0],
+                });
+              } else {
+                navigation.navigate("EditTableData", {
+                  title: data.title,
+                  list: data.list,
+                  exit: true,
+                  id: i,
+                  mainTitle: data.title,
+                  gigs: gigs[0],
+                });
+              }
+            }}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
           </TouchableOpacity>
         </View>
@@ -2034,14 +2003,12 @@ const BargainingScreen = ({ navigation, route }) => {
             overflow: "hidden",
 
             height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-            }}
-          >
+            }}>
             <View
               onLayout={(e) => {
                 //console.log(e.nativeEvent.layout.height);
@@ -2050,8 +2017,7 @@ const BargainingScreen = ({ navigation, route }) => {
               style={{
                 flex: 1.2,
                 maxHeight: 182,
-              }}
-            >
+              }}>
               {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
                 ServiceList.map((item, i) => (
                   <Button
@@ -2081,18 +2047,18 @@ const BargainingScreen = ({ navigation, route }) => {
                   title={NewDataList.length > 0 && NewDataList[0].mainTitle}
                 />
               )}
-              {Facilities&&Facilities.length!=0&&(
+              {Facilities && Facilities.length != 0 && (
                 <Button
-                onPress={() => {
-                  setActiveService("Extra Facilities");
-                }}
-                style={
-                  ActiveService == "Extra Facilities"
-                    ? styles.activeButton
-                    : styles.inactiveButton
-                }
-                title={"Extra Facilities"}
-              />
+                  onPress={() => {
+                    setActiveService("Extra Facilities");
+                  }}
+                  style={
+                    ActiveService == "Extra Facilities"
+                      ? styles.activeButton
+                      : styles.inactiveButton
+                  }
+                  title={"Extra Facilities"}
+                />
               )}
             </View>
             <View
@@ -2104,8 +2070,11 @@ const BargainingScreen = ({ navigation, route }) => {
               }}
             />
             <View
-              style={{ flex: 2, marginRight: 0, maxHeight: ServiceTableHeight }}
-            >
+              style={{
+                flex: 2,
+                marginRight: 0,
+                maxHeight: ServiceTableHeight,
+              }}>
               {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
                 SubServiceList.map((item, i) => (
                   <ServiceTable
@@ -2135,8 +2104,7 @@ const BargainingScreen = ({ navigation, route }) => {
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
                       lineHeight: 30,
-                    }}
-                  >
+                    }}>
                     Extra Facilities
                   </Text>
                   {Array.isArray(Facilities) &&
@@ -2153,8 +2121,7 @@ const BargainingScreen = ({ navigation, route }) => {
                             lineHeight: 25,
                             color: textColor,
                           }}
-                          key={i + 1}
-                        >
+                          key={i + 1}>
                           {doc.title}
                         </Text>
                       ) : null
@@ -2173,16 +2140,14 @@ const BargainingScreen = ({ navigation, route }) => {
           justifyContent: "space-between",
           marginHorizontal: 20,
           marginVertical: 15,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: Platform.OS == "ios" ? 17 : 15.5,
             color: textColor,
 
             fontFamily: "Poppins-SemiBold",
-          }}
-        >
+          }}>
           From {Price} ৳
         </Text>
         <TouchableOpacity
@@ -2196,16 +2161,14 @@ const BargainingScreen = ({ navigation, route }) => {
             flexDirection: "row",
             minWidth: 10,
             alignItems: "center",
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: Platform.OS == "ios" ? 16.5 : 15,
               fontFamily: "Poppins-SemiBold",
               color: "#707070",
               marginRight: 0,
-            }}
-          >
+            }}>
             Show All
           </Text>
           <MaterialIcons
@@ -2403,16 +2366,14 @@ const FixedScreen = ({ navigation, route }) => {
         }
         setOffset(currentOffset);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           marginHorizontal: 10,
           marginVertical: 20,
-        }}
-      >
+        }}>
         {FixedService.map((doc, i) => (
           <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
         ))}
@@ -2462,16 +2423,14 @@ const PackageScreen = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
+        }}>
         {PackageService.map((doc, i) => (
           <ServiceCart
             onPress={() => {
@@ -2658,15 +2617,13 @@ const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
         paddingVertical: 5,
         marginRight: 5,
         marginVertical: 5,
-      }}
-    >
+      }}>
       <Text
         style={{
           color: "white",
           fontFamily: "Poppins-Medium",
           fontSize: Platform.OS == "ios" ? 14.5 : 12,
-        }}
-      >
+        }}>
         {doc}
       </Text>
     </View>
@@ -2756,8 +2713,7 @@ export const ServiceTable = ({
         borderColor: "#e5e5e5",
         minHeight: 10,
       }}
-      key={i}
-    >
+      key={i}>
       {item && contentHeight > 30 && (
         <Text
           numberOfLines={1}
@@ -2767,8 +2723,7 @@ export const ServiceTable = ({
             margin: 0,
             color: "#535353",
             lineHeight: 30,
-          }}
-        >
+          }}>
           {item}
         </Text>
       )}
@@ -2784,8 +2739,7 @@ export const ServiceTable = ({
                     fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     color: "#95979D",
                     lineHeight: 30,
-                  }}
-                >
+                  }}>
                   {doc}
                 </Text>
                 <Rows
@@ -2807,8 +2761,7 @@ export const ServiceTable = ({
               fontSize: Platform.OS == "ios" ? 16.5 : 15,
               color: "#95979D",
               lineHeight: 30,
-            }}
-          >
+            }}>
             {name}
           </Text>
           <Rows
@@ -2868,8 +2821,7 @@ export const Rows = ({ title, item, name, NewDataList, height, index }) => {
         color: textColor,
         lineHeight: 25,
         maxHeight: 160,
-      }}
-    >
+      }}>
       {text}
     </Text>
   );
@@ -2911,13 +2863,11 @@ export const TabBar = ({
         flexDirection: "row",
         borderBottomColor: "#E9E6E6",
         borderBottomWidth: 0.5,
-      }}
-    >
+      }}>
       <ScrollView
         ref={ref}
         showsHorizontalScrollIndicator={false}
-        horizontal={true}
-      >
+        horizontal={true}>
         {packages.map((doc, index) => {
           const isFocused = state.index === index;
 
@@ -2945,14 +2895,12 @@ export const TabBar = ({
                   marginLeft: 5,
                   height: 40,
                   justifyContent: "center",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 16,
                     fontFamily: "Poppins-SemiBold",
-                  }}
-                >
+                  }}>
                   {Title}
 
                   {/* {packages[state.index].name+" "+packages[state.index].price+"৳"} */}
@@ -3018,8 +2966,7 @@ export const TabScreen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       {data.features.map((doc, i) => (
         <View
           style={{
@@ -3030,8 +2977,7 @@ export const TabScreen = ({ navigation, route }) => {
             borderBottomColor: "#F1F1F1",
             borderBottomWidth: data.features.length - 1 == i ? 0 : 1,
           }}
-          key={i}
-        >
+          key={i}>
           {doc.isAvailable ? (
             <SvgXml xml={right} height="30" width={"30"} />
           ) : (
@@ -3048,8 +2994,7 @@ export const TabScreen = ({ navigation, route }) => {
             style={{
               fontSize: 14,
               color: "#666666",
-            }}
-          >
+            }}>
             {doc.title}
           </Text>
         </View>
@@ -3096,7 +3041,7 @@ const Subscriptions = ({ navigation, route }) => {
   const changeScreenName = params.changeScreenName;
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [SubsCription,setSubscription]=React.useState()
+  const [SubsCription, setSubscription] = React.useState();
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -3119,8 +3064,8 @@ const Subscriptions = ({ navigation, route }) => {
     }
   }, [isFocused, user, vendor]);
   //console.log(FixedService)
-  if(!SubsCription){
-    return <ActivityLoader/>
+  if (!SubsCription) {
+    return <ActivityLoader />;
   }
   return (
     <View
@@ -3141,27 +3086,26 @@ const Subscriptions = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
-        {SubsCription&&SubsCription.map((doc, i) => (
-          <ServiceCart
-            onPress={() => {
-              if (onPress) {
-                onPress(doc);
-              }
-            }}
-            key={i}
-            data={doc}
-          />
-        ))}
+        }}>
+        {SubsCription &&
+          SubsCription.map((doc, i) => (
+            <ServiceCart
+              onPress={() => {
+                if (onPress) {
+                  onPress(doc);
+                }
+              }}
+              key={i}
+              data={doc}
+            />
+          ))}
         {/* {PackageService.length > content && (
           <View
             style={{
@@ -3184,7 +3128,7 @@ const Subscriptions = ({ navigation, route }) => {
           </View>
         )}
             */}
-        {SubsCription&&SubsCription.length == 0 && (
+        {SubsCription && SubsCription.length == 0 && (
           <Animated.View
             style={{
               flexDirection: "row",
@@ -3194,15 +3138,13 @@ const Subscriptions = ({ navigation, route }) => {
               justifyContent: "center",
               width: "100%",
             }}
-            entering={FadeIn}
-          >
+            entering={FadeIn}>
             <View
               style={{
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <SvgXml
                 xml={serviceIcon}
                 style={{ marginVertical: 100 }}
@@ -3305,7 +3247,7 @@ const Installment = ({ navigation, route }) => {
   const changeScreenName = params.changeScreenName;
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [SubsCription,setSubscription]=React.useState()
+  const [SubsCription, setSubscription] = React.useState();
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -3328,8 +3270,8 @@ const Installment = ({ navigation, route }) => {
     }
   }, [isFocused, user, vendor]);
   //console.log(FixedService)
-  if(!SubsCription){
-    return <ActivityLoader/>
+  if (!SubsCription) {
+    return <ActivityLoader />;
   }
   return (
     <View
@@ -3350,29 +3292,28 @@ const Installment = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
-        {SubsCription&&SubsCription.map((doc, i) => (
-          <ServiceCart
-            onPress={() => {
-              if (onPress) {
-                onPress(doc);
-              }
-            }}
-            key={i}
-            data={doc}
-          />
-        ))}
-        
-        {SubsCription&&SubsCription.length == 0 && (
+        }}>
+        {SubsCription &&
+          SubsCription.map((doc, i) => (
+            <ServiceCart
+              onPress={() => {
+                if (onPress) {
+                  onPress(doc);
+                }
+              }}
+              key={i}
+              data={doc}
+            />
+          ))}
+
+        {SubsCription && SubsCription.length == 0 && (
           <Animated.View
             style={{
               flexDirection: "row",
@@ -3382,15 +3323,13 @@ const Installment = ({ navigation, route }) => {
               justifyContent: "center",
               width: "100%",
             }}
-            entering={FadeIn}
-          >
+            entering={FadeIn}>
             <View
               style={{
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <SvgXml
                 xml={serviceIcon}
                 style={{ marginVertical: 100 }}
@@ -3400,9 +3339,104 @@ const Installment = ({ navigation, route }) => {
             </View>
           </Animated.View>
         )}
-        
       </View>
       <View style={{ height: 70 }} />
     </View>
   );
+};
+const ImageScreen = ({ onClose, onChange, uri }) => {
+  const [click, setClick] = useState(true);
+  const [image, setImage] = useState(uri);
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // console.log(result);
+
+    if (!result.canceled) {
+      onChange(result.assets[0]);
+      setImage(result.assets[0].uri);
+    }
+  };
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "black",
+      }}>
+      {click && (
+        <Animated.View
+          style={{
+            flexDirection: "row",
+            position: "absolute",
+            top: 20,
+            right: 20,
+          }}
+          layout={FadeIn}>
+          <Pressable onPress={pickImage}>
+            <SvgXml xml={cameraIcon} height="20" width={"20"} />
+          </Pressable>
+          <View style={{ width: 30 }} />
+          <Pressable onPress={() => onClose((val) => !val)}>
+            <SvgXml xml={close} height="20" width={"20"} />
+          </Pressable>
+        </Animated.View>
+      )}
+      <TouchableHighlight
+        style={{
+          width: width,
+          height: (height * 70) / 100,
+        }}
+        onPress={() => {
+          setClick((val) => !val);
+        }}>
+        <Image
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          source={{ uri: image }}
+        />
+      </TouchableHighlight>
+    </View>
+  );
+};
+const cameraIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18">
+<g id="Group_17885" data-name="Group 17885" transform="translate(-1.5 -3)">
+  <path id="Path_28064" data-name="Path 28064" d="M6.827,6.175A2.31,2.31,0,0,1,5.186,7.23c-.38.054-.757.112-1.134.175a2.179,2.179,0,0,0-1.8,2.169V18A2.25,2.25,0,0,0,4.5,20.25h15A2.25,2.25,0,0,0,21.75,18V9.574a2.18,2.18,0,0,0-1.8-2.169q-.566-.094-1.134-.175a2.31,2.31,0,0,1-1.64-1.055l-.822-1.316A2.192,2.192,0,0,0,14.616,3.82a48.774,48.774,0,0,0-5.232,0A2.192,2.192,0,0,0,7.648,4.859L6.827,6.175Z" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+  <path id="Path_28065" data-name="Path 28065" d="M16.5,12.75A4.5,4.5,0,1,1,12,8.25a4.5,4.5,0,0,1,4.5,4.5Zm2.25-2.25h.008v.008H18.75Z" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+</g>
+</svg>
+`;
+const close = `<svg xmlns="http://www.w3.org/2000/svg" width="14.121" height="14.121" viewBox="0 0 14.121 14.121">
+<path id="Path_28066" data-name="Path 28066" d="M6,18,18,6M6,6,18,18" transform="translate(-4.939 -4.939)" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+</svg>
+`;
+const pickImage = async () => {
+  // No permissions request is necessary for launching the image library
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  // console.log(result);
+
+  if (!result.canceled) {
+    return result.assets[0];
+    //setImage(result.assets[0].uri);
+  }
+  return null;
 };
