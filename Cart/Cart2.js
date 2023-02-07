@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Dimensions, Image, TouchableOpacity,Platform } from "react-native";
 import { Color } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import {useDispatch,useSelector} from 'react-redux'
 import { getUserInfo } from "../Class/member";
+import { setSaveList } from "../Reducers/saveList";
+import { storeJson } from "../Class/storage";
 
 const { width, height } = Dimensions.get("window");
 function Cart2(props) {
@@ -20,7 +22,39 @@ function Cart2(props) {
   const user=useSelector(state=>state.user);
   const [User,setUser]=React.useState()
   const onPress=props.onPress;
+  const saveList=useSelector(state=>state.saveList)
 
+  const listSave=(doc)=>{
+    if(saveList){
+      let arr=saveList.filter(d=>d.id==doc.id);
+      if(arr.length>0){
+        let newArr=saveList.filter(d=>d.id!=doc.id)
+        dispatch(setSaveList(newArr))
+        storeJson("saveList",newArr)
+      }else{
+        newArr=saveList;
+        newArr.push(doc)
+        dispatch(setSaveList(newArr))
+        storeJson("saveList",newArr)
+      }
+    }else{
+      let arr=[]
+      arr.push(doc)
+      dispatch(setSaveList(arr))
+      storeJson("saveList",arr)
+    }
+  }
+  useEffect(()=>{
+    //console.log(saveList)
+    if(saveList){
+      let arr=saveList.filter(d=>d.id==data.id)
+      if(arr.length>0){
+        setLove(true)
+      }else{
+        setLove(false)
+      }
+    }
+  },[saveList])
   
   return (
     <TouchableOpacity
@@ -200,7 +234,11 @@ function Cart2(props) {
           {data?data.price:'0'}৳
         </Text>
         <TouchableOpacity
-          onPress={() => setLove(!Love)}
+          onPress={() => {
+            setLove(!Love)
+            //console.log(data)
+            listSave(data)
+          }}
           style={{
             flex: 1,
           }}

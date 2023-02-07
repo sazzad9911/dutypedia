@@ -1,11 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
 import { primaryColor,secondaryColor,textColor } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setSaveList } from "../Reducers/saveList";
+import { storeJson } from "../Class/storage";
 
 const SearchItem = ({data,navigation,onPress}) => {
     const [Love,setLove]= React.useState(false);
+    const saveList=useSelector(state=>state.saveList)
+    const dispatch=useDispatch()
+
+    const listSave=(doc)=>{
+      if(saveList){
+        let arr=saveList.filter(d=>d.id==doc.id);
+        if(arr.length>0){
+          let newArr=saveList.filter(d=>d.id!=doc.id)
+          dispatch(setSaveList(newArr))
+          storeJson("saveList",newArr)
+        }else{
+          newArr=saveList;
+          newArr.push(doc)
+          dispatch(setSaveList(newArr))
+          storeJson("saveList",newArr)
+        }
+      }else{
+        let arr=[]
+        arr.push(doc)
+        dispatch(setSaveList(arr))
+        storeJson("saveList",arr)
+      }
+    }
+    useEffect(()=>{
+      //console.log(saveList)
+      if(saveList){
+        let arr=saveList.filter(d=>d.id==data.id)
+        if(arr.length>0){
+          setLove(true)
+        }else{
+          setLove(false)
+        }
+      }
+    },[saveList])
   return (
     <TouchableOpacity onPress={() => {
       if(onPress){
@@ -127,7 +164,10 @@ const SearchItem = ({data,navigation,onPress}) => {
           {data?.price}৳
         </Text>
         <TouchableOpacity
-          onPress={() => setLove(!Love)}
+          onPress={() => {
+            listSave(data)
+            setLove(!Love)
+          }}
           style={{
             flex: 1,
           }}

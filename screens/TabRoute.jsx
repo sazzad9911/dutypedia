@@ -79,6 +79,7 @@ import { setCallingScreen } from "../Reducers/callingScreen";
 import { setOfflineOrders, setOfflineOrdes } from "../Reducers/offlineOrders";
 import AppointmentHeader from "../components/Appointment/AppointmentHeader";
 import VendorAppointmentList from "./Vendor/Appointment/VendorAppointmentList";
+import { setSaveList } from "../Reducers/saveList";
 
 const Tab = createBottomTabNavigator();
 
@@ -156,6 +157,11 @@ const TabRoute = () => {
         //setDashboard(data);
       }
     });
+    getJson("saveList").then(data=>{
+      if(data){
+        dispatch(setSaveList(data))
+      }
+    })
   }, []);
   React.useEffect(() => {
     checkUser()
@@ -237,7 +243,9 @@ const TabRoute = () => {
       offlineOrders()
     }
   }, [user + vendor + reload + socket + isOffline]);
+  React.useEffect(()=>{
 
+  },[])
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);

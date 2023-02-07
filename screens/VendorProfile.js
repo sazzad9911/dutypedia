@@ -326,8 +326,7 @@ const VendorProfile = (props) => {
       setActiveServiceData(arr);
 
       setCategory(gigs[0].services.category);
-      //console.warn(gigs)
-      //return
+      
       try {
         //console.log(Data.service.gigs[0].services.options)
         dispatch({
@@ -342,19 +341,7 @@ const VendorProfile = (props) => {
         );
       } catch (e) {
         console.warn(e.message);
-        // dispatch({
-        //   type: "SET_NEW_LIST_DATA",
-        //   playload: serverToLocal(
-        //     Data.service.gigs[0].services.options,
-        //     Data.service.gigs[0].services.category
-        //   ),
-        // });
-        // setNewDataList(
-        //   serverToLocal(
-        //     Data.service.gigs[0].services.options,
-        //     Data.service.gigs[0].services.category
-        //   )
-        // );
+        
       }
     }
   }, [Bargaining, Data, isFocused]);

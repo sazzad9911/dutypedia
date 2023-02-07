@@ -29,6 +29,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
 
 const PARALLAX_HEIGHT = 330;
 const HEADER_BAR_HEIGHT =Platform.OS=="ios"?55:45;
@@ -69,6 +70,8 @@ const SaveList = ({ navigation }) => {
       ),
     };
   });
+  const saveList=useSelector(state=>state.saveList)
+
   return (
     <SafeAreaView style={screenStyles.screenContainer}>
       
@@ -183,13 +186,15 @@ const SaveList = ({ navigation }) => {
             >
               Save List
             </Text>
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
-            <SearchItem testID={simsScreenTestIDs.contentTestID} />
+            {saveList&&saveList.map((doc,i)=>(
+            <SearchItem data={doc} key={i} testID={simsScreenTestIDs.contentTestID} />
+            ))}
+            {!saveList&&(
+              <Text style={{
+                marginVertical:10,
+                textAlign:"center"
+              }}>No Data Found!</Text>
+            )}
           </SafeAreaView>
         </StickyHeaderScrollView>
       </View>

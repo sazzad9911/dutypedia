@@ -312,7 +312,7 @@ const Home_Next = (props) => {
             }} navigation={props.navigation} />
           ))}
         <View style={{ width: 15 }} />
-      </ScrollView>
+      </ScrollView> 
 
       <Text
         style={{

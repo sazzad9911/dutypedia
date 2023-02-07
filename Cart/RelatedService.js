@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -16,11 +16,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 const { width, height } = Dimensions.get("window");
 import { Canvas, useImage } from "@shopify/react-native-skia";
+import { setSaveList } from "../Reducers/saveList";
+import { storeJson } from "../Class/storage";
 
 const RelatedService = (props) => {
   const onPress=props.onPress;
   const navigation = props.navigation;
-  const [Like, seLike] = React.useState(false);
+  const [Like, setLike] = React.useState(false);
   const data = props.data;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -30,6 +32,41 @@ const RelatedService = (props) => {
   const backgroundColor = colors.getBackgroundColor();
   //console.log(data.images[0])
   const image = useImage(data.images[0]);
+  const saveList=useSelector(state=>state.saveList)
+  const dispatch=useDispatch()
+  //const [Love,setLove]=useState(false)
+
+  const listSave=(doc)=>{
+    if(saveList){
+      let arr=saveList.filter(d=>d.id==doc.id);
+      if(arr.length>0){
+        let newArr=saveList.filter(d=>d.id!=doc.id)
+        dispatch(setSaveList(newArr))
+        storeJson("saveList",newArr)
+      }else{
+        newArr=saveList;
+        newArr.push(doc)
+        dispatch(setSaveList(newArr))
+        storeJson("saveList",newArr)
+      }
+    }else{
+      let arr=[]
+      arr.push(doc)
+      dispatch(setSaveList(arr))
+      storeJson("saveList",arr)
+    }
+  }
+  useEffect(()=>{
+    //console.log(saveList)
+    if(saveList){
+      let arr=saveList.filter(d=>d.id==data.id)
+      if(arr.length>0){
+        setLike(true)
+      }else{
+        setLike(false)
+      }
+    }
+  },[saveList])
 
   if (props.squire) {
     return (
@@ -204,7 +241,8 @@ const RelatedService = (props) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              //setLike(!Like)
+              setLike(!Like)
+              listSave(data)
             }}
           >
             {Like ? (
