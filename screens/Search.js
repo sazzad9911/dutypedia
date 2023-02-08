@@ -12,7 +12,7 @@ const Search = (props) => {
         flexWrap: "wrap",
         paddingHorizontal: 15,
       }}
-    >
+    > 
       <Options action={true} onPress={()=>{
         navigation.navigate('SearchScreen',{search:'Lower'})
       }} name="Lower" />

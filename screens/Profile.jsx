@@ -543,6 +543,7 @@ const MainProfile = (props) => {
     //console.log(vendorInfo)
     if (user && !Array.isArray(user)) {
       setLogOut(false);
+      setImage(user.user.profilePhoto)
     }
     //console.log(user);
   }, [user]);
@@ -680,14 +681,14 @@ const MainProfile = (props) => {
         }>
         <StatusBar backgroundColor={primaryColor} />
         <View style={styles.container}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               storeJson("theme", !isDark);
               dispatch({ type: "SET_THEME", playload: !isDark });
             }}
             style={[styles.iconTop]}>
             <SvgXml xml={lightIcon} height="30" width="30" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {backgroundImage ? (
             <Image
               source={{ uri: backgroundImage }}
@@ -699,17 +700,29 @@ const MainProfile = (props) => {
               colors={["#F2F2F6", "#F2F2F6", "#F2F2F6"]}></LinearGradient>
           )}
 
-          <TouchableOpacity
-            onPress={() => {
-              pickImage();
-            }}
+          <View
+            
             style={styles.profile}>
             {image ? (
               <Image style={styles.image} source={{ uri: image }} />
             ) : (
               <FontAwesome name="user" size={80} color="#983C85" />
             )}
-          </TouchableOpacity>
+            
+          </View>
+          <Pressable onPress={() => {
+              pickImage();
+            }} style={{
+              position:"absolute",
+              right:"35.5%",
+              top:88,
+              zIndex:100,
+              backgroundColor:"#F7F7F7",
+              padding:4,
+              borderRadius:15
+            }}>
+          <SvgXml  xml={editIcon} width="20" height={"20"}/>
+          </Pressable>
           <View
             style={{
               alignSelf: "center",
@@ -1254,3 +1267,10 @@ const supportIcon = `<svg id="_000000ff" data-name="#000000ff" xmlns="http://www
 <path id="Path_20072" data-name="Path 20072" d="M154.479,153.072a5.756,5.756,0,0,1,9.06,4.593v.262a5.779,5.779,0,0,1-1.464,3.687.985.985,0,0,1,.767.451.963.963,0,0,1-.083,1.134,1,1,0,0,1-.647.336H157.17a.51.51,0,0,0-.248-.067,5.752,5.752,0,0,1-2.443-10.4m.574,4.094a.639.639,0,1,0,.593.132.641.641,0,0,0-.593-.132m2.557,0a.639.639,0,1,0,.609.145.641.641,0,0,0-.609-.145m2.558,0a.639.639,0,1,0,.594.133A.642.642,0,0,0,160.168,157.166Z" transform="translate(-147.171 -147.168)" fill="#fff"/>
 </svg>
 `;
+const editIcon=`<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18">
+  <g id="Group_17885" data-name="Group 17885" transform="translate(-1.5 -3)">
+    <path id="Path_28063" data-name="Path 28063" d="M6.827,6.175A2.31,2.31,0,0,1,5.186,7.23c-.38.054-.757.112-1.134.175a2.179,2.179,0,0,0-1.8,2.169V18A2.25,2.25,0,0,0,4.5,20.25h15A2.25,2.25,0,0,0,21.75,18V9.574a2.18,2.18,0,0,0-1.8-2.169q-.566-.094-1.134-.175a2.31,2.31,0,0,1-1.64-1.055l-.822-1.316A2.192,2.192,0,0,0,14.616,3.82a48.774,48.774,0,0,0-5.232,0A2.192,2.192,0,0,0,7.648,4.859L6.827,6.175Z" fill="none" stroke="#666" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <path id="Path_28064" data-name="Path 28064" d="M16.5,12.75A4.5,4.5,0,1,1,12,8.25a4.5,4.5,0,0,1,4.5,4.5Zm2.25-2.25h.008v.008H18.75Z" fill="none" stroke="#666" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+  </g>
+</svg>
+`

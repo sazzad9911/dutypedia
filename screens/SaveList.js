@@ -187,7 +187,9 @@ const SaveList = ({ navigation }) => {
               Save List
             </Text>
             {saveList&&saveList.map((doc,i)=>(
-            <SearchItem data={doc} key={i} testID={simsScreenTestIDs.contentTestID} />
+            <SearchItem onPress={()=>{
+              navigation.navigate("OtherProfile",{serviceId:doc?doc.service.id:null,data:doc})
+            }} data={doc} key={i} testID={simsScreenTestIDs.contentTestID} />
             ))}
             {!saveList&&(
               <Text style={{

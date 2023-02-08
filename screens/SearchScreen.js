@@ -191,14 +191,11 @@ const Searches = () => {
       >
         Recent Visit
       </Text>
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
-      <SearchItem />
+     <Text style={{
+      fontSize:18,
+      marginVertical:5
+     }}>No Result Found!</Text>
+      {/* <SearchItem /> */}
     </Animated.ScrollView>
   );
 };
