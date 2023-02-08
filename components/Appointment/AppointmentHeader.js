@@ -11,7 +11,7 @@ export default function AppointmentHeader({ title,navigation }) {
       <View style={{
         flexDirection:"row",
         borderBottomColor:"#E2E2E2",
-        borderBottomWidth:1,
+        borderBottomWidth:0,
         paddingHorizontal:20,
         alignItems:"center",
         height:45,

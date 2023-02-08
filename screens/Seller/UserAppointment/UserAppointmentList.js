@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -22,6 +22,10 @@ import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import UserRequestAppointment from "./UserRequestAppointment";
+const Tab = createMaterialTopTabNavigator();
+
 const status = [
   {
     title: "Incomplete",
@@ -63,72 +67,74 @@ export default function UserAppointmentList({ navigation, route }) {
   const [Previous, setPrevious] = React.useState();
 
   const isFocused = useIsFocused();
+  const [appointments,setAppointments]=useState(["All","Upcoming","Previous","Request"])
 
-  React.useLayoutEffect(() => {
-    if (Active == "All" && user) {
-      setLoader(true);
-      getUserAppointment(user.token, "upcoming", user.user.id)
-        .then((res) => {
-          setLoader(false);
-          let arr = [];
-          //console.log(res.data.appointments)
-          res.data.appointments.map((doc, i) => {
-            arr.push(doc);
-          });
-          setUpcoming(arr);
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-      getUserAppointment(user.token, "previous", user.user.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr = [];
-          res.data.appointments.map((doc, i) => {
-            arr.push(doc);
-          });
-          setPrevious(arr);
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-      return;
-    }
-    if (user && Active && Active != "Request") {
-      setLoader(true);
-      getUserAppointment(user.token, Active, user.user.id)
-        .then((res) => {
-          setLoader(false);
-          //console.log(res.data.appointments)
-          let arr = [];
-          res.data.appointments.map((doc, i) => {
-            arr.push(doc);
-          });
-          setData(arr);
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [isFocused + Active]);
-  React.useLayoutEffect(() => {
-    if (Upcoming && Previous) {
-      let arr = [];
-      Upcoming.map((doc, i) => {
-        arr.push(doc);
-      });
-      Previous.map((doc, i) => {
-        arr.push(doc);
-      });
-      setData(arr);
-    }
-  }, [Loader + Upcoming + Previous]);
   //console.log(data.service.serviceCenterName)
-  if (Loader) {
+  
+  return(
+    <Tab.Navigator style={{
+      marginTop:-10
+    }} screenOptions={{
+      tabBarScrollEnabled:true,
+      tabBarIndicatorStyle: {
+        backgroundColor: backgroundColor,
+      },
+    }}>
+      {
+        appointments.map((doc,i)=>(
+          <Tab.Screen initialParams={{
+            backgroundColor:backgroundColor
+          }} key={i} name={doc} component={Screen} />
+        ))
+      }
+     
+    </Tab.Navigator>
+  )
+}
+const Screen=({navigation,route})=>{
+  const [data,setData]=useState()
+  const user=useSelector(state=>state.user)
+  const isFocused=useIsFocused()
+  const name=route.name;
+  const backgroundColor=route.params.backgroundColor
+
+  useEffect(()=>{
+    if(isFocused){
+      //console.log(name)
+      //getUserAppointment()
+      if(name=="All"){
+        getAllAppointment()
+      }else if(name=="Upcoming"){
+        getUserAppointment(user.token,"upcoming",user.user.id).then(res=>{
+          setData(res.data.appointments)
+        }).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }else if(name=="Previous"){
+        getUserAppointment(user.token,"previous",user.user.id).then(res=>{
+          setData(res.data.appointments)
+        }).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }
+    }
+  },[isFocused])
+  const getAllAppointment=async()=>{
+    let  arr=[]
+    const res=await getUserAppointment(user.token,"upcoming",user.user.id);
+    const newRes=await getUserAppointment(user.token,"previous",user.user.id);
+    res.data.appointments.forEach(doc=>{
+      arr.push(doc)
+    })
+    newRes.data.appointments.forEach(doc=>{
+      arr.push(doc)
+    })
+    setData(arr)
+  }
+  if(name=="Request"){
+    return <UserRequestAppointment navigation={navigation}/>
+  }
+  if(!data){
     return (
       <View
         style={{
@@ -141,66 +147,13 @@ export default function UserAppointmentList({ navigation, route }) {
       </View>
     );
   }
-  return (
-    <View style={{ flex: 1 }}>
-      
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 20,
-              paddingVertical: 10,
-            }}
-          >
-            <Chip
-              style={{ width: 70 }}
-              onPress={() => {
-                setActive("All");
-              }}
-              title={"All"}
-              active={Active == "All" ? true : false}
-            />
-            <View
-              style={{
-                width: 10,
-              }}
-            />
-            <Chip
-              onPress={() => {
-                setActive("Upcoming");
-              }}
-              title={"Upcoming"}
-              active={Active == "Upcoming" ? true : false}
-            />
-            <View
-              style={{
-                width: 10,
-              }}
-            />
-            <Chip
-              onPress={() => {
-                setActive("Previous");
-              }}
-              title={"Previous"}
-              active={Active == "Previous" ? true : false}
-            />
-            <View
-              style={{
-                width: 10,
-              }}
-            />
-            <Chip
-              onPress={() => {
-                navigation.navigate("UserRequestAppointment");
-              }}
-              title={"Request"}
-              active={Active == "Request" ? true : false}
-            />
-          </View>
-        </ScrollView>
-        {Data.length == 0 ? <NoAppointment /> : null}
-        {Data.map((doc, i) => (
+  
+  if(data.length==0){
+    return <NoAppointment/>
+  }
+  return(
+    <ScrollView showsVerticalScrollIndicator={false}>
+       {data.map((doc, i) => (
           <Cart
             key={i}
             onPress={() => {
@@ -222,12 +175,11 @@ export default function UserAppointmentList({ navigation, route }) {
             position={doc.service.providerInfo.position}
           />
         ))}
-        <View style={{height:10}}/>
-      </ScrollView>
-    </View>
-  );
+        <View style={{height:20}}/>
+    </ScrollView>
+  )
 }
-const Cart = ({ date, status, title, onPress, image, name, username }) => {
+export const Cart = ({ date, status, title, onPress, image, name, username }) => {
   //console.log(status)
   return (
     <TouchableOpacity

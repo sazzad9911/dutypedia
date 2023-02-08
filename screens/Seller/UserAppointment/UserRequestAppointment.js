@@ -20,6 +20,7 @@ import {
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
+import { Cart } from "./UserAppointmentList";
 const status = [
   {
     title: "Incomplete",
@@ -46,7 +47,7 @@ const status = [
 export default function UserRequestAppointment({ navigation, route }) {
   const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
-  const data = route.params && route.params.data ? route.params.data : null;
+  
   const [Loader, setLoader] = React.useState(false);
   const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
@@ -58,7 +59,7 @@ export default function UserRequestAppointment({ navigation, route }) {
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-   
+   //console.log("okk")
     if (user && Active &&Active!="Request") {
       setLoader(true);
       getUserAppointment(user.token, Active, user.user.id)
@@ -94,11 +95,11 @@ export default function UserRequestAppointment({ navigation, route }) {
     );
   }
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
-          paddingHorizontal: 20,
+          paddingHorizontal: 10,
           paddingVertical: 10,
         }}
       >
@@ -149,103 +150,103 @@ export default function UserRequestAppointment({ navigation, route }) {
     </ScrollView>
   );
 }
-const Cart = ({ date, status, title, onPress, image,name,username }) => {
-    //console.log(status)
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={{
-          flexDirection: "row",
-          width: width - 10,
-          marginHorizontal: 5,
-          justifyContent: "space-between",
-          paddingHorizontal: 5,
-          paddingVertical: 20,
-          shadowColor: "#333333",
-          shadowOffset: {
-            width: 1,
-            height: 1,
-          },
-          shadowOpacity: 0.1,
-          elevation: 3,
-          shadowRadius: 3,
-          backgroundColor: "white",
-          alignItems: "center",
-          marginTop: 10,
-          borderRadius: 5,
-        }}
-      >
-        <Avatar
-          style={{
-            width: 55,
-            height: 55,
-          }}
-          source={{ uri: image }}
-        />
-        <View
-          style={{
-            width: 10,
-          }}
-        />
-        <View
-          style={{
-            flex: .5,
-          }}
-        >
-          <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-          <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
-        </View>
-        <View
-          style={{
-            width: 1,
-            height: 40,
-            backgroundColor: "#E2E2E2",
-            marginHorizontal: 15,
-          }}
-        />
-        <View
-          style={{
-            flex: 2,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-              }}
-            >
-              {date}
-            </Text>
-            <Text
-              style={{
-                color: status ? status.color : "red",
-                fontSize: 14,
-                marginLeft: 10,
-              }}
-            >{`(${status ? status.title : "Invalid"})`}</Text>
-          </View>
-          <Text
-            style={{
-              fontSize: 14,
-            }}
-            numberOfLines={1}
-          >
-            {title ? title : "Invalid"}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: 20,
-          }}
-        />
-        <AntDesign name="right" size={24} color="#666666" />
-      </TouchableOpacity>
-    );
-  };
+// const Cart = ({ date, status, title, onPress, image,name,username }) => {
+//     //console.log(status)
+//     return (
+//       <TouchableOpacity
+//         onPress={onPress}
+//         style={{
+//           flexDirection: "row",
+//           width: width - 10,
+//           marginHorizontal: 5,
+//           justifyContent: "space-between",
+//           paddingHorizontal: 5,
+//           paddingVertical: 20,
+//           shadowColor: "#333333",
+//           shadowOffset: {
+//             width: 1,
+//             height: 1,
+//           },
+//           shadowOpacity: 0.1,
+//           elevation: 3,
+//           shadowRadius: 3,
+//           backgroundColor: "white",
+//           alignItems: "center",
+//           marginTop: 10,
+//           borderRadius: 5,
+//         }}
+//       >
+//         <Avatar
+//           style={{
+//             width: 55,
+//             height: 55,
+//           }}
+//           source={{ uri: image }}
+//         />
+//         <View
+//           style={{
+//             width: 10,
+//           }}
+//         />
+//         <View
+//           style={{
+//             flex: .5,
+//           }}
+//         >
+//           <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
+//           <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
+//         </View>
+//         <View
+//           style={{
+//             width: 1,
+//             height: 40,
+//             backgroundColor: "#E2E2E2",
+//             marginHorizontal: 15,
+//           }}
+//         />
+//         <View
+//           style={{
+//             flex: 2,
+//           }}
+//         >
+//           <View
+//             style={{
+//               flexDirection: "row",
+//             }}
+//           >
+//             <Text
+//               style={{
+//                 fontSize: 14,
+//               }}
+//             >
+//               {date}
+//             </Text>
+//             <Text
+//               style={{
+//                 color: status ? status.color : "red",
+//                 fontSize: 14,
+//                 marginLeft: 10,
+//               }}
+//             >{`(${status ? status.title : "Invalid"})`}</Text>
+//           </View>
+//           <Text
+//             style={{
+//               fontSize: 14,
+//             }}
+//             numberOfLines={1}
+//           >
+//             {title ? title : "Invalid"}
+//           </Text>
+//         </View>
+//         <View
+//           style={{
+//             width: 20,
+//           }}
+//         />
+//         <AntDesign name="right" size={24} color="#666666" />
+//       </TouchableOpacity>
+//     );
+//   };
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="21.988" height="21.89" viewBox="0 0 21.988 21.89">
 <g id="Group_10006" data-name="Group 10006" transform="translate(-29.237 -142.571)">
   <rect id="Rectangle_7218" data-name="Rectangle 7218" width="21" height="18" rx="4" transform="translate(30 145.672)" fill="#666"/>

@@ -82,6 +82,11 @@ import EditInstallmentService from "./Profile/EditInstallmentService";
 import EditServiceList from "./Profile/EditServiceList";
 import EditSubCategory from "./Profile/EditSubCategory";
 import EditTableData from "./Profile/EditTableData";
+import ActivityLoader from "../components/ActivityLoader";
+import { fileFromURL } from "../action";
+import { uploadFile } from "../Class/upload";
+import { updateUserData } from "../Class/update";
+import { getUserInfo } from "../Class/member";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -549,6 +554,7 @@ const MainProfile = (props) => {
   }, [user]);
   React.useEffect(() => {
     setOrders(userOrders);
+    
   }, [userOrders + Refresh]);
 
   const pickImage = async () => {
@@ -562,8 +568,9 @@ const MainProfile = (props) => {
 
     //console.log(result);
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      return result.assets[0]
     }
   };
   const pickBackgroundImage = async () => {
@@ -578,6 +585,32 @@ const MainProfile = (props) => {
       setBackgroundImage(result.uri);
     }
   };
+  const updateProfilePicture=async(image)=>{
+    let arr=[]
+    arr.push(fileFromURL(image))
+    const res=await uploadFile(arr,user.token)
+    updateUserData(user.token,{
+      profilePhotoUrl:res[0]
+    }).then(res=>{
+      //console.log(res.data)
+      getUser(res.data.token)
+      console.warn("Upload Successful")
+    }).catch(err=>{
+      console.error(err.response.data.msg)
+    })
+  }
+  const getUser=async(token)=>{
+    const res=await getUserInfo(user.token,user.user.id)
+    storeJson("user",{
+      token:token,
+      user:res.data.user
+    })
+    dispatch({ type: "SET_USER", playload: {
+      token:token,
+      user:res.data.user
+    } });
+  }
+
   const styles = StyleSheet.create({
     backgroundContainer: {
       minHeight: 200,
@@ -651,7 +684,7 @@ const MainProfile = (props) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: textColor }}>Loading.....</Text>
+       <ActivityLoader/>
       </View>
     );
   }
@@ -711,7 +744,9 @@ const MainProfile = (props) => {
             
           </View>
           <Pressable onPress={() => {
-              pickImage();
+              pickImage().then(res=>{
+                updateProfilePicture(res)
+              })
             }} style={{
               position:"absolute",
               right:"35.5%",
@@ -728,7 +763,7 @@ const MainProfile = (props) => {
               alignSelf: "center",
             }}>
             <Text style={styles.headLine}>
-              {user ? user.user.firstName + " " + user.user.lastName : "-"}
+               {user ? user.user.firstName + " " + user.user.lastName : "-"}
               <Text
                 style={{
                   fontSize: 12,
