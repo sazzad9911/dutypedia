@@ -80,6 +80,7 @@ import { setOfflineOrders, setOfflineOrdes } from "../Reducers/offlineOrders";
 import AppointmentHeader from "../components/Appointment/AppointmentHeader";
 import VendorAppointmentList from "./Vendor/Appointment/VendorAppointmentList";
 import { setSaveList } from "../Reducers/saveList";
+import NotificationHeader from "../components/NotificationHeader";
 
 const Tab = createBottomTabNavigator();
 
@@ -432,10 +433,10 @@ const TabRoute = () => {
           component={Message}
         />
         <Tab.Screen
-          options={{ header: (props) => <Header {...props} /> }}
+          options={{ header: (props) => <NotificationHeader {...props}/> }}
           name="Notification"
           component={Notification}
-        />
+        /> 
         <Tab.Screen
           options={{ headerShown: false }}
           name="Profile"
