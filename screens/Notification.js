@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -24,14 +24,36 @@ import {
   request_ap,
 } from "./../assets/notification";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
+import { getNotification, getUnreadCount, getUnreadNotification } from "../Class/notification";
 const { width, height } = Dimensions.get("window");
 
 const Notification = ({ notification, route }) => {
+  const user=useSelector(state=>state.user)
+  const [unreadCount,setUnreadCount]=useState(0)
+  const [unreadNotification,setUnreadNotification]=useState()
+  const [readNotification,setReadNotification]=useState()
+
+  useEffect(()=>{
+    getUnreadCount(user.token).then(res=>{
+      setUnreadCount(res.data.count)
+    }).catch(err=>{
+      console.error(err.response.data.msg)
+    })
+    getUnreadNotification(user.token).then(res=>{
+      //console.log(res.data)
+      setUnreadNotification(res.data.notifications)
+    })
+    getNotification(user.token).then(res=>{
+      setReadNotification(res.data.notifications)
+    })
+  },[])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {types.map((doc, i) => (
+      {readNotification&&readNotification.map((doc,i)=>(
         <NotificationCart active={false} identity={"234324"} data={doc} key={i} icon={doc.icon} />
       ))}
+      
     </ScrollView>
   );
 };
