@@ -31,3 +31,9 @@ export const getVendorNotificationCount=async(token,serviceId)=>{
     });
     return res
 }
+export const getVendorUnreadNotification=async(token,serviceId)=>{
+    const  res=await axios.get(`${url}/server/notification/get-vendor-unread-notifications?serviceId=${serviceId}`,
+       { headers: { Authorization: `Bearer ${token}`}
+    });
+    return res
+}

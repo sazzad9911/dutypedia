@@ -25,7 +25,9 @@ import {
 } from "./../assets/notification";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { getNotification, getUnreadCount, getUnreadNotification } from "../Class/notification";
+import { getNotification, getUnreadCount, getUnreadNotification, getVendorNotification, getVendorNotificationCount, getVendorUnreadNotification } from "../Class/notification";
+import ActivityLoader from "../components/ActivityLoader";
+import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 const Notification = ({ notification, route }) => {
@@ -33,26 +35,71 @@ const Notification = ({ notification, route }) => {
   const [unreadCount,setUnreadCount]=useState(0)
   const [unreadNotification,setUnreadNotification]=useState()
   const [readNotification,setReadNotification]=useState()
+  const vendor=useSelector(state=>state.vendor)
+  const isFocused=useIsFocused()
 
   useEffect(()=>{
+   if(vendor){
+    getVendorNotificationCount(user.token,vendor.service.id).then(res=>{
+      setUnreadCount(res.data.count)
+    }).catch(err=>{
+      console.error(err.response.data.msg)
+    })
+    // getVendorUnreadNotification(user.token,vendor.service.id).then(res=>{
+    //   setUnreadNotification(res.data.notifications)
+    // })
+    getVendorNotification(user.token,vendor.service.id).then(res=>{
+      setReadNotification(res.data.notifications)
+    })
+   }else{
     getUnreadCount(user.token).then(res=>{
       setUnreadCount(res.data.count)
     }).catch(err=>{
       console.error(err.response.data.msg)
     })
     getUnreadNotification(user.token).then(res=>{
-      //console.log(res.data)
       setUnreadNotification(res.data.notifications)
     })
     getNotification(user.token).then(res=>{
       setReadNotification(res.data.notifications)
     })
-  },[])
+   }
+  },[isFocused])
+  if(!readNotification){
+    return(
+      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {readNotification&&readNotification.map((doc,i)=>(
-        <NotificationCart active={false} identity={"234324"} data={doc} key={i} icon={doc.icon} />
+      {unreadNotification&&unreadNotification.map((doc,i)=>(
+        <NotificationCart
+        start={types.filter(d=>d.type==doc.notificationType)?.[0]?.start}
+        end={types.filter(d=>d.type==doc.notificationType)?.[0]?.end}
+        middle={types.filter(d=>d.type==doc.notificationType)?.[0]?.middle}
+         active={true} orderId={doc.notificationType.split("_")[1]=="APPOINTMENT"?undefined:doc.entityId}
+          identity={doc.service.providerInfo.name}
+           data={doc} key={i} 
+           icon={types.filter(d=>d.type==doc.notificationType)?.[0]?.icon} />
       ))}
+      {readNotification&&readNotification.map((doc,i)=>(
+        <NotificationCart
+        start={types.filter(d=>d.type==doc.notificationType)?.[0]?.start}
+        end={types.filter(d=>d.type==doc.notificationType)?.[0]?.end}
+        middle={types.filter(d=>d.type==doc.notificationType)?.[0]?.middle}
+         active={false} orderId={undefined}
+          identity={doc.notificationType.split("_")[1]=="APPOINTMENT"?doc.service.providerInfo.name:doc.entityId}
+           data={doc} key={i} 
+           icon={types.filter(d=>d.type==doc.notificationType)?.[0]?.icon} />
+      ))}
+      {readNotification&&readNotification.length==0&&(
+        <Text style={{
+          marginVertical:10,
+          textAlign:"center"
+        }}>No Notification Found!</Text>
+      )}
       
     </ScrollView>
   );
@@ -60,17 +107,19 @@ const Notification = ({ notification, route }) => {
 
 export default Notification;
 
-const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,date }) => {
+const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,start,end ,middle}) => {
   return (
     <Pressable 
       style={[styles.cart_container,active?styles.active:null]}>
-      <SvgXml xml={icon} width={"50"} height={"50"} />
+      {icon&&(
+        <SvgXml xml={icon} width={"50"} height={"50"} />
+      )}
       <View style={{
         flex:1,
         marginLeft:10
       }}>
         <Text style={styles.text}>02-07-2023  08:00 PM</Text>
-        <Text style={styles.descriptionText}>{data.start}{orderId&&` ${orderId}`}{data.middle}<Text style={styles.bold}>{identity}</Text>{data.end}{" "}
+        <Text style={styles.descriptionText}>{start}{orderId&&` ${orderId}`}{middle}<Text style={styles.bold}>{identity}</Text>{end}{" "}
        {data.verified&&( <SvgXml xml={verified} height={"16"} width={"16"}/>)}
         </Text>
       </View>
@@ -80,42 +129,42 @@ const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,dat
 
 const types = [
   {
-    type: "CANCEL_APPOINTMENT",
+    type: "CANCELLED_APPOINTMENT",
     icon: cancel_ap,
     start:"Your Appoinment with ",
     end:" has been Cancel",
     verified:false,
   },
   {
-    type: "COMPLETE_APPOINTMENT",
+    type: "COMPLETED_APPOINTMENT",
     icon: complete_ap,
     start:"Your Appoinment with ",
     end:" has been completed",
     verified:true,
   },
   {
-    type: "ACCEPT_APPOINTMENT",
+    type: "APPROVED_APPOINTMENT",
     icon: accept_ap,
     start:"Your Appoinment with ",
     end:" has been Accepted",
     verified:false,
   },
   {
-    type: "REJECT_APPOINTMENT",
+    type: "REJECTED_APPOINTMENT",
     icon: reject_ap,
     start:"Your Appoinment with ",
     end:" has been Rejected",
     verified:false,
   },
   {
-    type: "REQUEST_APPOINTMENT",
+    type: "NEW_APPOINTMENT",
     icon: request_ap,
     start:"Your Appoinment with ",
     end:" has been Requested",
     verified:false,
   },
   {
-    type: "ACCEPT_ORDER",
+    type: "ACCEPTED_ORDER",
     icon: accept_or,
     start:"Your Order with ",
     end:" has been Accepted",
@@ -130,39 +179,35 @@ const types = [
     verified:false,
   },
   {
-    type: "CANCEL_ORDER",
+    type: "CANCELLED_ORDER",
     icon: cancel_or,
     start:"Your Order ",
     end:" has been Cancel",
     verified:false,
   },
   {
-    type: "COMPLETE_ORDER",
+    type: "COMPLETED_ORDER",
     icon: complete_or,
     start:"Your Order ",
     end:" has been completed Automatically",
     verified:true,
   },
   {
-    type: "DELIVER_ORDER",
+    type: "DELIVERED_ORDER",
     icon: delivered_or,
     start:"Your Order ",
     end:" has been delivered",
     verified:false,
   },
+  
   {
-    type: "PAYMENT_ORDER",
-    icon: payment_or,
-    start:"You have a new order. Please ",
-    verified:false,
-  },
-  {
-    type: "DATE_ORDER",
+    type: "REQUEST_DATE_ORDER",
     icon: date_or,
     start:"Your Order ",
     end:" has been requested for a new delivery date",
     verified:false,
   },
+  
 ];
 const styles=StyleSheet.create({
   cart_container:{

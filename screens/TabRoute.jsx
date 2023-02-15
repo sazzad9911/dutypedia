@@ -284,6 +284,9 @@ const TabRoute = () => {
       setAudioCall(data.audioOnly)
       setCallingScreenVisible(true);
     });
+    socket.on("notificationReceived",(data)=>{
+      console.log(data)
+    })
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
@@ -322,6 +325,9 @@ const TabRoute = () => {
       setAudioCall(data.audioOnly)
       setCallingScreenVisible(true);
     });
+    socket.on("notificationReceived",(e)=>{
+      console.log(`Notification ${e}`)
+    })
   }, []);
 
   async function registerBackgroundFetchAsync() {
