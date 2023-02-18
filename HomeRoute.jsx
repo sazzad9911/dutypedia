@@ -51,6 +51,7 @@ import PackageService from "./screens/PackageService";
 import ChatScreen from "./screens/ChatScreen";
 import SubscriptionService from "./screens/SubscriptionService";
 import InstallmentService from "./screens/InstallmentService";
+import UserNotice from "./screens/UserNotice";
 
 const Stack = createStackNavigator();
 
@@ -191,6 +192,13 @@ const HomeRoute = ({ navigation }) => {
         options={{ headerShown: false }}
         name="InstallmentService"
         component={InstallmentService}
+      />
+      <Stack.Screen
+        name="UserNotice"
+        options={{
+          headerShown: false,
+        }}
+        component={UserNotice}
       />
     </Stack.Navigator>
   );

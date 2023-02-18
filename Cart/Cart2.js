@@ -46,7 +46,7 @@ function Cart2(props) {
   }
   useEffect(()=>{
     //console.log(saveList)
-    if(saveList){
+    if(saveList&&data){
       let arr=saveList.filter(d=>d.id==data.id)
       if(arr.length>0){
         setLove(true)

@@ -33,9 +33,9 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
-import { GiftedChat } from 'react-native-gifted-chat'
+import { GiftedChat } from "react-native-gifted-chat";
 import { SafeAreaView } from "moti";
-
+import Animated, { FadeIn } from "react-native-reanimated";
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -94,21 +94,21 @@ const ChatScreen = (props) => {
   const [Id, setId] = React.useState();
   const username = params && params.username ? params.username : null;
   const isFocused = useIsFocused();
-  const [Refresh,setRefresh]=React.useState(false)
-  
-  const dispatch=useDispatch()
-  React.useEffect(()=>{
-    if(isFocused){
+  const [Refresh, setRefresh] = React.useState(false);
+
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    if (isFocused) {
       //console.log("hidden")
-      dispatch(setHideBottomBar(true))
-      setTimeout(()=>{
-        dispatch(setHideBottomBar(true))
-      },50)
-    }else{
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
       //console.log("seen")
-      dispatch(setHideBottomBar(false))
+      dispatch(setHideBottomBar(false));
     }
-  },[isFocused])
+  }, [isFocused]);
   React.useEffect(() => {
     if (data) {
       data.users.map((doc) => {
@@ -124,13 +124,18 @@ const ChatScreen = (props) => {
     }
   }, [data]);
   React.useEffect(() => {
-    if (username &&UserInfo&&user) {
+    if (username && UserInfo && user) {
       createConversation(user.token, username)
         .then((res) => {
-          let arr=[]
-          res.data.conversation.messages.map((doc,i)=>{
-            arr.push(serverMessageToLocal(doc,UserInfo.id==doc.senderId?UserInfo:user.user))
-          })
+          let arr = [];
+          res.data.conversation.messages.map((doc, i) => {
+            arr.push(
+              serverMessageToLocal(
+                doc,
+                UserInfo.id == doc.senderId ? UserInfo : user.user
+              )
+            );
+          });
           setMessages(arr.reverse());
           //console.log(res.data.conversation.messages)
         })
@@ -138,11 +143,13 @@ const ChatScreen = (props) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [username,isFocused,UserInfo,user]);
+  }, [username, isFocused, UserInfo, user]);
   React.useEffect(() => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
-      setMessages((val) => GiftedChat.append(val,serverMessageToLocal(e.message,data.users)));
+      setMessages((val) =>
+        GiftedChat.append(val, serverMessageToLocal(e.message, data.users))
+      );
     });
   }, []);
 
@@ -155,7 +162,12 @@ const ChatScreen = (props) => {
       if (result) {
         const res = await sendMessage(user.token, message, result[0], Id);
         if (res.data) {
-          setMessages((val) => GiftedChat.append(val,serverMessageToLocal(res.data.message,data.users)));
+          setMessages((val) =>
+            GiftedChat.append(
+              val,
+              serverMessageToLocal(res.data.message, data.users)
+            )
+          );
           //console.log(UserInfo.id);
           socket.emit("sendMessage", {
             senderId: user.user.id,
@@ -171,7 +183,12 @@ const ChatScreen = (props) => {
     }
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
-      setMessages((val) => GiftedChat.append(val,serverMessageToLocal(res.data.message,data.users)));
+      setMessages((val) =>
+        GiftedChat.append(
+          val,
+          serverMessageToLocal(res.data.message, data.users)
+        )
+      );
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       socket.emit("sendMessage", {
@@ -183,14 +200,14 @@ const ChatScreen = (props) => {
   };
 
   if (!Messages) {
+    return null;
     return (
       <View
         style={{
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <ActivityLoader />
       </View>
     );
@@ -200,30 +217,34 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
 
   return (
-    <SafeAreaView 
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-    >
-      <ChatHead user={UserInfo}
-        name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
-        image={UserInfo ? UserInfo.profilePhoto : null}
-        {...props}
-      />
-      <View style={{
-        marginTop:Platform.OS=="ios"?-20:0
-      }}/>
-      <GiftedChat 
-      renderComposer={()=><BottomBar onSend={send}/>}
-      messages={Messages}
-      onSend={messages => {
-        console.log(messages)
-      }}
-      user={{
-        _id: user.user.id,
-      }}
-    />
-    </SafeAreaView>
+    <Animated.View style={{flex:1}} layout={FadeIn}>
+      <SafeAreaView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+        <ChatHead
+          user={UserInfo}
+          name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
+          image={UserInfo ? UserInfo.profilePhoto : null}
+          {...props}
+        />
+        <View
+          style={{
+            marginTop: Platform.OS == "ios" ? -20 : 0,
+          }}
+        />
+        <GiftedChat
+          renderComposer={() => <BottomBar onSend={send} />}
+          messages={Messages}
+          onSend={(messages) => {
+            console.log(messages);
+          }}
+          user={{
+            _id: user.user.id,
+          }}
+        />
+      </SafeAreaView>
+    </Animated.View>
   );
 };
 
@@ -290,16 +311,14 @@ const BottomBar = (props) => {
               Alert.alert("Opps!", "Could not load image");
             });
         }}
-        style={styles.icon}
-      >
+        style={styles.icon}>
         <EvilIcons name="image" size={26} color={textColor} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           setCameraVisible(true);
         }}
-        style={styles.icon}
-      >
+        style={styles.icon}>
         <Ionicons name="camera-outline" size={24} color={textColor} />
       </TouchableOpacity>
       <TextInput
@@ -320,16 +339,14 @@ const BottomBar = (props) => {
             setMessage("");
           });
         }}
-        style={styles.icon}
-      >
+        style={styles.icon}>
         <Ionicons name="send-outline" size={20} color={assentColor} />
       </TouchableOpacity>
       <Modal
         visible={Visible}
         onRequestClose={() => {
           setVisible(!Visible);
-        }}
-      >
+        }}>
         <ImageScreen
           onConfirm={() => {
             setImageLoader(true);
@@ -359,8 +376,7 @@ const BottomBar = (props) => {
               width: width,
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <ActivityLoader />
           </View>
         )}
@@ -369,8 +385,7 @@ const BottomBar = (props) => {
         visible={CameraVisible}
         onRequestClose={() => {
           setCameraVisible(!CameraVisible);
-        }}
-      >
+        }}>
         <CameraScreen
           onTakePhoto={(pic) => {
             setImage(pic);
@@ -422,8 +437,7 @@ const ImageScreen = ({ image, onCancel, onConfirm }) => {
         backgroundColor: "rgba(0, 0, 0, 0.786)",
         justifyContent: "center",
         alignItems: "center",
-      }}
-    >
+      }}>
       <Image
         style={{
           width: width,
@@ -440,15 +454,13 @@ const ImageScreen = ({ image, onCancel, onConfirm }) => {
           paddingHorizontal: 20,
           position: "absolute",
           bottom: 0,
-        }}
-      >
+        }}>
         <TouchableOpacity
           onPress={() => {
             if (onCancel) {
               onCancel();
             }
-          }}
-        >
+          }}>
           <Ionicons name="arrow-back" size={25} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
@@ -456,28 +468,27 @@ const ImageScreen = ({ image, onCancel, onConfirm }) => {
             if (onConfirm) {
               onConfirm();
             }
-          }}
-        >
+          }}>
           <Ionicons name="send-outline" size={25} color={"white"} />
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-const serverMessageToLocal=(message,user)=>{
-  if(message&&user){
-    return{
+const serverMessageToLocal = (message, user) => {
+  if (message && user) {
+    return {
       _id: message.id,
       text: message.text,
       createdAt: message.createdAt,
       user: {
-        _id:user.id,
-        name:`${user.firstName} ${user.lastName}`,
-        avatar:user.profilePhoto
+        _id: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+        avatar: user.profilePhoto,
       },
       image: message.image,
       sent: message.seen,
-    }
+    };
   }
-  return null
-}
+  return null;
+};

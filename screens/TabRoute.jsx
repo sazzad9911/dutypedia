@@ -144,7 +144,9 @@ const TabRoute = () => {
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
-        updateVendorInfo(res.service.id)
+        updateVendorInfo(res.service.id).catch(err=>{
+          dispatch({ type: "SET_VENDOR", playload: res });
+        })
       }
     });
     getJson("serviceSettings").then((data) => {
@@ -235,12 +237,12 @@ const TabRoute = () => {
   };
   React.useEffect(() => {
     if (user && !isOffline) {
-      userOrders();
+      //userOrders();
     }
   }, [user + reload + socket + isOffline]);
   React.useEffect(() => {
     if (user && vendor && vendor.service && !isOffline) {
-      vendorOrders();
+      //vendorOrders();
       offlineOrders()
     }
   }, [user + vendor + reload + socket + isOffline]);
@@ -284,9 +286,7 @@ const TabRoute = () => {
       setAudioCall(data.audioOnly)
       setCallingScreenVisible(true);
     });
-    socket.on("notificationReceived",(data)=>{
-      console.log(data)
-    })
+    
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;

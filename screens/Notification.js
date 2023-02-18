@@ -24,24 +24,30 @@ import {
   request_ap,
 } from "./../assets/notification";
 import { SvgXml } from "react-native-svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getNotification, getUnreadCount, getUnreadNotification, getVendorNotification, getVendorNotificationCount, getVendorUnreadNotification } from "../Class/notification";
 import ActivityLoader from "../components/ActivityLoader";
 import { useIsFocused } from "@react-navigation/native";
+import { acceptRefundRequest, newOrder, refundRequestOrder, rejectRefundRequest } from "../assets/icon";
+import { dateConverter, timeConverter } from "../action";
+import { socket } from "../Class/socket";
+import { storeNotificationCount } from "../Reducers/unReadNotification";
 const { width, height } = Dimensions.get("window");
 
-const Notification = ({ notification, route }) => {
+const Notification = ({ navigation, route }) => {
   const user=useSelector(state=>state.user)
   const [unreadCount,setUnreadCount]=useState(0)
   const [unreadNotification,setUnreadNotification]=useState()
   const [readNotification,setReadNotification]=useState()
   const vendor=useSelector(state=>state.vendor)
   const isFocused=useIsFocused()
+  const dispatch=useDispatch()
 
   useEffect(()=>{
    if(vendor){
     getVendorNotificationCount(user.token,vendor.service.id).then(res=>{
       setUnreadCount(res.data.count)
+      dispatch(storeNotificationCount(res.data.count))
     }).catch(err=>{
       console.error(err.response.data.msg)
     })
@@ -54,6 +60,7 @@ const Notification = ({ notification, route }) => {
    }else{
     getUnreadCount(user.token).then(res=>{
       setUnreadCount(res.data.count)
+      dispatch(storeNotificationCount(res.data.count))
     }).catch(err=>{
       console.error(err.response.data.msg)
     })
@@ -65,6 +72,26 @@ const Notification = ({ notification, route }) => {
     })
    }
   },[isFocused])
+  useEffect(()=>{
+    socket.on("notificationReceived",e=>{
+      if(vendor){
+        getVendorNotificationCount(user.token,vendor.service.id).then(res=>{
+          setUnreadCount(res.data.count)
+          dispatch(storeNotificationCount(res.data.count))
+        }).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }else{
+        getUnreadCount(user.token).then(res=>{
+          setUnreadCount(res.data.count)
+          dispatch(storeNotificationCount(res.data.count))
+        }).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }
+    })
+  },[])
+  //console.log(user)
   if(!readNotification){
     return(
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
@@ -89,6 +116,8 @@ const Notification = ({ notification, route }) => {
         start={types.filter(d=>d.type==doc.notificationType)?.[0]?.start}
         end={types.filter(d=>d.type==doc.notificationType)?.[0]?.end}
         middle={types.filter(d=>d.type==doc.notificationType)?.[0]?.middle}
+        verify={types.filter(d=>d.type==doc.notificationType)?.[0]?.verified}
+        navigation={navigation}
          active={false} orderId={undefined}
           identity={doc.notificationType.split("_")[1]=="APPOINTMENT"?doc.service.providerInfo.name:doc.entityId}
            data={doc} key={i} 
@@ -107,10 +136,25 @@ const Notification = ({ notification, route }) => {
 
 export default Notification;
 
-const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,start,end ,middle}) => {
+const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,start,end ,middle,navigation,verify}) => {
+  //console.log(data)
+  const vendor=useSelector(state=>state.vendor)
+  const arr=data.notificationType.split("_")
+  const actionType=arr[arr.length-1]
   return (
-    <Pressable 
-      style={[styles.cart_container,active?styles.active:null]}>
+    <Pressable onPress={()=>{
+      if(actionType=="APPOINTMENT"&&vendor){
+        navigation.navigate("Search")
+      }else if(actionType=="APPOINTMENT"&&!vendor){
+        navigation.navigate("UserAppointmentList")
+      }
+      if(actionType=="ORDER"&&vendor){
+        navigation.navigate("Feed")
+      }else if(actionType=="ORDER"&&!vendor){
+        navigation.navigate("ManageOrder")
+      }
+    }}
+      style={[styles.cart_container,!data.opened?styles.active:null]}>
       {icon&&(
         <SvgXml xml={icon} width={"50"} height={"50"} />
       )}
@@ -118,10 +162,20 @@ const NotificationCart = ({ data,active, type, icon,onPress,identity,orderId,sta
         flex:1,
         marginLeft:10
       }}>
-        <Text style={styles.text}>02-07-2023  08:00 PM</Text>
-        <Text style={styles.descriptionText}>{start}{orderId&&` ${orderId}`}{middle}<Text style={styles.bold}>{identity}</Text>{end}{" "}
-       {data.verified&&( <SvgXml xml={verified} height={"16"} width={"16"}/>)}
-        </Text>
+        <Text style={styles.text}>{dateConverter(data.createdAt)} {timeConverter(data.createdAt)}</Text>
+        
+        <View style={{
+          flexDirection:"row",
+          alignItems:"baseline",
+        }}>
+        <Text style={styles.descriptionText}>{data.message}
+        {verify&&( <SvgXml style={{
+        marginBottom:-5,
+        marginLeft:5,
+       }} xml={verified} height={"18"} width={"18"}/>)}
+       </Text>
+        
+        </View>
       </View>
     </Pressable>
   );
@@ -134,6 +188,7 @@ const types = [
     start:"Your Appoinment with ",
     end:" has been Cancel",
     verified:false,
+    navigation:"Appointment"
   },
   {
     type: "COMPLETED_APPOINTMENT",
@@ -141,6 +196,7 @@ const types = [
     start:"Your Appoinment with ",
     end:" has been completed",
     verified:true,
+    navigation:"Appointment"
   },
   {
     type: "APPROVED_APPOINTMENT",
@@ -148,6 +204,7 @@ const types = [
     start:"Your Appoinment with ",
     end:" has been Accepted",
     verified:false,
+    navigation:"Appointment"
   },
   {
     type: "REJECTED_APPOINTMENT",
@@ -155,13 +212,14 @@ const types = [
     start:"Your Appoinment with ",
     end:" has been Rejected",
     verified:false,
+    navigation:"Appointment"
   },
   {
     type: "NEW_APPOINTMENT",
     icon: request_ap,
     start:"Your Appoinment with ",
     end:" has been Requested",
-    verified:false,
+    verified:false,navigation:"Appointment"
   },
   {
     type: "ACCEPTED_ORDER",
@@ -169,6 +227,7 @@ const types = [
     start:"Your Order with ",
     end:" has been Accepted",
     verified:false,
+    navigation:"ManageOrder"
   },
   {
     type: "AUTOMATIC_ORDER",
@@ -207,7 +266,55 @@ const types = [
     end:" has been requested for a new delivery date",
     verified:false,
   },
-  
+  {
+    type: "ACCEPT_DATE_ORDER",
+    icon: date_or,
+    start:"Your Order ",
+    end:" has accepted new date request",
+    verified:false,
+  },
+  {
+    type: "REJECT_DATE_ORDER",
+    icon: date_or,
+    start:"Your Order ",
+    end:" has rejected new date request",
+    verified:false,
+  },
+  {
+    type: "ACCEPT_REFUND_ORDER",
+    icon: acceptRefundRequest,
+    start:"Your Order ",
+    end:" has accepted Refund request",
+    verified:false,
+  },
+  {
+    type: "REJECT_REFUND_ORDER",
+    icon: rejectRefundRequest,
+    start:"Your Order ",
+    end:" has rejected Refund request",
+    verified:false,
+  },
+  {
+    type: "NEW_ORDER",
+    icon: newOrder,
+    start:"Your have new order ",
+    end:" . Please make payment",
+    verified:false,
+  },
+  {
+    type: "PAYMENT_ORDER",
+    icon: payment_or,
+    start:"Your Order ",
+    end:" has rejected Refund",
+    verified:false,
+  },
+  {
+    type: "REFUND_REQUEST_ORDER",
+    icon: refundRequestOrder,
+    start:"Your Order ",
+    end:" has rejected Refund",
+    verified:false,
+  },
 ];
 const styles=StyleSheet.create({
   cart_container:{

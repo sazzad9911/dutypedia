@@ -1,5 +1,12 @@
-import React from "react";
-import { View, Text, ScrollView, Dimensions, Image, StatusBar } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  Image,
+  StatusBar,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { SvgXml } from "react-native-svg";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,13 +14,19 @@ import { Color, primaryColor } from "../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { OrderCart, OrderCartOffline } from "./Vendor/Order";
-import { NavigationContainer, DefaultTheme, useIsFocused } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  useIsFocused,
+} from "@react-navigation/native";
 import NewTab from "./Vendor/components/NewTab";
 import { FontAwesome } from "@expo/vector-icons";
-import { FAB } from "react-native-paper";
+import { DataTable, FAB } from "react-native-paper";
 import NewTabe from "./Vendor/components/NewTabe";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { user } from "../assets/icon";
+import { getOrders } from "../Class/service";
+import ActivityLoader from "../components/ActivityLoader";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -26,9 +39,10 @@ export default function UserProfile({ navigation, route }) {
   const user = route.params.user;
   const ref = React.useRef();
 
-  const ViewBox = ({ Icon, title,onPress }) => {
+  const ViewBox = ({ Icon, title, onPress }) => {
     return (
-      <TouchableOpacity onPress={onPress?onPress:null}
+      <TouchableOpacity
+        onPress={onPress ? onPress : null}
         style={{
           width: width / 4 - 20,
           height: width / 4 - 30,
@@ -37,18 +51,16 @@ export default function UserProfile({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
           margin: 5,
-        }}
-      >
+        }}>
         <SvgXml xml={Icon} height="22" width="22" />
         {title && (
           <Text
             style={{
-              fontSize:width>350? 10:8,
+              fontSize: width > 350 ? 10 : 8,
               color: textColor,
               fontFamily: "Poppins-Medium",
               marginTop: 8,
-            }}
-          >
+            }}>
             {title}
           </Text>
         )}
@@ -58,19 +70,17 @@ export default function UserProfile({ navigation, route }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar/>
+      <StatusBar />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: "#F2F2F6",
-        }}
-      >
+        }}>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <View
             style={{
               width: 90,
@@ -83,8 +93,7 @@ export default function UserProfile({ navigation, route }) {
               justifyContent: "center",
               alignItems: "center",
               overflow: "hidden",
-            }}
-          >
+            }}>
             {user && user.user.profilePhoto ? (
               <Image
                 style={{
@@ -103,8 +112,7 @@ export default function UserProfile({ navigation, route }) {
               fontSize: 18,
               fontFamily: "Poppins-SemiBold",
               color: textColor,
-            }}
-          >
+            }}>
             {user
               ? `${user.user.firstName} ${user.user.lastName}`
               : `Invalid user`}
@@ -113,8 +121,7 @@ export default function UserProfile({ navigation, route }) {
                 fontSize: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-              }}
-            >
+              }}>
               {" "}
               {user ? `(${user.user.gender.toUpperCase()})` : `Invalid`}
             </Text>
@@ -124,8 +131,7 @@ export default function UserProfile({ navigation, route }) {
               fontSize: 14,
               color: textColor,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             Last seen today 12:00 pm
           </Text>
         </View>
@@ -134,24 +140,35 @@ export default function UserProfile({ navigation, route }) {
             flexDirection: "row",
             paddingHorizontal: 20,
             marginVertical: 20,
-            justifyContent:"center"
-          }}
-        >
+            justifyContent: "center",
+          }}>
           {/* <ViewBox Icon={callIcon} title="Call" /> */}
-          <ViewBox onPress={()=>{
-            let newUser={
-              userId:user.user.id,
-              user:user.user
-            }
-            navigation.navigate("ChatScreen", { data: {
-              users:[
-                newUser
-              ]
-            } ,username:user.user.username});
-          }} Icon={chatIcon} title="Chat" />
-          <ViewBox onPress={()=>{
-            navigation.navigate("MemberAppointment",{user:user.user,offline:false})
-          }} Icon={calenderIcon} title="Appointment" />
+          <ViewBox
+            onPress={() => {
+              let newUser = {
+                userId: user.user.id,
+                user: user.user,
+              };
+              navigation.navigate("ChatScreen", {
+                data: {
+                  users: [newUser],
+                },
+                username: user.user.username,
+              });
+            }}
+            Icon={chatIcon}
+            title="Chat"
+          />
+          <ViewBox
+            onPress={() => {
+              navigation.navigate("MemberAppointment", {
+                user: user.user,
+                offline: false,
+              });
+            }}
+            Icon={calenderIcon}
+            title="Appointment"
+          />
           <ViewBox Icon={threeDot} title="" />
         </View>
         <View
@@ -162,22 +179,19 @@ export default function UserProfile({ navigation, route }) {
             paddingLeft: 10,
             paddingTop: 10,
             paddingBottom: 10,
-          }}
-        >
+          }}>
           <View
             style={{
               borderBottomWidth: 0.5,
               borderBottomColor: "#E2E2E2",
               paddingBottom: 8,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-              }}
-            >
+              }}>
               User Name
             </Text>
             <Text
@@ -186,8 +200,7 @@ export default function UserProfile({ navigation, route }) {
                 fontFamily: "Poppins-Medium",
                 fontSize: 16,
                 marginTop: 3,
-              }}
-            >
+              }}>
               @{user ? `${user.user.username}` : "invalid"}
             </Text>
           </View>
@@ -196,16 +209,14 @@ export default function UserProfile({ navigation, route }) {
               borderBottomWidth: 0.5,
               borderBottomColor: "#E2E2E2",
               paddingBottom: 8,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 10,
-              }}
-            >
+              }}>
               Mobile
             </Text>
             <Text
@@ -214,8 +225,7 @@ export default function UserProfile({ navigation, route }) {
                 fontFamily: "Poppins-Medium",
                 fontSize: 16,
                 marginTop: 3,
-              }}
-            >
+              }}>
               N/A
             </Text>
             <TouchableOpacity
@@ -224,8 +234,7 @@ export default function UserProfile({ navigation, route }) {
                 right: 10,
                 top: -30,
                 zIndex: 100,
-              }}
-            >
+              }}>
               <Text>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -234,16 +243,14 @@ export default function UserProfile({ navigation, route }) {
               borderBottomWidth: 0,
               borderBottomColor: "#E2E2E2",
               paddingBottom: 5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 14,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 10,
-              }}
-            >
+              }}>
               Email
             </Text>
             <Text
@@ -252,8 +259,7 @@ export default function UserProfile({ navigation, route }) {
                 fontFamily: "Poppins-Medium",
                 fontSize: 16,
                 marginTop: 3,
-              }}
-            >
+              }}>
               {user ? `${user.user.email}` : "invalid"}
             </Text>
             <TouchableOpacity
@@ -262,8 +268,7 @@ export default function UserProfile({ navigation, route }) {
                 right: 10,
                 top: -25,
                 zIndex: 100,
-              }}
-            >
+              }}>
               <Text>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -277,8 +282,7 @@ export default function UserProfile({ navigation, route }) {
             paddingTop: 10,
             paddingBottom: 10,
             marginTop: 20,
-          }}
-        >
+          }}>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Note", { user: user });
@@ -286,8 +290,7 @@ export default function UserProfile({ navigation, route }) {
             style={{
               flexDirection: "row",
               alignItems: "center",
-            }}
-          >
+            }}>
             <View
               style={{
                 backgroundColor: "#03D303",
@@ -296,8 +299,7 @@ export default function UserProfile({ navigation, route }) {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
-              }}
-            >
+              }}>
               <SvgXml xml={noteIcon} height="24" width={"24"} />
             </View>
             <View
@@ -306,16 +308,14 @@ export default function UserProfile({ navigation, route }) {
                 borderColor: "#E2E2E2",
                 borderBottomWidth: 0.5,
                 flex: 1,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
                   color: textColor,
                   marginBottom: 6,
-                }}
-              >
+                }}>
                 Note
               </Text>
             </View>
@@ -325,8 +325,7 @@ export default function UserProfile({ navigation, route }) {
               flexDirection: "row",
               alignItems: "center",
               marginTop: 10,
-            }}
-          >
+            }}>
             <View
               style={{
                 backgroundColor: "#333333",
@@ -335,8 +334,7 @@ export default function UserProfile({ navigation, route }) {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,
-              }}
-            >
+              }}>
               <SvgXml xml={addressIcon} height="24" width={"24"} />
             </View>
             <View
@@ -345,16 +343,14 @@ export default function UserProfile({ navigation, route }) {
                 borderColor: "#E2E2E2",
                 borderBottomWidth: 0,
                 flex: 1,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
                   color: textColor,
                   marginBottom: 6,
-                }}
-              >
+                }}>
                 Address
               </Text>
             </View>
@@ -404,7 +400,7 @@ export default function UserProfile({ navigation, route }) {
             ))}
           </ScrollView>
         </View> */}
-        <View style={{height:20}}/>
+        <View style={{ height: 20 }} />
         <View style={{ minHeight: 500 }}>
           <TabBar userId={user.user.id} />
         </View>
@@ -424,7 +420,7 @@ export default function UserProfile({ navigation, route }) {
           alignItems: "center",
         }}
         onPress={() => {
-          navigation.navigate("VendorServiceList",{userId:user.user.id})
+          navigation.navigate("VendorServiceList", { userId: user.user.id });
         }}
       />
     </SafeAreaView>
@@ -483,7 +479,7 @@ const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" width="18.448" height=
 </svg>
 `;
 
-export const TabBar = ({ userId,offline }) => {
+export const TabBar = ({ userId, offline }) => {
   const [initialState, setInitialState] = React.useState([
     {
       title: "Bargaining",
@@ -533,25 +529,26 @@ export const TabBar = ({ userId,offline }) => {
       type: "INSTALLMENT",
     },
   ]);
-  if(offline){
+  if (offline) {
     return (
-      <Tab.Navigator screenOptions={{
-        tabBarLabelStyle: { fontSize: 12 },
-        tabBarItemStyle: {
-        margin:0,
-        padding:0,
-        width:120,
-       },
-        tabBarIndicatorStyle: {
-          backgroundColor: "#AC5DCB",
-        },
-        tabBarScrollEnabled: true
-      }}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarItemStyle: {
+            margin: 0,
+            padding: 0,
+            width: 120,
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#AC5DCB",
+          },
+          tabBarScrollEnabled: true,
+        }}>
         {initialStateOffline.map((doc, i) => (
           <Tab.Screen
             key={i}
             name={doc.title}
-            initialParams={{ userId: userId }}
+            initialParams={{ userId: userId, key: doc.type }}
             component={OfflineScreens}
           />
         ))}
@@ -559,23 +556,24 @@ export const TabBar = ({ userId,offline }) => {
     );
   }
   return (
-    <Tab.Navigator screenOptions={{
-      tabBarLabelStyle: { fontSize: 12 },
-      tabBarItemStyle: {
-      margin:0,
-      padding:0,
-      width:120,
-     },
-      tabBarIndicatorStyle: {
-        backgroundColor: "#AC5DCB",
-      },
-      tabBarScrollEnabled: true
-    }}>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: {
+          margin: 0,
+          padding: 0,
+          width: 120,
+        },
+        tabBarIndicatorStyle: {
+          backgroundColor: "#AC5DCB",
+        },
+        tabBarScrollEnabled: true,
+      }}>
       {initialState.map((doc, i) => (
         <Tab.Screen
           key={i}
           name={doc.title}
-          initialParams={{ userId: userId }}
+          initialParams={{ userId: userId, key: doc.type }}
           component={Screens}
         />
       ))}
@@ -620,21 +618,41 @@ const Screens = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ]);
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const isFocused = useIsFocused();
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(0);
+  const key = route.params.key;
 
   React.useEffect(() => {
-    if (vendorOrders) {
-      const arr = vendorOrders.filter((d) => d.user.id == userId);
-      setAllOrders(arr);
+    if (vendor && user && key) {
+      getOrders(user.token, "vendor", vendor.service.id, key, 20 * page)
+        .then((res) => {
+          let arr = res.data.orders.filter((d) => d.user.id == userId);
+          setAllOrders(arr);
+          setTotal(arr.length);
+        })
+        .catch((err) => {
+          console.error(err.response.data.msg);
+        });
       //setOrders(arr)
     }
-  }, [vendorOrders]);
+  }, [isFocused, page]);
   React.useEffect(() => {
     if (AllOrders) {
-      const type=initialState.filter(d=>d.title==route.name)[0].type
+      const type = initialState.filter((d) => d.title == route.name)[0].type;
       const arr = AllOrders.filter((d) => d.type == type);
       setOrders(arr);
     }
   }, [AllOrders + route.name]);
+  if (!AllOrders) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <View>
       <ScrollView nestedScrollEnabled={true}>
@@ -655,6 +673,19 @@ const Screens = ({ navigation, route }) => {
               key={i}
             />
           ))}
+        {Orders && Orders.length != 0 && (
+          <DataTable.Pagination
+            page={page}
+            numberOfPages={Math.ceil(total / 20)}
+            onPageChange={(page) => setPage(page)}
+            label={`${parseInt(total / 20) + 1} of ${page + 1}`}
+            // showFastPaginationControls
+            // numberOfItemsPerPageList={numberOfItemsPerPageList}
+            // numberOfItemsPerPage={numberOfItemsPerPage}
+            // onItemsPerPageChange={onItemsPerPageChange}
+            selectPageDropdownLabel={"Rows per page"}
+          />
+        )}
         <View style={{ height: 100 }} />
       </ScrollView>
       {Orders && Orders.length == 0 && (
@@ -663,15 +694,13 @@ const Screens = ({ navigation, route }) => {
             height: 400,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <SvgXml xml={emptyIcon} width="100" height="100" />
           <Text
             style={{
               marginTop: 30,
               color: textColor,
-            }}
-          >
+            }}>
             No Order Found
           </Text>
         </View>
@@ -717,22 +746,41 @@ const OfflineScreens = ({ navigation, route }) => {
       type: "PACKAGE",
     },
   ]);
-  const isFocused=useIsFocused()
+  const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
+  const isFocused = useIsFocused();
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(0);
+  const key = route.params.key;
 
   React.useEffect(() => {
-    if (vendorOrders) {
-      const arr = vendorOrders.filter((d) => d.offlineMemberId == userId);
-      setAllOrders(arr);
+    if (vendor && user && key) {
+      getOrders(user.token, "vendor", vendor.service.id, key, 20 * page)
+        .then((res) => {
+          let arr = res.data.orders.filter((d) => d.offlineMemberId == userId);
+          setAllOrders(arr);
+          setTotal(arr.length);
+        })
+        .catch((err) => {
+          console.error(err.response.data.msg);
+        });
       //setOrders(arr)
     }
-  }, [vendorOrders,isFocused]);
+  }, [isFocused, page]);
   React.useEffect(() => {
     if (AllOrders) {
-      const type=initialState.filter(d=>d.title==route.name)[0].type
+      const type = initialState.filter((d) => d.title == route.name)[0].type;
       const arr = AllOrders.filter((d) => d.type == type);
       setOrders(arr);
     }
-  }, [AllOrders, route.name,isFocused]);
+  }, [AllOrders, route.name, isFocused]);
+  if (!AllOrders) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <View>
       <ScrollView nestedScrollEnabled={true}>
@@ -745,24 +793,39 @@ const OfflineScreens = ({ navigation, route }) => {
                 //dispatch({ type: "ORDER_STATE", playload: e });
               }}
               onPress={(userInfo) => {
-                
                 if (doc.type == "SUBS" && doc.status != "WAITING_FOR_ACCEPT") {
                   navigation.navigate("SubscriptionScript", { data: doc });
                   return;
                 }
-                if (doc.type == "INSTALLMENT" && doc.status != "WAITING_FOR_ACCEPT") {
+                if (
+                  doc.type == "INSTALLMENT" &&
+                  doc.status != "WAITING_FOR_ACCEPT"
+                ) {
                   navigation.navigate("InstallmentScript", { data: doc });
                   return;
                 }
                 navigation.navigate("VendorOfflineOrderDetails", {
                   data: doc,
-                  userInfo:userInfo
+                  userInfo: userInfo,
                 });
               }}
               data={doc}
               key={i}
             />
           ))}
+        {Orders && Orders.length != 0 && (
+          <DataTable.Pagination
+            page={page}
+            numberOfPages={Math.ceil(total / 20)}
+            onPageChange={(page) => setPage(page)}
+            label={`${parseInt(total / 20) + 1} of ${page + 1}`}
+            // showFastPaginationControls
+            // numberOfItemsPerPageList={numberOfItemsPerPageList}
+            // numberOfItemsPerPage={numberOfItemsPerPage}
+            // onItemsPerPageChange={onItemsPerPageChange}
+            selectPageDropdownLabel={"Rows per page"}
+          />
+        )}
         <View style={{ height: 100 }} />
       </ScrollView>
       {Orders && Orders.length == 0 && (
@@ -771,15 +834,13 @@ const OfflineScreens = ({ navigation, route }) => {
             height: 400,
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           <SvgXml xml={emptyIcon} width="100" height="100" />
           <Text
             style={{
               marginTop: 30,
               color: textColor,
-            }}
-          >
+            }}>
             No Order Found
           </Text>
         </View>

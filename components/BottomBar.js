@@ -35,6 +35,7 @@ const BottomBar = (props) => {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const hideBottomBar = useSelector((state) => state.hideBottomBar);
+  const unReadNotification=useSelector(state=>state.unReadNotification)
   //const routes = useRoute();
   //console.log(routes.name);
 
@@ -217,7 +218,8 @@ const BottomBar = (props) => {
         }}
         style={styles.button}
       >
-        <Badge
+        {unReadNotification>0&&(
+          <Badge
           style={{
             position: "absolute",
             top: -5,
@@ -225,8 +227,9 @@ const BottomBar = (props) => {
             zIndex: 10,
           }}
         >
-          3
+         {unReadNotification}
         </Badge>
+        )}
         {route == 3 ? (
           <Ionicons
             name="notifications-sharp"

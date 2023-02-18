@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -40,6 +40,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator } from "react-native-paper";
+import { DataTable } from 'react-native-paper';
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
@@ -58,9 +59,9 @@ const ManageOrder = ({ navigation, route }) => {
       type: "ONETIME",
     },
     {
-      title: "Installment",
+      title: "Package",
       value: false,
-      type: "INSTALLMENT",
+      type: "PACKAGE",
     },
     {
       title: "Subscription",
@@ -68,14 +69,15 @@ const ManageOrder = ({ navigation, route }) => {
       type: "SUBS",
     },
     {
-      title: "Package",
+      title: "Installment",
       value: false,
-      type: "PACKAGE",
+      type: "INSTALLMENT",
     },
+    
   ];
   const userOrders = useSelector((state) => state.userOrders);
   const type = route.params && route.params.type ? route.params.type : null;
-
+  const [allOrders,setAllOrders]=useState([0,0,0,0,0])
   //console.log(type)
   return (
     <SafeAreaView
@@ -103,16 +105,15 @@ const ManageOrder = ({ navigation, route }) => {
         {initialState.map((doc, i) => (
           <Tab.Screen
             options={{
-              title: `${initialState[i].title}(${
-                userOrders
-                  ? userOrders.filter((d) => d.type == initialState[i].type)
-                      .length
-                  : "0"
-              })`,
+              title: `${initialState[i].title}(${allOrders[i]})`,
             }}
             key={i}
             name={doc.type}
             component={Screens}
+            initialParams={{
+              setAllOrders:setAllOrders,
+              key:i
+            }}
           />
         ))}
       </Tab.Navigator>
@@ -135,6 +136,8 @@ const Screens = ({ navigation, route }) => {
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
+  const setOrder=route.params.setAllOrders;
+  const key=route.params.key;
   const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [Loader, setLoader] = React.useState(false);
@@ -207,21 +210,45 @@ const Screens = ({ navigation, route }) => {
     //console.log("handleSheetChanges", index);
     setIndex(index);
   }, []);
+  const [total,setTotal]=useState(0)
+  const [page,setPage]=useState(0)
+  const to = Math.min((parseInt(total/20) + 1) * 20, 2);
   React.useEffect(() => {
-    if (userOrders) {
-      //console.warn(userOrders[0])
-      let arr = userOrders.filter((d) => d.type == route.name);
-      setAllOrders(arr);
-      setOrders(arr);
+    if (user) {
+      setLoader(true)
+      getOrders(user.token,"user",null,route.name,(20*page)).then(res=>{
+        setAllOrders(res.data.orders);
+        setOrders(res.data.orders);
+        //console.log(res.data.orders)
+        setOrder(val=>{
+          return val.map((doc,i)=>{
+             if(i==key){
+               return res.data.total;
+             }else{
+               return doc
+             }
+           })
+         })
+         setLoader(false)
+         if(isFocused){
+          setTotal(res.data.total) 
+         }
+      }).catch(err=>{
+        setLoader(false)
+        console.error(err.response.data.msg)
+      })
+      
     }
     
-  }, [route.name + isFocused+userOrders+Refresh]);
+  }, [isFocused,Refresh,page]);
   React.useEffect(()=>{
     socket.on("updateOrder", (e) => {
       e=e.order;
-      setTimeout(()=>{
-        setRefresh(val=>(!val))
-      },100)
+      setRefresh(val=>(!val))
+    });
+    socket.on("newOrder", (e) => {
+      e=e.order;
+      setRefresh(val=>(!val))
     });
   },[])
   
@@ -253,7 +280,7 @@ const Screens = ({ navigation, route }) => {
       }
     }
   }, [Search]);
-  if (!userOrders) {
+  if (!Array.isArray(AllOrders)) {
     return (
       <View
         style={{
@@ -395,6 +422,17 @@ const Screens = ({ navigation, route }) => {
             No data available
           </Text>
         )}
+        <DataTable.Pagination
+        page={page}
+        numberOfPages={Math.ceil( total/ 20)}
+        onPageChange={page => setPage(page)}
+        label={`${parseInt(total/20)+1} of ${page+1}`}
+        // showFastPaginationControls
+        // numberOfItemsPerPageList={numberOfItemsPerPageList}
+        // numberOfItemsPerPage={numberOfItemsPerPage}
+        // onItemsPerPageChange={onItemsPerPageChange}
+        selectPageDropdownLabel={'Rows per page'}
+      />
       </ScrollView>
       <BottomSheet
         enablePanDownToClose={true}
@@ -426,6 +464,7 @@ const Screens = ({ navigation, route }) => {
           ))}
         </BottomSheetScrollView>
       </BottomSheet>
+      
     </View>
   );
 };

@@ -48,14 +48,15 @@ export default function InstallmentScript({ navigation, route }) {
   //console.log(providerInfo)
   //console.warn(installmentData)
   useEffect(() => {
-    setSubsOrders();
+    //setSubsOrders();
     setLoader(true);
     getSubsOrderById(user.token, data.id)
       .then((res) => {
         //console.log(res.data.order.installmentOrders)
         setLoader(false);
+        //console.log(res.data.order)
         setSubsOrders(res.data.order.installmentOrders);
-        setActiveIndex(res.data.order.installmentOrders.length - 1);
+        setActiveIndex(res.data.order.installmentOrders.length-1);
         let paid = 0;
         let total=0;
         res.data.order.installmentOrders.map((doc, i) => {
@@ -73,9 +74,10 @@ export default function InstallmentScript({ navigation, route }) {
       });
   }, [isFocused]);
   useEffect(() => {
-    if (subsOrders && subsOrders.length < installmentData.installmentCount) {
+    if (subsOrders && subsOrders.length < parseInt(installmentData.installmentCount)) {
       let being = installmentData.installmentCount - subsOrders.length;
       let arr = [];
+      //console.log(subsOrders)
       //console.log(subsOrders[subsOrders.length-1].status)
       for (let i = 0; i < being; i++) {
         setSubsOrders((val) => [
@@ -83,7 +85,7 @@ export default function InstallmentScript({ navigation, route }) {
           {
             createdAt: new Date(),
             dateFrom: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
+              data.deliveryDateFrom,
               i *
                 (installmentData.installmentType == "Monthly"
                   ? 30
@@ -92,7 +94,7 @@ export default function InstallmentScript({ navigation, route }) {
                   : 7)
             ),
             dateTo: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
+              data.deliveryDateFrom,
               (i + 1) *
                 (installmentData.installmentType == "Monthly"
                   ? 30
@@ -109,7 +111,7 @@ export default function InstallmentScript({ navigation, route }) {
             received: false,
             refundRequestByUser: false,
             status:
-              subsOrders[subsOrders.length - 1].status == "CANCELLED"
+              subsOrders[subsOrders.length - 1]?.status == "CANCELLED"
                 ? "CANCELLED"
                 : "UPCOMING",
             updatedAt: new Date(),

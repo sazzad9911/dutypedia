@@ -359,17 +359,17 @@ export const createOrder = async (
   //console.log(res)
   return res;
 };
-export const getOrders = async (token, type, id) => {
+export const getOrders = async (token, type, id,orderType,skip) => {
   if (id) {
     const res = await axios.get(
-      `${url}/server/orders/${type}/get?serviceId=${id}`,
+      `${url}/server/orders/${type}/get?serviceId=${id}&orderType=${orderType}&skip=${skip}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     return res;
   } else {
-    const res = await axios.get(`${url}/server/orders/${type}/get`, {
+    const res = await axios.get(`${url}/server/orders/${type}/get?orderType=${orderType}&skip=${skip}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res;
