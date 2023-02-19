@@ -24,6 +24,7 @@ import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
 import uuid from "react-native-uuid";
 import ActivityLoader from "../../components/ActivityLoader";
+import { DataTable } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
 
 export default function SubscriptionOfflineScript({ navigation, route }) {
@@ -39,7 +40,7 @@ export default function SubscriptionOfflineScript({ navigation, route }) {
   const isFocused = useIsFocused();
   const [Counter, setCounter] = useState(50);
   const [orders, setOrder] = useState();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loader,setLoader]=useState(false)
   //console.log(providerInfo)
@@ -154,22 +155,15 @@ export default function SubscriptionOfflineScript({ navigation, route }) {
     }
   }, [subsOrders && subsOrders.length, Counter]);
   useEffect(() => {
-    if (Array.isArray(subsOrders)) {
-      //setOrder(null);
-      let arr = [];
-
-      let lower = (page - 1) * 12;
-      let upper = page * 12;
-      for (let i = 0; i < subsOrders.length; i++) {
-        if (lower <= i && i <= upper) {
-          arr.push(subsOrders[i]);
-        }
-      }
-
+    if (subsOrders) {
+      let arr = subsOrders.filter(
+        (d, i) => ((i < (10 * (page+1))&& (i >= (page)*10)))
+      );
       setOrder(arr);
-    }
-  }, [page, subsOrders]);
+    }else{
 
+    }
+  }, [page, subsOrders?.length]);
   
 
   return (
@@ -396,6 +390,7 @@ export default function SubscriptionOfflineScript({ navigation, route }) {
               key={i}
               index={i}
               page={page}
+              orders={subsOrders}
             />
           ))}
         {orders && orders.length == 0 && (
@@ -411,38 +406,15 @@ export default function SubscriptionOfflineScript({ navigation, route }) {
         {loader&&(
           <ActivityLoader/>
         )}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 20,
-            marginVertical: 10,
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(subsOrders?.length / 10)}
+          onPageChange={(page) => {
+            setPage(page)
           }}
-        >
-          <IconButton
-            disabled={page > 1 ? false : true}
-            onPress={() => {
-              if (page > 1) {
-                //handlePages(page + 1);
-                setPage((val) => val - 1);
-              }
-            }}
-            title={"Previous"}
-          />
-          <IconButton
-            disabled={
-              subsOrders && subsOrders.length / 12 > page ? false : true
-            }
-            onPress={() => {
-              let pageValue = subsOrders.length / 12;
-              if (pageValue > page) {
-                //handlePages(page + 1);
-                setPage((val) => val + 1);
-              }
-            }}
-            title={"Next"}
-          />
-        </View>
+          label={`${parseInt(subsOrders?.length / 10) + 1} of ${page + 1}`}
+          selectPageDropdownLabel={"Rows per page"}
+        />
         <View
           style={{
             height: 20,
@@ -462,8 +434,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index, page, activeIndex }) => {
+const Cart = ({ data, onPress, index, page, activeIndex,orders }) => {
     //console.log(data)
+    index=orders?.indexOf(data)
   return (
     <Pressable onPress={()=>{
       if(onPress){
@@ -497,9 +470,9 @@ const Cart = ({ data, onPress, index, page, activeIndex }) => {
             <Text style={[styles.smallText,{
               
             }]}>
-              {(index + 1) * page > 8
-                ? `${(index + 1) * page}`
-                : `0${(index + 1) * page}`}
+              {(index + 1)  > 8
+                ? `${(index + 1) }`
+                : `0${(index + 1) }`}
             </Text>
           </View>
 

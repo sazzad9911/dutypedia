@@ -25,6 +25,7 @@ import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
 import uuid from "react-native-uuid";
 import ActivityLoader from "../../components/ActivityLoader";
+import { DataTable } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
 
 export default function InstallmentScript({ navigation, route }) {
@@ -40,43 +41,91 @@ export default function InstallmentScript({ navigation, route }) {
   const isFocused = useIsFocused();
   const [Counter, setCounter] = useState(50);
   const [orders, setOrder] = useState();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loader, setLoader] = useState(false);
-  const [paidAmount,setPaidAmount]=useState(0)
+  const [paidAmount, setPaidAmount] = useState(0);
+  const [pageContent, setPageContent] = useState();
   //console.log(data.createdAt)
   //console.log(providerInfo)
   //console.warn(installmentData)
   useEffect(() => {
-    //setSubsOrders();
-    setLoader(true);
-    getSubsOrderById(user.token, data.id)
-      .then((res) => {
-        //console.log(res.data.order.installmentOrders)
-        setLoader(false);
-        //console.log(res.data.order)
+    //console.log(data)
+    (async () => {
+      setLoader(true);
+      const res = await getSubsOrderById(user.token, data.id);
+      //console.log(res.data.order.installmentOrders)
+
+      //console.log(res.data.order.installmentOrders)
+      if (res) {
         setSubsOrders(res.data.order.installmentOrders);
-        setActiveIndex(res.data.order.installmentOrders.length-1);
+        setLoader(false);
+        setActiveIndex(
+          installmentData.advancedPayment
+            ? res.data.order.installmentOrders.length
+            : res.data.order.installmentOrders.length - 1
+        );
         let paid = 0;
-        let total=0;
+        let total = 0;
         res.data.order.installmentOrders.map((doc, i) => {
           if (doc.paid) {
             paid = paid + 1;
-            total=total+(installmentData.totalAmount/installmentData.installmentCount)
+            total =
+              total +
+              installmentData.totalAmount / installmentData.installmentCount;
           }
         });
-        setPaidAmount(total.toFixed(1))
+        setPaidAmount(total.toFixed(1));
         setTotalPaid(paid);
-      })
-      .catch((err) => {
-        setLoader(false);
-        console.warn(err.response.data.message);
-      });
+      }
+    })();
   }, [isFocused]);
+
   useEffect(() => {
-    if (subsOrders && subsOrders.length < parseInt(installmentData.installmentCount)) {
+    //console.log(installmentData)
+    if (
+      subsOrders &&
+      subsOrders.length < parseInt(installmentData.installmentCount)
+    ) {
+      if (installmentData.advancedPayment) {
+        setSubsOrders((val) => [
+          {
+            createdAt: new Date(),
+            dateFrom: localTimeToServerDate(
+              data.deliveryDateFrom,
+              0 *
+                (installmentData.installmentType == "Monthly"
+                  ? 30
+                  : installmentData.installmentType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            dateTo: localTimeToServerDate(
+              data.deliveryDateFrom,
+              1 *
+                (installmentData.installmentType == "Monthly"
+                  ? 30
+                  : installmentData.installmentType == "Yearly"
+                  ? 365
+                  : 7)
+            ),
+            delivered: false,
+            deliveredAt: null,
+            id: uuid.v4(),
+            offlineOrderId: null,
+            orderId: data.id,
+            paid: data.paidAdvanced,
+            received: false,
+            refundRequestByUser: false,
+            status: data.cancelledBy ? "CANCELLED" : "UPCOMING",
+            updatedAt: new Date(),
+          },
+          ...val,
+        ]);
+      }
       let being = installmentData.installmentCount - subsOrders.length;
       let arr = [];
+      //console.log(being)
       //console.log(subsOrders)
       //console.log(subsOrders[subsOrders.length-1].status)
       for (let i = 0; i < being; i++) {
@@ -119,19 +168,23 @@ export default function InstallmentScript({ navigation, route }) {
         ]);
       }
     }
-  }, [subsOrders && subsOrders.length, Counter]);
+  }, [subsOrders]);
   useEffect(() => {
     if (subsOrders) {
-      setOrder(subsOrders);
+      let arr = subsOrders.filter(
+        (d, i) => ((i < (10 * (page+1))&& (i >= (page)*10)))
+      );
+      setPageContent(arr);
+    }else{
+
     }
-  }, [subsOrders]);
+  }, [page, subsOrders?.length]);
 
   return (
     <View
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       <SafeAreaView>
         <View
           style={{
@@ -141,11 +194,11 @@ export default function InstallmentScript({ navigation, route }) {
             borderBottomColor: "#E4E4E4",
             borderBottomWidth: 1,
             justifyContent: "center",
-          }}
-        >
-          <SvgXml onPress={()=>{
-            navigation.goBack()
-          }}
+          }}>
+          <SvgXml
+            onPress={() => {
+              navigation.goBack();
+            }}
             style={{
               position: "absolute",
               top: 10,
@@ -162,15 +215,13 @@ export default function InstallmentScript({ navigation, route }) {
               borderBottomWidth: 2,
               paddingVertical: 8.5,
               position: "absolute",
-              borderBottomColor:"#4ADE80"
-            }}
-          >
+              borderBottomColor: "#4ADE80",
+            }}>
             <Text
               style={{
                 color: "#4ADE80",
                 fontSize: 16,
-              }}
-            >
+              }}>
               Installment
             </Text>
           </View>
@@ -178,39 +229,34 @@ export default function InstallmentScript({ navigation, route }) {
             style={{
               alignItems: "flex-end",
               width: "100%",
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
-                alignItems:"center"
-              }}
-            >
+                alignItems: "center",
+              }}>
               <Text
                 style={{
                   fontSize: 14,
                   fontWeight: "600",
-                  marginRight:10
-                }}
-              >
+                  marginRight: 10,
+                }}>
                 Status
               </Text>
               {data.status == "CANCELED" ? (
                 <Text
                   style={{
                     color: "#DA1E37",
-                    fontSize:13
-                  }}
-                >
+                    fontSize: 13,
+                  }}>
                   Inactive
                 </Text>
               ) : (
                 <Text
                   style={{
                     color: "#4CAF50",
-                    fontSize:13
-                  }}
-                >
+                    fontSize: 13,
+                  }}>
                   Active
                 </Text>
               )}
@@ -226,15 +272,13 @@ export default function InstallmentScript({ navigation, route }) {
             marginVertical: 10,
             alignItems: "center",
             justifyContent: "space-between",
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
               flex: 1.8,
-            }}
-          >
+            }}>
             <Avatar
               style={{
                 height: 50,
@@ -246,23 +290,20 @@ export default function InstallmentScript({ navigation, route }) {
                 justifyContent: "center",
                 marginLeft: 10,
                 width: "60%",
-              }}
-            >
+              }}>
               <Text
                 numberOfLines={1}
                 style={{
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
+                }}>
                 {providerInfo.name}
               </Text>
               <Text
                 style={{
                   fontSize: 13,
                   color: "#666666",
-                }}
-              >
+                }}>
                 {providerInfo.position}({providerInfo.gender})
               </Text>
             </View>
@@ -274,8 +315,7 @@ export default function InstallmentScript({ navigation, route }) {
               alignItems: "flex-end",
               flex: 1,
               marginLeft: "10%",
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 12,
@@ -284,8 +324,7 @@ export default function InstallmentScript({ navigation, route }) {
                 marginRight: 2,
                 fontWeight: "200",
                 marginVertical: 0,
-              }}
-            >
+              }}>
               Date: {serverTimeToLocalDate(data.createdAt)}
             </Text>
             <View
@@ -294,8 +333,7 @@ export default function InstallmentScript({ navigation, route }) {
                 height: 40,
                 overflow: "hidden",
                 marginTop: 0,
-              }}
-            >
+              }}>
               <Barcode
                 height="40"
                 width="150"
@@ -312,8 +350,7 @@ export default function InstallmentScript({ navigation, route }) {
                 marginRight: 2,
                 fontWeight: "200",
                 marginVertical: 0,
-              }}
-            >
+              }}>
               {data.id}
             </Text>
           </View>
@@ -325,19 +362,16 @@ export default function InstallmentScript({ navigation, route }) {
             marginVertical: 10,
             alignItems: "center",
             justifyContent: "space-between",
-          }}
-        >
+          }}>
           <View
             style={{
               flex: 1.8,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 16,
                 marginTop: 10,
-              }}
-            >
+              }}>
               {service.serviceCenterName}
             </Text>
             <Text
@@ -345,8 +379,7 @@ export default function InstallmentScript({ navigation, route }) {
                 fontSize: 14,
                 marginTop: 5,
                 marginBottom: 5,
-              }}
-            >
+              }}>
               {service.gigs[0].title}
             </Text>
           </View>
@@ -363,32 +396,27 @@ export default function InstallmentScript({ navigation, route }) {
               alignItems: "flex-end",
               flex: 1.3,
               marginLeft: "10%",
-            }}
-          >
+            }}>
             <View
               style={{
                 flexDirection: "row",
                 width: "100%",
                 justifyContent: "space-between",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 14,
-                  fontWeight:"600"
-                }}
-              >
+                  fontWeight: "600",
+                }}>
                 Total Paid{" "}
               </Text>
-             
-                <Text
-                  style={{
-                    color: "#8F8F8F",
-                  }}
-                >
-                 {totalPaid}
-                </Text>
-             
+
+              <Text
+                style={{
+                  color: "#8F8F8F",
+                }}>
+                {totalPaid}
+              </Text>
             </View>
             <View
               style={{
@@ -397,24 +425,24 @@ export default function InstallmentScript({ navigation, route }) {
                 alignItems: "center",
                 width: "100%",
                 marginTop: 5,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 14,
-                  fontWeight:"600"
-                }}
-              >
+                  fontWeight: "600",
+                }}>
                 Paid Amount{" "}
               </Text>
               <Text
                 style={{
                   color: "#8F8F8F",
-                }}
-              >
-                {installmentData.advancedPaymentAmount&&
-                totalPaid>0?(amountConverter(parseInt(paidAmount)+parseInt(installmentData.advancedPaymentAmount))):
-                paidAmount}
+                }}>
+                {installmentData.advancedPaymentAmount && totalPaid > 0
+                  ? amountConverter(
+                      parseInt(paidAmount) +
+                        parseInt(installmentData.advancedPaymentAmount)
+                    )
+                  : paidAmount}
               </Text>
             </View>
           </View>
@@ -429,16 +457,14 @@ export default function InstallmentScript({ navigation, route }) {
             borderWidth: 1,
             marginVertical: 10,
             justifyContent: "space-between",
-          }}
-        >
+          }}>
           <Text
             style={[
               styles.text,
               {
                 flex: 1,
               },
-            ]}
-          >
+            ]}>
             Payment
           </Text>
           <Text
@@ -449,8 +475,7 @@ export default function InstallmentScript({ navigation, route }) {
                 marginLeft: 0,
                 textAlign: "center",
               },
-            ]}
-          >
+            ]}>
             Payment Date
           </Text>
           <Text
@@ -461,23 +486,22 @@ export default function InstallmentScript({ navigation, route }) {
                 marginLeft: 0,
                 textAlign: "right",
               },
-            ]}
-          >
+            ]}>
             Status
           </Text>
         </View>
-        {subsOrders &&
-          subsOrders.map((doc, i) => (
+        {pageContent &&
+          pageContent.map((doc, i) => (
             <Cart
               activeIndex={activeIndex}
               onPress={() => {
                 if (vendor) {
                   //console.log(i)
-                  navigation.navigate("VendorOrderDetails", {
-                    data: data,
-                    subsOrder: doc,
-                    index: i,
-                  });
+                  // navigation.navigate("VendorOrderDetails", {
+                  //   data: data,
+                  //   subsOrder: doc,
+                  //   index: i,
+                  // });
                 } else {
                   navigation.navigate("OrderDetails", {
                     data: data,
@@ -491,53 +515,30 @@ export default function InstallmentScript({ navigation, route }) {
               index={i}
               page={page}
               installmentData={installmentData}
+              orders={subsOrders}
             />
           ))}
-        {subsOrders && subsOrders.length == 0 && (
+        {pageContent && pageContent.length == 0 && (
           <Text
             style={{
               marginVertical: 10,
               textAlign: "center",
-            }}
-          >
+            }}>
             No Order Found
           </Text>
         )}
 
         {loader && <ActivityLoader />}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 20,
-            marginVertical: 10,
-          }}
-        >
-          <IconButton
-            disabled={page > 1 ? false : true}
-            onPress={() => {
-              if (page > 1) {
-                //handlePages(page + 1);
-                setPage((val) => val - 1);
-              }
-            }}
-            title={"Previous"}
-          />
-          <IconButton
-            disabled={
-              subsOrders && subsOrders.length / 12 > page ? false : true
-            }
-            onPress={() => {
-              let pageValue = subsOrders.length / 12;
-              if (pageValue > page) {
-                //handlePages(page + 1);
-                setPage((val) => val + 1);
-              }
-            }}
-            title={"Next"}
-          />
-        </View>
 
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(subsOrders?.length / 10)}
+          onPageChange={(page) => {
+            setPage(page)
+          }}
+          label={`${parseInt(subsOrders?.length / 10) + 1} of ${page + 1}`}
+          selectPageDropdownLabel={"Rows per page"}
+        />
         <View
           style={{
             height: 20,
@@ -557,7 +558,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
+const Cart = ({ data, onPress, index, page, activeIndex, installmentData,orders }) => {
+  index=orders.indexOf(data)
   return (
     <Pressable
       disabled={data.orderId ? false : true}
@@ -565,8 +567,7 @@ const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
         if (onPress) {
           onPress();
         }
-      }}
-    >
+      }}>
       <View
         style={{
           paddingHorizontal: 20,
@@ -580,13 +581,11 @@ const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
           borderTopWidth: index != 0 ? 0 : 1,
           opacity: data.orderId ? 1 : 0.3,
           backgroundColor: activeIndex == index ? "#F2F2F6" : "white",
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: 16,
-          }}
-        >
+          }}>
           {index == 0 && installmentData.advancedPayment
             ? "Advanced"
             : !installmentData.advancedPayment
@@ -603,9 +602,10 @@ const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
         <Text
           style={{
             fontSize: 16,
-          }}
-        >
-          {data.dateFrom} To {data.dateTo}
+          }}>
+          {index == 0 && installmentData.advancedPayment
+            ? `${data.dateFrom}`
+            : `${data.dateFrom} To ${data.dateTo}`}
         </Text>
         <View
           style={{
@@ -619,8 +619,7 @@ const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
             textAlign: "right",
             fontSize: 16,
             color: data.paid ? "black" : "red",
-          }}
-        >
+          }}>
           {data.paid ? "Paid" : "Due"}
         </Text>
       </View>
@@ -668,12 +667,12 @@ const backIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="10.498" height=
 <path id="arrow-ios-back-outline" d="M20.745,25.642a1.6,1.6,0,0,1-1.17-.479L12.33,17.387a1.163,1.163,0,0,1,0-1.646l7.5-7.775A1.669,1.669,0,0,1,21.945,7.8a1.18,1.18,0,0,1,.195,1.827l-6.7,6.946,6.48,6.946a1.157,1.157,0,0,1,.2,1.386A1.536,1.536,0,0,1,20.745,25.642Z" transform="translate(-11.989 -7.498)" fill="#666"/>
 </svg>
 `;
-const amountConverter=(number)=>{
-  let point=0;
-  if(number>1000){
-    point=number/1000;
-    point=point.toFixed(1)
-    return `${point}k`
+const amountConverter = (number) => {
+  let point = 0;
+  if (number > 1000) {
+    point = number / 1000;
+    point = point.toFixed(1);
+    return `${point}k`;
   }
-  return number
-}
+  return number;
+};

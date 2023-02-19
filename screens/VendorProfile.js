@@ -249,7 +249,7 @@ const VendorProfile = (props) => {
         setBackgroundImage(response.data.service.wallPhoto);
         setImage(response.data.service.profilePhoto);
         setImages(gigs[0].images);
-        setPrice(gigs[0].price);
+        setPrice(gigs[0].price); 
         setTitle(gigs[0].title);
         setDescription(gigs[0].description);
         //setNewDataList(response.data.service.gigs[0].services.options)

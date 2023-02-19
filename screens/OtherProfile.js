@@ -234,19 +234,21 @@ const OtherProfile = (props) => {
         .then((response) => {
           if (response.data) {
             setLoader(false);
-
+            const gigs = response.data.service.gigs.filter(
+              (d) => d.type == "STARTING"
+            );
             setData(response.data);
             setSpecialty(response.data.service.speciality);
 
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
-            setImages(response.data.service.gigs[0].images);
-            setPrice(response.data.service.gigs[0].price);
-            setTitle(response.data.service.gigs[0].title);
-            setDescription(response.data.service.gigs[0].description);
+            setImages(gigs[0].images);
+            setPrice(gigs[0].price);
+            setTitle(gigs[0].title);
+            setDescription(gigs[0].description);
             //setNewDataList(response.data.service.gigs[0].services.options)
             setFacilities(
-              response.data.service.gigs[0].facilites.selectedOptions
+              gigs[0].facilites.selectedOptions
             );
             let arr = initialState;
             response.data.service.activeServiceTypes.forEach((doc) => {
@@ -263,21 +265,21 @@ const OtherProfile = (props) => {
                 }
               });
             });
-            setCategory(response.data.service.gigs[0].services.category);
+            setCategory(gigs[0].services.category);
             setActiveServiceData(arr);
             setUserInfo(response.data.service.user)
             try {
               dispatch({
                 type: "SET_NEW_LIST_DATA",
                 playload: serverToLocal(
-                  response.data.service.gigs[0].services.options,
-                  response.data.service.gigs[0].services.category
+                  gigs[0].services.options,
+                  gigs[0].services.category
                 ),
               });
               setNewDataList(
                 serverToLocal(
-                  response.data.service.gigs[0].services.options,
-                  response.data.service.gigs[0].services.category
+                 gigs[0].services.options,
+                  gigs[0].services.category
                 )
               );
             } catch (e) {
@@ -296,14 +298,17 @@ const OtherProfile = (props) => {
     setActive("Bargaining");
     //setLoader(true);
     if (Data) {
+      const gigs = Data.service.gigs.filter(
+        (d) => d.type == "STARTING"
+      );
       setBackgroundImage(Data.service.wallPhoto);
       setImage(Data.service.profilePhoto);
-      setImages(Data.service.gigs[0].images);
-      setPrice(Data.service.gigs[0].price);
-      setTitle(Data.service.gigs[0].title);
-      setDescription(Data.service.gigs[0].description);
+      setImages(gigs[0].images);
+      setPrice(gigs[0].price);
+      setTitle(gigs[0].title);
+      setDescription(gigs[0].description);
       //setNewDataList(response.data.service.gigs[0].services.options)
-      setFacilities(Data.service.gigs[0].facilites.selectedOptions);
+      setFacilities(gigs[0].facilites.selectedOptions);
       let arr = initialState;
       Data.service.activeServiceTypes.forEach((doc) => {
         arr = arr.map((d) => {
@@ -319,21 +324,21 @@ const OtherProfile = (props) => {
           }
         });
       });
-      setCategory(Data.service.gigs[0].services.category);
+      setCategory(gigs[0].services.category);
       setActiveServiceData(arr);
       try {
         //console.log(Data.service.gigs[0].services.options)
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
-            Data.service.gigs[0].services.options,
-            Data.service.gigs[0].services.category
+            gigs[0].services.options,
+            gigs[0].services.category
           ),
         });
         setNewDataList(
           serverToLocal(
-            Data.service.gigs[0].services.options,
-            Data.service.gigs[0].services.category
+            gigs[0].services.options,
+            gigs[0].services.category
           )
         );
       } catch (e) {

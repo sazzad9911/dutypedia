@@ -253,28 +253,6 @@ const TabRoute = () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
     });
-    socket.on("getOrder", (e) => {
-      e = e.order;
-      if (e.type === "user") {
-        dispatch(addUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(addVendorOrder(e.data));
-      } else if (!e.type) {
-        dispatch(addUserOrder(e));
-        dispatch(addVendorOrder(e));
-      }
-    });
-    socket.on("updateOrder", (e) => {
-      e = e.order;
-      if (e.type === "user") {
-        dispatch(updateUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(updateVendorOrder(e.data));
-      } else if (!e.type) {
-        dispatch(addUserOrder(e));
-        dispatch(addVendorOrder(e));
-      }
-    });
     socket.on("incomingCall", (data) => {
       if (callingScreen) {
         socket?.emit("busy", data.from);
@@ -291,44 +269,7 @@ const TabRoute = () => {
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
-  React.useEffect(() => {
-    socket.on("getOrder", (e) => {
-      e = e.order;
-      if (e.type === "user") {
-        dispatch(addUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(addVendorOrder(e.data));
-      } else if (!e.type) {
-        dispatch(addUserOrder(e));
-        dispatch(addVendorOrder(e));
-      }
-    });
-    socket.on("updateOrder", (e) => {
-      e = e.order;
-      if (e.type === "user") {
-        dispatch(updateUserOrder(e.data));
-      } else if (e.type === "vendor") {
-        dispatch(updateVendorOrder(e.data));
-      } else if (!e.type) {
-        dispatch(addUserOrder(e));
-        dispatch(addVendorOrder(e));
-      }
-    });
-    socket.on("incomingCall", (data) => {
-      if (callingScreen) {
-        socket?.emit("busy", data.from);
-        return;
-      }
-      setCallerId(data.from)
-      setRoomId(data.roomId)
-      setCallerName(data.name)
-      setAudioCall(data.audioOnly)
-      setCallingScreenVisible(true);
-    });
-    socket.on("notificationReceived",(e)=>{
-      console.log(`Notification ${e}`)
-    })
-  }, []);
+  
 
   async function registerBackgroundFetchAsync() {
     return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {

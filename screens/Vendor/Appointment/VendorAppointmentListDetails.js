@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { Color } from "../../../assets/colors";
 import { ActivityIndicator } from "react-native-paper";
 import { changeTime } from "../../../action";
+import { socket } from "../../../Class/socket";
 
 export default function VendorAppointmentListDetails({ navigation, route }) {
   const [image, setImage] = React.useState();
@@ -192,6 +193,9 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
                   changeAppointment(user.token, data.id, "COMPLETED")
                     .then((res) => {
                       setLoader(false);
+                      socket.emit("notificationSend",{
+                        receiverId:res.data?.receiverId
+                      })
                       navigation.goBack();
                     })
                     .catch((err) => {
@@ -261,6 +265,9 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
                 changeAppointment(user.token, data.id, "CANCELLED")
                   .then((res) => {
                     setLoader(false);
+                    socket.emit("notificationSend",{
+                      receiverId:res.data?.receiverId
+                    })
                     navigation.goBack();
                   })
                   .catch((err) => {

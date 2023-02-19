@@ -380,7 +380,7 @@ const Screens = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </Animated.View>
-        {Loader && <ActivityLoader />}
+        {/* {Loader && <ActivityLoader />} */}
         {Orders &&
           Orders.map((doc, i) => (
             <OrderCart

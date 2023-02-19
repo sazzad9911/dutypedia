@@ -28,6 +28,7 @@ import {
 import { useSelector } from "react-redux";
 import { ActivityIndicator } from "react-native-paper";
 import { Color } from "../../../assets/colors";
+import { socket } from "../../../Class/socket";
 
 export default function AppointmentForm({ navigation, route }) {
   const [image, setImage] = React.useState();
@@ -90,6 +91,9 @@ export default function AppointmentForm({ navigation, route }) {
         .then((res) => {
           console.warn("Appointment created");
           setLoader(false);
+          socket.emit("notificationSend",{
+            receiverId:res.data?.receiverId
+          })
           navigation.navigate("VendorAppointmentList")
         })
         .catch((err) => {

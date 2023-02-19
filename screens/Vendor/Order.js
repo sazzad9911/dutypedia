@@ -1165,7 +1165,7 @@ export const Screens = ({ navigation, route }) => {
           /> */}
           </View>
         </A.View>
-        {Loader && <ActivityLoader />}
+        {/* {Loader && <ActivityLoader />} */}
         {NewOrders &&
           NewOrders.map((doc, i) => (
             <OrderCart

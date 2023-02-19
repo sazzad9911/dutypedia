@@ -167,6 +167,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: order,
         },
       });
+      socket.emit("notificationSend",{
+        receiverId:receiverId
+      })
       //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
@@ -201,9 +204,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: res.data.order,
         },
       });
+      socket.emit("notificationSend",{
+        receiverId:receiverId
+      })
       setData(res.data.order);
       setSubsOrder(res.data.order.subsOrders[index]);
       //route.params.onRefresh();
+      navigation.goBack()
       setLoader(false);
     } catch (e) {
       console.warn(e.message);
@@ -237,10 +244,15 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: res.data.order,
         },
       });
+      socket.emit("notificationSend",{
+        receiverId:receiverId
+      })
       setData(res.data.order);
+      //console.log(res.data.order.installmentOrders[index])
       setInstallmentOrder(res.data.order.installmentOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
+      navigation.goBack()
     } catch (e) {
       console.warn(e.message);
     }
@@ -250,7 +262,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       e = e.order;
       if (e.type === "user" && e.data.id == data.id) {
         setData(e.data);
-        setSubsOrder(e.data.subsOrders[index]);
+        //setSubsOrder(e.data.subsOrders[index]);
       }
     });
   }, []);

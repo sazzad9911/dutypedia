@@ -25,6 +25,7 @@ import SubHeader from "../../components/SubHeader";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
 import uuid from "react-native-uuid";
 import ActivityLoader from "../../components/ActivityLoader";
+import { DataTable } from "react-native-paper";
 const { width, height } = Dimensions.get("window");
 
 export default function InstallmentOfflineScript({ navigation, route }) {
@@ -41,22 +42,27 @@ export default function InstallmentOfflineScript({ navigation, route }) {
   const isFocused = useIsFocused();
   const [Counter, setCounter] = useState(50);
   const [orders, setOrder] = useState();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loader, setLoader] = useState(false);
   const [paidAmount,setPaidAmount]=useState(0)
+  const [pageContent,setPageContent]=useState()
   //console.log(data.createdAt)
   //console.log(providerInfo)
   //console.warn(installmentData)
   useEffect(() => {
-    setSubsOrders();
+    //console.log(data)
+   (async()=>{
+   
     setLoader(true);
-    getSubsOfflineOrderById(user.token, data.id)
-      .then((res) => {
-        //console.log(res.data.order.installmentOrders)
-        setLoader(false);
-        setSubsOrders(res.data.order.installmentOrders);
-        setActiveIndex(res.data.order.installmentOrders.length - 1);
+    const res=await getSubsOfflineOrderById(user.token, data.id)
+      //console.log(res.data.order.installmentOrders)
+      
+      //console.log(res.data.order.installmentOrders)
+      if(res){
+        setSubsOrders(res.data.order.installmentOrders)
+        setLoader(false); 
+        setActiveIndex(installmentData.advancedPayment?res.data.order.installmentOrders.length:res.data.order.installmentOrders.length-1);
         let paid = 0;
         let total=0;
         res.data.order.installmentOrders.map((doc, i) => {
@@ -67,16 +73,54 @@ export default function InstallmentOfflineScript({ navigation, route }) {
         });
         setPaidAmount(total.toFixed(1))
         setTotalPaid(paid);
-      })
-      .catch((err) => {
-        setLoader(false);
-        console.warn(err.response.data.message);
-      });
+      }
+   })()
   }, [isFocused]);
-  useEffect(() => {
-    if (subsOrders && subsOrders.length < installmentData.installmentCount) {
+  
+
+  useEffect(()=>{
+    //console.log(installmentData)
+    if (subsOrders && subsOrders.length < parseInt(installmentData.installmentCount)) {
+      if(installmentData.advancedPayment){
+        setSubsOrders(val=>[{
+          createdAt: new Date(),
+          dateFrom: localTimeToServerDate(
+            data.deliveryDateFrom,
+            0 *
+              (installmentData.installmentType == "Monthly"
+                ? 30
+                : installmentData.installmentType == "Yearly"
+                ? 365
+                : 7)
+          ),
+          dateTo: localTimeToServerDate(
+            data.deliveryDateFrom,
+            (1) *
+              (installmentData.installmentType == "Monthly"
+                ? 30
+                : installmentData.installmentType == "Yearly"
+                ? 365
+                : 7)
+          ),
+          delivered: false,
+          deliveredAt: null,
+          id: uuid.v4(),
+          offlineOrderId: null,
+          orderId: data.id,
+          paid: data.paidAdvanced,
+          received: false,
+          refundRequestByUser: false,
+          status:
+            data.cancelledBy
+              ? "CANCELLED"
+              : "UPCOMING",
+          updatedAt: new Date(),
+        },...val]);
+      }
       let being = installmentData.installmentCount - subsOrders.length;
       let arr = [];
+      //console.log(being)
+      //console.log(subsOrders)
       //console.log(subsOrders[subsOrders.length-1].status)
       for (let i = 0; i < being; i++) {
         setSubsOrders((val) => [
@@ -84,7 +128,7 @@ export default function InstallmentOfflineScript({ navigation, route }) {
           {
             createdAt: new Date(),
             dateFrom: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
+              data.deliveryDateFrom,
               i *
                 (installmentData.installmentType == "Monthly"
                   ? 30
@@ -93,7 +137,7 @@ export default function InstallmentOfflineScript({ navigation, route }) {
                   : 7)
             ),
             dateTo: localTimeToServerDate(
-              subsOrders[subsOrders.length - 1].dateTo,
+              data.deliveryDateFrom,
               (i + 1) *
                 (installmentData.installmentType == "Monthly"
                   ? 30
@@ -110,7 +154,7 @@ export default function InstallmentOfflineScript({ navigation, route }) {
             received: false,
             refundRequestByUser: false,
             status:
-              subsOrders[subsOrders.length - 1].status == "CANCELLED"
+              subsOrders[subsOrders.length - 1]?.status == "CANCELLED"
                 ? "CANCELLED"
                 : "UPCOMING",
             updatedAt: new Date(),
@@ -118,12 +162,17 @@ export default function InstallmentOfflineScript({ navigation, route }) {
         ]);
       }
     }
-  }, [subsOrders && subsOrders.length, Counter]);
-  useEffect(() => {
+   },[subsOrders?.length])
+   useEffect(() => {
     if (subsOrders) {
-      setOrder(subsOrders);
+      let arr = subsOrders.filter(
+        (d, i) => ((i < (10 * (page+1))&& (i >= (page)*10)))
+      );
+      setPageContent(arr);
+    }else{
+
     }
-  }, [subsOrders]);
+  }, [page, subsOrders?.length]);
 
   return (
     <View
@@ -465,8 +514,8 @@ export default function InstallmentOfflineScript({ navigation, route }) {
             Status
           </Text>
         </View>
-        {subsOrders &&
-          subsOrders.map((doc, i) => (
+        {pageContent &&
+          pageContent.map((doc, i) => (
             <Cart
               activeIndex={activeIndex}
               onPress={() => {
@@ -491,9 +540,10 @@ export default function InstallmentOfflineScript({ navigation, route }) {
               index={i}
               page={page}
               installmentData={installmentData}
+              orders={subsOrders}
             />
           ))}
-        {subsOrders && subsOrders.length == 0 && (
+        {pageContent && pageContent.length == 0 && (
           <Text
             style={{
               marginVertical: 10,
@@ -505,39 +555,15 @@ export default function InstallmentOfflineScript({ navigation, route }) {
         )}
 
         {loader && <ActivityLoader />}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 20,
-            marginVertical: 10,
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(subsOrders?.length / 10)}
+          onPageChange={(page) => {
+            setPage(page)
           }}
-        >
-          <IconButton
-            disabled={page > 1 ? false : true}
-            onPress={() => {
-              if (page > 1) {
-                //handlePages(page + 1);
-                setPage((val) => val - 1);
-              }
-            }}
-            title={"Previous"}
-          />
-          <IconButton
-            disabled={
-              subsOrders && subsOrders.length / 12 > page ? false : true
-            }
-            onPress={() => {
-              let pageValue = subsOrders.length / 12;
-              if (pageValue > page) {
-                //handlePages(page + 1);
-                setPage((val) => val + 1);
-              }
-            }}
-            title={"Next"}
-          />
-        </View>
-
+          label={`${parseInt(subsOrders?.length / 10) + 1} of ${page + 1}`}
+          selectPageDropdownLabel={"Rows per page"}
+        />
         <View
           style={{
             height: 20,
@@ -557,7 +583,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
 });
-const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
+const Cart = ({ data, onPress, index, page, activeIndex, installmentData,orders }) => {
+  index=orders.indexOf(data)
   return (
     <Pressable
       disabled={data.offlineOrderId ? false : true}
@@ -605,7 +632,9 @@ const Cart = ({ data, onPress, index, page, activeIndex, installmentData }) => {
             fontSize: 16,
           }}
         >
-          {data.dateFrom} To {data.dateTo}
+          {index == 0 && installmentData.advancedPayment?
+          `${data.dateFrom}`:
+          `${data.dateFrom} To ${data.dateTo}`}
         </Text>
         <View
           style={{
