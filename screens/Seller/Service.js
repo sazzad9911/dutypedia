@@ -90,9 +90,9 @@ const Service = ({ navigation, route }) => {
   const [Loader, setLoader] = React.useState(false);
   const [ModalVisible, setModalVisible] = React.useState(false);
   const params = route.params;
-  const type = params.type;
-  const subsData = params.subsData;
-  const installmentData=params.installmentData
+  const type = params?.type;
+  const subsData = params?.subsData;
+  const installmentData=params?.installmentData
   
 
   React.useEffect(() => {

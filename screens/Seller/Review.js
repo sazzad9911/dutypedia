@@ -174,22 +174,27 @@ const Review = (props) => {
         Array.isArray(img2) ? img2[0] : null
       ).catch(err=>{
         console.warn(err.response.data.msg)
+        Alert.alert(res.response.data.msg)
       })
       if(!res){
-        Alert.alert(res.response.data.msg)
+        setLoading(false);
+        //Alert.alert(res.response.data.msg)
         return
       }
       const data=await vendorLogin(newUser.token, res.data.service.id);
       if(!data){
+        setLoading(false);
         Alert.alert("Opps!",data.response.data.msg)
         return
       }
       setLoading(false);
       dispatch({ type: "SET_VENDOR", playload: data });
             //navigation.navigate("Profile");
-      navigation.navigate("VendorProfile");
+      navigation.navigate("Profile");
   
   };
+  //console.log(Images)
+  //return null
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -459,7 +464,7 @@ const Review = (props) => {
                 width: width,
                 height: width + 30,
               }}
-              source={{ uri: Images[index] }}
+              source={{ uri: Images[index].uri }}
             />
           )}
         />
