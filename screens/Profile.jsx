@@ -58,7 +58,6 @@ import OrderDetails from "./Seller/OrderDetails";
 import AddServiceList from "./AddServiceList";
 import UserNotice from "./UserNotice";
 import CompanyCalendar from "./Seller/CompanyCalendar";
-import AccountBalance from "./Seller/AccountBalance";
 import OnlineUserProfile from "./Vendor/OnlineUserProfile";
 import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
@@ -87,6 +86,8 @@ import { fileFromURL } from "../action";
 import { uploadFile } from "../Class/upload";
 import { updateUserData } from "../Class/update";
 import { getUserInfo } from "../Class/member";
+import AccountBalance from "./Vendor/account/AccountBalance";
+import AccountHeader from "./Vendor/account/AccountHeader";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -130,6 +131,15 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={EditVendorInfo}
+      />
+      <Stack.Screen
+        name="VendorAccountBalance"
+        options={{
+          header: (props) => (
+            <AccountHeader title="Personal Information" {...props} />
+          ),
+        }}
+        component={AccountBalance}
       />
       <Stack.Screen
         name="EditService"

@@ -216,7 +216,9 @@ const Menu = ({ navigation }) => {
             title="Staff & Member"
             Icon={() => <SvgXml xml={notice2} height="30" width="30" />}
           /> */}
-          <Cart
+          <Cart onPress={()=>{
+            navigation.navigate("VendorAccountBalance")
+          }}
             title="Account Balance"
             Icon={() => (
               <Image
