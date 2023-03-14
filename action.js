@@ -91,7 +91,7 @@ export const shortAZ = (data) => {
     return a.title > b.title;
   });
 };
-export const url = `https://dutybazar.com`;
+export const url = `https://duty.com.bd`;
 
 export function fileFromURL(inputURI) {
   if(inputURI==null){
