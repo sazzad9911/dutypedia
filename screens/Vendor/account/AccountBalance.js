@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { ScrollView, TouchableHighlight, View, Text } from "react-native";
+import { ScrollView, TouchableHighlight, View, Text, Dimensions } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
@@ -9,6 +9,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import RecentTransaction from "./RecentTransaction";
 import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
+const {width,height}=Dimensions.get("window")
 
 export default function AccountBalance() {
   const isFocused = useIsFocused();
@@ -29,7 +30,8 @@ export default function AccountBalance() {
       <View
         style={{
           paddingHorizontal: 20,
-          height: 350,
+          height: 450,
+          
         }}>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
           <Tab.Screen
@@ -43,18 +45,27 @@ export default function AccountBalance() {
   );
 }
 const MasterCart = () => {
-  const [verified, setVerified] = useState(true);
+  const [verified, setVerified] = useState(false);
   return (
     <View
       style={{
         justifyContent: "center",
-        marginHorizontal: 20,
         marginVertical: 10,
+        backgroundColor:"#485563",
+        padding:0,
+        width:width-40,
+        marginLeft:20,
+        height:207,
+        borderRadius:10,
+        overflow:"hidden"
       }}>
-      <SvgXml width={"auto"} xml={cart} />
+      <SvgXml width={width} style={{
+        width:width,
+        position:"absolute",
+        zIndex:-1
+      }} xml={cart} />
       <View
         style={{
-          position: "absolute",
           top: 0,
           height: "100%",
           width: "100%",
@@ -64,13 +75,13 @@ const MasterCart = () => {
           style={{
             height: 75,
             alignItems: "center",
-            justifyContent: "center",
+            flexDirection:"row",
+            justifyContent:"space-between"
           }}>
+            <SvgXml xml={chip}/>
           {verified ? (
             <SvgXml
-              style={{
-                alignSelf: "flex-end",
-              }}
+              
               xml={verifiedIcon}
             />
           ) : (
@@ -82,7 +93,6 @@ const MasterCart = () => {
                 borderRadius: 5,
                 borderColor: "white",
                 borderWidth: 1,
-                alignSelf: "flex-end",
               }}>
               <Text
                 style={{
@@ -126,35 +136,41 @@ const verifiedIcon = `<svg width="84" height="20" viewBox="0 0 84 20" fill="none
 `;
 const cart = `<svg width="329" height="207" viewBox="0 0 329 207" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="328.914" height="207" rx="12" fill="url(#paint0_linear_2820_18796)"/>
-<g clip-path="url(#clip0_2820_18796)">
-<path d="M85.6469 48.5789H45.9865C42.6802 48.5789 40 51.1769 40 54.3817V76.8678C40 80.0727 42.6802 82.6707 45.9865 82.6707H85.6469C88.9531 82.6707 91.6333 80.0727 91.6333 76.8678V54.3817C91.6333 51.1769 88.9531 48.5789 85.6469 48.5789Z" fill="#F2E07C"/>
-<path d="M85.6465 48.9414H45.9861C42.8865 48.9414 40.3738 51.3771 40.3738 54.3816V76.8677C40.3738 79.8722 42.8865 82.3079 45.9861 82.3079H85.6465C88.7461 82.3079 91.2588 79.8722 91.2588 76.8677V54.3816C91.2588 51.3771 88.7461 48.9414 85.6465 48.9414Z" stroke="#672525" stroke-width="0.737886"/>
-<path d="M40.0073 60.1207H56.5255" stroke="#672525" stroke-width="0.737886"/>
-<path d="M56.5249 54.1169H73.0431" stroke="#672525" stroke-width="0.737886"/>
-<path d="M79.4409 65.6248H91.8838" stroke="#672525" stroke-width="0.737886"/>
-<path d="M73.043 59.3707H91.6257" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M40.3738 71.8796H91.6255" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M56.5249 72.3691V82.6366" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M48.7822 60.1207V71.6438" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M64.7849 72.6304V82.6374" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M79.4409 59.3707V71.8795" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M56.5249 48.3628V60.1209" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M72.5269 71.8796V82.8877" stroke="#672525" stroke-width="0.737886"/>
-<path d="M73.043 48.3628V59.3708" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
-<path d="M62.0915 68.5263C63.7537 68.5263 65.1012 67.2272 65.1012 65.6248C65.1012 64.0224 63.7537 62.7234 62.0915 62.7234C60.4293 62.7234 59.0818 64.0224 59.0818 65.6248C59.0818 67.2272 60.4293 68.5263 62.0915 68.5263Z" stroke="#672525" stroke-width="0.737886"/>
-<path d="M67.2975 68.5263C68.9598 68.5263 70.3072 67.2272 70.3072 65.6248C70.3072 64.0224 68.9598 62.7234 67.2975 62.7234C65.6353 62.7234 64.2878 64.0224 64.2878 65.6248C64.2878 67.2272 65.6353 68.5263 67.2975 68.5263Z" stroke="#672525" stroke-width="0.737886"/>
-</g>
 <defs>
 <linearGradient id="paint0_linear_2820_18796" x1="0" y1="103.5" x2="328.914" y2="103.5" gradientUnits="userSpaceOnUse">
 <stop stop-color="#485563"/>
 <stop offset="1" stop-color="#29323C"/>
 </linearGradient>
-<clipPath id="clip0_2820_18796">
-<rect width="52" height="35" fill="white" transform="translate(40 48)"/>
+</defs>
+</svg>
+
+`;
+const chip=`<svg width="52" height="35" viewBox="0 0 52 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2960_17342)">
+<path d="M45.6469 0.578857H5.98647C2.68024 0.578857 0 3.17689 0 6.38173V28.8678C0 32.0727 2.68024 34.6707 5.98647 34.6707H45.6469C48.9531 34.6707 51.6333 32.0727 51.6333 28.8678V6.38173C51.6333 3.17689 48.9531 0.578857 45.6469 0.578857Z" fill="#F2E07C"/>
+<path d="M45.6465 0.941406H5.9861C2.8865 0.941406 0.373779 3.37706 0.373779 6.3816V28.8677C0.373779 31.8722 2.8865 34.3079 5.9861 34.3079H45.6465C48.7461 34.3079 51.2588 31.8722 51.2588 28.8677V6.3816C51.2588 3.37706 48.7461 0.941406 45.6465 0.941406Z" stroke="#672525" stroke-width="0.737886"/>
+<path d="M0.00732422 12.1207H16.5255" stroke="#672525" stroke-width="0.737886"/>
+<path d="M16.5249 6.11694H33.0431" stroke="#672525" stroke-width="0.737886"/>
+<path d="M39.4409 17.6248H51.8838" stroke="#672525" stroke-width="0.737886"/>
+<path d="M33.043 11.3707H51.6257" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M0.373779 23.8796H51.6255" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M16.5249 24.3691V34.6366" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M8.78223 12.1207V23.6438" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M24.7849 24.6304V34.6374" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M39.4409 11.3707V23.8795" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M16.5249 0.362793V12.1209" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M32.5269 23.8796V34.8877" stroke="#672525" stroke-width="0.737886"/>
+<path d="M33.043 0.362793V11.3708" stroke="#672525" stroke-width="0.737886" stroke-linecap="round"/>
+<path d="M22.0915 20.5263C23.7537 20.5263 25.1012 19.2272 25.1012 17.6248C25.1012 16.0224 23.7537 14.7234 22.0915 14.7234C20.4293 14.7234 19.0818 16.0224 19.0818 17.6248C19.0818 19.2272 20.4293 20.5263 22.0915 20.5263Z" stroke="#672525" stroke-width="0.737886"/>
+<path d="M27.2975 20.5263C28.9598 20.5263 30.3072 19.2272 30.3072 17.6248C30.3072 16.0224 28.9598 14.7234 27.2975 14.7234C25.6353 14.7234 24.2878 16.0224 24.2878 17.6248C24.2878 19.2272 25.6353 20.5263 27.2975 20.5263Z" stroke="#672525" stroke-width="0.737886"/>
+</g>
+<defs>
+<clipPath id="clip0_2960_17342">
+<rect width="52" height="35" fill="white"/>
 </clipPath>
 </defs>
 </svg>
-`;
+`
 const TabBar = ({ state, navigation }) => {
   //console.log(state.index)
   return (

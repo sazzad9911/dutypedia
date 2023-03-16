@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { View,Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SvgXml } from "react-native-svg";
 import IconButton from "../../../components/IconButton";
 import WithdrawCart from "./WithdrawCart";
 
-
-export default function RecentWithdraw() {
-  const [data,setData]=useState(["fsf",'sdfs',"sdf"])
+export default function RecentWithdraw({navigation}) {
+  const [data, setData] = useState(["fsf", "sdfs", "sdf", "sd", "sf", "sfd"]);
   return (
     <View
       style={{
@@ -26,7 +25,9 @@ export default function RecentWithdraw() {
             }}>
             Recent Transaction
           </Text>
-          <IconButton
+          <IconButton onPress={()=>{
+            navigation.navigate("AllWithdraws")
+          }}
             style={{
               borderWidth: 0,
               fontSize: 16,
@@ -36,9 +37,8 @@ export default function RecentWithdraw() {
           />
         </View>
       )}
-      {data&&data.map((doc,i)=>(
-        <WithdrawCart key={i} data={doc}/>
-      ))}
+      <TopBox/>
+      {data && data.map((doc, i) => <WithdrawCart key={i} data={doc} />)}
       {data && data.length == 0 && <NoThing />}
     </View>
   );
@@ -66,3 +66,47 @@ const icon = `<svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns=
 <path d="M1 16.5L8.5 9L1 1.5" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
+export const TopBox = () => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.leftBox}>
+        <Text style={styles.text}>Date</Text>
+      </View>
+      <View style={styles.middleBox}>
+        <Text style={styles.text}>Amount</Text>
+      </View>
+      <View style={styles.rightBox}>
+        <Text style={styles.text}>Status</Text>
+      </View>
+    </View>
+  );
+};
+const styles = StyleSheet.create({
+  leftBox: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  middleBox: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  rightBox: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  container: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e6e6e6",
+    padding: 8,
+    marginVertical: 4,
+  },
+  text: {
+    fontSize: 16,
+  },
+});

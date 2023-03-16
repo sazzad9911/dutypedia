@@ -4,7 +4,7 @@ import { SvgXml } from "react-native-svg";
 import IconButton from "../../../components/IconButton";
 import TransactionCart from "./TransactionCart";
 
-export default function RecentTransaction() {
+export default function RecentTransaction({navigation}) {
   const [data, setData] = useState(["sdf","sdfs","fdsf"]);
   return (
     <View
@@ -25,7 +25,9 @@ export default function RecentTransaction() {
             }}>
             Recent Transaction
           </Text>
-          <IconButton
+          <IconButton onPress={()=>{
+            navigation.navigate("AllTransactions")
+          }}
             style={{
               borderWidth: 0,
               fontSize: 16,

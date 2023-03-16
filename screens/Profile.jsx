@@ -88,6 +88,8 @@ import { updateUserData } from "../Class/update";
 import { getUserInfo } from "../Class/member";
 import AccountBalance from "./Vendor/account/AccountBalance";
 import AccountHeader from "./Vendor/account/AccountHeader";
+import AllTransactions from "./Vendor/account/AllTransactions";
+import { AllWithdraws } from "./Vendor/account/AllWithdraws";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -136,10 +138,28 @@ const Profile = ({ navigation }) => {
         name="VendorAccountBalance"
         options={{
           header: (props) => (
-            <AccountHeader title="Personal Information" {...props} />
+            <AccountHeader title="Account Balance" {...props} />
           ),
         }}
         component={AccountBalance}
+      />
+      <Stack.Screen
+        name="AllTransactions"
+        options={{
+          header: (props) => (
+            <AccountHeader title="All transaction" {...props} />
+          ),
+        }}
+        component={AllTransactions}
+      />
+      <Stack.Screen
+        name="AllWithdraws"
+        options={{
+          header: (props) => (
+            <AccountHeader title="All withdraw" {...props} />
+          ),
+        }}
+        component={AllWithdraws}
       />
       <Stack.Screen
         name="EditService"
