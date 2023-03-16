@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -65,6 +65,10 @@ import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
 import { SubscriptionDates } from "./screens/Seller/SubscriptionDates";
 import * as Network from 'expo-network';
+import AccountHeader from "./screens/Vendor/account/AccountHeader";
+import WithdrawFirst from "./screens/Vendor/account/WithdrawFirst";
+import WithdrawSecond from "./screens/Vendor/account/WithdrawSecond";
+import WithdrawFinal from "./screens/Vendor/account/WithdrawFinal";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -145,7 +149,7 @@ export default function StackRoute() {
     );
   }
   return (
-    <SafeAreaProvider
+    <SafeAreaView
       style={{
         flex: 1,
       }}
@@ -422,9 +426,30 @@ export default function StackRoute() {
             name="SubscriptionDates"
             component={SubscriptionDates}
           />
+          <Stack.Screen
+            options={{
+              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
+            }}
+            name="WithdrawFirst"
+            component={WithdrawFirst}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
+            }}
+            name="WithdrawSecond"
+            component={WithdrawSecond}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
+            }}
+            name="WithdrawFinal"
+            component={WithdrawFinal}
+          />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 }
 const New = () => {

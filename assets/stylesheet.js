@@ -14,6 +14,10 @@ const customStyle=StyleSheet.create({
     mediumText:{
         fontFamily:"Poppins-Medium",
         fontSize:16
+    },
+    largeFont:{
+        fontSize:24,
+        fontWeight:"600"
     }
 })
 export default customStyle

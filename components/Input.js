@@ -60,7 +60,6 @@ const Input = ({
           {
             borderBottomWidth: 1,
             marginHorizontal: 20,
-            borderBottomColor: !Focus ? "#e5e5e5" : "#DA1E37",
             marginVertical: 5,
             backgroundColor: primaryColor,
             borderRadius: 5,
@@ -69,8 +68,9 @@ const Input = ({
             fontFamily: "Poppins-Light",
             fontSize: 15,
           },
+          
+          { borderColor: !Focus ? "#e5e5e5" : "#4ADE80" },
           style,
-          { borderColor: !Focus ? "#e5e5e5" : "#DA1E37" },
         ]}
       />
       {Error && (

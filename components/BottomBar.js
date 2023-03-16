@@ -102,7 +102,7 @@ const BottomBar = (props) => {
     return null;
   }
   return (
-    <Animated.View entering={FadeIn} style={styles.box}>
+    <Animated.View entering={FadeIn} style={[styles.box,]}>
       <TouchableOpacity
         onPress={() => {
           if (route == 0 && vendor) {

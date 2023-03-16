@@ -1,3 +1,4 @@
+import { translate } from "@shopify/react-native-skia";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -5,18 +6,20 @@ import { SvgXml } from "react-native-svg";
 
 export default function AccountHeader({ navigation, title }) {
   return (
-    <SafeAreaView
+    <View
       style={{
         flexDirection: "row",
         justifyContent: "center",
         paddingHorizontal: 20,
         paddingVertical: 10,
+        alignItems:"center",
       }}>
       <TouchableOpacity
         style={{
           position: "absolute",
           left: 20,
-          top: 30,
+          height:"100%",
+          
         }}
         onPress={() => {
           navigation.goBack();
@@ -30,7 +33,7 @@ export default function AccountHeader({ navigation, title }) {
         {title ? title : "Account Balance"}
       </Text>
       {/* <SvgXml xml={menuIcon}/> */}
-    </SafeAreaView>
+    </View>
   );
 }
 

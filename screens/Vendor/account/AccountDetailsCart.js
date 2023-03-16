@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text,StyleSheet } from "react-native";
 import IconButton from "../../../components/IconButton";
 
-export default function AccountDetailsCart() {
+export default function AccountDetailsCart({onWithdraw}) {
   return (
     <View
       style={{
@@ -41,7 +41,7 @@ export default function AccountDetailsCart() {
           <Text style={styles.smallText}>Pending Amount</Text>
           <Text style={styles.largeText}>50.00৳</Text>
         </View>
-        <IconButton style={{
+        <IconButton onPress={onWithdraw} style={{
             width:100,
             height:40,
             fontFamily:"Poppins-Medium"

@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { Color } from "../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 
-const RadioButton = ({ value, title, onChange, style }) => {
+const RadioButton = ({ value, title, onChange, style,dark }) => {
   const [Check, setCheck] = React.useState(false);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -45,10 +45,10 @@ const RadioButton = ({ value, title, onChange, style }) => {
         {Check && (
           <View
             style={{
-              backgroundColor: backgroundColor,
-              height: 16,
-              width: 16,
-              borderRadius: 8,
+              backgroundColor:dark?"#484848": backgroundColor,
+              height: dark?20:16,
+              width: dark?20:16,
+              borderRadius:dark?12: 8,
             }}
           ></View>
         )}

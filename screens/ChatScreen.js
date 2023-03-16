@@ -218,7 +218,7 @@ const ChatScreen = (props) => {
 
   return (
     <Animated.View style={{flex:1}} layout={FadeIn}>
-      <SafeAreaView
+      <View
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
@@ -228,11 +228,7 @@ const ChatScreen = (props) => {
           image={UserInfo ? UserInfo.profilePhoto : null}
           {...props}
         />
-        <View
-          style={{
-            marginTop: Platform.OS == "ios" ? -20 : 0,
-          }}
-        />
+        <View/>
         <GiftedChat
           renderComposer={() => <BottomBar onSend={send} />}
           messages={Messages}
@@ -243,7 +239,7 @@ const ChatScreen = (props) => {
             _id: user.user.id,
           }}
         />
-      </SafeAreaView>
+      </View>
     </Animated.View>
   );
 };

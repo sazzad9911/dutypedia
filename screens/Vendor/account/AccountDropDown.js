@@ -29,7 +29,7 @@ const SERVICE = [
 ];
 const { width, height } = Dimensions.get("window");
 
-export default function AccountDropDown() {
+export default function AccountDropDown({onSelect}) {
   return (
     <View
       style={[{
@@ -39,14 +39,14 @@ export default function AccountDropDown() {
         backgroundColor: "#ffffff",
       },customStyle.shadow]}>
       {SERVICE.map((doc, i) => (
-        <Cart key={i} title={doc.title} />
+        <Cart onPress={()=>onSelect(doc.key)} key={i} title={doc.title} />
       ))}
     </View>
   );
 }
-const Cart = ({ title }) => {
+const Cart = ({ title,onPress }) => {
   return (
-    <TouchableOpacity
+    <TouchableOpacity onPress={onPress}
       style={{
         width: width - 20,
         marginLeft: 20,

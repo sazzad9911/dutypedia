@@ -11,7 +11,7 @@ import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
 const {width,height}=Dimensions.get("window")
 
-export default function AccountBalance() {
+export default function AccountBalance({navigation}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const Tab = createMaterialTopTabNavigator();
@@ -26,7 +26,7 @@ export default function AccountBalance() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <MasterCart />
-      <AccountDetailsCart />
+      <AccountDetailsCart onWithdraw={()=>navigation.navigate("WithdrawFirst")} />
       <View
         style={{
           paddingHorizontal: 20,
