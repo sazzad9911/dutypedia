@@ -34,12 +34,10 @@ export default function AccountDropDown({onSelect}) {
     <View
       style={[{
         flex: 1,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        backgroundColor: "#ffffff",
+        
       },customStyle.shadow]}>
       {SERVICE.map((doc, i) => (
-        <Cart onPress={()=>onSelect(doc.key)} key={i} title={doc.title} />
+        <Cart onPress={()=>onSelect?onSelect(doc.key):null} key={i} title={doc.title} />
       ))}
     </View>
   );

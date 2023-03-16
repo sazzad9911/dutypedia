@@ -1,20 +1,24 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableHighlight, View, Text, Dimensions } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 import AccountDetailsCart from "./AccountDetailsCart";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import RecentTransaction from "./RecentTransaction";
 import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
+import { getAccountInfo } from "../../../Class/account";
 const {width,height}=Dimensions.get("window")
 
 export default function AccountBalance({navigation}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const Tab = createMaterialTopTabNavigator();
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  const [data,setData]=useState()
 
   React.useEffect(() => {
     if (isFocused) {
@@ -23,10 +27,21 @@ export default function AccountBalance({navigation}) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  useEffect(()=>{
+    getAccountInfo(user.token,vendor.service.id).then(res=>{
+      //console.log(res.data)
+      setData(res.data)
+    }).catch(err=>{
+      console.error(err.response.data.msg)
+    })
+  },[])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <MasterCart />
-      <AccountDetailsCart onWithdraw={()=>navigation.navigate("WithdrawFirst")} />
+      <MasterCart id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
+      <AccountDetailsCart amount={data?.balance}
+      totalEarnings={data?.totalEarnings}
+      pendingAmount={data?.pending}
+       onWithdraw={()=>navigation.navigate("WithdrawFirst")} />
       <View
         style={{
           paddingHorizontal: 20,
@@ -44,7 +59,7 @@ export default function AccountBalance({navigation}) {
     </ScrollView>
   );
 }
-const MasterCart = () => {
+const MasterCart = ({name,id}) => {
   const [verified, setVerified] = useState(false);
   return (
     <View
@@ -114,7 +129,7 @@ const MasterCart = () => {
               fontSize: 24,
               color: "white",
             }}>
-            Easin Arafat
+            {name}
           </Text>
           <Text
             style={{
@@ -122,7 +137,7 @@ const MasterCart = () => {
               color: "white",
               marginVertical: 5,
             }}>
-            Id No: Dp545-3456
+            Id No: {id}
           </Text>
         </View>
       </View>

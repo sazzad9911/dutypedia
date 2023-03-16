@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, View } from "react-native";
-import { backgroundColor, primaryColor, textColor } from "../assets/colors";
+import { useSelector } from "react-redux";
+import { Color } from "../assets/colors";
 
 const IconButton = ({
   Icon,
@@ -11,6 +12,11 @@ const IconButton = ({
   active,
   LeftIcon,
 }) => {
+  const isDark=useSelector(state=>state.isDark)
+  const colors=new Color(isDark)
+  const backgroundColor=colors.getBackgroundColor()
+  const textColor=colors.getTextColor()
+  const primaryColor=colors.getPrimaryColor()
   return (
     <TouchableOpacity
       disabled={disabled}

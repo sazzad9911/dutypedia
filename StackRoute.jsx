@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { Alert, SafeAreaView, StyleSheet, Text, View } from "react-native";
+
+import { Alert, SafeAreaView, StyleSheet, Text, View ,StatusBar} from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
@@ -154,6 +154,7 @@ export default function StackRoute() {
         flex: 1,
       }}
     >
+      <StatusBar/>
       <NavigationContainer theme={MyTheme}>
         <Stack.Navigator
           screenOptions={({ route, navigation }) => ({
@@ -442,7 +443,7 @@ export default function StackRoute() {
           />
           <Stack.Screen
             options={{
-              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
+              headerShown:false
             }}
             name="WithdrawFinal"
             component={WithdrawFinal}

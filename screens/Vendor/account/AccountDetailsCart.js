@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text,StyleSheet } from "react-native";
 import IconButton from "../../../components/IconButton";
 
-export default function AccountDetailsCart({onWithdraw}) {
+export default function AccountDetailsCart({onWithdraw,totalEarnings,amount,pendingAmount}) {
   return (
     <View
       style={{
@@ -21,13 +21,13 @@ export default function AccountDetailsCart({onWithdraw}) {
         }}>
         <View>
           <Text style={styles.smallText}>Available Amount</Text>
-          <Text style={styles.largeText}>50000৳</Text>
+          <Text style={styles.largeText}>{amount}৳</Text>
         </View>
         <View style={{
             alignItems:"flex-end"
         }}>
           <Text style={styles.smallText}>Total Earnings</Text>
-          <Text style={styles.largeText}>50000৳</Text>
+          <Text style={styles.largeText}>{totalEarnings}৳</Text>
         </View>
       </View>
       <View
@@ -39,7 +39,7 @@ export default function AccountDetailsCart({onWithdraw}) {
         }}>
         <View>
           <Text style={styles.smallText}>Pending Amount</Text>
-          <Text style={styles.largeText}>50.00৳</Text>
+          <Text style={styles.largeText}>{pendingAmount}৳</Text>
         </View>
         <IconButton onPress={onWithdraw} style={{
             width:100,

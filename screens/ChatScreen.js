@@ -13,6 +13,7 @@ import {
   Modal,
   Image,
   Alert,
+  StatusBar,
 } from "react-native";
 import ChatBox from "./../components/ChatBox";
 import { EvilIcons } from "@expo/vector-icons";
@@ -217,18 +218,16 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
 
   return (
-    <Animated.View style={{flex:1}} layout={FadeIn}>
+    <Animated.View style={{ flex: 1 }} layout={FadeIn}>
+      {Platform.OS == "android" && <View style={{ height: 30 }} />}
+      <ChatHead
+        user={UserInfo}
+        name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
+        image={UserInfo ? UserInfo.profilePhoto : null}
+        {...props}
+      />
       <View
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
-        <ChatHead
-          user={UserInfo}
-          name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
-          image={UserInfo ? UserInfo.profilePhoto : null}
-          {...props}
-        />
-        <View/>
+        style={{ flex: 1,marginTop:Platform.OS=="android"?-30:-5 }}>
         <GiftedChat
           renderComposer={() => <BottomBar onSend={send} />}
           messages={Messages}

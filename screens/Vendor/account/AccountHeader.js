@@ -1,6 +1,6 @@
 import { translate } from "@shopify/react-native-skia";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 
@@ -13,6 +13,7 @@ export default function AccountHeader({ navigation, title }) {
         paddingHorizontal: 20,
         paddingVertical: 10,
         alignItems:"center",
+        marginTop:Platform.OS=="android"?25:0
       }}>
       <TouchableOpacity
         style={{
