@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { ScrollView, View, Animated, Dimensions } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 import AccountSearchBar from "./AccountSearchBar";
 import TransactionCart from "./TransactionCart";
@@ -9,23 +9,14 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import AccountDropDown from "./AccountDropDown";
 import customStyle from "../../../assets/stylesheet";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { getAllTransactions } from "../../../Class/account";
+import { dateDifference } from "../../../action";
+import ActivityLoader from "../../../components/ActivityLoader";
+import { NoThing } from "./RecentTransaction";
 const { width, height } = Dimensions.get("window");
 
 export default function AllTransactions() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    hideDatePicker();
-  };
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const scrollY = new Animated.Value(0);
@@ -40,6 +31,25 @@ export default function AllTransactions() {
   const handleSheetChanges = useCallback((index) => {
     setIndex(index);
   }, []);
+  const [data,setData]=useState()
+  const [allData,setAllData]=useState()
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  const [filterDate,setFilterDate]=useState()
+  const [filterTypes,setFilterTypes]=useState()
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setFilterDate(date)
+    setFilterTypes()
+    hideDatePicker();
+  };
 
   React.useEffect(() => {
     if (isFocused) {
@@ -51,6 +61,35 @@ export default function AllTransactions() {
       dispatch(setHideBottomBar(true));
     }, 50);
   }, [isFocused]);
+  useEffect(()=>{
+    if(user&&vendor){
+      getAllTransactions(user.token,vendor.service.id).then(res=>{
+        setAllData(res.data.orders)
+        setData(res.data.orders)
+      }).catch(err=>{
+        console.error(err.response.data.msg)
+      })
+    }
+  },[isFocused])
+
+  useEffect(()=>{
+    if(filterDate){
+      let arr=allData.filter(d=>dateDifference(d.createdAt,filterDate)==0)
+      setData(arr)
+    }
+    if(filterTypes){
+      if(filterTypes=="ALL"){
+        setData(allData)
+        return
+      }
+      let arr=allData.filter(d=>d.type.match(filterTypes))
+      setData(arr)
+    }
+    if(!filterDate&&!filterTypes){
+      setData(allData)
+    }
+  },[filterDate,filterTypes])
+  
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 }}>
@@ -70,17 +109,17 @@ export default function AllTransactions() {
             setIndex(1);
           }}
         />
-        <TransactionCart />
-        <TransactionCart />
-        <TransactionCart />
-        <TransactionCart />
-        <TransactionCart />
-        <TransactionCart />
-        <TransactionCart />
-
-        <TransactionCart />
-
-        <TransactionCart />
+        {data&&data.map((doc,i)=>(
+          <TransactionCart data={doc} key={i} />
+        ))}
+        {!data&&(
+        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+          <ActivityLoader/>
+        </View>
+       )}
+       {data&&data.length==0&&(
+        <NoThing/>
+       )}
         <View style={{ height: 10 }} />
       </ScrollView>
       <DateTimePickerModal
@@ -114,7 +153,11 @@ export default function AllTransactions() {
           },
           customStyle.shadow,
         ]}>
-        <AccountDropDown />
+        <AccountDropDown onSelect={(e)=>{
+          setFilterTypes(e)
+          setFilterDate()
+          bottomSheetRef.current.close()
+        }} />
       </BottomSheet>
     </View>
   );

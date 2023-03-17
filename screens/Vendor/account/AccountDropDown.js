@@ -1,43 +1,23 @@
 import React from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import customStyle from "../../../assets/stylesheet";
-const SERVICE = [
-  {
-    title: "All",
-    key: "ALL",
-  },
-  {
-    title: "Bargaining",
-    key: "BARGAINING",
-  },
-  {
-    title: "Fixed",
-    key: "FIXED",
-  },
-  {
-    title: "Package",
-    key: "PACKAGE",
-  },
-  {
-    title: "Subscription",
-    key: "SUBSCRIPTION",
-  },
-  {
-    title: "Installment",
-    key: "INSTALLMENT",
-  },
-];
+import { types } from "./types";
+
 const { width, height } = Dimensions.get("window");
 
-export default function AccountDropDown({onSelect}) {
+export default function AccountDropDown({onSelect,data}) {
   return (
     <View
       style={[{
         flex: 1,
         
       },customStyle.shadow]}>
-      {SERVICE.map((doc, i) => (
-        <Cart onPress={()=>onSelect?onSelect(doc.key):null} key={i} title={doc.title} />
+        <Cart onPress={()=>onSelect?onSelect("ALL"):null} title={"All"} />
+      {!data&&types.map((doc, i) => (
+        <Cart onPress={()=>onSelect?onSelect(doc.type):null} key={i} title={doc.title} />
+      ))}
+      {data&&data.map((doc, i) => (
+        <Cart onPress={()=>onSelect?onSelect(doc):null} key={i} title={doc.title} />
       ))}
     </View>
   );

@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useState,useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
+import { getAllWithdraws } from "../../../Class/account";
 import IconButton from "../../../components/IconButton";
 import WithdrawCart from "./WithdrawCart";
 
 export default function RecentWithdraw({navigation}) {
-  const [data, setData] = useState(["fsf", "sdfs", "sdf", "sd", "sf", "sfd"]);
+  const [data, setData] = useState();
+  const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
+  const isFocused=useIsFocused()
+  useEffect(() => {
+    if(user&&vendor){
+      getAllWithdraws(user.token,vendor.service.id).then(res=>{
+        setData(res.data)
+      }).catch(err=>{
+        console.error(err.response.data.msg)
+      })
+    }
+  }, [isFocused])
+  
   return (
     <View
       style={{
@@ -38,7 +54,7 @@ export default function RecentWithdraw({navigation}) {
         </View>
       )}
       <TopBox/>
-      {data && data.map((doc, i) => <WithdrawCart key={i} data={doc} />)}
+      {data && data.map((doc, i) => i<6? <WithdrawCart key={i} data={doc} />:<></>)}
       {data && data.length == 0 && <NoThing />}
     </View>
   );

@@ -1,18 +1,21 @@
 import React from 'react'
 import { StyleSheet, View,Text } from 'react-native'
+import { serverTimeToLocalDate } from '../../../action'
+import { exporters } from './expoters'
 
-export default function WithdrawCart({}) {
+export default function WithdrawCart({data}) {
+ // console.log(data)
   return (
     <View style={styles.container}>
         <View style={styles.leftBox}>
-          <Text style={styles.text}>5 Dec 2022</Text>
+          <Text style={styles.text}>{data&&serverTimeToLocalDate(data.createdAt)}</Text>
           
         </View>
         <View style={styles.middleBox}>
-        <Text style={styles.text}>500000</Text>
+        <Text style={styles.text}>{data?.amount}</Text>
         </View>
         <View style={styles.rightBox}>
-        <Text style={styles.text}>Canceled</Text>
+        <Text style={styles.text}>{data&&exporters(data.status)}</Text>
         </View>
     </View>
   )

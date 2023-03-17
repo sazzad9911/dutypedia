@@ -28,20 +28,16 @@ function Cart(props) {
         }
       }}
         style={{
-          width: width / 3-10,
-          height: 150,
+          width: width / 3,
+          height: 153,
           shadowColor: assentColor,
-          shadowOffset: {
-            width: 1,
-            height: 1,
-          },
-          shadowOpacity: .1,
-          shadowRadius: 6,
-          elevation: 5,
           backgroundColor: primaryColor,
-          margin: 10,
-          marginLeft: 5,
+          marginHorizontal: 10,
+          marginLeft: 0,
           borderRadius: 5,
+          borderWidth:1,
+          marginVertical:20,
+          borderColor:"#F1EFEF"
         }}
       >
         <Image

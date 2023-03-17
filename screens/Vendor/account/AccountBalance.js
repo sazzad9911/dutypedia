@@ -34,10 +34,10 @@ export default function AccountBalance({navigation}) {
     }).catch(err=>{
       console.error(err.response.data.msg)
     })
-  },[])
+  },[isFocused])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <MasterCart id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
+      <MasterCart verified={true} id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
       <AccountDetailsCart amount={data?.balance}
       totalEarnings={data?.totalEarnings}
       pendingAmount={data?.pending}
@@ -59,8 +59,8 @@ export default function AccountBalance({navigation}) {
     </ScrollView>
   );
 }
-const MasterCart = ({name,id}) => {
-  const [verified, setVerified] = useState(false);
+const MasterCart = ({name,id,verified}) => {
+  
   return (
     <View
       style={{

@@ -200,7 +200,7 @@ export const serverTimeToLocalDate=(date,dayPlus)=>{
   let day=date.getDate()<10?`0${date.getDate()}`:`${date.getDate()}`
   let year=date.getFullYear();
   let month=date.getMonth()
-  return `${months[month]} ${day} ${year}`
+  return `${day} ${months[month]} ${year}`
 
 }
 export const localTimeToServerDate=(date,dayPlus)=>{

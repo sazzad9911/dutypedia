@@ -12,7 +12,7 @@
         "react-native-background-fetch"
       ]
     ],
-    "name": "dutypedia",
+    "name": "Duty",
     "slug": "dutypedia",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,7 +26,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/*"
     ],
     "ios": {
       "supportsTablet": true,
@@ -37,14 +37,14 @@
         ]
       },
       "bitcode": false,
-      "bundleIdentifier": "com.sazzad991.dutypedia"
+      "bundleIdentifier": "com.duty.bd"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.sazzad991.dutypedia",
+      "package": "com.duty.bd",
       "versionCode": 1,
       "permissions": [
         "android.permission.RECORD_AUDIO",

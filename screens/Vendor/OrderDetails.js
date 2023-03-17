@@ -137,7 +137,7 @@ const OrderDetails = ({ navigation, route }) => {
   const installmentData = data.installmentData ? data.installmentData : null;
   const [installmentOrder, setInstallmentOrder] = useState(sOrder);
 
-  console.log(subsOrder)
+  //console.log(subsOrder)
   const stringDate = (d) => {
     const Months = [
       "Jan",
@@ -266,9 +266,9 @@ const OrderDetails = ({ navigation, route }) => {
         data: order,
       },
     });
-    socket.emit("notificationSend",{
-      receiverId:receiverId
-    })
+    socket.emit("notificationSend", {
+      receiverId: receiverId,
+    });
     setLoader(false);
     // try {
     //   const res = await getOrders(user.token, "user", vendor.service.id);
@@ -297,7 +297,7 @@ const OrderDetails = ({ navigation, route }) => {
       //let vendorArr = vendorRes.data.orders.filter((o) => o.id == order.id);
       socket.emit("updateOrder", {
         receiverId: user.user.id,
-        order:res.data.order,
+        order: res.data.order,
       });
       socket.emit("updateOrder", {
         receiverId: receiverId,
@@ -306,14 +306,14 @@ const OrderDetails = ({ navigation, route }) => {
           data: res.data.order,
         },
       });
-      socket.emit("notificationSend",{
-        receiverId:receiverId
-      })
+      socket.emit("notificationSend", {
+        receiverId: receiverId,
+      });
       setData(res.data.order);
       setSubsOrder(res.data.order.subsOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
-      navigation.goBack()
+      navigation.goBack();
     } catch (e) {
       console.warn(e.message);
     }
@@ -339,14 +339,14 @@ const OrderDetails = ({ navigation, route }) => {
         receiverId: receiverId,
         order: res.data.order,
       });
-      socket.emit("notificationSend",{
-        receiverId:receiverId
-      })
+      socket.emit("notificationSend", {
+        receiverId: receiverId,
+      });
       setData(res.data.order);
       setInstallmentOrder(res.data.order.installmentOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
-      navigation.goBack()
+      navigation.goBack();
     } catch (e) {
       console.warn(e.message);
     }
@@ -2159,6 +2159,8 @@ const exporters = (key) => {
       return "Cancelled";
     case "COMPLETED":
       return "Completed";
+    case "PENDING":
+      return "Pending";
     default:
       return "Unknown";
   }

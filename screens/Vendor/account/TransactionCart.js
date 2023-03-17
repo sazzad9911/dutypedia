@@ -1,26 +1,29 @@
 import React, { useState } from "react";
 import { StyleSheet, View,Text } from "react-native";
+import { convertDate, dateConverter, serverTimeToLocal, serverTimeToLocalDate } from "../../../action";
 import Avatar from "../../../components/Avatar";
+import { exporters } from "./expoters";
+import { types } from "./types";
 
-export default function TransactionCart() {
-  const [data, setData] = useState(["df", "sdf", "sef"]);
+export default function TransactionCart({data}) {
+  //console.log(data)
   return (
     <View style={styles.container}>
       <View style={styles.flexBox}>
-        <Text style={styles.smallText}>Bargaining</Text>
-        <Text style={styles.smallText}>5 Dec 2023</Text>
+        <Text style={styles.smallText}>{data&&types.filter(d=>d.type.match(data.type))[0].title}</Text>
+        <Text style={styles.smallText}>{data&&serverTimeToLocalDate(data?.createdAt)}</Text>
       </View>
       <View style={styles.flexBox}>
         <View style={styles.flexBox}>
           <Avatar style={{width:30,height:30,margin:4}} />
           <View>
-            <Text style={[styles.textLarge,{fontWeight:"700"}]}>Easin Arafat</Text>
-            <Text style={styles.smallText}>@easinarafat</Text>
+            <Text style={[styles.textLarge,{fontWeight:"700"}]}>{data&&`${data.user.firstName} ${data.user.lastName}`}</Text>
+            <Text style={styles.smallText}>@{data&&`${data.user.username}`}</Text>
           </View>
         </View>
         <View>
-          <Text style={styles.textLarge}>500</Text>
-          <Text style={styles.smallText}>Pending</Text>
+          <Text style={styles.textLarge}>{data&&`${data.amount}`}</Text>
+          <Text style={styles.smallText}>{data&&exporters(data.status)}</Text>
         </View>
       </View>
     </View>

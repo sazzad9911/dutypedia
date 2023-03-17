@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState,useEffect } from "react";
 import { ScrollView, View, Animated, Text, Dimensions } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 import AccountSearchBar from "./AccountSearchBar";
 import { TopBox } from "./RecentWithdraw";
@@ -10,12 +10,55 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import AccountDropDown from "./AccountDropDown";
 import customStyle from "../../../assets/stylesheet";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { getAllWithdraws } from "../../../Class/account";
+import ActivityLoader from "../../../components/ActivityLoader";
+import { NoThing } from "./RecentTransaction";
+import { dateDifference } from "../../../action";
+import { allExporters } from "./expoters";
 const { width, height } = Dimensions.get("window");
 
 export const AllWithdraws = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [data, setData] = useState();
+  const [allData, setAllData] = useState();
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [filterDate, setFilterDate] = useState();
+  const [filterTypes, setFilterTypes] = useState();
+  useEffect(() => {
+    if (user && vendor) {
+      getAllWithdraws(user.token, vendor.service.id)
+        .then((res) => {
+          setAllData(res.data);
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.error(err.response.data.msg);
+        });
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (filterDate) {
+      let arr = allData.filter(
+        (d) => dateDifference(d.createdAt, filterDate) == 0
+      );
+      setData(arr);
+    }
+    if (filterTypes) {
+      if (filterTypes == "ALL") {
+        setData(allData);
+        return;
+      }
+      let arr = allData.filter((d) => d.status.match(filterTypes));
+      setData(arr);
+    }
+    if (!filterDate && !filterTypes) {
+      setData(allData);
+    }
+  }, [filterDate, filterTypes]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -26,7 +69,8 @@ export const AllWithdraws = () => {
   };
 
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
+    setFilterDate(date);
+    setFilterTypes();
     hideDatePicker();
   };
   const scrollY = new Animated.Value(0);
@@ -70,30 +114,26 @@ export const AllWithdraws = () => {
           style={{
             backgroundColor: "#ffffff",
           }}>
-          <AccountSearchBar onDate={showDatePicker}
+          <AccountSearchBar
+            onDate={showDatePicker}
             onSort={() => {
               setIndex(1);
             }}
           />
           <TopBox />
         </View>
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
-        <WithdrawCart />
+        
+       {data&&data.map((doc,i)=>(
+        <WithdrawCart data={doc} key={i} />
+       ))}
+       {!data&&(
+        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+          <ActivityLoader/>
+        </View>
+       )}
+       {data&&data.length==0&&(
+        <NoThing/>
+       )}
         <View
           style={{
             height: 10,
@@ -105,6 +145,7 @@ export const AllWithdraws = () => {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        date={filterDate?filterDate:new Date()}
       />
       {index != -1 && (
         <View
@@ -131,7 +172,11 @@ export const AllWithdraws = () => {
           },
           customStyle.shadow,
         ]}>
-        <AccountDropDown />
+        <AccountDropDown data={allExporters} onSelect={e=>{
+          setFilterTypes(e.key)
+          setFilterDate()
+          bottomSheetRef.current.close()
+        }} />
       </BottomSheet>
     </View>
   );

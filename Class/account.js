@@ -2,7 +2,7 @@ import axios from "axios";
 import { url } from "../action";
 
 const getAllTransactions=async(token,serviceId,limit,skip)=>{
-    const res=axios.get(`${url}/server/balance/get/transactions?serviceId=${serviceId}&limit=${limit}&skip=${skip}`,{
+    const res=axios.get(`${url}/server/balance/get/transactions?serviceId=${serviceId}${limit?`&limit=${limit}`:``}${skip?`&skip=${skip}`:``}`,{
         headers:{Authorization: `Bearer ${token}`}
     })
     return res
