@@ -26,6 +26,8 @@ import { dutyIcon } from "../assets/icon";
 import JoinCart from "../components/LandingPage/JoinCart";
 import ServiceListCart from "../components/LandingPage/ServiceListCart";
 import PopularCategory from "../components/LandingPage/PopularCategory";
+import TopSeller from "../components/LandingPage/TopSeller";
+import Trending from "../components/LandingPage/Trending";
 
 const Feed = ({ navigation, route }) => {
   const scrollY = new Animated.Value(0);
@@ -123,7 +125,19 @@ const Feed = ({ navigation, route }) => {
         </Animated.View>
         <JoinCart/>
         <ServiceListCart/>
-        <PopularCategory/>
+        <PopularCategory onMore={()=>{
+          navigation.navigate("ServiceScreen")
+        }}/>
+        <TopSeller onMore={()=>{
+          navigation.navigate("ServiceScreen")
+        }}/>
+        <Trending onMore={()=>{
+          navigation.navigate("ServiceScreen")
+        }}/>
+        <JoinCart colors={["#5C258D","#4389A2"]}/>
+        <TopSeller onMore={()=>{
+          navigation.navigate("ServiceScreen")
+        }}/>
         <View>
         <Text style={styles.text}>Category</Text>
         <ScrollView
@@ -131,12 +145,12 @@ const Feed = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
-          <View style={{width:28}}/>
+          <View style={{width:22}}/>
           {AllData && AllData.map((item, i) => <Cart key={i} data={item} />)}
-          <View style={{width:28}}/>
+          <View style={{width:22}}/>
         </ScrollView>
         </View>
-        <View style={{ height: 10}} />
+        <View style={{ height: 20}} />
       </ScrollView>
     </View>
   );
@@ -152,6 +166,8 @@ const styles=StyleSheet.create({
     fontSize:24,
     fontWeight:"700",
     marginHorizontal:28,
-    color:"#484848"
+    color:"#484848",
+    marginTop:20,
+    marginBottom:18
   }
 })

@@ -22,12 +22,17 @@ const customStyle = StyleSheet.create({
   flexBox: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems:"center"
+    alignItems:"center",
+    flex:1
   },
   landingHeadLine: {
     fontSize: 24,
     fontWeight: "700",
     color: "#484848",
+  },
+  landingButtonText: {
+    color: "#00B22D",
+    fontSize: 16,
   },
 });
 export default customStyle;

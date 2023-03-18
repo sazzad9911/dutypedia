@@ -6,20 +6,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { rotate, translate } from '@shopify/react-native-skia';
 import IconButton from '../IconButton';
 
-export default function JoinCart({style,onJoin}) {
+export default function JoinCart({style,onJoin,colors}) {
   return (
     <View style={[{
         backgroundColor:"green",
         borderRadius:23,
-        marginHorizontal:20,
+        marginHorizontal:28,
         overflow:"hidden",
         marginVertical:20
     },style]}>
         <LinearGradient
         // Background Linear Gradient
-        colors={['#0BAB54', '#3BB6B7']}
+        colors={colors?colors:['#0BAB54', '#3BB6B7']}
         style={styles.container}
-        end={{x:.8,y:.3}}
+        end={{x:.9,y:.2}}
       >
         <Text style={styles.text1}>Grow your business in one month</Text>
         <Text style={[styles.text2]}>"Revamp your biz! Join our BD platform for 100% growth in 1 month. Boost sales, expand effortlessly & achieve success.</Text>
@@ -38,7 +38,7 @@ const styles=StyleSheet.create({
         color:"white",
         fontWeight:"800",
         width:"100%",
-        letterSpacing:-0.8,
+        letterSpacing:width<380?-1.2:0,
         lineHeight:38
     },
     text2:{

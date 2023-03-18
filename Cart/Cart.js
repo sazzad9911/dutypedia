@@ -32,11 +32,9 @@ function Cart(props) {
           height: 153,
           shadowColor: assentColor,
           backgroundColor: primaryColor,
-          marginHorizontal: 10,
-          marginLeft: 0,
+          margin: 6,
           borderRadius: 5,
           borderWidth:1,
-          marginVertical:20,
           borderColor:"#F1EFEF"
         }}
       >

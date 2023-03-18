@@ -69,6 +69,8 @@ import AccountHeader from "./screens/Vendor/account/AccountHeader";
 import WithdrawFirst from "./screens/Vendor/account/WithdrawFirst";
 import WithdrawSecond from "./screens/Vendor/account/WithdrawSecond";
 import WithdrawFinal from "./screens/Vendor/account/WithdrawFinal";
+import ServiceScreen from "./screens/ServiceScreen";
+import ServiceHeader from "./components/LandingPage/ServiceHeader";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -447,6 +449,13 @@ export default function StackRoute() {
             }}
             name="WithdrawFinal"
             component={WithdrawFinal}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><ServiceHeader {...props}/>
+            }}
+            name="ServiceScreen"
+            component={ServiceScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>

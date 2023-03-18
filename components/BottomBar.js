@@ -6,6 +6,7 @@ import {
   Text,
   Keyboard,
   Platform,
+  BackHandler
 } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
@@ -51,6 +52,11 @@ const BottomBar = (props) => {
     if (props.state.index) {
       setRoute(props.state.index);
     }
+    BackHandler.addEventListener("hardwareBackPress",()=>{
+      setRoute(0)
+      //console.log("red")
+      return true
+    })
   }, [props.state.index]);
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {

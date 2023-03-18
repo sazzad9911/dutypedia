@@ -24,7 +24,7 @@ const RadioButton = ({ value, title, onChange, style,dark }) => {
     >
       <TouchableOpacity
         onPress={() => {
-          setCheck((val) => !val);
+          //setCheck((val) => !val);
           if (onChange) {
             onChange();
           }

@@ -37,7 +37,7 @@ export default function AccountBalance({navigation}) {
   },[isFocused])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <MasterCart verified={true} id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
+      <MasterCart verified={false} id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
       <AccountDetailsCart amount={data?.balance}
       totalEarnings={data?.totalEarnings}
       pendingAmount={data?.pending}

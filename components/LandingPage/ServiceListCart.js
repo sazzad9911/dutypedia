@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, ScrollView, View ,Text} from 'react-native'
+import { Dimensions, ScrollView, View ,Text, Pressable} from 'react-native'
 import { SvgXml } from 'react-native-svg'
 import { AllData } from '../../Data/AllData'
 import { CATEGORY_LIST } from '../../Data/newIcon'
@@ -22,7 +22,7 @@ export default function ServiceListCart() {
 }
 const Cart=({data})=>{
     return(
-        <View style={{
+        <Pressable style={{
             height:width/4-5,
             backgroundColor:data.color,
             marginHorizontal:6,
@@ -30,15 +30,17 @@ const Cart=({data})=>{
             justifyContent:"center",
             alignItems:"center",
             paddingHorizontal:28,
-            paddingVertical:16
+            paddingVertical:16,
+            borderWidth:1,
+            borderColor:"#E6E6E6"
         }}>
             <SvgXml width={"30"} height={"30"} xml={data.icon}/>
             <Text style={{
                 fontSize:12,
                 fontWeight:"700",
                 marginTop:10,
-                color:"white"
+                color:data?.title=="Painter"?"#484848":"white"
             }}>{data?.title}</Text>
-        </View>
+        </Pressable>
     )
 }
