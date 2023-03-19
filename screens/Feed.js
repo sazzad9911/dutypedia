@@ -109,7 +109,7 @@ const Feed = ({ navigation, route }) => {
             <SvgXml xml={dutyIcon}/>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("SearchScreen");
+                navigation.navigate("UserSearch");
               }}
               style={{
                 width: 35,

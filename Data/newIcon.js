@@ -310,71 +310,85 @@ export const CATEGORY_LIST=[
     {
         title:"Builder",
         icon:newBuilder,
-        color:"#009BFF"
+        color:"#009BFF",
+        key:"BUIDLER",
     },
     {
         title:"Parlour",
         icon:newParlour,
-        color:"#A8B400"
+        color:"#A8B400",
+        key:"PARLOUR",
     },
     {
         title:"Labor",
         icon:newLabor,
-        color:"#FECB00"
+        color:"#FECB00",
+        key:"LABOR",
     },
     {
         title:"Electrician",
         icon:newElectrician,
-        color:"#222222"
+        color:"#222222",
+        key:"ELECTRICIAN",
     },
     {
         title:"Lifestyle",
         icon:newLifeStyle,
-        color:"#9C2AA0"
+        color:"#9C2AA0",
+        key:"LIFESTYLE",
     },
     {
         title:"Online tuition",
         icon:newOnlineTuition,
-        color:"#007C92"
+        color:"#007C92",
+        key:"ONLINETUTION",
     },
     {
         title:"It & technology",
         icon:newIt,
-        color:"#E60000"
+        color:"#E60000",
+        key:"IT",
     },
     {
         title:"Lawyer",
         icon:newLawyer,
-        color:"#C9C3E6"
+        color:"#C9C3E6",
+        key:"LAWYER",
     },
     {
         title:"Business",
         icon:newBusiness,
-        color:"#003262"
+        color:"#003262",
+        key:"BUSINESS",
     },
     {
         title:"Cooker",
         icon:newCooker,
-        color:"#9DCE0A"
+        color:"#9DCE0A",
+        key:"COOKER",
     },
     {
         title:"Entertainment",
         icon:newEntertainment,
-        color:"#003087"
+        color:"#003087",
+        key:"ENTERTAINMENT",
     },
     {
         title:"Painter",
         icon:newPainter,
-        color:"#FFFFFF"
+        color:"#FFFFFF",
+        key:"PAINTER",
     },
     {
         title:"Music & audio",
         icon:newMusic,
-        color:"#00B0CA33"
+        color:"#00B0CA33",
+        key:"MUSIC",
     },
     {
         title:"House keeper",
         icon:newHouseKeeper,
-        color:"#00ADEE"
+        color:"#00ADEE",
+        key:"HOUSEKEEPER",
     },
 ]

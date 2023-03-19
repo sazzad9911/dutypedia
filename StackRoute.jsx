@@ -71,6 +71,7 @@ import WithdrawSecond from "./screens/Vendor/account/WithdrawSecond";
 import WithdrawFinal from "./screens/Vendor/account/WithdrawFinal";
 import ServiceScreen from "./screens/ServiceScreen";
 import ServiceHeader from "./components/LandingPage/ServiceHeader";
+import Search from "./screens/Search";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -181,6 +182,11 @@ export default function StackRoute() {
             options={{ headerShown: false }}
             name="SearchScreen_1"
             component={SearchScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="UserSearch"
+            component={Search}
           />
           {/* <Stack.Screen
             options={{
@@ -452,7 +458,7 @@ export default function StackRoute() {
           />
           <Stack.Screen
             options={{
-              header:(props)=><ServiceHeader {...props}/>
+              headerShown:false
             }}
             name="ServiceScreen"
             component={ServiceScreen}

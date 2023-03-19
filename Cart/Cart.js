@@ -20,6 +20,7 @@ function Cart(props) {
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <TouchableOpacity onPress={()=>{
         if(onPress){
+          console.log(data.title)
           onPress(data.title)
         }
         return
