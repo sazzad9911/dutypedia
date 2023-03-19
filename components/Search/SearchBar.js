@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -9,14 +9,27 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Animated, { StretchInY } from "react-native-reanimated";
+import IconButton from "../IconButton";
+import { ScrollView } from "react-native-gesture-handler";
 
-export default function SearchBar({ beforeStyle, afterStyle, style }) {
+export default function SearchBar({
+  beforeStyle,
+  afterStyle,
+  style,
+  onChange,
+  onSort
+}) {
   const [searchKey, setSearchKey] = useState();
+  useEffect(() => {
+    if (onChange) {
+      onChange(searchKey);
+    }
+  }, [searchKey]);
 
-  if (searchKey?.split("").length > 3) {
+  if (searchKey?.split("").length > 0) {
     return (
       <Animated.View entering={StretchInY}>
-        <Container
+        <Container onSort={onSort}
           onChange={setSearchKey}
           value={searchKey}
           style={style}
@@ -38,10 +51,11 @@ export default function SearchBar({ beforeStyle, afterStyle, style }) {
     </Animated.View>
   );
 }
-const NormalScreen = ({ beforeStyle, onChange, onPress, style,value }) => {
+const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
   return (
     <Pressable onPress={onPress} style={[styles.container, style, beforeStyle]}>
-      <TextInput value={value}
+      <TextInput
+        value={value}
         onChangeText={onChange}
         placeholder="Search service"
         style={styles.text}
@@ -50,37 +64,57 @@ const NormalScreen = ({ beforeStyle, onChange, onPress, style,value }) => {
     </Pressable>
   );
 };
-const Container = ({ afterStyle, style, onChange,value }) => {
+const Container = ({ afterStyle, style, onChange, value,onSort }) => {
   return (
-    <View style={[styles.container, styles.flexBox, style, afterStyle]}>
-      <TouchableOpacity>
-        <SvgXml
+    <View>
+      <View style={[styles.container, styles.flexBox, style, afterStyle]}>
+        <TouchableOpacity onPress={onSort}>
+          <SvgXml
+            style={{
+              marginLeft: 0,
+            }}
+            xml={sort}
+          />
+        </TouchableOpacity>
+        <View
           style={{
-            marginLeft: 0,
-          }}
-          xml={sort}
-        />
-      </TouchableOpacity>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          flex: 1,
-        }}>
-        <TextInput autoFocus={true} value={value}
-          onChangeText={onChange}
-          style={{
-            marginLeft: 27,
+            flexDirection: "row",
+            alignItems: "center",
             flex: 1,
-          }}
-        />
-        <SvgXml
-          style={{
-            marginRight: 27,
-          }}
-          xml={icon}
-        />
+          }}>
+          <TextInput
+            autoFocus={true}
+            value={value}
+            onChangeText={onChange}
+            style={[styles.text,{
+              marginLeft: 27,
+              flex: 1,
+            }]}
+          />
+          <SvgXml
+            style={{
+              marginRight: 27,
+            }}
+            xml={icon}
+          />
+        </View>
       </View>
+      <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom:18
+          }}>
+            <View style={{width:22}}/>
+          <IconButton active={true} style={styles.button} title={"Branding"} />
+          <IconButton style={styles.button} title={"Business Consulting"} />
+
+          <IconButton style={styles.button} title={"Branding"} />
+          <IconButton style={styles.button} title={"Branding"} />
+
+          <View style={{width:22}}/>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -98,7 +132,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#767676",
     fontWeight: "400",
-    lineHeight: 18,
     height: "100%",
     alignItems: "center",
   },
@@ -110,6 +143,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  button:{
+    marginTop:24,
+    borderColor:"#F1EFEF",
+    borderRadius:4,
+    marginHorizontal:6,
+    height:40
+  }
 });
 const icon = `<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.24363 1.33398C4.70476 1.33398 1.83594 4.13945 1.83594 7.60016C1.83594 11.0609 4.70476 13.8663 8.24363 13.8663C9.75789 13.8663 11.1495 13.3527 12.2461 12.4938L14.3309 14.5273L14.3863 14.5739C14.5797 14.7139 14.8538 14.6979 15.0288 14.5264C15.2212 14.3377 15.2208 14.0321 15.0279 13.8439L12.9673 11.8341C14.0131 10.719 14.6513 9.23247 14.6513 7.60016C14.6513 4.13945 11.7825 1.33398 8.24363 1.33398ZM8.24105 2.29883C11.2348 2.29883 13.6618 4.67217 13.6618 7.59984C13.6618 10.5275 11.2348 12.9009 8.24105 12.9009C5.24726 12.9009 2.82031 10.5275 2.82031 7.59984C2.82031 4.67217 5.24726 2.29883 8.24105 2.29883Z" fill="#767676"/>

@@ -26,7 +26,7 @@ export default function PopularCategory({onMore}) {
     </View>
   );
 }
-const Card = ({style}) => {
+export const Card = ({style}) => {
   const [like, setLike] = useState(false);
   return (
     <Pressable style={[styles.container,style]}>

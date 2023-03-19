@@ -2194,6 +2194,11 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
+"@sharcoux/slider@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@sharcoux/slider/-/slider-6.1.1.tgz#6260c1d86d1a51bafdcf1341cd9ff5ce178fc710"
+  integrity sha512-0ubP44rDzIhmN0UJxp2Y0Yresmlpruz46ymlG/9uoZHyXjuGg7yMuS78c/myfSRrtjiQoqnFMU52+kaG1uhX5w==
+
 "@shopify/react-native-skia@0.1.157":
   version "0.1.157"
   resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.157.tgz#85f7f5859aa06639fc780fb57af19e55ad10da35"
