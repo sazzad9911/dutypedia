@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -20,15 +20,17 @@ import NoResult from "../components/Search/NoResult";
 const { width, height } = Dimensions.get("window");
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import FilterCard from "../components/Search/FilterCard";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useIsFocused } from "@react-navigation/native";
+const Stack = createNativeStackNavigator();
 
-const Search = ({ navigation }) => {
-  const [searchKey, setSearchKey] = useState();
+const SearchSecond = ({ navigation,route }) => {
   const sheetRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["25%", "50%", "90%"], []);
   const [index, setIndex] = useState(-1);
   // callbacks
   const handleSheetChange = React.useCallback((index) => {
-    setIndex(index)
+    setIndex(index);
   }, []);
   const handleSnapPress = React.useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -36,16 +38,29 @@ const Search = ({ navigation }) => {
   const handleClosePress = React.useCallback(() => {
     sheetRef.current?.close();
   }, []);
+  const [filter, setFilter] = useState();
+  const params=route?.params;
+  const key=params?.key;
+  const [searchKey, setSearchKey] = useState(key);
+
   return (
     <HidableHeaderLayout
       header={
         <SearchBar
           onSort={() => setIndex(2)}
-          onChange={setSearchKey}
+          onChange={(e)=>{
+            if(!e){
+              navigation.navigate("SearchInitial")
+
+            }
+            setSearchKey(e)
+          }}
           style={styles.header}
+          value={searchKey}
+          active={true}
         />
       }
-      component={searchKey?.split("").length > 0 ? <SCREEN /> : <ITEM />}
+      component={<SCREEN />}
       bottom={
         <>
           {index != -1 && (
@@ -67,18 +82,56 @@ const Search = ({ navigation }) => {
             enablePanDownToClose={true}
             style={{
               backgroundColor: "white",
-              borderRadius:30
+              borderRadius: 30,
             }}>
             <BottomSheetScrollView
               contentContainerStyle={{
                 backgroundColor: "white",
               }}>
-              <FilterCard />
+              <FilterCard
+                onSelect={(e) => {
+                  setFilter(e);
+                  sheetRef.current.close();
+                }}
+              />
             </BottomSheetScrollView>
           </BottomSheet>
         </>
       }
     />
+  );
+};
+const SearchFirst = ({ navigation,route }) => {
+  const [searchKey, setSearchKey] = useState();
+  const isFocused=useIsFocused()
+
+  useEffect(()=>{
+    setSearchKey()
+  },[isFocused])
+  
+  return (
+    <HidableHeaderLayout
+      header={
+        <SearchBar
+          onSort={() => setIndex(2)}
+          onChange={(e)=>{
+            navigation.navigate("SearchSecond",{key:e})
+          }}
+          style={styles.header}
+          value={searchKey}
+          
+        />
+      }
+      component={<ITEM />}
+    />
+  );
+};
+const Search = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen options={{headerShown:false}} name="SearchInitial" component={SearchFirst} />
+      <Stack.Screen options={{headerShown:false}} name="SearchSecond" component={SearchSecond} />
+    </Stack.Navigator>
   );
 };
 

@@ -1,15 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { RangeSlider } from "@sharcoux/slider";
 import SwitchCart from "./SwitchCart";
 import { OnlineTutionIcon } from "../../assets/icon";
 import DropDown from "../DropDown";
 import DropDownRight from "./DropDownRight";
+import AddressPicker from "./AddressPicker";
+import IconButton from "../IconButton";
 
-export default function FilterCard() {
+export default function FilterCard({onSelect}) {
   const [range, setRange] = useState([50, 25000]);
-  const [online,setOnline]=useState(false)
-  const [verified,setVerified]=useState(false)
+  const [online, setOnline] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [sortBy, setSortBy] = useState();
+  const [address, setAddress] = useState(["", ""]);
+  const [min, setMin] = useState("50");
+  const [max, setMax] = useState("25000");
+
+  useEffect(() => {
+    if (min && max) {
+      //setRange([parseInt(min),parseInt(max)])
+    }
+  }, [max, min]);
+
   return (
     <View
       style={{
@@ -22,7 +35,7 @@ export default function FilterCard() {
         <Text style={[styles.largeText]}>Price</Text>
         <View style={{ height: 20 }} />
         <RangeSlider
-          range={range} // set the current slider's value
+          range={[parseInt(min), parseInt(max)]} // set the current slider's value
           minimumValue={50} // Minimum value
           maximumValue={25000} // Maximum value
           //step={0} // The step for the slider (0 means that the slider will handle any decimal value within the range [min, max])
@@ -44,7 +57,9 @@ export default function FilterCard() {
           thumbImage={undefined} // An image that would represent the thumb
           slideOnTap={true} // If true, touching the slider will update it's value. No need to slide the thumb.
           onValueChange={(e) => {
-            setRange(e);
+            //setRange(e);
+            setMax(e[1].toString());
+            setMin(e[0].toString());
           }} // Called each time the value changed. The type is (range: [number, number]) => void
           onSlidingStart={undefined} // Called when the slider is pressed. The type is (range: [number, number]) => void
           onSlidingComplete={undefined} // Called when the press is released. The type is (range: [number, number]) => void
@@ -62,27 +77,70 @@ export default function FilterCard() {
           // Add any View Props that will be applied to the container (style, ref, etc)
         />
         <View style={{ height: 20 }} />
-        <View style={{
-          flexDirection:"row",
-          alignItems:"center"
-        }}>
-          <InputBox value={range[0]}  />
-          <Text style={[styles.mediumText,{marginHorizontal:12}]}>to</Text>
-          <InputBox onChange={e=>{
-            setRange([range[0],parseInt(e)])
-          }} value={range[1]}/> 
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}>
+          <InputBox
+            value={min}
+            onChange={(e) => {
+              if (!e) {
+                return;
+              }
+              setMin(e);
+            }}
+          />
+          <Text style={[styles.mediumText, { marginHorizontal: 12 }]}>to</Text>
+          <InputBox
+            onChange={(e) => {
+              //console.log(e)
+              if (!e) {
+                return;
+              }
+              setMax(e);
+            }}
+            value={max}
+          />
         </View>
       </View>
-      <Text style={[styles.largeText, { marginBottom:32}]}>Status</Text>
-      <SwitchCart value={online} onChange={()=>setOnline(t=>!t)} title={"Online Seller"}/>
-      <View style={{height:20}}/>
-      <SwitchCart value={verified} onChange={()=>setVerified(t=>!t)} title={"Verified Seller"}/>
-      <DropDownRight data={["Older","Newest"]} title={"Sort by"}/>
-      <Text style={[styles.largeText,{marginTop:32}]}>Location</Text>
+      <Text style={[styles.largeText, { marginBottom: 32 }]}>Status</Text>
+      <SwitchCart
+        value={online}
+        onChange={() => setOnline((t) => !t)}
+        title={"Online Seller"}
+      />
+      <View style={{ height: 20 }} />
+      <SwitchCart
+        value={verified}
+        onChange={() => setVerified((t) => !t)}
+        title={"Verified Seller"}
+      />
+      <DropDownRight
+        value={sortBy}
+        onChange={setSortBy}
+        data={["Older", "Newest"]}
+        title={"Sort by"}
+      />
+      <Text style={[styles.largeText, { marginTop: 32 }]}>Location</Text>
+      <AddressPicker value={address} onChange={setAddress} />
+      <IconButton onPress={()=>{
+       onSelect({
+        min:min,
+        max:max,
+        division:address[0],
+        district:address[1],
+        online:online,
+        verified:verified,
+        orderBy:sortBy
+       })
+      }} style={styles.button} title={"Apply"} />
     </View>
   );
 }
-const InputBox = ({value,onChange}) => {
+const InputBox = ({ value, onChange }) => {
+  value=parseInt(value);
+  value=value.toString()
   return (
     <View
       style={{
@@ -90,9 +148,14 @@ const InputBox = ({value,onChange}) => {
         borderWidth: 1,
         borderRadius: 4,
         height: 34,
-        flex:1
+        flex: 1,
       }}>
-      <TextInput value={value.toFixed(0).toString()} onChange={onChange} style={{flex:1,textAlign:"center"}} />
+      <TextInput
+        keyboardType="number-pad"
+        value={value}
+        onChangeText={onChange}
+        style={{ flex: 1, textAlign: "center" }}
+      />
     </View>
   );
 };
@@ -110,7 +173,14 @@ const styles = StyleSheet.create({
   lineBox: {
     marginVertical: 32,
   },
-  checkBox:{
-    margin:0
-  }
+  checkBox: {
+    margin: 0,
+  },
+  button: {
+    height: 35,
+    backgroundColor: "#4ADE80",
+    marginTop: 32,
+    borderRadius: 8,
+    color: "#ffffff",
+  },
 });

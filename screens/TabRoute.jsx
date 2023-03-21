@@ -40,7 +40,12 @@ import AllPackageList from "./Seller/AllPackageList";
 import HomeRoute from "../HomeRoute";
 import Feed from "./Feed";
 import { checkUser } from "../Class/auth";
-import { getService, getDashboard, getOrders, getOfflineOrders } from "../Class/service";
+import {
+  getService,
+  getDashboard,
+  getOrders,
+  getOfflineOrders,
+} from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
 import { getSocket, socket } from "../Class/socket";
@@ -112,10 +117,10 @@ const TabRoute = () => {
   const newVendorOrders = useSelector((state) => state.vendorOrders);
   const callingScreen = useSelector((state) => state.callingScreen);
   const [callingScreenVisible, setCallingScreenVisible] = React.useState(false);
-  const [CallerId,setCallerId]=React.useState()
-  const [RoomId,setRoomId]=React.useState()
-  const [CallerName,setCallerName]=React.useState()
-  const [AudioCall,setAudioCall]=React.useState()
+  const [CallerId, setCallerId] = React.useState();
+  const [RoomId, setRoomId] = React.useState();
+  const [CallerName, setCallerName] = React.useState();
+  const [AudioCall, setAudioCall] = React.useState();
 
   React.useEffect(() => {
     if (user) {
@@ -134,19 +139,19 @@ const TabRoute = () => {
         });
     }
   }, [user]);
-  const updateVendorInfo=async(id)=>{
-    const res=await getService(user.token,id);
-    if(res){
+  const updateVendorInfo = async (id) => {
+    const res = await getService(user.token, id);
+    if (res) {
       dispatch({ type: "SET_VENDOR", playload: res.data });
     }
-  }
+  };
 
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
-        updateVendorInfo(res.service.id).catch(err=>{
+        updateVendorInfo(res.service.id).catch((err) => {
           dispatch({ type: "SET_VENDOR", playload: res });
-        })
+        });
       }
     });
     getJson("serviceSettings").then((data) => {
@@ -160,11 +165,11 @@ const TabRoute = () => {
         //setDashboard(data);
       }
     });
-    getJson("saveList").then(data=>{
-      if(data){
-        dispatch(setSaveList(data))
+    getJson("saveList").then((data) => {
+      if (data) {
+        dispatch(setSaveList(data));
       }
-    })
+    });
   }, []);
   React.useEffect(() => {
     checkUser()
@@ -231,9 +236,9 @@ const TabRoute = () => {
     }
   };
   const offlineOrders = async () => {
-    const res = await getOfflineOrders(user.token,vendor.service.id);
+    const res = await getOfflineOrders(user.token, vendor.service.id);
     //console.log(res.data.orders)
-    dispatch(setOfflineOrders(res.data.orders))
+    dispatch(setOfflineOrders(res.data.orders));
   };
   React.useEffect(() => {
     if (user && !isOffline) {
@@ -243,12 +248,10 @@ const TabRoute = () => {
   React.useEffect(() => {
     if (user && vendor && vendor.service && !isOffline) {
       //vendorOrders();
-      offlineOrders()
+      offlineOrders();
     }
   }, [user + vendor + reload + socket + isOffline]);
-  React.useEffect(()=>{
-
-  },[])
+  React.useEffect(() => {}, []);
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
@@ -258,18 +261,17 @@ const TabRoute = () => {
         socket?.emit("busy", data.from);
         return;
       }
-      setCallerId(data.from)
-      setRoomId(data.roomId)
-      setCallerName(data.name)
-      setAudioCall(data.audioOnly)
+      setCallerId(data.from);
+      setRoomId(data.roomId);
+      setCallerName(data.name);
+      setAudioCall(data.audioOnly);
       setCallingScreenVisible(true);
     });
-    
+
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;
   });
-  
 
   async function registerBackgroundFetchAsync() {
     return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
@@ -313,8 +315,7 @@ const TabRoute = () => {
             bottomSheetRef.current.close();
           }
           return <BottomBar {...props} />;
-        }}
-      >
+        }}>
         {!vendor &&
           (!Array.isArray(user) && user && load ? (
             // !NewState ? (
@@ -352,14 +353,14 @@ const TabRoute = () => {
             name="Feed"
             component={Order}
           />
-        )} 
+        )}
         {vendor ? (
           <Tab.Screen
             options={{
               // header: (props) => (
               //   <AppointmentHeader title={"Appointment"} {...props} />
               // ),
-              headerShown:false
+              headerShown: false,
             }}
             name="Search"
             component={VendorAppointmentList}
@@ -368,7 +369,7 @@ const TabRoute = () => {
           <Tab.Screen
             options={{ lazy: false, headerShown: false }}
             name="Search"
-            component={SearchScreen}
+            component={Search}
           />
         )}
         <Tab.Screen
@@ -380,10 +381,11 @@ const TabRoute = () => {
           component={Message}
         />
         <Tab.Screen
-          options={{ header: (props) => <NotificationHeader {...props}/> }}
+          options={{ header: (props) => <NotificationHeader {...props} /> }}
           name="Notification"
           component={Notification}
-        /> 
+        />
+
         <Tab.Screen
           options={{ headerShown: false }}
           name="Profile"
@@ -403,7 +405,11 @@ const TabRoute = () => {
           name="Appointment"
           component={Appointment}
         />
-
+        {/* <Tab.Screen
+          options={{ headerShown: false }}
+          name="UserSearch"
+          component={Search}
+        /> */}
         {/* <Tab.Screen
           name="AllPackageList"
           options={{
@@ -561,8 +567,7 @@ const Bottom = (props) => {
       enablePanDownToClose={true}
       backgroundStyle={{
         backgroundColor: primaryColor,
-      }}
-    >
+      }}>
       <View
         style={{
           alignItems: "center",
@@ -570,8 +575,7 @@ const Bottom = (props) => {
           height: 30,
           flexDirection: "row",
           paddingHorizontal: 20,
-        }}
-      >
+        }}>
         {visible ? (
           <TouchableOpacity
             onPress={() => {
@@ -580,8 +584,7 @@ const Bottom = (props) => {
             style={{
               position: "absolute",
               left: 10,
-            }}
-          >
+            }}>
             <Ionicons name="chevron-back-outline" size={24} color={textColor} />
           </TouchableOpacity>
         ) : (
@@ -592,8 +595,7 @@ const Bottom = (props) => {
             style={{
               position: "absolute",
               left: 10,
-            }}
-          >
+            }}>
             <AntDesign name="close" size={24} color={textColor} />
           </TouchableOpacity>
         )}
@@ -603,8 +605,7 @@ const Bottom = (props) => {
             fontFamily: "Poppins-Medium",
             justifySelf: "center",
             textAlign: "center",
-          }}
-        >
+          }}>
           Filter
         </Text>
       </View>
@@ -634,13 +635,11 @@ const Bottom = (props) => {
             handleClosePress();
             setO(isEnabled);
             setV(Online);
-          }}
-        >
+          }}>
           <Text
             style={{
               color: "white",
-            }}
-          >
+            }}>
             Done
           </Text>
         </TouchableOpacity>
@@ -660,4 +659,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-

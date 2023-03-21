@@ -17,21 +17,18 @@ export default function SearchBar({
   afterStyle,
   style,
   onChange,
-  onSort
+  onSort,
+  value,
+  active
 }) {
-  const [searchKey, setSearchKey] = useState();
-  useEffect(() => {
-    if (onChange) {
-      onChange(searchKey);
-    }
-  }, [searchKey]);
-
-  if (searchKey?.split("").length > 0) {
+  const [searchKey, setSearchKey] = useState(value);
+  
+  if (active) {
     return (
       <Animated.View entering={StretchInY}>
         <Container onSort={onSort}
-          onChange={setSearchKey}
-          value={searchKey}
+          onChange={onChange}
+          value={value}
           style={style}
           afterStyle={afterStyle}
         />
@@ -42,11 +39,11 @@ export default function SearchBar({
   return (
     <Animated.View entering={StretchInY}>
       <NormalScreen
-        value={searchKey}
-        onPress={() => setSearchKey("")}
+        value={value}
+        onPress={() => setSearchKey()}
         beforeStyle={beforeStyle}
         style={style}
-        onChange={setSearchKey}
+        onChange={onChange}
       />
     </Animated.View>
   );

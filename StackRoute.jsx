@@ -183,11 +183,7 @@ export default function StackRoute() {
             name="SearchScreen_1"
             component={SearchScreen}
           />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="UserSearch"
-            component={Search}
-          />
+          
           {/* <Stack.Screen
             options={{
               headerStyle: {

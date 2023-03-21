@@ -3,7 +3,7 @@ import { Text, View, Easing, Pressable, StyleSheet } from "react-native";
 import Animated, { FlipInXDown, PinwheelIn, PinwheelOut, RotateInUpLeft, SlideInDown } from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
-export default function DropDownRight({ style, title, data }) {
+export default function DropDownRight({ style, title, data,value,onChange }) {
   const [expanded, setExpanded] = useState(false);
   return (
     <View
@@ -47,11 +47,11 @@ export default function DropDownRight({ style, title, data }) {
         )}
       </Pressable>
       {expanded && (
-        <Animated.View entering={SlideInDown}>
+        <Animated.View>
           {data &&
             data.map((doc, i) => (
-              <Pressable style={styles.view} key={i}>
-                <Text style={styles.text}>{doc}</Text>
+              <Pressable onPress={()=>onChange?onChange(value==doc?null:doc):null} style={styles.view} key={i}>
+                <Text style={[styles.text,{color:value==doc?styles.active.color:null}]}>{doc}</Text>
               </Pressable>
             ))}
         </Animated.View>
@@ -73,6 +73,10 @@ const styles = StyleSheet.create({
     fontSize:14,
     fontWeight:"400",
     lineHeight:16
+  },
+  active:{
+    color:"#4ADE80",
+    backgroundColor:"#4ADE80"
   }
 });
 const icon = `<svg width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
