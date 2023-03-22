@@ -23,6 +23,7 @@ import FilterCard from "../components/Search/FilterCard";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useIsFocused } from "@react-navigation/native";
 import { search } from "../Class/service";
+import ActivityLoader from "../components/ActivityLoader";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -186,6 +187,19 @@ const SCREEN = ({ data }) => {
         flex: 1,
         flexWrap: "wrap",
       }}>
+      {!data && (
+        <View style={{
+          justifyContent:"center",
+          alignItems:"center",
+          width:"100%",
+          height:"100%"
+        }}>
+          <ActivityLoader />
+        </View>
+      )}
+      {data&&data.length==0&&(
+        <NoResult/>
+      )}
       {data &&
         data.map((doc, i) =>
           (data.length > 1 && i == 0) || i == 1 ? (
@@ -226,7 +240,7 @@ const SCREEN = ({ data }) => {
           )
         )}
 
-      <View style={{ height: 36,width:"100%" }} />
+      <View style={{ height: 36, width: "100%" }} />
     </View>
   );
 };

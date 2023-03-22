@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -54,9 +54,17 @@ export default function SearchBar({
   );
 }
 const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
+  const ref=useRef()
   return (
-    <Pressable onPress={onPress} style={[styles.container, style, beforeStyle]}>
-      <TextInput
+    <Pressable onPress={()=>{
+      if(onPress){
+        onPress()
+      }
+      if(ref){
+        ref.current.focus()
+      }
+    }} style={[styles.container, style, beforeStyle]}>
+      <TextInput ref={ref}
         value={value}
         onChangeText={e=>{}}
         placeholder="Search service"

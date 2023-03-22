@@ -90,6 +90,9 @@ import AccountBalance from "./Vendor/account/AccountBalance";
 import AccountHeader from "./Vendor/account/AccountHeader";
 import AllTransactions from "./Vendor/account/AllTransactions";
 import { AllWithdraws } from "./Vendor/account/AllWithdraws";
+import ReviewScreen from "./Vendor/review/ReviewScreen";
+import AllReviewHeader from "../components/AllReviewHeader";
+import FeedBack from "./Vendor/review/FeedBack";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -151,6 +154,20 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={AllTransactions}
+      />
+      <Stack.Screen
+        name="CustomerReview"
+        options={{
+          header:(props)=><AllReviewHeader title="23 Review" {...props}/>
+        }}
+        component={ReviewScreen}
+      />
+      <Stack.Screen
+        name="FeedBack"
+        options={{
+          header:(props)=><AllReviewHeader title="Client feedback" {...props}/>
+        }}
+        component={FeedBack}
       />
       <Stack.Screen
         name="AllWithdraws"

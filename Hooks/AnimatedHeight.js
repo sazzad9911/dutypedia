@@ -12,7 +12,7 @@ import {
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-function AnimatedHeight({ text, button, id, onChange }) {
+function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLines }) {
   const [newHeight, setNewHeight] = useState(100);
   const [Lines, setLines] = React.useState(3);
   const [textHeight, setTextHeight] = React.useState(100);
@@ -97,6 +97,7 @@ function AnimatedHeight({ text, button, id, onChange }) {
         overflow: "hidden",
         width: "100%",
         height: "auto",
+        
       }}
     >
       <Pressable
@@ -130,32 +131,32 @@ function AnimatedHeight({ text, button, id, onChange }) {
         }}
       >
         <Animated.Text
-          numberOfLines={newHeight == minHeight ? 3 : 200}
+          numberOfLines={newHeight == minHeight ? (numberOfLines?numberOfLines:3) : 200}
           onLayout={(e) => {
             setTextHeight(e.nativeEvent.layout.height);
           }}
-          style={{
+          style={[{
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             textAlign: "justify",
             fontFamily: "Poppins-Medium",
             lineHeight: Platform.OS == "ios" ? 30 : 25,
             width: "100%",
-          }}
+          },fontStyle]}
         >
           {detailsText}
           {button &&
             newHeight == minHeight &&
             detailsText.split("").length > size - 2 && (
               <Text
-                style={{
+                style={[{
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   textAlign: "justify",
                   fontFamily: "Poppins-Medium",
                   lineHeight: Platform.OS == "ios" ? 30 : 25,
                   color: "#4ADE80",
-                }}
+                },fontStyle]}
               >
-                More
+                {title?title:"More"}
               </Text>
             )}
         </Animated.Text>

@@ -30,8 +30,8 @@ export default function SwitchCart({ style, title, value, onChange }) {
           Platform.OS == "ios" ? styles.trans : null,
         ]}
         ios_backgroundColor={"#B0BEC5"}
-        trackColor={{ false: "#B0BEC5", true: "#B0BEC5" }}
-        thumbColor={ value?"#4ADE80":"#ffffff"}
+        trackColor={{ false: "#B0BEC5", true:Platform.OS=="ios"? "#4ADE80":"#B0BEC5" }}
+        thumbColor={ value&&Platform.OS=="android"?"#4ADE80":"#ffffff"}
       />
     </View>
   );

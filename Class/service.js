@@ -1011,3 +1011,9 @@ export const getRating=async(serviceId)=>{
   const res=await axios.get(`${url}/server/review/get-rating/${serviceId}`)
   return res
 }
+export const getDashboardInfo=async(token,serviceId)=>{
+  const res=await axios.get(`${url}/server/services/summary/${serviceId}`,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}

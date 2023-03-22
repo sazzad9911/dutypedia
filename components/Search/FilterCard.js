@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
 import SwitchCart from "./SwitchCart";
 import { Slider } from "@miblanchard/react-native-slider";
 import { OnlineTutionIcon } from "../../assets/icon";
@@ -90,7 +90,7 @@ export default function FilterCard({ onSelect }) {
         onChange={() => setOnline((t) => !t)}
         title={"Online Seller"}
       />
-      <View style={{ height: 0 }} />
+      {Platform.OS=="ios"&&(<View style={{ height: 10 }} />)}
       <SwitchCart
         value={verified}
         onChange={() => setVerified((t) => !t)}
