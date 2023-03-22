@@ -38,7 +38,7 @@ const BottomBar = (props) => {
   const hideBottomBar = useSelector((state) => state.hideBottomBar);
   const unReadNotification=useSelector(state=>state.unReadNotification)
   //const routes = useRoute();
-  //console.log(routes.name);
+  
 
   React.useEffect(() => {
     if (vendor) {
@@ -49,15 +49,16 @@ const BottomBar = (props) => {
     //console.log(vendorInfo)
   }, [vendor]);
   React.useEffect(() => {
-    if (props.state.index) {
-      setRoute(props.state.index);
-    }
     BackHandler.addEventListener("hardwareBackPress",()=>{
-      setRoute(0)
+      //setRoute(props.state.index)
       //console.log("red")
-      return true
+      return false
     })
-  }, [props.state.index]);
+  }, []);
+  React.useEffect(()=>{
+    //console.log(props.state.index);
+    setRoute(props.state.index)
+  },[props.state.index])
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -160,7 +161,12 @@ const BottomBar = (props) => {
             }
           }
           dispatch({ type: "SET_INTEREST_CATEGORY", playload: "search" });
+          if(route==1){
+            navigation.navigate("SearchInitial");
+            return
+          }
           navigation.navigate("Search");
+          
           setRoute(1);
         }}
         style={styles.button}

@@ -1,14 +1,17 @@
 import React from "react";
 import { Platform, StyleSheet, Switch, Text, View } from "react-native";
 
-export default function SwitchCart({style, title, value, onChange }) {
+export default function SwitchCart({ style, title, value, onChange }) {
   return (
     <View
-      style={[{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      },style]}>
+      style={[
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        },
+        style,
+      ]}>
       <Text
         style={{
           fontSize: 16,
@@ -18,19 +21,23 @@ export default function SwitchCart({style, title, value, onChange }) {
         {title}
       </Text>
       <Switch
-          value={value}
-          onChange={onChange}
-          style={[{
-            backgroundColor: "#B0BEC5",
-             marginRight:-7
-          },Platform.OS=="ios"?styles.trans:null]}
-          ios_backgroundColor={"#B0BEC5"}
-        /> 
+        value={value}
+        onChange={onChange}
+        style={[
+          {
+            marginRight: -7,
+          },
+          Platform.OS == "ios" ? styles.trans : null,
+        ]}
+        ios_backgroundColor={"#B0BEC5"}
+        trackColor={{ false: "#B0BEC5", true: "#B0BEC5" }}
+        thumbColor={ value?"#4ADE80":"#ffffff"}
+      />
     </View>
   );
 }
-const styles=StyleSheet.create({
-    trans:{
-        transform: [{ scaleX: .7 }, { scaleY: .7 }]
-    }
-})
+const styles = StyleSheet.create({
+  trans: {
+    transform: [{ scaleX: 0.7 }, { scaleY: 0.7 }],
+  },
+});

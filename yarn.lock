@@ -1738,6 +1738,11 @@
   dependencies:
     dequal "^1.0.0"
 
+"@miblanchard/react-native-slider@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.3.1.tgz#79e0f1f9b1ce43ef25ee51ee9256c012e5dfa412"
+  integrity sha512-J/hZDBWmXq8fJeOnTVHqIUVDHshqMSpJVxJ4WqwuCBKl5Rke9OBYXIdkSlgi75OgtScAr8FKK5KNkDKHUf6JIg==
+
 "@motionone/animation@^10.12.0":
   version "10.14.0"
   resolved "https://registry.yarnpkg.com/@motionone/animation/-/animation-10.14.0.tgz#2f2a3517183bb58d82e389aac777fe0850079de6"
@@ -2193,11 +2198,6 @@
   dependencies:
     component-type "^1.2.1"
     join-component "^1.1.0"
-
-"@sharcoux/slider@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@sharcoux/slider/-/slider-6.1.1.tgz#6260c1d86d1a51bafdcf1341cd9ff5ce178fc710"
-  integrity sha512-0ubP44rDzIhmN0UJxp2Y0Yresmlpruz46ymlG/9uoZHyXjuGg7yMuS78c/myfSRrtjiQoqnFMU52+kaG1uhX5w==
 
 "@shopify/react-native-skia@0.1.157":
   version "0.1.157"

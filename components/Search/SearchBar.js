@@ -11,6 +11,7 @@ import { SvgXml } from "react-native-svg";
 import Animated, { StretchInY } from "react-native-reanimated";
 import IconButton from "../IconButton";
 import { ScrollView } from "react-native-gesture-handler";
+import { AllData } from "../../Data/AllData";
 
 export default function SearchBar({
   beforeStyle,
@@ -19,7 +20,9 @@ export default function SearchBar({
   onChange,
   onSort,
   value,
-  active
+  active,
+  category,
+  onCategory
 }) {
   const [searchKey, setSearchKey] = useState(value);
   
@@ -31,6 +34,8 @@ export default function SearchBar({
           value={value}
           style={style}
           afterStyle={afterStyle}
+          category={category}
+          onCategory={onCategory}
         />
       </Animated.View>
     );
@@ -53,15 +58,31 @@ const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
     <Pressable onPress={onPress} style={[styles.container, style, beforeStyle]}>
       <TextInput
         value={value}
-        onChangeText={onChange}
+        onChangeText={e=>{}}
         placeholder="Search service"
         style={styles.text}
+        returnKeyType="search"
+        onSubmitEditing={e=>{
+          onChange(e.nativeEvent.text)
+        }}
       />
       <SvgXml style={styles.icon} xml={icon} />
     </Pressable>
   );
 };
-const Container = ({ afterStyle, style, onChange, value,onSort }) => {
+const Container = ({ afterStyle, style, onChange, value,onSort,onCategory,category }) => {
+  const [search,setSearch]=useState()
+
+  const onSearch=(val)=>{
+    if(!val){
+      return
+    }
+    let arr=AllData.filter(d=>d.title.toLocaleUpperCase().match(val.toLocaleUpperCase()))
+    if(arr&&arr.length>0){
+      setSearch(arr[0])
+    }
+  }
+
   return (
     <View>
       <View style={[styles.container, styles.flexBox, style, afterStyle]}>
@@ -80,9 +101,13 @@ const Container = ({ afterStyle, style, onChange, value,onSort }) => {
             flex: 1,
           }}>
           <TextInput
-            autoFocus={true}
+            autoFocus={false}
             value={value}
-            onChangeText={onChange}
+            returnKeyType="search"
+            onChangeText={e=>{
+              onChange(e)
+              onSearch(e)
+            }}
             style={[styles.text,{
               marginLeft: 27,
               flex: 1,
@@ -103,12 +128,12 @@ const Container = ({ afterStyle, style, onChange, value,onSort }) => {
             marginBottom:18
           }}>
             <View style={{width:22}}/>
-          <IconButton active={true} style={styles.button} title={"Branding"} />
-          <IconButton style={styles.button} title={"Business Consulting"} />
-
-          <IconButton style={styles.button} title={"Branding"} />
-          <IconButton style={styles.button} title={"Branding"} />
-
+            {search&&search?.data?.map((doc,i)=>(
+              <IconButton active={doc?.title==category?true:false}
+               key={i} style={styles.button}
+               onPress={()=>onCategory(doc?.title)}
+                title={doc.title} />
+            ))}
           <View style={{width:22}}/>
         </View>
       </ScrollView>

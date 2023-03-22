@@ -1001,3 +1001,13 @@ export const rejectRefoundInstallment = async (token, orderId) => {
 
   return res;
 };
+export const search=async(token,data)=>{
+  const res=await axios.post(`${url}/server/services/search`,data,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+export const getRating=async(serviceId)=>{
+  const res=await axios.get(`${url}/server/review/get-rating/${serviceId}`)
+  return res
+}

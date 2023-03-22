@@ -52,6 +52,7 @@ import ChatScreen from "./screens/ChatScreen";
 import SubscriptionService from "./screens/SubscriptionService";
 import InstallmentService from "./screens/InstallmentService";
 import UserNotice from "./screens/UserNotice";
+import Feed from "./screens/Feed";
 
 const Stack = createStackNavigator();
 
@@ -104,7 +105,7 @@ const HomeRoute = ({ navigation }) => {
           options={{
             headerShown: false,
           }}
-          component={Home_Next}
+          component={Feed}
         />
       )}
       

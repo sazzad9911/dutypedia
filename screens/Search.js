@@ -22,9 +22,10 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import FilterCard from "../components/Search/FilterCard";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useIsFocused } from "@react-navigation/native";
+import { search } from "../Class/service";
 const Stack = createNativeStackNavigator();
 
-const SearchSecond = ({ navigation,route }) => {
+const SearchSecond = ({ navigation, route }) => {
   const sheetRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["25%", "50%", "90%"], []);
   const [index, setIndex] = useState(-1);
@@ -39,28 +40,49 @@ const SearchSecond = ({ navigation,route }) => {
     sheetRef.current?.close();
   }, []);
   const [filter, setFilter] = useState();
-  const params=route?.params;
-  const key=params?.key;
+  const params = route?.params;
+  const key = params?.key;
   const [searchKey, setSearchKey] = useState(key);
+  const [data, setData] = useState();
+  const [category, setCategory] = useState();
+
+  useEffect(() => {
+    search(null, {
+      q: searchKey || "",
+      min: filter?.min,
+      max: filter?.max,
+      division: filter ? filter.division : "",
+      district: filter?.district,
+      verified: filter?.verified,
+      online: filter?.online,
+      sort: filter?.orderBy,
+      category: category ? category : "",
+    })
+      .then((res) => {
+        setData(res.data.gigs);
+        console.log(res.data.gigs);
+      })
+      .catch((err) => {
+        console.warn(err.response.data.msg);
+      });
+  }, [searchKey, filter, category]);
 
   return (
     <HidableHeaderLayout
       header={
         <SearchBar
           onSort={() => setIndex(2)}
-          onChange={(e)=>{
-            if(!e){
-              navigation.navigate("SearchInitial")
-
-            }
-            setSearchKey(e)
+          onChange={(e) => {
+            setSearchKey(e);
           }}
           style={styles.header}
           value={searchKey}
           active={true}
+          category={category}
+          onCategory={setCategory}
         />
       }
-      component={<SCREEN />}
+      component={<SCREEN data={data} />}
       bottom={
         <>
           {index != -1 && (
@@ -91,6 +113,7 @@ const SearchSecond = ({ navigation,route }) => {
               <FilterCard
                 onSelect={(e) => {
                   setFilter(e);
+                  //console.log(e)
                   sheetRef.current.close();
                 }}
               />
@@ -101,25 +124,24 @@ const SearchSecond = ({ navigation,route }) => {
     />
   );
 };
-const SearchFirst = ({ navigation,route }) => {
+const SearchFirst = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState();
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
 
-  useEffect(()=>{
-    setSearchKey()
-  },[isFocused])
-  
+  useEffect(() => {
+    setSearchKey();
+  }, [isFocused]);
+
   return (
     <HidableHeaderLayout
       header={
         <SearchBar
           onSort={() => setIndex(2)}
-          onChange={(e)=>{
-            navigation.navigate("SearchSecond",{key:e})
+          onChange={(e) => {
+            navigation.navigate("SearchSecond", { key: e });
           }}
           style={styles.header}
           value={searchKey}
-          
         />
       }
       component={<ITEM />}
@@ -129,8 +151,16 @@ const SearchFirst = ({ navigation,route }) => {
 const Search = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen options={{headerShown:false}} name="SearchInitial" component={SearchFirst} />
-      <Stack.Screen options={{headerShown:false}} name="SearchSecond" component={SearchSecond} />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SearchInitial"
+        component={SearchFirst}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SearchSecond"
+        component={SearchSecond}
+      />
     </Stack.Navigator>
   );
 };
@@ -146,7 +176,7 @@ const ITEM = () => {
     </View>
   );
 };
-const SCREEN = ({}) => {
+const SCREEN = ({ data }) => {
   // 2 next 12; after calculating 12 if there odd number then print flat cart
   return (
     <View
@@ -156,23 +186,47 @@ const SCREEN = ({}) => {
         flex: 1,
         flexWrap: "wrap",
       }}>
-      <TopSellerCard height={130} style={styles.cart} />
-      <TopSellerCard height={130} style={styles.cart} />
-      <View
-        style={{
-          width: "100%",
-        }}>
-        <Card />
-        <Card />
-        <Card />
-        <Card
-          style={{
-            borderBottomWidth: 0,
-            paddingBottom: 0,
-          }}
-        />
-        <View style={{ height: 36 }} />
-      </View>
+      {data &&
+        data.map((doc, i) =>
+          (data.length > 1 && i == 0) || i == 1 ? (
+            <TopSellerCard
+              key={i}
+              data={doc}
+              height={130}
+              style={styles.cart}
+            />
+          ) : i % 14 == 0 && data.length > i + 1 ? (
+            <TopSellerCard
+              key={i}
+              data={doc}
+              height={130}
+              style={styles.cart}
+            />
+          ) : i % 15 == 0 ? (
+            <TopSellerCard
+              key={i}
+              data={doc}
+              height={130}
+              style={styles.cart}
+            />
+          ) : i + 1 == data.length ? (
+            <View key={i} style={{ width: "100%" }}>
+              <Card
+                style={{
+                  borderBottomWidth: 0,
+                  paddingBottom: 0,
+                }}
+                data={doc}
+              />
+            </View>
+          ) : (
+            <View key={i} style={{ width: "100%" }}>
+              <Card data={doc} />
+            </View>
+          )
+        )}
+
+      <View style={{ height: 36,width:"100%" }} />
     </View>
   );
 };

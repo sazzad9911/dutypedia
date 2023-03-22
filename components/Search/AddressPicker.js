@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -11,35 +11,44 @@ import Animated from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 import { DistrictList } from "../../Data/district";
 
-export default function AddressPicker({ value = ["", ""], onChange }) {
+export default function AddressPicker({ value, onChange  }) {
+  const [openValue,setOpenValue]=useState()
   return (
     <View
       style={{
         marginTop: 12,
       }}>
       {DistrictList.map((doc, i) => (
-        <Card value={value} onChange={onChange} key={i} data={doc} />
+        <Card openValue={openValue} value={value} onChange={e=>{
+          onChange(e)
+          setOpenValue(doc.title)
+        }} key={i} data={doc} />
       ))}
     </View>
   );
 }
-const Card = ({ data, value, onChange }) => {
+const Card = ({ data, value, onChange ,openValue}) => {
   const [open, setOpen] = useState(false);
+  useEffect(()=>{
+    if(openValue!=data.title){
+      setOpen(false)
+    }
+  },[openValue])
   return (
     <View>
       <Pressable
         onPress={() => {
           setOpen((t) => !t);
-          if(value[0]==data.title){
-            onChange(["",""])
+          if(value==data.title){
+            onChange("")
             return
           }
           
-          onChange([data?.title,value&&value[1]])
+          onChange(data.title)
         }}
         style={styles.container}>
-        <Text style={[styles.text,value&&value[0]==data?.title?styles.active:null]}>{data?.title}</Text>
-        {Array.isArray(value) && value[0] == data?.title && (
+        <Text style={[styles.text,value&&value==data?.title?styles.active:null]}>{data?.title}</Text>
+        {value && value == data?.title && (
           <SvgXml xml={right} />
         )}
       </Pressable>
@@ -54,16 +63,16 @@ const Card = ({ data, value, onChange }) => {
 const SmallCard = ({ title ,value,onChange}) => {
   return (
     <Pressable onPress={()=>{
-        if(value&&value[1]==title){
-            onChange([value[0],""])
+        if(value&&value==title){
+            onChange("")
             return
         }
-        onChange([value[0],title])
+        onChange(title)
     }} style={[styles.container, { paddingLeft: 24 }]}>
-      <Text style={[styles.text, { color: "#484848", fontSize: 14 },value&&value[1]==title?styles.active:null]}>
+      <Text style={[styles.text, { color: "#484848", fontSize: 14 },value&&value==title?styles.active:null]}>
         {title}
       </Text>
-      {Array.isArray(value) && value[1] == title && (
+      {value && value == title && (
           <SvgXml xml={right} />
         )}
     </Pressable>
