@@ -17,6 +17,8 @@ import { numToArray } from "./../action";
 const { width, height } = Dimensions.get("window");
 import AnimatedHeight from "./../Hooks/AnimatedHeight";
 import Avatar from "../components/Avatar";
+import LargeText from "../Hooks/LargeText";
+
 
 const ReviewCart = ({ navigation }) => {
   return (
@@ -124,7 +126,7 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
         style={{
           flex: 1,
         }}>
-        <AnimatedHeight
+        <LargeText
           fontStyle={{
             fontSize: 14,
             fontWeight: "400",
@@ -140,6 +142,7 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
+            marginTop:12
           }}>
           <View
             style={{
@@ -163,10 +166,11 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
                 onReplay()
               }
             }} style={{
-              flexDirection:"row"
+              flexDirection:"row",
+              alignItems:"center"
             }}>
               <SvgXml xml={replay} />
-              <Text style={[styles.text1,{fontWeight:"400",fontSize:16,marginLeft:10}]}>Replay</Text>
+              <Text style={[styles.text1,{fontWeight:"400",fontSize:16,marginLeft:10,lineHeight:17}]}>Replay</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -193,7 +197,7 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
                   Darrell Steward kh
                 </Text>
               </View>
-              <AnimatedHeight
+              <LargeText
                 fontStyle={{
                   fontSize: 14,
                   fontWeight: "400",

@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  Platform,
 } from "react-native";
 import { Text } from "react-native";
 import { Image } from "react-native";
@@ -60,6 +61,7 @@ const Menu = ({ navigation }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={{height:Platform.OS=="android"?StatusBar.currentHeight:0}}/>
       <View style={styles.container}>
         <View style={styles.pictureBox}>
           <SvgXml
@@ -118,7 +120,7 @@ const Menu = ({ navigation }) => {
           onPress={() => navigation.navigate("Member")}
           Icon={member}
           title={"Member List"}
-          text={`${info?.members>9?info.members:`0${info.members}`}`}
+          text={`${info?.members>9?info?.members:`0${info?.members}`}`}
         />
         <Cart
           onPress={() => navigation.navigate("VendorAccountBalance")}
@@ -133,7 +135,7 @@ const Menu = ({ navigation }) => {
           onPress={() => navigation.navigate("UserNotice")}
           Icon={notice}
           title={"Manage Notice"}
-          text={`${info?.notices>9?info.notices:`0${info.notices}`}`}
+          text={`${info?.notices>9?info?.notices:`0${info?.notices}`}`}
         />
         <Cart
           onPress={() => navigation.navigate("Support")}

@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   BackHandler,
   Modal,
+  StatusBar,
 } from "react-native";
 import Animated, { SlideInRight, SlideInLeft } from "react-native-reanimated";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -305,6 +306,7 @@ const TabRoute = () => {
   }
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar/>
       <Tab.Navigator
         tabBar={(props) => {
           if (

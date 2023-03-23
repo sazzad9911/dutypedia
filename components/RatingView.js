@@ -27,7 +27,6 @@ const RatingView = ({ title, rate, style }) => {
       <Text
         style={{
           fontSize: 16,
-          color:textColor,
           fontWeight:"500"
         }}
       >
@@ -46,7 +45,6 @@ const RatingView = ({ title, rate, style }) => {
         <Text
           style={{
             fontSize: 16,
-            color: textColor,
             marginLeft:10,
             fontWeight:"500"
           }}
