@@ -51,16 +51,16 @@ export default function AllTransactions() {
     hideDatePicker();
   };
 
-  React.useEffect(() => {
-    if (isFocused) {
-      dispatch(setHideBottomBar(true));
-    } else {
-      //dispatch(setHideBottomBar(false));
-    }
-    setTimeout(() => {
-      dispatch(setHideBottomBar(true));
-    }, 50);
-  }, [isFocused]);
+  // React.useEffect(() => {
+  //   if (isFocused) {
+  //     dispatch(setHideBottomBar(true));
+  //   } else {
+  //     //dispatch(setHideBottomBar(false));
+  //   }
+  //   setTimeout(() => {
+  //     dispatch(setHideBottomBar(true));
+  //   }, 50);
+  // }, [isFocused]);
   useEffect(()=>{
     if(user&&vendor){
       getAllTransactions(user.token,vendor.service.id).then(res=>{

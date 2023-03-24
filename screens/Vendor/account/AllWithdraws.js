@@ -87,12 +87,12 @@ export const AllWithdraws = () => {
   }, []);
   React.useEffect(() => {
     if (isFocused) {
-      dispatch(setHideBottomBar(true));
+      //dispatch(setHideBottomBar(true));
     } else {
       //dispatch(setHideBottomBar(false));
     }
     setTimeout(() => {
-      dispatch(setHideBottomBar(true));
+      //dispatch(setHideBottomBar(true));
     }, 50);
   }, [isFocused]);
   return (

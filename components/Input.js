@@ -16,7 +16,9 @@ const Input = ({
   onFocus,
   innerRef,
   level,
-  rightIcon
+  rightIcon,
+  editable,
+  onPress
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -39,6 +41,8 @@ const Input = ({
             onSubmitEditing();
           }
         }}
+        onPressIn={onPress}
+        editable={editable}
         keyboardType={keyboardType}
         value={value}
         onChangeText={(val) => {

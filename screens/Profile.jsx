@@ -93,6 +93,12 @@ import { AllWithdraws } from "./Vendor/account/AllWithdraws";
 import ReviewScreen from "./Vendor/review/ReviewScreen";
 import AllReviewHeader from "../components/AllReviewHeader";
 import FeedBack from "./Vendor/review/FeedBack";
+import RequestVerification from "./Vendor/account/RequestVerification";
+import FirstStepVerification from "./Vendor/account/FirstStepVerification";
+import SecondStepVerification from "./Vendor/account/SecondStepVerification";
+import ThirdStepVerification from "./Vendor/account/ThirdStepVerification";
+import ReviewVerification from "./Vendor/account/ReviewVerification";
+import ConfirmationScreen from "./Vendor/account/ConfirmationScreen";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -140,25 +146,27 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="VendorAccountBalance"
         options={{
-          header: (props) => (
-            <AccountHeader title="Account Balance" {...props} />
-          ),
+          // header: (props) => (
+          //   <AccountHeader title="Account Balance" {...props} />
+          // ),
+          headerShown:false
         }}
         component={AccountBalance}
       />
       <Stack.Screen
         name="AllTransactions"
         options={{
-          header: (props) => (
-            <AccountHeader title="All transaction" {...props} />
-          ),
+          // header: (props) => (
+          //   <AccountHeader title="All transaction" {...props} />
+          // ),
+          headerShown:false
         }}
         component={AllTransactions}
       />
       <Stack.Screen
         name="CustomerReview"
         options={{
-          header:(props)=><AllReviewHeader title="23 Review" {...props}/>
+          headerShown:false
         }}
         component={ReviewScreen}
       />
@@ -172,9 +180,10 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="AllWithdraws"
         options={{
-          header: (props) => (
-            <AccountHeader title="All withdraw" {...props} />
-          ),
+          // header: (props) => (
+          //   <AccountHeader title="All withdraw" {...props} />
+          // ),
+          headerShown:false
         }}
         component={AllWithdraws}
       />
@@ -515,6 +524,53 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={AccountBalance}
+      />
+      <Stack.Screen
+        name="RequestVerification"
+        options={{
+          headerShown:false
+          //header:(props)=><AllReviewHeader {...props} title="Account verification" />,
+        }}
+        component={RequestVerification}
+      />
+      <Stack.Screen
+        name="FirstStepVerification"
+        options={{
+          headerShown:false
+          //header:(props)=><AllReviewHeader {...props} title="Account verification" />,
+        }}
+        component={FirstStepVerification}
+      />
+      <Stack.Screen
+        name="SecondStepVerification"
+        options={{
+          headerShown:false
+          //header:(props)=><AllReviewHeader {...props} title="Account verification" />,
+        }}
+        component={SecondStepVerification}
+      />
+      <Stack.Screen
+        name="ThirdStepVerification"
+        options={{
+          headerShown:false
+         // header:(props)=><AllReviewHeader {...props} title="Account verification" />,
+        }}
+        component={ThirdStepVerification}
+      />
+      <Stack.Screen
+        name="ReviewVerification"
+        options={{
+          headerShown:false
+          //header:(props)=><AllReviewHeader {...props} title="Account verification" />,
+        }}
+        component={ReviewVerification}
+      />
+      <Stack.Screen
+        name="ConfirmationScreen"
+        options={{
+          headerShown:false
+        }}
+        component={ConfirmationScreen}
       />
       <Stack.Screen
         options={{ headerShown: false }}

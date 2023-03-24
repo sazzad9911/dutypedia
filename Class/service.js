@@ -1023,3 +1023,13 @@ export const getReviews=async(token,serviceId)=>{
   })
   return res
 }
+export const replyReview=async(token,reviewId,text)=>{
+  const res=await axios.post(`${url}/server/review/reply`,{
+    reviewId:reviewId,
+    reply:text
+  },{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+

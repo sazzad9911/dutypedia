@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { Color } from "../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 
-const RadioButton = ({ value, title, onChange, style,dark }) => {
+const RadioButton = ({ value, title, onChange, style,dark,selectStyle,margin }) => {
   const [Check, setCheck] = React.useState(false);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -16,11 +16,13 @@ const RadioButton = ({ value, title, onChange, style,dark }) => {
   }, [value]);
   return (
     <View
-      style={{
+      style={[{
         flexDirection: "row",
         margin: 3,
         alignItems: "center",
-      }}
+      },{
+        margin:margin==0?0:margin?margin:3
+      }]}
     >
       <TouchableOpacity
         onPress={() => {
@@ -44,12 +46,12 @@ const RadioButton = ({ value, title, onChange, style,dark }) => {
       >
         {Check && (
           <View
-            style={{
+            style={[{
               backgroundColor:dark?"#484848": backgroundColor,
               height: dark?20:16,
               width: dark?20:16,
               borderRadius:dark?12: 8,
-            }}
+            },selectStyle]}
           ></View>
         )}
       </TouchableOpacity>
@@ -57,8 +59,6 @@ const RadioButton = ({ value, title, onChange, style,dark }) => {
         <Text
           style={{
             fontSize: 16,
-            fontFamily: "Poppins-Medium",
-            color: textColor,
             marginLeft: 10,
           }}
         >

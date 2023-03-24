@@ -49,7 +49,7 @@ const RatingView = ({ title, rate, style }) => {
             fontWeight:"500"
           }}
         >
-          {rate}
+          {rate>parseInt(rate)?rate:`${rate}.0`}
         </Text>
       </View>
     </View>

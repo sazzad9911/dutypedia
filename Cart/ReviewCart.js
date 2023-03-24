@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,12 +13,13 @@ import {
 //import { star } from "../assets/icon";
 import { SvgXml } from "react-native-svg";
 import { primaryColor, secondaryColor, textColor } from "./../assets/colors";
-import { numToArray } from "./../action";
+import { dateDifference, numToArray } from "./../action";
 const { width, height } = Dimensions.get("window");
 import AnimatedHeight from "./../Hooks/AnimatedHeight";
 import Avatar from "../components/Avatar";
 import LargeText from "../Hooks/LargeText";
-
+import { types } from "./../screens/Vendor/account/types";
+import { useSelector } from "react-redux";
 
 const ReviewCart = ({ navigation }) => {
   return (
@@ -74,8 +75,12 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
 });
-export const Cart = ({ replied,onReplay,noReplay }) => {
+export const Cart = ({ replied, onReplay, noReplay, data }) => {
   const [button, setButton] = useState(true);
+  const [day,setDay]=useState(dateDifference(data?.updatedAt,new Date()))
+  const user=useSelector(state=>state.user)
+  //console.log(user)
+  //console.log(data)
   return (
     <View
       style={{
@@ -93,24 +98,30 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
           justifyContent: "space-between",
         }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image
+          <Avatar
             style={{
               width: 40,
               height: 40,
-              borderRadius: 20,
+              borderWidth: 0,
             }}
             source={{
-              uri: "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
+              uri: data
+                ? data.user.profilePhoto
+                : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
             }}
           />
           <View style={{ marginLeft: 10 }}>
-            <Text style={[styles.text1]}>Sumaiya Alam</Text>
+            <Text style={[styles.text1]}>
+              {data
+                ? `${data.user.firstName} ${data.user.lastName}`
+                : "Sumaiya Alam"}
+            </Text>
             <Text
               style={[
                 styles.text1,
                 { fontWeight: "400", color: "#767676", marginTop: 4 },
               ]}>
-              Today
+              {day?`${day==1?"Today":day>365?"1 year ago":day>30?`${parseInt(day/30)} month ago`:day>7?`${parseInt(day/7)} week ago`:`${day} days`}`:"Not Found"}
             </Text>
           </View>
         </View>
@@ -119,30 +130,34 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
             styles.text1,
             { justifySelf: "flex-end", fontWeight: "400" },
           ]}>
-          Bargaining
+          {data
+            ? types.filter((d) => d.type.match(data?.order?.type))[0]?.title
+            : "Bargaining"}
         </Text>
       </View>
       <View
         style={{
           flex: 1,
         }}>
-        <LargeText
-          fontStyle={{
-            fontSize: 14,
-            fontWeight: "400",
-            lineHeight: 20,
-            marginTop: 12,
-          }}
-          title="See More"
-          text={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.`}
-          onChange={setButton}
-          button={button}
-        />
+        {data && data.text && (
+          <LargeText
+            fontStyle={{
+              fontSize: 14,
+              fontWeight: "400",
+              lineHeight: 20,
+              marginTop: 12,
+            }}
+            title="See More"
+            text={data.text}
+            onChange={setButton}
+            button={button}
+          />
+        )}
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            marginTop:12
+            marginTop: 12,
           }}>
           <View
             style={{
@@ -157,24 +172,37 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
                   fontWeight: "500",
                 },
               ]}>
-              5.2
+              {data?.qualityRating>parseInt(data?.qualityRating)?data?.qualityRating:`${data?.qualityRating}.0`}
             </Text>
           </View>
-          {!replied&&!noReplay && (
-            <TouchableOpacity onPress={()=>{
-              if(onReplay){
-                onReplay()
-              }
-            }} style={{
-              flexDirection:"row",
-              alignItems:"center"
-            }}>
+          {!data?.reply && !noReplay && (
+            <TouchableOpacity
+              onPress={() => {
+                if (onReplay) {
+                  onReplay();
+                }
+              }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
               <SvgXml xml={replay} />
-              <Text style={[styles.text1,{fontWeight:"400",fontSize:16,marginLeft:10,lineHeight:17}]}>Replay</Text>
+              <Text
+                style={[
+                  styles.text1,
+                  {
+                    fontWeight: "400",
+                    fontSize: 16,
+                    marginLeft: 10,
+                    lineHeight: 17,
+                  },
+                ]}>
+                Replay
+              </Text>
             </TouchableOpacity>
           )}
         </View>
-        {replied && (
+        {data?.reply && (
           <>
             <View
               style={{
@@ -192,9 +220,9 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
                   flexDirection: "row",
                   alignItems: "center",
                 }}>
-                <Avatar style={{ height: 25, width: 25 }} />
+                <Avatar source={{uri:user?.user?.profilePhoto}} style={{ height: 25, width: 25,borderWidth:0 }} />
                 <Text style={[styles.text1, { marginLeft: 12 }]}>
-                  Darrell Steward kh
+                 {`${user?.user?.firstName} ${user?.user?.lastName}`}
                 </Text>
               </View>
               <LargeText
@@ -205,7 +233,7 @@ export const Cart = ({ replied,onReplay,noReplay }) => {
                   marginTop: 10,
                 }}
                 title="See More"
-                text={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.`}
+                text={data.reply}
                 onChange={setButton}
                 button={button}
               />

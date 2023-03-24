@@ -34,5 +34,10 @@ const customStyle = StyleSheet.create({
     color: "#00B22D",
     fontSize: 16,
   },
+  fullBox:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center"
+  }
 });
 export default customStyle;

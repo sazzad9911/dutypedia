@@ -1,6 +1,12 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView, TouchableHighlight, View, Text, Dimensions } from "react-native";
+import {
+  ScrollView,
+  TouchableHighlight,
+  View,
+  Text,
+  Dimensions,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
@@ -10,43 +16,61 @@ import RecentTransaction from "./RecentTransaction";
 import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
 import { getAccountInfo } from "../../../Class/account";
-const {width,height}=Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
-export default function AccountBalance({navigation}) {
+export default function AccountBalance({ navigation }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const Tab = createMaterialTopTabNavigator();
-  const user=useSelector(state=>state.user)
-  const vendor=useSelector(state=>state.vendor)
-  const [data,setData]=useState()
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [data, setData] = useState();
+  //console.log(vendor.service.verified)
 
-  React.useEffect(() => {
-    if (isFocused) {
-      dispatch(setHideBottomBar(true));
-    } else {
-      dispatch(setHideBottomBar(false));
-    }
+  // React.useEffect(() => {
+  //   if (isFocused) {
+  //     dispatch(setHideBottomBar(true));
+  //   } else {
+  //     dispatch(setHideBottomBar(false));
+  //   }
+  // }, [isFocused]);
+  useEffect(() => {
+    getAccountInfo(user.token, vendor.service.id)
+      .then((res) => {
+        //console.log(res.data)
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.error(err.response.data.msg);
+      });
   }, [isFocused]);
-  useEffect(()=>{
-    getAccountInfo(user.token,vendor.service.id).then(res=>{
-      //console.log(res.data)
-      setData(res.data)
-    }).catch(err=>{
-      console.error(err.response.data.msg)
-    })
-  },[isFocused])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <MasterCart verified={false} id={data?.id} name={`${user?.user.firstName} ${user?.user.lastName}`} />
-      <AccountDetailsCart amount={data?.balance}
-      totalEarnings={data?.totalEarnings}
-      pendingAmount={data?.pending}
-       onWithdraw={()=>navigation.navigate("WithdrawFirst")} />
+      <View style={{height:15}}/>
+      <MasterCart
+      onVerify={()=>{
+        navigation.navigate("FirstStepVerification")
+      }}
+        verified={vendor?.service?.verified}
+        id={data?.id}
+        name={`${user?.user.firstName} ${user?.user.lastName}`}
+      />
+      <AccountDetailsCart
+        amount={data?.balance}
+        totalEarnings={data?.totalEarnings}
+        pendingAmount={data?.pending}
+        onWithdraw={() => {
+          if(vendor.service.verified){
+            navigation.navigate("WithdrawFirst")
+          }else{
+            navigation.navigate("RequestVerification")
+          }
+        }}
+      />
       <View
         style={{
           paddingHorizontal: 20,
           height: 450,
-          
         }}>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
           <Tab.Screen
@@ -59,26 +83,29 @@ export default function AccountBalance({navigation}) {
     </ScrollView>
   );
 }
-const MasterCart = ({name,id,verified}) => {
-  
+const MasterCart = ({ name, id, verified, onVerify }) => {
   return (
     <View
       style={{
         justifyContent: "center",
         marginVertical: 10,
-        backgroundColor:"#485563",
-        padding:0,
-        width:width-40,
-        marginLeft:20,
-        height:207,
-        borderRadius:10,
-        overflow:"hidden"
+        backgroundColor: "#485563",
+        padding: 0,
+        width: width - 40,
+        marginLeft: 20,
+        height: 207,
+        borderRadius: 10,
+        overflow: "hidden",
       }}>
-      <SvgXml width={width} style={{
-        width:width,
-        position:"absolute",
-        zIndex:-1
-      }} xml={cart} />
+      <SvgXml
+        width={width}
+        style={{
+          width: width,
+          position: "absolute",
+          zIndex: -1,
+        }}
+        xml={cart}
+      />
       <View
         style={{
           top: 0,
@@ -90,18 +117,15 @@ const MasterCart = ({name,id,verified}) => {
           style={{
             height: 75,
             alignItems: "center",
-            flexDirection:"row",
-            justifyContent:"space-between"
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}>
-            <SvgXml xml={chip}/>
+          <SvgXml xml={chip} />
           {verified ? (
-            <SvgXml
-              
-              xml={verifiedIcon}
-            />
+            <SvgXml xml={verifiedIcon} />
           ) : (
             <TouchableHighlight
-              onPress={() => {}}
+              onPress={onVerify}
               style={{
                 paddingHorizontal: 8,
                 paddingVertical: 4,
@@ -160,7 +184,7 @@ const cart = `<svg width="329" height="207" viewBox="0 0 329 207" fill="none" xm
 </svg>
 
 `;
-const chip=`<svg width="52" height="35" viewBox="0 0 52 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+const chip = `<svg width="52" height="35" viewBox="0 0 52 35" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_2960_17342)">
 <path d="M45.6469 0.578857H5.98647C2.68024 0.578857 0 3.17689 0 6.38173V28.8678C0 32.0727 2.68024 34.6707 5.98647 34.6707H45.6469C48.9531 34.6707 51.6333 32.0727 51.6333 28.8678V6.38173C51.6333 3.17689 48.9531 0.578857 45.6469 0.578857Z" fill="#F2E07C"/>
 <path d="M45.6465 0.941406H5.9861C2.8865 0.941406 0.373779 3.37706 0.373779 6.3816V28.8677C0.373779 31.8722 2.8865 34.3079 5.9861 34.3079H45.6465C48.7461 34.3079 51.2588 31.8722 51.2588 28.8677V6.3816C51.2588 3.37706 48.7461 0.941406 45.6465 0.941406Z" stroke="#672525" stroke-width="0.737886"/>
@@ -185,7 +209,7 @@ const chip=`<svg width="52" height="35" viewBox="0 0 52 35" fill="none" xmlns="h
 </clipPath>
 </defs>
 </svg>
-`
+`;
 const TabBar = ({ state, navigation }) => {
   //console.log(state.index)
   return (
