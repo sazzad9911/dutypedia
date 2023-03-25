@@ -306,7 +306,7 @@ const TabRoute = () => {
   }
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar/>
+      
       <Tab.Navigator
         tabBar={(props) => {
           if (

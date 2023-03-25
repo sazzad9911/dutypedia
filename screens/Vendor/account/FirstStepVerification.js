@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet, StatusBar } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../components/IconButton";
@@ -24,101 +24,104 @@ export default function FirstStepVerification({ navigation }) {
     }, 50);
   }, [isFocused]);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View
-        style={{
-          marginVertical: 32,
-          marginHorizontal: 28,
-        }}>
-        <SvgXml width={"100%"} xml={vector} />
-        <Text style={[styles.text, { marginTop: 32 }]}>
-          Identity verification is a process that compares the identity that a
-          person claims to have with the supporting data they possess. Confirm
-          your identity with ease and accuracy.
-        </Text>
-        <View style={[styles.view, { marginTop: 32 }]}>
-          <Text style={styles.headLine}>Individual</Text>
-        </View>
-        <Text style={[styles.text, { marginTop: 32 }]}>
-          An individual account is for people who want to use the platform for
-          their personal services or as a sole proprietor. If you are a
-          freelancer, independent contractor, or self-employed, you can use an
-          individual account. You will need to provide your personal
-          information, such as your name, date of birth, and government-issued
-          ID, to verify your identity.
-        </Text>
-        <View style={[styles.view, { marginTop: 32 }]}>
-          <Text style={styles.headLine}>Company</Text>
-        </View>
-        <Text style={[styles.text, { marginTop: 32 }]}>
-          A company account is for businesses or organizations that want to use
-          the platform to offer services. If you are registering as a company,
-          you will need to provide your business name, tax ID, and other
-          relevant information to verify your identity. You may also need to
-          provide documentation, such as articles of incorporation, to prove
-          that you are authorized to act on behalf of the company.
-        </Text>
-        <Text style={[styles.text, { fontSize: 20, marginTop: 32 }]}>
-          Select account type
-        </Text>
-        <View style={{ marginVertical: 32 }}>
-          <RadioButton
-            margin={0}
-            dark={true}
-            onChange={() => {
-              setType("Individual");
-            }}
-            value={type == "Individual" ? true : false}
-            title={"Individual"}
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            selectStyle={{
-              width: 14,
-              height: 14,
-            }}
-          />
-          <View style={{ height: 16 }} />
-          <RadioButton
-            margin={0}
-            dark={true}
-            onChange={() => {
-              setType("Company");
-            }}
-            value={type == "Company" ? true : false}
-            title={"Company"}
-            style={{
-              width: 16,
-              height: 16,
-            }}
-            selectStyle={{
-              width: 14,
-              height: 14,
-            }}
-          />
-        </View>
-        {error && (
-          <Text style={{ color: "red", marginBottom: 16 }}>{error}</Text>
-        )}
-        <IconButton
-          onPress={() => {
-            setType();
-            if (!type) {
-              setError("*Required account type");
-              return;
-            }
-            navigation.navigate("SecondStepVerification", { type: type });
-          }}
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 1, marginTop: StatusBar.currentHeight }} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
           style={{
-            backgroundColor: "#4ADE80",
-            borderRadious: 4,
-            color: "white",
-          }}
-          title={"Next"}
-        />
-      </View>
-    </ScrollView>
+            marginVertical: 32,
+            marginHorizontal: 28,
+          }}>
+          <SvgXml width={"100%"} xml={vector} />
+          <Text style={[styles.text, { marginTop: 32 }]}>
+            Identity verification is a process that compares the identity that a
+            person claims to have with the supporting data they possess. Confirm
+            your identity with ease and accuracy.
+          </Text>
+          <View style={[styles.view, { marginTop: 32 }]}>
+            <Text style={styles.headLine}>Individual</Text>
+          </View>
+          <Text style={[styles.text, { marginTop: 32 }]}>
+            An individual account is for people who want to use the platform for
+            their personal services or as a sole proprietor. If you are a
+            freelancer, independent contractor, or self-employed, you can use an
+            individual account. You will need to provide your personal
+            information, such as your name, date of birth, and government-issued
+            ID, to verify your identity.
+          </Text>
+          <View style={[styles.view, { marginTop: 32 }]}>
+            <Text style={styles.headLine}>Company</Text>
+          </View>
+          <Text style={[styles.text, { marginTop: 32 }]}>
+            A company account is for businesses or organizations that want to
+            use the platform to offer services. If you are registering as a
+            company, you will need to provide your business name, tax ID, and
+            other relevant information to verify your identity. You may also
+            need to provide documentation, such as articles of incorporation, to
+            prove that you are authorized to act on behalf of the company.
+          </Text>
+          <Text style={[styles.text, { fontSize: 20, marginTop: 32 }]}>
+            Select account type
+          </Text>
+          <View style={{ marginVertical: 32 }}>
+            <RadioButton
+              margin={0}
+              dark={true}
+              onChange={() => {
+                setType("Individual");
+              }}
+              value={type == "Individual" ? true : false}
+              title={"Individual"}
+              style={{
+                width: 16,
+                height: 16,
+              }}
+              selectStyle={{
+                width: 14,
+                height: 14,
+              }}
+            />
+            <View style={{ height: 16 }} />
+            <RadioButton
+              margin={0}
+              dark={true}
+              onChange={() => {
+                setType("Company");
+              }}
+              value={type == "Company" ? true : false}
+              title={"Company"}
+              style={{
+                width: 16,
+                height: 16,
+              }}
+              selectStyle={{
+                width: 14,
+                height: 14,
+              }}
+            />
+          </View>
+          {error && (
+            <Text style={{ color: "red", marginBottom: 16 }}>{error}</Text>
+          )}
+          <IconButton
+            onPress={() => {
+              setType();
+              if (!type) {
+                setError("*Required account type");
+                return;
+              }
+              navigation.navigate("SecondStepVerification", { type: type });
+            }}
+            style={{
+              backgroundColor: "#4ADE80",
+              borderRadious: 4,
+              color: "white",
+            }}
+            title={"Next"}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({

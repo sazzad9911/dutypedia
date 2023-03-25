@@ -1,93 +1,272 @@
 import { useIsFocused } from "@react-navigation/native";
-import React from "react";
-import { ScrollView, View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  StatusBar,
+  Alert,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "../../../components/IconButton";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
+import { Entypo } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { fileFromURL, localTimeToServerDate } from "../../../action";
+import { uploadFile } from "../../../Class/upload";
+import {
+  submitVerificationCompany,
+  submitVerificationIndividual,
+} from "../../../Class/service";
+import customStyle from "../../../assets/stylesheet";
+import ActivityLoader from "../../../components/ActivityLoader";
 
-export default function ThirdStepVerification({navigation}) {
+export default function ThirdStepVerification({ navigation, route }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-
+  const data = route?.params?.data;
+  const [identity, setIdentity] = useState([""]);
+  const [address, setAddress] = useState([""]);
+  const user = useSelector((state) => state.user);
+  const [loader, setLoader] = useState(false);
+  const vendor = useSelector((state) => state.vendor);
+  //console.log(data)
   React.useEffect(() => {
     if (isFocused) {
-     // dispatch(setHideBottomBar(true));
+      // dispatch(setHideBottomBar(true));
     } else {
       //dispatch(setHideBottomBar(false));
     }
     setTimeout(() => {
-     // dispatch(setHideBottomBar(true));
+      // dispatch(setHideBottomBar(true));
     }, 50);
   }, [isFocused]);
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View
-        style={{
-          marginHorizontal: 28,
-          marginVertical: 32,
-        }}>
-        <Text style={styles.headLine}>Identity Verification*</Text>
-        <Text style={[styles.text, { marginTop: 28 }]}>
-          Upload{" "}
-          <Text style={{ color: "#7566FF" }}>
-            Birth certificate/ Passport/NID/Driving License
-          </Text>
-        </Text>
-        <Text style={[styles.text, { color: "#EC2700", marginTop: 20 }]}>
-          At least one document is required
-        </Text>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}>
-          <IconButton style={[styles.smButton]} title={"Choose file"} />
-          <Text style={[styles.small, { marginLeft: 12 }]}>No file chosen</Text>
-        </View>
-        <Text style={[styles.exSmall, { marginTop: 12 }]}>
-          Per file size limit (Maximum 2 MB)
-        </Text>
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 20,
-          }}>
-          <SvgXml xml={plus} />
-          <Text style={[styles.small, { marginLeft: 8 }]}>Add more file</Text>
-        </Pressable>
-        <View style={styles.step} />
-        <Text style={[styles.headLine]}>Address verification</Text>
-        <Text style={[styles.text, { marginTop: 28 }]}>
-          Upload{" "}
-          <Text style={{ color: "#7566FF" }}>
-          Bank statement or any utility bill like Gas bill/Water bill/ Current bill
-          </Text>
-        </Text>
-        <Text style={[styles.text,{color:"#EC2700"}]}>*note <Text style={{color:"#000000"}}>(Document address and input address must be match)</Text></Text>
-        <Text style={[styles.text, { color: "#EC2700", marginTop: 20 }]}>
-          At least one document is required
-        </Text>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}>
-          <IconButton style={[styles.smButton]} title={"Choose file"} />
-          <Text style={[styles.small, { marginLeft: 12 }]}>No file chosen</Text>
-        </View>
-        <Text style={[styles.exSmall, { marginTop: 12 }]}>
-          Per file size limit (Maximum 2 MB)
-        </Text>
-        <Pressable
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 20,
-          }}>
-          <SvgXml xml={plus} />
-          <Text style={[styles.small, { marginLeft: 8 }]}>Add more file</Text>
-        </Pressable>
-        <IconButton onPress={()=>{
-            navigation.navigate("ConfirmationScreen")
-        }} style={styles.button} title={"confirm"} />
+  //console.log(vendor.service.id)
+  const scrollRef = useRef();
+  const confirm = async () => {
+    if (!identity[0]) {
+      scrollRef?.current.scrollTo({ y: 0 });
+      return;
+    }
+    if (!address[0]) {
+      return;
+    }
+    setLoader(true);
+    const identityFiles = [];
+    const addressFiles = [];
+    identity.map((doc) => {
+      identityFiles.push(fileFromURL(doc));
+    });
+    address.map((doc) => {
+      addressFiles.push(fileFromURL(doc));
+    });
+
+    const identityUrls = await uploadFile(identityFiles, user.token);
+
+    if (!identityUrls) {
+      setLoader(false);
+      Alert.alert("Ops!", "Failed to upload files");
+      return;
+    }
+    const addressUrls = await uploadFile(addressFiles, user.token);
+    if (!addressUrls) {
+      setLoader(false);
+      Alert.alert("Ops!", "Failed to upload files");
+      return;
+    }
+    if (data?.type == "Company") {
+      submitVerificationCompany(user.token, {
+        serviceId: vendor.service.id,
+        companyName: data.name,
+        establishedDate: localTimeToServerDate(data.date),
+        companyDivision: data.permanentAddress.division,
+        companyDistrict: data.permanentAddress.district,
+        companyThana: data.permanentAddress.upazila,
+        companyPostalCode: data.permanentAddress.postalCode,
+        companyAddress: data.permanentAddress.fullAddress,
+        identityFiles: identityUrls,
+        addressFiles: addressUrls,
+      })
+        .then((res) => {
+          setLoader(false);
+          navigation.navigate("ConfirmationScreen");
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.log(err.response.data.msg);
+          Alert.alert("Ops!", err.response.data.msg);
+        });
+    } else {
+      submitVerificationIndividual(user.token, {
+        serviceId: vendor.service.id,
+        firstName: data.name.split(" ")[0],
+        lastName: data.name.split(" ")[1],
+        dob: localTimeToServerDate(data.date),
+        gender: data.gender,
+
+        presentDivision: data.presentAddress.division,
+        presentDistrict: data.presentAddress.district,
+        presentThana: data.presentAddress.upazila,
+        presentPostalCode: data.presentAddress.postalCode,
+        presentAddress: data.presentAddress.fullAddress,
+
+        permanentDivision: data.permanentAddress.division,
+        permanentDistrict: data.permanentAddress.district,
+        permanentThana: data.permanentAddress.upazila,
+        permanentPostalCode: data.permanentAddress.postalCode,
+        permanentAddress: data.permanentAddress.fullAddress,
+        identityFiles: identityUrls,
+        addressFiles: addressUrls,
+      })
+        .then((res) => {
+          setLoader(false);
+          navigation.navigate("ConfirmationScreen");
+        })
+        .catch((err) => {
+          setLoader(false);
+          Alert.alert("Ops!", err.response.data.msg);
+        });
+    }
+  };
+  if (loader) {
+    return (
+      <View style={customStyle.fullBox}>
+        <ActivityLoader />
       </View>
-    </ScrollView>
+    );
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ height: StatusBar.currentHeight }} />
+      <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            marginHorizontal: 28,
+            marginVertical: 32,
+          }}>
+          <Text style={styles.headLine}>Identity Verification*</Text>
+          <Text style={[styles.text, { marginTop: 28 }]}>
+            Upload{" "}
+            <Text style={{ color: "#7566FF" }}>
+              {data?.type == "Company"
+                ? "Trade license/ company Tax certificate"
+                : "Birth certificate/ Passport/NID/Driving License"}
+            </Text>
+          </Text>
+          <Text style={[styles.text, { color: "#EC2700", marginTop: 20 }]}>
+            At least one document is required
+          </Text>
+          {identity.map((doc, i) => (
+            <ExtButton
+              file={doc}
+              onChange={(e) => {
+                let arr = identity;
+                arr[i] = e;
+                setIdentity(arr);
+              }}
+              onClose={() => {
+                setIdentity((d) => d.filter((d, j) => j != i));
+              }}
+              key={i}
+              index={i}
+            />
+          ))}
+
+          <Text style={[styles.exSmall, { marginTop: 12 }]}>
+            Per file size limit (Maximum 2 MB)
+          </Text>
+          {identity.length < 3 && (
+            <Pressable
+              onPress={() => {
+                setIdentity((d) => [...d, ""]);
+              }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 20,
+              }}>
+              <SvgXml xml={plus} />
+              <Text style={[styles.small, { marginLeft: 8 }]}>
+                Add more file
+              </Text>
+            </Pressable>
+          )}
+          <View style={styles.step} />
+          <Text style={[styles.headLine]}>Address verification</Text>
+          {data?.type == "Company" ? (
+            <Text style={[styles.text, { marginTop: 28 }]}>
+              Please upload{" "}
+              <Text style={{ fontWeight: "500" }}>
+                your company's bank statement or any utility bill, such as a gas
+                bill, water bill, or current bill, for address verification.
+              </Text>
+            </Text>
+          ) : (
+            <Text style={[styles.text, { marginTop: 28 }]}>
+              Upload{" "}
+              <Text style={{ color: "#7566FF" }}>
+                Bank statement or any utility bill like Gas bill/Water bill/
+                Current bill
+              </Text>
+            </Text>
+          )}
+
+          <Text style={[styles.text, { color: "#EC2700" }]}>
+            *note{" "}
+            <Text style={{ color: "#000000" }}>
+              (Document address and input address must be match)
+            </Text>
+          </Text>
+          <Text style={[styles.text, { color: "#EC2700", marginTop: 20 }]}>
+            At least one document is required
+          </Text>
+          {address.map((doc, i) => (
+            <ExtButton
+              file={doc}
+              onChange={(e) => {
+                let arr = address;
+                arr[i] = e;
+                setAddress(arr);
+              }}
+              onClose={() => {
+                setAddress((d) => d.filter((d, j) => j != i));
+              }}
+              key={i}
+              index={i}
+            />
+          ))}
+          <Text style={[styles.exSmall, { marginTop: 12 }]}>
+            Per file size limit (Maximum 2 MB)
+          </Text>
+          {address.length < 3 && (
+            <Pressable
+              onPress={() => {
+                setAddress((d) => [...d, ""]);
+              }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 20,
+              }}>
+              <SvgXml xml={plus} />
+              <Text style={[styles.small, { marginLeft: 8 }]}>
+                Add more file
+              </Text>
+            </Pressable>
+          )}
+          <IconButton
+            onPress={() => {
+              confirm();
+            }}
+            style={styles.button}
+            title={"confirm"}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 const plus = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -123,10 +302,60 @@ const styles = StyleSheet.create({
     height: 32,
     width: 112,
   },
-  button:{
-    height:44,
-    backgroundColor:"#4ADE80",
-    marginVertical:32,
-    color:"white"
-  }
+  button: {
+    height: 44,
+    backgroundColor: "#4ADE80",
+    marginTop: 32,
+    color: "white",
+  },
 });
+const ExtButton = ({ onClose, file, onChange, index }) => {
+  const [image, setImage] = useState();
+  //const uri=file?.uri?.split("/")
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    //console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri.split("/"));
+      onChange(result.assets[0]);
+    }
+  };
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 20,
+        justifyContent: "space-between",
+      }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          flex: 1,
+        }}>
+        <IconButton
+          onPress={pickImage}
+          style={[styles.smButton]}
+          title={"Choose file"}
+        />
+        <Text
+          numberOfLines={1}
+          style={[styles.small, { marginLeft: 12, flex: 1 }]}>
+          {image ? image[image.length - 1] : "No file chosen"}
+        </Text>
+      </View>
+      {index != 0 && (
+        <Entypo onPress={onClose} name="cross" size={24} color="black" />
+      )}
+    </View>
+  );
+};

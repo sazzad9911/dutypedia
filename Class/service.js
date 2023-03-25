@@ -1032,4 +1032,27 @@ export const replyReview=async(token,reviewId,text)=>{
   })
   return res
 }
+export const submitVerificationIndividual=async(token,data)=>{
+  const res=await axios.post(`${url}/server/services/submit-verification-individual`,
+    data
+  ,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+export const submitVerificationCompany=async(token,data)=>{
+  //console.log(data)
+  const res=await axios.post(`${url}/server/services/submit-verification-company`,
+    data
+  ,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
 
+export const getVerificationDetails=async(token,serviceId)=>{
+  const res=await axios.get(`${url}/server/services/get-verification/${serviceId}`,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}

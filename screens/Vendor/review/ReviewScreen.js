@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View,Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Cart } from "../../../Cart/ReviewCart";
 import { getReviews } from "../../../Class/service";
@@ -9,6 +9,7 @@ import stylesheet from "../../../assets/stylesheet";
 import ActivityLoader from "../../../components/ActivityLoader";
 import AllReviewHeader from "../../../components/AllReviewHeader";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
+import customStyle from "../../../assets/stylesheet";
 
 export default function ReviewScreen({ navigation }) {
   const user = useSelector((state) => state.user);
@@ -41,7 +42,7 @@ export default function ReviewScreen({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <AllReviewHeader title={`${reviews?reviews.length:"0"} Review`} navigation={navigation} />
-      <ScrollView>
+      <ScrollView style={{flex:1}}>
         <View
           style={{
             marginTop: 8,
@@ -54,7 +55,7 @@ export default function ReviewScreen({ navigation }) {
               marginVertical: 8,
             }}
             title="Communication"
-            rate={overall?.communicationRating}
+            rate={overall?.communicationRating?overall?.communicationRating:0}
           />
           <RatingView
             style={{
@@ -62,7 +63,7 @@ export default function ReviewScreen({ navigation }) {
               marginVertical: 8,
             }}
             title="Service as Describe"
-            rate={overall?.describeRating}
+            rate={overall?.describeRating?overall?.describeRating:0}
           />
           <RatingView
             style={{
@@ -70,11 +71,11 @@ export default function ReviewScreen({ navigation }) {
               marginVertical: 8,
             }}
             title="Service quality"
-            rate={overall?.qualityRating}
+            rate={overall?.qualityRating?overall?.qualityRating:0}
           />
           {reviews && reviews.length == 0 && (
-            <View style={stylesheet.fullBox}>
-              <Text style={stylesheet.mediumText}>No Reviews</Text>
+            <View style={[customStyle.fullBox]}>
+              <Text style={[customStyle.mediumText,{marginTop:40}]}>No Reviews</Text>
             </View>
           )}
           {!reviews && (

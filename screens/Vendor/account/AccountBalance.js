@@ -6,6 +6,7 @@ import {
   View,
   Text,
   Dimensions,
+  StatusBar,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ import RecentTransaction from "./RecentTransaction";
 import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
 import { getAccountInfo } from "../../../Class/account";
+import { getVerificationDetails } from "../../../Class/service";
 const { width, height } = Dimensions.get("window");
 
 export default function AccountBalance({ navigation }) {
@@ -25,6 +27,7 @@ export default function AccountBalance({ navigation }) {
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [data, setData] = useState();
+  const [verification, setVerification] = useState();
   //console.log(vendor.service.verified)
 
   // React.useEffect(() => {
@@ -43,44 +46,58 @@ export default function AccountBalance({ navigation }) {
       .catch((err) => {
         console.error(err.response.data.msg);
       });
+    getVerificationDetails(user.token, vendor.service.id).then((res) => {
+      //console.log(res.data)
+      setVerification(res.data.verification);
+    });
   }, [isFocused]);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{height:15}}/>
-      <MasterCart
-      onVerify={()=>{
-        navigation.navigate("FirstStepVerification")
-      }}
-        verified={vendor?.service?.verified}
-        id={data?.id}
-        name={`${user?.user.firstName} ${user?.user.lastName}`}
-      />
-      <AccountDetailsCart
-        amount={data?.balance}
-        totalEarnings={data?.totalEarnings}
-        pendingAmount={data?.pending}
-        onWithdraw={() => {
-          if(vendor.service.verified){
-            navigation.navigate("WithdrawFirst")
-          }else{
-            navigation.navigate("RequestVerification")
-          }
-        }}
-      />
-      <View
-        style={{
-          paddingHorizontal: 20,
-          height: 450,
-        }}>
-        <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-          <Tab.Screen
-            name="Transaction history"
-            component={RecentTransaction}
-          />
-          <Tab.Screen name="Withdraw history" component={RecentWithdraw} />
-        </Tab.Navigator>
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 15, marginTop: StatusBar.currentHeight }} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        
+        <MasterCart
+          onVerify={() => {
+            if(!verification?.accept){
+              navigation.navigate("ReviewVerification");
+              return
+            }
+            navigation.navigate("FirstStepVerification");
+          }}
+          verified={vendor?.service?.verified}
+          id={data?.id}
+          name={`${user?.user.firstName} ${user?.user.lastName}`}
+        />
+        <AccountDetailsCart
+          amount={data?.balance}
+          totalEarnings={data?.totalEarnings}
+          pendingAmount={data?.pending}
+          onWithdraw={() => {
+            
+            if (verification?.accept) {
+              navigation.navigate("WithdrawFirst");
+            }else if(!verification?.accept){
+              navigation.navigate("ReviewVerification");
+            } else {
+              navigation.navigate("RequestVerification");
+            }
+          }}
+        />
+        <View
+          style={{
+            paddingHorizontal: 20,
+            height: 450,
+          }}>
+          <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+            <Tab.Screen
+              name="Transaction history"
+              component={RecentTransaction}
+            />
+            <Tab.Screen name="Withdraw history" component={RecentWithdraw} />
+          </Tab.Navigator>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 const MasterCart = ({ name, id, verified, onVerify }) => {

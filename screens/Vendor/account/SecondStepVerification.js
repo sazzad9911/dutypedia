@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  StatusBar,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../components/IconButton";
@@ -20,6 +21,8 @@ import DatePicker from "../../../Hooks/DatePicker";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { DistrictList } from "../../../Data/district";
+import InputButton from "./InputButton";
+import { SvgXml } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
 
 export default function SecondStepVerification({ navigation, route }) {
@@ -51,6 +54,14 @@ export default function SecondStepVerification({ navigation, route }) {
   const [permanentUpazila, setPermanentUpazila] = useState();
   const [permanentPostalCode, setPermanentPostalCode] = useState();
   const [permanentFullAddress, setPermanentFullAddress] = useState();
+  const [presentDistrictError, setPresentDistrictError] = useState();
+  const [permanentDistrictError, setPermanentDistrictError] = useState();
+  const [nameError,setNameError]=useState()
+  const [genderError,setGenderError]=useState()
+  const [presentError,setPresentError]=useState()
+  const [permanentError,setPermanentError]=useState()
+  const [dateError,setDateError]=useState()
+
   React.useEffect(() => {
     if (index == -1) {
       dispatch(setHideBottomBar(false));
@@ -60,7 +71,7 @@ export default function SecondStepVerification({ navigation, route }) {
   }, [index]);
 
   const bottomSheetRef = useRef(null);
-
+  const scrollRef=useRef()
   // variables
   const snapPoints = useMemo(() => ["25%", "60%"], []);
 
@@ -69,13 +80,69 @@ export default function SecondStepVerification({ navigation, route }) {
     //console.log('handleSheetChanges', index);
     setIndex(index);
   }, []);
+  const next = () => {
+    setNameError()
+    setGenderError()
+    setDateError()
+    setPresentError()
+    setPermanentError()
+    if(!name){
+      setNameError("*Name is required")
+      scrollRef?.current.scrollTo({y:0})
+      return
+    }
+    if(type!="Company"&&!gender){
+      setGenderError("*Gender is required")
+      scrollRef?.current.scrollTo({y:10})
+      return
+    }
+    if(!date){
+      setDateError("*Date is required")
+      scrollRef?.current.scrollTo({y:50})
+      return
+    }
+    
+    if(type!="Company"&&(!presentDistrict||!presentDivision||!presentUpazila||!presentPostalCode||!presentFullAddress)){
+      setPresentError("*Address is required")
+      scrollRef?.current.scrollTo({y:100})
+      return
+    }
+    if(!permanentDistrict || !permanentDivision ||!permanentUpazila||!permanentPostalCode||!permanentFullAddress){
+      setPermanentError("*Address is required")
+      return
+    }
+
+    let data = {
+      type: type,
+      name: name,
+      gender: gender,
+      date: date,
+      presentAddress: {
+        division: presentDivision,
+        district: presentDistrict,
+        upazila: presentUpazila,
+        postalCode: presentPostalCode,
+        fullAddress: presentFullAddress,
+      },
+      permanentAddress: {
+        division: permanentDivision,
+        district: permanentDistrict,
+        upazila: permanentUpazila,
+        postalCode: permanentPostalCode,
+        fullAddress: permanentFullAddress,
+      },
+    };
+    
+    navigation.navigate("ThirdStepVerification", {data:data});
+  };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+      <View style={{ height: 1, marginTop: StatusBar.currentHeight }} />
+      <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
         <View
           style={{
             marginTop: 28,
@@ -85,7 +152,7 @@ export default function SecondStepVerification({ navigation, route }) {
           <Text style={[styles.text, { marginBottom: 12 }]}>
             {type == "Company" && "Company "}Name
           </Text>
-          <Input
+          <Input error={nameError}
             value={name}
             onChange={setName}
             style={styles.input}
@@ -131,6 +198,7 @@ export default function SecondStepVerification({ navigation, route }) {
                   title={"Other"}
                 />
               </View>
+              {genderError&&(<Text style={styles.errorText}>{genderError}</Text>)}
             </>
           )}
           <Text style={[styles.text, { marginTop: 28 }]}>
@@ -143,6 +211,7 @@ export default function SecondStepVerification({ navigation, route }) {
               marginTop: 12,
             }}
           />
+          {dateError&&(<Text style={styles.errorText}>{dateError}</Text>)}
           {type != "Company" && (
             <>
               <Text style={[styles.text, { marginTop: 28 }]}>
@@ -154,10 +223,11 @@ export default function SecondStepVerification({ navigation, route }) {
                   marginTop: 16,
                   justifyContent: "space-between",
                 }}>
-                <Input
+                <InputButton
                   onPress={() => {
                     setIndex(1);
-                    setSelect("Division");
+                    setSelect("Present Division");
+                    setPresentDistrictError();
                   }}
                   value={presentDivision}
                   style={[
@@ -169,10 +239,16 @@ export default function SecondStepVerification({ navigation, route }) {
                   placeholder={"Division"}
                 />
 
-                <Input onPress={()=>{
-                  setIndex(1);
-                  setSelect("District");
-                }}
+                <InputButton
+                  error={presentDistrictError}
+                  onPress={() => {
+                    if (!presentDivision) {
+                      setPresentDistrictError("*Division not selected");
+                      return;
+                    }
+                    setIndex(1);
+                    setSelect("Present District");
+                  }}
                   value={presentDistrict}
                   style={[
                     styles.input,
@@ -205,6 +281,7 @@ export default function SecondStepVerification({ navigation, route }) {
                     { width: width / 2 - 48 },
                     styles.padding,
                   ]}
+                  keyboardType={"number-pad"}
                   value={presentPostalCode}
                   onChange={setPresentPostalCode}
                   placeholder={"Postal code"}
@@ -216,6 +293,7 @@ export default function SecondStepVerification({ navigation, route }) {
                 onChange={setPresentFullAddress}
                 placeholder={"Full address"}
               />
+              {presentError&&(<Text style={styles.errorText}>{presentError}</Text>)}
             </>
           )}
 
@@ -228,21 +306,27 @@ export default function SecondStepVerification({ navigation, route }) {
               marginTop: 16,
               justifyContent: "space-between",
             }}>
-            <Input
+            <InputButton
               onPress={() => {
                 setIndex(1);
-                setSelect("Division");
+                setSelect("Permanent Division");
+                setPermanentDistrictError()
               }}
               value={permanentDivision}
               editable={false}
               style={[styles.input, { width: width / 2 - 48 }, styles.padding]}
               placeholder={"Division"}
             />
-            <Input
+            <InputButton
               onPress={() => {
+                if (!permanentDivision) {
+                  setPermanentDistrictError("*Division not selected");
+                  return;
+                }
                 setIndex(1);
-                setSelect("District");
+                setSelect("Permanent District");
               }}
+              error={permanentDistrictError}
               editable={false}
               value={permanentDistrict}
               style={[styles.input, { width: width / 2 - 48 }, styles.padding]}
@@ -266,6 +350,7 @@ export default function SecondStepVerification({ navigation, route }) {
               onChange={setPermanentPostalCode}
               style={[styles.input, { width: width / 2 - 48 }, styles.padding]}
               placeholder={"Postal code"}
+              keyboardType={"number-pad"}
             />
           </View>
           <TextArea
@@ -274,9 +359,10 @@ export default function SecondStepVerification({ navigation, route }) {
             style={styles.textArea}
             placeholder={"Full address"}
           />
+          {permanentError&&(<Text style={styles.errorText}>{permanentError}</Text>)}
           <IconButton
             onPress={() => {
-              navigation.navigate("ThirdStepVerification");
+              next();
             }}
             style={styles.button}
             title={"Next"}
@@ -300,7 +386,48 @@ export default function SecondStepVerification({ navigation, route }) {
         snapPoints={snapPoints}
         enablePanDownToClose={true}
         onChange={handleSheetChanges}>
-        <Screen select={select} />
+        {select == "Present Division" && (
+          <Screen
+            onChange={(e) => {
+              setPresentDivision(e);
+              
+            }}
+            onClose={()=>bottomSheetRef?.current?.close()}
+            select={presentDivision}
+          />
+        )}
+        {select == "Present District" && (
+          <Screen
+            value={presentDivision}
+            onChange={(e) => {
+              setPresentDistrict(e);
+              //bottomSheetRef?.current?.close();
+            }}
+            onClose={()=>bottomSheetRef?.current?.close()}
+            select={presentDistrict}
+          />
+        )}
+        {select == "Permanent Division" && (
+          <Screen
+            onChange={(e) => {
+              setPermanentDivision(e);
+              //bottomSheetRef?.current?.close();
+            }}
+            onClose={()=>bottomSheetRef?.current?.close()}
+            select={permanentDivision}
+          />
+        )}
+        {select == "Permanent District" && (
+          <Screen
+            value={permanentDivision}
+            onChange={(e) => {
+              setPermanentDistrict(e);
+              //bottomSheetRef?.current?.close();
+            }}
+            onClose={()=>bottomSheetRef?.current?.close()}
+            select={permanentDistrict}
+          />
+        )}
       </BottomSheet>
     </KeyboardAvoidingView>
   );
@@ -338,23 +465,89 @@ const styles = StyleSheet.create({
     color: "white",
     marginTop: 28,
   },
+  box: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderBottomColor: "#F1EFEF",
+    borderBottomWidth: 1,
+    flexDirection:"row",
+    justifyContent:"space-between"
+  },
+  textSp: {
+    color: "#484848",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+  },
+  errorText:{
+    color:"red",
+    marginTop:2
+  }
 });
-const Screen = ({ select }) => {
+const Screen = ({ select, value, onChange, onClose }) => {
   return (
     <View
       style={{
         flex: 1,
       }}>
+      <Text
+        style={{
+          marginVertical: 12,
+          fontWeight: "400",
+          fontSize: 20,
+          width: "100%",
+          textAlign: "center",
+        }}>
+        {value ? "District" : "Division"}
+      </Text>
       <BottomSheetScrollView
         contentContainerStyle={{
           backgroundColor: "#ffffff",
         }}>
-          {DistrictList.map((doc,i)=>(
-            <View>
-              <Text>{}</Text>
-            </View>
+        {!value &&
+          DistrictList.map((doc, i) => (
+            <Pressable
+              onPress={() => {
+                if (onChange) {
+                  onChange(doc.title);
+                }
+              }}
+              style={styles.box}
+              key={i}>
+              <Text style={styles.textSp}>{doc.title}</Text>
+              {select==doc.title&&(<SvgXml xml={tick}/>)}
+            </Pressable>
           ))}
-        </BottomSheetScrollView>
+        {value &&
+          DistrictList.filter((d) => d.title.match(value))[0].data.map(
+            (doc, i) => (
+              <Pressable
+                onPress={() => {
+                  if (onChange) {
+                    onChange(doc);
+                  }
+                }}
+                style={styles.box}
+                key={i}>
+                <Text style={styles.textSp}>{doc}</Text>
+                {select==doc&&(<SvgXml xml={tick}/>)}
+              </Pressable>
+            )
+          )}
+      </BottomSheetScrollView>
+      <IconButton onPress={onClose}
+        style={{
+          marginBottom: 20,
+          backgroundColor: "#4ADE80",
+          marginHorizontal: 8,
+          color:"white"
+        }}
+        title={"Done"}
+      />
     </View>
   );
 };
+const tick=`<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.725 1.22423C14.055 0.885479 14.5413 0.664229 15.0188 0.792979C15.5688 0.907979 15.9525 1.42673 16 1.97298V2.03548C15.9688 2.44423 15.7487 2.80423 15.46 3.08298C12.5825 5.95548 9.7075 8.82923 6.835 11.7042C6.54625 11.993 6.18625 12.263 5.75625 12.2442C5.325 12.2605 4.9625 11.9917 4.67375 11.7017C3.30125 10.3267 1.9275 8.95298 0.55125 7.58298C0.2625 7.30423 0.0375 6.94798 0 6.54048V6.47923C0.03875 5.92298 0.42875 5.39423 0.9875 5.28048C1.46625 5.15173 1.95125 5.37923 2.28125 5.71923C3.44375 6.87298 4.59625 8.03673 5.75875 9.19048C8.41625 6.53798 11.0662 3.87798 13.725 1.22423Z" fill="#4ADE80"/>
+</svg>
+`

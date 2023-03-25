@@ -249,7 +249,7 @@ const VendorProfile = (props) => {
         setBackgroundImage(response.data.service.wallPhoto);
         setImage(response.data.service.profilePhoto);
         setImages(gigs[0].images);
-        setPrice(gigs[0].price); 
+        setPrice(gigs[0].price);
         setTitle(gigs[0].title);
         setDescription(gigs[0].description);
         //setNewDataList(response.data.service.gigs[0].services.options)
@@ -326,7 +326,7 @@ const VendorProfile = (props) => {
       setActiveServiceData(arr);
 
       setCategory(gigs[0].services.category);
-      
+
       try {
         //console.log(Data.service.gigs[0].services.options)
         dispatch({
@@ -341,7 +341,6 @@ const VendorProfile = (props) => {
         );
       } catch (e) {
         console.warn(e.message);
-        
       }
     }
   }, [Bargaining, Data, isFocused]);
@@ -1535,7 +1534,7 @@ const VendorProfile = (props) => {
               //console.log("ok");
               const res = await pickImage();
               setWallPhoto(res.uri);
-              uploadProfileImage(res,false)
+              uploadProfileImage(res, false);
             }}>
             <SvgXml xml={cameraIcon} height="20" width={"20"} />
           </Pressable>
@@ -1550,9 +1549,9 @@ const VendorProfile = (props) => {
           uri={image}
           onClose={setModalVisible}
           onChange={(image) => {
-            setModalVisible(false)
+            setModalVisible(false);
             setImage(image.uri);
-            uploadProfileImage(image,true)
+            uploadProfileImage(image, true);
           }}
         />
       </Modal>
@@ -2365,6 +2364,32 @@ const FixedScreen = ({ navigation, route }) => {
           <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
         ))}
       </View>
+      {FixedService && FixedService.length == 0 && (
+        <Animated.View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            paddingHorizontal: 10,
+            backgroundColor: primaryColor,
+            justifyContent: "center",
+            width: "100%",
+          }}
+          entering={FadeIn}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <SvgXml
+              xml={serviceIcon}
+              style={{ marginVertical: 100 }}
+              height="200"
+              width="200"
+            />
+          </View>
+        </Animated.View>
+      )}
       <View style={{ height: 70 }} />
     </View>
   );
@@ -2429,128 +2454,33 @@ const PackageScreen = ({ navigation, route }) => {
             data={doc}
           />
         ))}
-        {/* {PackageService.length > content && (
+      </View>
+      {PackageService && PackageService.length == 0 && (
+        <Animated.View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            paddingHorizontal: 10,
+            backgroundColor: primaryColor,
+            justifyContent: "center",
+            width: "100%",
+          }}
+          entering={FadeIn}>
           <View
             style={{
+              flex: 1,
               justifyContent: "center",
-              marginVertical: 15,
               alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <IconButton
-              onPress={() => {
-                setContent((val) => val + 2);
-              }}
-              style={{
-                borderWidth: 0,
-              }}
-              Icon={() => <SvgXml xml={refreshIcon} height="20" width={"20"} />}
-              title="Load More"
+            }}>
+            <SvgXml
+              xml={serviceIcon}
+              style={{ marginVertical: 100 }}
+              height="200"
+              width="200"
             />
           </View>
-        )}
-        {PackageService.length == 0 && (
-          <Animated.View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              paddingHorizontal: 10,
-              backgroundColor: primaryColor,
-              justifyContent: "center",
-              width: "100%",
-            }}
-            entering={FadeIn}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <SvgXml
-                xml={serviceIcon}
-                style={{ marginVertical: 100 }}
-                height="200"
-                width="200"
-              />
-            </View>
-          </Animated.View>
-        )}
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            marginTop: 0,
-          }}
-        >
-          {RelatedServices.length > 2 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 10,
-                  paddingVertical: 15,
-                }}
-              >
-                Related Service
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-              >
-                {RelatedServices.map((doc, i) =>
-                  i < 6 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
-                  ) : null
-                )}
-              </View>
-            </View>
-          )}
-
-          {UnRelatedServices.length > 0 && (
-            <View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  fontFamily: "Poppins-SemiBold",
-                  color: textColor,
-                  paddingHorizontal: 10,
-                  paddingVertical: 15,
-                }}
-              >
-                You Might Also Like
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-              >
-                {UnRelatedServices.map((doc, i) =>
-                  i < 50 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
-                  ) : null
-                )}
-              </View>
-            </View>
-          )}
-        </View> */}
-      </View>
+        </Animated.View>
+      )}
       <View style={{ height: 70 }} />
     </View>
   );
