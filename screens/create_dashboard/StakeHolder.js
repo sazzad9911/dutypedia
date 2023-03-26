@@ -1,12 +1,19 @@
 import React from "react";
-import { ScrollView, View, Text,KeyboardAvoidingView, Platform } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import ViewMore from "../../Hooks/ViewMore";
 import { icon, styles } from "./BusinessTitle";
+import ReadMore from "@fawazahmed/react-native-read-more";
 
-export default function StakeHolder({navigation}) {
+export default function StakeHolder({ navigation }) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -25,29 +32,41 @@ export default function StakeHolder({navigation}) {
               Tips for set up number of employees/team member{" "}
             </Text>
           </View>
-          <ViewMore
-            style={{
-              marginTop: 24,
-            }}
-            fontStyle={{
-              lineHeight: 24,
-              fontSize: 16,
-              fontWeight: "400",
-            }}
-            button={true}
-            text={text}
-            title={"Read More"}
-          />
-          <Text style={styles.headLine}>Number of employees/team member</Text>
+          <ReadMore
+            animate={true}
+            ellipsis={"..."}
+            seeMoreStyle={styles.seeMore}
+            seeLessStyle={styles.seeMore}
+            seeMoreText={"See More..."}
+            numberOfLines={3}
+            style={styles.spText}>
+            <Text>
+              If you are a <Text style={{fontWeight:"700"}}>company</Text>, please provide the number of team members or
+              workers that you have. <Text style={{fontWeight:"700"}}>If you are an individual with freelancers</Text>,
+              you can enter the number of freelancers that you work with. If you
+              don't have any team members or workers, please enter '1' to
+              indicate that you work alone. We require at least one input in
+              this section to ensure transparency and accuracy in our platform.
+              This will help us match you with the right buyers and ensure a
+              smooth experience for everyone.
+            </Text>
+          </ReadMore>
+          <Text style={[styles.headLine, { marginTop: 36 }]}>
+            Number of employees/team member
+          </Text>
           <Input
             keyboardType={"number-pad"}
             style={styles.input}
             placeholder={" "}
           />
           <Text style={styles.text}>Minimum 1 require</Text>
-          <IconButton onPress={()=>{
-            navigation.navigate("Established")
-          }} style={styles.button} title={"Continue"}/>
+          <IconButton
+            onPress={() => {
+              navigation.navigate("Established");
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

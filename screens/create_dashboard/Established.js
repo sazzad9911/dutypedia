@@ -1,36 +1,136 @@
-import React from "react";
-import { ScrollView, View,KeyboardAvoidingView, Platform,Text } from "react-native";
+import ReadMore from "@fawazahmed/react-native-read-more";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  Pressable,
+  TextInput,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
+import Input from "../../components/Input";
 import { icon, styles } from "./BusinessTitle";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {
+  convertDate,
+  serverTimeToLocal,
+  serverTimeToLocalDate,
+} from "../../action";
+import IconButton from "../../components/IconButton";
 
-export default function Established() {
+export default function Established({ navigation }) {
+  const [date, setDate] = useState();
   return (
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : null}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
-    <ScrollView>
-      <View style={{
-        marginTop:24,
-        paddingHorizontal:20
-      }}>
-        <SvgXml width={"100%"} xml={vectorImage}/>
-      </View>
-      <View style={{
-        flexDirection:"row",
-        alignItems:"center",
-        marginTop:36
-      }}>
-        <SvgXml style={{
-          marginRight:8
-        }} xml={icon}/>
-        <Text style={styles.headLine}>Tips for set up the established/starting date</Text>
-      </View>
-    </ScrollView>
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            marginTop: 24,
+            paddingHorizontal: 20,
+          }}>
+          <SvgXml width={"100%"} xml={vectorImage} />
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              marginTop: 36,
+            }}>
+            <SvgXml
+              style={{
+                marginRight: 8,
+              }}
+              xml={icon}
+            />
+            <Text style={[styles.headLine,{flex:1}]}>
+              Tips for set up the established/starting date
+            </Text>
+          </View>
+          <ReadMore
+            animate={true}
+            ellipsis={"..."}
+            seeMoreStyle={styles.seeMore}
+            seeLessStyle={styles.seeMore}
+            seeMoreText={"See More..."}
+            numberOfLines={3}
+            style={styles.spText}>
+            <Text>
+              Please provide the establishment date of your company.{" "}
+              <Text style={{ fontWeight: "700" }}>
+                If you are an individual
+              </Text>{" "}
+              without a company, please enter the date you started working as a
+              freelancer or the current date. Note that this field cannot be
+              left blank, as it helps us connect you with the right buyers and
+              sellers. Thanks for choosing our marketplace, and we look forward
+              to helping you succeed!
+            </Text>
+          </ReadMore>
+          <Text style={[styles.headLine, { marginTop: 36 }]}>
+            Established/starting date
+          </Text>
+          <CustomInput value={date} onChange={setDate} />
+          <IconButton onPress={()=>{
+            navigation.navigate("WorkingTime")
+          }} style={styles.button} title={"Continue"} />
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-const vectorImage=`<svg width="353" height="230" viewBox="0 0 353 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+const CustomInput = ({ value, onChange }) => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    if (onChange) {
+      onChange(date);
+    }
+    hideDatePicker();
+  };
+  return (
+    <Pressable
+      onPress={showDatePicker}
+      style={{
+        flexDirection: "row",
+        paddingHorizontal: 12,
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#A3A3A3",
+        height: 45,
+        borderRadius: 4,
+        marginTop: 24,
+      }}>
+      <SvgXml xml={dateIcon} />
+      <Text
+        style={{
+          marginLeft: 10,
+          fontSize: 14,
+          color: "#767676",
+        }}>
+        {value ? serverTimeToLocalDate(value) : "dd/mm/yyyy"}
+      </Text>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+    </Pressable>
+  );
+};
+const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M300.106 224.904C300.368 225.354 300.629 225.808 300.991 226.43C306.184 226.386 311.478 226.629 316.738 227.194C316.762 227.314 316.786 227.437 316.81 227.557C316.134 227.704 315.468 227.935 314.783 227.979C312.429 228.13 310.065 228.246 307.706 228.321C303.473 228.453 299.24 228.541 295.003 228.652C291.331 228.748 287.659 228.879 283.988 228.955C277.762 229.078 271.522 228.995 265.31 229.317C255.451 229.831 245.592 229.293 235.746 229.616C217.026 230.225 198.302 229.787 179.577 229.883C160.842 229.978 142.103 230.118 123.374 229.819C111.517 229.628 99.6551 229.903 87.8171 229.508C81.4535 229.297 75.085 229.592 68.7451 229.214C63.4421 228.895 58.1485 229.082 52.855 228.951C49.3688 228.863 45.8873 228.752 42.401 228.636C39.7281 228.548 37.0504 228.469 34.3823 228.317C31.2194 228.138 28.0661 227.895 24.9081 227.664C24.6988 227.648 24.5038 227.497 23.9045 227.238C25.0032 227.035 25.6976 226.824 26.4015 226.792C29.4454 226.649 32.4941 226.545 35.5427 226.454C39.5284 226.334 43.533 226.418 47.4901 226.091C53.1641 225.621 58.8429 226.091 64.5027 225.8C74.9186 225.267 85.3487 225.856 95.7503 225.442C103.926 225.119 112.092 225.366 120.259 225.195C120.806 225.183 121.352 225.131 121.781 225.107C121.781 223.909 121.785 222.833 121.776 221.758C121.771 221.125 121.976 220.623 122.794 220.44L122.912 220.551C121.942 221.742 121.966 224.283 123.027 225.346C123.264 225.585 123.773 225.812 124.111 225.769C125.533 225.585 127.041 225.538 128.144 224.57C128.396 224.769 128.61 225.087 128.9 225.143C129.438 225.243 130.018 225.191 130.579 225.195C161.156 225.39 191.738 224.829 222.315 225.494C234.224 225.753 246.139 225.279 258.053 225.765C265.215 226.055 272.411 225.824 279.588 225.82C280.126 225.82 280.668 225.741 281.424 225.685C281.424 224.956 281.415 224.347 281.424 223.733C281.434 223.096 281.495 222.471 282.237 222.085C282.161 223.371 281.943 224.665 282.052 225.94C282.185 227.461 282.608 227.704 284.425 227.696C288.772 227.684 293.119 227.64 297.466 227.605C297.776 227.601 298.09 227.605 298.394 227.565C299.864 227.382 300.311 226.92 300.225 225.681C300.225 225.414 300.154 225.159 300.106 224.904Z" fill="#DACBB6"/>
 <path d="M300.106 224.904C300.154 225.159 300.22 225.418 300.239 225.673C300.325 226.912 299.878 227.374 298.408 227.557C298.104 227.597 297.79 227.593 297.481 227.597C293.134 227.628 288.787 227.672 284.439 227.688C282.623 227.692 282.199 227.453 282.066 225.932C281.957 224.657 282.176 223.363 282.252 222.077C282.513 221.977 282.78 221.877 283.041 221.778C283.25 221.762 283.464 221.742 283.674 221.726C284.967 221.638 286.256 221.551 287.55 221.463C287.754 221.439 287.959 221.419 288.168 221.395C288.477 221.395 288.782 221.395 289.262 221.395C289.367 223.57 291.388 223.829 293.31 224.096C294.903 224.319 296.534 224.367 298.142 224.53C298.803 224.602 299.455 224.777 300.106 224.904Z" fill="#202038"/>
 <path d="M53.2165 210.439C53.5732 211.419 53.5827 212.41 53.0405 213.322C51.842 215.334 52.4032 217.142 53.8015 218.886C54.0773 219.229 54.4008 219.54 54.7004 219.866C54.9049 220.842 55.1475 221.81 55.2901 222.793C55.3615 223.299 55.3234 223.841 55.1903 224.335C55.0191 224.96 54.4531 225.167 53.7587 224.88C53.3211 224.697 52.8883 224.458 52.5506 224.167C51.0857 222.917 49.9633 221.507 49.716 219.703C49.5733 218.667 49.3783 217.636 49.1595 216.612C48.9883 215.82 48.7648 215.107 48.156 214.362C47.5234 213.589 47.5662 212.383 47.4901 211.359C47.4711 211.1 48.0656 210.698 48.4746 210.547C50.0156 209.981 51.6184 210.073 53.2165 210.439Z" fill="#1F1F38"/>
@@ -228,4 +328,8 @@ const vectorImage=`<svg width="353" height="230" viewBox="0 0 353 230" fill="non
 <path d="M101.976 73.7559C102.095 72.9315 102.209 72.1031 102.328 71.2787C102.961 71.5375 103.598 71.7964 104.23 72.0553C104.088 73.0948 105.258 72.9952 105.871 73.3377C106.028 74.1343 105.31 73.9949 104.835 74.0984C103.883 73.9869 102.927 73.8714 101.976 73.7559Z" fill="#F4EBEC"/>
 <path d="M104.231 72.0553C103.598 71.7964 102.961 71.5376 102.328 71.2787C102.195 71.1751 102.067 71.0676 101.933 70.964C102.314 70.8446 102.694 70.7211 103.075 70.6016C103.679 70.8008 104.316 70.9521 104.873 71.2189C105.101 71.3265 105.163 71.6809 105.301 71.9199C104.944 71.9637 104.587 72.0115 104.231 72.0553Z" fill="#6F565C"/>
 </svg>
-`
+`;
+const dateIcon = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.75 4V6.25M18.25 4V6.25M4 19.75V8.5C4 7.90326 4.23705 7.33097 4.65901 6.90901C5.08097 6.48705 5.65326 6.25 6.25 6.25H19.75C20.3467 6.25 20.919 6.48705 21.341 6.90901C21.7629 7.33097 22 7.90326 22 8.5V19.75M4 19.75C4 20.3467 4.23705 20.919 4.65901 21.341C5.08097 21.7629 5.65326 22 6.25 22H19.75C20.3467 22 20.919 21.7629 21.341 21.341C21.7629 20.919 22 20.3467 22 19.75M4 19.75V12.25C4 11.6533 4.23705 11.081 4.65901 10.659C5.08097 10.2371 5.65326 10 6.25 10H19.75C20.3467 10 20.919 10.2371 21.341 10.659C21.7629 11.081 22 11.6533 22 12.25V19.75M13 13.75H13.008V13.758H13V13.75ZM13 16H13.008V16.008H13V16ZM13 18.25H13.008V18.258H13V18.25ZM10.75 16H10.758V16.008H10.75V16ZM10.75 18.25H10.758V18.258H10.75V18.25ZM8.5 16H8.508V16.008H8.5V16ZM8.5 18.25H8.508V18.258H8.5V18.25ZM15.25 13.75H15.258V13.758H15.25V13.75ZM15.25 16H15.258V16.008H15.25V16ZM15.25 18.25H15.258V18.258H15.25V18.25ZM17.5 13.75H17.508V13.758H17.5V13.75ZM17.5 16H17.508V16.008H17.5V16Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;

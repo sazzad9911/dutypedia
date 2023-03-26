@@ -1589,6 +1589,13 @@
     find-up "^5.0.0"
     js-yaml "^4.1.0"
 
+"@fawazahmed/react-native-read-more@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@fawazahmed/react-native-read-more/-/react-native-read-more-3.0.2.tgz#07f2dbb94643dd0b98443a7a2ade10fa05a409b5"
+  integrity sha512-RkU3JOiEgY21AdC4kZcgG+lc7SFa8V77fWX4dCBV/pkZbFIOTpdxPhk9J2BHcbCpMblHFbwzEeFWclq4SOGQFQ==
+  dependencies:
+    prop-types "^15.7.2"
+
 "@floating-ui/core@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.0.1.tgz#00e64d74e911602c8533957af0cce5af6b2e93c8"

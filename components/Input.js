@@ -18,7 +18,9 @@ const Input = ({
   level,
   rightIcon,
   editable,
-  onPress
+  onPress,
+  leftIcon,
+  containerStyle
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -32,7 +34,8 @@ const Input = ({
   const backgroundColor =colors.getBackgroundColor();
   const assentColor=colors.getAssentColor();
   return (
-    <Animated.View entering={StretchInY}>
+    <Animated.View entering={StretchInY} style={containerStyle}>
+      {leftIcon}
       <TextInput placeholderTextColor={assentColor}
         ref={innerRef}
         returnKeyType={returnKeyType}

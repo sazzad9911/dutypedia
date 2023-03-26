@@ -78,6 +78,10 @@ import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
 import YourInformation from "./screens/create_dashboard/YourInformation";
 import StakeHolder from "./screens/create_dashboard/StakeHolder";
 import Established from "./screens/create_dashboard/Established";
+import WorkingTime from "./screens/create_dashboard/WorkingTime";
+import NewPricing from "./screens/create_dashboard/NewPricing";
+import Skills from "./screens/create_dashboard/Skills";
+import ServiceDescribe from "./screens/create_dashboard/ServiceDescribe";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -502,6 +506,34 @@ export default function StackRoute() {
             }}
             name="Established"
             component={Established}
+          />
+           <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Working Time"}/>
+            }}
+            name="WorkingTime"
+            component={WorkingTime}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Pricing"}/>
+            }}
+            name="NewPricing"
+            component={NewPricing}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Skills"}/>
+            }}
+            name="Skills"
+            component={Skills}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Service Describe"}/>
+            }}
+            name="ServiceDescribe"
+            component={ServiceDescribe}
           />
         </Stack.Navigator>
       </NavigationContainer>

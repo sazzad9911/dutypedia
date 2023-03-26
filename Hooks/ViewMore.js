@@ -96,8 +96,7 @@ function ViewMore({ text, button, id, onChange,title,fontStyle,numberOfLines,sty
       style={[{
         overflow: "hidden",
         width: "100%",
-        height: "auto",
-        
+        height: "auto",        
       },style]}
     >
       <Pressable
@@ -151,7 +150,7 @@ function ViewMore({ text, button, id, onChange,title,fontStyle,numberOfLines,sty
                 style={[{
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   textAlign: "justify",
-                  fontFamily: "Poppins-Medium",
+                  fontWeight:"500",
                   lineHeight: Platform.OS == "ios" ? 30 : 25,
                   color: "#4ADE80",
                 },fontStyle]}

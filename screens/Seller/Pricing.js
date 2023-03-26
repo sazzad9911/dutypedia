@@ -949,6 +949,7 @@ export const Days = ({
   open,
   values,
   allDay,
+  style
 }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [day, setDay] = React.useState(false);
@@ -1004,7 +1005,7 @@ export const Days = ({
   };
 
   return (
-    <View style={{ marginBottom: 10 }}>
+    <View style={style}>
       <View
         onPress={() => {}}
         style={{ flexDirection: "row", alignItems: "center" }}
@@ -1025,6 +1026,7 @@ export const Days = ({
           style={{
             flexDirection: "row",
             marginTop: 10,
+            width:250
           }}
         >
           <TouchableOpacity
@@ -1034,29 +1036,29 @@ export const Days = ({
             }}
             style={{
               flexDirection: "row",
-              paddingHorizontal: 20,
-              paddingVertical: 10,
-              justifyContent: "space-between",
+              height:40,
+              width:115,
+              justifyContent: "center",
               alignItems: "center",
               borderWidth: 1,
-              borderColor: "#e5e5e5",
+              borderColor: "#A3A3A3",
               borderRadius: 5,
-              margin: 5,
+              marginVertical: 5,
               flex: 1,
               opacity: day ? 1 : 0.4,
             }}
           >
+            <SvgXml xml={clock} />
             <Text
               style={{
-                fontSize: 13,
+                fontSize: 12,
                 fontFamily: "Poppins-Medium",
-                color: "#707070",
-                marginRight: 10,
+                
+                marginLeft: 10,
               }}
             >
               {OpeningTime ? toTime(OpeningTime) : "Opening Time"}
             </Text>
-            <SvgXml xml={clock} height="24" width="24" />
             <DateTimePickerModal
               date={OpeningTime ? OpeningTime : new Date()}
               buttonTextColorIOS={backgroundColor}
@@ -1092,29 +1094,31 @@ export const Days = ({
             }}
             style={{
               flexDirection: "row",
-              paddingHorizontal: 20,
-              paddingVertical: 10,
-              justifyContent: "space-between",
+              justifyContent: "center",
               alignItems: "center",
               borderWidth: 1,
-              borderColor: "#e5e5e5",
+              borderColor: "#A3A3A3",
               borderRadius: 5,
-              margin: 5,
+              marginVertical: 5,
               flex: 1,
               opacity: day ? 1 : 0.4,
+              height:40,
+              width:115,
+              marginLeft:12
             }}
           >
+            <SvgXml xml={clock} />
             <Text
               style={{
-                fontSize: 13,
+                fontSize: 12,
                 fontFamily: "Poppins-Medium",
-                color: "#707070",
-                marginRight: 10,
+                
+                marginLeft: 10,
               }}
             >
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
-            <SvgXml xml={clock} height="24" width="24" />
+            
             <DateTimePickerModal
               date={ClosingTime ? ClosingTime : new Date()}
               buttonTextColorIOS={backgroundColor}
@@ -1214,11 +1218,16 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
     </TouchableOpacity>
   );
 };
-const clock = `<svg xmlns="http://www.w3.org/2000/svg" width="14.3" height="14.3" viewBox="0 0 14.3 14.3">
-<g id="Group_10052" data-name="Group 10052" transform="translate(0.15 0.15)">
-  <circle id="Ellipse_2156" data-name="Ellipse 2156" cx="5.02" cy="5.02" r="5.02" transform="translate(1.98 1.98)" fill="#2e2e2e"/>
-  <path id="Path_19965" data-name="Path 19965" d="M6.794,0h.385A7.009,7.009,0,0,1,14,6.795V7.2a7,7,0,0,1-2.643,5.273,6.953,6.953,0,0,1-2.55,1.287A7.206,7.206,0,0,1,7.18,14H6.822A7.016,7.016,0,0,1,0,7.206V6.8A7.01,7.01,0,0,1,6.794,0M6.753,2.566a.5.5,0,0,0-.253.443Q6.5,5,6.5,7a.508.508,0,0,0,.2.4q1.239.99,2.478,1.981a.5.5,0,0,0,.765-.606A.85.85,0,0,0,9.68,8.5C8.953,7.923,8.23,7.34,7.5,6.764c-.005-1.252,0-2.5,0-3.755a.5.5,0,0,0-.747-.444Z" fill="#fff" stroke="#2e2e2e" stroke-width="0.3"/>
+const clock = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_3698_25429)">
+<path d="M14.6667 7.99992C14.6667 11.6799 11.68 14.6666 8.00001 14.6666C4.32001 14.6666 1.33334 11.6799 1.33334 7.99992C1.33334 4.31992 4.32001 1.33325 8.00001 1.33325C11.68 1.33325 14.6667 4.31992 14.6667 7.99992Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10.4733 10.1199L8.40666 8.88659C8.04666 8.67326 7.75333 8.15992 7.75333 7.73992V5.00659" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
+<defs>
+<clipPath id="clip0_3698_25429">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
 </svg>
 `;
 const tick = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="43.062" height="37.867" viewBox="0 0 43.062 37.867">
