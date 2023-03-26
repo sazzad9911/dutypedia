@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,12 +7,17 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
+import { useSelector } from "react-redux";
+import customStyle from "../../../assets/stylesheet";
+import { getBankDetails, saveBankDetails } from "../../../Class/service";
+import ActivityLoader from "../../../components/ActivityLoader";
 import IconButton from "../../../components/IconButton";
 import Input from "../../../components/Input";
 import RadioButton from "../../../components/RadioButton";
 
-export default function WithdrawFirst({ navigation }) {
+export default function WithdrawFirst({ navigation, route }) {
   const [ownerShipError, setOwnerShipError] = useState();
   const [accountHolderError, setAccountHolderError] = useState();
   const [bankName, setBankName] = useState();
@@ -26,8 +32,14 @@ export default function WithdrawFirst({ navigation }) {
   const [nameError, setNameError] = useState();
   const [holderName, setHolderName] = useState();
   const [holderNameError, setHolderNameError] = useState();
+  const amount = route?.params?.amount;
+  const id = route?.params?.id;
+  const isFocused = useIsFocused();
+  const user = useSelector((state) => state.user);
+  const [loader, setLoader] = useState(false);
+  const vendor=useSelector(state=>state.vendor)
 
-  const save = () => {
+  const save = async () => {
     setNameError();
     setBankNameError();
     setAccountHolderError();
@@ -52,7 +64,7 @@ export default function WithdrawFirst({ navigation }) {
       return;
     }
 
-    if (!name&&accountHolder=="Other") {
+    if (!name && accountHolder == "Other") {
       setNameError("*Relationship name is required");
       return;
     }
@@ -60,8 +72,61 @@ export default function WithdrawFirst({ navigation }) {
       setAccountHolderError("*Select account holder");
       return;
     }
-    navigation.navigate("WithdrawSecond");
+    setLoader(true);
+    try {
+      await saveBankDetails(user.token, {
+        serviceId: vendor.service.id,
+        accountId:id,
+        bankName: bankName,
+        branchName: branchName,
+        accountNumber: accountNumber,
+        accountHolderName: holderName,
+        relation:accountHolder==="Other"?name:accountHolder,
+      });
+      setLoader(false);
+      navigation.navigate("WithdrawSecond", {
+        data: {
+          bankName: bankName,
+          branchName: branchName,
+          accountNumber: accountNumber,
+          accountHolder: holderName,
+          relation: accountHolder,
+          otherType: name,
+          amount: amount,
+        },
+      });
+    } catch (err) {
+      setLoader(false);
+      Alert.alert(err.code,err.message)
+      console.error(err.message);
+    }
   };
+  useEffect(() => {
+    getBankDetails(user.token, id)
+      .then((res) => {
+        //console.log(res.data)
+        if (res.data.bankDetails) {
+          let details=res.data.bankDetails;
+          setHolderName(details.accountHolderName)
+          setAccountNumber(details.accountNumber)
+          setBankName(details.bankName)
+          setBranchName(details.branchName)
+          setAccountHolder(details.relation!="Myself"&&details.relation!="Father"&&details.relation!="Mother"&&details.relation!="Brother"&&details.relation!="Sister"?"Other":details.relation)
+          setName(details.relation)
+        }
+      })
+      .catch((err) => {
+        console.error(err.response.data.msg);
+      });
+  }, [isFocused]);
+  
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
 
   return (
     <KeyboardAvoidingView
@@ -73,9 +138,7 @@ export default function WithdrawFirst({ navigation }) {
           style={{
             paddingHorizontal: 20,
           }}>
-          <Text style={[styles.smallText, styles.gap1]}>
-            Bank Information
-          </Text>
+          <Text style={[styles.smallText, styles.gap1]}>Bank Information</Text>
           <Input
             error={bankNameError}
             value={bankName}

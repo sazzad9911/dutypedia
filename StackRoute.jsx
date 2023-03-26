@@ -72,6 +72,12 @@ import WithdrawFinal from "./screens/Vendor/account/WithdrawFinal";
 import ServiceScreen from "./screens/ServiceScreen";
 import ServiceHeader from "./components/LandingPage/ServiceHeader";
 import Search from "./screens/Search";
+import InitialPage from "./screens/create_dashboard/InitialPage";
+import CommonHeader from "./screens/create_dashboard/CommonHeader";
+import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
+import YourInformation from "./screens/create_dashboard/YourInformation";
+import StakeHolder from "./screens/create_dashboard/StakeHolder";
+import Established from "./screens/create_dashboard/Established";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -458,6 +464,44 @@ export default function StackRoute() {
             }}
             name="ServiceScreen"
             component={ServiceScreen}
+          />
+          {
+            //new service account screens
+          }
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Business account"}/>
+            }}
+            name="InitialServiceCreate"
+            component={InitialPage}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Business Title"}/>
+            }}
+            name="BusinessTitle"
+            component={BusinessTitle}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Your Information"}/>
+            }}
+            name="YourInformation"
+            component={YourInformation}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Stakeholder"}/>
+            }}
+            name="Stakeholder"
+            component={StakeHolder}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Established"}/>
+            }}
+            name="Established"
+            component={Established}
           />
         </Stack.Navigator>
       </NavigationContainer>

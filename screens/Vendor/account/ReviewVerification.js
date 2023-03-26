@@ -1,11 +1,12 @@
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
-import { ScrollView, StatusBar, View } from "react-native";
+import { ScrollView, StatusBar, View,Text } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
+import IconButton from "../../../components/IconButton";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 
-export default function ReviewVerification() {
+export default function ReviewVerification({navigation}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -19,17 +20,48 @@ export default function ReviewVerification() {
     }, 50);
   }, [isFocused]);
   return (
-    <View >
-      <View style={{height:StatusBar.currentHeight}}/>
-      <ScrollView>
-      <View style={{
-        marginHorizontal:28,
-        marginTop:28,
-        marginBottom:32
-      }}>
-        <SvgXml xml={vectorImage}/>
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <View style={{ height: StatusBar.currentHeight }} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            marginHorizontal: 28,
+            marginTop: 28,
+            marginBottom: 32,
+          }}>
+          <SvgXml width={"100%"} xml={vectorImage} />
+          <Text style={{
+            marginTop:28,
+            fontSize:24,
+            lineHeight:31,
+            fontWeight:"400"
+          }}>Your verification is currently under review.</Text>
+          <Text style={{
+            fontSize:16,
+            fontWeight:"400",
+            lineHeight:24,
+            marginTop:28,
+            color:"#484848"
+          }}>
+            Thank you for your interest in withdrawing funds from our platform.
+            We are currently reviewing your account verification request to
+            ensure the security of your account. Please be patient while we
+            complete the verification process. We will notify you as soon as
+            your account has been successfully verified and you are able to
+            proceed with your withdrawal request. Thank you for your
+            understanding and cooperation in keeping your account secure. If you
+            have any questions or concerns, please don't hesitate to contact our
+            <Text style={{color:"#4ADE80"}}> customer support team.</Text>
+          </Text>
+          <IconButton onPress={()=>{
+            navigation.goBack()
+          }} style={{
+            height:44,
+            marginTop:28,
+            
+          }} title={"Cancel"}/>
+        </View>
+      </ScrollView>
     </View>
   );
 }

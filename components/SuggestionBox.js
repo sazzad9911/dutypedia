@@ -38,7 +38,7 @@ const SuggestionBox = ({
     },
     input: {
       borderRadius: 5,
-      borderColor: Focus ? "#DA1E37" : "#e5e5e5",
+      borderColor: Focus ? "#4ADE80" : "#767676",
       borderWidth: 1,
       padding: 5,
       paddingHorizontal: 10,
@@ -98,6 +98,7 @@ const SuggestionBox = ({
         style={[styles.input,{
           fontFamily: "Poppins-Light",
         }]}
+        placeholderTextColor={"#767676"}
         placeholder={placeholder ? placeholder : "Type here"}
       />
       {error && (

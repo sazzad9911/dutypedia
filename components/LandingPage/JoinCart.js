@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { rotate, translate } from '@shopify/react-native-skia';
 import IconButton from '../IconButton';
 
-export default function JoinCart({style,onJoin,colors}) {
+export default function JoinCart({style,onJoin,colors,onClick}) {
   return (
     <View style={[{
         backgroundColor:"green",
@@ -23,7 +23,7 @@ export default function JoinCart({style,onJoin,colors}) {
       >
         <Text style={styles.text1}>Grow your business in one month</Text>
         <Text style={[styles.text2]}>"Revamp your biz! Join our BD platform for 100% growth in 1 month. Boost sales, expand effortlessly & achieve success.</Text>
-        <IconButton style={styles.button} title={"Join now"}/>
+        <IconButton onPress={onClick} style={styles.button} title={"Join now"}/>
         </LinearGradient>
     </View>
   )

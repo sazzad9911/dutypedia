@@ -1056,3 +1056,23 @@ export const getVerificationDetails=async(token,serviceId)=>{
   })
   return res
 }
+
+export const saveBankDetails=async(token,data)=>{
+  const res=await axios.post(`${url}/server/balance/add-bank`,data,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+export const getBankDetails=async(token,accountId)=>{
+  const res=await axios.get(`${url}/server/balance/get/bank/${accountId}`,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+
+export const requestWithdraw=async(token,data)=>{
+  const res=await axios.post(`${url}/server/balance/request-withdraw`,data,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}

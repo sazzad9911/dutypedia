@@ -50,7 +50,7 @@ const Menu = ({ navigation }) => {
   useEffect(()=>{
     if(user){
       getDashboardInfo(user.token,vendor.service.id).then(res=>{
-        //console.log(res.data)
+        console.log(res.data)
         setInfo(res.data)
       }).catch(err=>{
         console.error(err.response.data.msg)
@@ -114,7 +114,7 @@ const Menu = ({ navigation }) => {
           onPress={() => navigation.navigate("VendorProfile")}
           Icon={icon}
           title={"View Profile"}
-          text={`${info?.services} Services`}
+          text={`${info?.services?info?.services:"0"} Services`}
         />
         <Cart
           onPress={() => navigation.navigate("Member")}

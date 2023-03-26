@@ -123,7 +123,7 @@ const Feed = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </Animated.View>
-        <JoinCart/>
+        <JoinCart onClick={()=>navigation.navigate("InitialServiceCreate")}/>
         <ServiceListCart/>
         <PopularCategory onMore={()=>{
           navigation.navigate("ServiceScreen")
@@ -134,7 +134,7 @@ const Feed = ({ navigation, route }) => {
         <Trending onMore={()=>{
           navigation.navigate("ServiceScreen")
         }}/>
-        <JoinCart colors={["#5C258D","#4389A2"]}/>
+        <JoinCart onClick={()=>navigation.navigate("InitialServiceCreate")} colors={["#5C258D","#4389A2"]}/>
         <TopSeller onMore={()=>{
           navigation.navigate("ServiceScreen")
         }}/>

@@ -205,7 +205,8 @@ const SubCategories = ({ navigation, route }) => {
             if(direct){
               navigation.navigate("Service",{direct:direct});
             }else{
-              navigation.navigate("Pricing");
+              //navigation.navigate("Pricing");
+              navigation.navigate("BusinessTitle");
             }
           } else {
             navigation.goBack();

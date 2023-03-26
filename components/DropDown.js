@@ -15,7 +15,7 @@ import { AntDesign } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
 import { primaryColor, textColor } from "./../assets/colors";
 
-const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,message,label }) => {
+const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,message,label,noIcon }) => {
   const [Value, setValue] = React.useState();
   const [Data, setData] = React.useState();
   const [Focus, setFocus] = React.useState(false);
@@ -84,7 +84,8 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,mes
           <Text numberOfLines={1} style={[styles.text, { color: "#707070" }]}>
             {Value ? Value : placeholder}
           </Text>
-          <AntDesign
+          {!noIcon&&(
+            <AntDesign
             style={{
               justifySelf: "flex-end",
             }}
@@ -92,6 +93,7 @@ const DropDown = ({ style, value, onChange, placeholder, DATA, error,visible,mes
             size={20}
             color="#707070"
           />
+          )}
         </TouchableOpacity>
         {error && (
           <Text

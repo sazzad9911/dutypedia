@@ -6970,14 +6970,14 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-autocomplete-dropdown@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/react-native-autocomplete-dropdown/-/react-native-autocomplete-dropdown-2.0.7.tgz#50f76b4403d58ff90278328173766b39aeaa2b94"
-  integrity sha512-MktabrfeAE0oJ+WgxtIkesHxtbYbZwbdyR7MTJ9roFPNmAyOqrcRWzZowmOblXM0Ljv6zlg5b7n7waSM+4iATw==
+react-native-autocomplete-dropdown@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-autocomplete-dropdown/-/react-native-autocomplete-dropdown-2.1.0.tgz#dbccd0ae14330b3b05dd42013bb38f00909a9253"
+  integrity sha512-yvtdKorr5XaUq2WzJBuK95ito3dUXBlBukP0vNhLeXe2kgHAcD7jg2Fdpk5QbXBtpDyJS4d/Y8SpMbawsaxufA==
   dependencies:
     lodash.debounce "*"
     prop-types "*"
-    react-native-size-matters "^0.3.0 || ^0.4.0"
+    react-native-size-matters "^0.4.0"
     react-native-vector-icons ">=7.0.0"
 
 react-native-autocomplete-input@^5.1.1:
@@ -7207,7 +7207,7 @@ react-native-simple-peer@^0.1.5:
     queue-microtask "^1.2.3"
     react-native-webrtc "*"
 
-"react-native-size-matters@^0.3.0 || ^0.4.0":
+react-native-size-matters@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz#01bfd0d59454318f4e0b13fe9c1eb0523d70f2e0"
   integrity sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ==

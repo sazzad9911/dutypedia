@@ -74,12 +74,14 @@ export default function AccountBalance({ navigation }) {
           pendingAmount={data?.pending}
           onWithdraw={() => {
             
+            
             if (verification?.accept) {
               navigation.navigate("WithdrawFirst");
-            }else if(!verification?.accept){
-              navigation.navigate("ReviewVerification");
+            }else if(!verification){
+              navigation.navigate("RequestVerification")
+              
             } else {
-              navigation.navigate("RequestVerification");
+              navigation.navigate("ReviewVerification");
             }
           }}
         />
