@@ -38,6 +38,9 @@ const customStyle = StyleSheet.create({
     flex:1,
     justifyContent:"center",
     alignItems:"center"
+  },
+  flex:{
+    flexDirection:"row",
   }
 });
 export default customStyle;

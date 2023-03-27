@@ -22,10 +22,11 @@ import {
 } from "../../action";
 import IconButton from "../../components/IconButton";
 import skill from "../../assets/Images/skill.png"
+import TextOp from "./TextOp";
 const {width,height}=Dimensions.get("window")
 
 export default function Skills({ navigation }) {
-  const [date, setDate] = useState();
+  const [skills, setSkill] = useState([]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -57,17 +58,33 @@ export default function Skills({ navigation }) {
             Tips for skill
             </Text>
           </View>
-          <Text style={styles.spText}>. Determine your value and research market rates.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>2. Consider your target audience and set a starting fee that is competitive but not undervaluing your services.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>3. Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>4. Allow for flexibility in your pricing based on the specific needs of each buyer.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>5. Regularly evaluate and adjust your pricing strategy to remain competitive in the market.</Text>
+          <TextOp style={{marginTop:24}} text={"Choose relevant skills: Be specific about what you offer, whether you're an individual or representing a company. This could be anything from graphic design to plumbing services."} />
+          <TextOp style={{marginTop:5}} text={"Use specific terms: Use clear and specific terms to describe what you do. This helps buyers find you easily and understand what you offer."} />
+          <TextOp style={{marginTop:5}} text={"Prioritize your strongest skills: List your best skills first to show buyers what you excel at."} />
+          <TextOp style={{marginTop:5}} text={"Update regularly: Keep your skills list up to date with new experience or skills. This helps you stay relevant and attract new buyers."} />
+          <TextOp style={{marginTop:5}} text={"Be honest: Represent your abilities accurately. Buyers rely on your skills to make informed decisions, so it's important to be honest about what you can and cannot do."} />
 
           <Text style={[styles.headLine, { marginTop: 36 }]}>
-          Starting price
+          Add Skill
           </Text>
-          <Input style={styles.input} placeholder={"00.00 ৳"}/>
-          <Text style={styles.text}>Minimum 50.00 ৳ </Text>
+          <AddBox onChange={e=>{
+            try{
+              setSkill(d=>[...d,e])
+            }catch(e){
+              console.log(e.message)
+            }
+          }}/>
+          <Text style={styles.text}>Max 25 character </Text>
+          {skills&&skills.length>0&&(
+            <View style={{marginTop:32,flexDirection:"row",flexWrap:"wrap",marginHorizontal:-4}}>
+              {skills.map((doc,i)=>(
+                <BT onDelete={()=>{
+                  setSkill(d=>d.filter((c,j)=>i!=j))
+                }} key={i} title={doc}/>
+              ))}
+            </View>
+          )}
+          <Text style={[styles.text,{marginTop:32,lineHeight:24}]}>Example : Bridge Builder, Business Plans, Graphic design, Events Items, Bike repair, photographer, Baby Care, Business lawyers, Cooking Lessons, Dj Mixing </Text>
           <IconButton onPress={()=>{
             navigation.navigate("ServiceDescribe")
           }} style={styles.button} title={"Continue"} />
@@ -76,7 +93,70 @@ export default function Skills({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
+const AddBox=({onChange})=>{
+  const [text,setText]=useState()
 
+  return(
+    <View style={{
+      borderWidth:1,
+      borderRadius:4,
+      flexDirection:"row",
+      height:45,
+      paddingLeft:10,
+      alignItems:"center",
+      borderColor:"#A3A3A3",
+      marginTop:24
+    }}>
+      <TextInput value={text} onChangeText={setText} style={{
+        flex:1,
+
+      }} placeholder="Type Skill"/>
+      <Pressable onPress={()=>{
+        if(!text){
+          return
+        }
+        if(onChange){
+          onChange(text)
+          setText()
+        }
+      }} style={{
+        width:73,
+        backgroundColor:text?"#4ADE80":"#E4E4E4",
+        height:"100%",
+        borderTopRightRadius:4,
+        borderBottomRightRadius:4,
+        justifyContent:"center",
+        alignItems:"center",
+        borderLeftWidth:1,
+        borderLeftColor:"#A3A3A3"
+      }}>
+        <Text style={{
+          fontSize:14,
+          lineHeight:24,
+          color:text?"#ffffff":"#767676"
+        }}>Add</Text>
+      </Pressable>
+    </View>
+  )
+}
+const BT=({title,onDelete})=>{
+  return(
+    <View style={{
+      borderColor:"#E6E6E6",
+      borderWidth:1,
+      borderRadius:4,
+      padding:8,
+      margin:4
+    }}>
+      <SvgXml onPress={onDelete} style={{
+        position:"absolute",
+        right:-9,
+        top:-9
+      }} xml={dateIcon}/>
+      <Text>{title}</Text>
+    </View>
+  )
+}
 const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_3698_24038" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="353" height="230">
 <path d="M353 0H0V230H353V0Z" fill="white"/>
@@ -1586,7 +1666,7 @@ const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="n
 <rect x="194" y="64" width="26" height="11" fill="white"/>
 </svg>
 `;
-const dateIcon = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.75 4V6.25M18.25 4V6.25M4 19.75V8.5C4 7.90326 4.23705 7.33097 4.65901 6.90901C5.08097 6.48705 5.65326 6.25 6.25 6.25H19.75C20.3467 6.25 20.919 6.48705 21.341 6.90901C21.7629 7.33097 22 7.90326 22 8.5V19.75M4 19.75C4 20.3467 4.23705 20.919 4.65901 21.341C5.08097 21.7629 5.65326 22 6.25 22H19.75C20.3467 22 20.919 21.7629 21.341 21.341C21.7629 20.919 22 20.3467 22 19.75M4 19.75V12.25C4 11.6533 4.23705 11.081 4.65901 10.659C5.08097 10.2371 5.65326 10 6.25 10H19.75C20.3467 10 20.919 10.2371 21.341 10.659C21.7629 11.081 22 11.6533 22 12.25V19.75M13 13.75H13.008V13.758H13V13.75ZM13 16H13.008V16.008H13V16ZM13 18.25H13.008V18.258H13V18.25ZM10.75 16H10.758V16.008H10.75V16ZM10.75 18.25H10.758V18.258H10.75V18.25ZM8.5 16H8.508V16.008H8.5V16ZM8.5 18.25H8.508V18.258H8.5V18.25ZM15.25 13.75H15.258V13.758H15.25V13.75ZM15.25 16H15.258V16.008H15.25V16ZM15.25 18.25H15.258V18.258H15.25V18.25ZM17.5 13.75H17.508V13.758H17.5V13.75ZM17.5 16H17.508V16.008H17.5V16Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+const dateIcon = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 12L8 8M11.495 8.505L12 8M8 12L9.905 10.095M3 11C3.21 12.46 3.875 13.875 5 15C7.76 17.76 12.24 17.76 15 15C17.76 12.24 17.76 7.76 15 5C12.24 2.24 7.76 2.24 5 5C4.285 5.715 3.75 6.55 3.41 7.44" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;

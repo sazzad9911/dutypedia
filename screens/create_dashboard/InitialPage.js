@@ -31,7 +31,8 @@ export default function InitialPage({ navigation }) {
           </Text>
         </Text>
         <IconButton onPress={()=>{
-            navigation.navigate("Category")
+            //navigation.navigate("Category")
+            navigation.navigate("FinalReview")
         }} style={{
             backgroundColor:"#4ADE80",
             height:40,
@@ -192,4 +193,4 @@ const vectorImage = `<svg width="372" height="256" viewBox="0 0 372 256" fill="n
 </linearGradient>
 </defs>
 </svg>
-`;
+`

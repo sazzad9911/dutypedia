@@ -82,6 +82,9 @@ import WorkingTime from "./screens/create_dashboard/WorkingTime";
 import NewPricing from "./screens/create_dashboard/NewPricing";
 import Skills from "./screens/create_dashboard/Skills";
 import ServiceDescribe from "./screens/create_dashboard/ServiceDescribe";
+import Location from "./screens/create_dashboard/Location";
+import About from "./screens/create_dashboard/About";
+import FinalReview from "./screens/create_dashboard/FinalReview";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -534,6 +537,27 @@ export default function StackRoute() {
             }}
             name="ServiceDescribe"
             component={ServiceDescribe}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"Location"}/>
+            }}
+            name="Location"
+            component={Location}
+          />
+          <Stack.Screen
+            options={{
+              header:(props)=><CommonHeader {...props} title={"About"}/>
+            }}
+            name="About"
+            component={About}
+          />
+          <Stack.Screen
+            options={{
+              headerShown:false
+            }}
+            name="FinalReview"
+            component={FinalReview}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -703,13 +703,14 @@ export const ImageButton = ({ style, onChange, value }) => {
   const styles = StyleSheet.create({
     view: {
       width: width / 4 - 20,
-      height: width / 4 - 20,
+      height: 56,
       borderWidth: 1,
       borderRadius: 5,
       justifyContent: "center",
       alignItems: "center",
       marginVertical: 5,
-      borderColor: "#e5e5e5",
+      borderColor: "#e6e6e6",
+
     },
   });
   if (image) {
@@ -722,7 +723,9 @@ export const ImageButton = ({ style, onChange, value }) => {
         <TouchableOpacity
           onPress={() => {
             setImage(null);
-            onChange(null)
+            if(onChange){
+              onChange(null)
+            }
           }}
           style={{
             position: "absolute",
@@ -750,7 +753,7 @@ export const ImageButton = ({ style, onChange, value }) => {
       }}
       style={[styles.view, style]}
     >
-      <AntDesign name="plus" size={24} color="#707070" />
+      <AntDesign name="plus" size={20} color="#000000" />
     </TouchableOpacity>
   );
 };

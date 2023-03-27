@@ -19,6 +19,8 @@ import {
   serverTimeToLocalDate,
 } from "../../action";
 import IconButton from "../../components/IconButton";
+import customStyle from "../../assets/stylesheet";
+import TextOp from "./TextOp";
 
 export default function NewPricing({ navigation }) {
   const [date, setDate] = useState();
@@ -46,24 +48,29 @@ export default function NewPricing({ navigation }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine,{flex:1}]}>
-            Tips for set up the price
+            <Text style={[styles.headLine, { flex: 1 }]}>
+              Tips for set up the price
             </Text>
           </View>
-          <Text style={styles.spText}>1. Determine your value and research market rates.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>2. Consider your target audience and set a starting fee that is competitive but not undervaluing your services.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>3. Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>4. Allow for flexibility in your pricing based on the specific needs of each buyer.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>5. Regularly evaluate and adjust your pricing strategy to remain competitive in the market.</Text>
-
+          
+          <TextOp style={{marginTop:24}} number={'1.'} text={"Determine your value and research market rates."}/>
+          <TextOp style={{marginTop:5}} number={'2.'} text={"Consider your target audience and set a starting fee that is competitive but not undervaluing your services."}/>
+          <TextOp style={{marginTop:5}} number={'3.'} text={"Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project."}/>
+          <TextOp style={{marginTop:5}} number={'4.'} text={"Allow for flexibility in your pricing based on the specific needs of each buyer."}/>
+          <TextOp style={{marginTop:5}} number={'5.'} text={"Regularly evaluate and adjust your pricing strategy to remain competitive in the market."}/>
+         
           <Text style={[styles.headLine, { marginTop: 36 }]}>
-          Starting price
+            Starting price
           </Text>
-          <Input style={styles.input} placeholder={"00.00 ৳"}/>
-          <Text style={styles.text}>Minimum 50.00 ৳ </Text>
-          <IconButton onPress={()=>{
-            navigation.navigate("Skills")
-          }} style={styles.button} title={"Continue"} />
+          <Input keyboardType={"number-pad"} style={styles.input} placeholder={"00.00 ৳"} />
+          <Text  style={styles.text}>Minimum 50.00 ৳ </Text>
+          <IconButton
+            onPress={() => {
+              navigation.navigate("Skills");
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

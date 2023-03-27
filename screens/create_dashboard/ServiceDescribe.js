@@ -8,6 +8,7 @@ import {
   Text,
   Pressable,
   TextInput,
+  Dimensions,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -19,6 +20,9 @@ import {
   serverTimeToLocalDate,
 } from "../../action";
 import IconButton from "../../components/IconButton";
+import TextArea from "../../components/TextArea";
+import { ImageButton } from "../Seller/Service";
+const {width}=Dimensions.get("window")
 
 export default function ServiceDescribe({ navigation }) {
   const [date, setDate] = useState();
@@ -46,24 +50,71 @@ export default function ServiceDescribe({ navigation }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine,{flex:1}]}>
-            Tips for skill
+            <Text style={[styles.headLine, { flex: 1 }]}>
+              Tips for title, service describe & photo
             </Text>
           </View>
-          <Text style={styles.spText}>. Determine your value and research market rates.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>2. Consider your target audience and set a starting fee that is competitive but not undervaluing your services.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>3. Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>4. Allow for flexibility in your pricing based on the specific needs of each buyer.</Text>
-          <Text style={[styles.spText,{marginTop:5}]}>5. Regularly evaluate and adjust your pricing strategy to remain competitive in the market.</Text>
+          <Text style={styles.spText}>
+            . Determine your value and research market rates.
+          </Text>
+          <Text style={[styles.spText, { marginTop: 5 }]}>
+            2. Consider your target audience and set a starting fee that is
+            competitive but not undervaluing your services.
+          </Text>
+          <Text style={[styles.spText, { marginTop: 5 }]}>
+            3. Communicate your starting fee clearly to potential buyers, and
+            explain any additional charges based on the scope of the project.
+          </Text>
+          <Text style={[styles.spText, { marginTop: 5 }]}>
+            4. Allow for flexibility in your pricing based on the specific needs
+            of each buyer.
+          </Text>
+          <Text style={[styles.spText, { marginTop: 5 }]}>
+            5. Regularly evaluate and adjust your pricing strategy to remain
+            competitive in the market.
+          </Text>
 
           <Text style={[styles.headLine, { marginTop: 36 }]}>
-          Starting price
+            Service title
           </Text>
-          <Input style={styles.input} placeholder={"00.00 ৳"}/>
-          <Text style={styles.text}>Minimum 50.00 ৳ </Text>
-          <IconButton onPress={()=>{
-            navigation.navigate("WorkingTime")
-          }} style={styles.button} title={"Continue"} />
+          <Input style={styles.input} placeholder={"Type service title"} />
+          <Text style={styles.text}>Max 100 characters </Text>
+          <Text style={[styles.headLine, { marginTop: 36 }]}>
+            Service Description
+          </Text>
+          <TextArea
+            placeholder={"Describe your service"}
+            style={styles.input}
+          />
+          <Text style={styles.text}>Max 1000 characters </Text>
+          <Text style={[styles.headLine, { marginTop: 36 }]}>Add Photo</Text>
+          <View style={{
+            flexDirection:"row",
+            marginTop:24
+          }}>
+            <ImageButton style={{
+              width:(width-64)/4
+            }} />
+            <ImageButton style={{
+              marginLeft:8,
+              width:(width-64)/4
+            }}/>
+            <ImageButton style={{
+              marginLeft:8,
+              width:(width-64)/4
+            }}/>
+            <ImageButton style={{
+              marginLeft:8,
+              width:(width-64)/4
+            }}/>
+          </View>
+          <IconButton
+            onPress={() => {
+              navigation.navigate("Location");
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
