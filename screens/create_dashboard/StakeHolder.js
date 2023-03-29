@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
@@ -11,9 +11,12 @@ import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import ViewMore from "../../Hooks/ViewMore";
 import { icon, styles } from "./BusinessTitle";
-import ReadMore from "@fawazahmed/react-native-read-more";
 
-export default function StakeHolder({ navigation }) {
+export default function StakeHolder({ navigation,route }) {
+  const [layoutHeight,setLayoutHeight]=useState(0)
+  const [number,setNumber]=useState("0")
+  const data=route?.params?.data;
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -32,15 +35,13 @@ export default function StakeHolder({ navigation }) {
               Tips for set up number of employees/team member{" "}
             </Text>
           </View>
-          <ReadMore
-            animate={true}
-            ellipsis={"..."}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.seeMore}
-            seeMoreText={"See More..."}
-            numberOfLines={3}
-            style={styles.spText}>
-            <Text>
+          <ViewMore style={{
+              marginTop: 24,
+            }}
+            width={145}
+            height={layoutHeight}
+             component={<Text onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+              style={[styles.spText,{marginTop:0}]}>
               If you are a <Text style={{fontWeight:"700"}}>company</Text>, please provide the number of team members or
               workers that you have. <Text style={{fontWeight:"700"}}>If you are an individual with freelancers</Text>,
               you can enter the number of freelancers that you work with. If you
@@ -49,20 +50,29 @@ export default function StakeHolder({ navigation }) {
               this section to ensure transparency and accuracy in our platform.
               This will help us match you with the right buyers and ensure a
               smooth experience for everyone.
-            </Text>
-          </ReadMore>
+            </Text>}/>
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Number of employees/team member
           </Text>
-          <Input
+          <Input value={number}
+          onChange={setNumber}
             keyboardType={"number-pad"}
             style={styles.input}
             placeholder={" "}
           />
           <Text style={styles.text}>Minimum 1 require</Text>
-          <IconButton
+          <IconButton active={parseInt(number)>0?true:false}
+          disabled={parseInt(number)>0?false:true}
             onPress={() => {
-              navigation.navigate("Established");
+              navigation.navigate("Established",{
+                data:{
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam:number
+                }
+              });
             }}
             style={styles.button}
             title={"Continue"}

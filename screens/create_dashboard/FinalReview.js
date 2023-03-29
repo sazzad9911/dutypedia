@@ -54,6 +54,7 @@ import {
   getOtherServices,
   getRelatedServices,
   getUnRelatedServices,
+  createService,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -91,16 +92,18 @@ import { fileFromURL, setListData } from "../../action";
 import * as ImagePicker from "expo-image-picker";
 import { uploadFile } from "../../Class/upload";
 import { updateData } from "../../Class/update";
+import { CheckBox } from "../Seller/Pricing";
+import { vendorLogin } from "../../Class/auth";
+import customStyle from "../../assets/stylesheet";
 
 const { width, height } = Dimensions.get("window");
 const FinalReview = (props) => {
+  const newData=props?.route?.params?.data;
   const window = Dimensions.get("window");
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
   const [backgroundImage, setBackgroundImage] = React.useState(null);
-  const [Lines, setLines] = React.useState(3);
   const navigation = props.navigation;
-  const [Visible, setVisible] = React.useState(false);
   const initialState = [
     {
       title: "Bargaining",
@@ -128,222 +131,84 @@ const FinalReview = (props) => {
       type: "SUBS",
     },
   ];
-  const [Active, setActive] = React.useState("Bargaining");
-  const [NewLines, setNewLines] = React.useState(3);
   const [Facilities, setFacilities] = React.useState([]);
-  const [NewDataList, setNewDataList] = React.useState(null);
+  const [NewDataList, setNewDataList] = React.useState();
   const [ServiceList, setServiceList] = React.useState([]);
   const [ActiveService, setActiveService] = React.useState();
   const [SubServiceList, setSubServiceList] = React.useState([]);
-
+  const listData=useSelector(state=>state.listData)
   // const user= useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState();
   const [Images, setImages] = React.useState([]);
   const dispatch = useDispatch();
-  const [ActiveServiceData, setActiveServiceData] = React.useState(null);
-  const [FixedService, setFixedService] = React.useState(null);
-  const vendor = useSelector((state) => state.vendor);
   const [Click, setClick] = React.useState(false);
   const [Title, setTitle] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Price, setPrice] = React.useState();
-  const [Category, setCategory] = React.useState();
-  const [Bargaining, setBargaining] = React.useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
   const [Refresh, setRefresh] = React.useState(false);
   const [RelatedServices, setRelatedServices] = React.useState();
-  const [UnRelatedServices, setUnRelatedServices] = React.useState();
-  const [Gigs, setGigs] = React.useState();
-  const [PackageService, setPackageService] = React.useState();
-  const [packageData, setPackageData] = React.useState();
-  const [selectedPackage, setSelectedPackage] = React.useState();
-  const [PackageServiceList, setPackageServiceList] = React.useState();
+  const [UnRelatedServices, setUnRelatedServices] = React.useState(); 
   const [OpenDetails, setOpenDetails] = React.useState(false);
   const [NameDropDown, setNameDropDown] = React.useState(false);
   const [PositionDropDown, setPositionDropDown] = React.useState(false);
   const childRef = React.useRef();
-  const [heightt, setHeight] = React.useState(0);
   const [calenderHeight, setCalenderHeight] = React.useState(0);
-  const [opacity, setOpacity] = React.useState(new Animation.Value(0));
   const [SeeMore, setSeeMore] = React.useState(false);
   const [More, setMore] = React.useState(false);
   const scrollRef = React.useRef();
-  const [isActionButtonVisible, setIsActionButtonVisible] =
-    React.useState(false);
-  const scrollY = new Animation.Value(0);
-  const diffClamp = Animation.diffClamp(scrollY, 0, 300);
-  const translateY = diffClamp.interpolate({
-    inputRange: [0, 500],
-    outputRange: [0, 500],
-  });
   const [specialtyHeight, setSpecialtyHeight] = React.useState(75);
   const [specialtyAnimation, setSpecialtyAnimation] = React.useState(
     new Animation.Value(specialtyHeight)
   );
-  const [aboutHeight, setAboutHeight] = React.useState(120);
-  const [aboutAnimation, setAboutAnimation] = React.useState(
-    new Animation.Value(aboutHeight)
-  );
   const { handleScroll, showButton } = useHandleScroll();
-  const [Specialty, setSpecialty] = React.useState();
-  const params = props.route.params;
-  const data = useSelector((state) => state.vendor);
+  const [Specialty, setSpecialty] = React.useState(); 
   const [newNavigation, setNewNavigation] = React.useState(1100);
-  const [scrollLayout, setScrollLayout] = React.useState();
-  const scroll = React.useRef();
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState();
-  const [statusBarHeight, setStatusBarHeight] = React.useState(0);
   const isFocused = useIsFocused();
   const [ScreenName, setScreenName] = React.useState(false);
   const changeScreenName = React.useCallback((val) => {
     setScreenName(val);
   });
-  const [wallPhoto, setWallPhoto] = useState(data?.service?.wallPhoto);
+  const [wallPhoto, setWallPhoto] = useState("https://i.ibb.co/BNCTDBs/2023-03-26-20-48-43.jpg");
   const [modalVisible, setModalVisible] = useState(false);
   //console.log(SeeMore)
   const newImage = useImage(wallPhoto);
   const [imageUploader, setImageUploader] = useState(false);
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setRefresh((val) => !val);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
-  React.useEffect(() => {
-    if (isFocused) {
-      //console.log("hidden")
-      dispatch(setHideBottomBar(true));
-      setTimeout(() => {
-        dispatch(setHideBottomBar(true));
-      }, 50);
-    } else {
-      //console.log("seen")
-      dispatch(setHideBottomBar(false));
-    }
-  }, [isFocused]);
+  const [ButtonPress,setButtonPress]=useState(false)
+  const [loading,setLoading]=useState(false)
 
   React.useEffect(() => {
-    setActive("Bargaining");
+   //console.log(newData)
+    setSpecialty(newData.skills.join(","));
+    let img=[]
+    newData?.images?.map((doc)=>{
+      img.push(doc.uri)
+    })
+    setImages(img);
+    setPrice(newData?.price);
+    setTitle(newData?.serviceTitle);
+    setDescription(newData?.serviceDescription);
+    setFacilities(newData?.facilities);
+    setBackgroundImage("https://i.ibb.co/BNCTDBs/2023-03-26-20-48-43.jpg");
     //setLoader(true);
     setScrollEnabled(false);
-    //setNewDataList(null)
-    if (vendor && newUser) {
-      setActiveServiceData(null);
-      setRelatedServices(null);
-      setUnRelatedServices(null);
-      //setFixedService(null);
-      //setPackageService(null);
-      let response = { data: vendor };
-      if (response.data) {
-        setLoader(false);
-        const gigs = response.data.service.gigs.filter(
-          (d) => d.type == "STARTING"
-        );
-        setData(response.data);
-        setSpecialty(response.data.service.speciality);
-
-        setBackgroundImage(response.data.service.wallPhoto);
-        setImage(response.data.service.profilePhoto);
-        setImages(gigs[0].images);
-        setPrice(gigs[0].price);
-        setTitle(gigs[0].title);
-        setDescription(gigs[0].description);
-        //setNewDataList(response.data.service.gigs[0].services.options)
-        setFacilities(gigs[0].facilites.selectedOptions);
-        let arr = initialState;
-        response.data.service.activeServiceTypes.forEach((doc) => {
-          arr = arr.map((d) => {
-            if (d.type == doc) {
-              //console.log(doc);
-              return {
-                title: d.title,
-                value: true,
-                type: d.type,
-              };
-            } else {
-              return d;
-            }
-          });
-        });
-        setActiveServiceData(arr);
-
-        //console.log(gigs)
-        setCategory(gigs[0].services.category);
-        try {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(
-              gigs[0].services.options,
-              gigs[0].services.category
-            ),
-          });
-          setNewDataList(
-            serverToLocal(gigs[0].services.options, gigs[0].services.category)
-          );
-        } catch (e) {
-          setLoader(false);
-          console.warn(e.message);
-        }
-      }
-    }
-  }, [vendor + data, isFocused]);
-  React.useEffect(() => {
-    setActive("Bargaining");
-    //setLoader(true);
-    // setNewDataList(null)
-    if (Data) {
-      const gigs = Data.service.gigs.filter((d) => d.type == "STARTING");
-      setBackgroundImage(Data.service.wallPhoto);
-      setImage(Data.service.profilePhoto);
-
-      setImages(gigs[0].images);
-      setPrice(gigs[0].price);
-      setTitle(gigs[0].title);
-      setDescription(gigs[0].description);
-      //setNewDataList(response.data.service.gigs[0].services.options)
-      //console.log(data.service.gigs[0].facilites.selectedOptions)
-      setFacilities(gigs[0].facilites.selectedOptions);
-      let arr = initialState;
-      Data.service.activeServiceTypes.forEach((doc) => {
-        arr = arr.map((d) => {
-          if (d.type == doc) {
-            //console.log(doc);
-            return {
-              title: d.title,
-              value: true,
-              type: d.type,
-            };
-          } else {
-            return d;
-          }
-        });
+    try {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: listData
       });
-
-      setActiveServiceData(arr);
-
-      setCategory(gigs[0].services.category);
-
-      try {
-        //console.log(Data.service.gigs[0].services.options)
-        dispatch({
-          type: "SET_NEW_LIST_DATA",
-          playload: serverToLocal(
-            gigs[0].services.options,
-            gigs[0].services.category
-          ),
-        });
-        setNewDataList(
-          serverToLocal(gigs[0].services.options, gigs[0].services.category)
-        );
-      } catch (e) {
-        console.warn(e.message);
-      }
+      setNewDataList(
+        listData
+      );
+    } catch (e) {
+      setLoader(false);
+      console.warn(e.message);
     }
-  }, [Bargaining, Data, isFocused]);
+
+  }, [newData, isFocused]);
+  
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -383,143 +248,14 @@ const FinalReview = (props) => {
       }
     }
   }, [ActiveService + Click + Refresh, isFocused]);
-  React.useEffect(() => {
-    if (newUser && Data) {
-      getOtherServices(newUser.token, data.service.id, "ONETIME")
-        .then((res) => {
-          setFixedService(res.data.gigs);
-          //console.log(res.data.gigs);
-        })
-        .catch((err) => {
-          setFixedService([]);
-          console.warn(err.response.data);
-        });
-    }
-  }, [Active + data + newUser + vendor + Data, isFocused]);
-  React.useEffect(() => {
-    if (newUser && data) {
-      getOtherServices(newUser.token, data.service.id, "PACKAGE")
-        .then((res) => {
-          setPackageService(res.data.gigs);
-          //console.log(res.data.gigs);
-        })
-        .catch((err) => {
-          setPackageService([]);
-          console.warn(err.response.data);
-        });
-    }
-  }, [data + newUser + vendor + Data, isFocused]);
-
+  
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
   }, [Specialty, isFocused]);
-  const showCart = (doc) => {
-    setGigs(doc);
-    setClick(true);
-    setImages(doc.images);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  const clickFixed = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    //console.log("ok");
-    navigation.navigate("VendorFixedService", { data: doc });
-  };
-  const clickPackage = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    //console.log("ok");
-    navigation.navigate("VendorPackageService", { data: doc });
-  };
-  const clickSubscription = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    //console.log("ok");
-    navigation.navigate("VendorSubscriptionService", { data: doc });
-  };
-  const clickInstallment = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    //console.log("ok");
-    navigation.navigate("VendorInstallmentService", { data: doc });
-  };
+ 
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -550,44 +286,92 @@ const FinalReview = (props) => {
     let arr = [];
     arr.push(fileFromURL(image));
     const res = await uploadFile(arr, newUser.token);
-    updateData(newUser.token, {
-      serviceId: vendor.service.id,
-      wallPhotoUrl: isProfile ? undefined : res[0],
-      profilePhotoUrl: isProfile ? res[0] : undefined,
-    })
-      .then((res) => {
-        updateVendorInfo();
-      })
-      .catch((err) => {
-        setImageUploader(false);
-        console.error(err.response.data.msg);
-      });
-  };
-  const updateVendorInfo = async () => {
-    const res = await getService(newUser.token, vendor.service.id);
-    if (res) {
-      setImageUploader(false);
-      dispatch({ type: "SET_VENDOR", playload: res.data });
-      //navigation.navigate("VendorProfile");
+    if(isProfile){
+      setImage(res[0])
+    }else{
+      setWallPhoto(res[0])
     }
-    setImageUploader(false);
   };
-  //console.log(SeeMore)
-
-  if (
-    !Data ||
-    !Array.isArray(FixedService) ||
-    !Array.isArray(PackageService) ||
-    !NewDataList ||
-    !Specialty
-  ) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader />
-      </View>
-    );
+  const confirm=async()=>{
+    setLoading(true);
+    let blobImages = [];
+    Array.isArray(newData?.images) &&
+      newData?.images.forEach((image, i) => {
+        blobImages.push(fileFromURL(image));
+      });
+    const result = await uploadFile(blobImages, newUser.token);
+    if(!result){
+      setLoading(false);
+      //console.log(result)
+      Alert.alert("Opps!","Failed to upload images")
+    }
+    let businessForm={
+      workingTime:newData?.workingTime,
+      startDate:{
+        day:newData?.established?.getDate(),
+        month:newData?.established?.getMonth(),
+        year:newData?.established?.getFullYear()
+      },
+      about:newData?.about,
+      speciality:newData?.skills?.join(","),
+      serviceTitle:newData?.serviceTitle,
+      description:newData?.serviceDescription,
+      serviceCenterName:newData?.serviceCenterName,
+      title:"",
+      name:newData?.providerName,
+      gender:newData?.gender,
+      position:newData?.position,
+      teamNumber:parseInt(newData?.numberOfTeam),
+      price:parseInt(newData?.price),
+      facilities:newData?.facilities,
+      division:newData?.address?.division,
+      district:newData?.address?.district,
+      area:newData?.address?.area,
+      address:newData?.address?.address
+    }
+      //setLoading(false)
+      const res = await createService(
+        businessForm,
+        listData,
+        result,
+        newUser.token,
+        image ,
+        wallPhoto
+      ).catch(err=>{
+        console.warn(err.response.data.msg)
+        Alert.alert(res.response.data.msg)
+      })
+      if(!res){
+        setLoading(false);
+        //Alert.alert(res.response.data.msg)
+        return
+      }
+      const data=await vendorLogin(newUser.token, res.data.service.id);
+      if(!data){
+        setLoading(false);
+        Alert.alert("Opps!",data.response.data.msg)
+        return
+      }
+      setLoading(false);
+      dispatch({ type: "SET_VENDOR", playload: data });
+            //navigation.navigate("Profile");
+      try{
+        props.navigation.navigate("VendorProfile");
+      }catch(err){
+        Alert.alert("Ops!",err.message)
+      }
   }
-
+ 
+if(Images.length==0){
+  return null
+}
+if(loading){
+  return(
+    <View style={customStyle.fullBox}>
+      <ActivityLoader/>
+    </View>
+  )
+}
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
@@ -607,13 +391,7 @@ const FinalReview = (props) => {
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         ref={scrollRef}
-        refreshControl={
-          <RefreshControl
-            style={{}}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
+        
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: primaryColor,
@@ -741,44 +519,12 @@ const FinalReview = (props) => {
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 },
               ]}>
-              {data
-                ? data.service.serviceCenterName
+              {newData
+                ? newData.serviceTitle
                 : "Easin Arafat It Consulting Center"}
             </Text>
             <View style={{ flex: 0.5 }} />
-            <View
-              style={{
-                alignItems: "center",
-              }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}>
-                <SvgXml
-                  xml={newStar}
-                  height={Platform.OS == "ios" ? "21" : "19"}
-                  width={Platform.OS == "ios" ? "21" : "19"}
-                />
-                <Text
-                  style={{
-                    fontSize: Platform.OS == "ios" ? 20 : 18,
-                    fontFamily: "Poppins-Bold",
-                    color: "#FFC107",
-                    marginLeft: 5,
-                  }}>
-                  4.6
-                </Text>
-              </View>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 12 : 11,
-                  fontFamily: "Poppins-Medium",
-                  marginTop: Platform.OS == "ios" ? 5 : 0,
-                }}>
-                Profile Views {Data ? Data.service.views : "00"}
-              </Text>
-            </View>
+            
           </View>
           <Animation.View
             style={{
@@ -796,9 +542,9 @@ const FinalReview = (props) => {
                 style={{
                   width: 40,
                   height: 40,
-                  borderWidth: Data && Data.service.profilePhoto ? 0 : 0.5,
+                  borderWidth: image ? 0 : 0.5,
                 }}
-                source={{ uri: Data ? Data.service.profilePhoto : null }}
+                source={{ uri: image }}
               />
             </TouchableOpacity>
             <View
@@ -808,10 +554,8 @@ const FinalReview = (props) => {
               <Tooltip
                 enterTouchDelay={10}
                 title={
-                  Data
-                    ? `${Data.service.providerInfo.title} ${
-                        Data.service.providerInfo.name
-                      } (${Data.service.providerInfo.gender.toUpperCase()})`
+                  newData
+                    ? `${newData?.providerName} (${newData?.gender.toUpperCase()})`
                     : "No"
                 }>
                 <View
@@ -834,11 +578,9 @@ const FinalReview = (props) => {
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                     }}>
-                    {Data
-                      ? `${Data.service.providerInfo.title} ${
-                          Data.service.providerInfo.name
-                        } (${Data.service.providerInfo.gender.toUpperCase()})`
-                      : null}
+                    {newData
+                    ? `${newData?.providerName} (${newData?.gender.toUpperCase()})`
+                    : "No"}
                   </Text>
                 </View>
               </Tooltip>
@@ -849,7 +591,7 @@ const FinalReview = (props) => {
               }}>
               <Tooltip
                 enterTouchDelay={10}
-                title={Data ? Data.service.providerInfo.position : ""}>
+                title={newData?.position}>
                 <View
                   style={{
                     flex: 1,
@@ -868,7 +610,7 @@ const FinalReview = (props) => {
                       fontSize: Platform.OS == "ios" ? 14 : 13,
                       fontFamily: "Poppins-SemiBold",
                     }}>
-                    {Data ? Data.service.providerInfo.position : ""}
+                    {newData?.position}
                   </Text>
                 </View>
               </Tooltip>
@@ -893,13 +635,7 @@ const FinalReview = (props) => {
                 }}>
                 Specialty In
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("EditVendorInfo", { data: Data });
-                }}
-                style={{}}>
-                <SvgXml xml={editIcon} height="50" width={"50"} />
-              </TouchableOpacity>
+              
             </View>
             <Animation.View style={{ height: specialtyAnimation }}>
               <View
@@ -971,15 +707,17 @@ const FinalReview = (props) => {
                 <SvgXml xml={editIcon} height="50" width={"50"} />
               </TouchableOpacity> */}
             </View>
-            <AnimatedHeight
-              id={Data.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
-              text={Data.service.about}
-            />
+            {newData && (
+              <AnimatedHeight
+                //id={newData?.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
+                text={newData?.about}
+              />
+            )}
           </View>
           <Pressable
             onPress={() => {
               if (calenderHeight == 0) {
-                setCalenderHeight(150);
+                setCalenderHeight(120);
               } else {
                 setCalenderHeight(0);
               }
@@ -997,7 +735,7 @@ const FinalReview = (props) => {
                 fontFamily: "Poppins-SemiBold",
                 marginBottom: 15,
               }}>
-              ...Company Calender, Notice & Team
+              ...Company Calender, Location & Team
             </Text>
           </Pressable>
         </View>
@@ -1016,40 +754,31 @@ const FinalReview = (props) => {
                 //setCalenderHeight(e.nativeEvent.layout.height);
               }
             }}>
+            
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Company Calender", { vendor: Data });
+                navigation.navigate("Company Calender", { workingTime:newData?.workingTime });
               }}
               Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
               title="Company Calender"
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("UserNotice", {
-                  serviceId: Data.service.id,
-                });
+                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:newData?.address });
               }}
               style={{
                 marginBottom: 0,
-              }}
-              Icon={() => <SvgXml xml={noticeIcon} height="22" width="22" />}
-              title="Notice"
-            />
-            <ProfileOption
-              onPress={() => {
-                //navigation.navigate("Notice", { serviceId: Data.service.id });
-              }}
-              style={{
-                marginBottom: 0,
+                marginTop:5
               }}
               Icon={() => (
                 <Ionicons name="location-sharp" size={24} color={"#4ADE80"} />
               )}
               title="Work Location"
             />
+            
             <BarOption
               icon={user}
-              title={`Worker and Team (${Data?.service.worker} member)`}
+              title={`Worker and Team (${newData?.numberOfTeam} member)`}
             />
           </View>
         </MotiView>
@@ -1127,396 +856,37 @@ const FinalReview = (props) => {
               }}
               component={BargainingScreen}
             />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[1].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[1].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickFixed,
-                FixedService: FixedService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={FixedScreen}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[2].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[2].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickPackage,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={PackageScreen}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[4].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[4].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickSubscription,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={Subscriptions}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[3].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[3].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickInstallment,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={Installment}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}>
-                    <Text
-                      style={{
-                        color: focused ? "#4ADE80" : "black",
-                        fontFamily: "Poppins-SemiBold",
-                        fontSize: Platform.OS == "ios" ? 18 : 17,
-                        marginRight: 10,
-                      }}>
-                      Settings
-                    </Text>
-                    <SvgXml
-                      xml={focused ? settingsActiveIcon : settingsIcon}
-                      height="15"
-                      width="15"
-                    />
-                  </View>
-                ),
-              }}
-              name={"Vendor Settings"}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickPackage,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={ServiceSettings}
-            />
+            
           </Tab.Navigator>
         </View>
       </ScrollView>
-      {showButton && ScreenName == "ONETIME" && (
-        <Animated.View
-          entering={FadeIn}
+      <View style={{ backgroundColor: primaryColor }}>
+        <CheckBox
+          onChange={() => {
+            setButtonPress(!ButtonPress);
+          }}
           style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "ONETIME",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
-      {showButton && ScreenName == "PACKAGE" && (
-        <Animated.View
-          entering={FadeIn}
+            marginHorizontal: 20,
+            marginTop: 10,
+          }}
+          title="I agree with all the terms and conditions"
+        />
+        <IconButton
+          onPress={confirm}
+          disabled={ButtonPress ? false : true}
           style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_PACKAGES", playload: [] });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "PACKAGE",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
-      {showButton && ScreenName == "SUBS" && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_PACKAGES", playload: [] });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "SUBSCRIPTION",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
-      {showButton && ScreenName == "INSTALLMENT" && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_PACKAGES", playload: [] });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "INSTALLMENT",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
+            height: 45,
+            marginHorizontal: 20,
+            marginVertical: 10,
+            borderRadius: 5,
+            backgroundColor: ButtonPress ? "#4ADE80" : "#e6e6e6",
+            borderWidth: 0,
+            color:ButtonPress ? "white" : "black",
+          }}
+          title="Confirm"
+        />
+      </View>
+      
       {offset < 100 && offset > -1 && (
         <Animated.View
           style={{
@@ -1721,6 +1091,7 @@ function uniq(a) {
 const BargainingScreen = ({ navigation, route }) => {
   const params = route.params;
   const Images = params.Images;
+  //console.log(Images)
   const primaryColor = params.primaryColor;
   const textColor = params.textColor;
   const Title = params.Title;
@@ -1731,7 +1102,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [SubServiceList, setSubServiceList] = React.useState(sub);
   const NewDataList = params.NewDataList;
   const [ActiveService, setActiveService] = React.useState(
-    ServiceList ? ServiceList[0] : NewDataList[0].mainTitle
+    ServiceList ? ServiceList[0] : NewDataList[0]?.mainTitle
   );
   const Facilities = params.Facilities;
   const Data = params.Data;
@@ -1763,7 +1134,7 @@ const BargainingScreen = ({ navigation, route }) => {
       return;
     }
     if (Array.isArray(NewDataList)) {
-      setActiveService(NewDataList[0].mainTitle);
+      setActiveService(NewDataList[0]?.mainTitle);
       return;
     }
   }, [NewDataList + ServiceList]);
@@ -1869,15 +1240,17 @@ const BargainingScreen = ({ navigation, route }) => {
             marginVertical: 15,
             marginBottom: 0,
           }}>
-          <AnimatedHeight
-            onChange={(height) => {
-              //setNewNavigation(newHeight + 55 + height);
-              //console.log(height)
-              setTextHeight(height - 50);
-            }}
-            button={true}
-            text={Description}
-          />
+          {Description && (
+            <AnimatedHeight
+              onChange={(height) => {
+                //setNewNavigation(newHeight + 55 + height);
+                //console.log(height)
+                setTextHeight(height - 50);
+              }}
+              button={true}
+              text={Description}
+            />
+          )}
         </View>
         <View
           style={{
@@ -1887,16 +1260,7 @@ const BargainingScreen = ({ navigation, route }) => {
             marginVertical: 0,
             marginTop: -15,
           }}>
-          <TouchableOpacity
-            onPress={() => {
-              const gigs = Data.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              navigation.navigate("EditService", { data: Data, gigs: gigs[0] });
-            }}
-            style={{}}>
-            <SvgXml xml={editIcon} height="50" width={"50"} />
-          </TouchableOpacity>
+          
         </View>
         <Carousel
           panGestureHandlerProps={{
@@ -1941,45 +1305,7 @@ const BargainingScreen = ({ navigation, route }) => {
             }}>
             Service List
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              const gigs = Data.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              const data = AllData.filter(
-                (d) => d.key == gigs[0].services.category
-              )[0];
-              const i = AllData.indexOf(data);
-              dispatch(
-                setListData(
-                  serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  )
-                )
-              );
-              if (data.data) {
-                navigation.navigate("EditSubCategory", {
-                  title: data.title,
-                  data: data.data,
-                  image: data.image,
-                  id: i,
-                  mainTitle: data.title,
-                  gigs: gigs[0],
-                });
-              } else {
-                navigation.navigate("EditTableData", {
-                  title: data.title,
-                  list: data.list,
-                  exit: true,
-                  id: i,
-                  mainTitle: data.title,
-                  gigs: gigs[0],
-                });
-              }
-            }}>
-            <SvgXml xml={editIcon} height="50" width={"50"} />
-          </TouchableOpacity>
+          
         </View>
 
         <View
@@ -2022,18 +1348,18 @@ const BargainingScreen = ({ navigation, route }) => {
               ) : (
                 <Button
                   onPress={() => {
-                    setActiveService(NewDataList[0].mainTitle);
+                    setActiveService(NewDataList[0]?.mainTitle);
                   }}
                   style={
-                    NewDataList.length > 0 &&
-                    NewDataList[0].mainTitle == ActiveService
+                    NewDataList?.length > 0 &&
+                    NewDataList[0]?.mainTitle == ActiveService
                       ? styles.activeButton
                       : styles.inactiveButton
                   }
-                  title={NewDataList.length > 0 && NewDataList[0].mainTitle}
+                  title={NewDataList?.length > 0 && NewDataList[0]?.mainTitle}
                 />
               )}
-              {Facilities && Facilities.length != 0 && (
+              {Facilities && Facilities?.length != 0 && (
                 <Button
                   onPress={() => {
                     setActiveService("Extra Facilities");
@@ -2305,188 +1631,12 @@ const newStar = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" 
 <path id="Polygon_1" data-name="Polygon 1" d="M9.6,1.879a1,1,0,0,1,1.8,0l1.844,3.843a1,1,0,0,0,.817.564l4.428.376a1,1,0,0,1,.537,1.78l-3.181,2.526a1,1,0,0,0-.349,1.024l.951,3.827a1,1,0,0,1-1.441,1.123L10.971,14.79a1,1,0,0,0-.941,0L5.994,16.942a1,1,0,0,1-1.441-1.123L5.5,11.992a1,1,0,0,0-.349-1.024L1.973,8.442a1,1,0,0,1,.537-1.78l4.428-.376a1,1,0,0,0,.817-.564Z" fill="#ffc107"/>
 </svg>
 `;
-const FixedScreen = ({ navigation, route }) => {
-  const params = route.params;
-  const FixedService = params.FixedService;
-  const onPress = params.onPress;
-  const setNewNavigation = params.setNewNavigation;
-  const isFocused = useIsFocused();
-  const [viewHeight, setViewHeight] = React.useState();
-  const RelatedServices = params.RelatedServices;
-  const UnRelatedServices = params.UnRelatedServices;
-  const [content, setContent] = React.useState(2);
-  const [layoutHeight, setLayoutHeight] = React.useState();
-  const [offset, setOffset] = React.useState(0);
-  const scrollTo = params.scrollTo;
-  const changeScreenName = params.changeScreenName;
 
-  React.useEffect(() => {
-    if (layoutHeight && isFocused) {
-      //console.log(layoutHeight);
-      setNewNavigation(layoutHeight + 50);
-      changeScreenName("ONETIME");
-      //setNewNavigation(layoutHeight + 70);
-      setTimeout(() => {
-        //setNewNavigation(layoutHeight + 140);
-      }, 50);
-    }
-  }, [isFocused + layoutHeight]);
-
-  //console.log(FixedService)
-  return (
-    <View
-      onLayout={(e) => {
-        setLayoutHeight(e.nativeEvent.layout.height);
-      }}
-      scrollEventThrottle={16}
-      onScroll={(e) => {
-        //console.log(e.nativeEvent.contentOffset.y)
-        const currentOffset = e.nativeEvent.contentOffset.y;
-        //console.log(navHeight)
-        if (currentOffset < -80) {
-          //console.log("ok")
-          scrollTo(1);
-        }
-        if (currentOffset > offset && currentOffset > 0) {
-          scrollTo(-10);
-        }
-        setOffset(currentOffset);
-      }}
-      nestedScrollEnabled={true}>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginHorizontal: 10,
-          marginVertical: 20,
-        }}>
-        {FixedService.map((doc, i) => (
-          <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
-        ))}
-      </View>
-      {FixedService && FixedService.length == 0 && (
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            paddingHorizontal: 10,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            width: "100%",
-          }}
-          entering={FadeIn}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
-          </View>
-        </Animated.View>
-      )}
-      <View style={{ height: 70 }} />
-    </View>
-  );
-};
-const PackageScreen = ({ navigation, route }) => {
-  const params = route.params;
-  const PackageService = params.PackageService;
-  const onPress = route.params.onPress;
-  const RelatedServices = params.RelatedServices;
-  const UnRelatedServices = params.UnRelatedServices;
-  const [content, setContent] = React.useState(2);
-  const [layoutHeight, setLayoutHeight] = React.useState();
-  const isFocused = useIsFocused();
-  const setNewNavigation = params.setNewNavigation;
-  const scrollTo = params.scrollTo;
-  const [offset, setOffset] = React.useState(0);
-  const changeScreenName = params.changeScreenName;
-
-  React.useEffect(() => {
-    if (layoutHeight && isFocused) {
-      //console.log(layoutHeight);
-      changeScreenName("PACKAGE");
-      setNewNavigation(layoutHeight + 50);
-    }
-  }, [layoutHeight + isFocused]);
-  //console.log(FixedService)
-  return (
-    <View
-      scrollEventThrottle={16}
-      onScroll={(e) => {
-        //console.log(e.nativeEvent.contentOffset.y)
-        const currentOffset = e.nativeEvent.contentOffset.y;
-        //console.log(navHeight)
-        if (currentOffset < -80) {
-          //console.log("ok")
-          scrollTo(1);
-        }
-        if (currentOffset > offset && currentOffset > 0) {
-          scrollTo(-10);
-        }
-        setOffset(currentOffset);
-      }}
-      onLayout={(e) => {
-        setLayoutHeight(e.nativeEvent.layout.height);
-      }}
-      nestedScrollEnabled={true}>
-      <View
-        style={{
-          marginHorizontal: 10,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginVertical: 20,
-        }}>
-        {PackageService.map((doc, i) => (
-          <ServiceCart
-            onPress={() => {
-              if (onPress) {
-                onPress(doc);
-              }
-            }}
-            key={i}
-            data={doc}
-          />
-        ))}
-      </View>
-      {PackageService && PackageService.length == 0 && (
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            paddingHorizontal: 10,
-            backgroundColor: primaryColor,
-            justifyContent: "center",
-            width: "100%",
-          }}
-          entering={FadeIn}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}>
-            <SvgXml
-              xml={serviceIcon}
-              style={{ marginVertical: 100 }}
-              height="200"
-              width="200"
-            />
-          </View>
-        </Animated.View>
-      )}
-      <View style={{ height: 70 }} />
-    </View>
-  );
-};
 const calculateHeight = (text, plus, minus) => {
-  let textLength = text.split("").length;
+  let textLength = text?.split("").length;
+  if(!textLength){
+    return
+  }
   textLength = parseInt(textLength);
   let lineHeight = Platform.OS == "ios" ? 26 : 26;
   let letterWidth = Platform.OS == "ios" ? 8 : 8;
@@ -2571,7 +1721,7 @@ const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="41.275" height=
 </svg>
 `;
 
-export const ServiceTable = ({
+const ServiceTable = ({
   item,
   i,
   name,
@@ -2693,7 +1843,7 @@ export const ServiceTable = ({
   );
 };
 
-export const Rows = ({ title, item, name, NewDataList, height, index }) => {
+const Rows = ({ title, item, name, NewDataList, height, index }) => {
   const [text, setText] = React.useState();
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -2744,11 +1894,11 @@ export const Rows = ({ title, item, name, NewDataList, height, index }) => {
   );
 };
 
-export const ServiceCarts = () => {
+const ServiceCarts = () => {
   return <TouchableOpacity></TouchableOpacity>;
 };
 
-export const TabBar = ({
+const TabBar = ({
   state,
   descriptors,
   navigation,
@@ -2876,7 +2026,7 @@ export const TabBar = ({
     </View>
   );
 };
-export const TabScreen = ({ navigation, route }) => {
+const TabScreen = ({ navigation, route }) => {
   const data = route.params.data;
 
   return (
@@ -3148,119 +2298,7 @@ const Subscriptions = ({ navigation, route }) => {
     </View>
   );
 };
-const Installment = ({ navigation, route }) => {
-  const params = route.params;
-  //const PackageService = params.PackageService;
-  const PackageService = [];
-  const onPress = route.params.onPress;
-  const RelatedServices = params.RelatedServices;
-  const UnRelatedServices = params.UnRelatedServices;
-  const [content, setContent] = React.useState(2);
-  const [layoutHeight, setLayoutHeight] = React.useState();
-  const isFocused = useIsFocused();
-  const setNewNavigation = params.setNewNavigation;
-  const scrollTo = params.scrollTo;
-  const [offset, setOffset] = React.useState(0);
-  const changeScreenName = params.changeScreenName;
-  const vendor = useSelector((state) => state.vendor);
-  const user = useSelector((state) => state.user);
-  const [SubsCription, setSubscription] = React.useState();
 
-  React.useEffect(() => {
-    if (layoutHeight && isFocused) {
-      //console.log(layoutHeight);
-      changeScreenName("INSTALLMENT");
-      setNewNavigation(layoutHeight + 50);
-    }
-  }, [layoutHeight + isFocused]);
-  React.useEffect(() => {
-    if (user && vendor) {
-      getOtherServices(user.token, vendor.service.id, "INSTALLMENT")
-        .then((res) => {
-          setSubscription(res.data.gigs);
-          //console.log(res.data.gigs);
-        })
-        .catch((err) => {
-          setSubscription([]);
-          console.warn(err.response.data);
-        });
-    }
-  }, [isFocused, user, vendor]);
-  //console.log(FixedService)
-  if (!SubsCription) {
-    return <ActivityLoader />;
-  }
-  return (
-    <View
-      scrollEventThrottle={16}
-      onScroll={(e) => {
-        //console.log(e.nativeEvent.contentOffset.y)
-        const currentOffset = e.nativeEvent.contentOffset.y;
-        //console.log(navHeight)
-        if (currentOffset < -80) {
-          //console.log("ok")
-          scrollTo(1);
-        }
-        if (currentOffset > offset && currentOffset > 0) {
-          scrollTo(-10);
-        }
-        setOffset(currentOffset);
-      }}
-      onLayout={(e) => {
-        setLayoutHeight(e.nativeEvent.layout.height);
-      }}
-      nestedScrollEnabled={true}>
-      <View
-        style={{
-          marginHorizontal: 10,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          marginVertical: 20,
-        }}>
-        {SubsCription &&
-          SubsCription.map((doc, i) => (
-            <ServiceCart
-              onPress={() => {
-                if (onPress) {
-                  onPress(doc);
-                }
-              }}
-              key={i}
-              data={doc}
-            />
-          ))}
-
-        {SubsCription && SubsCription.length == 0 && (
-          <Animated.View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              paddingHorizontal: 10,
-              backgroundColor: primaryColor,
-              justifyContent: "center",
-              width: "100%",
-            }}
-            entering={FadeIn}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
-              <SvgXml
-                xml={serviceIcon}
-                style={{ marginVertical: 100 }}
-                height="200"
-                width="200"
-              />
-            </View>
-          </Animated.View>
-        )}
-      </View>
-      <View style={{ height: 70 }} />
-    </View>
-  );
-};
 const ImageScreen = ({ onClose, onChange, uri }) => {
   const [click, setClick] = useState(true);
   const [image, setImage] = useState(uri);

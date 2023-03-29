@@ -1,8 +1,8 @@
-import React, { memo, useCallback, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Button, Dimensions, Platform, Text, View } from "react-native";
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 
-export const AutoComplete = memo(() => {
+export const AutoComplete = memo(({ onChange, value, onFocus,blur,innerRef }) => {
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -49,6 +49,7 @@ export const AutoComplete = memo(() => {
       id: 8,
     },
   ];
+  const [close,setClose]=useState(false)
 
   const searchRef = useRef(null);
 
@@ -115,9 +116,13 @@ export const AutoComplete = memo(() => {
 
   const onClearPress = useCallback(() => {
     setSuggestionsList(null);
+    onChange();
   }, []);
 
-  const onOpenSuggestionsList = useCallback((isOpened) => {}, []);
+  const onOpenSuggestionsList = useCallback((isOpened) => {
+    
+  }, []);
+  
 
   return (
     <>
@@ -127,16 +132,23 @@ export const AutoComplete = memo(() => {
           Platform.select({ ios: { zIndex: 1 } }),
         ]}>
         <AutocompleteDropdown
+          onFocus={onFocus}
           ref={searchRef}
-          closeOnBlur={false}
+          closeOnBlur={blur?blur:false}
           direction={Platform.select({ ios: "up" })}
           controller={(controller) => {
-            dropdownController.current = controller;
+            if(innerRef){innerRef = controller;}
           }}
-          dataSet={items}
-          onChangeText={getSuggestions}
+          
+          dataSet={suggestionsList ? suggestionsList : items}
+          onChangeText={(e) => {
+            getSuggestions(e);
+            onChange(e);
+          }}
           onSelectItem={(item) => {
             item && setSelectedItem(item.id);
+            item && onChange(item.title);
+            //console.log(item)
           }}
           debounce={600}
           suggestionsListMaxHeight={Dimensions.get("window").height * 0.3}
@@ -148,6 +160,7 @@ export const AutoComplete = memo(() => {
           textInputProps={{
             placeholder: "Position",
             placeholderTextColor: "#767676",
+            
           }}
           rightButtonsContainerStyle={{
             height: 30,
@@ -158,16 +171,17 @@ export const AutoComplete = memo(() => {
             borderWidth: 1,
             borderColor: "#767676",
             height: 45,
-            
           }}
           suggestionsListContainerStyle={{
             backgroundColor: "#fff",
+            marginBottom: 8,
           }}
-          containerStyle={{ flexGrow: 1, flexShrink: 1,marginLeft:8 }}
+          closeOnSubmit={true}
+          containerStyle={{ flexGrow: 1, flexShrink: 1, marginLeft: 8 }}
           renderItem={(item, text) => {
             console.log(text);
             return (
-              <Text style={{ color: "#383b42", padding: 15 }}>
+              <Text  style={{ color: "#383b42", padding: 15 }}>
                 {item.title}
               </Text>
             );

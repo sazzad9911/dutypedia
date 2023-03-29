@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Color } from "../assets/colors";
@@ -44,6 +45,7 @@ const Feed = ({ navigation, route }) => {
   const textColor = colors.getTextColor();
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
+  const user=useSelector(state=>state.user)
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -123,7 +125,13 @@ const Feed = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </Animated.View>
-        <JoinCart onClick={()=>navigation.navigate("InitialServiceCreate")}/>
+        <JoinCart onClick={()=>{
+          if (Array.isArray(user)) {
+            navigation.navigate("LogIn");
+            return;
+          }
+          navigation.navigate("InitialServiceCreate")
+        }}/>
         <ServiceListCart/>
         <PopularCategory onMore={()=>{
           navigation.navigate("ServiceScreen")
@@ -134,7 +142,13 @@ const Feed = ({ navigation, route }) => {
         <Trending onMore={()=>{
           navigation.navigate("ServiceScreen")
         }}/>
-        <JoinCart onClick={()=>navigation.navigate("InitialServiceCreate")} colors={["#5C258D","#4389A2"]}/>
+        <JoinCart onClick={()=>{
+          if (Array.isArray(user)) {
+            navigation.navigate("LogIn");
+            return;
+          }
+          navigation.navigate("InitialServiceCreate")
+          }} colors={["#5C258D","#4389A2"]}/>
         <TopSeller onMore={()=>{
           navigation.navigate("ServiceScreen")
         }}/>

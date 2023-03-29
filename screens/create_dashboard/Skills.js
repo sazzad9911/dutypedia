@@ -1,5 +1,5 @@
 import ReadMore from "@fawazahmed/react-native-read-more";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -9,7 +9,7 @@ import {
   Pressable,
   TextInput,
   Image,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -21,12 +21,21 @@ import {
   serverTimeToLocalDate,
 } from "../../action";
 import IconButton from "../../components/IconButton";
-import skill from "../../assets/Images/skill.png"
+import skill from "../../assets/Images/skill.png";
 import TextOp from "./TextOp";
-const {width,height}=Dimensions.get("window")
+import ViewMore from "../../Hooks/ViewMore";
+const { width, height } = Dimensions.get("window");
 
-export default function Skills({ navigation }) {
+export default function Skills({ navigation, route }) {
   const [skills, setSkill] = useState([]);
+  const data = route?.params?.data;
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const [length,setLength]=useState(0)
+
+  useEffect(()=>{
+    setLength(skills.length)
+  },[skills.length])
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -38,10 +47,13 @@ export default function Skills({ navigation }) {
             marginTop: 24,
             paddingHorizontal: 20,
           }}>
-          <Image style={{
-            width:width-40,
-            height:230
-          }} source={skill}/>
+          <Image
+            style={{
+              width: width - 40,
+              height: 230,
+            }}
+            source={skill}
+          />
           <View
             style={{
               flexDirection: "row",
@@ -54,109 +66,194 @@ export default function Skills({ navigation }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine,{flex:1}]}>
-            Tips for skill
-            </Text>
+            <Text style={[styles.headLine, { flex: 1 }]}>Tips for skill</Text>
           </View>
-          <TextOp style={{marginTop:24}} text={"Choose relevant skills: Be specific about what you offer, whether you're an individual or representing a company. This could be anything from graphic design to plumbing services."} />
-          <TextOp style={{marginTop:5}} text={"Use specific terms: Use clear and specific terms to describe what you do. This helps buyers find you easily and understand what you offer."} />
-          <TextOp style={{marginTop:5}} text={"Prioritize your strongest skills: List your best skills first to show buyers what you excel at."} />
-          <TextOp style={{marginTop:5}} text={"Update regularly: Keep your skills list up to date with new experience or skills. This helps you stay relevant and attract new buyers."} />
-          <TextOp style={{marginTop:5}} text={"Be honest: Represent your abilities accurately. Buyers rely on your skills to make informed decisions, so it's important to be honest about what you can and cannot do."} />
-
-          <Text style={[styles.headLine, { marginTop: 36 }]}>
-          Add Skill
-          </Text>
-          <AddBox onChange={e=>{
-            try{
-              setSkill(d=>[...d,e])
-            }catch(e){
-              console.log(e.message)
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={126}
+            position={{
+              top: 47,
+            }}
+            height={layoutHeight}
+            component={
+              <View
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={{ width: "100%" }}>
+                <TextOp
+                  style={{ marginTop: 0 }}
+                  text={
+                    "Choose relevant skills: Be specific about what you offer, whether you're an individual or representing a company. This could be anything from graphic design to plumbing services."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={
+                    "Use specific terms: Use clear and specific terms to describe what you do. This helps buyers find you easily and understand what you offer."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={
+                    "Prioritize your strongest skills: List your best skills first to show buyers what you excel at."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={
+                    "Update regularly: Keep your skills list up to date with new experience or skills. This helps you stay relevant and attract new buyers."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={
+                    "Be honest: Represent your abilities accurately. Buyers rely on your skills to make informed decisions, so it's important to be honest about what you can and cannot do."
+                  }
+                />
+              </View>
             }
-          }}/>
+          />
+          <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
+          <AddBox
+            onChange={(e) => {
+              try {
+                setSkill((d) => [...d, e]);
+              } catch (e) {
+                console.log(e.message);
+              }
+            }}
+          />
           <Text style={styles.text}>Max 25 character </Text>
-          {skills&&skills.length>0&&(
-            <View style={{marginTop:32,flexDirection:"row",flexWrap:"wrap",marginHorizontal:-4}}>
-              {skills.map((doc,i)=>(
-                <BT onDelete={()=>{
-                  setSkill(d=>d.filter((c,j)=>i!=j))
-                }} key={i} title={doc}/>
+          {skills && skills.length > 0 && (
+            <View
+              style={{
+                marginTop: 32,
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginHorizontal: -4,
+              }}>
+              {skills.map((doc, i) => (
+                <BT
+                  onDelete={() => {
+                    setSkill((d) => d.filter((c, j) => i != j));
+                  }}
+                  key={i}
+                  title={doc}
+                />
               ))}
             </View>
           )}
-          <Text style={[styles.text,{marginTop:32,lineHeight:24}]}>Example : Bridge Builder, Business Plans, Graphic design, Events Items, Bike repair, photographer, Baby Care, Business lawyers, Cooking Lessons, Dj Mixing </Text>
-          <IconButton onPress={()=>{
-            navigation.navigate("ServiceDescribe")
-          }} style={styles.button} title={"Continue"} />
+          <Text style={[styles.text, { marginTop: 32, lineHeight: 24 }]}>
+            Example : Bridge Builder, Business Plans, Graphic design, Events
+            Items, Bike repair, photographer, Baby Care, Business lawyers,
+            Cooking Lessons, Dj Mixing{" "}
+          </Text>
+          <IconButton active={length>0?true:false}
+          disabled={length>0?false:true}
+            onPress={() => {
+              navigation.navigate("ServiceDescribe",{
+                data:{
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: data.workingTime,
+                  fullTime: data.fullTime,
+                  price: data.price,
+                  skills:skills
+                }
+              });
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-const AddBox=({onChange})=>{
-  const [text,setText]=useState()
+const AddBox = ({ onChange }) => {
+  const [text, setText] = useState();
 
-  return(
-    <View style={{
-      borderWidth:1,
-      borderRadius:4,
-      flexDirection:"row",
-      height:45,
-      paddingLeft:10,
-      alignItems:"center",
-      borderColor:"#A3A3A3",
-      marginTop:24
-    }}>
-      <TextInput value={text} onChangeText={setText} style={{
-        flex:1,
-
-      }} placeholder="Type Skill"/>
-      <Pressable onPress={()=>{
-        if(!text){
-          return
-        }
-        if(onChange){
-          onChange(text)
-          setText()
-        }
-      }} style={{
-        width:73,
-        backgroundColor:text?"#4ADE80":"#E4E4E4",
-        height:"100%",
-        borderTopRightRadius:4,
-        borderBottomRightRadius:4,
-        justifyContent:"center",
-        alignItems:"center",
-        borderLeftWidth:1,
-        borderLeftColor:"#A3A3A3"
+  return (
+    <View
+      style={{
+        borderWidth: 1,
+        borderRadius: 4,
+        flexDirection: "row",
+        height: 45,
+        paddingLeft: 10,
+        alignItems: "center",
+        borderColor: "#A3A3A3",
+        marginTop: 24,
       }}>
-        <Text style={{
-          fontSize:14,
-          lineHeight:24,
-          color:text?"#ffffff":"#767676"
-        }}>Add</Text>
+      <TextInput
+        value={text}
+        onChangeText={setText}
+        style={{
+          flex: 1,
+        }}
+        placeholder="Type Skill"
+      />
+      <Pressable
+        onPress={() => {
+          if (!text) {
+            return;
+          }
+          if (onChange) {
+            onChange(text);
+            setText();
+          }
+        }}
+        style={{
+          width: 73,
+          backgroundColor: text ? "#4ADE80" : "#E4E4E4",
+          height: "100%",
+          borderTopRightRadius: 4,
+          borderBottomRightRadius: 4,
+          justifyContent: "center",
+          alignItems: "center",
+          borderLeftWidth: 1,
+          borderLeftColor: "#A3A3A3",
+        }}>
+        <Text
+          style={{
+            fontSize: 14,
+            lineHeight: 24,
+            color: text ? "#ffffff" : "#767676",
+          }}>
+          Add
+        </Text>
       </Pressable>
     </View>
-  )
-}
-const BT=({title,onDelete})=>{
-  return(
-    <View style={{
-      borderColor:"#E6E6E6",
-      borderWidth:1,
-      borderRadius:4,
-      padding:8,
-      margin:4
-    }}>
-      <SvgXml onPress={onDelete} style={{
-        position:"absolute",
-        right:-9,
-        top:-9
-      }} xml={dateIcon}/>
+  );
+};
+const BT = ({ title, onDelete }) => {
+  return (
+    <View
+      style={{
+        borderColor: "#E6E6E6",
+        borderWidth: 1,
+        borderRadius: 4,
+        padding: 8,
+        margin: 4,
+      }}>
+      <SvgXml
+        onPress={onDelete}
+        style={{
+          position: "absolute",
+          right: -9,
+          top: -9,
+        }}
+        xml={dateIcon}
+      />
       <Text>{title}</Text>
     </View>
-  )
-}
+  );
+};
 const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_3698_24038" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="353" height="230">
 <path d="M353 0H0V230H353V0Z" fill="white"/>

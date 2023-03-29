@@ -34,7 +34,7 @@ const IconButton = ({
           justifyContent: "center",
           alignItems: "center",
           height: 45,
-          opacity: disabled ? 0.4 : 1,
+          opacity: disabled ? 0.9 : 1,
           borderWidth: active ? 0 : 1,
           borderColor: "#e5e5e5",
         },

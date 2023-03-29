@@ -1,15 +1,16 @@
 import React from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Pressable, StatusBar, Text, View } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 
-export default function CommonHeader({navigation,title}) {
+export default function CommonHeader({navigation,title,no}) {
   return (
     <View style={{
         paddingHorizontal:20,
         flexDirection:"row",
         alignItems:"center",
         paddingVertical:12,
-        justifyContent:"center"
+        justifyContent:"center",
+        //marginTop:!no?StatusBar.currentHeight:0
     }}>
         <Pressable onPress={()=>{
             navigation.goBack()

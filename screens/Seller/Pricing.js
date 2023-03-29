@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -1003,6 +1003,15 @@ export const Days = ({
     let newTime = val.split(":");
     return new Date(`2010-10-10 ${newTime[0]}:${newTime[1]}:00`);
   };
+  useEffect(()=>{
+    if (onChange&& ClosingTime&&OpeningTime) {
+      onChange({
+        title: title,
+        openingTime: OpeningTime,
+        closingTime: ClosingTime,
+      });
+    }
+  },[OpeningTime,ClosingTime])
 
   return (
     <View style={style}>
@@ -1074,13 +1083,13 @@ export const Days = ({
                 setError(null);
                 setOpeningTime(e);
                 setOpen(false);
-                if (onChange) {
-                  onChange({
-                    title: title,
-                    openingTime: e,
-                    closingTime: ClosingTime,
-                  });
-                }
+                // if (onChange && ClosingTime&&OpeningTime) {
+                //   onChange({
+                //     title: title,
+                //     openingTime: OpeningTime,
+                //     closingTime: ClosingTime,
+                //   });
+                // }
               }}
               onCancel={() => {
                 setOpen(false);
@@ -1134,13 +1143,7 @@ export const Days = ({
                 setError(null);
                 setClosingTime(e);
                 setClose(false);
-                if (onChange) {
-                  onChange({
-                    title: title,
-                    openingTime: OpeningTime,
-                    closingTime: e,
-                  });
-                }
+                
               }}
               onCancel={() => {
                 setClose(false);

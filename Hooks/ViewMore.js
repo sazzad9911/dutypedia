@@ -12,161 +12,90 @@ import {
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-function ViewMore({ text, button, id, onChange,title,fontStyle,numberOfLines,style,component }) {
-  const [newHeight, setNewHeight] = useState(100);
-  const [Lines, setLines] = React.useState(3);
-  const [textHeight, setTextHeight] = React.useState(100);
-  const [maxHeight, setMaxHeight] = React.useState(0);
-  const [animation, setAnimation] = React.useState(
-    new Animated.Value(textHeight)
-  );
-  const [detailsText, setDetailsText] = React.useState("");
-  const [size, setSize] = React.useState(125);
-  const [minHeight, setMinHeight] = React.useState(100);
-
-  React.useEffect(() => {
-    
-    if (width < 400 && Platform.OS == "android") {
-      setSize(113);
-      setNewHeight(85);
-      setMinHeight(85);
-    } else {
-      setNewHeight(100);
-      setMinHeight(100);
-    }
-    if(width < 350 && Platform.OS == "android"){
-      setSize(100);
-    }
-    if (width > 400) {
-      setNewHeight(85);
-      setMinHeight(85);
-    }
-    if (width < 400 && Platform.OS == "ios") {
-      setSize(100);
-    }
-  }, []);
+function ViewMore({
+  fontStyle,
+  style,
+  component,
+  height,
+  lowHeight,
+  largeText,
+  smallText,
+  width,
+  position
+}) {
+  const [newHeight, setNewHeight] = useState(lowHeight ? lowHeight : 78);
 
   React.useEffect(() => {
     //console.log(`height: ${width}`)
-
-    if (text) {
-      let totalText = "";
-      let arr = text.split("");
-      arr.map((doc, i) => {
-        if (newHeight == minHeight) {
-          totalText = totalText + `${i < size ? doc : ""}`;
-        } else {
-          totalText = totalText + doc;
-        }
-      });
-      //setDetailsText(text);
-      //console.log(totalText)
-      if (newHeight == minHeight && arr.length > size - 2) {
-        setTimeout(() => {
-          setDetailsText(totalText + `${"..."}`);
-        }, 200);
-        return;
-      } else {
-        setTimeout(() => {
-          setDetailsText(`${text}`);
-        }, 10);
-      }
-    }
-  }, [newHeight + size]);
-  React.useEffect(() => {
-    setTimeout(() => {
-      if (onChange) {
-        onChange(textHeight);
-      }
-    }, 300);
-  }, [textHeight]);
+  }, [newHeight]);
 
   return (
     <MotiView
       transition={{ type: "timing" }}
       animate={{
-        height:
-          newHeight < minHeight
-            ? textHeight
-            : detailsText.split("").length < size
-            ? textHeight + (Platform.OS == "ios" ? 10 : 25)
-            : newHeight,
-        marginBottom: newHeight != minHeight ? 10 : 0,
+        height: newHeight,
       }}
-      style={[{
-        overflow: "hidden",
-        width: "100%",
-        height: "auto",        
-      },style]}
-    >
+      style={[
+        {
+          overflow: "hidden",
+          width: "100%",
+          height: "auto",
+        },
+        style,
+      ]}>
       <Pressable
-        disabled={detailsText.split("").length < size ? true : false}
         onPress={() => {
           // setHeight(calculateHeight(Data?.service.about));
-          if (newHeight === minHeight) {
-            if (onChange) {
-              //onChange(textHeight)
-            }
-            setNewHeight(
-              countTextHeight(text, Platform.OS == "ios" ? 0.6 : 0.7)
-            );
-            //toggleAbout(aboutHeight)
-            //setLines(100);
-          } else {
-            if (onChange) {
-              //onChange(minHeight)
-            }
-            setNewHeight(minHeight);
-            //toggleAbout(aboutHeight)
-            //setLines(3);
-          }
+          setNewHeight((d) => (d == 78 ? height : 78));
         }}
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "center",
           width: "100%",
-          height: "auto",
-        }}
-      >
-        <Animated.Text
-          numberOfLines={newHeight == minHeight ? (numberOfLines?numberOfLines:3) : 200}
-          onLayout={(e) => {
-            setTextHeight(e.nativeEvent.layout.height);
-          }}
-          style={[{
-            fontSize: Platform.OS == "ios" ? 16.5 : 15,
-            textAlign: "justify",
-            fontFamily: "Poppins-Medium",
-            lineHeight: Platform.OS == "ios" ? 30 : 25,
-            width: "100%",
-          },fontStyle]}
-        >
-          {detailsText}
-          {button &&
-            newHeight == minHeight &&
-            detailsText.split("").length > size - 2 && (
-              <Text
-                style={[{
+          overflow:"hidden"
+        }}>
+        {component}
+        {newHeight != height && (
+          <View
+            style={[{
+              position: "absolute",
+              right:0,
+              backgroundColor: "white",
+              width:width?width:Platform.OS=="android"?138: 140,
+              flexDirection: "row",
+              alignItems: "baseline",
+              bottom:Platform.OS=="android"?5:0,
+              height:24
+            },position]}>
+            {newHeight == 78 && <Text>...</Text>}
+            <Text
+              style={[
+                {
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   textAlign: "justify",
-                  fontWeight:"500",
+                  fontWeight: "500",
                   lineHeight: Platform.OS == "ios" ? 30 : 25,
                   color: "#4ADE80",
-                },fontStyle]}
-              >
-                {title?title:"More"}
-              </Text>
-            )}
-        </Animated.Text>
+                  fontWeight: "700",
+                  lineHeight: 24,
+                  fontSize: 16,
+                },
+                fontStyle,
+              ]}>
+              {newHeight == height
+                ? largeText
+                  ? largeText
+                  : "See Less"
+                : smallText
+                ? smallText
+                : "See More..."}
+            </Text>
+          </View>
+        )}
       </Pressable>
+      
     </MotiView>
   );
 }
 export default ViewMore;
-
-const countTextHeight = (text, size) => {
-  let arr = text.split("");
-  let length = arr.length;
-  return length / width;
-};

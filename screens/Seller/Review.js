@@ -137,8 +137,6 @@ const Review = (props) => {
     }
     setLoading(true);
     let blobImages = [];
-    let imageLinks = [];
-    const formData = new FormData();
     Array.isArray(Images) &&
       Images.forEach((image, i) => {
         blobImages.push(fileFromURL(image));

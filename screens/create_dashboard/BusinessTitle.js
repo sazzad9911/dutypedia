@@ -7,23 +7,25 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  StatusBar,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import AnimatedHeight from "../../Hooks/AnimatedHeight";
 import ViewMore from "../../Hooks/ViewMore";
-import ReadMore from "@fawazahmed/react-native-read-more";
 
 export default function BusinessTitle({ navigation }) {
   const [name, setName] = useState();
   const [nameError, setNameError] = useState();
+  const [layoutHeight,setLayoutHeight]=useState(0)
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+        
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -51,27 +53,15 @@ export default function BusinessTitle({ navigation }) {
               Tips for set up the service center name
             </Text>
           </View>
-          {/* <ViewMore
+          <ViewMore
             style={{
               marginTop: 24,
             }}
-            fontStyle={{
-              lineHeight: 24,
-              fontSize: 16,
-              fontWeight: "400",
-            }}
-            button={true}
-            text={text}
-            title={"Read More"}
-          /> */}
-          <ReadMore 
-          animate={true} 
-          ellipsis={"..."}
-          seeMoreStyle={styles.seeMore}
-          seeLessStyle={styles.seeMore}
-          seeMoreText={"See More..."}
-          numberOfLines={3} style={styles.spText}>
-            <Text>
+            width={"37%"}
+            height={layoutHeight}
+            component={<Text onLayout={e=>{
+              setLayoutHeight(e.nativeEvent.layout.height)
+            }} style={[styles.spText,{marginTop:0}]}>
               Please enter the name of your{" "}
               <Text style={{ fontWeight: "700" }}>brand or company</Text> in the
               service name form.{" "}
@@ -83,9 +73,9 @@ export default function BusinessTitle({ navigation }) {
               promote your services to potential buyers. Ensure the name
               accurately reflects your services and does not infringe on others'
               rights. Thank you for choosing our platform!"
-            </Text>
-          </ReadMore>
-
+            </Text>}
+          />
+          
           <Text
             style={[
               styles.headLine,
@@ -118,6 +108,8 @@ export default function BusinessTitle({ navigation }) {
                 serviceCenterName: name,
               });
             }}
+            active={name?true:false}
+            disabled={!name?true:false}
             style={styles.button}
             title={"Contine"}
           />

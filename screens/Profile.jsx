@@ -657,7 +657,7 @@ const MainProfile = (props) => {
   }, [user]);
   React.useEffect(() => {
     setOrders(userOrders);
-    
+   // console.log("ds")
   }, [userOrders + Refresh]);
 
   const pickImage = async () => {
@@ -1173,7 +1173,7 @@ const MainProfile = (props) => {
             ))}
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Category");
+              navigation.navigate("InitialServiceCreate");
             }}
             style={{
               flexDirection: "row",

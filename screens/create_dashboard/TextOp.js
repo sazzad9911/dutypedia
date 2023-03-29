@@ -6,7 +6,8 @@ export default function TextOp({ number, text,style }) {
     <View
       style={[{
         flexDirection: "row",
-        flex: 1,
+        flexWrap:"wrap",
+        
       },style]}>
       {number?(
         <Text

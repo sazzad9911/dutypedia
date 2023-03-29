@@ -218,7 +218,7 @@ const SubCategories = ({ navigation, route }) => {
           borderRadius: 5,
           color: "white",
           backgroundColor:
-            listData && listData.length > 0 ? "#DA1E37" : "#707070",
+            listData && listData.length > 0 ? "#4CD964" : "#707070",
           borderWidth: 0,
           height: 43,
         }}

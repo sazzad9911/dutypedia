@@ -1,5 +1,4 @@
-import ReadMore from "@fawazahmed/react-native-read-more";
-import React, { useState } from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 import {
   ScrollView,
   View,
@@ -10,6 +9,7 @@ import {
   TextInput,
   Dimensions,
   Image,
+  StyleSheet,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -23,11 +23,36 @@ import {
 import IconButton from "../../components/IconButton";
 import TextArea from "../../components/TextArea";
 import { ImageButton } from "../Seller/Service";
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 import Group from "./../../assets/Images/Group.png";
+import ViewMore from "../../Hooks/ViewMore";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { DistrictList } from "../../Data/district";
+import InputButton from "../Vendor/account/InputButton";
+import { AreaList } from "../../Data/area";
 
-export default function Location({ navigation }) {
+export default function Location({ navigation, route }) {
   const [date, setDate] = useState();
+  const data = route?.params?.data;
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const [division, setDivision] = useState();
+  const [district, setDistrict] = useState();
+  const [area, setArea] = useState();
+  const [address, setAddress] = useState();
+  const [index, setIndex] = useState(-1);
+  const bottomSheetRef = useRef(null);
+  const scrollRef = useRef();
+  const [select, setSelect] = useState();
+  const [districtError, setDistrictError] = useState();
+  const [areaError, setAreaError] = useState();
+  // variables
+  const snapPoints = useMemo(() => ["25%", "60%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index) => {
+    //console.log('handleSheetChanges', index);
+    setIndex(index);
+  }, []);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -60,45 +85,162 @@ export default function Location({ navigation }) {
             />
             <Text style={[styles.headLine, { flex: 1 }]}>Tips for address</Text>
           </View>
-          <ReadMore
-            animate={true}
-            ellipsis={"..."}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.seeMore}
-            seeMoreText={"See More..."}
-            numberOfLines={3}
-            style={styles.spText}>
-            <Text>
-              Set Your Address: As a seller, you may need to provide your
-              address for internal purposes. If you are a company, please
-              provide your business address. If you are an individual without a
-              physical service center, you can provide your current location.
-              Please note that your address will not be visible to buyers, it
-              will only be used for internal purposes. day, please enter your
-              preferred working hours instead. This will help buyers determine
-              whether your services fit their needs.
-            </Text>
-          </ReadMore>
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={142}
+            height={layoutHeight}
+            component={
+              <Text
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={[styles.spText, { marginTop: 0 }]}>
+                Set Your Address: As a seller, you may need to provide your
+                address for internal purposes. If you are a company, please
+                provide your business address. If you are an individual without
+                a physical service center, you can provide your current
+                location. Please note that your address will not be visible to
+                buyers, it will only be used for internal purposes. day, please
+                enter your preferred working hours instead. This will help
+                buyers determine whether your services fit their needs.
+              </Text>
+            }
+          />
 
-          <Text style={[styles.headLine, { marginTop: 36 }]}>
-            Address
-          </Text>
-          <Input style={styles.input} placeholder={"Division"} />
-         <View style={{flexDirection:"row",marginTop:8}}>
-            <Input style={[styles.input,{marginTop:0,width:(width/2)-28}]} placeholder="Upazila"/>
-            <Input style={[styles.input,{marginTop:0,width:(width/2)-28,marginLeft:16}]} placeholder="Area"/>
-         </View>
-          <Input style={[styles.input,{marginTop:8}]} placeholder={"Address"}/>
-         
-          <IconButton
+          <Text style={[styles.headLine, { marginTop: 36 }]}>Address</Text>
+          <InputButton
+            value={division}
             onPress={() => {
-              navigation.navigate("About");
+              setSelect("Division");
+              setIndex(1);
+            }}
+            style={styles.input}
+            placeholder={"Division"}
+          />
+
+          <View style={{ flexDirection: "row", marginTop: 8 }}>
+            <InputButton
+              error={districtError}
+              onPress={() => {
+                setDistrictError();
+                setAreaError();
+                if (!division) {
+                  setDistrictError("Select division");
+                  return;
+                }
+                setSelect("District");
+                setIndex(1);
+              }}
+              value={district}
+              style={[styles.input, { marginTop: 0, width: width / 2 - 28 }]}
+              placeholder="District"
+            />
+            <View style={{ width: 16 }} />
+            <InputButton
+              error={areaError}
+              onPress={() => {
+                setDistrictError();
+                setAreaError();
+                if (!district) {
+                  setAreaError("Select district");
+                  return;
+                }
+                setSelect("Area");
+                setIndex(1);
+              }}
+              value={area}
+              style={[styles.input, { marginTop: 0, width: width / 2 - 28 }]}
+              placeholder="Area"
+            />
+          </View>
+          <Input
+            value={address}
+            onChange={setAddress}
+            style={[styles.input, { marginTop: 8 }]}
+            placeholder={"Address"}
+          />
+
+          <IconButton
+            active={division && district && area ? true : false}
+            disabled={division && district && area ? false : true}
+            onPress={() => {
+              navigation.navigate("About", {
+                data: {
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: data.workingTime,
+                  fullTime: data.fullTime,
+                  price: data.price,
+                  skills: data.skills,
+                  serviceTitle: data.serviceTitle,
+                  serviceDescription: data.serviceDescription,
+                  images: data.images,
+                  address: {
+                    division: division,
+                    district: district,
+                    area: area,
+                    address: address,
+                  },
+                },
+              });
             }}
             style={styles.button}
             title={"Continue"}
           />
         </View>
       </ScrollView>
+      {index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#00000010",
+            position: "absolute",
+            width: width,
+            height: height,
+            top: 0,
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={index}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        onChange={handleSheetChanges}>
+        {select == "Division" ? (
+          <Screen
+            onChange={(e) => {
+              setDivision(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={division}
+            type={select}
+          />
+        ) : select == "District" ? (
+          <Screen
+            onChange={(e) => {
+              setDistrict(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={district}
+            type={select}
+            value={division}
+          />
+        ) : (
+          <Screen
+            onChange={(e) => {
+              setArea(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={area}
+            type={select}
+            value={district}
+          />
+        )}
+      </BottomSheet>
     </KeyboardAvoidingView>
   );
 }
@@ -843,3 +985,139 @@ const dateIcon = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xm
 <path d="M7.75 4V6.25M18.25 4V6.25M4 19.75V8.5C4 7.90326 4.23705 7.33097 4.65901 6.90901C5.08097 6.48705 5.65326 6.25 6.25 6.25H19.75C20.3467 6.25 20.919 6.48705 21.341 6.90901C21.7629 7.33097 22 7.90326 22 8.5V19.75M4 19.75C4 20.3467 4.23705 20.919 4.65901 21.341C5.08097 21.7629 5.65326 22 6.25 22H19.75C20.3467 22 20.919 21.7629 21.341 21.341C21.7629 20.919 22 20.3467 22 19.75M4 19.75V12.25C4 11.6533 4.23705 11.081 4.65901 10.659C5.08097 10.2371 5.65326 10 6.25 10H19.75C20.3467 10 20.919 10.2371 21.341 10.659C21.7629 11.081 22 11.6533 22 12.25V19.75M13 13.75H13.008V13.758H13V13.75ZM13 16H13.008V16.008H13V16ZM13 18.25H13.008V18.258H13V18.25ZM10.75 16H10.758V16.008H10.75V16ZM10.75 18.25H10.758V18.258H10.75V18.25ZM8.5 16H8.508V16.008H8.5V16ZM8.5 18.25H8.508V18.258H8.5V18.25ZM15.25 13.75H15.258V13.758H15.25V13.75ZM15.25 16H15.258V16.008H15.25V16ZM15.25 18.25H15.258V18.258H15.25V18.25ZM17.5 13.75H17.508V13.758H17.5V13.75ZM17.5 16H17.508V16.008H17.5V16Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
+const Screen = ({ select, value, onChange, onClose, type }) => {
+  //console.log(value)
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}>
+      <Text
+        style={{
+          marginVertical: 12,
+          fontWeight: "400",
+          fontSize: 20,
+          width: "100%",
+          textAlign: "center",
+        }}>
+        {type ? type : "Division"}
+      </Text>
+      <BottomSheetScrollView
+        contentContainerStyle={{
+          backgroundColor: "#ffffff",
+        }}>
+        {type == "Division" &&
+          DistrictList.map((doc, i) => (
+            <Pressable
+              onPress={() => {
+                if (onChange) {
+                  onChange(doc.title);
+                }
+              }}
+              style={newStyles.box}
+              key={i}>
+              <Text style={newStyles.textSp}>{doc.title}</Text>
+              {select == doc.title && <SvgXml xml={tick} />}
+            </Pressable>
+          ))}
+        {type == "District" &&
+          DistrictList.filter((d) => d.title.match(value))[0].data.map(
+            (doc, i) => (
+              <Pressable
+                onPress={() => {
+                  if (onChange) {
+                    onChange(doc);
+                  }
+                }}
+                style={newStyles.box}
+                key={i}>
+                <Text style={newStyles.textSp}>{doc}</Text>
+                {select == doc && <SvgXml xml={tick} />}
+              </Pressable>
+            )
+          )}
+        {type == "Area" &&
+          AreaList.filter((d) => d.title.match(value))[0].data.map((doc, i) => (
+            <Pressable
+              onPress={() => {
+                if (onChange) {
+                  onChange(doc);
+                }
+              }}
+              style={newStyles.box}
+              key={i}>
+              <Text style={newStyles.textSp}>{doc}</Text>
+              {select == doc && <SvgXml xml={tick} />}
+            </Pressable>
+          ))}
+      </BottomSheetScrollView>
+      <IconButton
+        onPress={onClose}
+        style={{
+          marginBottom: 20,
+          backgroundColor: "#4ADE80",
+          marginHorizontal: 8,
+          color: "white",
+        }}
+        title={"Done"}
+      />
+      <View style={{ height: 15 }} />
+    </View>
+  );
+};
+const tick = `<svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.725 1.22423C14.055 0.885479 14.5413 0.664229 15.0188 0.792979C15.5688 0.907979 15.9525 1.42673 16 1.97298V2.03548C15.9688 2.44423 15.7487 2.80423 15.46 3.08298C12.5825 5.95548 9.7075 8.82923 6.835 11.7042C6.54625 11.993 6.18625 12.263 5.75625 12.2442C5.325 12.2605 4.9625 11.9917 4.67375 11.7017C3.30125 10.3267 1.9275 8.95298 0.55125 7.58298C0.2625 7.30423 0.0375 6.94798 0 6.54048V6.47923C0.03875 5.92298 0.42875 5.39423 0.9875 5.28048C1.46625 5.15173 1.95125 5.37923 2.28125 5.71923C3.44375 6.87298 4.59625 8.03673 5.75875 9.19048C8.41625 6.53798 11.0662 3.87798 13.725 1.22423Z" fill="#4ADE80"/>
+</svg>
+`;
+const newStyles = StyleSheet.create({
+  text: {
+    fontSize: 20,
+    fontWeight: "400",
+  },
+  input: {
+    borderColor: "#A3A3A3",
+    padding: 0,
+    borderWidth: 1,
+    marginHorizontal: 0,
+    marginVertical: 0,
+  },
+  radio: {
+    height: 16,
+    width: 16,
+  },
+  padding: {
+    paddingLeft: 20,
+  },
+  textArea: {
+    paddingHorizontal: 20,
+    minHeight: 60,
+    marginTop: 16,
+    borderColor: "#A3A3A3",
+    width: "100%",
+  },
+  button: {
+    borderRadius: 4,
+    backgroundColor: "#4ADE80",
+    height: 44,
+    color: "white",
+    marginTop: 28,
+  },
+  box: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderBottomColor: "#F1EFEF",
+    borderBottomWidth: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  textSp: {
+    color: "#484848",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 19,
+  },
+  errorText: {
+    color: "red",
+    marginTop: 2,
+  },
+});

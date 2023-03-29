@@ -21,9 +21,14 @@ import {
 import IconButton from "../../components/IconButton";
 import customStyle from "../../assets/stylesheet";
 import TextOp from "./TextOp";
+import ViewMore from "../../Hooks/ViewMore";
 
-export default function NewPricing({ navigation }) {
-  const [date, setDate] = useState();
+export default function NewPricing({ navigation, route }) {
+  const [price, setPrice] = useState();
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const data = route?.params?.data;
+  const [priceError,setPriceError]=useState()
+  
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -52,21 +57,90 @@ export default function NewPricing({ navigation }) {
               Tips for set up the price
             </Text>
           </View>
-          
-          <TextOp style={{marginTop:24}} number={'1.'} text={"Determine your value and research market rates."}/>
-          <TextOp style={{marginTop:5}} number={'2.'} text={"Consider your target audience and set a starting fee that is competitive but not undervaluing your services."}/>
-          <TextOp style={{marginTop:5}} number={'3.'} text={"Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project."}/>
-          <TextOp style={{marginTop:5}} number={'4.'} text={"Allow for flexibility in your pricing based on the specific needs of each buyer."}/>
-          <TextOp style={{marginTop:5}} number={'5.'} text={"Regularly evaluate and adjust your pricing strategy to remain competitive in the market."}/>
-         
+
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={167}
+            position={{
+              bottom: layoutHeight - 75,
+            }}
+            height={layoutHeight}
+            component={
+              <View
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={{ width: "100%" }}>
+                <TextOp
+                  style={{ marginTop: 0, minHeight: 0 }}
+                  number={"1."}
+                  text={"Determine your value and research market rates."}
+                />
+                <TextOp
+                  style={{ marginTop: 5, minHeight: 20 }}
+                  number={"2."}
+                  text={
+                    "Consider your target audience and set a starting fee that is competitive but not undervaluing your services."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5, minHeight: 20 }}
+                  number={"3."}
+                  text={
+                    "Communicate your starting fee clearly to potential buyers, and explain any additional charges based on the scope of the project."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"4."}
+                  text={
+                    "Allow for flexibility in your pricing based on the specific needs of each buyer."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"5."}
+                  text={
+                    "Regularly evaluate and adjust your pricing strategy to remain competitive in the market."
+                  }
+                />
+              </View>
+            }
+          />
+
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Starting price
           </Text>
-          <Input keyboardType={"number-pad"} style={styles.input} placeholder={"00.00 ৳"} />
-          <Text  style={styles.text}>Minimum 50.00 ৳ </Text>
+          <Input error={priceError}
+
+            value={price}
+            onChange={setPrice}
+            keyboardType={"number-pad"}
+            style={styles.input}
+            placeholder={"00.00 ৳"}
+          />
+          <Text style={styles.text}>Minimum 50.00 ৳ </Text>
           <IconButton
+            disabled={price ? false : true}
+            active={price ? true : false}
             onPress={() => {
-              navigation.navigate("Skills");
+              if(parseInt(price)<50){
+                setPriceError("*Minimum 50 taka required")
+                return
+              }
+              navigation.navigate("Skills", {
+                data: {
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: data.workingTime,
+                  fullTime: data.fullTime,
+                  price: price,
+                },
+              });
             }}
             style={styles.button}
             title={"Continue"}

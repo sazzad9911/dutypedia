@@ -20,10 +20,12 @@ import { updateData } from "../../Class/update";
 import { vendorLogin } from "../../Class/auth";
 import { StatusBar } from "expo-status-bar";
 import ActivityLoader from "../../components/ActivityLoader";
+import { allTimeConverter, timeConverter } from "../../action";
 
 const CompanyCalendar = (props) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
-  const vendor = props.route.params.vendor;
+  const vendor = props?.route?.params?.vendor;
+  const workingTime=props?.route?.params?.workingTime;
   const navigation = props.navigation;
   const [Times, setTimes] = React.useState(false);
   const [Days, setDays] = React.useState();
@@ -33,7 +35,11 @@ const CompanyCalendar = (props) => {
   const [Loader,setLoader]=React.useState(false)
 
   React.useEffect(() => {
-    if (vendor && vendor.service && vendor.service.workingTime.length == 0) {
+    if (vendor && vendor?.service && vendor?.service?.workingTime.length == 0) {
+      setTimes(true);
+    }
+    
+    if(workingTime&&workingTime.length==0){
       setTimes(true);
     }
     //console.log(vendor.service.workingTime)
@@ -129,7 +135,7 @@ const CompanyCalendar = (props) => {
           width="80%"
         />
         {Edit ? (
-          <ViewBox navigation={navigation} setEdit={setEdit} times={vendor.service.workingTime} />
+          <ViewBox navigation={navigation} setEdit={setEdit} times={vendor?vendor.service.workingTime:workingTime} />
         ) : (
           <Animated.View
             entering={SlideInLeft}
@@ -162,7 +168,7 @@ const CompanyCalendar = (props) => {
               <Cart key={i} value={doc} />
             ))} */}
             {days.map((times, i) => (
-              <Cart times={vendor.service.workingTime} key={i} day={times} />
+              <Cart times={vendor?vendor.service.workingTime:workingTime} key={i} day={times} />
             ))}
           </Animated.View>
         )}
@@ -322,21 +328,40 @@ const Cart = ({ value, day, times }) => {
   //const text=times.length==0?"24/7 day":null;
   const [Time, setTime] = React.useState();
   React.useEffect(() => {
-    try {
-      if (times.length == 0) {
-        setTime("24/7 days");
-      } else {
-        let arr = times.filter((d) =>
-          d.day.toUpperCase().match(day.toUpperCase())
-        );
-        if (arr.length == 0) {
-          setTime("Close");
+    if(times[0].title){
+      try {
+        if (times.length == 0) {
+          setTime("24/7 days");
         } else {
-          setTime(convertTime(arr[0].open) + " - " + convertTime(arr[0].close));
+          let arr = times.filter((d) =>
+            d.title.toUpperCase().match(day.toUpperCase())
+          );
+          if (arr.length == 0) {
+            setTime("Close");
+          } else {
+            setTime(timeConverter(arr[0].openingTime) + " - " + timeConverter(arr[0].closingTime));
+          }
         }
+      } catch (err) {
+        console.warn(err.message);
       }
-    } catch (err) {
-      console.warn(err.message);
+    }else{
+      try {
+        if (times.length == 0) {
+          setTime("24/7 days");
+        } else {
+          let arr = times.filter((d) =>
+            d.day.toUpperCase().match(day.toUpperCase())
+          );
+          if (arr.length == 0) {
+            setTime("Close");
+          } else {
+            setTime(convertTime(arr[0].open) + " - " + convertTime(arr[0].close));
+          }
+        }
+      } catch (err) {
+        console.warn(err.message);
+      }
     }
   }, []);
   return (

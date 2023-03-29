@@ -22,10 +22,22 @@ import {
 import IconButton from "../../components/IconButton";
 import TextArea from "../../components/TextArea";
 import { ImageButton } from "../Seller/Service";
+import ViewMore from "../../Hooks/ViewMore";
+import TextOp from "./TextOp";
 const {width}=Dimensions.get("window")
 
-export default function ServiceDescribe({ navigation }) {
-  const [date, setDate] = useState();
+export default function ServiceDescribe({ navigation,route }) {
+  const [serviceTitle,setServiceTitle]=useState()
+  const [serviceDescription,setServiceDescription]=useState()
+  const [firstImage,setFirstImage]=useState()
+  const [secondImage,setSecondImage]=useState()
+  const [thirdImage,setThirdImage]=useState()
+  const [forthImage,setForthImage]=useState()
+  const [serviceTitleError,setServiceTitleError]=useState()
+  const [serviceDescriptionError,setServiceDescriptionError]=useState()
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const data=route?.params?.data;
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -54,35 +66,73 @@ export default function ServiceDescribe({ navigation }) {
               Tips for title, service describe & photo
             </Text>
           </View>
-          <Text style={styles.spText}>
-            . Determine your value and research market rates.
-          </Text>
-          <Text style={[styles.spText, { marginTop: 5 }]}>
-            2. Consider your target audience and set a starting fee that is
-            competitive but not undervaluing your services.
-          </Text>
-          <Text style={[styles.spText, { marginTop: 5 }]}>
-            3. Communicate your starting fee clearly to potential buyers, and
-            explain any additional charges based on the scope of the project.
-          </Text>
-          <Text style={[styles.spText, { marginTop: 5 }]}>
-            4. Allow for flexibility in your pricing based on the specific needs
-            of each buyer.
-          </Text>
-          <Text style={[styles.spText, { marginTop: 5 }]}>
-            5. Regularly evaluate and adjust your pricing strategy to remain
-            competitive in the market.
-          </Text>
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={145}
+            position={{
+              top: 47,
+            }}
+            height={layoutHeight}
+            component={
+              <View
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={{ width: "100%" }}>
+                <TextOp
+                  style={{ marginTop: 0 }}
+                  number={"1."}
+                  text={
+                    "Optimize Your Title: Craft a clear and compelling title that accurately represents your service. This is the first thing buyers will see, so make it count."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"2."}
+                  text={
+                    "Showcase Your Best Work: Choose high-quality photos that showcase your best work. This will help buyers visualize what you offer and build trust in your abilities."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"3."}
+                  text={
+                    "Use Descriptive Language: Use descriptive language to highlight the unique features and benefits of your service. Avoid technical jargon and focus on the value you can provide to buyers."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"4."}
+                  text={
+                    "Keep Your Listing Updated: Regularly update your service listing to reflect any changes or improvements to your offering. This will help you stay relevant and attract new buyers."
+                  }
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  number={"5."}
+                  text={
+                    "We're here to help you succeed on our platform. If you have any questions or need further assistance, please don't hesitate to contact our support team. Thank you for being a part of our marketplace community!"
+                  }
+                />
+              </View>
+            }
+          />
+          
 
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Service title
           </Text>
-          <Input style={styles.input} placeholder={"Type service title"} />
+          <Input value={serviceTitle} 
+          onChange={setServiceTitle}
+          error={serviceTitleError}
+           style={styles.input} placeholder={"Type service title"} />
           <Text style={styles.text}>Max 100 characters </Text>
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Service Description
           </Text>
-          <TextArea
+          <TextArea value={serviceDescription}
+          onChange={setServiceDescription}
+          error={serviceDescriptionError}
             placeholder={"Describe your service"}
             style={styles.input}
           />
@@ -92,25 +142,56 @@ export default function ServiceDescribe({ navigation }) {
             flexDirection:"row",
             marginTop:24
           }}>
-            <ImageButton style={{
+            <ImageButton value={firstImage} onChange={setFirstImage} style={{
               width:(width-64)/4
             }} />
-            <ImageButton style={{
+            <ImageButton value={secondImage} 
+            onChange={setSecondImage}
+             style={{
               marginLeft:8,
               width:(width-64)/4
             }}/>
-            <ImageButton style={{
+            <ImageButton value={thirdImage}
+            onChange={setThirdImage}
+             style={{
               marginLeft:8,
               width:(width-64)/4
             }}/>
-            <ImageButton style={{
+            <ImageButton value={forthImage}
+            onChange={setForthImage}
+             style={{
               marginLeft:8,
               width:(width-64)/4
             }}/>
           </View>
-          <IconButton
+          <IconButton active={firstImage&&secondImage&&thirdImage&&forthImage&&serviceTitle&&serviceDescription?true:false}
+          disabled={firstImage&&secondImage&&thirdImage&&forthImage&&serviceTitle&&serviceDescription?false:true}
             onPress={() => {
-              navigation.navigate("Location");
+              if(serviceTitle.split("").length>100){
+                serviceTitleError("*Max 100 character required")
+                return
+              }
+              if(serviceDescription.split("").length>1000){
+                setServiceDescriptionError("*Max 1000 character required")
+                return
+              }
+              navigation.navigate("Location",{
+                data:{
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: data.workingTime,
+                  fullTime: data.fullTime,
+                  price: data.price,
+                  skills:data.skills,
+                  serviceTitle:serviceTitle,
+                  serviceDescription:serviceDescription,
+                  images:[firstImage,secondImage,thirdImage,forthImage]
+                }
+              });
             }}
             style={styles.button}
             title={"Continue"}

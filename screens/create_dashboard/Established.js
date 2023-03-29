@@ -1,4 +1,3 @@
-import ReadMore from "@fawazahmed/react-native-read-more";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -19,9 +18,13 @@ import {
   serverTimeToLocalDate,
 } from "../../action";
 import IconButton from "../../components/IconButton";
+import ViewMore from "../../Hooks/ViewMore";
 
-export default function Established({ navigation }) {
+export default function Established({ navigation, route }) {
   const [date, setDate] = useState();
+  const data = route?.params?.data;
+  const [layoutHeight,setLayoutHeight]=useState(0)
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -46,37 +49,53 @@ export default function Established({ navigation }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine,{flex:1}]}>
+            <Text style={[styles.headLine, { flex: 1 }]}>
               Tips for set up the established/starting date
             </Text>
           </View>
-          <ReadMore
-            animate={true}
-            ellipsis={"..."}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.seeMore}
-            seeMoreText={"See More..."}
-            numberOfLines={3}
-            style={styles.spText}>
-            <Text>
-              Please provide the establishment date of your company.{" "}
-              <Text style={{ fontWeight: "700" }}>
-                If you are an individual
-              </Text>{" "}
-              without a company, please enter the date you started working as a
-              freelancer or the current date. Note that this field cannot be
-              left blank, as it helps us connect you with the right buyers and
-              sellers. Thanks for choosing our marketplace, and we look forward
-              to helping you succeed!
-            </Text>
-          </ReadMore>
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={145}
+            height={layoutHeight}
+            component={
+              <Text onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)} 
+              style={[styles.spText,{marginTop:0}]}>
+                Please provide the establishment date of your company.{" "}
+                <Text style={{ fontWeight: "700" }}>
+                  If you are an individual
+                </Text>{" "}
+                without a company, please enter the date you started working as
+                a freelancer or the current date. Note that this field cannot be
+                left blank, as it helps us connect you with the right buyers and
+                sellers. Thanks for choosing our marketplace, and we look
+                forward to helping you succeed!
+              </Text>
+            }
+          />
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Established/starting date
           </Text>
           <CustomInput value={date} onChange={setDate} />
-          <IconButton onPress={()=>{
-            navigation.navigate("WorkingTime")
-          }} style={styles.button} title={"Continue"} />
+          <IconButton
+            active={date ? true : false}
+            disabled={date ? false : true}
+            onPress={() => {
+              navigation.navigate("WorkingTime",{
+                data:{
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam:data.numberOfTeam,
+                  established:date,
+                }
+              });
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

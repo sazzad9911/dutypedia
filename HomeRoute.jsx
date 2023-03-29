@@ -53,6 +53,19 @@ import SubscriptionService from "./screens/SubscriptionService";
 import InstallmentService from "./screens/InstallmentService";
 import UserNotice from "./screens/UserNotice";
 import Feed from "./screens/Feed";
+import CommonHeader from "./screens/create_dashboard/CommonHeader";
+import FinalReview from "./screens/create_dashboard/FinalReview";
+import About from "./screens/create_dashboard/About";
+import Location from "./screens/create_dashboard/Location";
+import ServiceDescribe from "./screens/create_dashboard/ServiceDescribe";
+import Skills from "./screens/create_dashboard/Skills";
+import NewPricing from "./screens/create_dashboard/NewPricing";
+import WorkingTime from "./screens/create_dashboard/WorkingTime";
+import Established from "./screens/create_dashboard/Established";
+import StakeHolder from "./screens/create_dashboard/StakeHolder";
+import YourInformation from "./screens/create_dashboard/YourInformation";
+import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
+import InitialPage from "./screens/create_dashboard/InitialPage";
 
 const Stack = createStackNavigator();
 
@@ -108,7 +121,7 @@ const HomeRoute = ({ navigation }) => {
           component={Feed}
         />
       )}
-      
+
       <Stack.Screen
         name="AllPackageList"
         options={{
@@ -201,6 +214,102 @@ const HomeRoute = ({ navigation }) => {
           headerShown: false,
         }}
         component={UserNotice}
+      />
+
+      {
+        //service screen
+      }
+      <Stack.Screen
+        options={{
+          header: (props) => (
+            <CommonHeader no={true} {...props} title={"Business account"} />
+          ),
+        }}
+        name="InitialServiceCreate"
+        component={InitialPage}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Business Title"} />
+          ),
+        }}
+        name="BusinessTitle"
+        component={BusinessTitle}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Your Information"} />
+          ),
+        }}
+        name="YourInformation"
+        component={YourInformation}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Stakeholder"} />,
+        }}
+        name="Stakeholder"
+        component={StakeHolder}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Established"} />,
+        }}
+        name="Established"
+        component={Established}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Working Time"} />,
+        }}
+        name="WorkingTime"
+        component={WorkingTime}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Pricing"} />,
+        }}
+        name="NewPricing"
+        component={NewPricing}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Skills"} />,
+        }}
+        name="Skills"
+        component={Skills}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Service Describe"} />
+          ),
+        }}
+        name="ServiceDescribe"
+        component={ServiceDescribe}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Location"} />,
+        }}
+        name="Location"
+        component={Location}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"About"} />,
+        }}
+        name="About"
+        component={About}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="FinalReview"
+        component={FinalReview}
       />
     </Stack.Navigator>
   );

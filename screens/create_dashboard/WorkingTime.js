@@ -1,5 +1,4 @@
-import ReadMore from "@fawazahmed/react-native-read-more";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -21,8 +20,9 @@ import {
 import IconButton from "../../components/IconButton";
 import { CheckBox, Days } from "../Seller/Pricing";
 import Animated, { FadeIn } from "react-native-reanimated";
+import ViewMore from "../../Hooks/ViewMore";
 
-export default function WorkingTime({ navigation }) {
+export default function WorkingTime({ navigation, route }) {
   const [checked, setChecked] = useState();
   const [visible, setVisible] = React.useState({
     title: "",
@@ -31,7 +31,11 @@ export default function WorkingTime({ navigation }) {
   const [Times, setTimes] = React.useState([]);
   const [TimesError, setTimesError] = React.useState([]);
   const [TimeError, setTimeError] = React.useState();
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const data = route?.params?.data;
+  const [time, setTime] = useState(0);
 
+  useEffect(() => {}, [Times.length]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -60,26 +64,29 @@ export default function WorkingTime({ navigation }) {
               Tips for set up the working time
             </Text>
           </View>
-          <ReadMore
-            animate={true}
-            ellipsis={"..."}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.seeMore}
-            seeMoreText={"See More..."}
-            numberOfLines={3}
-            style={styles.spText}>
-            <Text>
-              We require information on your working time to help potential
-              buyers understand when you're available to provide your services.
-              If you are a <Text style={{ fontWeight: "700" }}>company</Text>,
-              please input your working hours as accurately as possible. If you
-              are an <Text style={{ fontWeight: "700" }}>individual</Text>,
-              please enter the days and times when you are usually available to
-              work. However, if you have a flexible schedule or can work any
-              day, please enter your preferred working hours instead. This will
-              help buyers determine whether your services fit their needs.
-            </Text>
-          </ReadMore>
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={142}
+            height={layoutHeight}
+            component={
+              <Text
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={[styles.spText, { marginTop: 0 }]}>
+                We require information on your working time to help potential
+                buyers understand when you're available to provide your
+                services. If you are a{" "}
+                <Text style={{ fontWeight: "700" }}>company</Text>, please input
+                your working hours as accurately as possible. If you are an{" "}
+                <Text style={{ fontWeight: "700" }}>individual</Text>, please
+                enter the days and times when you are usually available to work.
+                However, if you have a flexible schedule or can work any day,
+                please enter your preferred working hours instead. This will
+                help buyers determine whether your services fit their needs.
+              </Text>
+            }
+          />
           <View
             style={{
               flexDirection: "row",
@@ -100,7 +107,7 @@ export default function WorkingTime({ navigation }) {
               }}
             />
           </View>
-          <View style={{height:24}}/>
+          <View style={{ height: 24 }} />
           {!checked ? (
             <Animated.View entering={FadeIn}>
               <Days
@@ -110,6 +117,7 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[0] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Saturday"
@@ -121,10 +129,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[1] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Sunday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
               <Days
                 value={Times}
@@ -133,10 +142,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[2] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Monday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
               <Days
                 value={Times}
@@ -145,10 +155,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[3] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Tuesday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
               <Days
                 value={Times}
@@ -157,10 +168,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[4] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Wednesday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
               <Days
                 value={Times}
@@ -169,10 +181,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[5] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Thursday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
               <Days
                 value={Times}
@@ -181,10 +194,11 @@ export default function WorkingTime({ navigation }) {
                   let arr = Times;
                   arr[6] = val;
                   setTimes(arr);
+                  setTime((d) => d + 1);
                 }}
                 setVisible={setVisible}
                 title="Friday"
-                style={{marginTop:16}}
+                style={{ marginTop: 16 }}
               />
             </Animated.View>
           ) : (
@@ -203,8 +217,29 @@ export default function WorkingTime({ navigation }) {
             </Text>
           )}
           <IconButton
+            active={checked || time > 0 ? true : false}
+            disabled={checked || time ? false : true}
             onPress={() => {
-              navigation.navigate("NewPricing");
+              console.log(Times);
+
+              if (!checked && Times.length == 0) {
+                setTimeError("Please select any time");
+                //scrollingTo(250);
+                return;
+              }
+
+              navigation.navigate("NewPricing", {
+                data: {
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: Times,
+                  fullTime: checked,
+                },
+              });
             }}
             style={styles.button}
             title={"Continue"}

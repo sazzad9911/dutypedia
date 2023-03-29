@@ -1,5 +1,5 @@
 import ReadMore from "@fawazahmed/react-native-read-more";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -29,9 +29,11 @@ const { width } = Dimensions.get("window");
 import Group from "./../../assets/Images/Group.png";
 import { CheckBox } from "../Seller/Pricing";
 import customStyle from "../../assets/stylesheet";
+import ViewMore from "../../Hooks/ViewMore";
 
-export default function About({ navigation }) {
+export default function About({ navigation,route }) {
   const [date, setDate] = useState();
+  const data=route?.params?.data;
   const [Service, setService] = React.useState([
     {
       id: 1,
@@ -51,6 +53,11 @@ export default function About({ navigation }) {
   ]);
   const [ServiceError, setServiceError] = React.useState();
   const [buttonVisible, setButtonVisible] = React.useState(false);
+  const [layoutHeight,setLayoutHeight]=useState(0)
+  const [about,setAbout]=useState(text)
+  const [length,setLength]=useState(0)
+
+
 
   return (
     <KeyboardAvoidingView
@@ -80,15 +87,15 @@ export default function About({ navigation }) {
               Tips for about your business
             </Text>
           </View>
-          <ReadMore
-            animate={true}
-            ellipsis={"..."}
-            seeMoreStyle={styles.seeMore}
-            seeLessStyle={styles.seeMore}
-            seeMoreText={"See More..."}
-            numberOfLines={3}
-            style={styles.spText}>
-            <Text>
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            width={142}
+            height={layoutHeight}
+            component={
+              <Text onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)} 
+              style={[styles.spText,{marginTop:0}]}>
               Introduce your business and what makes it unique. Share your
               goals, vision, and what you can offer to potential buyers in a
               genuine way that reflects your business's personality and values.
@@ -97,14 +104,16 @@ export default function About({ navigation }) {
               with any changes to your business, to help you stay relevant and
               attract new buyers.
             </Text>
-          </ReadMore>
-
+            }
+          />
+          
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             About Your Business
           </Text>
           <TextArea
             style={styles.input}
-            value={text}
+            value={about}
+            onChange={setAbout}
             placeholder={"Type here"}
           />
           <View>
@@ -134,7 +143,7 @@ export default function About({ navigation }) {
                       id: i + 1,
                     };
                     setService(arr);
-                    setChange(!change);
+                    //setChange(!change);
                     //console.log(arr);
                   }}
                 />
@@ -168,9 +177,33 @@ export default function About({ navigation }) {
               />
             )}
           </View>
-          <IconButton
+          <IconButton active={about?true:false}
+          disabled={about?false:true}
             onPress={() => {
-              navigation.navigate("FinalReview");
+              if(Service.filter(d=>d.checked==true).length==0){
+                setServiceError("Select any facilities")
+                return
+              }
+              navigation.navigate("FinalReview",{
+                data:{
+                  serviceCenterName: data.serviceCenterName,
+                  providerName: data.providerName,
+                  gender: data.gender,
+                  position: data.position,
+                  numberOfTeam: data.numberOfTeam,
+                  established: data.established,
+                  workingTime: data.workingTime,
+                  fullTime: data.fullTime,
+                  price: data.price,
+                  skills:data.skills,
+                  serviceTitle:data.serviceTitle,
+                  serviceDescription:data.serviceDescription,
+                  images:data.images,
+                  address:data.address,
+                  about:about,
+                  facilities:Service.filter(d=>d.checked==true)
+                }
+              });
             }}
             style={styles.button}
             title={"Continue"}

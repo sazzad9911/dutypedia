@@ -15,8 +15,10 @@ const { width, height } = Dimensions.get("window");
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
-const VendorAddress = () => {
+const VendorAddress = ({route}) => {
   const vendor = useSelector((state) => state.vendor);
+  const address=route?.params?.address;
+
   return (
     <View style={{ flex: 1 }}>
       <SvgXml
@@ -46,15 +48,15 @@ const VendorAddress = () => {
         >
           <Options
             title={"City"}
-            subTitle={vendor ? vendor.location.region : ""}
+            subTitle={vendor ? vendor.location.region:address?address.division : ""}
           />
           <Options
             title={"District"}
-            subTitle={vendor ? vendor.location.city : ""}
+            subTitle={vendor ? vendor.location.city:address?address.district : ""}
           />
           <Options
             title={"Area"}
-            subTitle={vendor ? vendor.location.area : ""}
+            subTitle={vendor ? vendor.location.area:address?address.area : ""}
           />
           {vendor && vendor.location.address && (
             <View
@@ -96,6 +98,8 @@ const styles = StyleSheet.create({
   },
 });
 const Options = ({ title, subTitle,onPress }) => {
+  const vendor=useSelector(state=>state.vendor)
+
   return (
     <View
       style={{
@@ -124,13 +128,15 @@ const Options = ({ title, subTitle,onPress }) => {
           {subTitle}
         </Text>
       </View>
-      <TouchableOpacity onPress={()=>{
-        if(onPress){
-            onPress()
-        }
-      }}>
-        <FontAwesome5 name="edit" size={20} color={textColor} />
-      </TouchableOpacity>
+      {vendor&&(
+        <TouchableOpacity onPress={()=>{
+          if(onPress){
+              onPress()
+          }
+        }}>
+          <FontAwesome5 name="edit" size={20} color={textColor} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  StatusBar,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import DropDown from "../../components/DropDown";
@@ -18,16 +19,15 @@ import ViewMore from "../../Hooks/ViewMore";
 import { icon, styles } from "./BusinessTitle";
 const { width, height } = Dimensions.get("window");
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
-import ReadMore from "@fawazahmed/react-native-read-more";
 import { AutoComplete } from "./AutoComplete";
+import OutsideView from "react-native-detect-press-outside";
 
 export default function YourInformation({ navigation, route }) {
   const [name, setName] = useState();
   const [gender, setGender] = useState();
   const [position, setPosition] = useState();
   const [nameError, setNameError] = useState();
-  const [genderError, setGenderError] = useState();
-  const [positionError, setPositionError] = useState();
+
   const PositionData = [
     {
       title: "Administrative Assistant",
@@ -71,102 +71,138 @@ export default function YourInformation({ navigation, route }) {
     },
   ];
   const genderData = ["Male", "Female", "Other"];
-  const [Positions, setPositions] = React.useState([]);
-  const [SelectedPositions, setSelectedPositions] = React.useState();
   const [genderPress, setGenderPress] = useState(false);
+  const [layoutHeight, setLayoutHeight] = useState(0);
+  const childRef = useRef();
+  const serviceCenterName = route?.params?.serviceCenterName;
+  const suggestionBox = useRef();
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      
       <ScrollView
         style={{
           paddingHorizontal: 20,
         }}
         showsVerticalScrollIndicator={false}>
-        <SvgXml style={{ marginTop: 24 }} width={"100%"} xml={vectorImage} />
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            marginTop: 36,
+        <OutsideView
+          childRef={childRef}
+          onPressOutside={() => {
+            setGenderPress(false);
+            // handle press outside of childRef event
           }}>
-          <SvgXml style={{ marginRight: 8 }} xml={icon} />
-          <Text style={[styles.headLine, { flex: 1 }]}>
-            Tips for set up your information
-          </Text>
-        </View>
-        {/* <ViewMore
-          style={{
-            marginTop: 24,
-          }}
-          fontStyle={{
-            lineHeight: 24,
-            fontSize: 16,
-            fontWeight: "400",
-          }}
-          button={true}
-          text={text}
-          title={"Read More"}
-        /> */}
-        <ReadMore
-          animate={true}
-          ellipsis={"..."}
-          seeMoreStyle={styles.seeMore}
-          seeLessStyle={styles.seeMore}
-          seeMoreText={"See More..."}
-          numberOfLines={3}
-          style={styles.spText}>
-          <Text>
-            If you are registering as an{" "}
-            <Text style={{ fontWeight: "700" }}>individual</Text>, simply fill
-            in your name and gender, and for the "position" field, you can enter
-            any title or role that best describes you, such as{" "}
-            <Text style={{ fontWeight: "700" }}>
-              "freelancer" or "consultant."
+          <SvgXml style={{ marginTop: 24 }} width={"100%"} xml={vectorImage} />
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              marginTop: 36,
+            }}>
+            <SvgXml style={{ marginRight: 8 }} xml={icon} />
+            <Text style={[styles.headLine, { flex: 1 }]}>
+              Tips for set up your information
             </Text>
-            If you are registering as a{" "}
-            <Text style={{ fontWeight: "700" }}>company</Text>, you can still
-            use your own name and provide your position within the company. By
-            providing this information, you will help us connect you with the
-            right buyers and sellers on our platform. Thank you for choosing our
-            marketplace and we look forward to seeing you succeed!
-          </Text>
-        </ReadMore>
-        <Text style={[styles.headLine, { marginTop: 36 }]}>Your Name</Text>
-        <Input style={[styles.input]} placeholder={"Type your name"} />
-        <Text style={styles.text}>Max 20 character</Text>
-        <View
-          style={{ flexDirection: "row", marginTop: 16, alignItems: "center" }}>
-          <View>
-            {genderPress && (
-              <View style={newStyle.box}>
-                {genderData.map((doc, i) => (
-                  <Pressable onPress={()=>{
-                    setGender(doc)
-                    setGenderPress(t=>!t)
-                  }}
-                    style={[
-                      newStyle.pressable,
-                      { borderBottomWidth: i == 2 ? 0 : 1 },
-                    ]}
-                    key={i}>
-                    <Text style={newStyle.text}>{doc}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            )}
-            <ExButton value={gender} onPress={()=>setGenderPress(t=>!t)} />
           </View>
-          <AutoComplete />
-        </View>
-        <IconButton
-          onPress={() => {
-            navigation.navigate("Stakeholder");
-          }}
-          style={styles.button}
-          title={"Continue"}
-        />
+          <ViewMore
+            style={{
+              marginTop: 24,
+            }}
+            height={layoutHeight}
+            component={
+              <Text
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+                style={[styles.spText, { marginTop: 0 }]}>
+                If you are registering as an{" "}
+                <Text style={{ fontWeight: "700" }}>individual</Text>, simply
+                fill in your name and gender, and for the "position" field, you
+                can enter any title or role that best describes you, such as{" "}
+                <Text style={{ fontWeight: "700" }}>
+                  "freelancer" or "consultant."
+                </Text>
+                If you are registering as a{" "}
+                <Text style={{ fontWeight: "700" }}>company</Text>, you can
+                still use your own name and provide your position within the
+                company. By providing this information, you will help us connect
+                you with the right buyers and sellers on our platform. Thank you
+                for choosing our marketplace and we look forward to seeing you
+                succeed!
+              </Text>
+            }
+          />
+          <Text style={[styles.headLine, { marginTop: 36 }]}>Your Name</Text>
+          <Input
+            onFocus={() => setGenderPress(false)}
+            value={name}
+            error={nameError}
+            onChange={setName}
+            style={[styles.input]}
+            placeholder={"Type your name"}
+          />
+          <Text style={styles.text}>Max 20 character</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 16,
+              alignItems: "center",
+            }}>
+            <View>
+              {genderPress && (
+                <View ref={childRef} style={newStyle.box}>
+                  {genderData.map((doc, i) => (
+                    <Pressable
+                      onPress={() => {
+                        setGender(doc);
+                        setGenderPress((t) => !t);
+                      }}
+                      style={[
+                        newStyle.pressable,
+                        { borderBottomWidth: i == 2 ? 0 : 1 },
+                      ]}
+                      key={i}>
+                      <Text style={[newStyle.text]}>{doc}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
+              <ExButton
+                value={gender}
+                onPress={() => {
+                  setGenderPress((t) => !t);
+                  suggestionBox?.current?.close();
+                }}
+              />
+            </View>
+            <AutoComplete
+              innerRef={suggestionBox}
+              value={position}
+              onChange={setPosition}
+              onFocus={() => setGenderPress(false)}
+            />
+          </View>
+          <IconButton
+            active={name && gender && position ? true : false}
+            disabled={!name || !position || !gender ? true : false}
+            onPress={() => {
+              if (name.split("").length > 20) {
+                setNameError("*Name must with in 20 character");
+                return;
+              }
+              navigation.navigate("Stakeholder", {
+                data: {
+                  serviceCenterName: serviceCenterName,
+                  providerName: name,
+                  gender: gender,
+                  position: position,
+                },
+              });
+            }}
+            style={styles.button}
+            title={"Continue"}
+          />
+        </OutsideView>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -187,7 +223,6 @@ const newStyle = StyleSheet.create({
   },
   text: {
     color: "#484848",
-    borderBottomWidth: 1,
     fontSize: 16,
     fontWeight: "400",
   },
@@ -447,9 +482,10 @@ const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="n
 const text = `If you are registering as an individual, simply fill in your name and gender, and for the "position" field, you can enter any title or role that best describes you, such as "freelancer" or "consultant." If you are registering as a company, you can still use your own name and provide your position within the company.
 By providing this information, you will help us connect you with the right buyers and sellers on our platform. Thank you for choosing our marketplace and we look forward to seeing you succeed!`;
 
-const ExButton = ({ value, onPress }) => {
+const ExButton = ({ value, onPress, innerRef }) => {
   return (
     <Pressable
+      ref={innerRef}
       onPress={onPress}
       style={{
         width: 80,
@@ -464,7 +500,7 @@ const ExButton = ({ value, onPress }) => {
       <Text
         style={{
           color: "#767676",
-          fontSize:14
+          fontSize: 14,
         }}>
         {value ? value : "Gender"}
       </Text>

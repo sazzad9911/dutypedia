@@ -31,8 +31,8 @@ export default function InitialPage({ navigation }) {
           </Text>
         </Text>
         <IconButton onPress={()=>{
-            //navigation.navigate("Category")
-            navigation.navigate("FinalReview")
+            navigation.navigate("Category")
+            //navigation.navigate("FinalReview")
         }} style={{
             backgroundColor:"#4ADE80",
             height:40,
