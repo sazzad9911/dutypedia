@@ -3297,7 +3297,7 @@ const ImageScreen = ({ onClose, onChange, uri }) => {
           style={{
             flexDirection: "row",
             position: "absolute",
-            top: 20,
+            top: 50,
             right: 20,
           }}
           layout={FadeIn}>

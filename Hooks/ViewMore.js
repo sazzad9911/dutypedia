@@ -21,14 +21,15 @@ function ViewMore({
   largeText,
   smallText,
   width,
-  position
+  position,
+  view
 }) {
-  const [newHeight, setNewHeight] = useState(lowHeight ? lowHeight : 78);
+  const [newHeight, setNewHeight] = useState(lowHeight ? lowHeight : 73);
 
   React.useEffect(() => {
     //console.log(`height: ${width}`)
   }, [newHeight]);
-
+//console.log(height)
   return (
     <MotiView
       transition={{ type: "timing" }}
@@ -46,17 +47,17 @@ function ViewMore({
       <Pressable
         onPress={() => {
           // setHeight(calculateHeight(Data?.service.about));
-          setNewHeight((d) => (d == 78 ? height : 78));
+          setNewHeight((d) => (d == (lowHeight?lowHeight:73) ? height : (lowHeight?lowHeight:73)));
         }}
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "center",
           width: "100%",
-          overflow:"hidden"
+          
         }}>
         {component}
-        {newHeight != height && (
+        {!view&&newHeight != height && (
           <View
             style={[{
               position: "absolute",
@@ -65,10 +66,10 @@ function ViewMore({
               width:width?width:Platform.OS=="android"?138: 140,
               flexDirection: "row",
               alignItems: "baseline",
-              bottom:Platform.OS=="android"?5:0,
+              bottom:0,
               height:24
             },position]}>
-            {newHeight == 78 && <Text>...</Text>}
+            {newHeight == (lowHeight?lowHeight:73) && <Text>...</Text>}
             <Text
               style={[
                 {
@@ -94,7 +95,45 @@ function ViewMore({
           </View>
         )}
       </Pressable>
-      
+      {view&&newHeight != height && (
+          <Pressable  onPress={()=>{
+            setNewHeight((d) => (d == (lowHeight?lowHeight:73) ? height : (lowHeight?lowHeight:73)));
+          }}
+            style={[{
+              position: "absolute",
+              right:0,
+              backgroundColor: "white",
+              width:width?width:Platform.OS=="android"?138: 140,
+              flexDirection: "row",
+              alignItems: "baseline",
+              bottom:Platform.OS=="android"?5:0,
+              height:24
+            },position]}>
+            {newHeight == (lowHeight?lowHeight:73) && <Text>...</Text>}
+            <Text
+              style={[
+                {
+                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                  textAlign: "justify",
+                  fontWeight: "500",
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
+                  color: "#4ADE80",
+                  fontWeight: "700",
+                  lineHeight: 24,
+                  fontSize: 16,
+                },
+                fontStyle,
+              ]}>
+              {newHeight == height
+                ? largeText
+                  ? largeText
+                  : "See Less"
+                : smallText
+                ? smallText
+                : "See More..."}
+            </Text>
+          </Pressable>
+        )}
     </MotiView>
   );
 }

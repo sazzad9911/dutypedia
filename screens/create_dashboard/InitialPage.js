@@ -1,10 +1,28 @@
+import { useIsFocused } from "@react-navigation/native";
 import React from "react";
 import { ScrollView, View,Text } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useDispatch } from "react-redux";
 import customStyle from "../../assets/stylesheet";
 import IconButton from "../../components/IconButton";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function InitialPage({ navigation }) {
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
+
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View

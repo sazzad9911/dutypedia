@@ -32,6 +32,8 @@ import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/Avatar";
 import { getDashboardInfo } from "../../Class/service";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -46,17 +48,30 @@ const Menu = ({ navigation }) => {
   const [service,setService]=useState(0)
   const [info,setInfo]=useState()
   const user=useSelector(state=>state.user)
+  const isFocused=useIsFocused()
 
   useEffect(()=>{
     if(user){
       getDashboardInfo(user.token,vendor.service.id).then(res=>{
-        console.log(res.data)
+        //console.log(res.data)
         setInfo(res.data)
       }).catch(err=>{
         console.error(err.response.data.msg)
       })
     }
   },[])
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+     // dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
 
   return (

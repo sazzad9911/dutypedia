@@ -40,6 +40,7 @@ import Button from "./components/Button";
 import IconButton from "./components/IconButton";
 //import { getStream } from "./Utils";
 import { socket } from "./Class/socket";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const MyTheme = {
@@ -86,12 +87,14 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <PaperProvider theme={theme}>
-        <RootSiblingParent>
-          <Views />
-          {/* <WebRTC/> */}
-        </RootSiblingParent>
-      </PaperProvider>
+      <SafeAreaProvider>
+        <PaperProvider theme={theme}>
+          <RootSiblingParent>
+            <Views />
+            {/* <WebRTC/> */}
+          </RootSiblingParent>
+        </PaperProvider>
+      </SafeAreaProvider>
     </Provider>
   );
 }
@@ -103,7 +106,6 @@ const Views = () => {
   const statusBar = useSelector((state) => state.statusBar);
   const [ModalVisible, setModalVisible] = React.useState(false);
 
-  
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* <CustomAppStatusBar
@@ -115,8 +117,7 @@ const Views = () => {
         visible={ModalVisible}
         onRequestClose={() => {
           setModalVisible(!ModalVisible);
-        }}
-      ></Modal>
+        }}></Modal>
     </GestureHandlerRootView>
   );
 };
@@ -148,7 +149,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const WebRTC=()=>{
-  return null
-}
-
+const WebRTC = () => {
+  return null;
+};

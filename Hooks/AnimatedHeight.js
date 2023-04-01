@@ -97,7 +97,7 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
         overflow: "hidden",
         width: "100%",
         height: "auto",
-        
+       
       }}
     >
       <Pressable

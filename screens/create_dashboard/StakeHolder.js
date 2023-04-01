@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -7,15 +8,32 @@ import {
   Platform,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import ViewMore from "../../Hooks/ViewMore";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { icon, styles } from "./BusinessTitle";
 
 export default function StakeHolder({ navigation,route }) {
   const [layoutHeight,setLayoutHeight]=useState(0)
-  const [number,setNumber]=useState("0")
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const [number,setNumber]=useState(businessForm?.teamNumber?businessForm.teamNumber:"0")
   const data=route?.params?.data;
+  const isFocused=useIsFocused()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -64,6 +82,7 @@ export default function StakeHolder({ navigation,route }) {
           <IconButton active={parseInt(number)>0?true:false}
           disabled={parseInt(number)>0?false:true}
             onPress={() => {
+              dispatch({ type: "TEAM_NUMBER", playload: number });
               navigation.navigate("Established",{
                 data:{
                   serviceCenterName: data.serviceCenterName,

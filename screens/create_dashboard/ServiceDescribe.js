@@ -24,19 +24,37 @@ import TextArea from "../../components/TextArea";
 import { ImageButton } from "../Seller/Service";
 import ViewMore from "../../Hooks/ViewMore";
 import TextOp from "./TextOp";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 const {width}=Dimensions.get("window")
 
 export default function ServiceDescribe({ navigation,route }) {
-  const [serviceTitle,setServiceTitle]=useState()
-  const [serviceDescription,setServiceDescription]=useState()
-  const [firstImage,setFirstImage]=useState()
-  const [secondImage,setSecondImage]=useState()
-  const [thirdImage,setThirdImage]=useState()
-  const [forthImage,setForthImage]=useState()
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const isFocused=useIsFocused()
+  const [serviceTitle,setServiceTitle]=useState(businessForm?.serviceTitle)
+  const [serviceDescription,setServiceDescription]=useState(businessForm?.description)
+  const [firstImage,setFirstImage]=useState(businessForm?.firstImage)
+  const [secondImage,setSecondImage]=useState(businessForm?.secondImage)
+  const [thirdImage,setThirdImage]=useState(businessForm?.thirdImage)
+  const [forthImage,setForthImage]=useState(businessForm?.forthImage)
   const [serviceTitleError,setServiceTitleError]=useState()
   const [serviceDescriptionError,setServiceDescriptionError]=useState()
   const [layoutHeight, setLayoutHeight] = useState(0);
   const data=route?.params?.data;
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -66,13 +84,14 @@ export default function ServiceDescribe({ navigation,route }) {
               Tips for title, service describe & photo
             </Text>
           </View>
-          <ViewMore
+          <ViewMore view={true}
             style={{
               marginTop: 24,
             }}
+            lowHeight={72}
             width={145}
             position={{
-              top: 47,
+              bottom:0
             }}
             height={layoutHeight}
             component={
@@ -175,6 +194,12 @@ export default function ServiceDescribe({ navigation,route }) {
                 setServiceDescriptionError("*Max 1000 character required")
                 return
               }
+              dispatch({ type: "SERVICE_TITLE", playload: serviceTitle });
+              dispatch({ type: "DESCRIPTION", playload: serviceDescription });
+              dispatch({ type: "FIRST_IMAGE", playload: firstImage });
+              dispatch({ type: "SECOND_IMAGE", playload: secondImage });
+              dispatch({ type: "THIRD_IMAGE", playload: thirdImage });
+              dispatch({ type: "FOURTH_IMAGE", playload: forthImage });
               navigation.navigate("Location",{
                 data:{
                   serviceCenterName: data.serviceCenterName,

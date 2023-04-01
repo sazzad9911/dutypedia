@@ -22,12 +22,30 @@ import IconButton from "../../components/IconButton";
 import customStyle from "../../assets/stylesheet";
 import TextOp from "./TextOp";
 import ViewMore from "../../Hooks/ViewMore";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function NewPricing({ navigation, route }) {
-  const [price, setPrice] = useState();
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const isFocused=useIsFocused()
+  const [price, setPrice] = useState(businessForm?.price);
   const [layoutHeight, setLayoutHeight] = useState(0);
   const data = route?.params?.data;
   const [priceError,setPriceError]=useState()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   
   return (
     <KeyboardAvoidingView
@@ -58,13 +76,14 @@ export default function NewPricing({ navigation, route }) {
             </Text>
           </View>
 
-          <ViewMore
+          <ViewMore view={true}
             style={{
               marginTop: 24,
             }}
+            lowHeight={77}
             width={167}
             position={{
-              bottom: layoutHeight - 75,
+              bottom: 0,
             }}
             height={layoutHeight}
             component={
@@ -128,6 +147,7 @@ export default function NewPricing({ navigation, route }) {
                 setPriceError("*Minimum 50 taka required")
                 return
               }
+              dispatch({ type: "PRICE", playload: price });
               navigation.navigate("Skills", {
                 data: {
                   serviceCenterName: data.serviceCenterName,

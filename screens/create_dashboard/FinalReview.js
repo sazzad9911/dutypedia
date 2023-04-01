@@ -180,6 +180,18 @@ const FinalReview = (props) => {
   const [loading,setLoading]=useState(false)
 
   React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
+  React.useEffect(() => {
    //console.log(newData)
     setSpecialty(newData.skills.join(","));
     let img=[]
@@ -286,6 +298,7 @@ const FinalReview = (props) => {
     let arr = [];
     arr.push(fileFromURL(image));
     const res = await uploadFile(arr, newUser.token);
+    setImageUploader(false);
     if(isProfile){
       setImage(res[0])
     }else{
@@ -354,12 +367,12 @@ const FinalReview = (props) => {
       }
       setLoading(false);
       dispatch({ type: "SET_VENDOR", playload: data });
-            //navigation.navigate("Profile");
-      try{
-        props.navigation.navigate("VendorProfile");
-      }catch(err){
-        Alert.alert("Ops!",err.message)
-      }
+      navigation.navigate("Profile");
+      // try{
+      //   props.navigation.navigate("VendorProfile");
+      // }catch(err){
+      //   Alert.alert("Ops!",err.message)
+      // }
   }
  
 if(Images.length==0){
@@ -789,12 +802,12 @@ if(loading){
           transition={{ type: "timing" }}
           animate={{ height: newNavigation }}
           style={[
-            {
-              overflow: "hidden",
-              height: newNavigation,
-            },
+            // {
+            //   overflow: "hidden",
+            //   height: newNavigation,
+            // },
           ]}>
-          <Tab.Navigator
+          {/* <Tab.Navigator
             screenOptions={{
               tabBarStyle: {
                 paddingLeft: 0,
@@ -854,23 +867,49 @@ if(loading){
                 scrollTo: scrollTo,
                 changeScreenName: changeScreenName,
               }}
-              component={BargainingScreen}
+              component={}
             />
             
-          </Tab.Navigator>
+          </Tab.Navigator> */}
+          <BargainingScreen navigation={navigation} initialParams={{
+                Images: Images,
+                primaryColor: primaryColor,
+                textColor: textColor,
+                Title: Title,
+                Description: Description,
+                ServiceList: ServiceList,
+                SubServiceList: SubServiceList,
+                NewDataList: NewDataList,
+                Facilities: Facilities,
+                Data: Data,
+                Price: Price,
+                setNewNavigation: setNewNavigation,
+                RelatedServices: RelatedServices,
+                UnRelatedServices: UnRelatedServices,
+                changeScrollStatus: changeScrollStatus,
+                scrollTo: scrollTo,
+                changeScreenName: changeScreenName,
+              }}/>
         </View>
       </ScrollView>
       <View style={{ backgroundColor: primaryColor }}>
+        <Pressable onPress={() => {
+            setButtonPress(!ButtonPress);
+          }} style={{flexDirection:"row",marginTop: 10,marginHorizontal: 20,justifyContent:"center"}}>
         <CheckBox
+          value={ButtonPress}
           onChange={() => {
             setButtonPress(!ButtonPress);
           }}
           style={{
-            marginHorizontal: 20,
-            marginTop: 10,
+            
+            marginRight:10,
+            width:30
           }}
-          title="I agree with all the terms and conditions"
+         
         />
+        <Text style={{fontSize:16}}>I agree with all the <Text style={{color:"blue"}}>terms and conditions</Text></Text>
+        </Pressable>
         <IconButton
           onPress={confirm}
           disabled={ButtonPress ? false : true}
@@ -892,7 +931,7 @@ if(loading){
           style={{
             backgroundColor: "#F0F0F0",
             position: "absolute",
-            top: 20,
+            top: 30,
             right: 20,
             padding: 5,
             borderRadius: 5,
@@ -1088,8 +1127,9 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
-const BargainingScreen = ({ navigation, route }) => {
-  const params = route.params;
+const BargainingScreen = (props) => {
+  const params = props.initialParams;
+  const navigation=props.navigation;
   const Images = params.Images;
   //console.log(Images)
   const primaryColor = params.primaryColor;
@@ -1109,7 +1149,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const Price = params.Price;
   const startingHeight = 120;
   const fullHeight = calculateHeight(Description, 25);
-  const setNewNavigation = params.setNewNavigation;
+  const setNewNavigation = params?.setNewNavigation;
   const isFocused = useIsFocused();
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
@@ -1117,8 +1157,6 @@ const BargainingScreen = ({ navigation, route }) => {
   const [newHeight, setHeight] = React.useState(3);
   const [text, setText] = React.useState("");
   const [navHeight, setNavHeight] = React.useState(0);
-  const RelatedServices = params.RelatedServices;
-  const UnRelatedServices = params.UnRelatedServices;
   const [textHeight, setTextHeight] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(true);
   const [offset, setOffset] = React.useState(0);
@@ -1191,9 +1229,9 @@ const BargainingScreen = ({ navigation, route }) => {
   React.useEffect(() => {
     if (navHeight && isFocused) {
       //console.log(textHeight)
-      changeScreenName("BARGAINING");
+     // changeScreenName("BARGAINING");
       setTimeout(() => {
-        setNewNavigation(navHeight + textHeight);
+      //  setNewNavigation(navHeight + textHeight);
       }, 0);
     }
   }, [navHeight + isFocused + textHeight]);
@@ -1237,16 +1275,16 @@ const BargainingScreen = ({ navigation, route }) => {
         <View
           style={{
             marginHorizontal: 20,
-            marginVertical: 15,
-            marginBottom: 0,
+            marginTop:10
           }}>
           {Description && (
             <AnimatedHeight
               onChange={(height) => {
                 //setNewNavigation(newHeight + 55 + height);
                 //console.log(height)
-                setTextHeight(height - 50);
+                setTextHeight(height-50);
               }}
+              
               button={true}
               text={Description}
             />
@@ -1258,7 +1296,7 @@ const BargainingScreen = ({ navigation, route }) => {
             paddingHorizontal: 20,
             justifyContent: "flex-end",
             marginVertical: 0,
-            marginTop: -15,
+            marginTop: 10,
           }}>
           
         </View>
@@ -2323,7 +2361,7 @@ const ImageScreen = ({ onClose, onChange, uri }) => {
     }
   };
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         justifyContent: "center",
@@ -2335,7 +2373,7 @@ const ImageScreen = ({ onClose, onChange, uri }) => {
           style={{
             flexDirection: "row",
             position: "absolute",
-            top: 20,
+            top: 50,
             right: 20,
           }}
           layout={FadeIn}>
@@ -2364,7 +2402,7 @@ const ImageScreen = ({ onClose, onChange, uri }) => {
           source={{ uri: image }}
         />
       </TouchableHighlight>
-    </View>
+    </SafeAreaView>
   );
 };
 const cameraIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18">

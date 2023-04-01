@@ -21,21 +21,38 @@ import IconButton from "../../components/IconButton";
 import { CheckBox, Days } from "../Seller/Pricing";
 import Animated, { FadeIn } from "react-native-reanimated";
 import ViewMore from "../../Hooks/ViewMore";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function WorkingTime({ navigation, route }) {
-  const [checked, setChecked] = useState();
+  const businessForm=useSelector(state=>state.businessForm)
+  const [checked, setChecked] = useState(businessForm?.workingTime==true?true:false);
   const [visible, setVisible] = React.useState({
     title: "",
     visible: false,
   });
-  const [Times, setTimes] = React.useState([]);
+  const [Times, setTimes] = React.useState(Array.isArray(businessForm?.workingTime)?businessForm.workingTime:[]);
   const [TimesError, setTimesError] = React.useState([]);
   const [TimeError, setTimeError] = React.useState();
   const [layoutHeight, setLayoutHeight] = useState(0);
   const data = route?.params?.data;
   const [time, setTime] = useState(0);
+  const dispatch=useDispatch()
+  const isFocused=useIsFocused()
 
-  useEffect(() => {}, [Times.length]);
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -220,14 +237,17 @@ export default function WorkingTime({ navigation, route }) {
             active={checked || time > 0 ? true : false}
             disabled={checked || time ? false : true}
             onPress={() => {
-              console.log(Times);
+              //console.log(Times);
 
               if (!checked && Times.length == 0) {
                 setTimeError("Please select any time");
                 //scrollingTo(250);
                 return;
               }
-
+              dispatch({
+                type: "WORKING_TIME",
+                playload: Times.length == 0 ? true : Times,
+              });
               navigation.navigate("NewPricing", {
                 data: {
                   serviceCenterName: data.serviceCenterName,

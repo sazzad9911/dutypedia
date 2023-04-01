@@ -19,11 +19,29 @@ import {
 } from "../../action";
 import IconButton from "../../components/IconButton";
 import ViewMore from "../../Hooks/ViewMore";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function Established({ navigation, route }) {
-  const [date, setDate] = useState();
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const [date, setDate] = useState(businessForm?.startDate?.day);
   const data = route?.params?.data;
   const [layoutHeight,setLayoutHeight]=useState(0)
+  const isFocused=useIsFocused()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -82,6 +100,14 @@ export default function Established({ navigation, route }) {
             active={date ? true : false}
             disabled={date ? false : true}
             onPress={() => {
+              dispatch({
+                type: "START_DATE",
+                playload: {
+                  day: date,
+                  month: date,
+                  year: date,
+                },
+              });
               navigation.navigate("WorkingTime",{
                 data:{
                   serviceCenterName: data.serviceCenterName,

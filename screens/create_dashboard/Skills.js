@@ -24,10 +24,16 @@ import IconButton from "../../components/IconButton";
 import skill from "../../assets/Images/skill.png";
 import TextOp from "./TextOp";
 import ViewMore from "../../Hooks/ViewMore";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 const { width, height } = Dimensions.get("window");
 
 export default function Skills({ navigation, route }) {
-  const [skills, setSkill] = useState([]);
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const isFocused=useIsFocused()
+  const [skills, setSkill] = useState(businessForm?.speciality?businessForm.speciality:[]);
   const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [length,setLength]=useState(0)
@@ -35,6 +41,18 @@ export default function Skills({ navigation, route }) {
   useEffect(()=>{
     setLength(skills.length)
   },[skills.length])
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -68,13 +86,16 @@ export default function Skills({ navigation, route }) {
             />
             <Text style={[styles.headLine, { flex: 1 }]}>Tips for skill</Text>
           </View>
-          <ViewMore
+          <ViewMore view={true}
             style={{
               marginTop: 24,
+              
             }}
-            width={126}
+            lowHeight={70}
+            width={135}
+            
             position={{
-              top: 47,
+              bottom:0
             }}
             height={layoutHeight}
             component={
@@ -152,6 +173,7 @@ export default function Skills({ navigation, route }) {
           <IconButton active={length>0?true:false}
           disabled={length>0?false:true}
             onPress={() => {
+              dispatch({ type: "SPECIALITY", playload: skills });
               navigation.navigate("ServiceDescribe",{
                 data:{
                   serviceCenterName: data.serviceCenterName,

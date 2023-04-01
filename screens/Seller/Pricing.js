@@ -1158,14 +1158,17 @@ export const Days = ({
     </View>
   );
 };
-export const CheckBox = ({ onChange, value, title, style, disabled }) => {
+export const CheckBox = ({ onChange, value, title, style, disabled,decline }) => {
   const [checked, setChecked] = React.useState(false);
   React.useEffect(() => {
     setChecked(value);
   }, [value]);
   return (
-    <TouchableOpacity disabled={disabled}
+    <Pressable disabled={disabled}
       onPress={() => {
+        if(decline){
+          return
+        }
         if (onChange) {
           onChange(title);
         }
@@ -1218,7 +1221,7 @@ export const CheckBox = ({ onChange, value, title, style, disabled }) => {
       >
         {title}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 const clock = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

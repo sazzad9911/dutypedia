@@ -74,119 +74,13 @@ import { DataTable } from "react-native-paper";
 import UserOrderHeader from "../../Hooks/UserOrderHeader";
 import { setOrderRef } from "../../Reducers/orderRef";
 import customStyle from "../../assets/stylesheet";
-import VendorSearchOrder from "./VendorSearchOrder";
+import SearchOrderHeader from "../../Hooks/SearchOrderHeader";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
 
-const Order = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="VendorOrder"
-        component={VendorOrder}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="VendorOrderDetails"
-        component={OrderDetails}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="VendorOfflineOrderDetails"
-        component={VendorOfflineOrderDetails}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddServiceList"
-        component={AddServiceList}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AcceptOrder"
-        component={AcceptOrder}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="UserProfile"
-        component={UserProfile}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="MemberList"
-        component={MemberList}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="OfflineProfile"
-        component={OfflineProfile}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="Note"
-        component={Note}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddNote"
-        component={AddNote}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="ViewNote"
-        component={ViewNote}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="VendorServiceList"
-        component={VendorServiceList}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SelectDate"
-        component={SelectDate}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="PackageList"
-        component={PackageList}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="AddServiceList_1"
-        component={AddServiceList}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SubscriptionScript"
-        component={SubscriptionScript}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SubscriptionOfflineScript"
-        component={SubscriptionOfflineScript}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="InstallmentScript"
-        component={InstallmentScript}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="InstallmentOfflineScript"
-        component={InstallmentOfflineScript}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="VendorSearchOrder"
-        component={VendorSearchOrder}
-      />
-    </Stack.Navigator>
-  );
-};
 
-const VendorOrder = ({ navigation, route }) => {
+const VendorSearchOrder = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -334,10 +228,8 @@ const VendorOrder = ({ navigation, route }) => {
       {offlineOrder == false && (
         <Tab.Navigator
           tabBar={(props) => (
-            <UserOrderHeader
-              onSearch={() => {
-                navigation.navigate("VendorSearchOrder");
-              }}
+            <SearchOrderHeader
+              onSearch={() => {}}
               onCreate={() => {
                 navigation.navigate("MemberList", { offline: offlineOrder });
               }}
@@ -512,7 +404,7 @@ const VendorOrder = ({ navigation, route }) => {
   );
 };
 
-export default Order;
+export default VendorSearchOrder;
 const styles = StyleSheet.create({
   view: {
     justifyContent: "center",
@@ -881,6 +773,7 @@ export const Screens = ({ navigation, route }) => {
   const key = route.params.key;
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
+  const searchOrderRef=useSelector(state=>state.searchOrderRef)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setRefresh((val) => !val);
@@ -915,16 +808,7 @@ export const Screens = ({ navigation, route }) => {
         });
     }
   }, [isFocused, Refresh]);
-  React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      e = e.order;
-      setRefresh((val) => !val);
-    });
-    socket.on("newOrder", (e) => {
-      e = e.order;
-      setRefresh((val) => !val);
-    });
-  }, []);
+  
 
   React.useEffect(() => {
     if (AllOrders) {
@@ -976,10 +860,10 @@ export const Screens = ({ navigation, route }) => {
   }, [orderListFilter]);
   React.useEffect(() => {
     if (AllOrders) {
-      if (!Search) {
+      if (!searchOrderRef) {
         setNewOrders(AllOrders);
       } else {
-        let text = Search;
+        let text = searchOrderRef;
         text = text.split(" ").join("_");
         let arr = AllOrders.filter((d) =>
           d.status.toUpperCase().match(text.toUpperCase())
@@ -987,7 +871,7 @@ export const Screens = ({ navigation, route }) => {
         setNewOrders(arr);
       }
     }
-  }, [Search]);
+  }, [searchOrderRef]);
 
   // callbacks
   const renderItem = useCallback(
@@ -1010,10 +894,7 @@ export const Screens = ({ navigation, route }) => {
             navigation.navigate("SubscriptionScript", { data: item });
             return;
           }
-          if (
-            item.type == "INSTALLMENT" &&
-            item.status != "WAITING_FOR_ACCEPT"
-          ) {
+          if (item.type == "INSTALLMENT" && item.status != "WAITING_FOR_ACCEPT") {
             navigation.navigate("InstallmentScript", { data: item });
             return;
           }
@@ -1058,18 +939,18 @@ export const Screens = ({ navigation, route }) => {
   }
   return (
     <View style={{ flex: 1, paddingVertical: 8 }}>
-      {NewOrders && NewOrders.length > 0 && (
+      {NewOrders&&NewOrders.length>0&&(
         <FlatList
-          showsVerticalScrollIndicator={false}
-          data={NewOrders}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          onEndReached={() => {
-            //setPage((d) => d + 1);
-            loadData();
-            //console.log("ds");
-          }}
-        />
+        showsVerticalScrollIndicator={false}
+        data={NewOrders}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        onEndReached={() => {
+          //setPage((d) => d + 1);
+          loadData();
+          //console.log("ds");
+        }}
+      />
       )}
       {/* {Loader && <ActivityLoader />} */}
       {NewOrders && NewOrders.length == 0 && !Loader && (

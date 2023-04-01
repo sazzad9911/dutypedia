@@ -49,11 +49,12 @@ import customStyle from "../assets/stylesheet";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import UserOrderHeader from "../Hooks/UserOrderHeader";
 import { setOrderRef } from "../Reducers/orderRef";
+import SearchOrderHeader from "../Hooks/SearchOrderHeader";
 
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
 
-const ManageOrder = ({ navigation, route }) => {
+const SearchOrder = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const initialState = [
     {
@@ -88,8 +89,6 @@ const ManageOrder = ({ navigation, route }) => {
   //console.log(type)
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const orderRef=useSelector(state=>state.orderRef)
-
   return (
     <View
       style={{
@@ -104,16 +103,7 @@ const ManageOrder = ({ navigation, route }) => {
       <StatusBar style="light" backgroundColor="#4ADE80" />
       <Tab.Navigator
         tabBar={(props) => (
-          <UserOrderHeader
-            onFilter={() => {
-              dispatch(setOrderRef(orderRef?false:true));
-            }}
-            onSearch={()=>{
-              navigation.navigate("SearchOrder")
-            }}
-            allOrders={allOrders}
-            {...props}
-          />
+          <SearchOrderHeader allOrders={allOrders} {...props} />
         )}
         initialRouteName={type}
         screenOptions={{
@@ -148,7 +138,7 @@ const ManageOrder = ({ navigation, route }) => {
   );
 };
 
-export default ManageOrder;
+export default SearchOrder;
 const Screens = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -235,15 +225,15 @@ const Screens = ({ navigation, route }) => {
     //console.log("handleSheetChanges", index);
     setIndex(index);
     if (index < 0) {
-      dispatch(setOrderRef(false));
+      dispatch(setOrderRef());
     }
   }, []);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const to = Math.min((parseInt(total / 20) + 1) * 20, 2);
+  const searchOrderRef = useSelector((state) => state.searchOrderRef);
 
   React.useEffect(() => {
-    
     if (user) {
       //setLoader(true);
       getOrders(user.token, "user", null, route.name, 20 * page)
@@ -270,17 +260,7 @@ const Screens = ({ navigation, route }) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [isFocused,Refresh]);
-  React.useEffect(() => {
-    socket.on("updateOrder", (e) => {
-      e = e?.order;
-      setRefresh((val) => !val);
-    });
-    socket.on("newOrder", (e) => {
-      e = e?.order;
-      setRefresh((val) => !val);
-    });
-  }, []);
+  }, [isFocused]);
 
   React.useEffect(() => {
     if (AllOrders) {
@@ -297,26 +277,21 @@ const Screens = ({ navigation, route }) => {
     }
   }, [Filter]);
   React.useEffect(() => {
+    //console.log(searchOrderRef)
     if (AllOrders) {
-      if (!Search) {
+      if (!searchOrderRef) {
         setOrders(AllOrders);
       } else {
-        let text = Search;
+        let text = searchOrderRef;
         text = text.split(" ").join("_");
         let arr = AllOrders.filter((d) =>
-          d.status.toUpperCase().match(text.toUpperCase())
+          d.service.serviceCenterName.toUpperCase().match(searchOrderRef.toUpperCase())
         );
         setOrders(arr);
       }
     }
-  }, [Search]);
-  useEffect(() => {
-    if (orderRef) {
-      setIndex(1);
-    } else {
-      bottomSheetRef?.current?.close()
-    }
-  }, [orderRef]);
+  }, [searchOrderRef]);
+
   const renderItem = useCallback(
     ({ item }) => (
       <OrderCart
@@ -487,7 +462,6 @@ const sort = `<svg xmlns="http://www.w3.org/2000/svg" width="9.374" height="12.5
 </g>
 </svg>
 `;
-
 const noOrder = `<svg width="145" height="144" viewBox="0 0 145 144" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="mask0_4053_28692" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="145" height="144">
 <path d="M144.436 0H0.563477V144H144.436V0Z" fill="white"/>

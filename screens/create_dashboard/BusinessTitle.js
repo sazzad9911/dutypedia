@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -10,15 +11,33 @@ import {
   StatusBar,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import AnimatedHeight from "../../Hooks/AnimatedHeight";
 import ViewMore from "../../Hooks/ViewMore";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function BusinessTitle({ navigation }) {
-  const [name, setName] = useState();
+  const businessForm=useSelector(state=>state.businessForm)
+  const [name, setName] = useState(businessForm?.serviceCenterName);
   const [nameError, setNameError] = useState();
   const [layoutHeight,setLayoutHeight]=useState(0)
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
+  //console.log(businessForm)
 
   return (
     <KeyboardAvoidingView
@@ -49,7 +68,7 @@ export default function BusinessTitle({ navigation }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine]}>
+            <Text style={[styles.headLine,{flex:1}]}>
               Tips for set up the service center name
             </Text>
           </View>
@@ -57,6 +76,7 @@ export default function BusinessTitle({ navigation }) {
             style={{
               marginTop: 24,
             }}
+            
             width={"37%"}
             height={layoutHeight}
             component={<Text onLayout={e=>{
@@ -104,6 +124,7 @@ export default function BusinessTitle({ navigation }) {
                 setNameError("*Max text size is 50 character");
                 return;
               }
+              dispatch({ type: "SERVICE_CENTER_NAME", playload: name });
               navigation.navigate("YourInformation", {
                 serviceCenterName: name,
               });

@@ -1,6 +1,16 @@
-
-import { Alert, SafeAreaView, StyleSheet, Text, View ,StatusBar} from "react-native";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import {
+  Alert,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+} from "react-native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  useRoute,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionSpecs } from "@react-navigation/stack";
 import TabRoute from "./screens/TabRoute";
@@ -36,14 +46,12 @@ import { checkUser } from "./Class/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { getService, getDashboard } from "./Class/service";
 import AllService from "./screens/Vendor/AllService";
-import VendorCalender from "./screens/Vendor/VendorCalender";
 import VendorAddress from "./screens/Vendor/VendorAddress";
 import Expenses from "./screens/Vendor/Expenses";
 import { AddExpenses } from "./screens/Vendor/Expenses";
 import DashboardList from "./screens/Vendor/DashboardList";
 import Category from "./screens/Seller/Category";
 import Support from "./screens/Support";
-import Feed from "./screens/Feed";
 import { getJson } from "./Class/storage";
 import { getSocket, socket } from "./Class/socket";
 import VendorProfile from "./screens/VendorProfile";
@@ -60,11 +68,14 @@ import VendorAppointmentListDetails from "./screens/Vendor/Appointment/VendorApp
 import UserAppointmentList from "./screens/Seller/UserAppointment/UserAppointmentList";
 import UserRequestAppointment from "./screens/Seller/UserAppointment/UserRequestAppointment";
 import UserAppointmentDetails from "./screens/Seller/UserAppointment/UserAppointmentDetails";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import FixedService from "./screens/FixedService";
 import PackageService from "./screens/PackageService";
 import { SubscriptionDates } from "./screens/Seller/SubscriptionDates";
-import * as Network from 'expo-network';
+import * as Network from "expo-network";
 import AccountHeader from "./screens/Vendor/account/AccountHeader";
 import WithdrawFirst from "./screens/Vendor/account/WithdrawFirst";
 import WithdrawSecond from "./screens/Vendor/account/WithdrawSecond";
@@ -101,8 +112,8 @@ export default function StackRoute() {
   const secondaryColor = colors.getSecondaryColor();
   const [userId, setUserId] = React.useState();
 
+  
   React.useEffect(() => {
-
     checkUser()
       .then((res) => {
         //console.log(res)
@@ -128,19 +139,18 @@ export default function StackRoute() {
       })
       .catch((err) => {
         console.log(err.message);
-        
       });
     getJson("theme").then((data) => {
       if (data) {
         dispatch({ type: "SET_THEME", playload: data });
       }
     });
-    (async()=>{
-      const net=await Network.getNetworkStateAsync();
-      if(net && !net.isConnected){
-        Alert.alert("Ops!","You are offline")
+    (async () => {
+      const net = await Network.getNetworkStateAsync();
+      if (net && !net.isConnected) {
+        Alert.alert("Ops!", "You are offline");
       }
-    })()
+    })();
   }, []);
   React.useEffect(() => {
     if (userId) {
@@ -164,40 +174,34 @@ export default function StackRoute() {
       </View>
     );
   }
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
-      <StatusBar/>
-      <NavigationContainer theme={MyTheme}>
-        <Stack.Navigator
-          screenOptions={({ route, navigation }) => ({
-            gestureEnabled: true,
-            transitionSpec: {
-              open: TransitionSpecs.TransitionIOSSpec,
-              close: TransitionSpecs.TransitionIOSSpec,
-            },
-          })}
-        >
-          <Stack.Screen
-            options={{
-              presentation: "modal",
-              animationTypeForReplace: "push",
-              animation: "slide_from_right",
-              headerShown: false,
-            }}
-            name="Dashboard"
-            component={TabRoute}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="SearchScreen_1"
-            component={SearchScreen}
-          />
-          
-          {/* <Stack.Screen
+    <NavigationContainer theme={MyTheme}>
+      <Stack.Navigator
+        screenOptions={({ route, navigation }) => ({
+          gestureEnabled: true,
+          transitionSpec: {
+            open: TransitionSpecs.TransitionIOSSpec,
+            close: TransitionSpecs.TransitionIOSSpec,
+          },
+        })}>
+        <Stack.Screen
+          options={{
+            presentation: "modal",
+            animationTypeForReplace: "push",
+            animation: "slide_from_right",
+            headerShown: false,
+          }}
+          name="Dashboard"
+          component={TabRoute}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SearchScreen_1"
+          component={SearchScreen}
+        />
+
+        {/* <Stack.Screen
             options={{
               headerStyle: {
                 backgroundColor: "green",
@@ -217,12 +221,12 @@ export default function StackRoute() {
             name="PackageService"
             component={PackageService}
           /> */}
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="LogIn"
-            component={Login}
-          />
-          {/* <Stack.Screen
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="LogIn"
+          component={Login}
+        />
+        {/* <Stack.Screen
             options={{
               headerShown: false,
             }}
@@ -230,146 +234,144 @@ export default function StackRoute() {
             component={ChatScreen}
           /> */}
 
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AllReviewHeader title="23 Review" {...props} />
-              ),
-            }}
-            name="AllReview"
-            component={AllReview}
-          />
-          <Stack.Screen
-            name="TableData"
-            options={{
-              header: (props) => <SubHeader {...props} />,
-            }}
-            component={TableData}
-          />
-          <Stack.Screen
-            name="SubCategories"
-            options={{
-              header: (props) => <SubHeader {...props} />,
-            }}
-            component={SubCategories}
-          />
-          <Stack.Screen
-            name="Category"
-            options={{
-              headerShown: false,
-            }}
-            component={Category}
-          />
-          <Stack.Screen
-            name="SubCategories_1"
-            options={{
-              header: (props) => <SubHeader {...props} />,
-            }}
-            component={SubCategories}
-          />
-          <Stack.Screen
-            name="Pricing"
-            options={{
-              header: (props) => <SubHeader title="Pricing" {...props} />,
-            }}
-            component={Pricing}
-          />
-          <Stack.Screen
-            name="Service"
-            options={{
-              headerShown:false,
-             // : (props) => <SubHeader title="Service" {...props} />
-            }}
-            component={Service}
-          />
-          <Stack.Screen
-            name="Address"
-            options={{
-              header: (props) => <SubHeader title="Address" {...props} />,
-            }}
-            component={Address}
-          />
-          <Stack.Screen
-            name="Review"
-            options={{
-              header: (props) => <SubHeader title="Review" {...props} />,
-            }}
-            component={Review}
-          />
-          <Stack.Screen
-            name="VendorProfile_1"
-            options={{
-              headerShown: false,
-            }}
-            component={VendorProfile}
-          />
-          <Stack.Screen
-            name="Service List"
-            options={{
-              header: (props) => <SubHeader title="Service List" {...props} />,
-            }}
-            component={AllServiceList}
-          />
-          <Stack.Screen
-            name="Service List_1"
-            options={{
-              header: (props) => <SubHeader title="Service List" {...props} />,
-            }}
-            component={AllService}
-          />
+        <Stack.Screen
+          options={{
+            header: (props) => <AllReviewHeader title="23 Review" {...props} />,
+          }}
+          name="AllReview"
+          component={AllReview}
+        />
+        <Stack.Screen
+          name="TableData"
+          options={{
+            header: (props) => <SubHeader {...props} />,
+          }}
+          component={TableData}
+        />
+        <Stack.Screen
+          name="SubCategories"
+          options={{
+            header: (props) => <SubHeader {...props} />,
+          }}
+          component={SubCategories}
+        />
+        <Stack.Screen
+          name="Category"
+          options={{
+            headerShown: false,
+          }}
+          component={Category}
+        />
+        <Stack.Screen
+          name="SubCategories_1"
+          options={{
+            header: (props) => <SubHeader {...props} />,
+          }}
+          component={SubCategories}
+        />
+        <Stack.Screen
+          name="Pricing"
+          options={{
+            header: (props) => <SubHeader title="Pricing" {...props} />,
+          }}
+          component={Pricing}
+        />
+        <Stack.Screen
+          name="Service"
+          options={{
+            headerShown: false,
+            // : (props) => <SubHeader title="Service" {...props} />
+          }}
+          component={Service}
+        />
+        <Stack.Screen
+          name="Address"
+          options={{
+            header: (props) => <SubHeader title="Address" {...props} />,
+          }}
+          component={Address}
+        />
+        <Stack.Screen
+          name="Review"
+          options={{
+            header: (props) => <SubHeader title="Review" {...props} />,
+          }}
+          component={Review}
+        />
+        <Stack.Screen
+          name="VendorProfile_1"
+          options={{
+            headerShown: false,
+          }}
+          component={VendorProfile}
+        />
+        <Stack.Screen
+          name="Service List"
+          options={{
+            header: (props) => <SubHeader title="Service List" {...props} />,
+          }}
+          component={AllServiceList}
+        />
+        <Stack.Screen
+          name="Service List_1"
+          options={{
+            header: (props) => <SubHeader title="Service List" {...props} />,
+          }}
+          component={AllService}
+        />
 
-          <Stack.Screen
-            name="Vendor Address"
-            options={{
-              header: (props) => <SubHeader title="Address" {...props} />,
-            }}
-            component={VendorAddress}
-          />
-          <Stack.Screen
-            name="Support_1"
-            options={{
-              header: (props) => <SubHeader title="Report" {...props} />,
-            }}
-            component={Support}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="AddPackage"
-            component={AddPackage}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="AddPackageScreen"
-            component={AddScreen}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="AppointmentList"
-            component={AppointmentList}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="CreateAppointment"
-            component={CreateAppointment}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="AppointmentDetails"
-            component={AppointmentDetails}
-          />
-          {/* <Stack.Screen
+        <Stack.Screen
+          name="Vendor Address"
+          options={{
+            header: (props) => <SubHeader title="Address" {...props} />,
+          }}
+          component={VendorAddress}
+        />
+        <Stack.Screen
+          name="Support_1"
+          options={{
+            header: (props) => <SubHeader title="Report" {...props} />,
+          }}
+          component={Support}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddPackage"
+          component={AddPackage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddPackageScreen"
+          component={AddScreen}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="AppointmentList"
+          component={AppointmentList}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="CreateAppointment"
+          component={CreateAppointment}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="AppointmentDetails"
+          component={AppointmentDetails}
+        />
+        {/* <Stack.Screen
             options={{
               header: (props) => (
                 <AppointmentHeader title={"Appointment"} {...props} />
@@ -378,107 +380,105 @@ export default function StackRoute() {
             name="VendorAppointmentList"
             component={VendorAppointmentList}
           /> */}
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="CreateVendorAppointment"
-            component={CreateVendorAppointment}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="AppointmentForm"
-            component={AppointmentForm}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="RequestAppointmentList"
-            component={RequestAppointmentList}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="VendorAppointmentListDetails"
-            component={VendorAppointmentListDetails}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="UserAppointmentList"
-            component={UserAppointmentList}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="UserRequestAppointment"
-            component={UserRequestAppointment}
-          />
-          <Stack.Screen
-            options={{
-              header: (props) => (
-                <AppointmentHeader title={"Appointment"} {...props} />
-              ),
-            }}
-            name="UserAppointmentDetails"
-            component={UserAppointmentDetails}
-          />
-          <Stack.Screen
-            options={{
-              headerShown:false
-            }}
-            name="SubscriptionDates"
-            component={SubscriptionDates}
-          />
-          <Stack.Screen
-            options={{
-              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
-            }}
-            name="WithdrawFirst"
-            component={WithdrawFirst}
-          />
-          <Stack.Screen
-            options={{
-              header:(props)=><AccountHeader title={"Withdraw"} {...props}/>
-            }}
-            name="WithdrawSecond"
-            component={WithdrawSecond}
-          />
-          <Stack.Screen
-            options={{
-              headerShown:false
-            }}
-            name="WithdrawFinal"
-            component={WithdrawFinal}
-          />
-          <Stack.Screen
-            options={{
-              headerShown:false
-            }}
-            name="ServiceScreen"
-            component={ServiceScreen}
-          />
-          {
-            //new service account screens
-          }
-          
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="CreateVendorAppointment"
+          component={CreateVendorAppointment}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="AppointmentForm"
+          component={AppointmentForm}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="RequestAppointmentList"
+          component={RequestAppointmentList}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="VendorAppointmentListDetails"
+          component={VendorAppointmentListDetails}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="UserAppointmentList"
+          component={UserAppointmentList}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="UserRequestAppointment"
+          component={UserRequestAppointment}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => (
+              <AppointmentHeader title={"Appointment"} {...props} />
+            ),
+          }}
+          name="UserAppointmentDetails"
+          component={UserAppointmentDetails}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="SubscriptionDates"
+          component={SubscriptionDates}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => <AccountHeader title={"Withdraw"} {...props} />,
+          }}
+          name="WithdrawFirst"
+          component={WithdrawFirst}
+        />
+        <Stack.Screen
+          options={{
+            header: (props) => <AccountHeader title={"Withdraw"} {...props} />,
+          }}
+          name="WithdrawSecond"
+          component={WithdrawSecond}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="WithdrawFinal"
+          component={WithdrawFinal}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="ServiceScreen"
+          component={ServiceScreen}
+        />
+        {
+          //new service account screens
+        }
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 const New = () => {
@@ -487,7 +487,6 @@ const New = () => {
       style={{
         backgroundColor: "green",
         flex: 1,
-      }}
-    ></View>
+      }}></View>
   );
 };

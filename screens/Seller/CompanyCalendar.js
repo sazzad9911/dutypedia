@@ -328,7 +328,7 @@ const Cart = ({ value, day, times }) => {
   //const text=times.length==0?"24/7 day":null;
   const [Time, setTime] = React.useState();
   React.useEffect(() => {
-    if(times[0].title){
+    if(times[0]?.title){
       try {
         if (times.length == 0) {
           setTime("24/7 days");

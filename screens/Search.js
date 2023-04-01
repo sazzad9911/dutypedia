@@ -24,6 +24,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useIsFocused } from "@react-navigation/native";
 import { search } from "../Class/service";
 import ActivityLoader from "../components/ActivityLoader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -150,19 +151,23 @@ const SearchFirst = ({ navigation, route }) => {
   );
 };
 const Search = () => {
+  const inset=useSafeAreaInsets()
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SearchInitial"
-        component={SearchFirst}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="SearchSecond"
-        component={SearchSecond}
-      />
-    </Stack.Navigator>
+    <View style={{flex:1}}>
+      <View style={{height:inset?.top}}/>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SearchInitial"
+          component={SearchFirst}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SearchSecond"
+          component={SearchSecond}
+        />
+      </Stack.Navigator>
+    </View>
   );
 };
 
@@ -188,18 +193,17 @@ const SCREEN = ({ data }) => {
         flexWrap: "wrap",
       }}>
       {!data && (
-        <View style={{
-          justifyContent:"center",
-          alignItems:"center",
-          width:"100%",
-          height:"100%"
-        }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}>
           <ActivityLoader />
         </View>
       )}
-      {data&&data.length==0&&(
-        <NoResult/>
-      )}
+      {data && data.length == 0 && <NoResult />}
       {data &&
         data.map((doc, i) =>
           (data.length > 1 && i == 0) || i == 1 ? (

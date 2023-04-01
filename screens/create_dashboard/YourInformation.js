@@ -21,11 +21,16 @@ const { width, height } = Dimensions.get("window");
 import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import { AutoComplete } from "./AutoComplete";
 import OutsideView from "react-native-detect-press-outside";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function YourInformation({ navigation, route }) {
-  const [name, setName] = useState();
-  const [gender, setGender] = useState();
-  const [position, setPosition] = useState();
+  const businessForm = useSelector((state) => state.businessForm);
+  const dispatch = useDispatch();
+  const [name, setName] = useState(businessForm?.name);
+  const [gender, setGender] = useState(businessForm?.gender);
+  const [position, setPosition] = useState(businessForm?.position);
   const [nameError, setNameError] = useState();
 
   const PositionData = [
@@ -76,13 +81,25 @@ export default function YourInformation({ navigation, route }) {
   const childRef = useRef();
   const serviceCenterName = route?.params?.serviceCenterName;
   const suggestionBox = useRef();
+  const isFocused=useIsFocused()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
-      
       <ScrollView
         style={{
           paddingHorizontal: 20,
@@ -110,6 +127,7 @@ export default function YourInformation({ navigation, route }) {
             style={{
               marginTop: 24,
             }}
+            lowHeight={72}
             height={layoutHeight}
             component={
               <Text
@@ -190,6 +208,9 @@ export default function YourInformation({ navigation, route }) {
                 setNameError("*Name must with in 20 character");
                 return;
               }
+              dispatch({ type: "NAME", playload: name });
+              dispatch({ type: "GENDER", playload: gender });
+              dispatch({ type: "POSITION", playload: position });
               navigation.navigate("Stakeholder", {
                 data: {
                   serviceCenterName: serviceCenterName,

@@ -63,7 +63,7 @@ import UserProfile from "./UserProfile";
 import OfflineProfile from "./OfflineProfile";
 import Note, { AddNote, ViewNote } from "./Vendor/Note";
 import AddPackage from "./services/AddPackage";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import VendorFixedService from "./Vendor/VendorFixedService";
 import VendorPackageService from "./Vendor/VendorPackageService";
 import AddSubscription from "./services/AddSubscription";
@@ -99,6 +99,7 @@ import SecondStepVerification from "./Vendor/account/SecondStepVerification";
 import ThirdStepVerification from "./Vendor/account/ThirdStepVerification";
 import ReviewVerification from "./Vendor/account/ReviewVerification";
 import ConfirmationScreen from "./Vendor/account/ConfirmationScreen";
+import SearchOrder from "./SearchOrder";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -318,6 +319,13 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={ManageOrder}
+      />
+      <Stack.Screen
+        name="SearchOrder"
+        options={{
+          headerShown: false,
+        }}
+        component={SearchOrder}
       />
       <Stack.Screen
         name="Appointment"
@@ -713,6 +721,7 @@ const MainProfile = (props) => {
       user:res.data.user
     } });
   }
+  const inset=useSafeAreaInsets()
 
   const styles = StyleSheet.create({
     backgroundContainer: {
@@ -799,10 +808,11 @@ const MainProfile = (props) => {
     );
   }
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
       }}>
+        <View style={{height:inset?.top}}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: "#F2F2F6" }}
@@ -1284,7 +1294,7 @@ const MainProfile = (props) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

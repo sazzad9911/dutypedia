@@ -21,7 +21,6 @@ const ServiceCart = ({ data, onPress }) => {
   const assentColor = colors.getAssentColor();
   const backgroundColor = colors.getBackgroundColor();
   const secondaryColor = colors.getSecondaryColor();
-  
 
   return (
     <TouchableOpacity
@@ -31,53 +30,54 @@ const ServiceCart = ({ data, onPress }) => {
         }
       }}
       style={{
-        shadowColor: assentColor,
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 5,
-        borderRadius: 10,
+        borderRadius: 12,
         backgroundColor: primaryColor,
-        margin: 10,
-      }}
-    >
+        margin: 6,
+        height: 238,
+        borderWidth: 1,
+        borderColor: "#E6E6E6",
+        marginVertical:16
+      }}>
       <View
         style={{
-          width: width / 2 - 30,
-          
+          width:( width / 2) - 26,
           overflow: "hidden",
-          borderRadius: 10,
+          borderRadius: 12,
           backgroundColor: primaryColor,
-        }}
-      >
-        <Image
-          style={{
-            width: "100%",
-            height: (width / 2 - 10)/2,
-            opacity:.9
-          }}
-          source={{
-            uri: data?.images[0],
-          }}
-        />
+          flex:1
+        }}>
         <View
           style={{
-            padding: 10,
-            paddingTop: 15,
-          }}
-        >
+            borderBottomColor: "#E6E6E6",
+            borderBottomWidth: 1,
+          }}>
+          <Image
+            style={{
+              width: "100%",
+              height: 136,
+              opacity: 0.9,
+            }}
+            source={{
+              uri: data?.images[0],
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            paddingVertical: 12,
+            paddingHorizontal:8,
+            flex:1,
+            justifyContent:"space-between"
+          }}>
           <Text
-            numberOfLines={2}
+            numberOfLines={3}
             style={{
               fontSize: 14,
-              fontFamily: "Poppins-Medium",
-              lineHeight: 15,
+              fontWeight: "400",
+              lineHeight: 18,
               color: textColor,
-            }}
-          >
+            }}>
             {data?.title}
           </Text>
           <View
@@ -86,61 +86,60 @@ const ServiceCart = ({ data, onPress }) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-            }}
-          >
-            {data.type=="PACKAGE"&&(
+            }}>
+            {data.type == "PACKAGE" && (
               <View
-              style={{
-                flexDirection: "row",
-                alignItems:'center',
-                flex:1
-              }}
-            >
-              <Text numberOfLines={1}
                 style={{
-                  fontSize: 14,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
-                  marginRight: 5,
-                }}
-              >
-                {data&&data.packageData
-                &&data.packageData.map((doc,i)=>{
-                  return `${i!=0?", ":""}${doc.price}৳`
-                })}
-              </Text>
-              
-            </View>
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flex: 1,
+                }}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "600",
+                    color: "#1A1A1A",
+                  }}>
+                  {data &&
+                    data.packageData &&
+                    data.packageData.map((doc, i) => {
+                      return `${i != 0 ? ", " : ""}${doc.price}৳`;
+                    })}
+                </Text>
+              </View>
             )}
             {data.type != "PACKAGE" ? (
               <Text
                 style={{
-                  fontSize: 14,
-                  fontFamily: "Poppins-Medium",
-                  color: textColor,
-                }}
-              >
+                  fontSize: 12,
+                    fontWeight: "600",
+                    color: "#1A1A1A",
+                }}>
                 {data?.price}৳
               </Text>
             ) : null}
             <Text
               style={{
-                fontSize: 10,
-                fontFamily: "Poppins-Medium",
-                color: textColor,
-              }}
-            >
+                fontSize: 12,
+                fontWeight: "400",
+                color: "#767676",
+              }}>
               View {data?.service.views}
             </Text>
           </View>
         </View>
       </View>
-      {data.type=="PACKAGE"&&(
-        <SvgXml style={{
-          position:"absolute",
-          top:10,
-          left:10
-        }} xml={icon} height="15" width="15" />
+      {data.type == "PACKAGE" && (
+        <SvgXml
+          style={{
+            position: "absolute",
+            top: 6,
+            right: 8.6,
+          }}
+          xml={icon}
+          
+        />
       )}
     </TouchableOpacity>
   );

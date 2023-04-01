@@ -30,8 +30,14 @@ import Group from "./../../assets/Images/Group.png";
 import { CheckBox } from "../Seller/Pricing";
 import customStyle from "../../assets/stylesheet";
 import ViewMore from "../../Hooks/ViewMore";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function About({ navigation,route }) {
+  const businessForm=useSelector(state=>state.businessForm)
+  const dispatch=useDispatch()
+  const isFocused=useIsFocused()
   const [date, setDate] = useState();
   const data=route?.params?.data;
   const [Service, setService] = React.useState([
@@ -54,10 +60,24 @@ export default function About({ navigation,route }) {
   const [ServiceError, setServiceError] = React.useState();
   const [buttonVisible, setButtonVisible] = React.useState(false);
   const [layoutHeight,setLayoutHeight]=useState(0)
-  const [about,setAbout]=useState(text)
+  const [about,setAbout]=useState(businessForm?.about?businessForm.about:text)
   const [length,setLength]=useState(0)
 
-
+  React.useEffect(() => {
+    if(businessForm?.facilities){
+      setService(businessForm.facilities)
+    }
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -180,10 +200,9 @@ export default function About({ navigation,route }) {
           <IconButton active={about?true:false}
           disabled={about?false:true}
             onPress={() => {
-              if(Service.filter(d=>d.checked==true).length==0){
-                setServiceError("Select any facilities")
-                return
-              }
+              
+              dispatch({ type: "FACILITIES", playload: Service });
+              dispatch({ type: "ABOUT", playload: about });
               navigation.navigate("FinalReview",{
                 data:{
                   serviceCenterName: data.serviceCenterName,

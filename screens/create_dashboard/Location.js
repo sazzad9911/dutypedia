@@ -30,15 +30,21 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { DistrictList } from "../../Data/district";
 import InputButton from "../Vendor/account/InputButton";
 import { AreaList } from "../../Data/area";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function Location({ navigation, route }) {
+  const businessForm = useSelector((state) => state.businessForm);
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [date, setDate] = useState();
   const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
-  const [division, setDivision] = useState();
-  const [district, setDistrict] = useState();
-  const [area, setArea] = useState();
-  const [address, setAddress] = useState();
+  const [division, setDivision] = useState(businessForm?.division);
+  const [district, setDistrict] = useState(businessForm?.district);
+  const [area, setArea] = useState(businessForm?.area);
+  const [address, setAddress] = useState(businessForm?.address);
   const [index, setIndex] = useState(-1);
   const bottomSheetRef = useRef(null);
   const scrollRef = useRef();
@@ -46,13 +52,25 @@ export default function Location({ navigation, route }) {
   const [districtError, setDistrictError] = useState();
   const [areaError, setAreaError] = useState();
   // variables
-  const snapPoints = useMemo(() => ["25%", "60%"], []);
+  const snapPoints = useMemo(() => [ "70%"], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index) => {
     //console.log('handleSheetChanges', index);
     setIndex(index);
   }, []);
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -112,7 +130,7 @@ export default function Location({ navigation, route }) {
             value={division}
             onPress={() => {
               setSelect("Division");
-              setIndex(1);
+              setIndex(0);
             }}
             style={styles.input}
             placeholder={"Division"}
@@ -129,7 +147,7 @@ export default function Location({ navigation, route }) {
                   return;
                 }
                 setSelect("District");
-                setIndex(1);
+                setIndex(0);
               }}
               value={district}
               style={[styles.input, { marginTop: 0, width: width / 2 - 28 }]}
@@ -146,7 +164,7 @@ export default function Location({ navigation, route }) {
                   return;
                 }
                 setSelect("Area");
-                setIndex(1);
+                setIndex(0);
               }}
               value={area}
               style={[styles.input, { marginTop: 0, width: width / 2 - 28 }]}
@@ -164,6 +182,10 @@ export default function Location({ navigation, route }) {
             active={division && district && area ? true : false}
             disabled={division && district && area ? false : true}
             onPress={() => {
+              dispatch({ type: "DIVISION", playload: division });
+              dispatch({ type: "DISTRICT", playload: district });
+              dispatch({ type: "AREA", playload: area });
+              dispatch({ type: "ADDRESS", playload: address });
               navigation.navigate("About", {
                 data: {
                   serviceCenterName: data.serviceCenterName,
@@ -1054,14 +1076,14 @@ const Screen = ({ select, value, onChange, onClose, type }) => {
       <IconButton
         onPress={onClose}
         style={{
-          marginBottom: 20,
+          marginVertical: 8,
           backgroundColor: "#4ADE80",
           marginHorizontal: 8,
           color: "white",
         }}
         title={"Done"}
       />
-      <View style={{ height: 15 }} />
+     
     </View>
   );
 };

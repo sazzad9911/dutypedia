@@ -13,7 +13,8 @@ import ServiceCart from "../../Cart/ServiceCart";
 import ActivityLoader from "../../components/ActivityLoader";
 import { textColor } from "../../assets/colors";
 import { serverToLocal } from "../../Class/dataConverter";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 const {width,height}=Dimensions.get("window")
 
 const Tab = createMaterialTopTabNavigator();
@@ -32,44 +33,55 @@ export default function VendorServiceList({navigation,route}) {
       value: false,
       type: "PACKAGE",
     },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
-    {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
+    // {
+    //   title: "Subscription",
+    //   value: false,
+    //   type: "SUBS",
+    // },
+    // {
+    //   title: "Installment",
+    //   value: false,
+    //   type: "INSTALLMENT",
+    // },
   ]);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
   const offline=route.params.offline;
- 
+  const inset = useSafeAreaInsets();
+  
   // tabBar={(props) => <ListHeader {...props} />}
   return (
-    <SafeAreaView style={{
-      flex:1
+    <View style={{
+      flex:1,
+      backgroundColor: "#4ADE80",
     }}>
+      <StatusBar style="light" backgroundColor="#4ADE80" />
+      <View
+        style={{
+          height: inset?.top,
+        }}
+      />
       <Tab.Navigator screenOptions={{
-      tabBarLabelStyle: { fontSize: 12 },
-      tabBarItemStyle: { width: 120,
-      margin:0,
-      padding:0,
-      paddingTop:32,
-      paddingBottom:10
+      tabBarLabelStyle: { fontSize: 16,fontWeight:"500",color:"#ffffff" },
+      tabBarItemStyle: { 
+      
      },
       tabBarIndicatorStyle: {
         backgroundColor: "#AC5DCB",
       },
-      tabBarScrollEnabled: true,
+      tabBarContentContainerStyle:{
+        backgroundColor:"#4ADE80"
+      },
+      tabBarAccessibilityLabel:{
+        
+      }
+      
     }}>
       {initialState.map((doc, i) => (
         <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId,offline:offline}} component={Screens} />
       ))}
     </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 }
 const wait = (timeout) => {
@@ -179,17 +191,18 @@ const Screens = ({ navigation, route }) => {
       />
     } showsVerticalScrollIndicator={false}>
       <Text style={{
-        fontSize:16,
-        color:textColor,
-        fontFamily:"Poppins-Medium",
+        fontSize:24,
+        
+        fontWeight:"600",
         marginHorizontal:20,
-        marginVertical:10,
-        marginTop:20
+        marginVertical:16,
+        marginTop:32,
+        lineHeight:28,
       }}>Select Service</Text>
       <View style={{
         flexDirection:"row",
         flexWrap:"wrap", 
-        paddingHorizontal:10
+        paddingHorizontal:12
       }}> 
         {Data.map((doc, i) => (
           <ServiceCart onPress={()=>{

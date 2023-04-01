@@ -21,7 +21,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AllData } from "./../Data/AllData";
 import CustomAppStatusBar from "../Hooks/AppBar";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { dutyIcon } from "../assets/icon";
 import JoinCart from "../components/LandingPage/JoinCart";
@@ -55,6 +55,7 @@ const Feed = ({ navigation, route }) => {
     setRefresh((val) => !val);
     wait(1000).then(() => setRefreshing(false));
   }, []);
+  const insets=useSafeAreaInsets()
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,7 +64,7 @@ const Feed = ({ navigation, route }) => {
         style="dark"
         backgroundColor={primaryColor}
       />
-
+      <View style={{height:insets?.top}}/>
       <ScrollView
         style={{ flexGrow: 1 }}
         stickyHeaderIndices={[0]}

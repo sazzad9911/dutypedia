@@ -29,6 +29,8 @@ import orderListFilter from "./Reducers/orderListFilter";
 import offlineOrders from "./Reducers/offlineOrders";
 import saveList from "./Reducers/saveList";
 import unReadNotification from "./Reducers/unReadNotification";
+import orderRef from "./Reducers/orderRef";
+import searchOrderRef from "./Reducers/searchOrderRef";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -60,7 +62,9 @@ const combine = combineReducers({
   orderListFilter:orderListFilter,
   offlineOrders:offlineOrders,
   saveList:saveList,
-  unReadNotification:unReadNotification
+  unReadNotification:unReadNotification,
+  orderRef:orderRef,
+  searchOrderRef:searchOrderRef
 });
 const store = createStore(combine);
 export default store;
