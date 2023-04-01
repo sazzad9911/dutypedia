@@ -79,7 +79,6 @@ const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
 
-
 const VendorSearchOrder = ({ navigation, route }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -225,53 +224,53 @@ const VendorSearchOrder = ({ navigation, route }) => {
           height: inset?.top,
         }}
       />
+      <SearchOrderHeader
+        onSearch={() => {}}
+        onCreate={() => {
+          navigation.navigate("MemberList", { offline: offlineOrder });
+        }}
+        onFilter={() => {
+          //dispatch(setOrderRef(orderRef?false:true));
+          setIndex(1);
+        }}
+        allOrders={allOrders}
+        navigation={navigation}
+      />
       {offlineOrder == false && (
         <Tab.Navigator
-          tabBar={(props) => (
-            <SearchOrderHeader
-              onSearch={() => {}}
-              onCreate={() => {
-                navigation.navigate("MemberList", { offline: offlineOrder });
-              }}
-              onFilter={() => {
-                //dispatch(setOrderRef(orderRef?false:true));
-                setIndex(1);
-              }}
-              allOrders={allOrders}
-              {...props}
-            />
-          )}
           screenOptions={{
-            tabBarLabelStyle: {
-              fontSize: 12,
-              color: "white",
-              lineHeight: 16,
-              fontWeight: "500",
-            },
-            tabBarItemStyle: {
-              margin: 0,
-              padding: 0,
-              width: 120,
-              paddingTop: 0,
-              paddingBottom: 10,
-            },
             tabBarIndicatorStyle: {
-              backgroundColor: "white",
+              backgroundColor: "#ffffff",
+              height: 3,
+            },
+            tabBarStyle: {
+              backgroundColor: "#4ADE80",
+              marginLeft: 20,
+              marginRight: 20,
             },
             tabBarScrollEnabled: true,
-            tabBarPressColor: "white",
-            tabBarContentContainerStyle: {
-              backgroundColor: "#4ADE80",
-            },
-            tabBarIndicatorContainerStyle: {
-              backgroundColor: "red",
-            },
           }}>
           {initialState.map((doc, i) => (
             <Tab.Screen
-              options={{
-                title: `${initialState[i].title}(${allOrders[i]})`,
-              }}
+            options={{
+              tabBarLabel: ({ focused, color }) => (
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 16,
+                    lineHeight: 16,
+                    color: focused ? "#ffffff" : "#E8E8E8",
+                  }}>
+                  {`${initialState[i].title}`}
+                  <Text
+                    style={{
+                      fontSize: 12,
+                    }}>
+                    ({allOrders[i]})
+                  </Text>
+                </Text>
+              ),
+            }}
               key={i}
               name={doc.type}
               component={Screens}
@@ -302,15 +301,25 @@ const VendorSearchOrder = ({ navigation, route }) => {
           }}>
           {initialStateOffline.map((doc, i) => (
             <Tab.Screen
-              options={{
-                title: `${initialStateOffline[i].title}(${
-                  offlineOrders
-                    ? offlineOrders.filter(
-                        (d) => d.type == initialStateOffline[i].type
-                      ).length
-                    : "0"
-                })`,
-              }}
+            options={{
+              tabBarLabel: ({ focused, color }) => (
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 16,
+                    lineHeight: 16,
+                    color: focused ? "#ffffff" : "#E8E8E8",
+                  }}>
+                  {`${initialState[i].title}`}
+                  <Text
+                    style={{
+                      fontSize: 12,
+                    }}>
+                    ({allOrders[i]})
+                  </Text>
+                </Text>
+              ),
+            }}
               key={i}
               name={doc.type}
               component={OfflineScreens}
@@ -773,7 +782,7 @@ export const Screens = ({ navigation, route }) => {
   const key = route.params.key;
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
-  const searchOrderRef=useSelector(state=>state.searchOrderRef)
+  const searchOrderRef = useSelector((state) => state.searchOrderRef);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setRefresh((val) => !val);
@@ -808,7 +817,6 @@ export const Screens = ({ navigation, route }) => {
         });
     }
   }, [isFocused, Refresh]);
-  
 
   React.useEffect(() => {
     if (AllOrders) {
@@ -894,7 +902,10 @@ export const Screens = ({ navigation, route }) => {
             navigation.navigate("SubscriptionScript", { data: item });
             return;
           }
-          if (item.type == "INSTALLMENT" && item.status != "WAITING_FOR_ACCEPT") {
+          if (
+            item.type == "INSTALLMENT" &&
+            item.status != "WAITING_FOR_ACCEPT"
+          ) {
             navigation.navigate("InstallmentScript", { data: item });
             return;
           }
@@ -939,18 +950,18 @@ export const Screens = ({ navigation, route }) => {
   }
   return (
     <View style={{ flex: 1, paddingVertical: 8 }}>
-      {NewOrders&&NewOrders.length>0&&(
+      {NewOrders && NewOrders.length > 0 && (
         <FlatList
-        showsVerticalScrollIndicator={false}
-        data={NewOrders}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        onEndReached={() => {
-          //setPage((d) => d + 1);
-          loadData();
-          //console.log("ds");
-        }}
-      />
+          showsVerticalScrollIndicator={false}
+          data={NewOrders}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          onEndReached={() => {
+            //setPage((d) => d + 1);
+            loadData();
+            //console.log("ds");
+          }}
+        />
       )}
       {/* {Loader && <ActivityLoader />} */}
       {NewOrders && NewOrders.length == 0 && !Loader && (

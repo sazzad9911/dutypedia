@@ -101,28 +101,45 @@ const SearchOrder = ({ navigation, route }) => {
         }}
       />
       <StatusBar style="light" backgroundColor="#4ADE80" />
+      <SearchOrderHeader
+        navigation={navigation}
+        allOrders={allOrders}
+        
+      />
       <Tab.Navigator
-        tabBar={(props) => (
-          <SearchOrderHeader allOrders={allOrders} {...props} />
-        )}
         initialRouteName={type}
         screenOptions={{
-          tabBarLabelStyle: { fontSize: 12 },
-          tabBarItemStyle: {
-            margin: 0,
-            padding: 0,
-            width: 120,
-          },
           tabBarIndicatorStyle: {
-            backgroundColor: "#AC5DCB",
+            backgroundColor: "#ffffff",
+            height: 3,
+          },
+          tabBarStyle: {
+            backgroundColor: "#4ADE80",
+            marginLeft: 20,
+            marginRight: 20,
           },
           tabBarScrollEnabled: true,
-          tabBarPressColor: "white",
         }}>
         {initialState.map((doc, i) => (
           <Tab.Screen
             options={{
-              title: `${initialState[i].title}(${allOrders[i]})`,
+              tabBarLabel: ({ focused, color }) => (
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 16,
+                    lineHeight: 16,
+                    color: focused ? "#ffffff" : "#E8E8E8",
+                  }}>
+                  {`${initialState[i].title}`}
+                  <Text
+                    style={{
+                      fontSize: 12,
+                    }}>
+                    ({allOrders[i]})
+                  </Text>
+                </Text>
+              ),
             }}
             key={i}
             name={doc.type}
@@ -285,7 +302,9 @@ const Screens = ({ navigation, route }) => {
         let text = searchOrderRef;
         text = text.split(" ").join("_");
         let arr = AllOrders.filter((d) =>
-          d.service.serviceCenterName.toUpperCase().match(searchOrderRef.toUpperCase())
+          d.service.serviceCenterName
+            .toUpperCase()
+            .match(searchOrderRef.toUpperCase())
         );
         setOrders(arr);
       }

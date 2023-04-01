@@ -30,35 +30,34 @@ const ChatCart = (props) => {
   const styles = StyleSheet.create({
     outBox: {
       marginHorizontal: 20,
-      marginVertical: 0,
+      marginVertical: 8,
       width: width - 40,
-      minHeight: 50,
-      padding: 10,
+      padding: 4,
       borderRadius: 10,
       flexDirection: "row",
       alignItems: "center",
+      justifyContent: "space-between",
     },
     box: {
-      flex: 4,
-      borderBottomWidth: 1,
-      borderBottomColor: "#e5e5e5",
-      paddingVertical: 10,
+      marginLeft: 20,
+      justifyContent: "flex-end",
     },
     image: {
-      width: 45,
-      height: 45,
-      borderRadius: 25,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
       marginRight: 10,
     },
     head: {
-      fontSize: 14,
-      fontFamily: "Poppins-Medium",
-      color: textColor,
+      fontSize: 16,
+      fontWeight: "700",
+      lineHeight: 16,
     },
     text: {
-      fontSize: 13,
-      fontFamily: "Poppins-Light",
-      color: textColor,
+      fontSize: 12,
+      fontWeight: "400",
+      lineHeight: 12,
+      color: "#767676",
     },
     date: {
       fontSize: 10,
@@ -88,19 +87,19 @@ const ChatCart = (props) => {
       setLastMessage(data.messages[data.messages.length - 1]);
     }
   }, [data]);
-  useEffect(()=>{
-    if(UserInfo){
-      const socket=getSocket(UserInfo.id)
-    socket.on("getUsers",users=>{
-      if(Array.isArray(users)){
-        let arr=users.filter(d=>d.userId==UserInfo.id)
-        if(arr.length>0){
-          setActive(true)
+  useEffect(() => {
+    if (UserInfo) {
+      const socket = getSocket(UserInfo.id);
+      socket.on("getUsers", (users) => {
+        if (Array.isArray(users)) {
+          let arr = users.filter((d) => d.userId == UserInfo.id);
+          if (arr.length > 0) {
+            setActive(true);
+          }
         }
-      }
-    })
+      });
     }
-  },[UserInfo])
+  }, [UserInfo]);
 
   if (!UserInfo) {
     return null;
@@ -115,47 +114,54 @@ const ChatCart = (props) => {
         })
       }
       style={styles.outBox}>
-      <View style={styles.image}>
-        <Avatar
-          style={styles.image}
-          source={{
-            uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
-          }}
-        />
-        <View
-          style={{
-            backgroundColor: Active ? "#4ADE80" : "#F0EFEF",
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            position: "absolute",
-            top: 5,
-            right: 0,
-            borderWidth: 1,
-            borderColor: "#e5e5e5",
-            zIndex: 100,
-          }}
-        />
-      </View>
-      <View style={styles.box}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}>
+        <View style={styles.image}>
+          <Avatar
+            style={styles.image}
+            source={{
+              uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
+            }}
+          />
+          {!Active && (
+            <View
+              style={{
+                backgroundColor: "#4ADE80",
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                position: "absolute",
+                bottom: 5,
+                right: 0,
+                borderWidth: 1,
+                borderColor: "#e5e5e5",
+                zIndex: 100,
+              }}
+            />
+          )}
+        </View>
+        <View style={{}}>
           <Text style={styles.head}>
             {UserInfo
               ? `${UserInfo.firstName} ${UserInfo.lastName}`
               : "Sefa Khandakar"}
           </Text>
-          <Text style={styles.date}>
-            {LastMessage
-              ? `${serverTimeToLocal(LastMessage.updatedAt)}`
-              : "Jul 21 2:30 Pm"}
+          <Text style={styles.text}>
+            {LastMessage ? LastMessage.text : null}
           </Text>
         </View>
-        <Text style={styles.text}>{LastMessage ? LastMessage.text : null}</Text>
       </View>
+      <View style={styles.box}>
+        <Text style={styles.date}>
+          {LastMessage
+            ? `${serverTimeToLocal(LastMessage.updatedAt)}`
+            : "Jul 21 2:30 Pm"}
+        </Text>
+      </View>
+
       {props.active ? <View style={styles.active} /> : <></>}
     </TouchableOpacity>
   );

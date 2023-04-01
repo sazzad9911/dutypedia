@@ -31,6 +31,7 @@ import saveList from "./Reducers/saveList";
 import unReadNotification from "./Reducers/unReadNotification";
 import orderRef from "./Reducers/orderRef";
 import searchOrderRef from "./Reducers/searchOrderRef";
+import chatSearchRef from "./Reducers/chatSearchRef";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -64,7 +65,8 @@ const combine = combineReducers({
   saveList:saveList,
   unReadNotification:unReadNotification,
   orderRef:orderRef,
-  searchOrderRef:searchOrderRef
+  searchOrderRef:searchOrderRef,
+  chatSearchRef:chatSearchRef
 });
 const store = createStore(combine);
 export default store;

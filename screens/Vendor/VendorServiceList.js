@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet,RefreshControl,Text,Dimensions } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -27,11 +27,13 @@ export default function VendorServiceList({navigation,route}) {
       title: "Fixed",
       value: false,
       type: "ONETIME",
+      name:"Fixed service"
     },
     {
       title: "Package",
       value: false,
       type: "PACKAGE",
+      name:"Package"
     },
     // {
     //   title: "Subscription",
@@ -48,6 +50,7 @@ export default function VendorServiceList({navigation,route}) {
   const [Data, setData] = React.useState([]);
   const offline=route.params.offline;
   const inset = useSafeAreaInsets();
+  const [serviceCount,setServiceCount]=useState([0,0])
   
   // tabBar={(props) => <ListHeader {...props} />}
   return (
@@ -62,23 +65,28 @@ export default function VendorServiceList({navigation,route}) {
         }}
       />
       <Tab.Navigator screenOptions={{
-      tabBarLabelStyle: { fontSize: 16,fontWeight:"500",color:"#ffffff" },
-      tabBarItemStyle: { 
-      
-     },
       tabBarIndicatorStyle: {
-        backgroundColor: "#AC5DCB",
+        backgroundColor: "#ffffff",
+        height:3
       },
-      tabBarContentContainerStyle:{
-        backgroundColor:"#4ADE80"
+      tabBarStyle:{
+        backgroundColor:"#4ADE80",
+        marginLeft:20,
+        marginRight:20
       },
-      tabBarAccessibilityLabel:{
-        
-      }
-      
+    
     }}>
       {initialState.map((doc, i) => (
-        <Tab.Screen key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId,offline:offline}} component={Screens} />
+        <Tab.Screen options={{
+          tabBarLabel:({focused,color})=><Text style={{
+            fontWeight:"500",
+            fontSize:16,
+            lineHeight:16,
+            color:focused?"#ffffff":"#E8E8E8"
+          }}>{`${initialState[i].name} `}<Text style={{
+            fontSize:12
+          }}>{serviceCount[i]}</Text></Text>
+        }} key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId,offline:offline,setServiceCount:setServiceCount,index:i}} component={Screens} />
       ))}
     </Tab.Navigator>
     </View>
@@ -96,15 +104,25 @@ const Screens = ({ navigation, route }) => {
   const dispatch=useDispatch()
   const userId=route.params.userId;
   const offline=route.params.offline;
+  const setServiceCount=route?.params?.setServiceCount;
+  const index=route?.params?.index;
   //console.log(userId)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
   React.useEffect(() => {
+    //console.log(route)
     getOtherServices(user.token, vendor.service.id, route.params.key)
       .then((res) => {
         setData(res.data.gigs);
+        setServiceCount(v=> v.map((doc, i) => {
+          if (i == index) {
+            return res.data.gigs.length;
+          } else {
+            return doc;
+          }
+        }))
         //console.log(res.data)
         setLoader(false)
       })

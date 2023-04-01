@@ -331,54 +331,54 @@ const VendorOrder = ({ navigation, route }) => {
           height: inset?.top,
         }}
       />
+      <UserOrderHeader
+        onSearch={() => {
+          navigation.navigate("VendorSearchOrder");
+        }}
+        onCreate={() => {
+          navigation.navigate("MemberList", { offline: offlineOrder });
+        }}
+        onFilter={() => {
+          //dispatch(setOrderRef(orderRef?false:true));
+          setIndex(1);
+        }}
+        allOrders={allOrders}
+        navigation={navigation}
+      />
       {offlineOrder == false && (
         <Tab.Navigator
-          tabBar={(props) => (
-            <UserOrderHeader
-              onSearch={() => {
-                navigation.navigate("VendorSearchOrder");
-              }}
-              onCreate={() => {
-                navigation.navigate("MemberList", { offline: offlineOrder });
-              }}
-              onFilter={() => {
-                //dispatch(setOrderRef(orderRef?false:true));
-                setIndex(1);
-              }}
-              allOrders={allOrders}
-              {...props}
-            />
-          )}
           screenOptions={{
-            tabBarLabelStyle: {
-              fontSize: 12,
-              color: "white",
-              lineHeight: 16,
-              fontWeight: "500",
-            },
-            tabBarItemStyle: {
-              margin: 0,
-              padding: 0,
-              width: 120,
-              paddingTop: 0,
-              paddingBottom: 10,
-            },
             tabBarIndicatorStyle: {
-              backgroundColor: "white",
+              backgroundColor: "#ffffff",
+              height: 3,
+            },
+            tabBarStyle: {
+              backgroundColor: "#4ADE80",
+              marginLeft: 20,
+              marginRight: 20,
             },
             tabBarScrollEnabled: true,
-            tabBarPressColor: "white",
-            tabBarContentContainerStyle: {
-              backgroundColor: "#4ADE80",
-            },
-            tabBarIndicatorContainerStyle: {
-              backgroundColor: "red",
-            },
           }}>
           {initialState.map((doc, i) => (
             <Tab.Screen
               options={{
-                title: `${initialState[i].title}(${allOrders[i]})`,
+                tabBarLabel: ({ focused, color }) => (
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      fontSize: 16,
+                      lineHeight: 16,
+                      color: focused ? "#ffffff" : "#E8E8E8",
+                    }}>
+                    {`${initialState[i].title}`}
+                    <Text
+                      style={{
+                        fontSize: 12,
+                      }}>
+                      ({allOrders[i]})
+                    </Text>
+                  </Text>
+                ),
               }}
               key={i}
               name={doc.type}

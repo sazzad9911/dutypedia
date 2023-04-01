@@ -1,5 +1,5 @@
-import { Pressable, Text, View } from "react-native";
-import React from "react";
+import { Dimensions, Pressable, Text, View } from "react-native";
+import React, { useEffect } from "react";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import Animated,{interpolate} from "react-native-reanimated";
@@ -30,6 +30,7 @@ const initialState = [
   //   type: "INSTALLMENT",
   // },
 ];
+const {width,height}=Dimensions.get("window")
 export default function UserOrderHeader({
   state,
   allOrders,
@@ -42,6 +43,7 @@ export default function UserOrderHeader({
 }) {
   const vendor = useSelector((state) => state.vendor);
   //console.log(navigation);
+  
   return (
     <View
       style={{
@@ -53,6 +55,7 @@ export default function UserOrderHeader({
           flexDirection: "row",
           justifyContent: vendor ? "space-between" : "flex-end",
           paddingVertical: 16,
+          paddingBottom:6
         }}>
         {vendor && (
           <Pressable onPress={onCreate}>
@@ -71,10 +74,10 @@ export default function UserOrderHeader({
           </Pressable>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-between",
+          
         }}>
         {state?.routes.map((doc, index) => {
           const { options } = descriptors[doc.key];
@@ -84,6 +87,7 @@ export default function UserOrderHeader({
         //     inputRange,
         //     outputRange: inputRange.map((i) => (i === index ? 1 : 0)),
         //   });
+       
        
           return (
             <Pressable
@@ -96,6 +100,9 @@ export default function UserOrderHeader({
               }}
               style={{
                 paddingTop: 8,
+                width:(width-40)/3,
+                alignItems:"center",
+                
               }}
               key={index}>
               <Animated.Text
@@ -121,7 +128,7 @@ export default function UserOrderHeader({
             </Pressable>
           );
         })}
-      </View>
+      </View> */}
     </View>
   );
 }

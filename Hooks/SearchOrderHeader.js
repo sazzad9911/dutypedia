@@ -60,7 +60,8 @@ export default function SearchOrderHeader({
           flexDirection: "row",
           justifyContent: vendor ? "space-between" : "flex-end",
           paddingVertical: 16,
-          alignItems:"center"
+          alignItems:"center",
+          paddingBottom:6
         }}>
         <View style={{
             flexDirection:"row",
@@ -86,7 +87,7 @@ export default function SearchOrderHeader({
             }}>Cancel</Text>
         </Pressable>
       </View>
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -136,7 +137,7 @@ export default function SearchOrderHeader({
             </Pressable>
           );
         })}
-      </View>
+      </View> */}
     </View>
   );
 }
