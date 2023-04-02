@@ -10,6 +10,7 @@ import {
   Image,
   TextInput,
   FlatList,
+  Dimensions,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,7 +50,7 @@ import customStyle from "../assets/stylesheet";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import UserOrderHeader from "../Hooks/UserOrderHeader";
 import { setOrderRef } from "../Reducers/orderRef";
-
+const {width,height}=Dimensions.get("window")
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
 
@@ -94,14 +95,14 @@ const ManageOrder = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#4ADE80",
+       
       }}>
       <View
         style={{
           height: inset?.top,
         }}
       />
-      <StatusBar style="light" backgroundColor="#4ADE80" />
+     
       <UserOrderHeader
         onFilter={() => {
           dispatch(setOrderRef(orderRef ? false : true));
@@ -116,13 +117,12 @@ const ManageOrder = ({ navigation, route }) => {
         initialRouteName={type}
         screenOptions={{
           tabBarIndicatorStyle: {
-            backgroundColor: "#ffffff",
+            backgroundColor: "#767676",
             height: 3,
           },
           tabBarStyle: {
-            backgroundColor: "#4ADE80",
-            marginLeft: 20,
-            marginRight: 20,
+            backgroundColor: "#ffffff",
+            
           },
           tabBarScrollEnabled: true,
         }}>
@@ -135,14 +135,14 @@ const ManageOrder = ({ navigation, route }) => {
                     fontWeight: "500",
                     fontSize: 16,
                     lineHeight: 16,
-                    color: focused ? "#ffffff" : "#E8E8E8",
+                    color: focused ? "#000000" : "#A3A3A3",
                   }}>
-                  {`${initialState[i].title}`}
+                  {`${initialState[i].title} `}
                   <Text
                     style={{
                       fontSize: 12,
                     }}>
-                    ({allOrders[i]})
+                    {allOrders[i]}
                   </Text>
                 </Text>
               ),
@@ -273,16 +273,16 @@ const Screens = ({ navigation, route }) => {
               }
             });
           });
-          setLoader(false);
+         // setLoader(false);
           //console.log(res.data.total)
           setTotal(res.data.total);
         })
         .catch((err) => {
-          setLoader(false);
+         // setLoader(false);
           console.error(err.response.data.msg);
         });
     }
-  }, [isFocused, Refresh]);
+  }, [ Refresh]);
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
       e = e?.order;
@@ -383,7 +383,7 @@ const Screens = ({ navigation, route }) => {
       setOrders((d) => [...d, ...data.orders]);
     }
   };
-  if (!Array.isArray(AllOrders)) {
+  if (!AllOrders) {
     return (
       <View style={customStyle.fullBox}>
         <ActivityIndicator size="small" color={backgroundColor} />
@@ -422,6 +422,17 @@ const Screens = ({ navigation, route }) => {
         <View style={[customStyle.fullBox, { marginBottom: 20 }]}>
           <ActivityIndicator size="small" color={backgroundColor} />
         </View>
+      )}
+      {Index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#00000010",
+            position: "absolute",
+            width: width,
+            height: height,
+            top: 0,
+          }}
+        />
       )}
       <BottomSheet
         enablePanDownToClose={true}

@@ -816,7 +816,7 @@ export const Screens = ({ navigation, route }) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [isFocused, Refresh]);
+  }, [ Refresh]);
 
   React.useEffect(() => {
     if (AllOrders) {
@@ -867,14 +867,15 @@ export const Screens = ({ navigation, route }) => {
     }
   }, [orderListFilter]);
   React.useEffect(() => {
+    
     if (AllOrders) {
       if (!searchOrderRef) {
         setNewOrders(AllOrders);
       } else {
         let text = searchOrderRef;
-        text = text.split(" ").join("_");
+        text = text.split(" ")[0];
         let arr = AllOrders.filter((d) =>
-          d.status.toUpperCase().match(text.toUpperCase())
+          d.user.firstName.toUpperCase().match(text.toUpperCase())
         );
         setNewOrders(arr);
       }

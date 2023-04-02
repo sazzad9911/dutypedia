@@ -93,14 +93,14 @@ const SearchOrder = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#4ADE80",
+        
       }}>
       <View
         style={{
           height: inset?.top,
         }}
       />
-      <StatusBar style="light" backgroundColor="#4ADE80" />
+      
       <SearchOrderHeader
         navigation={navigation}
         allOrders={allOrders}
@@ -110,13 +110,12 @@ const SearchOrder = ({ navigation, route }) => {
         initialRouteName={type}
         screenOptions={{
           tabBarIndicatorStyle: {
-            backgroundColor: "#ffffff",
+            backgroundColor: "#767676",
             height: 3,
           },
           tabBarStyle: {
-            backgroundColor: "#4ADE80",
-            marginLeft: 20,
-            marginRight: 20,
+            backgroundColor: "#ffffff",
+            
           },
           tabBarScrollEnabled: true,
         }}>
@@ -129,7 +128,7 @@ const SearchOrder = ({ navigation, route }) => {
                     fontWeight: "500",
                     fontSize: 16,
                     lineHeight: 16,
-                    color: focused ? "#ffffff" : "#E8E8E8",
+                    color: focused ? "#000000" : "#A3A3A3",
                   }}>
                   {`${initialState[i].title}`}
                   <Text
@@ -277,7 +276,7 @@ const Screens = ({ navigation, route }) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [isFocused]);
+  }, []);
 
   React.useEffect(() => {
     if (AllOrders) {

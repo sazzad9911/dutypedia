@@ -13,7 +13,6 @@ import {
   Modal,
   Image,
   Alert,
-  StatusBar,
 } from "react-native";
 import ChatBox from "./../components/ChatBox";
 import { EvilIcons } from "@expo/vector-icons";
@@ -37,6 +36,8 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import { GiftedChat } from "react-native-gifted-chat";
 import { SafeAreaView } from "moti";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { StatusBar } from "expo-status-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -96,7 +97,7 @@ const ChatScreen = (props) => {
   const username = params && params.username ? params.username : null;
   const isFocused = useIsFocused();
   const [Refresh, setRefresh] = React.useState(false);
-
+  const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
   React.useEffect(() => {
     if (isFocused) {
@@ -218,27 +219,36 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
 
   return (
-    <Animated.View style={{ flex: 1 }} layout={FadeIn}>
-      {Platform.OS == "android" && <View style={{ height: 30 }} />}
+    <Animated.View
+      style={{ flex: 1, backgroundColor: "#4ADE80" }}
+      layout={FadeIn}>
+      <View
+        style={{
+          height: inset?.top,
+        }}
+      />
+      <StatusBar style="light" backgroundColor="#4ADE80" />
       <ChatHead
         user={UserInfo}
         name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}
       />
-      <View
-        style={{ flex: 1,marginTop:Platform.OS=="android"?-30:-5 }}>
-        <GiftedChat
-          renderComposer={() => <BottomBar onSend={send} />}
-          messages={Messages}
-          onSend={(messages) => {
-            console.log(messages);
-          }}
-          user={{
-            _id: user.user.id,
-          }}
-        />
-      </View>
+      <GiftedChat
+        wrapInSafeArea={false}
+        messagesContainerStyle={{
+          backgroundColor: "#ffffff",
+        }}
+        renderComposer={() => <BottomBar onSend={send} />}
+        messages={Messages}
+        onSend={(messages) => {
+          console.log(messages);
+        }}
+        user={{
+          _id: user.user.id,
+        }}
+        renderBubble={(props)=><Bubble {...props}/>}
+      />
     </Animated.View>
   );
 };
@@ -487,3 +497,11 @@ const serverMessageToLocal = (message, user) => {
   }
   return null;
 };
+const Bubble=(props)=>{
+  console.log(props?.text)
+  return(
+    <View>
+
+    </View>
+  )
+}

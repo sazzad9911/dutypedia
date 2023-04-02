@@ -11,18 +11,18 @@ import { Color } from "./../assets/colors";
 const { width, height } = Dimensions.get("window");
 import { useSelector, useDispatch } from "react-redux";
 import Avatar from "../components/Avatar";
-import { serverTimeToLocal } from "../action";
+import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
 import { getSocket } from "../Class/socket";
 
-const ChatCart = (props) => {
-  const [Active, setActive] = React.useState(props.active);
-  const navigation = props.navigation;
+const ChatCart = ({navigation,active,data,number}) => {
+  const [Active, setActive] = React.useState(active);
+  //const navigation = props.navigation;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
   const secondaryColor = colors.getSecondaryColor();
   const textColor = colors.getTextColor();
-  const data = props.data;
+  //const data = props.data;
   const user = useSelector((state) => state.user);
   const [UserInfo, setUserInfo] = React.useState();
   const [LastMessage, setLastMessage] = React.useState();
@@ -32,10 +32,10 @@ const ChatCart = (props) => {
       marginHorizontal: 20,
       marginVertical: 8,
       width: width - 40,
-      padding: 4,
+      paddingVertical: 4,
       borderRadius: 10,
       flexDirection: "row",
-      alignItems: "center",
+      alignItems: "flex-end",
       justifyContent: "space-between",
     },
     box: {
@@ -113,11 +113,14 @@ const ChatCart = (props) => {
           username: UserInfo.username,
         })
       }
-      style={styles.outBox}>
+      style={[styles.outBox,{
+        
+      }]}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
+          
         }}>
         <View style={styles.image}>
           <Avatar
@@ -135,34 +138,56 @@ const ChatCart = (props) => {
                 borderRadius: 5,
                 position: "absolute",
                 bottom: 5,
-                right: 0,
-                borderWidth: 1,
-                borderColor: "#e5e5e5",
+                right: 1,
+                borderWidth: 1.5,
+                borderColor: "#ffffff",
                 zIndex: 100,
               }}
             />
           )}
         </View>
-        <View style={{}}>
+        <View style={{
+          
+        }}>
           <Text style={styles.head}>
             {UserInfo
               ? `${UserInfo.firstName} ${UserInfo.lastName}`
               : "Sefa Khandakar"}
           </Text>
-          <Text style={styles.text}>
+          {LastMessage&&(
+            <Text style={[styles.text,{marginTop:4}]}>
             {LastMessage ? LastMessage.text : null}
           </Text>
+          )}
         </View>
       </View>
-      <View style={styles.box}>
-        <Text style={styles.date}>
+      <View style={[styles.box,{
+        alignItems:"flex-end"
+      }]}>
+       {number&&(
+         <View style={{
+          backgroundColor:"#4ADE80",
+          width:16,
+          height:16,
+          borderRadius:8,
+          justifyContent:"center",
+          alignItems:"center",
+          marginBottom:4
+        }}>
+          <Text style={{
+            fontSize:12,
+            color:"#ffffff",
+            fontWeight:"700",
+            
+          }}>{number}</Text>
+        </View>
+       )}
+        <Text style={styles.text}>
           {LastMessage
-            ? `${serverTimeToLocal(LastMessage.updatedAt)}`
+            ? `${dateDifference(new Date(),LastMessage.updatedAt)==0?timeConverter(LastMessage.updatedAt):dateDifference(new Date(),LastMessage.updatedAt)==1?"Yesterday":serverTimeToLocal(LastMessage.updatedAt)}`
             : "Jul 21 2:30 Pm"}
         </Text>
       </View>
-
-      {props.active ? <View style={styles.active} /> : <></>}
     </TouchableOpacity>
   );
 };

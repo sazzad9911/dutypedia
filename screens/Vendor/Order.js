@@ -306,18 +306,18 @@ const VendorOrder = ({ navigation, route }) => {
   }, []);
   const inset = useSafeAreaInsets();
   //console.log(vendorOrders)
-  if (Loader) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <ActivityLoader />
-      </View>
-    );
-  }
+  // if (Loader) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //       }}>
+  //       <ActivityLoader />
+  //     </View>
+  //   );
+  // }
 
   return (
     <View
@@ -477,6 +477,17 @@ const VendorOrder = ({ navigation, route }) => {
         </TouchableOpacity>
         
       </View> */}
+      {Index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#00000010",
+            position: "absolute",
+            width: width,
+            height: height,
+            top: 0,
+          }}
+        />
+      )}
       <BottomSheet
         enablePanDownToClose={true}
         ref={bottomSheetRef}
@@ -889,7 +900,7 @@ export const Screens = ({ navigation, route }) => {
   }, []);
   React.useEffect(() => {
     if (user && vendor) {
-      setLoader(true);
+      //setLoader(true);
       getOrders(user.token, "vendor", vendor.service.id, route.name, 0)
         .then((res) => {
           setAllOrders(res.data.orders);
@@ -904,17 +915,17 @@ export const Screens = ({ navigation, route }) => {
               }
             });
           });
-          setLoader(false);
+          //setLoader(false);
           if (isFocused) {
             setTotal(res.data.total);
           }
         })
         .catch((err) => {
-          setLoader(false);
+          //setLoader(false);
           console.error(err.response.data.msg);
         });
     }
-  }, [isFocused, Refresh]);
+  }, [ Refresh]);
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
       e = e.order;
