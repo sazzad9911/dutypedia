@@ -29,7 +29,7 @@ import { SvgXml } from "react-native-svg";
 import { logOut, logoutVendor } from "../../Class/auth";
 import Button from "./../../components/Button";
 import IconButton from "../../components/IconButton";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Avatar from "../../components/Avatar";
 import { getDashboardInfo } from "../../Class/service";
 import { useIsFocused } from "@react-navigation/native";
@@ -45,21 +45,24 @@ const Menu = ({ navigation }) => {
   const textColor = colors.getTextColor();
   const secondaryColor = colors.getSecondaryColor();
   const backgroundColor = colors.getBackgroundColor();
-  const [service,setService]=useState(0)
-  const [info,setInfo]=useState()
-  const user=useSelector(state=>state.user)
-  const isFocused=useIsFocused()
+  const [service, setService] = useState(0);
+  const [info, setInfo] = useState();
+  const user = useSelector((state) => state.user);
+  const isFocused = useIsFocused();
+  const inset=useSafeAreaInsets()
 
-  useEffect(()=>{
-    if(user){
-      getDashboardInfo(user.token,vendor.service.id).then(res=>{
-        //console.log(res.data)
-        setInfo(res.data)
-      }).catch(err=>{
-        console.error(err.response.data.msg)
-      })
+  useEffect(() => {
+    if (user) {
+      getDashboardInfo(user.token, vendor.service.id)
+        .then((res) => {
+          //console.log(res.data)
+          setInfo(res.data);
+        })
+        .catch((err) => {
+          console.error(err.response.data.msg);
+        });
     }
-  },[])
+  }, []);
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -69,104 +72,122 @@ const Menu = ({ navigation }) => {
       }, 50);
     } else {
       //console.log("seen")
-     // dispatch(setHideBottomBar(false));
+      // dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
 
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={{height:Platform.OS=="android"?StatusBar.currentHeight:0}}/>
-      <View style={styles.container}>
-        <View style={styles.pictureBox}>
-          <SvgXml
-            style={styles.icon}
-            width={"100"}
-            height={"100"}
-            xml={squire}
+    <View style={{flex:1}}>
+      <View
+        style={{
+          height: inset?.top,
+        }}
+      />
+      <StatusBar barStyle="dark-content"/>
+      <View
+          style={{
+            height: Platform.OS == "android" ? StatusBar.currentHeight : 0,
+          }}
+        />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        
+        <View style={styles.container}>
+          <View style={styles.pictureBox}>
+            <SvgXml
+              style={styles.icon}
+              width={"100"}
+              height={"100"}
+              xml={squire}
+            />
+            <Avatar
+              style={{ width: 80, height: 80, borderWidth: 0 }}
+              source={{ uri: vendor?.service?.profilePhoto }}
+            />
+          </View>
+          <Text
+            style={{
+              marginTop: 24,
+              fontWeight: "800",
+              fontSize: 20,
+              lineHeight: 24,
+            }}>
+            {vendor && vendor.service && vendor.service.serviceCenterName
+              ? vendor.service.serviceCenterName
+              : "Easin Arafat It Service"}
+          </Text>
+          <Text
+            style={{
+              marginTop: 12,
+              fontSize: 16,
+              fontWeight: "500",
+              lineHeight: 18,
+              color: "#767676",
+            }}>
+            {vendor &&
+            vendor.service &&
+            vendor.service.providerInfo &&
+            vendor.service.providerInfo.title
+              ? vendor.service.providerInfo.title + " "
+              : "Mr" + " "}
+            {vendor &&
+            vendor.service &&
+            vendor.service.providerInfo &&
+            vendor.service.providerInfo.name
+              ? vendor.service.providerInfo.name
+              : "Easin Arafat"}
+          </Text>
+        </View>
+        <View
+          style={{ paddingHorizontal: 28, paddingTop: 31, paddingBottom: 52 }}>
+          <Cart
+            onPress={() => navigation.navigate("VendorProfile")}
+            Icon={icon}
+            title={"View Profile"}
+            text={`${info?.services ? info?.services : "0"} Services`}
           />
-          <Avatar
-            style={{ width: 80, height: 80, borderWidth: 0 }}
-            source={{ uri: vendor?.service?.profilePhoto }}
+          <Cart
+            onPress={() => navigation.navigate("Member")}
+            Icon={member}
+            title={"Member List"}
+            text={`${info?.members > 9 ? info?.members : `0${info?.members}`}`}
+          />
+          <Cart
+            onPress={() => navigation.navigate("VendorAccountBalance")}
+            Icon={account}
+            title={"Account Balance"}
+            text={`${info?.balance}৳`}
+          />
+          <Cart
+            onPress={() => {
+              navigation.navigate("CustomerReview");
+            }}
+            Icon={review}
+            title={"Customer Review"}
+            text={`${info?.reviews} review`}
+          />
+          <Cart
+            onPress={() => navigation.navigate("UserNotice")}
+            Icon={notice}
+            title={"Manage Notice"}
+            text={`${info?.notices > 9 ? info?.notices : `0${info?.notices}`}`}
+          />
+          <Cart
+            onPress={() => navigation.navigate("Support")}
+            Icon={support}
+            title={"Support"}
+          />
+          <Cart
+            onPress={() => {
+              logoutVendor();
+              dispatch({ type: "SET_VENDOR", playload: false });
+            }}
+            Icon={logout}
+            title={"Logout"}
           />
         </View>
-        <Text
-          style={{
-            marginTop: 24,
-            fontWeight: "800",
-            fontSize: 20,
-            lineHeight: 24,
-          }}>
-          {vendor && vendor.service && vendor.service.serviceCenterName
-            ? vendor.service.serviceCenterName
-            : "Easin Arafat It Service"}
-        </Text>
-        <Text
-          style={{
-            marginTop: 12,
-            fontSize: 16,
-            fontWeight: "500",
-            lineHeight: 18,
-            color: "#767676",
-          }}>
-          {vendor &&
-          vendor.service &&
-          vendor.service.providerInfo &&
-          vendor.service.providerInfo.title
-            ? vendor.service.providerInfo.title + " "
-            : "Mr" + " "}
-          {vendor &&
-          vendor.service &&
-          vendor.service.providerInfo &&
-          vendor.service.providerInfo.name
-            ? vendor.service.providerInfo.name
-            : "Easin Arafat"}
-        </Text>
-      </View>
-      <View
-        style={{ paddingHorizontal: 28, paddingTop: 31, paddingBottom: 52 }}>
-        <Cart
-          onPress={() => navigation.navigate("VendorProfile")}
-          Icon={icon}
-          title={"View Profile"}
-          text={`${info?.services?info?.services:"0"} Services`}
-        />
-        <Cart
-          onPress={() => navigation.navigate("Member")}
-          Icon={member}
-          title={"Member List"}
-          text={`${info?.members>9?info?.members:`0${info?.members}`}`}
-        />
-        <Cart
-          onPress={() => navigation.navigate("VendorAccountBalance")}
-          Icon={account}
-          title={"Account Balance"}
-          text={`${info?.balance}৳`}
-        />
-        <Cart onPress={()=>{
-          navigation.navigate("CustomerReview")
-        }} Icon={review} title={"Customer Review"} text={`${info?.reviews} review`} />
-        <Cart
-          onPress={() => navigation.navigate("UserNotice")}
-          Icon={notice}
-          title={"Manage Notice"}
-          text={`${info?.notices>9?info?.notices:`0${info?.notices}`}`}
-        />
-        <Cart
-          onPress={() => navigation.navigate("Support")}
-          Icon={support}
-          title={"Support"}
-        />
-        <Cart
-          onPress={() => {
-            logoutVendor();
-            dispatch({ type: "SET_VENDOR", playload: false });
-          }}
-          Icon={logout}
-          title={"Logout"}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 
   return (

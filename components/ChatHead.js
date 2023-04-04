@@ -42,6 +42,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
       justifyContent: "flex-start",
       alignItems: "center",
       paddingTop: 0,
+      
     },
     image: {
       width: 30,
@@ -49,12 +50,12 @@ const ChatHead = ({ navigation, name, image, user }) => {
       borderRadius: 20,
       marginLeft: 12,
       marginRight: 8,
-      borderColor: "#ffffff",
+      borderColor: "#e5e5e5",
     },
     text: {
       fontSize: 20,
       fontWeight: "500",
-      color: "#ffffff",
+      color: "#000000",
       lineHeight: 23,
     },
     icon: {
@@ -141,7 +142,9 @@ const ChatHead = ({ navigation, name, image, user }) => {
         paddingHorizontal: 20,
         alignItems: "center",
         flexDirection: "row",
-        backgroundColor: "#4ADE80",
+        //backgroundColor: "#4ADE80",
+        borderBottomWidth:1,
+        borderBottomColor:"#F1EFEF"
       }}>
       <View style={styles.box}>
         <Pressable
@@ -194,7 +197,12 @@ const ChatHead = ({ navigation, name, image, user }) => {
           flexDirection: "row",
         }}>
         {vendor && (
-          <Pressable>
+          <Pressable onPress={()=>{
+            navigation.navigate("VendorServiceList", {
+              userId: user?.id,
+              offline: false,
+            });
+          }}>
             <SvgXml xml={cart} />
           </Pressable>
         )}
@@ -360,8 +368,8 @@ const MenuBar = (props) => {
     </OutsideView>
   );
 };
-const backIcon = `<svg width="9" height="18" viewBox="0 0 9 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.99984 16.92L1.47984 10.4C0.709844 9.63002 0.709844 8.37002 1.47984 7.60002L7.99984 1.08002" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+const backIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 19.9201L8.48 13.4001C7.71 12.6301 7.71 11.3701 8.48 10.6001L15 4.08008" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
 const cart = `<svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -377,9 +385,9 @@ const cart = `<svg width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns=
 </svg>
 `;
 const notification = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 21H15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5.26855 10.5C5.26855 9.61603 5.44266 8.74072 5.78094 7.92405C6.11921 7.10738 6.61503 6.36533 7.24009 5.74028C7.86514 5.11522 8.60719 4.6194 9.42386 4.28112C10.2405 3.94285 11.1158 3.76874 11.9998 3.76874C12.8838 3.76874 13.7591 3.94285 14.5757 4.28112C15.3924 4.6194 16.1345 5.11522 16.7595 5.74028C17.3846 6.36533 17.8804 7.10738 18.2187 7.92405C18.5569 8.74072 18.7311 9.61603 18.7311 10.5V10.5C18.7311 13.8562 19.4342 15.8062 20.0529 16.875C20.1186 16.9888 20.1533 17.1179 20.1534 17.2493C20.1535 17.3808 20.1191 17.5099 20.0536 17.6238C19.9881 17.7378 19.8938 17.8325 19.7801 17.8985C19.6665 17.9645 19.5375 17.9995 19.4061 18H4.59355C4.46212 17.9995 4.33312 17.9645 4.21948 17.8985C4.10583 17.8325 4.01153 17.7378 3.94601 17.6238C3.8805 17.5099 3.84608 17.3808 3.84619 17.2493C3.84631 17.1179 3.88096 16.9888 3.94667 16.875C4.56542 15.8062 5.26855 13.8562 5.26855 10.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M17.1938 2.25C18.7209 3.21395 19.9534 4.57938 20.7563 6.19687" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M3.24365 6.19687C4.04664 4.57938 5.2791 3.21395 6.80615 2.25" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9 21H15" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.26875 10.4998C5.26875 9.61584 5.44286 8.74054 5.78113 7.92387C6.11941 7.10719 6.61523 6.36515 7.24029 5.74009C7.86534 5.11504 8.60739 4.61922 9.42406 4.28094C10.2407 3.94266 11.116 3.76855 12 3.76855C12.884 3.76855 13.7593 3.94266 14.5759 4.28094C15.3926 4.61922 16.1347 5.11504 16.7597 5.74009C17.3848 6.36515 17.8806 7.10719 18.2189 7.92387C18.5571 8.74054 18.7312 9.61584 18.7312 10.4998V10.4998C18.7312 13.8561 19.4344 15.8061 20.0531 16.8748C20.1188 16.9886 20.1535 17.1177 20.1536 17.2491C20.1537 17.3806 20.1193 17.5097 20.0538 17.6237C19.9883 17.7376 19.894 17.8323 19.7803 17.8983C19.6667 17.9644 19.5377 17.9993 19.4062 17.9998H4.59375C4.46232 17.9993 4.33332 17.9644 4.21967 17.8983C4.10603 17.8323 4.01172 17.7376 3.94621 17.6237C3.8807 17.5097 3.84627 17.3806 3.84639 17.2491C3.84651 17.1177 3.88116 16.9886 3.94687 16.8748C4.56562 15.8061 5.26875 13.8561 5.26875 10.4998Z" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.1937 2.25C18.7208 3.21395 19.9533 4.57938 20.7562 6.19687" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3.24375 6.19687C4.04674 4.57938 5.2792 3.21395 6.80625 2.25" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;

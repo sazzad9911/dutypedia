@@ -27,18 +27,19 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
         style={{
           flexDirection: "row",
           alignItems: "center",
-          marginVertical: 5,
+          marginVertical: 8,
         }}
       >
         <View>
           <Avatar
             style={{
-              height: 45,
-              width: 45,
+              height: 40,
+              width: 40,
+              borderWidth:0
             }}
             source={image}
           />
-          <View
+          {/* <View
             style={{
               backgroundColor: Active ? "#4ADE80" : "#F0EFEF",
               width: 10,
@@ -50,7 +51,7 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
               borderWidth: 1,
               borderColor: "#e5e5e5",
             }}
-          />
+          /> */}
         </View>
         <View
           style={{
@@ -59,19 +60,19 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
         >
           <Text
             style={{
-              fontFamily: "Poppins-Medium",
+              fontWeight: "500",
               fontSize: 16,
             }}
           >
             {name}
           </Text>
-          <Text
+          {/* <Text
             style={{
               fontSize: 14,
             }}
           >
             {username}
-          </Text>
+          </Text> */}
         </View>
       </View>
     </Pressable>

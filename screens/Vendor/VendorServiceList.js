@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet,RefreshControl,Text,Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  RefreshControl,
+  Text,
+  Dimensions,
+} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import NewTab from "./components/NewTab";
@@ -7,33 +13,36 @@ import ListHeader from "./components/ListHeader";
 import { SvgXml } from "react-native-svg";
 import { FAB } from "react-native-paper";
 import { getOtherServices } from "../../Class/service";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
 import ServiceCart from "../../Cart/ServiceCart";
 import ActivityLoader from "../../components/ActivityLoader";
 import { textColor } from "../../assets/colors";
 import { serverToLocal } from "../../Class/dataConverter";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-const {width,height}=Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
 
-export default function VendorServiceList({navigation,route}) {
+export default function VendorServiceList({ navigation, route }) {
   const [initialState, setInitialState] = React.useState([
     {
       title: "Fixed",
       value: false,
       type: "ONETIME",
-      name:"Fixed service"
+      name: "Fixed service",
     },
     {
       title: "Package",
       value: false,
       type: "PACKAGE",
-      name:"Package"
+      name: "Package",
     },
     // {
     //   title: "Subscription",
@@ -48,64 +57,85 @@ export default function VendorServiceList({navigation,route}) {
   ]);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState([]);
-  const offline=route.params.offline;
+  const offline = route.params.offline;
   const inset = useSafeAreaInsets();
-  const [serviceCount,setServiceCount]=useState([0,0])
-  
+  const [serviceCount, setServiceCount] = useState([0, 0]);
+
   // tabBar={(props) => <ListHeader {...props} />}
   return (
-    <View style={{
-      flex:1,
-      backgroundColor: "#4ADE80",
-    }}>
-      <StatusBar style="light" backgroundColor="#4ADE80" />
+    <View
+      style={{
+        flex: 1,
+       
+      }}>
+      <StatusBar style="dark" backgroundColor="#ffffff" />
       <View
         style={{
           height: inset?.top,
         }}
       />
-      <Tab.Navigator screenOptions={{
-      tabBarIndicatorStyle: {
-        backgroundColor: "#ffffff",
-        height:3
-      },
-      tabBarStyle:{
-        backgroundColor:"#4ADE80",
-        marginLeft:20,
-        marginRight:20
-      },
-    
-    }}>
-      {initialState.map((doc, i) => (
-        <Tab.Screen options={{
-          tabBarLabel:({focused,color})=><Text style={{
-            fontWeight:"500",
-            fontSize:16,
-            lineHeight:16,
-            color:focused?"#ffffff":"#E8E8E8"
-          }}>{`${initialState[i].name} `}<Text style={{
-            fontSize:12
-          }}>{serviceCount[i]}</Text></Text>
-        }} key={i} name={doc.title} initialParams={{key:doc.type,userId:route.params.userId,offline:offline,setServiceCount:setServiceCount,index:i}} component={Screens} />
-      ))}
-    </Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarIndicatorStyle: {
+            backgroundColor: "#767676",
+            height: 3,
+          },
+          tabBarStyle: {
+            backgroundColor: "#ffffff",
+          },
+          
+        }}>
+        {initialState.map((doc, i) => (
+          <Tab.Screen
+            options={{
+              tabBarLabel: ({ focused, color }) => (
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 16,
+                    lineHeight: 16,
+                    color: focused ? "#000000" : "#A3A3A3",
+                  }}>
+                  {`${initialState[i].name} `}
+                  <Text
+                    style={{
+                      fontSize: 12,
+                    }}>
+                    {serviceCount[i]}
+                  </Text>
+                </Text>
+              ),
+            }}
+            key={i}
+            name={doc.title}
+            initialParams={{
+              key: doc.type,
+              userId: route.params.userId,
+              offline: offline,
+              setServiceCount: setServiceCount,
+              index: i,
+            }}
+            component={Screens}
+          />
+        ))}
+      </Tab.Navigator>
     </View>
   );
 }
 const wait = (timeout) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 const Screens = ({ navigation, route }) => {
   const [Data, setData] = React.useState();
   const [Loader, setLoader] = React.useState(true);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
   const [refreshing, setRefreshing] = React.useState(false);
-  const dispatch=useDispatch()
-  const userId=route.params.userId;
-  const offline=route.params.offline;
-  const setServiceCount=route?.params?.setServiceCount;
-  const index=route?.params?.index;
+  const dispatch = useDispatch();
+  const userId = route.params.userId;
+  const offline = route.params.offline;
+  const setServiceCount = route?.params?.setServiceCount;
+  const index = route?.params?.index;
   //console.log(userId)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -116,36 +146,35 @@ const Screens = ({ navigation, route }) => {
     getOtherServices(user.token, vendor.service.id, route.params.key)
       .then((res) => {
         setData(res.data.gigs);
-        setServiceCount(v=> v.map((doc, i) => {
-          if (i == index) {
-            return res.data.gigs.length;
-          } else {
-            return doc;
-          }
-        }))
+        setServiceCount((v) =>
+          v.map((doc, i) => {
+            if (i == index) {
+              return res.data.gigs.length;
+            } else {
+              return doc;
+            }
+          })
+        );
         //console.log(res.data)
-        setLoader(false)
+        setLoader(false);
       })
       .catch((err) => {
         console.warn(err.response.data.msg);
-        setLoader(false)
+        setLoader(false);
       });
   }, [refreshing]);
-  if(Loader){
-    return(
-      <ActivityLoader/>
-    )
+  if (Loader) {
+    return <ActivityLoader />;
   }
 
   if (!Data) {
     return (
       <View
         style={{
-          flex: 1, 
+          flex: 1,
           alignItems: "center",
           justifyContent: "center",
-        }}
-      >
+        }}>
         <SvgXml xml={emptyIcon} width="80%" />
         <FAB
           color="#FFFFFF"
@@ -202,40 +231,58 @@ const Screens = ({ navigation, route }) => {
     );
   }
   return (
-    <ScrollView refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />
-    } showsVerticalScrollIndicator={false}>
-      <Text style={{
-        fontSize:24,
-        
-        fontWeight:"600",
-        marginHorizontal:20,
-        marginVertical:16,
-        marginTop:32,
-        lineHeight:28,
-      }}>Select Service</Text>
-      <View style={{
-        flexDirection:"row",
-        flexWrap:"wrap", 
-        paddingHorizontal:12
-      }}> 
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      showsVerticalScrollIndicator={false}>
+      <Text
+        style={{
+          fontSize: 24,
+
+          fontWeight: "600",
+          marginHorizontal: 20,
+          marginVertical: 16,
+          marginTop: 32,
+          lineHeight: 28,
+        }}>
+        Select Service
+      </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          paddingHorizontal: 12,
+        }}>
         {Data.map((doc, i) => (
-          <ServiceCart onPress={()=>{
-            
-            if(doc.type=="ONETIME"||doc.type=="SUBS"||doc.type=="INSTALLMENT"){
-              navigation.navigate("SelectDate",{data:doc,userId:userId,offline:offline})
-            }else if(doc.type=="PACKAGE"){
-              navigation.navigate("PackageList",{data:doc,userId:userId,offline:offline})
-            }
-            //console.log(doc.type)
-            //navigation.navigate("SelectDate",{data:doc,userId:userId})
-          }} key={i} data={doc} />
+          <ServiceCart
+            onPress={() => {
+              if (
+                doc.type == "ONETIME" ||
+                doc.type == "SUBS" ||
+                doc.type == "INSTALLMENT"
+              ) {
+                navigation.navigate("SelectDate", {
+                  data: doc,
+                  userId: userId,
+                  offline: offline,
+                });
+              } else if (doc.type == "PACKAGE") {
+                navigation.navigate("PackageList", {
+                  data: doc,
+                  userId: userId,
+                  offline: offline,
+                });
+              }
+              //console.log(doc.type)
+              //navigation.navigate("SelectDate",{data:doc,userId:userId})
+            }}
+            key={i}
+            data={doc}
+          />
         ))}
       </View>
-      <View style={{height:20}}/>
+      <View style={{ height: 20 }} />
     </ScrollView>
   );
 };

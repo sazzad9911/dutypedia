@@ -41,7 +41,7 @@ export default function MemberList({ navigation, route }) {
   const [Search, setSearch] = React.useState();
   const offline = route.params.offline;
   const inset = useSafeAreaInsets();
-  const [users,setUsers]=useState()
+  const [users, setUsers] = useState();
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -50,7 +50,7 @@ export default function MemberList({ navigation, route }) {
           .then((res) => {
             setLoading(false);
             setData(res.members);
-            setUsers(res.members)
+            setUsers(res.members);
           })
           .catch((err) => {
             setLoading(false);
@@ -62,7 +62,7 @@ export default function MemberList({ navigation, route }) {
         .then((res) => {
           setLoading(false);
           setData(res.members);
-          setUsers(res.members)
+          setUsers(res.members);
         })
         .catch((err) => {
           setLoading(false);
@@ -70,13 +70,17 @@ export default function MemberList({ navigation, route }) {
         });
     }
   }, [user + vendor]);
-  useEffect(()=>{
-    if(!Search){
-      setUsers(Data)
-    }else{
-      setUsers(Data?.filter(d=>d.user.firstName.toUpperCase().match(Search.toUpperCase())))
+  useEffect(() => {
+    if (!Search) {
+      setUsers(Data);
+    } else {
+      setUsers(
+        Data?.filter((d) =>
+          d.user.firstName.toUpperCase().match(Search.toUpperCase())
+        )
+      );
     }
-  },[Search])
+  }, [Search]);
   if (!Data) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -89,16 +93,15 @@ export default function MemberList({ navigation, route }) {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#4ADE80",
       }}>
-      <StatusBar style="light" backgroundColor="#4ADE80" />
+      <StatusBar style="dark" backgroundColor="#ffffff" />
       <View
         style={{
           height: inset?.top,
         }}
       />
       <ScrollView
-        style={{ flex: 1,backgroundColor:"#FFFFFF" }}
+        style={{ flex: 1, backgroundColor: "#FFFFFF" }}
         stickyHeaderIndices={[0]}
         scrollEventThrottle={16}
         stickyHeaderHiddenOnScroll={true}
@@ -119,38 +122,52 @@ export default function MemberList({ navigation, route }) {
             },
           ]}>
           <View
-        style={{
-          flexDirection: "row",
-          justifyContent: vendor ? "space-between" : "flex-end",
-          paddingVertical: 16,
-          alignItems:"center",
-          backgroundColor: "#4ADE80",
-          paddingHorizontal:20
-        }}>
-        <View style={{
-            flexDirection:"row",
-            borderRadius:4,
-            backgroundColor:"#ffffff",
-            flex:1,
-            height:32,
-            paddingHorizontal:16,
-            alignItems:"center"
-        }}>
-            <TextInput onChangeText={setSearch} value={Search} style={{flex:1}} placeholder="Type name"/>
-            <SvgXml xml={searchIcon}/>
-        </View>
-        <Pressable onPress={()=>{
-            navigation.goBack()
-        }} style={{
-            marginLeft:8
-        }}>
-            <Text style={{
-                fontWeight:"700",
-                fontSize:16,
-                color:"#ffffff"
-            }}>Cancel</Text>
-        </Pressable>
-      </View>
+            style={{
+              flexDirection: "row",
+              justifyContent: vendor ? "space-between" : "flex-end",
+              paddingVertical: 16,
+              alignItems: "center",
+              backgroundColor: "#ffffff",
+              paddingHorizontal: 20,
+              borderBottomWidth: 1,
+              borderBottomColor: "#F1EFEF",
+            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                borderRadius: 4,
+                backgroundColor: "#ffffff",
+                flex: 1,
+                height: 32,
+                paddingHorizontal: 16,
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor: "#D1D1D1",
+              }}>
+              <TextInput
+                onChangeText={setSearch}
+                value={Search}
+                style={{ flex: 1 }}
+                placeholder="Type name"
+              />
+              <SvgXml xml={searchIcon} />
+            </View>
+            <Pressable
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={{
+                marginLeft: 8,
+              }}>
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: 16,
+                }}>
+                Cancel
+              </Text>
+            </Pressable>
+          </View>
         </Animated.View>
         {/* <Text
           style={{
@@ -162,45 +179,46 @@ export default function MemberList({ navigation, route }) {
           }}>
           {Data.length > 9 ? Data.length : "0" + Data.length} Members
         </Text> */}
-        <View style={{height:8}}/>
-        {users&&users.map((doc, i) => (
-          <UserCart
-            onSelect={() => {
-              navigation.navigate("VendorServiceList", {
-                userId: doc.userId ? doc.userId : doc.id,
-                offline: offline,
-              });
-            }}
-            data={doc}
-            key={i}
-          />
-        ))}
-        {Data&&Data.length==0&&(
+        <View style={{ height: 8 }} />
+        {users &&
+          users.map((doc, i) => (
+            <UserCart
+              onSelect={() => {
+                navigation.navigate("VendorServiceList", {
+                  userId: doc.userId ? doc.userId : doc.id,
+                  offline: offline,
+                });
+              }}
+              data={doc}
+              key={i}
+            />
+          ))}
+        {Data && Data.length == 0 && (
           <View
             style={{
               alignItems: "center",
-              height:"100%",
+              height: "100%",
               paddingTop: "20%",
-              justifyContent:"center"
-          }}>
-          <SvgXml xml={vectorImage} />
-          <Text
-            style={{
-              color: textColor,
-              fontSize: 16,
-              marginTop: 20,
+              justifyContent: "center",
             }}>
-            No member found!
-          </Text>
-        </View>
+            <SvgXml xml={vectorImage} />
+            <Text
+              style={{
+                color: textColor,
+                fontSize: 16,
+                marginTop: 20,
+              }}>
+              No member found!
+            </Text>
+          </View>
         )}
-        {users&&users.length==0&&(
-            <View
+        {users && users.length == 0 && (
+          <View
             style={{
               alignItems: "center",
-              height:"100%",
+              height: "100%",
               paddingTop: "20%",
-              justifyContent:"center"
+              justifyContent: "center",
             }}>
             <SvgXml xml={noIcon} />
             <Text
@@ -212,8 +230,8 @@ export default function MemberList({ navigation, route }) {
               No member found!
             </Text>
           </View>
-          )}
-        <View style={{height:8}}/>
+        )}
+        <View style={{ height: 8 }} />
       </ScrollView>
     </View>
   );
@@ -352,7 +370,7 @@ const vectorImage = `<svg width="165" height="216" viewBox="0 0 165 216" fill="n
 <path d="M43.7405 66.7246C42.2088 66.9946 40.8586 67.2329 39.2873 67.5109C39.8163 68.6388 40.2585 69.5918 40.7323 70.5926C38.9557 71.085 37.7556 69.8619 36.2554 69.2503C36.2396 70.5688 36.6896 71.6966 37.1081 72.8165C37.2344 73.1501 37.4319 73.4678 37.5898 73.7934C38.2057 75.0087 38.1582 75.1516 36.8634 75.7394C36.4844 75.9141 36.1054 76.065 35.7501 76.2715C34.5262 76.9864 33.5156 77.8998 32.8208 79.3135C33.7288 79.4327 34.5183 79.5439 35.4816 79.671C35.0552 80.8067 34.2973 81.4977 33.3103 81.7281C32.2286 81.9822 31.0284 82.2364 29.9704 82.014C28.2729 81.6645 26.5674 81.1086 25.0277 80.3143C22.8327 79.1865 20.7325 77.8362 18.6796 76.4542C15.1502 74.0635 12.3946 70.9659 10.4286 67.1376C8.17041 62.7374 6.14913 58.2578 5.26481 53.3493C4.87003 51.1413 4.71208 48.9333 5.08318 46.6935C5.38321 44.8588 6.37019 43.8501 8.15461 43.4688C9.92325 43.0955 11.6761 43.2385 13.3816 43.6038C21.1272 45.248 28.2649 48.2899 34.2973 53.5161C37.9135 56.6534 40.7717 60.4897 42.9351 64.8104C43.2352 65.3902 43.4484 66.0177 43.7405 66.7246Z" fill="#F5F2EB"/>
 <path d="M66.1246 95.993C65.943 97.0176 65.564 97.6848 64.9245 97.8118C64.1507 97.9707 63.5506 97.5656 63.2901 96.9302C63.0058 96.2471 62.8005 95.4449 62.8716 94.7222C62.99 93.5467 64.2139 93.1575 65.0271 94.0391C65.5246 94.5713 65.7693 95.3338 66.1246 95.993Z" fill="#F5F2EB"/>
 </svg>
-`
+`;
 const UserCart = ({ data, onSelect }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -373,7 +391,7 @@ const UserCart = ({ data, onSelect }) => {
           paddingHorizontal: 20,
           paddingVertical: 4,
           paddingTop: 0,
-          marginVertical:8
+          marginVertical: 8,
         }}>
         <View
           style={{
@@ -459,16 +477,15 @@ const UserCart = ({ data, onSelect }) => {
             </View>
           </View>
         </View>
-        
       </View>
     </TouchableOpacity>
   );
 };
-const searchIcon=`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+const searchIcon = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M7.74363 1.33398C4.20476 1.33398 1.33594 4.13945 1.33594 7.60016C1.33594 11.0609 4.20476 13.8663 7.74363 13.8663C9.25789 13.8663 10.6495 13.3527 11.7461 12.4938L13.8309 14.5273L13.8863 14.5739C14.0797 14.7139 14.3538 14.6979 14.5288 14.5264C14.7212 14.3377 14.7208 14.0321 14.5279 13.8439L12.4673 11.8341C13.5131 10.719 14.1513 9.23247 14.1513 7.60016C14.1513 4.13945 11.2825 1.33398 7.74363 1.33398ZM7.74105 2.29883C10.7348 2.29883 13.1618 4.67217 13.1618 7.59984C13.1618 10.5275 10.7348 12.9009 7.74105 12.9009C4.74726 12.9009 2.32031 10.5275 2.32031 7.59984C2.32031 4.67217 4.74726 2.29883 7.74105 2.29883Z" fill="#767676"/>
 </svg>
-`
-const noIcon=`<svg width="145" height="144" viewBox="0 0 145 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+`;
+const noIcon = `<svg width="145" height="144" viewBox="0 0 145 144" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_3817_24284)">
 <path d="M64.1205 0H81.0005C87.4786 0.171958 93.9357 0.814988 100.32 1.924C105.576 2.8182 110.722 4.26731 115.672 6.247C120.439 8.30644 124.828 11.149 128.656 14.657C131.164 16.8645 133.355 19.4067 135.168 22.212C137.434 25.8379 139.204 29.7506 140.431 33.846C141.725 37.5432 142.644 41.3605 143.176 45.241C143.933 50.613 144.197 56.034 144.433 61.448V82.314C144.284 88.5131 143.745 94.6967 142.818 100.828C142.092 104.576 141.079 108.262 139.786 111.854C137.955 117.593 134.86 122.847 130.729 127.232C126.906 131.157 122.442 134.403 117.529 136.832C112.918 138.958 108.064 140.511 103.074 141.456C96.3175 142.858 89.4505 143.664 82.5525 143.864C78.1525 144.089 73.7375 143.926 69.3295 143.996C61.9035 144.052 54.4845 143.53 47.1395 142.435C38.9825 141.006 30.6785 139.107 23.5795 134.643C17.7855 130.953 12.4795 126.213 9.03748 120.199C6.35148 115.606 4.74548 110.499 3.28248 105.412C2.44021 102.109 1.85842 98.7457 1.54248 95.352C0.760477 87.7 0.586477 79.988 0.563477 72.3C0.571477 65.527 0.701477 58.748 1.23548 51.994C1.52592 47.0716 2.33029 42.1931 3.63548 37.438C4.68535 33.5698 6.07059 29.8005 7.77548 26.173C9.63212 22.3519 12.1414 18.8842 15.1905 15.926C18.9659 12.22 23.3272 9.16257 28.0985 6.877C32.8182 4.77897 37.7736 3.25766 42.8575 2.346C49.8638 0.949326 56.9782 0.164371 64.1205 0ZM68.7415 30.418C64.38 31.2267 60.3878 33.399 57.3401 36.622C54.2924 39.8449 52.3464 43.9522 51.7825 48.352C51.6123 50.2295 51.5559 52.1156 51.6135 54C47.4815 54.02 43.3465 53.972 39.2135 54.025C37.7175 54.1293 36.3152 54.7912 35.284 55.8799C34.2527 56.9686 33.6676 58.4046 33.6445 59.904C33.6391 73.504 33.6418 87.106 33.6525 100.71C33.7882 104.156 35.218 107.425 37.6568 109.864C40.0956 112.302 43.3642 113.732 46.8105 113.868C63.9798 113.885 81.1501 113.885 98.3215 113.868C101.052 113.81 103.701 112.927 105.92 111.335C108.139 109.743 109.824 107.517 110.754 104.949C111.71 102.415 111.468 99.672 111.497 97.022C111.492 84.64 111.489 72.257 111.489 59.873C111.443 58.3326 110.81 56.868 109.721 55.7777C108.632 54.6874 107.168 54.0534 105.627 54.005C101.593 53.988 97.5605 54.005 93.5275 53.997C93.6205 51.7524 93.5074 49.5039 93.1895 47.28C92.6985 44.5642 91.6757 41.9723 90.1797 39.6532C88.6837 37.334 86.744 35.3335 84.4722 33.7665C82.2005 32.1995 79.6414 31.097 76.9421 30.5223C74.2428 29.9477 71.4565 29.9122 68.7435 30.418H68.7415Z" fill="#4ADE80"/>
 <path d="M65.7115 37.731C67.7052 36.7015 69.905 36.1339 72.1479 36.0704C74.3908 36.0069 76.6193 36.449 78.668 37.3641C80.7168 38.2791 82.5332 39.6436 83.9828 41.3564C85.4323 43.0691 86.4777 45.0862 87.0415 47.258C87.5045 49.4735 87.67 51.7408 87.5335 54C77.5562 54.0053 67.5802 54.0053 57.6055 54C57.4857 51.8479 57.6237 49.6893 58.0165 47.57C58.5158 45.4729 59.4617 43.5083 60.7897 41.8103C62.1177 40.1122 63.7965 38.7208 65.7115 37.731Z" fill="#4ADE80"/>
@@ -481,4 +498,4 @@ const noIcon=`<svg width="145" height="144" viewBox="0 0 145 144" fill="none" xm
 </clipPath>
 </defs>
 </svg>
-`
+`;

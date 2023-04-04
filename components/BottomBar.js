@@ -6,7 +6,8 @@ import {
   Text,
   Keyboard,
   Platform,
-  BackHandler
+  BackHandler,
+  Dimensions
 } from "react-native";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
@@ -19,6 +20,7 @@ import { checkVendor } from "./../Class/auth";
 import { useDispatch } from "react-redux";
 import { useRoute } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+const   {width,height}=Dimensions.get("window")
 
 const BottomBar = (props) => {
   const navigation = props.navigation;
@@ -84,13 +86,8 @@ const BottomBar = (props) => {
       justifyContent: "space-between",
       paddingHorizontal: 20,
       paddingVertical: 5,
-      shadowOffset: {
-        height: 1,
-        width: 1,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 1,
-      elevation: 1,
+      borderTopWidth:1,
+      borderTopColor:"#F1EFEF"
     },
     button: {
       justifyContent: "center",
@@ -112,6 +109,13 @@ const BottomBar = (props) => {
   }
   return (
     <Animated.View entering={FadeIn} style={[styles.box,{paddingBottom:insets?.bottom}]}>
+      {/* <View style={StyleSheet.absoluteFillObject}>
+        <View style={{
+          width:50,
+          height:2,
+          backgroundColor:"#4ADE80"
+        }}/>
+      </View> */}
     <TouchableOpacity
       onPress={() => {
         if (route == 0 && vendor) {
@@ -200,6 +204,10 @@ const BottomBar = (props) => {
         if (Array.isArray(user)) {
           navigation.navigate("LogIn");
           return;
+        }
+        if(route==2){
+          navigation.navigate("MessageScreen")
+          return
         }
         navigation.navigate("Message");
       }}

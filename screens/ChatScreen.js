@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -29,15 +29,21 @@ import { useIsFocused } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import IconButton from "../components/IconButton";
 import CameraScreen from "../components/CameraScreen";
-import { fileFromURL } from "../action";
+import {
+  dateDifference,
+  fileFromURL,
+  serverTimeToLocal,
+  timeConverter,
+} from "../action";
 import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import { SafeAreaView } from "moti";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgXml } from "react-native-svg";
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -217,17 +223,72 @@ const ChatScreen = (props) => {
   //return <VideoCallingScreen/>
   //return <CallingScreen user={UserInfo} audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
+  const renderBubble = (props) => {
+    const { currentMessage } = props;
+    //console.log(currentMessage)
+    if (currentMessage?.image) {
+      console.log(currentMessage?.image)
+      return (
+        <View style={newStyles.imageBox}>
+          <Image
+            style={newStyles.image}
+            source={{ uri: currentMessage.image }}
+          />
+          <View style={{ flexDirection: "row",paddingHorizontal:8 }}>
+            <Text style={[newStyles.dateText, { textAlign: "left" }]}>
+              dfdgf
+              <Text>dds.png</Text>
+            </Text>
+            <View style={{ width: 8 }} />
+            <Text style={newStyles.dateText}>{dateDifference(new Date(), currentMessage.createdAt) == 0
+              ? timeConverter(currentMessage.createdAt)
+              : dateDifference(new Date(), currentMessage.createdAt) == 1
+              ? "Yesterday"
+              : serverTimeToLocal(currentMessage.createdAt)}</Text>
+          </View>
+        </View>
+      );
+    }
+    if (UserInfo?.id?.match(currentMessage?.user?._id)) {
+      return (
+        <View style={newStyles.senderBox}>
+          <Text style={newStyles.title}>{currentMessage.user.name}</Text>
+          <Text style={newStyles.text}>{currentMessage?.text}</Text>
+          <Text style={newStyles.dateText}>
+            {dateDifference(new Date(), currentMessage.createdAt) == 0
+              ? timeConverter(currentMessage.createdAt)
+              : dateDifference(new Date(), currentMessage.createdAt) == 1
+              ? "Yesterday"
+              : serverTimeToLocal(currentMessage.createdAt)}
+          </Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={newStyles.receiverBox}>
+        <Text style={[newStyles.text, { color: "white" }]}>
+          {currentMessage?.text}
+        </Text>
+        <Text style={[newStyles.dateText, { color: "white" }]}>
+          {dateDifference(new Date(), currentMessage.createdAt) == 0
+            ? timeConverter(currentMessage.createdAt)
+            : dateDifference(new Date(), currentMessage.createdAt) == 1
+            ? "Yesterday"
+            : serverTimeToLocal(currentMessage.createdAt)}
+        </Text>
+      </View>
+    );
+  };
 
   return (
-    <Animated.View
-      style={{ flex: 1, backgroundColor: "#4ADE80" }}
-      layout={FadeIn}>
+    <Animated.View style={{ flex: 1 }} layout={FadeIn}>
       <View
         style={{
           height: inset?.top,
         }}
       />
-      <StatusBar style="light" backgroundColor="#4ADE80" />
+      <StatusBar style="dark" backgroundColor="#ffffff" />
       <ChatHead
         user={UserInfo}
         name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
@@ -239,6 +300,9 @@ const ChatScreen = (props) => {
         messagesContainerStyle={{
           backgroundColor: "#ffffff",
         }}
+        isKeyboardInternallyHandled={true}
+        minComposerHeight={72}
+        maxComposerHeight={200}
         renderComposer={() => <BottomBar onSend={send} />}
         messages={Messages}
         onSend={(messages) => {
@@ -247,7 +311,7 @@ const ChatScreen = (props) => {
         user={{
           _id: user.user.id,
         }}
-        renderBubble={(props)=><Bubble {...props}/>}
+        renderBubble={renderBubble}
       />
     </Animated.View>
   );
@@ -267,86 +331,100 @@ const BottomBar = (props) => {
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",
-      paddingHorizontal: 10,
+      paddingHorizontal: 20,
       alignItems: "center",
-      backgroundColor: primaryColor,
-      shadowOffset: {
-        width: 1,
-        height: 1,
-      },
-      shadowColor: backgroundColor,
-      shadowRadius: 3,
-      elevation: 3,
-      paddingVertical: 5,
+      backgroundColor: "#ffffff",
     },
     icon: {
-      margin: 5,
-      flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      marginRight: 12,
     },
     input: {
-      backgroundColor: secondaryColor,
-      flex: 7,
-      height: 40,
+      flex: 1,
       fontSize: 14,
-      borderRadius: 20,
-      paddingHorizontal: 10,
-      fontFamily: "Poppins-Light",
+      fontWeight: "500",
+      minHeight: 32,
+    },
+    inputOutBox: {
+      flexDirection: "row",
+      flex: 1,
+      minHeight: 48,
+      borderRadius: 32,
+      backgroundColor: "#F8F8F8",
+      padding: 8,
+      alignItems: "center",
     },
   });
   const [image, setImage] = React.useState();
   const [Visible, setVisible] = React.useState(false);
   const [CameraVisible, setCameraVisible] = React.useState(false);
   const [ImageLoader, setImageLoader] = React.useState(false);
+  const [focused, setFocused] = useState(false);
 
   return (
     <View style={styles.view}>
-      <TouchableOpacity
-        onPress={() => {
-          setImageLoader(false);
-          pickImage()
-            .then((res) => {
-              if (res) {
-                setImage(res);
-                setVisible(true);
-              }
-            })
-            .catch((err) => {
-              Alert.alert("Opps!", "Could not load image");
+      {focused ? (
+        <SvgXml
+          style={{
+            marginRight: 8,
+          }}
+          xml={com}
+        />
+      ) : (
+        <Animated.View style={{ flexDirection: "row" }} entering={FadeIn}>
+          <TouchableOpacity
+            onPress={() => {
+              setImageLoader(false);
+              pickImage()
+                .then((res) => {
+                  if (res) {
+                    setImage(res);
+                    setVisible(true);
+                  }
+                })
+                .catch((err) => {
+                  Alert.alert("Opps!", "Could not load image");
+                });
+            }}
+            style={[styles.icon]}>
+            <SvgXml xml={img} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCameraVisible(true);
+            }}
+            style={styles.icon}>
+            <SvgXml xml={cam} />
+          </TouchableOpacity>
+        </Animated.View>
+      )}
+      <View style={styles.inputOutBox}>
+        <TextInput
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          numberOfLines={6}
+          multiline={true}
+          value={Message}
+          onChangeText={(value) => {
+            setMessage(value);
+          }}
+          style={styles.input}
+          placeholder="Write message here.."
+          placeholderTextColor={assentColor}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (!Message) {
+              return;
+            }
+            props.onSend(Message).then(() => {
+              setMessage("");
             });
-        }}
-        style={styles.icon}>
-        <EvilIcons name="image" size={26} color={textColor} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setCameraVisible(true);
-        }}
-        style={styles.icon}>
-        <Ionicons name="camera-outline" size={24} color={textColor} />
-      </TouchableOpacity>
-      <TextInput
-        value={Message}
-        onChangeText={(value) => {
-          setMessage(value);
-        }}
-        style={styles.input}
-        placeholder="Write message here.."
-        placeholderTextColor={assentColor}
-      />
-      <TouchableOpacity
-        onPress={() => {
-          if (!Message) {
-            return;
-          }
-          props.onSend(Message).then(() => {
-            setMessage("");
-          });
-        }}
-        style={styles.icon}>
-        <Ionicons name="send-outline" size={20} color={assentColor} />
-      </TouchableOpacity>
+          }}>
+          <SvgXml xml={send} />
+        </TouchableOpacity>
+      </View>
       <Modal
         visible={Visible}
         onRequestClose={() => {
@@ -497,11 +575,67 @@ const serverMessageToLocal = (message, user) => {
   }
   return null;
 };
-const Bubble=(props)=>{
-  console.log(props?.text)
-  return(
-    <View>
-
-    </View>
-  )
-}
+const img = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.57999 19.0111L2.55999 19.0311C2.28999 18.4411 2.11999 17.7711 2.04999 17.0311C2.11999 17.7611 2.30999 18.4211 2.57999 19.0111ZM9.00099 10.3811C9.6322 10.3811 10.2376 10.1303 10.6839 9.68401C11.1302 9.23767 11.381 8.63231 11.381 8.00109C11.381 7.36988 11.1302 6.76452 10.6839 6.31818C10.2376 5.87184 9.6322 5.62109 9.00099 5.62109C8.36977 5.62109 7.76441 5.87184 7.31807 6.31818C6.87174 6.76452 6.62099 7.36988 6.62099 8.00109C6.62099 8.63231 6.87174 9.23767 7.31807 9.68401C7.76441 10.1303 8.36977 10.3811 9.00099 10.3811Z" fill="black" fill-opacity="0.87"/>
+<path d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.19C2 17.28 2.19 18.23 2.56 19.03C3.42 20.93 5.26 22 7.81 22H16.19C19.83 22 22 19.83 22 16.19V7.81C22 4.17 19.83 2 16.19 2ZM20.37 12.5C19.59 11.83 18.33 11.83 17.55 12.5L13.39 16.07C12.61 16.74 11.35 16.74 10.57 16.07L10.23 15.79C9.52 15.17 8.39 15.11 7.59 15.65L3.85 18.16C3.63 17.6 3.5 16.95 3.5 16.19V7.81C3.5 4.99 4.99 3.5 7.81 3.5H16.19C19.01 3.5 20.5 4.99 20.5 7.81V12.61L20.37 12.5Z" fill="black" fill-opacity="0.87"/>
+</svg>
+`;
+const cam = `<svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.63015 22H15.3703C18.1989 22 19.3262 20.31 19.4594 18.25L19.9923 9.99C20.0255 9.47783 19.9507 8.96446 19.7726 8.48161C19.5944 7.99876 19.3167 7.5567 18.9565 7.18275C18.5963 6.80879 18.1613 6.51089 17.6785 6.30746C17.1956 6.10403 16.6752 5.99939 16.1492 6C15.5241 6 14.9502 5.65 14.6632 5.11L13.9253 3.66C13.4539 2.75 12.2241 2 11.1788 2H8.83195C7.77637 2 6.54658 2.75 6.07516 3.66L5.33728 5.11C5.05033 5.65 4.47643 6 3.85128 6C1.62741 6 -0.135298 7.83 0.00817817 9.99L0.541089 18.25C0.664068 20.31 1.80163 22 4.63015 22Z" fill="black" fill-opacity="0.87"/>
+<path d="M11.5375 8.75H8.46299C8.04281 8.75 7.69437 8.41 7.69437 8C7.69437 7.59 8.04281 7.25 8.46299 7.25H11.5375C11.9577 7.25 12.3061 7.59 12.3061 8C12.3061 8.41 11.9577 8.75 11.5375 8.75ZM10.0013 18.131C10.9199 18.131 11.801 17.7749 12.4506 17.141C13.1002 16.5071 13.4652 15.6474 13.4652 14.751C13.4652 13.8546 13.1002 12.9949 12.4506 12.361C11.801 11.7271 10.9199 11.371 10.0013 11.371C9.08257 11.371 8.20151 11.7271 7.5519 12.361C6.90229 12.9949 6.53734 13.8546 6.53734 14.751C6.53734 15.6474 6.90229 16.5071 7.5519 17.141C8.20151 17.7749 9.08257 18.131 10.0013 18.131Z" fill="white"/>
+</svg>
+`;
+const send = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.44 12.0001H10.84M9.51 4.23013L18.07 8.51013C21.91 10.4301 21.91 13.5701 18.07 15.4901L9.51 19.7701C3.75 22.6501 1.4 20.2901 4.28 14.5401L5.15 12.8101C5.37 12.3701 5.37 11.6401 5.15 11.2001L4.28 9.46013C1.4 3.71013 3.76 1.35013 9.51 4.23013Z" stroke="#00A53C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+const com = `<svg width="9" height="18" viewBox="0 0 9 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.999973 17.0002L7.51997 10.4802C8.28997 9.71016 8.28997 8.45016 7.51997 7.68016L0.999973 1.16016" stroke="#00A53C" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+const newStyles = StyleSheet.create({
+  dateText: {
+    fontSize: 12,
+    lineHeight: 14,
+    fontWeight: "400",
+    marginTop: 4,
+    textAlign: "right",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "400",
+  },
+  title: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontWeight: "500",
+    color: "#21AD54",
+  },
+  senderBox: {
+    backgroundColor: "#EFF8F4",
+    padding: 8,
+    maxWidth: "60%",
+    borderRadius: 12,
+    borderBottomLeftRadius: 4,
+  },
+  receiverBox: {
+    padding: 8,
+    maxWidth: "60%",
+    borderRadius: 12,
+    backgroundColor: "#4ADE80",
+    borderBottomRightRadius: 4,
+  },
+  imageBox:{
+    width:"60%",
+    height:140,
+    overflow:"hidden",
+    borderRadius:4,
+    borderWidth:1,
+    borderColor:"#E6E6E6"
+  },
+  image:{
+    width:"100%",
+    height:114
+  }
+});

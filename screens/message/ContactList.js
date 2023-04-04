@@ -108,6 +108,7 @@ export default function ContactList({ navigation,route }) {
           paddingHorizontal: 20,
           minHeight:"100%"
         }}>
+          <View style={{height:8}}/>
         {Members &&
           Members.map((doc, i) => (
             <ChatMemberCart
@@ -149,6 +150,7 @@ export default function ContactList({ navigation,route }) {
             Ops! Please logged in as ''Vendor''
           </Text>
         )}
+        <View style={{height:8}}/>
       </View>
     </ScrollView>
   );
