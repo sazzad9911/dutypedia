@@ -14,7 +14,7 @@ import Avatar from "../components/Avatar";
 import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
 import { getSocket } from "../Class/socket";
 
-const ChatCart = ({navigation,active,data,number}) => {
+const ChatCart = ({ navigation, active, data, number }) => {
   const [Active, setActive] = React.useState(active);
   //const navigation = props.navigation;
   const isDark = useSelector((state) => state.isDark);
@@ -29,14 +29,14 @@ const ChatCart = ({navigation,active,data,number}) => {
 
   const styles = StyleSheet.create({
     outBox: {
-      marginHorizontal: 20,
-      marginVertical: 8,
-      width: width - 40,
-      paddingVertical: 4,
+      marginLeft: 20,
+      marginVertical: 0,
+      width: width - 20,
+      paddingVertical: 0,
       borderRadius: 10,
       flexDirection: "row",
-      alignItems: "flex-end",
-      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop:12
     },
     box: {
       marginLeft: 20,
@@ -47,6 +47,7 @@ const ChatCart = ({navigation,active,data,number}) => {
       height: 56,
       borderRadius: 28,
       marginRight: 10,
+      borderColor: "#e5e5e5",
     },
     head: {
       fontSize: 16,
@@ -113,80 +114,97 @@ const ChatCart = ({navigation,active,data,number}) => {
           username: UserInfo.username,
         })
       }
-      style={[styles.outBox,{
-        
-      }]}>
+      style={[styles.outBox, {}]}>
+      <View style={styles.image}>
+        <Avatar
+          style={styles.image}
+          source={{
+            uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
+          }}
+        />
+        {Active && (
+          <View
+            style={{
+              backgroundColor: "#4ADE80",
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              position: "absolute",
+              bottom: 5,
+              right: 1,
+              borderWidth: 1.5,
+              borderColor: "#ffffff",
+              zIndex: 100,
+            }}
+          />
+        )}
+      </View>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
+          borderBottomWidth:1,
+          borderBottomColor:"#E6E6E6",
+          flex:1,
+          height:"100%",
+          justifyContent:"space-between",
+          paddingVertical:12,
           
         }}>
-        <View style={styles.image}>
-          <Avatar
-            style={styles.image}
-            source={{
-              uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
-            }}
-          />
-          {!Active && (
-            <View
-              style={{
-                backgroundColor: "#4ADE80",
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                position: "absolute",
-                bottom: 5,
-                right: 1,
-                borderWidth: 1.5,
-                borderColor: "#ffffff",
-                zIndex: 100,
-              }}
-            />
-          )}
-        </View>
-        <View style={{
-          
-        }}>
+        <View style={{}}>
           <Text style={styles.head}>
             {UserInfo
               ? `${UserInfo.firstName} ${UserInfo.lastName}`
               : "Sefa Khandakar"}
           </Text>
-          {LastMessage&&(
-            <Text style={[styles.text,{marginTop:4}]}>
-            {LastMessage ? LastMessage.text : null}
-          </Text>
+          {LastMessage && (
+            <Text numberOfLines={1} style={[styles.text, { marginTop: 4,maxWidth:"60%" }]}>
+              {LastMessage ? LastMessage.text : null}
+            </Text>
           )}
         </View>
-      </View>
-      <View style={[styles.box,{
-        alignItems:"flex-end"
-      }]}>
-       {number&&(
-         <View style={{
-          backgroundColor:"#4ADE80",
-          width:16,
-          height:16,
-          borderRadius:8,
-          justifyContent:"center",
-          alignItems:"center",
-          marginBottom:4
-        }}>
-          <Text style={{
-            fontSize:12,
-            color:"#ffffff",
-            fontWeight:"700",
-            
-          }}>{number}</Text>
+        <View
+          style={[
+            styles.box,
+            {
+              alignItems: "flex-end",
+              paddingRight:20,
+              flex:1
+            },
+          ]}>
+          {number && (
+            <View
+              style={{
+                backgroundColor: "#4ADE80",
+                width: 16,
+                height: 16,
+                borderRadius: 8,
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 4,
+              }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "#ffffff",
+                  fontWeight: "700",
+                }}>
+                {number}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.text}>
+            {LastMessage
+              ? `${
+                  dateDifference(new Date(), LastMessage.updatedAt) == 0
+                    ? timeConverter(LastMessage.updatedAt)
+                    : dateDifference(new Date(), LastMessage.updatedAt) == 1
+                    ? "Yesterday"
+                    : serverTimeToLocal(LastMessage.updatedAt)
+                }`
+              : "Jul 21 2:30 Pm"}
+          </Text>
         </View>
-       )}
-        <Text style={styles.text}>
-          {LastMessage
-            ? `${dateDifference(new Date(),LastMessage.updatedAt)==0?timeConverter(LastMessage.updatedAt):dateDifference(new Date(),LastMessage.updatedAt)==1?"Yesterday":serverTimeToLocal(LastMessage.updatedAt)}`
-            : "Jul 21 2:30 Pm"}
-        </Text>
       </View>
     </TouchableOpacity>
   );

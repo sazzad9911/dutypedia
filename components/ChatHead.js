@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { setCallingScreen } from "../Reducers/callingScreen";
 import { socket } from "../Class/socket";
 import { SvgXml } from "react-native-svg";
+import { getUserInfo } from "../Class/member";
 
 const ChatHead = ({ navigation, name, image, user }) => {
   const isDark = useSelector((state) => state.isDark);
@@ -42,7 +43,6 @@ const ChatHead = ({ navigation, name, image, user }) => {
       justifyContent: "flex-start",
       alignItems: "center",
       paddingTop: 0,
-      
     },
     image: {
       width: 30,
@@ -89,9 +89,16 @@ const ChatHead = ({ navigation, name, image, user }) => {
   const newUser = useSelector((state) => state.user);
   const callingScreen = useSelector((state) => state.callingScreen);
   const vendor = useSelector((state) => state.vendor);
+  const users = useSelector((state) => state.user);
+  const [data, setData] = useState();
+  const [notify, setNotify] = useState(true);
   //const [AudioOnly,setAudioOnly]=React.useState(false)
   //console.log(newUser.user)
-
+  useEffect(() => {
+    getUserInfo(users.token, user.id).then((res) => {
+      setData(res.data);
+    });
+  }, []);
   const makeVideoCall = () => {
     dispatch(
       setCallingScreen({
@@ -143,8 +150,8 @@ const ChatHead = ({ navigation, name, image, user }) => {
         alignItems: "center",
         flexDirection: "row",
         //backgroundColor: "#4ADE80",
-        borderBottomWidth:1,
-        borderBottomColor:"#F1EFEF"
+        borderBottomWidth: 1,
+        borderBottomColor: "#F1EFEF",
       }}>
       <View style={styles.box}>
         <Pressable
@@ -153,62 +160,42 @@ const ChatHead = ({ navigation, name, image, user }) => {
           }}>
           <SvgXml xml={backIcon} />
         </Pressable>
-        <Avatar style={styles.image} source={{ uri: image ? image : null }} />
-        {/* <Image
-          style={styles.image}
-          source={{
-            uri: data
-              ? data.service.profilePhoto
-              : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
-          }}
-        /> */}
-        <Text style={styles.text}>{name ? `${name}` : "Sefa Khandakar"}</Text>
+        <Pressable style={{
+          flexDirection:"row",
+          alignSelf:"center"
+        }}
+          onPress={() => {
+            if (data) {
+              navigation.navigate("UserProfile", { user: data });
+            }
+          }}>
+          <Avatar style={styles.image} source={{ uri: image ? image : null }} />
+
+          <Text style={styles.text}>{name ? `${name}` : "Sefa Khandakar"}</Text>
+        </Pressable>
       </View>
-      {/* <View
-        style={[
-          styles.box,
-          {
-            justifyContent: "flex-end",
-          },
-        ]}
-      >
-        <TouchableOpacity onPress={makeAudioCall}>
-          <Zocial style={styles.icon} name="call" size={24} color={textColor} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={makeVideoCall}>
-          <MaterialIcons
-            style={styles.icon}
-            name="videocam"
-            size={24}
-            color={textColor}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setVisible(!visible)}>
-          <Entypo
-            style={styles.icon}
-            name="dots-three-vertical"
-            size={24}
-            color={textColor}
-          />
-        </TouchableOpacity>
-      </View> */}
+
       <View
         style={{
           flexDirection: "row",
         }}>
         {vendor && (
-          <Pressable onPress={()=>{
-            navigation.navigate("VendorServiceList", {
-              userId: user?.id,
-              offline: false,
-            });
-          }}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("VendorServiceList", {
+                userId: user?.id,
+                offline: false,
+              });
+            }}>
             <SvgXml xml={cart} />
           </Pressable>
         )}
-        <View style={{ width: 8 }} />
-        <Pressable>
-          <SvgXml xml={notification} />
+        <View style={{ width: 16 }} />
+        <Pressable
+          onPress={() => {
+            setNotify((v) => !v);
+          }}>
+          <SvgXml xml={notify ? notification : noNotification} />
         </Pressable>
       </View>
       <Modal
@@ -389,5 +376,12 @@ const notification = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none
 <path d="M5.26875 10.4998C5.26875 9.61584 5.44286 8.74054 5.78113 7.92387C6.11941 7.10719 6.61523 6.36515 7.24029 5.74009C7.86534 5.11504 8.60739 4.61922 9.42406 4.28094C10.2407 3.94266 11.116 3.76855 12 3.76855C12.884 3.76855 13.7593 3.94266 14.5759 4.28094C15.3926 4.61922 16.1347 5.11504 16.7597 5.74009C17.3848 6.36515 17.8806 7.10719 18.2189 7.92387C18.5571 8.74054 18.7312 9.61584 18.7312 10.4998V10.4998C18.7312 13.8561 19.4344 15.8061 20.0531 16.8748C20.1188 16.9886 20.1535 17.1177 20.1536 17.2491C20.1537 17.3806 20.1193 17.5097 20.0538 17.6237C19.9883 17.7376 19.894 17.8323 19.7803 17.8983C19.6667 17.9644 19.5377 17.9993 19.4062 17.9998H4.59375C4.46232 17.9993 4.33332 17.9644 4.21967 17.8983C4.10603 17.8323 4.01172 17.7376 3.94621 17.6237C3.8807 17.5097 3.84627 17.3806 3.84639 17.2491C3.84651 17.1177 3.88116 16.9886 3.94687 16.8748C4.56562 15.8061 5.26875 13.8561 5.26875 10.4998Z" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M17.1937 2.25C18.7208 3.21395 19.9533 4.57938 20.7562 6.19687" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M3.24375 6.19687C4.04674 4.57938 5.2792 3.21395 6.80625 2.25" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+const noNotification = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.5 3.75L19.5 20.25" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9 21H15" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.67188 3.88137C9.69819 3.29198 10.8634 2.98772 12.0469 3.00012C15.7594 3.02825 18.7313 6.11262 18.7313 9.8345V10.5001C18.7313 13.0032 19.125 14.7189 19.575 15.872" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.4562 18H4.59368C4.46087 18.0005 4.3303 17.9657 4.21532 17.8992C4.10035 17.8327 4.0051 17.7369 3.93931 17.6215C3.87351 17.5062 3.83954 17.3754 3.84086 17.2426C3.84218 17.1098 3.87874 16.9797 3.94681 16.8656C4.56556 15.8062 5.26868 13.8562 5.26868 10.5V9.75C5.26791 8.37786 5.68304 7.0377 6.45931 5.90625" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;

@@ -32,6 +32,7 @@ import unReadNotification from "./Reducers/unReadNotification";
 import orderRef from "./Reducers/orderRef";
 import searchOrderRef from "./Reducers/searchOrderRef";
 import chatSearchRef from "./Reducers/chatSearchRef";
+import chatBottomRef from "./Reducers/chatBottomRef";
 
 const combine = combineReducers({
   bottomSheet: bottomSheet,
@@ -66,7 +67,8 @@ const combine = combineReducers({
   unReadNotification:unReadNotification,
   orderRef:orderRef,
   searchOrderRef:searchOrderRef,
-  chatSearchRef:chatSearchRef
+  chatSearchRef:chatSearchRef,
+  chatBottomRef:chatBottomRef
 });
 const store = createStore(combine);
 export default store;

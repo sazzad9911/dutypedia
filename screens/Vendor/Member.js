@@ -54,15 +54,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { Snackbar } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import IconButton from "../../components/IconButton";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import OutsideView from "react-native-detect-press-outside";
 import ActivityLoader from "../../components/ActivityLoader";
 import { useIsFocused } from "@react-navigation/native";
+import customStyle from "../../assets/stylesheet";
 const { width, height } = Dimensions.get("window");
 
 const Member = ({ navigation }) => {
   const [routeName, setRouteName] = useState();
+  return <DutyPediaUser navigation={navigation} />;
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: 0 }}>
       <Tab.Navigator
@@ -266,6 +271,7 @@ const DutyPediaUser = (props) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   const isFocused = useIsFocused();
+  const inset = useSafeAreaInsets();
 
   const onChange = React.useCallback((data) => {
     setLoader(!Loader);
@@ -284,7 +290,7 @@ const DutyPediaUser = (props) => {
       });
     }
     if (isFocused) {
-      props.route.params.setRouteName(props.route.name);
+      //props.route.params.setRouteName(props.route.name);
     }
   }, [Refresh, isFocused]);
   const search = (val) => {
@@ -318,19 +324,24 @@ const DutyPediaUser = (props) => {
     <View
       style={{
         flex: 1,
+        paddingTop: inset?.top,
       }}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+      <View style={{ marginHorizontal: 20 }}>
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: "700",
+            marginVertical: 12,
+          }}>
+          Member list
+        </Text>
         <Input
           rightIcon={
             <SvgXml
               style={{
                 position: "absolute",
-                right: 35,
-                top: 31,
+                right: 12,
+                top: 10,
               }}
               xml={searchIcon}
               width="20"
@@ -345,41 +356,25 @@ const DutyPediaUser = (props) => {
             setData(search(val));
           }}
           style={{
-            borderWidth: 1,
-            marginVertical: 10,
-            marginTop: 20,
-            borderRadius: 20,
-            height: 40,
+            borderRadius: 4,
+            height: 32,
+            backgroundColor: "#E6E6E6",
+            marginHorizontal: 0,
+            borderBottomWidth: 0,
           }}
           placeholder="Search By User"
         />
-        {/* <TouchableOpacity
-        
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            marginHorizontal: 20,
-            marginVertical: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
-            Add Member
-          </Text>
-          <View style={{ width: 10 }} />
-          <AntDesign name="pluscircleo" size={24} color={backgroundColor} />
-        </View>
-      </TouchableOpacity> */}
-
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {Data &&
           Data.map((doc, i) => (
             <OnlineCart
               onPress={() => {
+                //console.log(doc)
                 navigation.navigate("UserProfile", { user: doc });
               }}
               doc={doc}
@@ -391,6 +386,26 @@ const DutyPediaUser = (props) => {
           ))}
         <View style={{ height: 10 }} />
       </ScrollView>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("AddOnlineUser", {
+            onChange: null,
+            data: AllData,
+          });
+        }}
+        style={{
+          width: 44,
+          height: 44,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#4ADE80",
+          borderRadius: 30,
+          bottom: 32,
+          right: 20,
+          position: "absolute",
+        }}>
+        <SvgXml xml={whiteContact} height={"20"} width={"20"} />
+      </Pressable>
     </View>
   );
 };
@@ -427,31 +442,28 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        marginVertical: 5,
-        marginHorizontal: 20,
+        marginTop: 12,
+        marginLeft: 20,
         borderRadius: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
         justifyContent: "space-between",
       }}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Pressable
           style={{
-            height: 50,
-            width: 50,
-            borderRadius: 25,
+            height: 40,
+            width: 40,
+            borderRadius: 20,
             overflow: "hidden",
             justifyContent: "center",
             alignItems: "center",
-            marginLeft: 5,
             borderWidth: 1,
             borderColor: "#e5e5e5",
           }}>
           {doc.user.profilePhoto ? (
             <Image
               style={{
-                height: 50,
-                width: 50,
+                height: 40,
+                width: 40,
               }}
               source={{ uri: doc.user.profilePhoto }}
             />
@@ -459,36 +471,36 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
             <FontAwesome name="user" size={30} color="#983C85" />
           )}
         </Pressable>
-        <View>
+        <View
+          style={{
+            borderBottomColor: "#E6E6E6",
+            borderBottomWidth: 1,
+            paddingVertical: 12,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            flex: 1,
+            height: "100%",
+            marginLeft: 16,
+          }}>
           <Text
             numberOfLines={1}
             style={{
-              marginLeft: 10,
               fontSize: 16,
-              fontFamily: "Poppins-Medium",
+              fontWeight: "400",
             }}>
             {doc.user.firstName
               ? doc.user.firstName + " " + doc.user.lastName
               : "Easin Arafat"}
           </Text>
-          <Text
-            numberOfLines={1}
+          <Pressable
             style={{
-              marginLeft: 10,
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
+              marginRight: 20,
+            }}
+            onPress={() => {
+              setModalVisible((val) => !val);
+              setSelectUser(`${doc.user.firstName} ${doc.user.lastName}`);
             }}>
-            {totalOrder > 0 ? `${totalOrder} Orders` : "No Order Yet"}
-          </Text>
-        </View>
-      </View>
-      <Pressable
-        onPress={() => {
-          setModalVisible((val) => !val);
-          setSelectUser(`${doc.user.firstName} ${doc.user.lastName}`);
-        }}
-        style={{ flexDirection: "row" }}>
-        {/* <Feather name="send" size={22} color={backgroundColor} />
+            {/* <Feather name="send" size={22} color={backgroundColor} />
         <View style={{ width: 15 }} />
         <AntDesign
           onPress={() => {
@@ -498,9 +510,11 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
           size={22}
           color={backgroundColor}
         /> */}
-        <SvgXml xml={threeDot} height="20" width={"20"} />
-        <View style={{ width: 10 }} />
-      </Pressable>
+            <SvgXml xml={threeDot} />
+          </Pressable>
+        </View>
+      </View>
+
       <Modal
         animationType={"fade"}
         transparent={true}
@@ -900,10 +914,10 @@ const OfflineCart = ({ doc, i, navigation, reload, onPress }) => {
     </TouchableOpacity>
   );
 };
-const edit=`<svg xmlns="http://www.w3.org/2000/svg" width="20.25" height="20.409" viewBox="0 0 20.25 20.409">
+const edit = `<svg xmlns="http://www.w3.org/2000/svg" width="20.25" height="20.409" viewBox="0 0 20.25 20.409">
 <path id="Path_28063" data-name="Path 28063" d="M16.862,4.487,18.549,2.8A1.875,1.875,0,0,1,21.2,5.451L10.582,16.07a4.5,4.5,0,0,1-1.9,1.13L6,18l.8-2.685a4.5,4.5,0,0,1,1.13-1.9l8.932-8.931Zm0,0L19.5,7.125M18,14v4.75A2.25,2.25,0,0,1,15.75,21H5.25A2.25,2.25,0,0,1,3,18.75V8.25A2.25,2.25,0,0,1,5.25,6H10" transform="translate(-2.25 -1.341)" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
 </svg>
-`
+`;
 export const AddOfflineUser = (props) => {
   const [backgroundImage, setBackgroundImage] = React.useState();
   const [image, setImage] = React.useState();
@@ -1270,22 +1284,27 @@ const pickImage = async () => {
   }
   return null;
 };
-export const AddOnlineUser = () => {
+export const AddOnlineUser = ({ navigation, route }) => {
   const [Data, setData] = React.useState([]);
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
   const [SearchValue, setSearchValue] = React.useState();
   const vendor = useSelector((state) => state.vendor);
   const [Message, setMessage] = React.useState(null);
+  const data = route?.params?.data;
+  const [All, setAll] = useState();
 
   React.useEffect(() => {
+    //console.log(data)
     if (user) {
+      setData([]);
       getRandomUser(user.token, vendor.service.id)
         .then((res) => {
           if (res) {
-            setLoader(false);
+            //setLoader(false);
             //console.log(res.users)
-            return setData(res.users);
+
+            return setAll(res.users);
           }
         })
         .catch((err) => {
@@ -1293,11 +1312,24 @@ export const AddOnlineUser = () => {
         });
     }
   }, [user]);
+  React.useEffect(() => {
+    if (All) {
+      
+      let arr = [];
+      setLoader(false);
+      All?.map((doc, i) => {
+        if (data.filter((d) => d.user.id == doc.id).length==0) {
+          arr.push(doc);
+        }
+      });
+      setData(arr)
+    }
+  }, [All,data]);
 
   React.useEffect(() => {
     setLoader(true);
     if (SearchValue) {
-      getUserByName(user.token, SearchValue)
+      getUserByName(user.token, SearchValue,vendor.service.id)
         .then((res) => {
           setLoader(false);
           if (res) {
@@ -1336,44 +1368,30 @@ export const AddOnlineUser = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
       <SafeAreaView
         style={{
           flex: 1,
         }}>
         <View
           style={{
-            borderBottomWidth: 1,
-            paddingVertical: 10,
-            alignItems: "center",
-            borderBottomColor: "#E2E2E2",
+            marginHorizontal: 20,
           }}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 24,
+              fontWeight: "700",
+              marginVertical: 12,
             }}>
-            Dutypedia User
+            Add Member
           </Text>
-        </View>
-        <View style={{ height: 5, backgroundColor: primaryColor }} />
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            paddingBottom: 5,
-            shadowOffset: {
-              height: 1,
-              width: 1,
-            },
-            elevation: 1,
-            shadowRadius: 1,
-          }}>
           <Input
             rightIcon={
               <SvgXml
                 style={{
                   position: "absolute",
-                  right: 35,
-                  top: 18,
+                  right: 12,
+                  top: 10,
                 }}
                 xml={searchIcon}
                 width="20"
@@ -1382,17 +1400,21 @@ export const AddOnlineUser = () => {
             }
             value={SearchValue}
             onChange={(val) => {
-              setSearchValue(val);
+              
+              setSearchValue(val)
             }}
             style={{
-              borderWidth: 1,
-              height: 42,
-              borderRadius: 20,
+              borderRadius: 4,
+              height: 32,
+              backgroundColor: "#E6E6E6",
+              marginHorizontal: 0,
+              borderBottomWidth: 0,
             }}
-            placeholder="Search"
+            placeholder="Search By User"
           />
         </View>
-        <ScrollView showsHorizontalScrollIndicator={false}>
+
+        <ScrollView showsVerticalScrollIndicator={false}>
           {!Loader ? (
             Data.map((doc, i) =>
               doc.id != user.user.id ? (
@@ -1403,14 +1425,12 @@ export const AddOnlineUser = () => {
                   doc={doc}
                   key={i}
                 />
-              ) : (
-                <View key={i}></View>
-              )
+              ) : null
             )
           ) : (
-            <Text style={{ textAlign: "center", marginTop: 10 }}>
-              Loading...
-            </Text>
+            <View style={customStyle.fullBox}>
+              <ActivityLoader />
+            </View>
           )}
         </ScrollView>
         <Snackbar
@@ -1432,61 +1452,76 @@ const CartView = ({ doc, onChange }) => {
   const [Send, setSend] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
+  useEffect(() => {
+    if (doc.alreadySentRequest) {
+      setSend(true);
+    } else {
+      setSend(false);
+    }
+  }, []);
 
   return (
     <View
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        marginVertical: 5,
-        marginHorizontal: 20,
+        marginTop: 12,
+        marginLeft: 20,
         alignItems: "center",
         borderBottomWidth: 0,
-        borderBottomColor: "#e5e5e5",
-        paddingBottom: 5,
       }}>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
+          flex: 1,
+          height: "100%",
         }}>
         <View
           style={{
-            width: 50,
-            height: 50,
+            width: 40,
+            height: 40,
             backgroundColor: "#e5e5e5",
-            borderRadius: 25,
+            borderRadius: 20,
             justifyContent: "center",
             alignItems: "center",
             overflow: "hidden",
-            margin: 5,
+            margin: 0,
           }}>
           {doc.profilePhoto ? (
             <Image
               style={{
-                height: 50,
-                width: 50,
+                height: 40,
+                width: 40,
               }}
               source={{ uri: doc.profilePhoto }}
             />
           ) : (
-            <FontAwesome name="user" size={30} color="#983C85" />
+            <FontAwesome name="user" size={25} color="#983C85" />
           )}
         </View>
         <View
           style={{
-            marginLeft: 0,
+            marginLeft: 12,
+            flexDirection: "row",
+            flex: 1,
+            height: "100%",
+            borderBottomWidth: 1,
+            alignItems: "center",
+            paddingVertical: 12,
+            borderBottomColor: "#E6E6E6",
           }}>
           <Text
             numberOfLines={1}
             style={{
               fontSize: 16,
-              fontFamily: "Poppins-Medium",
+              fontWeight: "400",
               lineHeight: 20,
+              flex: 1,
             }}>
             {doc.firstName + " " + doc.lastName}
           </Text>
-          <Text
+          {/* <Text
             numberOfLines={1}
             style={{
               fontSize: 13,
@@ -1494,65 +1529,53 @@ const CartView = ({ doc, onChange }) => {
               lineHeight: 15,
             }}>
             @{doc.username}
-          </Text>
+          </Text> */}
+          <Pressable
+            onPress={() => {
+              if (Send) {
+                cancelOnlineUser(user.token, doc.id, vendor.service.id)
+                  .then((res) => {})
+                  .catch((err) => {
+                    console.warn(err.response.data.message);
+                  });
+              }
+              setSend((val) => !val);
+              if (onChange) {
+                onChange(doc.id);
+              }
+            }}
+            style={{
+              marginRight: 20,
+              marginLeft:20
+            }}
+            title={Send ? "Undo" : "Send Request"}>
+            <SvgXml
+              xml={!Send ? contact : sendContact}
+              width="20"
+              height={"20"}
+            />
+          </Pressable>
         </View>
       </View>
-      <IconButton
-        LeftIcon={() => <SvgXml xml={contact} width="20" height={"20"} />}
-        onPress={() => {
-          if (Send) {
-            cancelOnlineUser(user.token, doc.id, vendor.service.id)
-              .then((res) => {})
-              .catch((err) => {
-                console.warn(err.response.data.message);
-              });
-          }
-          setSend((val) => !val);
-          if (onChange) {
-            onChange(doc.id);
-          }
-        }}
-        style={{
-          borderRadius: 5,
-          borderWidth: 1,
-          color: "black",
-          height: 40,
-          fontSize: 14,
-          borderColor: "#C0FFD7",
-          width: 140,
-        }}
-        title={Send ? "Undo" : "Send Request"}
-      />
     </View>
   );
 };
-const searchIcon = `<svg id="__TEMP__SVG__" xmlns="http://www.w3.org/2000/svg" width="13.985" height="14" viewBox="0 0 13.985 14">
-<path id="Path_27799" data-name="Path 27799" d="M9.018,3.9A4.791,4.791,0,1,1,4.231,8.688,4.791,4.791,0,0,1,9.018,3.9m0-.9a5.688,5.688,0,1,0,5.688,5.688A5.688,5.688,0,0,0,9.018,3Z" transform="translate(-3.33 -3)" fill="#ff007f"/>
-<path id="Path_27800" data-name="Path 27800" d="M30.056,29.117,26.831,25.87l-.621.617,3.225,3.247a.438.438,0,0,0,.621-.617Z" transform="translate(-16.199 -15.863)" fill="#ff007f"/>
+const searchIcon = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.74363 1.33398C4.20476 1.33398 1.33594 4.13945 1.33594 7.60016C1.33594 11.0609 4.20476 13.8663 7.74363 13.8663C9.25789 13.8663 10.6495 13.3527 11.7461 12.4938L13.8309 14.5273L13.8863 14.5739C14.0797 14.7139 14.3538 14.6979 14.5288 14.5264C14.7212 14.3377 14.7208 14.0321 14.5279 13.8439L12.4673 11.8341C13.5131 10.719 14.1513 9.23247 14.1513 7.60016C14.1513 4.13945 11.2825 1.33398 7.74363 1.33398ZM7.74105 2.29883C10.7348 2.29883 13.1618 4.67217 13.1618 7.59984C13.1618 10.5275 10.7348 12.9009 7.74105 12.9009C4.74726 12.9009 2.32031 10.5275 2.32031 7.59984C2.32031 4.67217 4.74726 2.29883 7.74105 2.29883Z" fill="#767676"/>
 </svg>
 `;
-const contact = `<svg xmlns="http://www.w3.org/2000/svg" width="13.761" height="12.966" viewBox="0 0 13.761 12.966">
-<g id="_6324958" data-name="6324958" transform="translate(0 -3.742)">
-  <g id="_000000ff" data-name="#000000ff" transform="translate(0 3.742)">
-    <path id="Path_28035" data-name="Path 28035" d="M29.455,3.8a3.057,3.057,0,1,1-2.5,3.085,3.061,3.061,0,0,1,2.5-3.085m.02.874a2.2,2.2,0,1,0,2.607,1.381A2.2,2.2,0,0,0,29.475,4.675Z" transform="translate(-24.057 -3.742)" fill="#4ade80"/>
-    <path id="Path_28036" data-name="Path 28036" d="M92.279,33.4a.425.425,0,0,1,.8.063,10.124,10.124,0,0,1,.024,1.264,10.474,10.474,0,0,1,1.246.021c.147.019.225.172.334.257v.281c-.094.115-.193.256-.35.28a10.911,10.911,0,0,1-1.23.019,8.794,8.794,0,0,1-.032,1.3.425.425,0,0,1-.8-.032,10.044,10.044,0,0,1-.023-1.272,9.726,9.726,0,0,1-1.289-.027.426.426,0,0,1-.028-.8,8.281,8.281,0,0,1,1.317-.035A7.817,7.817,0,0,1,92.279,33.4Z" transform="translate(-80.918 -29.994)" fill="#4ade80"/>
-    <path id="Path_28037" data-name="Path 28037" d="M1.636,66.675a5.95,5.95,0,0,1,10.274,4.076c.03.343-.335.488-.622.455q-5,0-10,0c-.438-.015-.942.1-1.286-.245V70.6a5.981,5.981,0,0,1,1.636-3.922m.878.344A5.173,5.173,0,0,0,.872,70.343q5.086,0,10.174,0a5.292,5.292,0,0,0-.756-2.253,5.091,5.091,0,0,0-7.776-1.071Z" transform="translate(0 -58.247)" fill="#4ade80"/>
-  </g>
-  <g id="_5eac24ff" data-name="#5eac24ff" transform="translate(0.872 4.603)">
-    <path id="Path_28038" data-name="Path 28038" d="M36.634,11.822a2.2,2.2,0,1,1-1.651,1.988A2.208,2.208,0,0,1,36.634,11.822Z" transform="translate(-32.088 -11.75)" fill="#4ade80"/>
-    <path id="Path_28039" data-name="Path 28039" d="M9.753,74.173a5.091,5.091,0,0,1,7.776,1.071,5.292,5.292,0,0,1,.756,2.253q-5.088,0-10.174,0A5.173,5.173,0,0,1,9.753,74.173Z" transform="translate(-8.11 -66.262)" fill="#4ade80"/>
-  </g>
-</g>
+const contact = `<svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 13.5C4.0396 13.5 0 16.86 0 21C0 21.28 0.217822 21.5 0.49505 21.5H17.505C17.7822 21.5 18 21.28 18 21C18 16.86 13.9604 13.5 9 13.5ZM12.6733 2.16002C12.2123 1.63641 11.6464 1.21767 11.0132 0.931495C10.3799 0.645323 9.69374 0.498252 9 0.500016C7.61386 0.500016 6.34653 1.07002 5.44554 2.01002C4.58416 2.91002 4.04951 4.15002 4.04951 5.50002C4.04951 6.44002 4.30693 7.32002 4.77228 8.07002C5.0198 8.50002 5.33663 8.89002 5.71287 9.21002C6.57426 10.01 7.72277 10.5 9 10.5C10.8119 10.5 12.3762 9.52002 13.2376 8.07002C13.4951 7.64002 13.6931 7.16002 13.802 6.66002C13.901 6.29002 13.9505 5.90002 13.9505 5.50002C13.9505 4.22002 13.4653 3.05002 12.6733 2.16002ZM10.8515 6.42002H9.93069V7.39002C9.93069 7.63932 9.83264 7.87841 9.6581 8.0547C9.48356 8.23098 9.24684 8.33002 9 8.33002C8.75317 8.33002 8.51644 8.23098 8.3419 8.0547C8.16736 7.87841 8.06931 7.63932 8.06931 7.39002V6.42002H7.14852C6.90168 6.42002 6.66495 6.32098 6.49042 6.1447C6.31588 5.96841 6.21782 5.72932 6.21782 5.48002C6.21782 5.23071 6.31588 4.99162 6.49042 4.81534C6.66495 4.63905 6.90168 4.54002 7.14852 4.54002H8.06931V3.65002C8.06931 3.40071 8.16736 3.16162 8.3419 2.98534C8.51644 2.80905 8.75317 2.71002 9 2.71002C9.24684 2.71002 9.48356 2.80905 9.6581 2.98534C9.83264 3.16162 9.93069 3.40071 9.93069 3.65002V4.54002H10.8515C11.0983 4.54002 11.335 4.63905 11.5096 4.81534C11.6841 4.99162 11.7822 5.23071 11.7822 5.48002C11.7822 5.72932 11.6841 5.96841 11.5096 6.1447C11.335 6.32098 11.0983 6.42002 10.8515 6.42002Z" fill="#4ADE80"/>
 </svg>
 `;
-const threeDot = `<svg xmlns="http://www.w3.org/2000/svg" width="16.227" height="4.127" viewBox="0 0 16.227 4.127">
-<g id="Group_17843" data-name="Group 17843" transform="translate(-1685.67 141.407)">
-  <g id="_000000ff" data-name="#000000ff" transform="translate(1701.896 -340.568) rotate(90)">
-    <path id="Path_6118" data-name="Path 6118" d="M201.177,0h.1A2.08,2.08,0,0,1,202.6.52a2.063,2.063,0,1,1-2.734,0A2.081,2.081,0,0,1,201.177,0Z" transform="translate(-0.007)" fill="#666"/>
-    <path id="Path_6119" data-name="Path 6119" d="M200.991,199.166a2.063,2.063,0,1,1-1.563,1.044A2.066,2.066,0,0,1,200.991,199.166Z" transform="translate(-0.006 -193.102)" fill="#666"/>
-    <path id="Path_6120" data-name="Path 6120" d="M199.8,398.823a2.064,2.064,0,1,1,2.788,3.043,2.082,2.082,0,0,1-1.314.52h-.1a2.067,2.067,0,0,1-2.013-2.107A2.058,2.058,0,0,1,199.8,398.823Z" transform="translate(0 -386.158)" fill="#666"/>
-  </g>
-</g>
+const sendContact = `<svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 12C4.0396 12 0 15.36 0 19.5C0 19.78 0.217822 20 0.49505 20H17.505C17.7822 20 18 19.78 18 19.5C18 15.36 13.9604 12 9 12ZM12.6733 1.66005C12.2123 1.13644 11.6464 0.717696 11.0132 0.431525C10.3799 0.145354 9.69374 -0.00171709 9 4.61871e-05C7.61386 4.61871e-05 6.34653 0.570046 5.44554 1.51005C4.58416 2.41005 4.04951 3.65005 4.04951 5.00005C4.04951 5.94005 4.30693 6.82005 4.77228 7.57005C5.0198 8.00005 5.33663 8.39005 5.71287 8.71005C6.57426 9.51005 7.72277 10 9 10C10.8119 10 12.3762 9.02005 13.2376 7.57005C13.4951 7.14005 13.6931 6.66005 13.802 6.16005C13.901 5.79005 13.9505 5.40005 13.9505 5.00005C13.9505 3.72005 13.4653 2.55005 12.6733 1.66005ZM10.8515 5.92005H7.14852C7.02629 5.92005 6.90527 5.89573 6.79235 5.84849C6.67944 5.80125 6.57684 5.73201 6.49042 5.64473C6.40399 5.55744 6.33544 5.45381 6.28867 5.33977C6.24189 5.22572 6.21782 5.10349 6.21782 4.98005C6.21782 4.8566 6.24189 4.73437 6.28867 4.62032C6.33544 4.50628 6.40399 4.40265 6.49042 4.31537C6.57684 4.22808 6.67944 4.15884 6.79235 4.1116C6.90527 4.06436 7.02629 4.04005 7.14852 4.04005H10.8515C10.9737 4.04005 11.0947 4.06436 11.2076 4.1116C11.3206 4.15884 11.4232 4.22808 11.5096 4.31537C11.596 4.40265 11.6646 4.50628 11.7113 4.62032C11.7581 4.73437 11.7822 4.8566 11.7822 4.98005C11.7822 5.10349 11.7581 5.22572 11.7113 5.33977C11.6646 5.45381 11.596 5.55744 11.5096 5.64473C11.4232 5.73201 11.3206 5.80125 11.2076 5.84849C11.0947 5.89573 10.9737 5.92005 10.8515 5.92005Z" fill="black" fill-opacity="0.87"/>
+</svg>
+`;
+const threeDot = `<svg width="4" height="16" viewBox="0 0 4 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="2" cy="2" r="2" fill="black" fill-opacity="0.87"/>
+<circle cx="2" cy="8" r="2" fill="black" fill-opacity="0.87"/>
+<circle cx="2" cy="14" r="2" fill="black" fill-opacity="0.87"/>
 </svg>
 `;
 const message = `<svg xmlns="http://www.w3.org/2000/svg" width="23.108" height="23.108" viewBox="0 0 23.108 23.108">
@@ -1574,17 +1597,11 @@ const deleteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="2
 </g>
 </svg>
 `;
-const whiteContact = `<svg xmlns="http://www.w3.org/2000/svg" width="19.806" height="18.662" viewBox="0 0 19.806 18.662">
-<g id="_6324958" data-name="6324958" transform="translate(0 -3.742)">
-  <g id="_000000ff" data-name="#000000ff" transform="translate(0 3.742)">
-    <path id="Path_28035" data-name="Path 28035" d="M30.553,3.827a4.4,4.4,0,1,1-3.594,4.441,4.406,4.406,0,0,1,3.594-4.441m.029,1.258a3.161,3.161,0,1,0,3.752,1.988A3.17,3.17,0,0,0,30.582,5.085Z" transform="translate(-22.784 -3.742)" fill="#fff"/>
-    <path id="Path_28036" data-name="Path 28036" d="M92.988,33.513a.611.611,0,0,1,1.145.091,14.571,14.571,0,0,1,.034,1.82,15.075,15.075,0,0,1,1.793.031c.212.028.323.248.481.37v.4c-.135.166-.279.368-.5.4a15.7,15.7,0,0,1-1.77.028,12.657,12.657,0,0,1-.046,1.877.611.611,0,0,1-1.154-.046,14.454,14.454,0,0,1-.033-1.831,14,14,0,0,1-1.855-.039.614.614,0,0,1-.04-1.145,11.92,11.92,0,0,1,1.9-.051A11.25,11.25,0,0,1,92.988,33.513Z" transform="translate(-76.636 -28.605)" fill="#fff"/>
-    <path id="Path_28037" data-name="Path 28037" d="M2.355,67.493a8.564,8.564,0,0,1,14.788,5.866c.043.494-.483.7-.9.655q-7.2,0-14.4,0C1.221,73.994.5,74.156,0,73.663v-.525a8.609,8.609,0,0,1,2.355-5.645m1.264.5a7.445,7.445,0,0,0-2.364,4.784q7.32,0,14.644,0a7.618,7.618,0,0,0-1.088-3.243A7.328,7.328,0,0,0,3.619,67.988Z" transform="translate(0 -55.362)" fill="#fff"/>
-  </g>
-  <g id="_5eac24ff" data-name="#5eac24ff" transform="translate(1.255 4.981)">
-    <path id="Path_28038" data-name="Path 28038" d="M37.363,11.854a3.163,3.163,0,1,1-2.377,2.861A3.178,3.178,0,0,1,37.363,11.854Z" transform="translate(-30.819 -11.75)" fill="#fff"/>
-    <path id="Path_28039" data-name="Path 28039" d="M10.474,74.764a7.328,7.328,0,0,1,11.192,1.541,7.617,7.617,0,0,1,1.088,3.243q-7.323,0-14.644,0A7.445,7.445,0,0,1,10.474,74.764Z" transform="translate(-8.11 -63.378)" fill="#fff"/>
-  </g>
-</g>
+const whiteContact = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.8665 0.748522C8.75114 0.584002 9.66495 0.694658 10.4847 1.06557C11.3045 1.43649 11.9909 2.04983 12.4513 2.82292C12.9118 3.59601 13.1241 4.49167 13.0597 5.38917C12.9953 6.28667 12.6573 7.14286 12.0913 7.84231C11.5252 8.54177 10.7583 9.05086 9.89399 9.30097C9.02964 9.55107 8.10939 9.53016 7.25729 9.24106C6.40519 8.95195 5.66222 8.40856 5.12852 7.68411C4.59482 6.95967 4.29605 6.08902 4.2725 5.18952C4.24631 4.14299 4.59361 3.12133 5.25217 2.30757C5.91072 1.49381 6.83751 0.941123 7.8665 0.748522ZM7.8955 2.00652C7.27684 2.16395 6.72034 2.50501 6.29925 2.98481C5.87816 3.46461 5.61221 4.06067 5.53641 4.69453C5.4606 5.32839 5.57849 5.97035 5.87456 6.53591C6.17063 7.10148 6.631 7.56416 7.19509 7.86304C7.75918 8.16192 8.40054 8.283 9.03477 8.21036C9.669 8.13771 10.2664 7.87473 10.7483 7.45603C11.2302 7.03734 11.574 6.48255 11.7345 5.86468C11.895 5.24681 11.8647 4.59482 11.6475 3.99452C11.3788 3.25773 10.8465 2.6467 10.1535 2.27951C9.46053 1.91233 8.65603 1.81507 7.8955 2.00652Z" fill="white"/>
+<path d="M16.4495 5.57152C16.5015 5.45735 16.5874 5.36197 16.6956 5.29833C16.8037 5.2347 16.9288 5.20589 17.0539 5.21583C17.1789 5.22577 17.2979 5.27398 17.3946 5.35389C17.4914 5.43381 17.5611 5.54156 17.5945 5.66252C17.6437 6.26788 17.6551 6.87573 17.6285 7.48252C18.2262 7.45726 18.825 7.46761 19.4215 7.51352C19.6335 7.54152 19.7445 7.76152 19.9025 7.88352V8.28351C19.7675 8.44951 19.6235 8.65152 19.4025 8.68352C18.8135 8.72613 18.2225 8.73548 17.6325 8.71152C17.6636 9.33746 17.6483 9.96485 17.5865 10.5885C17.5402 10.7069 17.4582 10.8078 17.3518 10.8774C17.2455 10.9469 17.1201 10.9816 16.9931 10.9765C16.8661 10.9715 16.7439 10.9269 16.6434 10.8492C16.5429 10.7714 16.4692 10.6642 16.4325 10.5425C16.3828 9.9335 16.3718 9.32193 16.3995 8.71152C15.781 8.73955 15.1613 8.72652 14.5445 8.67251C14.4273 8.63195 14.3252 8.55685 14.2515 8.45711C14.1778 8.35737 14.1361 8.23766 14.1317 8.11374C14.1274 7.98981 14.1607 7.86748 14.2272 7.76284C14.2938 7.6582 14.3904 7.57616 14.5045 7.52752C15.1355 7.45997 15.7708 7.44291 16.4045 7.47652C16.3656 6.84139 16.3806 6.2041 16.4495 5.57152Z" fill="white"/>
+<path d="M2.45247 12.7945C3.62909 11.5496 5.152 10.6861 6.82443 10.3157C8.49687 9.94522 10.242 10.0848 11.8342 10.7164C13.4265 11.348 14.7928 12.4426 15.7565 13.8588C16.7203 15.2749 17.2372 16.9476 17.2405 18.6605C17.2835 19.1545 16.7575 19.3605 16.3405 19.3155C11.5405 19.3155 6.74047 19.3155 1.94047 19.3155C1.31847 19.2955 0.597473 19.4575 0.0974731 18.9645V18.4395C0.165029 16.333 1.00296 14.3245 2.45247 12.7945ZM3.71647 13.2945C2.36442 14.5423 1.52228 16.2465 1.35247 18.0785C6.23247 18.0785 11.1138 18.0785 15.9965 18.0785C15.8843 16.929 15.5123 15.8201 14.9085 14.8355C14.3412 13.9171 13.5781 13.1354 12.6737 12.5462C11.7692 11.957 10.7458 11.5749 9.6765 11.4272C8.60722 11.2795 7.51851 11.3698 6.4882 11.6918C5.45789 12.0137 4.51143 12.5593 3.71647 13.2895V13.2945Z" fill="white"/>
+<path d="M7.8965 2.00652C8.54379 1.84195 9.22658 1.8865 9.847 2.13379C10.4674 2.38109 10.9936 2.81843 11.3503 3.38314C11.7069 3.94786 11.8756 4.61097 11.8322 5.27745C11.7888 5.94394 11.5356 6.57958 11.1088 7.0933C10.6819 7.60702 10.1035 7.97245 9.45622 8.13723C8.80897 8.302 8.12617 8.25766 7.50567 8.01057C6.88517 7.76347 6.35881 7.32629 6.00202 6.76168C5.64523 6.19708 5.47632 5.53402 5.5195 4.86752C5.56494 4.2014 5.81903 3.5665 6.24571 3.05294C6.67239 2.53939 7.24997 2.17326 7.8965 2.00652Z" fill="white"/>
+<path d="M3.71648 13.2885C4.5111 12.5581 5.45727 12.0122 6.48737 11.6898C7.51746 11.3675 8.60604 11.2767 9.6753 11.4239C10.7446 11.5712 11.7681 11.9528 12.6727 12.5415C13.5774 13.1302 14.3408 13.9115 14.9085 14.8295C15.5123 15.814 15.8844 16.923 15.9965 18.0725C11.1145 18.0725 6.23314 18.0725 1.35248 18.0725C1.52229 16.2405 2.36443 14.5363 3.71648 13.2885Z" fill="white"/>
 </svg>
 `;

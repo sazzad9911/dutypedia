@@ -494,7 +494,7 @@ const Profile = ({ navigation }) => {
         component={OrderDetails}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{ header: (props)=><SubHeader title={"Select Service"} {...props}/> }}
         name="AddServiceList_1"
         component={AddServiceList}
       />

@@ -1,65 +1,47 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { View, Animated, ScrollView, Text, TextInput, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Animated, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { SvgXml } from "react-native-svg";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
-import ChatCart from "../../Cart/ChatCart";
+import ChatMemberCart from "../../Cart/ChatMemberCart";
+import { getOnlineUser } from "../../Class/member";
 import { getConversation } from "../../Class/message";
+import { getOnlineUsers, getSocket } from "../../Class/socket";
 import ActivityLoader from "../../components/ActivityLoader";
+import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { setChatSearchRef } from "../../Reducers/chatSearchRef";
-import SellerList from "./SellerList";
-import ContactList from "./ContactList";
-import { setChatBottomRef } from "../../Reducers/chatBottomRef";
 
-export default function ChatList(props) {
+export default function SellerList({ navigation, seller, onClose,data }) {
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
     inputRange: [0, 300],
     outputRange: [0, -300],
   });
-  const [Conversations, setConversations] = React.useState();
-  const [AllConversation, setAllConversations] = React.useState();
+  const [Members, setMembers] = React.useState();
+  const [AllMembers, setAllMembers] = useState();
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
+  const vendor = useSelector((state) => state.vendor);
   const isFocused = useIsFocused();
   const chatSearchRef = useSelector((state) => state.chatSearchRef);
-  const searchX = props?.route?.params?.search;
-  const sheetRef = useRef(null);
-  const dispatch=useDispatch()
-  const [data, setData] = useState();
-  const chatBottomRef=useSelector(state=>state.chatBottomRef)
-  const snapPoints = useMemo(() => ["90%"], []);
-  const handleSheetChange = useCallback((index) => {
-    dispatch(setChatBottomRef({type:"",index:index}))
-  }, []);
-  const handleSnapPress = useCallback((index) => {
-    sheetRef.current?.snapToIndex(index);
-  }, []);
-  const handleClosePress = useCallback(() => {
-    sheetRef.current?.close();
-    dispatch(setChatBottomRef(null))
-  }, []);
+  //const searchX=route?.params?.search;
 
   React.useEffect(() => {
-    if (user) {
-      getConversation(user.token)
-        .then((res) => {
-          setLoader(false);
-          setConversations(res.data.conversations);
-          setAllConversations(res.data.conversations);
-          //console.warn(res.data.conversations)
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [user, isFocused]);
-
+    getConversation(user.token)
+      .then((res) => {
+        setLoader(false);
+        setMembers(res.data.conversations);
+        setAllMembers(res.data.conversations);
+        //console.warn(res.data.conversations)
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err.response.data.msg);
+      });
+  }, [user, vendor, seller]);
   const search = (val, data) => {
     if (!Array.isArray(data)) {
       return [];
@@ -69,17 +51,15 @@ export default function ChatList(props) {
     }
     return data.filter((d) =>
       d.users
-        .filter((s) => s.userId != user.user.id)[0]
-        .user.username.toUpperCase()
+        .filter((s) => s.user.id != user.user.id)[0]
+        ?.user?.username.toUpperCase()
         .match(val.toUpperCase())
     );
   };
   useEffect(() => {
-    if (!searchX) {
-      return;
-    }
-    setConversations(search(chatSearchRef, AllConversation));
-  }, [chatSearchRef]);
+    //console.log(Members?Members[0]:null)
+    setMembers(search(chatSearchRef, AllMembers));
+  }, [chatSearchRef, seller]);
 
   if (Loader) {
     return (
@@ -94,101 +74,106 @@ export default function ChatList(props) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        style={{ flex: 1 }}
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderHiddenOnScroll={true}
-        stickyHeaderIndices={[0]}
-        onScroll={(e) => {
-          scrollY.setValue(e.nativeEvent.contentOffset.y);
-        }}>     
-        <View
-          style={{
-            minHeight: "100%",
-          }}>
-          <View style={{ height: 0 }} />
-          {Conversations &&
-            Conversations.map((doc, i) => (
-              <ChatCart data={doc} key={i} {...props} />
-            ))}
-          {Conversations && Conversations.length == 0 && (
-            <View style={customStyle.fullBox}>
-              <SvgXml xml={noResult} />
-              <Text
-                style={{
-                  marginVertical: 20,
-                  textAlign: "center",
-                  fontSize: 24,
-                }}>
-                {searchX ? "Ops, No Result" : "No Member Added"}
-              </Text>
-            </View>
-          )}
-        </View>
+    <ScrollView
+      style={{ flex: 1 }}
+      scrollEventThrottle={16}
+      showsVerticalScrollIndicator={false}
+      stickyHeaderHiddenOnScroll={true}
+      stickyHeaderIndices={[0]}
+      onScroll={(e) => {
+        scrollY.setValue(e.nativeEvent.contentOffset.y);
+      }}>
+      {/* <Animated.View
+      style={[
+        {
+          transform: [{ translateY: translateY }],
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "white",
+          zIndex: 500,
+        },
+      ]}
+    >
+        <SearchBar onChange={e=>{
+          setMembers(search(e,AllMembers))
+        }} />
+    </Animated.View> */}
+
+      <View
+        style={{
+          paddingHorizontal: 20,
+          minHeight: "100%",
+        }}>
         <View style={{ height: 0 }} />
-      </ScrollView>
-      <BottomSheet
-        backgroundStyle={{
-          backgroundColor: "#4ADE80",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#ffffff",
-        }}
-        ref={sheetRef}
-        index={chatBottomRef?chatBottomRef.index:-1}
-        enablePanDownToClose={true}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}>
-        <Header
-          type={chatBottomRef?.type}
-          value={chatSearchRef}
-          onChange={(e) => dispatch(setChatSearchRef(e))}
-          onConfirm={() => {
-            handleClosePress();
-          }}
-        />
-        <BottomSheetScrollView style={{ backgroundColor: "white" }}>
-          {chatBottomRef?.type == "Search" ? (
-            <SellerList
-              bottomRef={sheetRef}
-              data={data}
-              onClose={setData}
-              navigation={props.navigation}
-              seller={true}
+        {Members &&
+          Members.map((doc, i) => (
+            <ChatMemberCart data={data}
+              onPress={() => {
+                // if (onClose) {
+                //   onClose({
+                //     data: doc,
+                //     username: doc?.users?.filter(
+                //       (d) => d.user.id != user.user.id
+                //     )[0]?.user?.username,
+                //   });
+                //   return;
+                // }
+                navigation.navigate("ChatScreen", {
+                  data: doc,
+                  username: doc?.users?.filter(
+                    (d) => d.user.id != user.user.id
+                  )[0]?.user?.username,
+                });
+              }}
+              userId={
+                doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
+                  ?.id
+              }
+              key={i}
+              name={`${
+                doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
+                  ?.firstName
+              } ${
+                doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
+                  ?.lastName
+              }`}
+              username={`${
+                doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
+                  ?.username
+              }`}
+              image={{
+                uri: doc?.users?.filter((d) => d.user.id != user.user.id)[0]
+                  ?.user?.profilePhoto,
+              }}
             />
-          ) : (
-            <ContactList
-              data={data}
-              onClose={setData}
-              seller={false}
-              navigation={props.navigation}
-            />
-          )}
-        </BottomSheetScrollView>
-        {chatBottomRef?.type != "Search" && (
-          <Pressable
-            onPress={() => {
-              handleClosePress();
-              props.navigation.navigate("Member");
-            }}
-            style={{
-              width: 44,
-              height: 44,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#4ADE80",
-              borderRadius: 22,
-              position: "absolute",
-              right: 20,
-              bottom: 37,
-            }}>
-            <SvgXml xml={contact} />
-          </Pressable>
+          ))}
+        {Members && Members.length == 0 && (
+          <View style={customStyle.fullBox}>
+            <SvgXml xml={noResult} />
+            <Text
+              style={{
+                marginVertical: 20,
+                textAlign: "center",
+                fontSize: 24,
+              }}>
+              {chatSearchRef ? "Ops, No Result" : "No Member Added"}
+            </Text>
+          </View>
         )}
-      </BottomSheet>
-    </View>
+        {!Members && (
+          <Text
+            style={{
+              marginVertical: 20,
+              textAlign: "center",
+              fontSize: 16,
+            }}>
+            Ops! Please logged in as ''Vendor''
+          </Text>
+        )}
+        <View style={{ height: 0 }} />
+      </View>
+    </ScrollView>
   );
 }
 const noResult = `<svg width="165" height="216" viewBox="0 0 165 216" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -324,70 +309,5 @@ const noResult = `<svg width="165" height="216" viewBox="0 0 165 216" fill="none
 <path d="M99.3419 84.1347C99.2235 85.0719 99.113 85.7629 98.3234 85.9694C97.5575 86.168 96.9733 85.747 96.689 85.1196C96.4206 84.5398 96.2942 83.8567 96.2627 83.2054C96.2311 82.6177 96.5469 81.9823 97.1706 81.9584C97.6523 81.9426 98.2997 82.1967 98.6156 82.5541C99.0261 83.0307 99.1682 83.7296 99.3419 84.1347Z" fill="#F5F2EB"/>
 <path d="M43.7405 66.7247C42.2088 66.9947 40.8586 67.233 39.2873 67.511C39.8163 68.6388 40.2585 69.5919 40.7323 70.5927C38.9557 71.0851 37.7556 69.862 36.2554 69.2504C36.2396 70.5689 36.6896 71.6967 37.1081 72.8166C37.2344 73.1502 37.4319 73.4679 37.5898 73.7935C38.2057 75.0087 38.1582 75.1517 36.8634 75.7395C36.4844 75.9142 36.1054 76.0651 35.7501 76.2716C34.5262 76.9865 33.5156 77.8998 32.8208 79.3136C33.7288 79.4328 34.5183 79.544 35.4816 79.671C35.0552 80.8068 34.2973 81.4978 33.3103 81.7282C32.2286 81.9823 31.0284 82.2365 29.9704 82.0141C28.2729 81.6646 26.5674 81.1086 25.0277 80.3144C22.8327 79.1865 20.7325 77.8363 18.6796 76.4543C15.1502 74.0636 12.3946 70.966 10.4286 67.1377C8.17041 62.7375 6.14913 58.2579 5.26481 53.3494C4.87003 51.1414 4.71208 48.9334 5.08318 46.6936C5.38321 44.8588 6.37019 43.8501 8.15461 43.4689C9.92325 43.0956 11.6761 43.2386 13.3816 43.6039C21.1272 45.248 28.2649 48.29 34.2973 53.5162C37.9135 56.6535 40.7717 60.4898 42.9351 64.8105C43.2352 65.3903 43.4484 66.0178 43.7405 66.7247Z" fill="#F5F2EB"/>
 <path d="M66.1248 95.9929C65.9432 97.0175 65.5643 97.6847 64.9247 97.8118C64.151 97.9706 63.5509 97.5655 63.2903 96.9301C63.0061 96.2471 62.8008 95.4449 62.8718 94.7221C62.9903 93.5466 64.2141 93.1574 65.0274 94.0391C65.5248 94.5712 65.7695 95.3337 66.1248 95.9929Z" fill="#F5F2EB"/>
-</svg>
-`;
-const Header = ({ type, onConfirm, onChange, value }) => {
-  return (
-    <View
-      style={{
-        backgroundColor: "#4ADE80",
-        paddingHorizontal: 20,
-        paddingVertical: 24,
-      }}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "700",
-            color: "#fff",
-          }}>
-          {type == "Search" ? "Seller List" : "Member List"}
-        </Text>
-        <Text
-          onPress={onConfirm}
-          style={{
-            fontSize: 16,
-            fontWeight: "400",
-            color: "#fff",
-          }}>
-          Done
-        </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          borderRadius: 8,
-          backgroundColor: "#fff",
-          height: 32,
-          marginTop: 12,
-          alignItems: "center",
-          paddingHorizontal: 8,
-          justifyContent: "space-between",
-        }}>
-        <TextInput
-          onChangeText={onChange}
-          value={value}
-          style={{ flex: 1 }}
-          placeholder="Type Name"
-        />
-        <SvgXml xml={search} />
-      </View>
-    </View>
-  );
-};
-const search = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M7.74363 1.33398C4.20476 1.33398 1.33594 4.13945 1.33594 7.60016C1.33594 11.0609 4.20476 13.8663 7.74363 13.8663C9.25789 13.8663 10.6495 13.3527 11.7461 12.4938L13.8309 14.5273L13.8863 14.5739C14.0797 14.7139 14.3538 14.6979 14.5288 14.5264C14.7212 14.3377 14.7208 14.0321 14.5279 13.8439L12.4673 11.8341C13.5131 10.719 14.1513 9.23247 14.1513 7.60016C14.1513 4.13945 11.2825 1.33398 7.74363 1.33398ZM7.74105 2.29883C10.7348 2.29883 13.1618 4.67217 13.1618 7.59984C13.1618 10.5275 10.7348 12.9009 7.74105 12.9009C4.74726 12.9009 2.32031 10.5275 2.32031 7.59984C2.32031 4.67217 4.74726 2.29883 7.74105 2.29883Z" fill="#767676"/>
-</svg>
-`;
-const contact = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.86686 0.748491C8.7515 0.583971 9.66531 0.694628 10.4851 1.06554C11.3049 1.43646 11.9913 2.0498 12.4517 2.82289C12.9121 3.59598 13.1245 4.49164 13.0601 5.38914C12.9957 6.28664 12.6577 7.14283 12.0916 7.84228C11.5256 8.54174 10.7587 9.05083 9.89435 9.30093C9.03001 9.55104 8.10976 9.53013 7.25766 9.24103C6.40556 8.95192 5.66258 8.40853 5.12888 7.68408C4.59518 6.95964 4.29642 6.08899 4.27286 5.18949C4.24668 4.14296 4.59397 3.1213 5.25253 2.30754C5.91109 1.49378 6.83788 0.941093 7.86686 0.748491ZM7.89587 2.00649C7.27721 2.16392 6.72071 2.50498 6.29962 2.98478C5.87853 3.46458 5.61258 4.06064 5.53677 4.6945C5.46097 5.32836 5.57886 5.97032 5.87493 6.53588C6.171 7.10145 6.63137 7.56413 7.19546 7.86301C7.75954 8.16189 8.40091 8.28297 9.03514 8.21032C9.66937 8.13768 10.2667 7.8747 10.7486 7.456C11.2305 7.03731 11.5743 6.48252 11.7349 5.86465C11.8954 5.24678 11.865 4.59479 11.6479 3.99449C11.3792 3.2577 10.8469 2.64667 10.1539 2.27948C9.4609 1.9123 8.6564 1.81504 7.89587 2.00649Z" fill="white"/>
-<path d="M16.4495 5.57147C16.5015 5.4573 16.5874 5.36192 16.6956 5.29829C16.8037 5.23465 16.9288 5.20585 17.0539 5.21579C17.1789 5.22573 17.2979 5.27393 17.3946 5.35385C17.4914 5.43376 17.5611 5.54152 17.5945 5.66247C17.6437 6.26784 17.6551 6.87569 17.6285 7.48247C18.2262 7.45721 18.825 7.46757 19.4215 7.51347C19.6335 7.54147 19.7445 7.76147 19.9025 7.88347V8.28347C19.7675 8.44947 19.6235 8.65147 19.4025 8.68347C18.8135 8.72608 18.2225 8.73543 17.6325 8.71147C17.6636 9.33741 17.6483 9.9648 17.5865 10.5885C17.5402 10.7068 17.4582 10.8078 17.3518 10.8773C17.2455 10.9469 17.1201 10.9815 16.9931 10.9765C16.8661 10.9714 16.7439 10.9269 16.6434 10.8491C16.5429 10.7713 16.4692 10.6641 16.4325 10.5425C16.3828 9.93345 16.3718 9.32189 16.3995 8.71147C15.781 8.7395 15.1613 8.72647 14.5445 8.67247C14.4273 8.6319 14.3252 8.55681 14.2515 8.45707C14.1778 8.35733 14.1361 8.23762 14.1317 8.11369C14.1274 7.98977 14.1607 7.86743 14.2272 7.76279C14.2938 7.65815 14.3904 7.57612 14.5045 7.52747C15.1355 7.45992 15.7708 7.44287 16.4045 7.47647C16.3656 6.84134 16.3806 6.20406 16.4495 5.57147Z" fill="white"/>
-<path d="M2.45266 12.7943C3.62927 11.5494 5.15218 10.6859 6.82462 10.3155C8.49705 9.94501 10.2421 10.0846 11.8344 10.7162C13.4267 11.3478 14.793 12.4424 15.7567 13.8586C16.7204 15.2747 17.2374 16.9473 17.2407 18.6603C17.2837 19.1543 16.7577 19.3603 16.3407 19.3153C11.5407 19.3153 6.74066 19.3153 1.94066 19.3153C1.31866 19.2953 0.597656 19.4573 0.0976562 18.9643V18.4393C0.165213 16.3328 1.00314 14.3243 2.45266 12.7943ZM3.71666 13.2943C2.3646 14.5421 1.52247 16.2463 1.35266 18.0783C6.23266 18.0783 11.114 18.0783 15.9967 18.0783C15.8845 16.9288 15.5125 15.8198 14.9087 14.8353C14.3414 13.9169 13.5783 13.1352 12.6739 12.546C11.7694 11.9568 10.746 11.5747 9.67669 11.427C8.6074 11.2793 7.51869 11.3696 6.48838 11.6915C5.45807 12.0135 4.51161 12.5591 3.71666 13.2893V13.2943Z" fill="white"/>
-<path d="M7.89631 2.00671C8.54361 1.84213 9.2264 1.88668 9.84682 2.13398C10.4672 2.38127 10.9935 2.81861 11.3501 3.38333C11.7067 3.94804 11.8754 4.61115 11.832 5.27764C11.7886 5.94412 11.5354 6.57976 11.1086 7.09349C10.6818 7.60721 10.1033 7.97264 9.45604 8.13741C8.80879 8.30219 8.12599 8.25785 7.50549 8.01075C6.88499 7.76365 6.35863 7.32648 6.00184 6.76187C5.64505 6.19726 5.47614 5.5342 5.51931 4.86771C5.56476 4.20158 5.81885 3.56668 6.24553 3.05313C6.67221 2.53957 7.24979 2.17344 7.89631 2.00671Z" fill="white"/>
-<path d="M3.71654 13.2885C4.51116 12.5581 5.45733 12.0122 6.48743 11.6899C7.51752 11.3675 8.6061 11.2767 9.67536 11.424C10.7446 11.5712 11.7682 11.9528 12.6728 12.5415C13.5775 13.1302 14.3409 13.9115 14.9085 14.8295C15.5124 15.8141 15.8844 16.923 15.9965 18.0725C11.1145 18.0725 6.23321 18.0725 1.35254 18.0725C1.52235 16.2406 2.36449 14.5363 3.71654 13.2885Z" fill="white"/>
 </svg>
 `;

@@ -88,8 +88,8 @@ export const getRandomUser=async(token,serviceId)=>{
     
     return res
 }
-export const getUserByName = async(token, name) =>{
-    const res = await axios.get(`${url}/server/members/online/get-users-by-name?name=${name}`,{
+export const getUserByName = async(token, name,serviceId) =>{
+    const res = await axios.get(`${url}/server/members/online/get-users-by-name?name=${name}&&serviceId=${serviceId}`,{
         headers: { Authorization: `Bearer ${token}` }
     });
     if(res.data){ return res.data }

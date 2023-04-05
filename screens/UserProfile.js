@@ -38,6 +38,7 @@ export default function UserProfile({ navigation, route }) {
   const assentColor = colors.getAssentColor();
   const user = route.params.user;
   const ref = React.useRef();
+  const vendor=useSelector(state=>state.vendor)
 
   const ViewBox = ({ Icon, title, onPress }) => {
     return (
@@ -405,7 +406,8 @@ export default function UserProfile({ navigation, route }) {
           <TabBar userId={user.user.id} />
         </View>
       </ScrollView>
-      <FAB
+      {vendor&&(
+        <FAB
         color="#FFFFFF"
         icon="plus"
         style={{
@@ -423,6 +425,7 @@ export default function UserProfile({ navigation, route }) {
           navigation.navigate("VendorServiceList", { userId: user.user.id });
         }}
       />
+      )}
     </SafeAreaView>
   );
 }

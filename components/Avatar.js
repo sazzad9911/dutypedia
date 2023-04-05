@@ -1,10 +1,10 @@
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { View, Image } from "react-native";
+import { View, Image, Pressable } from "react-native";
 
-export default function Avatar({ source, style,active }) {
+export default function Avatar({ source, style,active,onPress }) {
   return (
-    <View style={[{
+    <Pressable onPress={onPress} style={[{
       justifyContent:"center",
       alignItems:"center",
       borderRadius:100,
@@ -25,6 +25,6 @@ export default function Avatar({ source, style,active }) {
         )
       }
       
-    </View>
+    </Pressable>
   );
 }

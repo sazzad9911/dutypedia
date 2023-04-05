@@ -45,13 +45,13 @@ const SubHeader = (props) => {
               marginLeft: 20,
             }}
             name="left"
-            size={25}
+            size={22}
             color={assentColor}
           />
           <Text
             style={{
-              fontSize: 18,
-              fontFamily: "Poppins-Medium",
+              fontSize: 20,
+              fontWeight: "500",
               flex: 1,
               textAlign: "center",
               marginLeft: -50,

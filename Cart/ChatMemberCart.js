@@ -3,7 +3,7 @@ import { View, Text, Pressable } from "react-native";
 import { getSocket } from "../Class/socket";
 import Avatar from "../components/Avatar";
 
-export default function ChatMemberCart({ name, username, active, image,userId,onPress }) {
+export default function ChatMemberCart({ name, username, active, image,userId,onPress,data }) {
   const [Active,setActive]=useState(false)
 
   useEffect(()=>{
@@ -27,7 +27,8 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
         style={{
           flexDirection: "row",
           alignItems: "center",
-          marginVertical: 8,
+          marginTop:12,
+          //backgroundColor:"#4ADE80"
         }}
       >
         <View>
@@ -35,7 +36,8 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
             style={{
               height: 40,
               width: 40,
-              borderWidth:0
+              borderWidth:1,
+              borderColor:"#e5e5e5"
             }}
             source={image}
           />
@@ -56,6 +58,13 @@ export default function ChatMemberCart({ name, username, active, image,userId,on
         <View
           style={{
             marginLeft: 10,
+            borderBottomWidth:1,
+            height:"100%",
+            flex:1,
+            borderBottomColor:"#E6E6E6",
+            flexDirection:"row",
+            alignItems:"center",
+            paddingVertical:12
           }}
         >
           <Text

@@ -14,6 +14,8 @@ import { Color } from "../assets/colors";
 import { CheckBox } from "./Seller/Pricing";
 import Button from "./../components/Button";
 import IconButton from "../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 const Tab = createMaterialTopTabNavigator();
 const { width, height } = Dimensions.get("window");
 
@@ -47,6 +49,20 @@ const AddServiceList = (props) => {
       color: textColor,
     },
   });
+  const isFocused=useIsFocused()
+
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
     //console.log(newListData)
@@ -81,8 +97,8 @@ const AddServiceList = (props) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TopTabBar {...props} id={true} />}>
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator tabBar={(props) => <TopTabBar {...props}/>}>
         {Services.map((doc, i) => (
           <Tab.Screen
             key={i}
@@ -103,7 +119,9 @@ const AddServiceList = (props) => {
           component={ExtraFacilities}
         /> */}
       </Tab.Navigator>
-      <View>
+      <View style={{
+        paddingVertical:12
+      }}>
         {DataError && (
           <Text style={{ color: "red", textAlign: "center" }}>{DataError}</Text>
         )}
@@ -152,10 +170,8 @@ const AddServiceList = (props) => {
             }
           }}
           style={{
-            position: "absolute",
             backgroundColor: backgroundColor,
             zIndex: 100,
-            bottom: 20,
             borderRadius: 5,
             marginHorizontal: 20,
             width: width - 40,
@@ -163,7 +179,7 @@ const AddServiceList = (props) => {
           title={!params.setListData ? "Next" : "Done"}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -182,12 +198,11 @@ const ComponentScreen = (props) => {
   const styles = StyleSheet.create({
     view: {
       marginHorizontal: 20,
-      marginVertical: 10,
+      marginBottom: 28,
     },
     text: {
-      fontFamily: "Poppins-Medium",
-      fontSize: 15,
-      color: textColor,
+      fontWeight: "500",
+      fontSize: 20,
     },
   });
 
@@ -212,7 +227,7 @@ const ComponentScreen = (props) => {
         Services.map((doc, i) => (
           <View style={styles.view} key={i}>
             <Text style={styles.text}>{doc}</Text>
-            <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+            
             <Table
               Data={params.Data}
               setData={params.setData}
@@ -294,17 +309,17 @@ const Table = (props) => {
         Data.map((item, i) => (
           <View
             style={{
-              padding: 10,
               width: width / 2 - 30,
-              marginRight: 10,
+              marginRight:i==0?12: 0,
             }}
             key={i}
           >
             <Text
               style={{
-                fontSize: 15,
-                fontFamily: "Poppins-Medium",
-                color: "#707070",
+                fontSize: 16,
+                fontWeight: "400",
+                marginVertical:20,
+                marginBottom:12
               }}
             >
               {item}
@@ -387,8 +402,9 @@ const Rows = ({ title, item, name, setData, Data }) => {
         List.map((doc, i) => (
           <CheckBox
             style={{
-              marginTop: 5,
               width: width / 2 - 30,
+              alignItems:"flex-start",
+              marginVertical:8
             }}
             key={i}
             value={

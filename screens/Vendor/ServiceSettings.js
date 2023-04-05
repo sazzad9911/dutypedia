@@ -16,16 +16,16 @@ const ServiceSettings = ({ navigation, route }) => {
       value: false,
       type: "ONETIME",
     },
-    {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
+    // {
+    //   title: "Installment",
+    //   value: false,
+    //   type: "INSTALLMENT",
+    // },
+    // {
+    //   title: "Subscription",
+    //   value: false,
+    //   type: "SUBS",
+    // },
     {
       title: "Package",
       value: false,

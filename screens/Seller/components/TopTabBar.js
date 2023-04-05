@@ -36,22 +36,14 @@ const TopTabBar = (props) => {
     }
   }, [props.state.index]);
   return (
-    <SafeAreaView
+    <View
       style={{
         backgroundColor: primaryColor,
-        borderTopWidth: 1,
+        borderTopWidth: 0,
         borderTopColor: "#e5e5e5",
-        shadowOffset: {
-          height: 2,
-          width: 2,
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
-        shadowColor: "#707070",
-        elevation: 3,
         paddingTop: props.id ? 35 : 0,
-        
-       
+        marginHorizontal:12,
+        marginVertical:28
       }}
     >
       <ScrollView
@@ -74,16 +66,16 @@ const TopTabBar = (props) => {
               {i != Services.length - 1 && (
                 <View
                   style={{
-                    height: 20,
+                    height: 16,
                     width: 2,
-                    backgroundColor: "#e5e5e5",
+                    backgroundColor: "#A3A3A3",
                   }}
                 />
               )}
             </View>
           ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -98,15 +90,14 @@ const Button = (props) => {
         props.navigation.navigate(title);
       }}
       style={{
-        margin: 10,
-        paddingHorizontal: 3,
+        marginHorizontal: 8,
       }}
     >
       <Text
         style={{
-          fontSize: 15,
-          fontFamily: "Poppins-Medium",
-          color: index == i ? backgroundColor : textColor,
+          fontSize: 16,
+          fontWeight: "500",
+          color: index == i ? "black" : "#A3A3A3",
         }}
       >
         {title}

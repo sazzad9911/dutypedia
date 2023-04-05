@@ -96,6 +96,7 @@ import ServiceDescribe from "./screens/create_dashboard/ServiceDescribe";
 import Location from "./screens/create_dashboard/Location";
 import About from "./screens/create_dashboard/About";
 import FinalReview from "./screens/create_dashboard/FinalReview";
+import ChatImage from "./screens/message/ChatImage";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -194,6 +195,13 @@ export default function StackRoute() {
           }}
           name="Dashboard"
           component={TabRoute}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="ChatImage"
+          component={ChatImage}
         />
         <Stack.Screen
           options={{ headerShown: false }}
@@ -315,7 +323,7 @@ export default function StackRoute() {
         <Stack.Screen
           name="Service List_1"
           options={{
-            header: (props) => <SubHeader title="Service List" {...props} />,
+            header: (props) => <SubHeader title="Your Service List" {...props} />,
           }}
           component={AllService}
         />

@@ -117,16 +117,16 @@ const VendorProfile = (props) => {
       value: false,
       type: "PACKAGE",
     },
-    {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
+    // {
+    //   title: "Installment",
+    //   value: false,
+    //   type: "INSTALLMENT",
+    // },
+    // {
+    //   title: "Subscription",
+    //   value: false,
+    //   type: "SUBS",
+    // },
   ];
   const [Active, setActive] = React.useState("Bargaining");
   const [NewLines, setNewLines] = React.useState(3);
@@ -1199,7 +1199,7 @@ const VendorProfile = (props) => {
               }}
               component={PackageScreen}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
                   <Text
@@ -1270,7 +1270,7 @@ const VendorProfile = (props) => {
                 changeScreenName: changeScreenName,
               }}
               component={Installment}
-            />
+            /> */}
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (

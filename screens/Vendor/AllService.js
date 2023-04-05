@@ -17,6 +17,7 @@ const AllService = (props) => {
   const textColor=colors.getTextColor();
   const secondaryColor=colors.getSecondaryColor();
   const backgroundColor=colors.getBackgroundColor();
+  //console.log("hgj")
   const styles = StyleSheet.create({
     view: {
       marginHorizontal: 20,
@@ -80,13 +81,13 @@ const ComponentScreen = (props) => {
   const styles = StyleSheet.create({
     view: {
       marginHorizontal: 20,
-      marginVertical: 10,
+      marginBottom: 28,
       
     },
     text: {
-      fontFamily: "Poppins-Medium",
-      fontSize: 15,
-      color: textColor,
+      fontWeight: "500",
+      fontSize: 20,
+      
     },
   });
 
@@ -106,19 +107,19 @@ const ComponentScreen = (props) => {
     }
   }, [props.route.name]);
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       {Array.isArray(Services) && Services.length > 0 ? (
         Services.map((doc, i) => (
           <View style={styles.view} key={i}>
             <Text style={styles.text}>{doc}</Text>
-            <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+            
             <Table {...props} title={doc} />
           </View>
         ))
       ) : (
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
-          <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+          
           <Table {...props} />
         </View>
       )}
@@ -141,8 +142,8 @@ const Table = (props) => {
 
   const styles = StyleSheet.create({
     view: {
-      marginHorizontal: 20,
-      marginVertical: 10,
+      marginHorizontal: 0,
+      marginVertical: 0,
     },
     text: {
       fontFamily: "Poppins-Medium",
@@ -187,17 +188,18 @@ const Table = (props) => {
         Data.map((item, i) => (
           <View
             style={{
-              padding: 10,
+              padding: 0,
               width: width / 2 - 30,
-              marginRight: 10,
+              marginRight:i==0?12:0
             }}
             key={i}
           >
             <Text
               style={{
-                fontSize: 15,
-                fontFamily: "Poppins-Medium",
-                color: "#707070",
+                fontSize: 16,
+                fontWeight: "400",
+                color: "#000000",
+                marginVertical:20
               }}
             >
               {item}
@@ -262,10 +264,9 @@ const Rows = ({ title, item, name }) => {
   return (
     <Text
       style={{
-        fontSize: 13,
-        fontFamily: "Poppins-Medium",
-        color:textColor,
-        lineHeight:18
+        fontSize: 14,
+        fontWeight: "400",
+        lineHeight:20
       }}
     >
       {text}
@@ -288,26 +289,26 @@ const ExtraFacilities = (props) => {
   const styles = StyleSheet.create({
     view: {
       marginHorizontal: 20,
-      marginVertical: 10,
+      marginVertical: 0,
     },
     text: {
-      fontFamily: "Poppins-Medium",
-      fontSize: 15,
-      color: textColor,
+      fontWeight: "500",
+      fontSize: 20,
+      marginBottom:20
     },
   });
   return (
     <ScrollView>
       <View style={styles.view}>
         <Text style={styles.text}>Lists</Text>
-        <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+        
         {Array.isArray(facilites) &&
           facilites.map(
             (doc, i) =><Text style={{
-              fontSize:13,
-              fontFamily: "Poppins-Medium",
-              color:textColor,
-              marginTop:5
+              fontSize:14,
+              fontWeight: "400",
+              marginTop:0,
+              lineHeight:20
             }} key={i}>{doc.title}</Text>
           )}
       </View>

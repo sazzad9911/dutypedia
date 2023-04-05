@@ -75,6 +75,7 @@ import UserOrderHeader from "../../Hooks/UserOrderHeader";
 import { setOrderRef } from "../../Reducers/orderRef";
 import customStyle from "../../assets/stylesheet";
 import VendorSearchOrder from "./VendorSearchOrder";
+import Member from "./Member";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -182,6 +183,7 @@ const Order = () => {
         name="VendorSearchOrder"
         component={VendorSearchOrder}
       />
+      
     </Stack.Navigator>
   );
 };
