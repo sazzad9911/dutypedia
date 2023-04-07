@@ -43,7 +43,7 @@ export default function TopSeller({ onMore }) {
     </View>
   );
 }
-export const TopSellerCard = ({ width, style, height, data }) => {
+export const TopSellerCard = ({ width, style, height, data,onPress }) => {
   const [like, setLike] = useState(false);
   const [rating,setRating]=useState(0)
   const saveList = useSelector((state) => state.saveList);
@@ -80,7 +80,7 @@ export const TopSellerCard = ({ width, style, height, data }) => {
     dispatch(setSaveList(response.data.gigs))
   }
   return (
-    <Pressable style={[styles.container, width ? st.width : null, style]}>
+    <Pressable onPress={onPress} style={[styles.container, width ? st.width : null, style]}>
       <View>
         <Image
           style={[
@@ -113,6 +113,130 @@ export const TopSellerCard = ({ width, style, height, data }) => {
         <Text style={styles.headLine} numberOfLines={2}>
           {data
             ? data.title
+            : "devlop,customize web app and fix bug using vue js,p and other things"}
+        </Text>
+        <View
+          style={[
+            customStyle.flexBox,
+            { marginTop: 8, justifyContent: "space-between" },
+          ]}>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 2,
+            }}>
+            <View>
+              <Avatar
+                style={styles.avatar}
+                source={{
+                  uri: data
+                    ? data.service.profilePhoto
+                    : "https://media.istockphoto.com/id/1375264815/photo/beautiful-afro-woman.jpg?b=1&s=170667a&w=0&k=20&c=V052sAKDF76elxBGk2ozB0hxafANXLjVmBNKFfPTdTY=",
+                }}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
+              }}>
+              <Text style={styles.smallText} numberOfLines={1}>
+              {data?`${data.service.user.firstName} ${data.service.user.lastName}`:"Easin Arafat It consulting center"}
+              </Text>
+              <Text style={styles.mediumText} numberOfLines={1}>
+                {data
+                  ? data.service.serviceCenterName
+                  : "Easin Arafat It consulting center"}
+              </Text>
+            </View>
+          </View>
+          <View style={{ flex: 0.5 }} />
+          <View
+            style={{
+              alignItems: "center",
+            }}>
+            <View style={styles.chipContainer}>
+              <SvgXml width={"8"} xml={star} />
+              <Text style={styles.chipText}>{rating>parseInt(rating)?rating:`${rating}.0`}</Text>
+            </View>
+            <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
+          </View>
+        </View>
+      </View>
+    </Pressable>
+  );
+};
+export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
+  const [like, setLike] = useState(false);
+  const [rating,setRating]=useState(0)
+  const saveList = useSelector((state) => state.saveList);
+  const user=useSelector(state=>state.user)
+  const dispatch=useDispatch()
+  data=data.gig;
+
+  const st = StyleSheet.create({
+    width: {
+      width: width,
+    },
+  });
+  useEffect(() => {
+    getRating(data?.id).then(res=>{
+      setRating(res.data.rating)
+    })
+  }, []);
+  useEffect(()=>{
+    //console.log(data)
+    let arr=saveList?.filter(d=>d.gig.id==data?.id)
+    if(arr?.length>0){
+      setLike(true)
+    }else{
+      setLike(false)
+    }
+  },[saveList?.length])
+  const addToSaveList=async()=>{
+    if(!data){
+      return
+    }
+    const res=await setLikeGigs(user.token,data.id)
+    //console.log(res.data)
+    const response=await getLikeGigs(user.token);
+    //console.log(response.data.gigs)
+    dispatch(setSaveList(response.data.gigs))
+  }
+  //console.log(data)
+  return (
+    <Pressable onPress={onPress} style={[styles.container, width ? st.width : null, style]}>
+      <View>
+        <Image
+          style={[
+            styles.image,
+            width ? st.width : null,
+            height ? { height: height } : null,
+          ]}
+          source={{
+            uri: data
+              ? data.images[0]
+              : "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
+          }}
+        />
+        {user&&(
+          <TouchableOpacity
+          style={styles.icon}
+          onPress={() => {
+            addToSaveList()
+            setLike((t) => !t)
+          }}>
+          <AntDesign
+            name={like ? "heart" : "hearto"}
+            size={16}
+            color={like ? "red" : "#FFFFFF"}
+          />
+        </TouchableOpacity>
+        )}
+      </View>
+      <View style={styles.lineBox}>
+        <Text style={styles.headLine} numberOfLines={2}>
+          {data
+            ? data?.title
             : "devlop,customize web app and fix bug using vue js,p and other things"}
         </Text>
         <View

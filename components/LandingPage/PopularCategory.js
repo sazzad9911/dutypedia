@@ -10,7 +10,9 @@ import React, { useEffect, useState } from "react";
 import customStyle from "../../assets/stylesheet";
 import { AntDesign } from "@expo/vector-icons";
 import { SvgXml } from "react-native-svg";
-import { getRating } from "../../Class/service";
+import { getLikeGigs, getRating, setLikeGigs } from "../../Class/service";
+import { useDispatch, useSelector } from "react-redux";
+import { setSaveList } from "../../Reducers/saveList";
 
 export default function PopularCategory({ onMore }) {
   return (
@@ -36,16 +38,29 @@ export default function PopularCategory({ onMore }) {
     </View>
   );
 }
-export const Card = ({ style, data }) => {
+export const Card = ({ style, data ,onPress }) => {
   const [like, setLike] = useState(false);
   const [rating, setRating] = useState(0);
+  const user=useSelector(state=>state.user)
+  const dispatch=useDispatch()
+
   useEffect(() => {
     getRating(data?.id).then((res) => {
       setRating(res.data.rating);
     });
   }, []);
+  const addToSaveList=async()=>{
+    if(!data){
+      return
+    }
+    const res=await setLikeGigs(user.token,data.id)
+    //console.log(res.data)
+    const response=await getLikeGigs(user.token);
+    //console.log(response.data.gigs)
+    dispatch(setSaveList(response.data.gigs))
+  }
   return (
-    <Pressable style={[styles.container, style]}>
+    <Pressable onPress={onPress} style={[styles.container, style]}>
       <Image
         style={styles.image}
         source={{
@@ -68,6 +83,7 @@ export const Card = ({ style, data }) => {
           </View>
           <TouchableOpacity
             onPress={() => {
+              addToSaveList()
               setLike((t) => !t);
             }}>
             <AntDesign

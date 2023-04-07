@@ -84,7 +84,7 @@ const SearchSecond = ({ navigation, route }) => {
           onCategory={setCategory}
         />
       }
-      component={<SCREEN data={data} />}
+      component={<SCREEN navigation={navigation} data={data} />}
       bottom={
         <>
           {index != -1 && (
@@ -151,10 +151,10 @@ const SearchFirst = ({ navigation, route }) => {
   );
 };
 const Search = () => {
-  const inset=useSafeAreaInsets()
+  const inset = useSafeAreaInsets();
   return (
-    <View style={{flex:1}}>
-      <View style={{height:inset?.top}}/>
+    <View style={{ flex: 1 }}>
+      <View style={{ height: inset?.top }} />
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
@@ -182,7 +182,7 @@ const ITEM = () => {
     </View>
   );
 };
-const SCREEN = ({ data }) => {
+const SCREEN = ({ data,navigation }) => {
   // 2 next 12; after calculating 12 if there odd number then print flat cart
   return (
     <View
@@ -208,6 +208,12 @@ const SCREEN = ({ data }) => {
         data.map((doc, i) =>
           (data.length > 1 && i == 0) || i == 1 ? (
             <TopSellerCard
+              onPress={() => {
+                navigation.navigate("OtherProfile", {
+                  serviceId: doc.service.id,
+                  data: doc,
+                });
+              }}
               key={i}
               data={doc}
               height={130}
@@ -215,6 +221,12 @@ const SCREEN = ({ data }) => {
             />
           ) : i % 14 == 0 && data.length > i + 1 ? (
             <TopSellerCard
+              onPress={() => {
+                navigation.navigate("OtherProfile", {
+                  serviceId: doc.service.id,
+                  data: doc,
+                });
+              }}
               key={i}
               data={doc}
               height={130}
@@ -222,6 +234,12 @@ const SCREEN = ({ data }) => {
             />
           ) : i % 15 == 0 ? (
             <TopSellerCard
+              onPress={() => {
+                navigation.navigate("OtherProfile", {
+                  serviceId: doc.service.id,
+                  data: doc,
+                });
+              }}
               key={i}
               data={doc}
               height={130}
@@ -230,6 +248,12 @@ const SCREEN = ({ data }) => {
           ) : i + 1 == data.length ? (
             <View key={i} style={{ width: "100%" }}>
               <Card
+                onPress={() => {
+                  navigation.navigate("OtherProfile", {
+                    serviceId: doc.service.id,
+                    data: doc,
+                  });
+                }}
                 style={{
                   borderBottomWidth: 0,
                   paddingBottom: 0,
@@ -239,7 +263,15 @@ const SCREEN = ({ data }) => {
             </View>
           ) : (
             <View key={i} style={{ width: "100%" }}>
-              <Card data={doc} />
+              <Card
+                onPress={() => {
+                  navigation.navigate("OtherProfile", {
+                    serviceId: doc.service.id,
+                    data: doc,
+                  });
+                }}
+                data={doc}
+              />
             </View>
           )
         )}

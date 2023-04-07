@@ -29,12 +29,18 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AnimatedHeight from "../Hooks/AnimatedHeight";
 import { useIsFocused } from "@react-navigation/native";
 import { getFavoriteCategories } from "../Class/auth";
-import { TopSellerCard } from "../components/LandingPage/TopSeller";
+import {
+  TopSellerCard,
+  TopSellerCardLike,
+} from "../components/LandingPage/TopSeller";
+import { getLikeGigs, getRating, setLikeGigs } from "../Class/service";
+import { setSaveList } from "../Reducers/saveList";
+import customStyle from "../assets/stylesheet";
 
 const PARALLAX_HEIGHT = 330;
 const HEADER_BAR_HEIGHT = Platform.OS == "ios" ? 55 : 45;
@@ -48,7 +54,7 @@ const SaveList = ({ navigation }) => {
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user);
   useEffect(() => {
-    //console.log(saveList)
+    //console.log(saveList);
   }, [isFocused]);
   return (
     <View
@@ -85,11 +91,31 @@ const SaveList = ({ navigation }) => {
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
-            marginHorizontal:-6,
-            marginVertical:22
+            marginHorizontal: -6,
+            marginVertical: 22,
           }}>
-          <TopSellerCard height={130} style={styles.cart} />
-          <TopSellerCard height={130} style={styles.cart} />
+          {saveList &&
+            saveList.map((doc, i) => (
+              <TopSellerCardLike onPress={()=>{
+                navigation.navigate("OtherProfile",{serviceId:doc.gig.service.id,data:doc.gig})
+              }}
+                key={i}
+                data={doc}
+                height={130}
+                style={styles.cart}
+              />
+            ))}
+          {saveList && saveList.length == 0 && (
+            <View style={customStyle.fullBox}>
+              <Text
+                style={{
+                  marginVertical: 20,
+                  fontSize: 16,
+                }}>
+                !No List Added
+              </Text>
+            </View>
+          )}
         </View>
         {/* {saveList &&
           saveList.map((doc, i) => (
