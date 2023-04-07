@@ -46,6 +46,7 @@ import {
   getDashboard,
   getOrders,
   getOfflineOrders,
+  getLikeGigs,
 } from "../Class/service";
 import Dashboard from "./Seller/Dashboard";
 import Order from "./Vendor/Order";
@@ -54,17 +55,6 @@ import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import NetInfo from "@react-native-community/netinfo";
 import { ActivityIndicator } from "react-native-paper";
-import CompanyCalendar from "./Seller/CompanyCalendar";
-import OrderDetails from "./Seller/OrderDetails";
-import ManageOrder from "./ManageOrder";
-import FixedOffers from "./Seller/FixedOffers";
-import OfferNow from "./Seller/OfferNow";
-import CategoryList from "./CategoryList";
-import { ViewCart } from "./Vendor/Notice";
-import Notice from "./UserNotice";
-import FixedService from "./FixedService";
-import PackageService from "./PackageService";
-import NewRoute from "../NewRoute";
 import { setIsOnline } from "../Reducers/isOffline";
 import {
   addUserOrder,
@@ -101,8 +91,6 @@ const TabRoute = () => {
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
   const user = useSelector((state) => state.user);
-  const vendorInfo = useSelector((state) => state.vendorInfo);
-  const interestCategory = useSelector((state) => state.interestCategory);
   const vendor = useSelector((state) => state.vendor);
   const [load, setLoad] = React.useState(false);
   const [reload, setReload] = React.useState(false);
@@ -114,14 +102,7 @@ const TabRoute = () => {
   const backgroundColor = colors.getBackgroundColor();
   const [NewState, setNewState] = React.useState(false);
   const [Loader, setLoader] = React.useState(false);
-  const newUserOrders = useSelector((state) => state.userOrders);
-  const newVendorOrders = useSelector((state) => state.vendorOrders);
-  const callingScreen = useSelector((state) => state.callingScreen);
   const [callingScreenVisible, setCallingScreenVisible] = React.useState(false);
-  const [CallerId, setCallerId] = React.useState();
-  const [RoomId, setRoomId] = React.useState();
-  const [CallerName, setCallerName] = React.useState();
-  const [AudioCall, setAudioCall] = React.useState();
 
   React.useEffect(() => {
     if (user) {
@@ -138,6 +119,7 @@ const TabRoute = () => {
           console.warn(err);
           setLoader(false);
         });
+        loadSaveList()
     }
   }, [user]);
   const updateVendorInfo = async (id) => {
@@ -146,6 +128,10 @@ const TabRoute = () => {
       dispatch({ type: "SET_VENDOR", playload: res.data });
     }
   };
+  const loadSaveList=async()=>{
+    const {data}=await getLikeGigs(user.token);
+    dispatch(setSaveList(data.gigs))
+  }
 
   React.useEffect(() => {
     checkVendor().then((res) => {
@@ -241,34 +227,10 @@ const TabRoute = () => {
     //console.log(res.data.orders)
     dispatch(setOfflineOrders(res.data.orders));
   };
-  React.useEffect(() => {
-    if (user && !isOffline) {
-      //userOrders();
-    }
-  }, [user + reload + socket + isOffline]);
-  React.useEffect(() => {
-    if (user && vendor && vendor.service && !isOffline) {
-      //vendorOrders();
-      offlineOrders();
-    }
-  }, [user + vendor + reload + socket + isOffline]);
-  React.useEffect(() => {}, []);
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);
     });
-    socket.on("incomingCall", (data) => {
-      if (callingScreen) {
-        socket?.emit("busy", data.from);
-        return;
-      }
-      setCallerId(data.from);
-      setRoomId(data.roomId);
-      setCallerName(data.name);
-      setAudioCall(data.audioOnly);
-      setCallingScreenVisible(true);
-    });
-
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;

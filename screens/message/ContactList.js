@@ -14,7 +14,7 @@ import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
 const { width, height } = Dimensions.get("window");
 
-export default function ContactList({ navigation, seller, onClose, data }) {
+export default function ContactList({ navigation, seller, onClose, data ,bottomRef,setIndex}) {
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
@@ -86,6 +86,8 @@ export default function ContactList({ navigation, seller, onClose, data }) {
           <ChatMemberCart
             data={data}
             onPress={() => {
+              bottomRef?.current.close()
+              setIndex(-1)
               // if (onClose) {
               //   onClose({
               //     data: {

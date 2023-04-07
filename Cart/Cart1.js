@@ -4,7 +4,7 @@ import { Color } from "./../assets/colors";
 import { Foundation } from "@expo/vector-icons";
 import {SvgXml} from 'react-native-svg'
 import {useDispatch,useSelector} from 'react-redux'
-import {setFavoriteCategories} from '../Class/auth'
+import {getFavoriteCategories, setFavoriteCategories} from '../Class/auth'
 import {getDashboardTitle} from '../Class/service'
 
 const { width, height } = Dimensions.get("window");
@@ -21,6 +21,7 @@ function Cart1(props) {
 
   React.useEffect(() => {
     //console.log(props.data.icon);
+    console.log("re")
   },[])
   const confirm=(title)=>{
     const newTitle=getDashboardTitle(title);

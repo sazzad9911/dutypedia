@@ -62,7 +62,7 @@ const SearchSecond = ({ navigation, route }) => {
     })
       .then((res) => {
         setData(res.data.gigs);
-        console.log(res.data.gigs);
+        //console.log(res.data.gigs);
       })
       .catch((err) => {
         console.warn(err.response.data.msg);

@@ -39,17 +39,7 @@ const Message = (props) => {
       <Stack.Navigator>
         <Stack.Screen
           options={{
-            header: (props) => (
-              <ChatHeader
-                onContact={() => {
-                  dispatch(setChatBottomRef({type:"Contact",index:0}))
-                }}
-                onSearch={() => {
-                  dispatch(setChatBottomRef({type:"Search",index:0}))    
-                }}
-                {...props}
-              />
-            ),
+            headerShown:false
           }}
           name="MessageScreen"
           component={ChatList}

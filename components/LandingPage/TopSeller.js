@@ -14,7 +14,9 @@ import { SvgXml } from "react-native-svg";
 import customStyle from "../../assets/stylesheet";
 import Avatar from "../Avatar";
 import { AntDesign } from "@expo/vector-icons";
-import { getRating } from "../../Class/service";
+import { getLikeGigs, getRating, setLikeGigs } from "../../Class/service";
+import { useDispatch, useSelector } from "react-redux";
+import { setSaveList } from "../../Reducers/saveList";
 const { width, height } = Dimensions.get("window");
 
 export default function TopSeller({ onMore }) {
@@ -44,6 +46,9 @@ export default function TopSeller({ onMore }) {
 export const TopSellerCard = ({ width, style, height, data }) => {
   const [like, setLike] = useState(false);
   const [rating,setRating]=useState(0)
+  const saveList = useSelector((state) => state.saveList);
+  const user=useSelector(state=>state.user)
+  const dispatch=useDispatch()
 
   const st = StyleSheet.create({
     width: {
@@ -55,6 +60,25 @@ export const TopSellerCard = ({ width, style, height, data }) => {
       setRating(res.data.rating)
     })
   }, []);
+  useEffect(()=>{
+    //console.log(data)
+    let arr=saveList?.filter(d=>d.gig.id==data?.id)
+    if(arr?.length>0){
+      setLike(true)
+    }else{
+      setLike(false)
+    }
+  },[saveList?.length])
+  const addToSaveList=async()=>{
+    if(!data){
+      return
+    }
+    const res=await setLikeGigs(user.token,data.id)
+    //console.log(res.data)
+    const response=await getLikeGigs(user.token);
+    //console.log(response.data.gigs)
+    dispatch(setSaveList(response.data.gigs))
+  }
   return (
     <Pressable style={[styles.container, width ? st.width : null, style]}>
       <View>
@@ -70,15 +94,20 @@ export const TopSellerCard = ({ width, style, height, data }) => {
               : "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
           }}
         />
-        <TouchableOpacity
+        {user&&(
+          <TouchableOpacity
           style={styles.icon}
-          onPress={() => setLike((t) => !t)}>
+          onPress={() => {
+            addToSaveList()
+            setLike((t) => !t)
+          }}>
           <AntDesign
             name={like ? "heart" : "hearto"}
             size={16}
             color={like ? "red" : "#FFFFFF"}
           />
         </TouchableOpacity>
+        )}
       </View>
       <View style={styles.lineBox}>
         <Text style={styles.headLine} numberOfLines={2}>

@@ -13,7 +13,7 @@ import ActivityLoader from "../../components/ActivityLoader";
 import ChatHeader from "../../components/ChatHeader";
 import SearchBar from "../../components/SearchBar";
 
-export default function SellerList({ navigation, seller, onClose,data }) {
+export default function SellerList({ navigation, seller, onClose, data,bottomRef,setIndex }) {
   const scrollY = new Animated.Value(0);
   const diffClamp = Animated.diffClamp(scrollY, 0, 300);
   const translateY = diffClamp.interpolate({
@@ -108,8 +108,11 @@ export default function SellerList({ navigation, seller, onClose,data }) {
         <View style={{ height: 0 }} />
         {Members &&
           Members.map((doc, i) => (
-            <ChatMemberCart data={data}
+            <ChatMemberCart
+              data={data}
               onPress={() => {
+                bottomRef?.current.close();
+                setIndex(-1);
                 // if (onClose) {
                 //   onClose({
                 //     data: doc,

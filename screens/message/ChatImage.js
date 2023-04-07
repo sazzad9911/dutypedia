@@ -75,6 +75,7 @@ export default function ChatImage({ navigation, route }) {
             marginLeft: 8,
             alignItems: "center",
             flexDirection: "row",
+            flex:1,
           }}>
           <Text
             numberOfLines={1}
@@ -83,8 +84,10 @@ export default function ChatImage({ navigation, route }) {
               fontSize: 16,
               lineHeight: 18,
               fontWeight: "400",
+              flex:1
             }}>
             {arr[arr.length - 1]}
+            
           </Text>
           {/* <Text style={{
               color: "#ffffff",

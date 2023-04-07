@@ -1,6 +1,19 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { View, Animated, ScrollView, Text, TextInput, Pressable } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  View,
+  Animated,
+  ScrollView,
+  Text,
+  TextInput,
+  Pressable,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
@@ -13,6 +26,7 @@ import { setChatSearchRef } from "../../Reducers/chatSearchRef";
 import SellerList from "./SellerList";
 import ContactList from "./ContactList";
 import { setChatBottomRef } from "../../Reducers/chatBottomRef";
+import ChatHeader from "./ChatHeader";
 
 export default function ChatList(props) {
   const scrollY = new Animated.Value(0);
@@ -29,21 +43,24 @@ export default function ChatList(props) {
   const chatSearchRef = useSelector((state) => state.chatSearchRef);
   const searchX = props?.route?.params?.search;
   const sheetRef = useRef(null);
-  const dispatch=useDispatch()
+  const [index, setIndex] = useState(-1);
+  const [type, setType] = useState("");
+  const dispatch = useDispatch();
   const [data, setData] = useState();
-  const chatBottomRef=useSelector(state=>state.chatBottomRef)
+  const chatBottomRef = useSelector((state) => state.chatBottomRef);
   const snapPoints = useMemo(() => ["90%"], []);
   const handleSheetChange = useCallback((index) => {
-    dispatch(setChatBottomRef({type:"",index:index}))
+    setIndex(index);
   }, []);
   const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
   }, []);
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
-    dispatch(setChatBottomRef(null))
+    dispatch(setChatBottomRef(null));
   }, []);
 
+  //console.log(chatBottomRef)
   React.useEffect(() => {
     if (user) {
       getConversation(user.token)
@@ -95,6 +112,17 @@ export default function ChatList(props) {
   }
   return (
     <View style={{ flex: 1 }}>
+      <ChatHeader
+        onContact={() => {
+          setType("Contact");
+          setIndex(0);
+        }}
+        onSearch={() => {
+          setType("Search");
+          setIndex(0);
+        }}
+        {...props}
+      />
       <ScrollView
         style={{ flex: 1 }}
         scrollEventThrottle={16}
@@ -103,7 +131,7 @@ export default function ChatList(props) {
         stickyHeaderIndices={[0]}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
-        }}>     
+        }}>
         <View
           style={{
             minHeight: "100%",
@@ -129,65 +157,72 @@ export default function ChatList(props) {
         </View>
         <View style={{ height: 0 }} />
       </ScrollView>
-      <BottomSheet
-        backgroundStyle={{
-          backgroundColor: "#4ADE80",
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: "#ffffff",
-        }}
-        ref={sheetRef}
-        index={chatBottomRef?chatBottomRef.index:-1}
-        enablePanDownToClose={true}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}>
-        <Header
-          type={chatBottomRef?.type}
-          value={chatSearchRef}
-          onChange={(e) => dispatch(setChatSearchRef(e))}
-          onConfirm={() => {
-            handleClosePress();
+      {isFocused && (
+        <BottomSheet
+          backgroundStyle={{
+            backgroundColor: index == -1 && isFocused ? "#ffffff" : "#4ADE80",
           }}
-        />
-        <BottomSheetScrollView style={{ backgroundColor: "white" }}>
-          {chatBottomRef?.type == "Search" ? (
-            <SellerList
-              bottomRef={sheetRef}
-              data={data}
-              onClose={setData}
-              navigation={props.navigation}
-              seller={true}
-            />
-          ) : (
-            <ContactList
-              data={data}
-              onClose={setData}
-              seller={false}
-              navigation={props.navigation}
+          handleIndicatorStyle={{
+            backgroundColor: "#ffffff",
+          }}
+          ref={sheetRef}
+          index={index}
+          enablePanDownToClose={true}
+          snapPoints={snapPoints}
+          onChange={handleSheetChange}>
+          {index != -1 && isFocused && (
+            <Header
+              type={type}
+              value={chatSearchRef}
+              onChange={(e) => dispatch(setChatSearchRef(e))}
+              onConfirm={() => {
+                handleClosePress();
+              }}
             />
           )}
-        </BottomSheetScrollView>
-        {chatBottomRef?.type != "Search" && (
-          <Pressable
-            onPress={() => {
-              handleClosePress();
-              props.navigation.navigate("Member");
-            }}
-            style={{
-              width: 44,
-              height: 44,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#4ADE80",
-              borderRadius: 22,
-              position: "absolute",
-              right: 20,
-              bottom: 37,
-            }}>
-            <SvgXml xml={contact} />
-          </Pressable>
-        )}
-      </BottomSheet>
+          <BottomSheetScrollView style={{ backgroundColor: "white" }}>
+            {type == "Search" ? (
+              <SellerList
+                bottomRef={sheetRef}
+                data={data}
+                onClose={setData}
+                navigation={props.navigation}
+                seller={true}
+                setIndex={setIndex}
+              />
+            ) : (
+              <ContactList
+                bottomRef={sheetRef}
+                data={data}
+                onClose={setData}
+                seller={false}
+                navigation={props.navigation}
+                setIndex={setIndex}
+              />
+            )}
+          </BottomSheetScrollView>
+          {type != "Search" && (
+            <Pressable
+              onPress={() => {
+                handleClosePress();
+                props.navigation.navigate("AddOnlineUser", { data: [] });
+              }}
+              style={{
+                width: 44,
+                height: 44,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#4ADE80",
+                borderRadius: 22,
+                position: "absolute",
+                right: 20,
+                bottom: 37,
+              }}>
+              <SvgXml xml={contact} />
+            </Pressable>
+          )}
+        </BottomSheet>
+      )}
     </View>
   );
 }

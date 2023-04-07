@@ -40,7 +40,7 @@ import { uploadFile } from "../Class/upload";
 import { socket } from "../Class/socket";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
-import { SafeAreaView } from "moti";
+import { MotiView, SafeAreaView } from "moti";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -106,14 +106,14 @@ const ChatScreen = (props) => {
   const [Refresh, setRefresh] = React.useState(false);
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const ref=params?.ref;
+  const ref = params?.ref;
   React.useEffect(() => {
     if (isFocused) {
-      ref?.current?.close()
+      ref?.current?.close();
       //console.log("hidden")
       dispatch(setHideBottomBar(true));
       setTimeout(() => {
-        ref?.current?.close()
+        ref?.current?.close();
         dispatch(setHideBottomBar(true));
       }, 50);
     } else {
@@ -229,39 +229,55 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
   const RenderBubble = (props) => {
     const currentMessage = props?.item;
-   
+
     if (currentMessage?.image) {
       //console.log(currentMessage?.image)
-      let arr=currentMessage?.image.split("/");
-      let newArr=arr[arr.length-1]?.split(".");
-      let type=newArr[newArr.length-1];
-      let three=newArr[0].split("")?.slice(-3)?.join("");
+      let arr = currentMessage?.image.split("/");
+      let newArr = arr[arr.length - 1]?.split(".");
+      let type = newArr[newArr.length - 1];
+      let three = newArr[0].split("")?.slice(-3)?.join("");
       return (
-        <Pressable onPress={()=>{
-          props.navigation.navigate("ChatImage",{uri:currentMessage?.image})
-        }} style={[newStyles.imageBox,{
-          alignSelf:UserInfo?.id==currentMessage?.user?._id?"flex-start":"flex-end"
-        }]}>
+        <Pressable
+          onPress={() => {
+            props.navigation.navigate("ChatImage", {
+              uri: currentMessage?.image,
+            });
+          }}
+          style={[
+            newStyles.imageBox,
+            {
+              alignSelf:
+                UserInfo?.id == currentMessage?.user?._id
+                  ? "flex-start"
+                  : "flex-end",
+            },
+          ]}>
           <Image
             style={newStyles.image}
             source={{ uri: currentMessage.image }}
           />
-          <View style={{ flexDirection: "row",paddingHorizontal:8,flex:1 }}>
-            <Text numberOfLines={1} style={[newStyles.dateText, { textAlign: "left" ,flex:1}]}>
-              {arr[arr.length-1]}
+          <View style={{ flexDirection: "row", paddingHorizontal: 8, flex: 1 }}>
+            <Text
+              numberOfLines={1}
+              style={[newStyles.dateText, { textAlign: "left", flex: 1 }]}>
+              {arr[arr.length - 1]}
             </Text>
-            <Text style={newStyles.dateText}>{three}.{type}{" "}</Text>
+            <Text style={newStyles.dateText}>
+              {three}.{type}{" "}
+            </Text>
             <View style={{ width: 8 }} />
-            <Text style={newStyles.dateText}>{dateDifference(new Date(), currentMessage.createdAt) == 0
-              ? timeConverter(currentMessage.createdAt)
-              : dateDifference(new Date(), currentMessage.createdAt) == 1
-              ? "Yesterday"
-              : serverTimeToLocal(currentMessage.createdAt)}</Text>
+            <Text style={newStyles.dateText}>
+              {dateDifference(new Date(), currentMessage.createdAt) == 0
+                ? timeConverter(currentMessage.createdAt)
+                : dateDifference(new Date(), currentMessage.createdAt) == 1
+                ? "Yesterday"
+                : serverTimeToLocal(currentMessage.createdAt)}
+            </Text>
           </View>
         </Pressable>
       );
     }
-    if (UserInfo?.id==currentMessage?.user?._id) {
+    if (UserInfo?.id == currentMessage?.user?._id) {
       return (
         <View style={newStyles.senderBox}>
           <Text style={newStyles.title}>{currentMessage.user.name}</Text>
@@ -296,9 +312,8 @@ const ChatScreen = (props) => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-    >
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
       <View
         style={{
           height: inset?.top,
@@ -313,16 +328,16 @@ const ChatScreen = (props) => {
       />
       <FlatList
         data={Messages}
-        renderItem={(pr)=><RenderBubble navigation={props.navigation} {...pr}/>}
-        keyExtractor={item => item._id.toString()}
+        renderItem={(pr) => (
+          <RenderBubble navigation={props.navigation} {...pr} />
+        )}
+        keyExtractor={(item) => item._id.toString()}
         inverted
       />
-      <BottomBar onSend={send} {...props}/>
-      
-   </KeyboardAvoidingView>
+      <BottomBar onSend={send} {...props} />
+    </KeyboardAvoidingView>
   );
 };
-
 
 {
   /*
@@ -363,15 +378,15 @@ const BottomBar = (props) => {
   const [CameraVisible, setCameraVisible] = React.useState(false);
   const [ImageLoader, setImageLoader] = React.useState(false);
   const [focused, setFocused] = useState(false);
-  const [line,setLine]=useState()
+  const [line, setLine] = useState();
   const styles = StyleSheet.create({
     view: {
       flexDirection: "row",
       paddingHorizontal: 20,
-      alignItems: focused?"flex-end":"center",
+      alignItems: focused ? "flex-end" : "center",
       backgroundColor: "#ffffff",
-      marginVertical:12,
-      marginTop:4,
+      marginVertical: 12,
+      marginTop: 4,
     },
     icon: {
       justifyContent: "center",
@@ -379,32 +394,37 @@ const BottomBar = (props) => {
       marginRight: 12,
     },
     input: {
-      flex: 1,
       fontSize: 14,
       fontWeight: "500",
-      minHeight: 32,
+      flex: 1,
+      paddingBottom: 3,
     },
     inputOutBox: {
       flexDirection: "row",
-      flex: 1,
-      minHeight: 48,
-      borderRadius: 32,
+      borderRadius: line && line > 62 ? 12 : 32,
       backgroundColor: "#F8F8F8",
-      padding: 8,
-      alignItems: focused?"flex-end":"center",
+      alignItems: line && line > 62 ? "flex-end" : "center",
+      flex: 1,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
     },
   });
-  
 
   return (
     <View style={styles.view}>
       {focused ? (
-        <SvgXml
-          style={{
-            marginRight: 8,marginBottom:8
-          }}
-          xml={com}
-        />
+        <Pressable style={{
+          paddingRight: 8,
+          paddingBottom: 12,
+        }}
+          onPress={() => {
+            setFocused(false);
+          }}>
+          <SvgXml
+            
+            xml={com}
+          />
+        </Pressable>
       ) : (
         <Animated.View style={{ flexDirection: "row" }} entering={FadeIn}>
           <TouchableOpacity
@@ -433,29 +453,39 @@ const BottomBar = (props) => {
           </TouchableOpacity>
         </Animated.View>
       )}
-      <View style={[styles.inputOutBox,{borderRadius:line?12:32}]}>
+      <MotiView
+        onLayout={(e) => {
+          setLine(e.nativeEvent.layout.height);
+        }}
+        animate={{
+          minHeight: 48,
+          maxHeight: focused ? 130 : 48,
+        }}
+        transition={{
+          type: "timing",
+          duration: 200,
+        }}
+        style={[styles.inputOutBox]}>
         <TextInput
+          onPressIn={() => {
+            setFocused(true);
+          }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          
           multiline={true}
           value={Message}
           onChangeText={(value) => {
-            if(value.split("").length>190){
-              return
+            setFocused(true);
+            if (value.split("").length > 190) {
+              return;
             }
             setMessage(value);
             //console.log(value)
-            if(value.split("").length>80){
-              //console.log("dsfd")
-              setLine(true)
-            }else{
-              setLine(false)
-            }
           }}
           style={styles.input}
           placeholder="Write message here.."
           placeholderTextColor={assentColor}
+          showsVerticalScrollIndicator={false}
         />
         <TouchableOpacity
           onPress={() => {
@@ -468,7 +498,7 @@ const BottomBar = (props) => {
           }}>
           <SvgXml xml={send} />
         </TouchableOpacity>
-      </View>
+      </MotiView>
       <Modal
         visible={Visible}
         onRequestClose={() => {
@@ -662,8 +692,8 @@ const newStyles = StyleSheet.create({
     maxWidth: "60%",
     borderRadius: 12,
     borderBottomLeftRadius: 4,
-    marginLeft:28,
-    marginVertical:8
+    marginLeft: 28,
+    marginVertical: 8,
   },
   receiverBox: {
     padding: 8,
@@ -671,39 +701,38 @@ const newStyles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#4ADE80",
     borderBottomRightRadius: 4,
-    alignSelf:"flex-end",
-    marginRight:28,
-    marginVertical:8
+    alignSelf: "flex-end",
+    marginRight: 28,
+    marginVertical: 8,
   },
-  imageBox:{
-    width:"60%",
-    height:140,
-    overflow:"hidden",
-    borderRadius:4,
-    borderWidth:1,
-    borderColor:"#E6E6E6",
-    marginVertical:8,
-    marginHorizontal:28
+  imageBox: {
+    width: "60%",
+    height: 140,
+    overflow: "hidden",
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#E6E6E6",
+    marginVertical: 8,
+    marginHorizontal: 28,
   },
-  image:{
-    width:"100%",
-    height:114
-  }
+  image: {
+    width: "100%",
+    height: 114,
+  },
 });
-function getFileSize(url)
-{
-    var fileSize = '';
-    var http = new XMLHttpRequest();
-    http.open('HEAD', url, false); // false = Synchronous
+function getFileSize(url) {
+  var fileSize = "";
+  var http = new XMLHttpRequest();
+  http.open("HEAD", url, false); // false = Synchronous
 
-    http.send(null); // it will stop here until this http request is complete
+  http.send(null); // it will stop here until this http request is complete
 
-    // when we are here, we already have a response, b/c we used Synchronous XHR
+  // when we are here, we already have a response, b/c we used Synchronous XHR
 
-    if (http.status === 200) {
-        fileSize = http.getResponseHeader('content-length');
-        console.log('fileSize = ' + fileSize);
-    }
+  if (http.status === 200) {
+    fileSize = http.getResponseHeader("content-length");
+    console.log("fileSize = " + fileSize);
+  }
 
-    return fileSize;
+  return fileSize;
 }

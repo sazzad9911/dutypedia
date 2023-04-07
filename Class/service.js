@@ -1076,3 +1076,16 @@ export const requestWithdraw=async(token,data)=>{
   })
   return res
 }
+export const setLikeGigs=async(token,gigId)=>{
+  const res=await axios.post(`${url}/server/services/toggle-like/${gigId}`,{},{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+
+export const getLikeGigs=async(token)=>{
+  const res=await axios.get(`${url}/server/services/gigs/liked`,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}

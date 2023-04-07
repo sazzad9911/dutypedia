@@ -1285,7 +1285,7 @@ const pickImage = async () => {
   return null;
 };
 export const AddOnlineUser = ({ navigation, route }) => {
-  const [Data, setData] = React.useState([]);
+  const [Data, setData] = React.useState();
   const user = useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
   const [SearchValue, setSearchValue] = React.useState();
@@ -1293,38 +1293,30 @@ export const AddOnlineUser = ({ navigation, route }) => {
   const [Message, setMessage] = React.useState(null);
   const data = route?.params?.data;
   const [All, setAll] = useState();
+  const isFocused=useIsFocused()
 
   React.useEffect(() => {
     //console.log(data)
     if (user) {
-      setData([]);
-      getRandomUser(user.token, vendor.service.id)
-        .then((res) => {
-          if (res) {
-            //setLoader(false);
-            //console.log(res.users)
-
-            return setAll(res.users);
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-        });
+     fetch()
+        
     }
-  }, [user]);
-  React.useEffect(() => {
-    if (All) {
-      
-      let arr = [];
-      setLoader(false);
-      All?.map((doc, i) => {
-        if (data.filter((d) => d.user.id == doc.id).length==0) {
-          arr.push(doc);
-        }
-      });
-      setData(arr)
+  }, [user,isFocused]);
+ const fetch=async()=>{
+  const {members}=await getOnlineUser(user.token,vendor.service.id);
+  const {users}=await getRandomUser(user.token,vendor.service.id)
+  let arr=[]
+  users.map((doc)=>{
+    if(members?.filter(d=>d.userId==doc.id)?.length==0){
+     arr.push(doc)
+    }else{
+      //console.log("d")
     }
-  }, [All,data]);
+  })
+  
+  setData(arr)
+  setAll(arr)
+ }
 
   React.useEffect(() => {
     setLoader(true);
@@ -1340,16 +1332,7 @@ export const AddOnlineUser = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     } else {
-      getRandomUser(user.token, vendor.service.id)
-        .then((res) => {
-          if (res) {
-            setLoader(false);
-            return setData(res.users);
-          }
-        })
-        .catch((err) => {
-          console.warn(err.response.data.msg);
-        });
+      setData(All)
     }
   }, [SearchValue]);
   const sendRequest = (id) => {
@@ -1415,13 +1398,14 @@ export const AddOnlineUser = ({ navigation, route }) => {
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {!Loader ? (
+          {Data ? (
             Data.map((doc, i) =>
               doc.id != user.user.id ? (
                 <CartView
                   onChange={(val) => {
                     sendRequest(val);
                   }}
+                  setMessage={setMessage}
                   doc={doc}
                   key={i}
                 />
@@ -1448,7 +1432,7 @@ export const AddOnlineUser = ({ navigation, route }) => {
     </KeyboardAvoidingView>
   );
 };
-const CartView = ({ doc, onChange }) => {
+const CartView = ({ doc, onChange,setMessage }) => {
   const [Send, setSend] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
@@ -1534,10 +1518,14 @@ const CartView = ({ doc, onChange }) => {
             onPress={() => {
               if (Send) {
                 cancelOnlineUser(user.token, doc.id, vendor.service.id)
-                  .then((res) => {})
+                  .then((res) => {
+                    setMessage("Request cancelled!")
+                  })
                   .catch((err) => {
                     console.warn(err.response.data.message);
                   });
+                  setSend((val) => !val);
+                  return
               }
               setSend((val) => !val);
               if (onChange) {
