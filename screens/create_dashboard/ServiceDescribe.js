@@ -1,4 +1,3 @@
-import ReadMore from "@fawazahmed/react-native-read-more";
 import React, { useState } from "react";
 import {
   ScrollView,

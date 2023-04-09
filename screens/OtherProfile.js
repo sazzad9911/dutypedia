@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -52,6 +52,7 @@ import {
   getOtherServices,
   getRelatedServices,
   getUnRelatedServices,
+  getDashboardReviews,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../Class/dataConverter";
@@ -192,8 +193,11 @@ const OtherProfile = (props) => {
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState();
   const [statusBarHeight, setStatusBarHeight] = React.useState(0);
-  const isFocused=useIsFocused()
-  const [userInfo,setUserInfo]=useState()
+  const isFocused = useIsFocused();
+  const [userInfo, setUserInfo] = useState();
+  const [individualRating, setIndividualRating] = useState();
+  const [reviews, setReviews] = useState();
+  const [bargaining, setActiveBargaining] = useState(true);
 
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
@@ -205,22 +209,20 @@ const OtherProfile = (props) => {
     setRefresh((val) => !val);
     wait(2000).then(() => setRefreshing(false));
   }, []);
-  React.useEffect(()=>{
-    if(isFocused){
+  React.useEffect(() => {
+    if (isFocused) {
       //console.log("hidden")
-      dispatch(setHideBottomBar(true))
-      setTimeout(()=>{
-        dispatch(setHideBottomBar(true))
-      },50)
-    }else{
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
       //console.log("seen")
-      dispatch(setHideBottomBar(false))
+      dispatch(setHideBottomBar(false));
     }
-  },[isFocused])
+  }, [isFocused]);
 
   React.useEffect(() => {
-    
-    setActive("Bargaining");
     //setLoader(true);
     setScrollEnabled(false);
 
@@ -247,9 +249,7 @@ const OtherProfile = (props) => {
             setTitle(gigs[0].title);
             setDescription(gigs[0].description);
             //setNewDataList(response.data.service.gigs[0].services.options)
-            setFacilities(
-              gigs[0].facilites.selectedOptions
-            );
+            setFacilities(gigs[0].facilites.selectedOptions);
             let arr = initialState;
             response.data.service.activeServiceTypes.forEach((doc) => {
               arr = arr.map((d) => {
@@ -267,7 +267,7 @@ const OtherProfile = (props) => {
             });
             setCategory(gigs[0].services.category);
             setActiveServiceData(arr);
-            setUserInfo(response.data.service.user)
+            setUserInfo(response.data.service.user);
             try {
               dispatch({
                 type: "SET_NEW_LIST_DATA",
@@ -278,7 +278,7 @@ const OtherProfile = (props) => {
               });
               setNewDataList(
                 serverToLocal(
-                 gigs[0].services.options,
+                  gigs[0].services.options,
                   gigs[0].services.category
                 )
               );
@@ -293,14 +293,12 @@ const OtherProfile = (props) => {
           console.warn(error.response.data);
         });
     }
-  }, [serviceId +data]);
+  }, [serviceId + data]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
     if (Data) {
-      const gigs = Data.service.gigs.filter(
-        (d) => d.type == "STARTING"
-      );
+      const gigs = Data.service.gigs.filter((d) => d.type == "STARTING");
       setBackgroundImage(Data.service.wallPhoto);
       setImage(Data.service.profilePhoto);
       setImages(gigs[0].images);
@@ -336,10 +334,7 @@ const OtherProfile = (props) => {
           ),
         });
         setNewDataList(
-          serverToLocal(
-            gigs[0].services.options,
-            gigs[0].services.category
-          )
+          serverToLocal(gigs[0].services.options, gigs[0].services.category)
         );
       } catch (e) {
         console.warn(e.message);
@@ -358,7 +353,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data ]);
+  }, [Bargaining + Data]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -380,7 +375,7 @@ const OtherProfile = (props) => {
         setServiceList(uniq(array));
       }
     }
-  }, [NewDataList + Click + Refresh ]);
+  }, [NewDataList + Click + Refresh]);
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -397,7 +392,7 @@ const OtherProfile = (props) => {
         setSubServiceList(uniq(arr));
       }
     }
-  }, [ActiveService + Click + Refresh ]);
+  }, [ActiveService + Click + Refresh]);
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -410,7 +405,7 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [Active + data + newUser + serviceId+Data]);
+  }, [Active + data + newUser + serviceId + Data]);
   React.useEffect(() => {
     if (newUser && data) {
       getOtherServices(newUser.token, data.service.id, "PACKAGE")
@@ -423,7 +418,7 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + serviceId+Data]);
+  }, [data + newUser + serviceId + Data]);
   React.useEffect(() => {
     if (newUser && data) {
       //setLoader(true);
@@ -447,6 +442,7 @@ const OtherProfile = (props) => {
         .then((response) => {
           if (response.data) {
             setLoader(false);
+            //console.log(response.data.gigs[0])
             setUnRelatedServices(response.data.gigs);
           }
         })
@@ -455,7 +451,20 @@ const OtherProfile = (props) => {
           console.warn(err.response);
         });
     }
-  }, [data + serviceId+Data]);
+  }, [data + serviceId + Data]);
+  React.useEffect(() => {
+    if (data) {
+      getDashboardReviews(newUser.token, data?.service?.id)
+        .then((res) => {
+          //console.log(res.data)
+          setIndividualRating(res.data.aggregate.individualRating);
+          setReviews(res.data.reviews);
+        })
+        .catch((err) => {
+          console.error(err.response.data.msg);
+        });
+    }
+  }, [data]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -631,9 +640,11 @@ const OtherProfile = (props) => {
         alwaysBounceVertical={false}
         ref={scrollRef}
         refreshControl={
-          <RefreshControl style={{
-            
-          }} refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            style={{}}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
         showsVerticalScrollIndicator={false}
         style={{
@@ -668,14 +679,16 @@ const OtherProfile = (props) => {
           // }
           // scrollY.setValue(e.nativeEvent.contentOffset.y);
           setOffset(currentOffset);
-        }}
-      >
-        <Canvas style={{ width: width, height: height-((height*30)/100) }}>
+        }}>
+        <Canvas style={{ width: width, height: height - (height * 30) / 100 }}>
           <Fill color={primaryColor} />
           <Box
-            box={rrect(rect(0, 0, width - 3, height-(((height*30)/100)+10)), 5, 5)}
-            color={primaryColor}
-          > 
+            box={rrect(
+              rect(0, 0, width - 3, height - ((height * 30) / 100 + 10)),
+              5,
+              5
+            )}
+            color={primaryColor}>
             <BoxShadow
               dx={30}
               dy={30}
@@ -710,7 +723,7 @@ const OtherProfile = (props) => {
               x={0}
               y={0}
               width={width}
-              height={height-((height*30)/100)}
+              height={height - (height * 30) / 100}
             />
           )}
         </Canvas>
@@ -720,12 +733,11 @@ const OtherProfile = (props) => {
             position: "absolute",
             top: 0,
             right: 10,
-            height: height-((height*30)/100),
+            height: height - (height * 30) / 100,
             justifyContent: "center",
             elevation: 2,
             zIndex: 100,
-          }}
-        >
+          }}>
           <Menu
             contentStyle={{
               backgroundColor: primaryColor,
@@ -755,8 +767,7 @@ const OtherProfile = (props) => {
                 height={Platform.OS == "ios" ? "50" : "45"}
                 width={Platform.OS == "ios" ? "50" : "45"}
               />
-            }
-          >
+            }>
             <Menu.Item
               onPress={() => {
                 navigation.navigate("Support_1");
@@ -818,23 +829,24 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
-              if(!userInfo){
-                Alert.alert("Invalid user!")
-                return
+              if (!userInfo) {
+                Alert.alert("Invalid user!");
+                return;
               }
-              if(newUser.user.id==userInfo.id){
-                Alert.alert("Ops!","Self messaging is not allowed.")
-                return
+              if (newUser.user.id == userInfo.id) {
+                Alert.alert("Ops!", "Self messaging is not allowed.");
+                return;
               }
-              let user={
-                userId:userInfo.id,
-                user:userInfo
-              }
-              navigation.navigate("ChatScreen", { data: {
-                users:[
-                  user
-                ]
-              } ,username:userInfo.username});
+              let user = {
+                userId: userInfo.id,
+                user: userInfo,
+              };
+              navigation.navigate("ChatScreen", {
+                data: {
+                  users: [user],
+                },
+                username: userInfo.username,
+              });
             }}
             style={{
               shadowOffset: {
@@ -858,8 +870,7 @@ const OtherProfile = (props) => {
             borderTopRightRadius: 30,
             marginTop: -30,
             overflow: "hidden",
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
@@ -867,8 +878,7 @@ const OtherProfile = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 5,
               backgroundColor: primaryColor,
-            }}
-          >
+            }}>
             <Text
               numberOfLines={2}
               style={[
@@ -878,8 +888,7 @@ const OtherProfile = (props) => {
                   flex: 3,
                   fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 },
-              ]}
-            >
+              ]}>
               {data
                 ? data.service.serviceCenterName
                 : "Easin Arafat It Consulting Center"}
@@ -889,14 +898,12 @@ const OtherProfile = (props) => {
               style={{
                 paddingTop: 20,
                 alignItems: "center",
-              }}
-            >
+              }}>
               <View
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <SvgXml
                   xml={newStar}
                   height={Platform.OS == "ios" ? "21" : "19"}
@@ -908,8 +915,7 @@ const OtherProfile = (props) => {
                     fontFamily: "Poppins-Bold",
                     color: "#FFC107",
                     marginLeft: 5,
-                  }}
-                >
+                  }}>
                   4.6
                 </Text>
               </View>
@@ -918,8 +924,7 @@ const OtherProfile = (props) => {
                   fontSize: Platform.OS == "ios" ? 12 : 11,
                   fontFamily: "Poppins-Medium",
                   marginTop: Platform.OS == "ios" ? 5 : 0,
-                }}
-              >
+                }}>
                 Profile Views {Data ? Data.service.views : "00"}
               </Text>
             </View>
@@ -931,8 +936,7 @@ const OtherProfile = (props) => {
               paddingHorizontal: 20,
               marginVertical: 15,
               flex: 1,
-            }}
-          >
+            }}>
             <Avatar
               style={{
                 width: 40,
@@ -944,8 +948,7 @@ const OtherProfile = (props) => {
             <View
               style={{
                 flex: 3,
-              }}
-            >
+              }}>
               <Tooltip
                 enterTouchDelay={10}
                 title={
@@ -954,8 +957,7 @@ const OtherProfile = (props) => {
                         Data.service.providerInfo.name
                       } (${Data.service.providerInfo.gender.toUpperCase()})`
                     : "No"
-                }
-              >
+                }>
                 <View
                   onPress={() => {
                     setNameDropDown((val) => !val);
@@ -968,16 +970,14 @@ const OtherProfile = (props) => {
                     paddingVertical: 10,
                     paddingHorizontal: 10,
                     flex: 1,
-                  }}
-                >
+                  }}>
                   <Text
                     numberOfLines={NameDropDown ? 2 : 1}
                     style={{
                       color: "#6366F1",
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
-                    }}
-                  >
+                    }}>
                     {Data
                       ? `${Data.service.providerInfo.title} ${
                           Data.service.providerInfo.name
@@ -990,12 +990,10 @@ const OtherProfile = (props) => {
             <View
               style={{
                 flex: 2,
-              }}
-            >
+              }}>
               <Tooltip
                 enterTouchDelay={10}
-                title={Data ? Data.service.providerInfo.position : ""}
-              >
+                title={Data ? Data.service.providerInfo.position : ""}>
                 <View
                   style={{
                     flex: 1,
@@ -1005,8 +1003,7 @@ const OtherProfile = (props) => {
                     borderRadius: 10,
                     justifyContent: "center",
                     justifySelf: "flex-end",
-                  }}
-                >
+                  }}>
                   <Text
                     numberOfLines={PositionDropDown ? 4 : 1}
                     style={{
@@ -1014,8 +1011,7 @@ const OtherProfile = (props) => {
                       textAlign: "center",
                       fontSize: Platform.OS == "ios" ? 14 : 13,
                       fontFamily: "Poppins-SemiBold",
-                    }}
-                  >
+                    }}>
                     {Data ? Data.service.providerInfo.position : ""}
                   </Text>
                 </View>
@@ -1025,16 +1021,14 @@ const OtherProfile = (props) => {
           <View
             style={{
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
                 marginVertical: 15,
                 marginTop: 2,
-              }}
-            >
+              }}>
               Specialty In
             </Text>
             <Animation.View style={{ height: specialtyAnimation }}>
@@ -1047,8 +1041,7 @@ const OtherProfile = (props) => {
                   flexDirection: "row",
                   flexWrap: "wrap",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 {Array.isArray(Specialty) &&
                   Specialty.map((doc, i) => (
                     <SpecialtyComponent
@@ -1070,15 +1063,13 @@ const OtherProfile = (props) => {
                     }}
                     style={{
                       marginVertical: 5,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         fontFamily: "Poppins-SemiBold",
                         fontSize: Platform.OS == "ios" ? 16.5 : 15,
                         color: "#86939B",
-                      }}
-                    >
+                      }}>
                       {!More ? "...Show All" : "...Show Less"}
                     </Text>
                   </Pressable>
@@ -1090,16 +1081,14 @@ const OtherProfile = (props) => {
             style={{
               paddingHorizontal: 20,
               backgroundColor: primaryColor,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: Platform.OS == "ios" ? 22 : 20.5,
                 fontFamily: "Poppins-SemiBold",
                 marginTop: 15,
                 marginBottom: 10,
-              }}
-            >
+              }}>
               About
             </Text>
 
@@ -1121,16 +1110,14 @@ const OtherProfile = (props) => {
               paddingHorizontal: 20,
               paddingVertical: 10,
               paddingTop: 5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 color: "#4ADE80",
                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
                 fontFamily: "Poppins-SemiBold",
                 marginBottom: 15,
-              }}
-            >
+              }}>
               ...Company Calender, Notice & Team
             </Text>
           </Pressable>
@@ -1139,8 +1126,7 @@ const OtherProfile = (props) => {
         <MotiView
           transition={{ type: "timing" }}
           animate={{ height: calenderHeight }}
-          style={{ overflow: "hidden" }}
-        >
+          style={{ overflow: "hidden" }}>
           <View
             style={{
               backgroundColor: primaryColor,
@@ -1150,8 +1136,7 @@ const OtherProfile = (props) => {
               if (OpenDetails) {
                 //setCalenderHeight(e.nativeEvent.layout.height);
               }
-            }}
-          >
+            }}>
             <ProfileOption
               onPress={() => {
                 navigation.navigate("Company Calender", { vendor: Data });
@@ -1161,7 +1146,9 @@ const OtherProfile = (props) => {
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("UserNotice", { serviceId: Data.service.id });
+                navigation.navigate("UserNotice", {
+                  serviceId: Data.service.id,
+                });
               }}
               style={{
                 marginBottom: 0,
@@ -1186,8 +1173,7 @@ const OtherProfile = (props) => {
               overflow: "hidden",
               height: newNavigation,
             },
-          ]}
-        >
+          ]}>
           <Tab.Navigator
             screenOptions={{
               tabBarStyle: {
@@ -1213,22 +1199,24 @@ const OtherProfile = (props) => {
               },
               tabBarScrollEnabled: true,
               tabBarPressColor: primaryColor,
-              swipeEnabled:false
-            }}
-          >
+              swipeEnabled: false,
+            }}>
             <Tab.Screen
               options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                    }}
-                  >
-                    {initialState[0].title}
-                  </Text>
-                ),
+                tabBarLabel: ({ focused, color, size }) => {
+                  //setActiveBargaining(focused);
+                  //console.log(focused)
+                  return (
+                    <Text
+                      style={{
+                        color: focused ? "#4ADE80" : "black",
+                        fontFamily: "Poppins-SemiBold",
+                        fontSize: Platform.OS == "ios" ? 16.5 : 15,
+                      }}>
+                      {initialState[0].title}
+                    </Text>
+                  );
+                },
               }}
               name={initialState[0].title}
               initialParams={{
@@ -1248,6 +1236,7 @@ const OtherProfile = (props) => {
                 UnRelatedServices: UnRelatedServices,
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
+                setActiveBargaining:setActiveBargaining
               }}
               component={BargainingScreen}
             />
@@ -1259,8 +1248,7 @@ const OtherProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[1].title}
                   </Text>
                 ),
@@ -1295,8 +1283,7 @@ const OtherProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[2].title}
                   </Text>
                 ),
@@ -1323,7 +1310,7 @@ const OtherProfile = (props) => {
               }}
               component={PackageScreen}
             />
-            
+
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
@@ -1332,8 +1319,7 @@ const OtherProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[4].title}
                   </Text>
                 ),
@@ -1357,7 +1343,7 @@ const OtherProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 scrollTo: scrollTo,
-                data:data
+                data: data,
               }}
               component={Subscriptions}
             />
@@ -1369,8 +1355,7 @@ const OtherProfile = (props) => {
                       color: focused ? "#4ADE80" : "black",
                       fontFamily: "Poppins-SemiBold",
                       fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}
-                  >
+                    }}>
                     {initialState[3].title}
                   </Text>
                 ),
@@ -1394,12 +1379,109 @@ const OtherProfile = (props) => {
                 RelatedServices: RelatedServices,
                 UnRelatedServices: UnRelatedServices,
                 scrollTo: scrollTo,
-                data:data
+                data: data,
               }}
               component={Installment}
             />
           </Tab.Navigator>
         </View>
+        {bargaining && (
+          <>
+            <View
+              style={{
+                backgroundColor: primaryColor,
+                marginTop: 0,
+                paddingVertical: 25,
+                paddingTop: 25,
+              }}>
+              <RatingView
+                style={{
+                  marginHorizontal: 20,
+                }}
+                title="Seller Communication"
+                rate={individualRating?.communicationRating}
+              />
+              <RatingView
+                style={{
+                  marginHorizontal: 20,
+                  marginTop: 5,
+                }}
+                title="Service As Describe"
+                rate={individualRating?.describeRating}
+              />
+              <RatingView
+                style={{
+                  marginHorizontal: 20,
+                  marginTop: 5,
+                }}
+                title="Service Quality"
+                rate={individualRating?.qualityRating}
+              />
+            </View>
+            <ReviewCart
+              individualRating={individualRating}
+              data={reviews}
+              navigation={navigation}
+            />
+            <View
+              style={{
+                backgroundColor: primaryColor,
+                marginTop: 0,
+              }}>
+              {RelatedServices.length > 0 && (
+                <View>
+                  <Text
+                    style={{
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                      fontFamily: "Poppins-SemiBold",
+                      color: textColor,
+                      paddingHorizontal: 20,
+                      paddingVertical: 15,
+                    }}>
+                    Related Service
+                  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <View style={{ width: 10 }} />
+                    {RelatedServices.map((doc, i) => (
+                      <RelatedService
+                        data={doc}
+                        key={i}
+                        navigation={navigation}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+
+              {UnRelatedServices.length > 0 && (
+                <View>
+                  <Text
+                    style={{
+                      fontSize: Platform.OS == "ios" ? 22 : 20.5,
+                      fontFamily: "Poppins-SemiBold",
+                      color: textColor,
+                      paddingHorizontal: 20,
+                      paddingVertical: 15,
+                    }}>
+                    You Might Also Like
+                  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <View style={{ width: 10 }} />
+                    {UnRelatedServices.map((doc, i) => (
+                      <RelatedService
+                        data={doc}
+                        key={i}
+                        navigation={navigation}
+                      />
+                    ))}
+                    <View style={{ width: 10 }} />
+                  </ScrollView>
+                </View>
+              )}
+            </View>
+            <View style={{ height: 90 }} />
+          </>
+        )}
       </ScrollView>
       {showButton && (
         <Animated.View
@@ -1418,29 +1500,28 @@ const OtherProfile = (props) => {
             bottom: 20,
             backgroundColor: "#4ADE80",
             borderRadius: 25,
-          }}
-        >
+          }}>
           <Pressable
             onPress={() => {
-              if(!userInfo){
-                Alert.alert("Invalid user!")
-                return
+              if (!userInfo) {
+                Alert.alert("Invalid user!");
+                return;
               }
-              if(newUser.user.id==userInfo.id){
-                Alert.alert("Ops!","Self messaging is not allowed.")
-                return
+              if (newUser.user.id == userInfo.id) {
+                Alert.alert("Ops!", "Self messaging is not allowed.");
+                return;
               }
-              let user={
-                userId:userInfo.id,
-                user:userInfo
-              }
-              navigation.navigate("ChatScreen", { data: {
-                users:[
-                  user
-                ]
-              } ,username:userInfo.username});
-            }}
-          >
+              let user = {
+                userId: userInfo.id,
+                user: userInfo,
+              };
+              navigation.navigate("ChatScreen", {
+                data: {
+                  users: [user],
+                },
+                username: userInfo.username,
+              });
+            }}>
             <SvgXml xml={messageIcon} height="50" width={"50"} />
           </Pressable>
         </Animated.View>
@@ -1457,7 +1538,7 @@ const OtherProfile = (props) => {
         }}/>
       )} */}
       {/* <NewBottomBar {...props}/> */}
-      <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
+      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
     </View>
   );
 };
@@ -1584,15 +1665,13 @@ const BarOption = ({ icon, title }) => {
         flexDirection: "row",
         backgroundColor: primaryColor,
         paddingVertical: 5,
-      }}
-    >
+      }}>
       <SvgXml xml={icon} height="22" width="22" />
       <View
         style={{
           flex: 6,
           marginLeft: 10,
-        }}
-      >
+        }}>
         <Text
           numberOfLines={lines}
           style={{
@@ -1600,8 +1679,7 @@ const BarOption = ({ icon, title }) => {
             marginBottom: 5,
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             color: "#333333",
-          }}
-        >
+          }}>
           {title}
         </Text>
       </View>
@@ -1634,6 +1712,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const startingHeight = 120;
   const fullHeight = calculateHeight(Description, 25);
   const setNewNavigation = params.setNewNavigation;
+  const setActiveBargaining=params.setActiveBargaining;
   const isFocused = useIsFocused();
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
@@ -1648,6 +1727,8 @@ const BargainingScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
+  const newUser = useSelector((state) => state.user);
+
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1709,6 +1790,13 @@ const BargainingScreen = ({ navigation, route }) => {
       setText(totalText);
     }
   }, [NewLines]);
+  React.useEffect(()=>{
+    if(isFocused){
+      setActiveBargaining(true)
+    }else{
+      setActiveBargaining(false)
+    }
+  },[isFocused])
   //console.log(newHeight);
   React.useEffect(() => {
     if (navHeight && isFocused) {
@@ -1720,11 +1808,12 @@ const BargainingScreen = ({ navigation, route }) => {
   }, [navHeight + isFocused + textHeight]);
 
   return (
-    <View onLayout={e=>{
-      if(navHeight===0){
-        setNavHeight(e.nativeEvent.layout.height)
-      }
-    }}
+    <View
+      onLayout={(e) => {
+        if (navHeight === 0) {
+          setNavHeight(e.nativeEvent.layout.height);
+        }
+      }}
       scrollEventThrottle={16}
       onScroll={(e) => {
         //console.log(e.nativeEvent.contentOffset.y)
@@ -1741,8 +1830,7 @@ const BargainingScreen = ({ navigation, route }) => {
 
         setOffset(currentOffset);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View style={{ backgroundColor: primaryColor, marginBottom: -1 }}>
         <Text
           style={{
@@ -1751,8 +1839,7 @@ const BargainingScreen = ({ navigation, route }) => {
             color: textColor,
             paddingHorizontal: 20,
             marginTop: 20,
-          }}
-        >
+          }}>
           {Title}
         </Text>
 
@@ -1760,13 +1847,12 @@ const BargainingScreen = ({ navigation, route }) => {
           style={{
             marginHorizontal: 20,
             marginVertical: 15,
-          }}
-        >
+          }}>
           <AnimatedHeight
             onChange={(height) => {
               //setNewNavigation(newHeight + 55 + height);
               //console.log(height)
-              setTextHeight(height-50);
+              setTextHeight(height - 50);
             }}
             button={true}
             text={Description}
@@ -1798,8 +1884,7 @@ const BargainingScreen = ({ navigation, route }) => {
         style={{
           backgroundColor: primaryColor,
           paddingHorizontal: 20,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontFamily: "Poppins-SemiBold",
@@ -1807,8 +1892,7 @@ const BargainingScreen = ({ navigation, route }) => {
             marginBottom: 20,
             marginTop: 35,
             color: "#535353",
-          }}
-        >
+          }}>
           Service List
         </Text>
 
@@ -1819,14 +1903,12 @@ const BargainingScreen = ({ navigation, route }) => {
             overflow: "hidden",
 
             height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-            }}
-          >
+            }}>
             <View
               onLayout={(e) => {
                 //console.log(e.nativeEvent.layout.height);
@@ -1835,8 +1917,7 @@ const BargainingScreen = ({ navigation, route }) => {
               style={{
                 flex: 1.2,
                 maxHeight: 182,
-              }}
-            >
+              }}>
               {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
                 ServiceList.map((item, i) => (
                   <Button
@@ -1887,8 +1968,11 @@ const BargainingScreen = ({ navigation, route }) => {
               }}
             />
             <View
-              style={{ flex: 2, marginRight: 0, maxHeight: ServiceTableHeight }}
-            >
+              style={{
+                flex: 2,
+                marginRight: 0,
+                maxHeight: ServiceTableHeight,
+              }}>
               {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
                 SubServiceList.map((item, i) => (
                   <ServiceTable
@@ -1918,8 +2002,7 @@ const BargainingScreen = ({ navigation, route }) => {
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
                       lineHeight: 30,
-                    }}
-                  >
+                    }}>
                     Extra Facilities
                   </Text>
                   {Array.isArray(Facilities) &&
@@ -1936,8 +2019,7 @@ const BargainingScreen = ({ navigation, route }) => {
                             lineHeight: 25,
                             color: textColor,
                           }}
-                          key={i + 1}
-                        >
+                          key={i + 1}>
                           {doc.title}
                         </Text>
                       ) : null
@@ -1956,16 +2038,14 @@ const BargainingScreen = ({ navigation, route }) => {
           justifyContent: "space-between",
           marginHorizontal: 20,
           marginVertical: 25,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: Platform.OS == "ios" ? 17 : 15.5,
             color: textColor,
 
             fontFamily: "Poppins-SemiBold",
-          }}
-        >
+          }}>
           From {Price} ৳
         </Text>
         <TouchableOpacity
@@ -1979,16 +2059,14 @@ const BargainingScreen = ({ navigation, route }) => {
             flexDirection: "row",
             minWidth: 10,
             alignItems: "center",
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: Platform.OS == "ios" ? 16.5 : 15,
               fontFamily: "Poppins-SemiBold",
               color: "#707070",
               marginRight: 0,
-            }}
-          >
+            }}>
             Show All
           </Text>
           <MaterialIcons
@@ -2019,91 +2097,6 @@ const BargainingScreen = ({ navigation, route }) => {
           title="Offer Now"
         />
       </View>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
-          paddingVertical: 25,
-          paddingTop: 25,
-        }}
-      >
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-          }}
-          title="Seller Communication"
-          rate={4.6}
-        />
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-            marginTop: 5,
-          }}
-          title="Service As Describe"
-          rate={4.6}
-        />
-        <RatingView
-          style={{
-            marginHorizontal: 20,
-            marginTop: 5,
-          }}
-          title="Service Quality"
-          rate={3.2}
-        />
-      </View>
-      <ReviewCart navigation={navigation} />
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          marginTop: 0,
-        }}
-      >
-        {RelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              Related Service
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {RelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-            </ScrollView>
-          </View>
-        )}
-
-        {UnRelatedServices.length > 0 && (
-          <View>
-            <Text
-              style={{
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                fontFamily: "Poppins-SemiBold",
-                color: textColor,
-                paddingHorizontal: 20,
-                paddingVertical: 15,
-              }}
-            >
-              You Might Also Like
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={{ width: 10 }} />
-              {UnRelatedServices.map((doc, i) => (
-                <RelatedService data={doc} key={i} navigation={navigation} />
-              ))}
-              <View style={{ width: 10 }} />
-            </ScrollView>
-          </View>
-        )}
-      </View>
-      <View style={{ height: 90 }} />
     </View>
   );
 };
@@ -2236,12 +2229,10 @@ const FixedScreen = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
-  const data=params.Data;
-  const [Active,setActive]=React.useState(false)
-
+  const data = params.Data;
+  const [Active, setActive] = React.useState(false);
 
   React.useEffect(() => {
-    
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);
       setNewNavigation(layoutHeight + 50);
@@ -2251,23 +2242,24 @@ const FixedScreen = ({ navigation, route }) => {
       }, 50);
     }
   }, [isFocused + layoutHeight]);
-  React.useEffect(()=>{
-    if(data){
-      data.service.activeServiceTypes.map((doc,i)=>{
-        if(doc==="ONETIME"){
-          setActive(true)
-        }else{
+  React.useEffect(() => {
+    if (data) {
+      data.service.activeServiceTypes.map((doc, i) => {
+        if (doc === "ONETIME") {
+          setActive(true);
+        } else {
           //setActive(false)
         }
-      })
+      });
     }
-  },[data+isFocused])
+  }, [data + isFocused]);
 
   //console.log(FixedService)
   return (
-    <View onLayout={e=>{
-      setLayoutHeight(e.nativeEvent.layout.height)
-    }}
+    <View
+      onLayout={(e) => {
+        setLayoutHeight(e.nativeEvent.layout.height);
+      }}
       scrollEventThrottle={16}
       onScroll={(e) => {
         //console.log(e.nativeEvent.contentOffset.y)
@@ -2282,31 +2274,29 @@ const FixedScreen = ({ navigation, route }) => {
         }
         setOffset(currentOffset);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           marginHorizontal: 10,
           marginVertical: 20,
-        }}
-      >
-        {Active&&FixedService.map(
-          (doc, i) =>
-            i < content && (
-              <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
-            )
-        )}
-        {Active&&FixedService.length > content && (
+        }}>
+        {Active &&
+          FixedService.map(
+            (doc, i) =>
+              i < content && (
+                <ServiceCart onPress={() => onPress(doc)} key={i} data={doc} />
+              )
+          )}
+        {Active && FixedService.length > content && (
           <View
             style={{
               justifyContent: "center",
               marginVertical: 15,
               alignItems: "center",
               width: "100%",
-            }}
-          >
+            }}>
             <IconButton
               onPress={() => {
                 setContent((val) => val + 2);
@@ -2319,40 +2309,38 @@ const FixedScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {FixedService.length == 0||!Active && (
-          <Animated.View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              paddingHorizontal: 10,
-              backgroundColor: primaryColor,
-              justifyContent: "center",
-              width: "100%",
-            }}
-            entering={FadeIn}
-          >
-            <View
+        {FixedService.length == 0 ||
+          (!Active && (
+            <Animated.View
               style={{
-                flex: 1,
+                flexDirection: "row",
+                flexWrap: "wrap",
+                paddingHorizontal: 10,
+                backgroundColor: primaryColor,
                 justifyContent: "center",
-                alignItems: "center",
+                width: "100%",
               }}
-            >
-              <SvgXml
-                xml={serviceIcon}
-                style={{ marginVertical: 100 }}
-                height="200"
-                width="200"
-              />
-            </View>
-          </Animated.View>
-        )}
+              entering={FadeIn}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
+                <SvgXml
+                  xml={serviceIcon}
+                  style={{ marginVertical: 100 }}
+                  height="200"
+                  width="200"
+                />
+              </View>
+            </Animated.View>
+          ))}
         <View
           style={{
             backgroundColor: primaryColor,
             marginTop: 0,
-          }}
-        >
+          }}>
           {RelatedServices.length > 2 && (
             <View>
               <Text
@@ -2362,16 +2350,14 @@ const FixedScreen = ({ navigation, route }) => {
                   color: textColor,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 Related Service
               </Text>
               <View
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
                     <RelatedService
@@ -2395,16 +2381,14 @@ const FixedScreen = ({ navigation, route }) => {
                   color: textColor,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 You Might Also Like
               </Text>
               <View
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
                     <RelatedService
@@ -2436,8 +2420,8 @@ const PackageScreen = ({ navigation, route }) => {
   const setNewNavigation = params.setNewNavigation;
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
-  const data=params.Data;
-  const [Active,setActive]=React.useState(false)
+  const data = params.Data;
+  const [Active, setActive] = React.useState(false);
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2446,17 +2430,17 @@ const PackageScreen = ({ navigation, route }) => {
     }
   }, [layoutHeight + isFocused]);
   //console.log(FixedService)
-  React.useEffect(()=>{
-    if(data){
-      data.service.activeServiceTypes.map((doc,i)=>{
-        if(doc==="PACKAGE"){
-          setActive(true)
-        }else{
+  React.useEffect(() => {
+    if (data) {
+      data.service.activeServiceTypes.map((doc, i) => {
+        if (doc === "PACKAGE") {
+          setActive(true);
+        } else {
           //setActive(false)
         }
-      })
+      });
     }
-  },[data+isFocused])
+  }, [data + isFocused]);
   return (
     <View
       scrollEventThrottle={16}
@@ -2476,34 +2460,37 @@ const PackageScreen = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
-        
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
-        {Active&&PackageService.map(
-          (doc, i) =>
-            i < content && <ServiceCart onPress={()=>{
-              if(onPress){
-                onPress(doc)
-              }
-            }} key={i} data={doc} />
-        )}
-        {Active&&PackageService.length > content && (
+        }}>
+        {Active &&
+          PackageService.map(
+            (doc, i) =>
+              i < content && (
+                <ServiceCart
+                  onPress={() => {
+                    if (onPress) {
+                      onPress(doc);
+                    }
+                  }}
+                  key={i}
+                  data={doc}
+                />
+              )
+          )}
+        {Active && PackageService.length > content && (
           <View
             style={{
               justifyContent: "center",
               marginVertical: 15,
               alignItems: "center",
               width: "100%",
-            }}
-          >
+            }}>
             <IconButton
               onPress={() => {
                 setContent((val) => val + 2);
@@ -2516,40 +2503,38 @@ const PackageScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {PackageService.length == 0||!Active && (
-          <Animated.View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              paddingHorizontal: 10,
-              backgroundColor: primaryColor,
-              justifyContent: "center",
-              width: "100%",
-            }}
-            entering={FadeIn}
-          >
-            <View
+        {PackageService.length == 0 ||
+          (!Active && (
+            <Animated.View
               style={{
-                flex: 1,
+                flexDirection: "row",
+                flexWrap: "wrap",
+                paddingHorizontal: 10,
+                backgroundColor: primaryColor,
                 justifyContent: "center",
-                alignItems: "center",
+                width: "100%",
               }}
-            >
-              <SvgXml
-                xml={serviceIcon}
-                style={{ marginVertical: 100 }}
-                height="200"
-                width="200"
-              />
-            </View>
-          </Animated.View>
-        )}
+              entering={FadeIn}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
+                <SvgXml
+                  xml={serviceIcon}
+                  style={{ marginVertical: 100 }}
+                  height="200"
+                  width="200"
+                />
+              </View>
+            </Animated.View>
+          ))}
         <View
           style={{
             backgroundColor: primaryColor,
             marginTop: 0,
-          }}
-        >
+          }}>
           {RelatedServices.length > 2 && (
             <View>
               <Text
@@ -2559,16 +2544,14 @@ const PackageScreen = ({ navigation, route }) => {
                   color: textColor,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 Related Service
               </Text>
               <View
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
                     <RelatedService
@@ -2592,16 +2575,14 @@ const PackageScreen = ({ navigation, route }) => {
                   color: textColor,
                   paddingHorizontal: 10,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 You Might Also Like
               </Text>
               <View
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
                     <RelatedService
@@ -2670,15 +2651,13 @@ const SpecialtyComponent = ({ doc, i, arr, seeMore, more }) => {
         paddingVertical: 5,
         marginRight: 5,
         marginVertical: 5,
-      }}
-    >
+      }}>
       <Text
         style={{
           color: "white",
           fontFamily: "Poppins-Medium",
           fontSize: Platform.OS == "ios" ? 14.5 : 12,
-        }}
-      >
+        }}>
         {doc}
       </Text>
     </View>
@@ -2707,8 +2686,8 @@ const Subscriptions = ({ navigation, route }) => {
   const changeScreenName = params.changeScreenName;
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [SubsCription,setSubscription]=React.useState()
-  const data=params.data;
+  const [SubsCription, setSubscription] = React.useState();
+  const data = params.data;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2732,8 +2711,8 @@ const Subscriptions = ({ navigation, route }) => {
     }
   }, [isFocused, user, vendor]);
   //console.log(FixedService)
-  if(!SubsCription){
-    return <ActivityLoader/>
+  if (!SubsCription) {
+    return <ActivityLoader />;
   }
   return (
     <View
@@ -2754,27 +2733,26 @@ const Subscriptions = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
-        {SubsCription&&SubsCription.map((doc, i) => (
-          <ServiceCart
-            onPress={() => {
-              if (onPress) {
-                onPress(doc);
-              }
-            }}
-            key={i}
-            data={doc}
-          />
-        ))}
+        }}>
+        {SubsCription &&
+          SubsCription.map((doc, i) => (
+            <ServiceCart
+              onPress={() => {
+                if (onPress) {
+                  onPress(doc);
+                }
+              }}
+              key={i}
+              data={doc}
+            />
+          ))}
         {/* {PackageService.length > content && (
           <View
             style={{
@@ -2797,7 +2775,7 @@ const Subscriptions = ({ navigation, route }) => {
           </View>
         )}
             */}
-        {SubsCription&&SubsCription.length == 0 && (
+        {SubsCription && SubsCription.length == 0 && (
           <Animated.View
             style={{
               flexDirection: "row",
@@ -2807,15 +2785,13 @@ const Subscriptions = ({ navigation, route }) => {
               justifyContent: "center",
               width: "100%",
             }}
-            entering={FadeIn}
-          >
+            entering={FadeIn}>
             <View
               style={{
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <SvgXml
                 xml={serviceIcon}
                 style={{ marginVertical: 100 }}
@@ -2918,8 +2894,8 @@ const Installment = ({ navigation, route }) => {
   const changeScreenName = params.changeScreenName;
   const vendor = useSelector((state) => state.vendor);
   const user = useSelector((state) => state.user);
-  const [SubsCription,setSubscription]=React.useState()
-  const data=params.data;
+  const [SubsCription, setSubscription] = React.useState();
+  const data = params.data;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2943,8 +2919,8 @@ const Installment = ({ navigation, route }) => {
     }
   }, [isFocused, user, vendor]);
   //console.log(FixedService)
-  if(!SubsCription){
-    return <ActivityLoader/>
+  if (!SubsCription) {
+    return <ActivityLoader />;
   }
   return (
     <View
@@ -2965,29 +2941,28 @@ const Installment = ({ navigation, route }) => {
       onLayout={(e) => {
         setLayoutHeight(e.nativeEvent.layout.height);
       }}
-      nestedScrollEnabled={true}
-    >
+      nestedScrollEnabled={true}>
       <View
         style={{
           marginHorizontal: 10,
           flexDirection: "row",
           flexWrap: "wrap",
           marginVertical: 20,
-        }}
-      >
-        {SubsCription&&SubsCription.map((doc, i) => (
-          <ServiceCart
-            onPress={() => {
-              if (onPress) {
-                onPress(doc);
-              }
-            }}
-            key={i}
-            data={doc}
-          />
-        ))}
-       
-        {SubsCription&&SubsCription.length == 0 && (
+        }}>
+        {SubsCription &&
+          SubsCription.map((doc, i) => (
+            <ServiceCart
+              onPress={() => {
+                if (onPress) {
+                  onPress(doc);
+                }
+              }}
+              key={i}
+              data={doc}
+            />
+          ))}
+
+        {SubsCription && SubsCription.length == 0 && (
           <Animated.View
             style={{
               flexDirection: "row",
@@ -2997,15 +2972,13 @@ const Installment = ({ navigation, route }) => {
               justifyContent: "center",
               width: "100%",
             }}
-            entering={FadeIn}
-          >
+            entering={FadeIn}>
             <View
               style={{
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <SvgXml
                 xml={serviceIcon}
                 style={{ marginVertical: 100 }}

@@ -13,7 +13,11 @@
         "buildType": "apk"
       }
     },
-    "production": {},
+    "production": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "development-simulator": {
       "developmentClient": true,
       "distribution": "internal",

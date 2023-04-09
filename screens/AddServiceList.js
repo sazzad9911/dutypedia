@@ -225,7 +225,7 @@ const ComponentScreen = (props) => {
     <ScrollView showsVerticalScrollIndicator={false}>
       {Array.isArray(Services) && Services.length > 0 ? (
         Services.map((doc, i) => (
-          <View style={styles.view} key={i}>
+          <View style={[styles.view]} key={i}>
             <Text style={styles.text}>{doc}</Text>
             
             <Table
@@ -243,7 +243,7 @@ const ComponentScreen = (props) => {
           <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
-      <View style={{ height: 80 }} />
+      
     </ScrollView>
   );
 };

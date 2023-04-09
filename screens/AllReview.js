@@ -1,16 +1,21 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, StyleSheet, Dimensions, Text } from "react-native";
 import { secondaryColor, primaryColor } from "../assets/colors";
 import RatingView from "./../components/RatingView";
-import { Cart } from "../Cart/ReviewCart";
+import { Cart, CartView } from "../Cart/ReviewCart";
+import customStyle from "../assets/stylesheet";
+const { width, height } = Dimensions.get("window");
 
-const AllReview = () => {
+const AllReview = ({ navigation, route }) => {
+  const data = route?.params?.data;
+  const individualRating = route?.params?.individualRating;
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}
+    <ScrollView
+      showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: secondaryColor,
-      }}
-    >
+      }}>
       <View style={{ backgroundColor: primaryColor, height: 20 }} />
       <RatingView
         style={{
@@ -19,7 +24,7 @@ const AllReview = () => {
           paddingVertical: 5,
         }}
         title="Seller Communication"
-        rate={3.5}
+        rate={individualRating?.communicationRating}
       />
       <RatingView
         style={{
@@ -28,7 +33,7 @@ const AllReview = () => {
           paddingVertical: 5,
         }}
         title="Service as Describe"
-        rate={4.5}
+        rate={individualRating?.describeRating}
       />
       <RatingView
         style={{
@@ -37,29 +42,46 @@ const AllReview = () => {
           paddingVertical: 5,
         }}
         title="Service Quality"
-        rate={5}
+        rate={individualRating?.qualityRating}
       />
       <View style={{ backgroundColor: primaryColor, height: 20 }} />
-      <View style={{
-        paddingHorizontal:10,
-        backgroundColor:primaryColor,
-      }}>
-        <Cart id={true} />
-        <Cart id={true} />
-        <View
-          style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
-        />
-        <Cart id={true}/>
-        <View
-          style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
-        />
-        <Cart id={true}/>
-        <View
-          style={{ height: 1, width: "100%", backgroundColor: secondaryColor }}
-        />
+      <View
+        style={{
+          paddingHorizontal: 20,
+          backgroundColor: primaryColor,
+        }}>
+        {data &&
+          data.map((doc, i) => (
+            <CartView
+              noReplay={true}
+              data={doc}
+              key={i}
+              style={{
+                width: width - 40,
+              }}
+            />
+          ))}
+        {data && data.length == 0 && (
+          <View style={customStyle.fullBox}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "500",
+                marginVertical: 50,
+              }}>
+              No Rating
+            </Text>
+          </View>
+        )}
+        <View style={{ height: 40 }} />
       </View>
     </ScrollView>
   );
 };
 
 export default AllReview;
+const styles = StyleSheet.create({
+  cart: {
+    height: 200,
+  },
+});

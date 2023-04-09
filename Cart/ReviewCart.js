@@ -20,8 +20,11 @@ import Avatar from "../components/Avatar";
 import LargeText from "../Hooks/LargeText";
 import { types } from "./../screens/Vendor/account/types";
 import { useSelector } from "react-redux";
+import customStyle from "../assets/stylesheet";
 
-const ReviewCart = ({ navigation }) => {
+const ReviewCart = ({ navigation, data,individualRating }) => {
+  const [height,setHeight]=useState(220)
+
   return (
     <View
       style={{
@@ -35,19 +38,44 @@ const ReviewCart = ({ navigation }) => {
           paddingHorizontal: 20,
           marginTop: 5,
         }}>
-        <Text style={styles.text1}>23 Review</Text>
+        <Text style={styles.text1}>
+          {data?.length < 9 ? `0${data?.length}` : data?.length} Review
+        </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.push("AllReview");
+            navigation.push("AllReview",{individualRating:individualRating,data:data});
           }}>
           <Text style={styles.text1}>See All</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        style={{
+          paddingBottom: 20,
+        }}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}>
         <View style={{ width: 10 }} />
-        <Cart />
-        <Cart />
-        <Cart />
+        {data &&
+          data.map((doc, i) => (
+            <CartView noReplay={true} data={doc} key={i}
+              style={{
+                width: width - 50,
+                marginHorizontal:10
+              }}
+              onHeight={setHeight}
+            />
+          ))}
+          {data&&data.length==0&&(
+            <View style={[customStyle.fullBox,{width:width-20}]}>
+              <Text style={{
+                fontSize:16,
+                fontWeight:"500",
+                marginVertical:50,
+                textAlign:"center",
+                flex:1
+              }}>No Rating</Text>
+              </View>
+          )}
         <View style={{ width: 10 }} />
       </ScrollView>
       <View
@@ -75,22 +103,25 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
 });
-export const Cart = ({ replied, onReplay, noReplay, data }) => {
+export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
   const [button, setButton] = useState(true);
-  const [day,setDay]=useState(dateDifference(data?.updatedAt,new Date()))
-  const user=useSelector(state=>state.user)
+  const [day, setDay] = useState(dateDifference(data?.createdAt, new Date()));
+  const user = useSelector((state) => state.user);
   //console.log(user)
   //console.log(data)
   return (
-    <View
-      style={{
-        borderColor: "#E6E6E6",
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingVertical: 12,
-        paddingHorizontal: 8,
-        marginTop: 28,
-      }}>
+    <View onLayout={onLayout}
+      style={[
+        {
+          borderColor: "#E6E6E6",
+          borderWidth: 1,
+          borderRadius: 8,
+          paddingVertical: 12,
+          paddingHorizontal: 8,
+          marginTop: 28,
+        },
+        style,
+      ]}>
       <View
         style={{
           flexDirection: "row",
@@ -121,7 +152,19 @@ export const Cart = ({ replied, onReplay, noReplay, data }) => {
                 styles.text1,
                 { fontWeight: "400", color: "#767676", marginTop: 4 },
               ]}>
-              {day?`${day==1?"Today":day>365?"1 year ago":day>30?`${parseInt(day/30)} month ago`:day>7?`${parseInt(day/7)} week ago`:`${day} days`}`:"Not Found"}
+              {day
+                ? `${day==0?"Today":
+                    day == 1
+                      ? "Yesterday"
+                      : day > 365
+                      ? "1 year ago"
+                      : day > 30
+                      ? `${parseInt(day / 30)} month ago`
+                      : day > 7
+                      ? `${parseInt(day / 7)} week ago`
+                      : `${day} days`
+                  }`
+                : "Not Found"}
             </Text>
           </View>
         </View>
@@ -172,7 +215,9 @@ export const Cart = ({ replied, onReplay, noReplay, data }) => {
                   fontWeight: "500",
                 },
               ]}>
-              {data?.qualityRating>parseInt(data?.qualityRating)?data?.qualityRating:`${data?.qualityRating}.0`}
+              {data?.qualityRating > parseInt(data?.qualityRating)
+                ? data?.qualityRating
+                : `${data?.qualityRating}.0`}
             </Text>
           </View>
           {!data?.reply && !noReplay && (
@@ -220,9 +265,12 @@ export const Cart = ({ replied, onReplay, noReplay, data }) => {
                   flexDirection: "row",
                   alignItems: "center",
                 }}>
-                <Avatar source={{uri:user?.user?.profilePhoto}} style={{ height: 25, width: 25,borderWidth:0 }} />
+                <Avatar
+                  source={{ uri: user?.user?.profilePhoto }}
+                  style={{ height: 25, width: 25, borderWidth: 0 }}
+                />
                 <Text style={[styles.text1, { marginLeft: 12 }]}>
-                 {`${user?.user?.firstName} ${user?.user?.lastName}`}
+                  {`${user?.user?.firstName} ${user?.user?.lastName}`}
                 </Text>
               </View>
               <LargeText
@@ -239,6 +287,174 @@ export const Cart = ({ replied, onReplay, noReplay, data }) => {
               />
             </View>
           </>
+        )}
+      </View>
+    </View>
+  );
+};
+export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) => {
+  const [button, setButton] = useState(true);
+  const [day, setDay] = useState(dateDifference(data?.createdAt, new Date()));
+  const user = useSelector((state) => state.user);
+  //console.log(user)
+  //console.log(data)
+  
+  return (
+    <View 
+      style={[
+        {
+          borderColor: "#E6E6E6",
+          borderWidth: 1,
+          borderRadius: 8,
+          paddingVertical: 12,
+          paddingHorizontal: 8,
+          marginTop: 28,
+          
+        },
+        style,
+      ]}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Avatar
+            style={{
+              width: 40,
+              height: 40,
+              borderWidth: 0,
+            }}
+            source={{
+              uri: data
+                ? data.user.profilePhoto
+                : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
+            }}
+          />
+          <View style={{ marginLeft: 10 }}>
+            <Text style={[styles.text1]}>
+              {data
+                ? `${data.user.firstName} ${data.user.lastName}`
+                : "Sumaiya Alam"}
+            </Text>
+            <Text
+              style={[
+                styles.text1,
+                { fontWeight: "400", color: "#767676", marginTop: 4 },
+              ]}>
+              {day
+                ? `${day==0?"Today":
+                    day == 1
+                      ? "Yesterday"
+                      : day > 365
+                      ? "1 year ago"
+                      : day > 30
+                      ? `${parseInt(day / 30)} month ago`
+                      : day > 7
+                      ? `${parseInt(day / 7)} week ago`
+                      : `${day} days`
+                  }`
+                : "Not Found"}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={[
+            styles.text1,
+            { justifySelf: "flex-end", fontWeight: "400" },
+          ]}>
+          {data
+            ? types.filter((d) => d.type.match(data?.order?.type))[0]?.title
+            : "Bargaining"}
+        </Text>
+      </View>
+      <View
+        style={{
+          flex: 1,
+        
+        }}>
+        {data && data.text && (
+          <LargeText 
+            fontStyle={{
+              fontSize: 14,
+              fontWeight: "400",
+              lineHeight: 20,
+              marginTop: 12,
+            }}
+            title="See More"
+            text={data.text}
+            
+            button={button}
+          />
+        )}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 12,
+          }}>
+          <View
+            style={{
+              flexDirection: "row",
+            }}>
+            <SvgXml xml={star} />
+            <Text
+              style={[
+                styles.text1,
+                {
+                  marginLeft: 10,
+                  fontWeight: "500",
+                },
+              ]}>
+              {data?.qualityRating > parseInt(data?.qualityRating)
+                ? data?.qualityRating
+                : `${data?.qualityRating}.0`}
+            </Text>
+          </View>
+          
+        </View>
+        {data?.reply && (
+          <View style={{
+          }}>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: "#E6E6E6",
+                marginVertical: 12,
+              }}
+            />
+            <View
+              style={{
+                marginLeft: 64,
+              }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}>
+                <Avatar
+                  source={{ uri: user?.user?.profilePhoto }}
+                  style={{ height: 25, width: 25, borderWidth: 0 }}
+                />
+                <Text style={[styles.text1, { marginLeft: 12 }]}>
+                  {`${user?.user?.firstName} ${user?.user?.lastName}`}
+                </Text>
+              </View>
+              <LargeText
+                fontStyle={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  lineHeight: 20,
+                  marginTop: 10,
+                }}
+                title="See More"
+                text={data.reply}
+                
+                button={button}
+              />
+            </View>
+          </View>
         )}
       </View>
     </View>

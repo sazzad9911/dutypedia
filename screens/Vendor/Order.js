@@ -76,6 +76,7 @@ import { setOrderRef } from "../../Reducers/orderRef";
 import customStyle from "../../assets/stylesheet";
 import VendorSearchOrder from "./VendorSearchOrder";
 import Member from "./Member";
+import SubHeader from "../../components/SubHeader";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -99,7 +100,7 @@ const Order = () => {
         component={VendorOfflineOrderDetails}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{ header: (props)=><SubHeader title={"Select Service"} {...props}/> }}
         name="AddServiceList"
         component={AddServiceList}
       />
@@ -157,7 +158,7 @@ const Order = () => {
         options={{ headerShown: false }}
         name="AddServiceList_1"
         component={AddServiceList}
-      />
+      /> 
       <Stack.Screen
         options={{ headerShown: false }}
         name="SubscriptionScript"

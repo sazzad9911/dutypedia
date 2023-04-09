@@ -242,12 +242,13 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
         <View
           style={[
             customStyle.flexBox,
-            { marginTop: 8, justifyContent: "space-between" },
+            { marginTop: 8, justifyContent: "space-between",alignItems:"flex-end" },
           ]}>
           <View
             style={{
               flexDirection: "row",
               flex: 2,
+              
             }}>
             <View>
               <Avatar
@@ -305,6 +306,8 @@ const styles = StyleSheet.create({
   lineBox: {
     marginVertical: 12,
     paddingHorizontal: 8,
+    flex:1,
+    justifyContent:"space-between"
   },
   headLine: {
     fontSize: 14,

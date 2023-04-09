@@ -588,23 +588,26 @@ const OrderDetails = ({ navigation, route }) => {
             data.type != "ONETIME" &&
             data.type != "PACKAGE" &&
             type != "SUBS" &&
-            type != "INSTALLMENT" && (
+            type != "INSTALLMENT" && ( 
               <IconButton
                 onPress={() => {
-                  if (data.service.gigs[0].services.category) {
+                  const gigs = data.service.gigs.filter(
+                    (d) => d.type == "STARTING"
+                  );
+                  if (gigs[0].services.category) {
                     dispatch({
                       type: "SET_NEW_LIST_DATA",
                       playload: serverToLocal(
-                        data.service.gigs[0].services.options,
-                        data.service.gigs[0].services.category
+                        gigs[0].services.options,
+                        gigs[0].services.category
                       ),
                     });
                     navigation.navigate("AddServiceList", {
                       NewDataList: serverToLocal(
-                        data.service.gigs[0].services.options,
-                        data.service.gigs[0].services.category
+                       gigs[0].services.options,
+                        gigs[0].services.category
                       ),
-                      facilites: data.service.gigs[0].facilites.selectedOptions,
+                      facilites: gigs[0].facilites.selectedOptions,
                       setListData: setListData,
                       name: "VendorOrderDetails",
                       data: data,
@@ -613,16 +616,16 @@ const OrderDetails = ({ navigation, route }) => {
                     dispatch({
                       type: "SET_NEW_LIST_DATA",
                       playload: serverToLocal(
-                        data.service.gigs[0].services,
-                        data.service.gigs[0].dashboard
+                        gigs[0].services,
+                        gigs[0].dashboard
                       ),
                     });
                     navigation.navigate("AddServiceList", {
                       NewDataList: serverToLocal(
-                        data.service.gigs[0].services,
-                        data.service.gigs[0].dashboard
+                       gigs[0].services,
+                        gigs[0].dashboard
                       ),
-                      facilites: data.service.gigs[0].facilites.selectedOptions,
+                      facilites: gigs[0].facilites.selectedOptions,
                       setListData: setListData,
                       name: "VendorOrderDetails",
                       data: data,

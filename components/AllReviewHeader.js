@@ -9,9 +9,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { primaryColor, textColor } from "./../assets/colors";
 import { SvgXml } from "react-native-svg";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const AllReviewHeader = (props) => {
   //console.log(props.navigation)
+  const inset=useSafeAreaInsets()
   return (
     <View
       style={{
@@ -19,7 +21,7 @@ const AllReviewHeader = (props) => {
         justifyContent: "center",
         backgroundColor: primaryColor,
         paddingVertical: 12,
-        marginTop:Platform.OS=="android"?StatusBar.currentHeight:0
+        marginTop:Platform.OS=="android"? StatusBar.currentHeight:inset.top,
       }}>
       <TouchableOpacity
         style={{

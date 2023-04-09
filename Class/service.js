@@ -1089,3 +1089,15 @@ export const getLikeGigs=async(token)=>{
   })
   return res
 }
+export const getDashboardReviews=async(token,serviceId)=>{
+  const res=await axios.get(`${url}/server/review/get-for-dashboard?serviceId=${serviceId}`,{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+// export const postReview=async(token,communicationRating)=>{
+//   const res=await axios.get(`${url}/server/review/add`,{
+//     headers: { Authorization: `Bearer ${token}` },
+//   })
+//   return res
+// }

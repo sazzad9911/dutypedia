@@ -42,7 +42,8 @@ const RatingView = ({ title, rate, style }) => {
             marginRight:3
           }} key={i} xml={star} height="15" width="15" />
         ))}
-        <Text
+        {rate?(
+          <Text
           style={{
             fontSize: 16,
             marginLeft:10,
@@ -51,6 +52,17 @@ const RatingView = ({ title, rate, style }) => {
         >
           {rate>parseInt(rate)?rate:`${rate}.0`}
         </Text>
+        ):(
+          <Text
+          style={{
+            fontSize: 16,
+            marginLeft:10,
+            fontWeight:"500"
+          }}
+        >
+          0.0
+        </Text>
+        )}
       </View>
     </View>
   );
