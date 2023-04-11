@@ -84,6 +84,7 @@ import NewBottomBar from "../components/NewBottomBar";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import ActivityLoader from "../components/ActivityLoader";
+import { TopSellerCard } from "../components/LandingPage/TopSeller";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -1236,7 +1237,7 @@ const OtherProfile = (props) => {
                 UnRelatedServices: UnRelatedServices,
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
-                setActiveBargaining:setActiveBargaining
+                setActiveBargaining: setActiveBargaining,
               }}
               component={BargainingScreen}
             />
@@ -1443,10 +1444,17 @@ const OtherProfile = (props) => {
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={{ width: 10 }} />
                     {RelatedServices.map((doc, i) => (
-                      <RelatedService
-                        data={doc}
+                      <TopSellerCard style={{
+                        width:width/2-20
+                      }}
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
                         key={i}
-                        navigation={navigation}
+                        data={doc}
                       />
                     ))}
                   </ScrollView>
@@ -1468,10 +1476,22 @@ const OtherProfile = (props) => {
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={{ width: 10 }} />
                     {UnRelatedServices.map((doc, i) => (
-                      <RelatedService
-                        data={doc}
+                      // <RelatedService
+                      //   data={doc}
+                      //   key={i}
+                      //   navigation={navigation}
+                      // />
+                      <TopSellerCard style={{
+                        width:width/2-20
+                      }} 
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
                         key={i}
-                        navigation={navigation}
+                        data={doc}
                       />
                     ))}
                     <View style={{ width: 10 }} />
@@ -1712,7 +1732,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const startingHeight = 120;
   const fullHeight = calculateHeight(Description, 25);
   const setNewNavigation = params.setNewNavigation;
-  const setActiveBargaining=params.setActiveBargaining;
+  const setActiveBargaining = params.setActiveBargaining;
   const isFocused = useIsFocused();
   const animatedHeight = React.useRef(
     new Animation.Value(startingHeight)
@@ -1790,19 +1810,19 @@ const BargainingScreen = ({ navigation, route }) => {
       setText(totalText);
     }
   }, [NewLines]);
-  React.useEffect(()=>{
-    if(isFocused){
-      setActiveBargaining(true)
-    }else{
-      setActiveBargaining(false)
+  React.useEffect(() => {
+    if (isFocused) {
+      setActiveBargaining(true);
+    } else {
+      setActiveBargaining(false);
     }
-  },[isFocused])
+  }, [isFocused]);
   //console.log(newHeight);
   React.useEffect(() => {
     if (navHeight && isFocused) {
       //console.log(textHeight)
       setTimeout(() => {
-        setNewNavigation(navHeight + textHeight);
+        setNewNavigation(navHeight + textHeight + 20);
       }, 0);
     }
   }, [navHeight + isFocused + textHeight]);

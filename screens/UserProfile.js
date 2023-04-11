@@ -342,7 +342,7 @@ export default function UserProfile({ navigation, route }) {
               style={{
                 marginLeft: 10,
                 borderColor: "#E2E2E2",
-                borderBottomWidth: 0,
+                borderBottomWidth: .5,
                 flex: 1,
               }}>
               <Text
@@ -353,6 +353,43 @@ export default function UserProfile({ navigation, route }) {
                   marginBottom: 6,
                 }}>
                 Address
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate("WebViews",{url:"https://duty.com.bd/about",title:"About Us"})
+          }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                backgroundColor: "#333333",
+                width: 30,
+                height: 30,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+              }}>
+              <SvgXml xml={addressIcon} height="24" width={"24"} />
+            </View>
+            <View
+              style={{
+                marginLeft: 10,
+                borderColor: "#E2E2E2",
+                borderBottomWidth: 0,
+                flex: 1,
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                  color: textColor,
+                  marginBottom: 6,
+                }}>
+                About Us
               </Text>
             </View>
           </TouchableOpacity>

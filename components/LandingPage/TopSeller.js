@@ -118,12 +118,13 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
         <View
           style={[
             customStyle.flexBox,
-            { marginTop: 8, justifyContent: "space-between" },
+            { marginTop: 8, justifyContent: "space-between",alignItems:"flex-end" },
           ]}>
           <View
             style={{
               flexDirection: "row",
               flex: 2,
+              
             }}>
             <View>
               <Avatar
@@ -138,6 +139,7 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
             <View
               style={{
                 flex: 1,
+               
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
               {data?`${data.service.user.firstName} ${data.service.user.lastName}`:"Easin Arafat It consulting center"}

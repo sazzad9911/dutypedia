@@ -100,6 +100,7 @@ import ThirdStepVerification from "./Vendor/account/ThirdStepVerification";
 import ReviewVerification from "./Vendor/account/ReviewVerification";
 import ConfirmationScreen from "./Vendor/account/ConfirmationScreen";
 import SearchOrder from "./SearchOrder";
+import WebViews from "./WebViews";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -510,6 +511,11 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="UserProfile"
         component={UserProfile}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="WebViews"
+        component={WebViews}
       />
       <Stack.Screen
         options={{ headerShown: false }}
