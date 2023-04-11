@@ -242,13 +242,7 @@ export default function StackRoute() {
             component={ChatScreen}
           /> */}
 
-        <Stack.Screen
-          options={{
-            header: (props) => <AllReviewHeader title="23 Review" {...props} />,
-          }}
-          name="AllReview"
-          component={AllReview}
-        />
+        
         <Stack.Screen
           name="TableData"
           options={{

@@ -66,6 +66,7 @@ import StakeHolder from "./screens/create_dashboard/StakeHolder";
 import YourInformation from "./screens/create_dashboard/YourInformation";
 import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
 import InitialPage from "./screens/create_dashboard/InitialPage";
+import AllReview from "./screens/AllReview";
 
 const Stack = createStackNavigator();
 
@@ -311,6 +312,13 @@ const HomeRoute = ({ navigation }) => {
         name="FinalReview"
         component={FinalReview}
       />
+      <Stack.Screen
+          options={{
+            headerShown:false
+          }}
+          name="AllReview"
+          component={AllReview}
+        />
     </Stack.Navigator>
   );
 };

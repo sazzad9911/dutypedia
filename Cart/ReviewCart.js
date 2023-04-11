@@ -17,13 +17,14 @@ import { dateDifference, numToArray } from "./../action";
 const { width, height } = Dimensions.get("window");
 import AnimatedHeight from "./../Hooks/AnimatedHeight";
 import Avatar from "../components/Avatar";
-import LargeText from "../Hooks/LargeText";
+import LargeText,{ExtraLargeText} from "../Hooks/LargeText";
 import { types } from "./../screens/Vendor/account/types";
 import { useSelector } from "react-redux";
 import customStyle from "../assets/stylesheet";
+import ViewMore from "../Hooks/ViewMore"
 
-const ReviewCart = ({ navigation, data,individualRating }) => {
-  const [height,setHeight]=useState(220)
+const ReviewCart = ({ navigation, data, individualRating }) => {
+  const [height, setHeight] = useState(220);
 
   return (
     <View
@@ -43,7 +44,10 @@ const ReviewCart = ({ navigation, data,individualRating }) => {
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.push("AllReview",{individualRating:individualRating,data:data});
+            navigation.push("AllReview", {
+              individualRating: individualRating,
+              data: data,
+            });
           }}>
           <Text style={styles.text1}>See All</Text>
         </TouchableOpacity>
@@ -57,25 +61,31 @@ const ReviewCart = ({ navigation, data,individualRating }) => {
         <View style={{ width: 10 }} />
         {data &&
           data.map((doc, i) => (
-            <CartView noReplay={true} data={doc} key={i}
+            <Cart
+              noReplay={true}
+              data={doc}
+              key={i}
               style={{
                 width: width - 50,
-                marginHorizontal:10
+                marginHorizontal: 10,
               }}
               onHeight={setHeight}
             />
           ))}
-          {data&&data.length==0&&(
-            <View style={[customStyle.fullBox,{width:width-20}]}>
-              <Text style={{
-                fontSize:16,
-                fontWeight:"500",
-                marginVertical:50,
-                textAlign:"center",
-                flex:1
-              }}>No Rating</Text>
-              </View>
-          )}
+        {data && data.length == 0 && (
+          <View style={[customStyle.fullBox, { width: width - 20 }]}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "500",
+                marginVertical: 50,
+                textAlign: "center",
+                flex: 1,
+              }}>
+              No Rating
+            </Text>
+          </View>
+        )}
         <View style={{ width: 10 }} />
       </ScrollView>
       <View
@@ -103,14 +113,22 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
 });
-export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
+export const Cart = ({
+  replied,
+  onReplay,
+  noReplay,
+  data,
+  style,
+  onLayout,
+}) => {
   const [button, setButton] = useState(true);
   const [day, setDay] = useState(dateDifference(data?.createdAt, new Date()));
   const user = useSelector((state) => state.user);
   //console.log(user)
   //console.log(data)
   return (
-    <View onLayout={onLayout}
+    <View
+      onLayout={onLayout}
       style={[
         {
           borderColor: "#E6E6E6",
@@ -153,8 +171,10 @@ export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
                 { fontWeight: "400", color: "#767676", marginTop: 4 },
               ]}>
               {day
-                ? `${day==0?"Today":
-                    day == 1
+                ? `${
+                    day == 0
+                      ? "Today"
+                      : day == 1
                       ? "Yesterday"
                       : day > 365
                       ? "1 year ago"
@@ -273,7 +293,7 @@ export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
                   {`${user?.user?.firstName} ${user?.user?.lastName}`}
                 </Text>
               </View>
-              <LargeText
+              <ExtraLargeText
                 fontStyle={{
                   fontSize: 14,
                   fontWeight: "400",
@@ -285,6 +305,33 @@ export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
                 onChange={setButton}
                 button={button}
               />
+              {/* <ViewMore
+                fontStyle={{
+                  fontSize: 14,
+                  fontWeight: "400",
+                  lineHeight: 20,
+                }}
+                style={{
+                  marginTop: 10,
+                  backgroundColor:"red"
+                }}
+                lowHeight={40}
+                position={{
+                  bottom:-5,
+                  
+                }}
+                component={
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "400",
+                      lineHeight: 20,
+                    }}>
+                    {data.text}
+                  </Text>
+                }
+              /> */}
+              
             </View>
           </>
         )}
@@ -292,15 +339,22 @@ export const Cart = ({ replied, onReplay, noReplay, data, style,onLayout }) => {
     </View>
   );
 };
-export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) => {
+export const CartView = ({
+  replied,
+  onReplay,
+  noReplay,
+  data,
+  style,
+  onHeight,
+}) => {
   const [button, setButton] = useState(true);
   const [day, setDay] = useState(dateDifference(data?.createdAt, new Date()));
   const user = useSelector((state) => state.user);
   //console.log(user)
   //console.log(data)
-  
+
   return (
-    <View 
+    <View
       style={[
         {
           borderColor: "#E6E6E6",
@@ -309,7 +363,6 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
           paddingVertical: 12,
           paddingHorizontal: 8,
           marginTop: 28,
-          
         },
         style,
       ]}>
@@ -344,8 +397,10 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
                 { fontWeight: "400", color: "#767676", marginTop: 4 },
               ]}>
               {day
-                ? `${day==0?"Today":
-                    day == 1
+                ? `${
+                    day == 0
+                      ? "Today"
+                      : day == 1
                       ? "Yesterday"
                       : day > 365
                       ? "1 year ago"
@@ -372,10 +427,9 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
       <View
         style={{
           flex: 1,
-        
         }}>
         {data && data.text && (
-          <LargeText 
+          <LargeText
             fontStyle={{
               fontSize: 14,
               fontWeight: "400",
@@ -384,7 +438,6 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
             }}
             title="See More"
             text={data.text}
-            
             button={button}
           />
         )}
@@ -412,11 +465,9 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
                 : `${data?.qualityRating}.0`}
             </Text>
           </View>
-          
         </View>
         {data?.reply && (
-          <View style={{
-          }}>
+          <View style={{}}>
             <View
               style={{
                 height: 1,
@@ -450,7 +501,6 @@ export const CartView = ({ replied, onReplay, noReplay, data, style,onHeight }) 
                 }}
                 title="See More"
                 text={data.reply}
-                
                 button={button}
               />
             </View>
