@@ -269,11 +269,11 @@ const BottomBar = (props) => {
           type: "SET_INTEREST_CATEGORY",
           playload: "MainProfile",
         });
-        if (Array.isArray(user)) {
-          setRoute(4);
-          navigation.navigate("LogIn");
-          return;
-        }
+        // if (Array.isArray(user)) {
+        //   setRoute(4);
+        //   navigation.navigate("LogIn");
+        //   return;
+        // }
         if (route === 4) {
           try {
             navigation.navigate("MainProfile");

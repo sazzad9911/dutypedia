@@ -2,7 +2,7 @@ import { Dimensions, Pressable, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
-import Animated,{interpolate} from "react-native-reanimated";
+import Animated, { interpolate } from "react-native-reanimated";
 const initialState = [
   {
     title: "Bargaining",
@@ -30,7 +30,7 @@ const initialState = [
   //   type: "INSTALLMENT",
   // },
 ];
-const {width,height}=Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 export default function UserOrderHeader({
   state,
   allOrders,
@@ -39,11 +39,11 @@ export default function UserOrderHeader({
   onCreate,
   navigation,
   descriptors,
-  position
+  position,
 }) {
   const vendor = useSelector((state) => state.vendor);
   //console.log(navigation);
-  
+
   return (
     <View
       style={{
@@ -53,20 +53,28 @@ export default function UserOrderHeader({
       <View
         style={{
           flexDirection: "row",
-          justifyContent: vendor ? "space-between" : "flex-end",
+          justifyContent:  "space-between",
           paddingVertical: 16,
-          paddingBottom:6
+          paddingBottom: 6,
         }}>
-        {vendor && (
-          <Pressable onPress={onCreate}>
-            <SvgXml  xml={cart} />
-          </Pressable>
-        )}
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {!vendor && (
           <Pressable onPress={onSearch}>
             <SvgXml width={"20"} height={"20"} xml={search} />
           </Pressable>
-          <Pressable onPress={onFilter}
+        )}
+        {vendor && (
+          <Pressable onPress={onCreate}>
+            <SvgXml xml={cart} />
+          </Pressable>
+        )}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {vendor && (
+            <Pressable onPress={onSearch}>
+              <SvgXml width={"20"} height={"20"} xml={search} />
+            </Pressable>
+          )}
+          <Pressable
+            onPress={onFilter}
             style={{
               marginLeft: 20,
             }}>
