@@ -24,54 +24,53 @@ import { Cart } from "./UserAppointmentList";
 const status = [
   {
     title: "Incomplete",
-    color: "#E2B529",
+    color: "#1A1A1A",
   },
   {
     title: "Completed",
-    color: "#4ADE80",
+    color: "#1A1A1A",
   },
   {
     title: "Cancelled",
-    color: "#DA1E37",
+    color: "#1A1A1A",
   },
   {
     title: "Pending",
-    color: "#6366F1",
+    color: "#1A1A1A",
   },
   {
-    title:"Approved",
-    color:"#6366F1"
-  }
+    title: "Approved",
+    color: "#1A1A1A",
+  },
 ];
 
 export default function UserRequestAppointment({ navigation, route }) {
   const [Active, setActive] = React.useState("Sent");
   const user = useSelector((state) => state.user);
-  
+
   const [Loader, setLoader] = React.useState(false);
   const [Data, setData] = React.useState([]);
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
   const vendor = useSelector((state) => state.vendor);
-  const [Upcoming,setUpcoming]=React.useState()
-  const [Previous,setPrevious]=React.useState()
+  const [Upcoming, setUpcoming] = React.useState();
+  const [Previous, setPrevious] = React.useState();
   const isFocused = useIsFocused();
 
   React.useLayoutEffect(() => {
-   //console.log("okk")
-    if (user && Active &&Active!="Request") {
+    //console.log("okk")
+    if (user && Active && Active != "Request") {
       setLoader(true);
       getUserAppointment(user.token, Active, user.user.id)
         .then((res) => {
           setLoader(false);
           //console.log(res.data.appointments)
-          let arr=[]
-          res.data.appointments.map((doc,i)=>{
-            arr.push(doc)
-            
-          })
-          setData(arr)
+          let arr = [];
+          res.data.appointments.map((doc, i) => {
+            arr.push(doc);
+          });
+          setData(arr);
         })
         .catch((err) => {
           setLoader(false);
@@ -79,7 +78,7 @@ export default function UserRequestAppointment({ navigation, route }) {
         });
     }
   }, [isFocused + Active]);
- 
+
   //console.log(data.service.serviceCenterName)
   if (Loader) {
     return (
@@ -88,8 +87,7 @@ export default function UserRequestAppointment({ navigation, route }) {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <ActivityIndicator size={"small"} color={backgroundColor} />
       </View>
     );
@@ -101,8 +99,7 @@ export default function UserRequestAppointment({ navigation, route }) {
           flexDirection: "row",
           paddingHorizontal: 10,
           paddingVertical: 10,
-        }}
-      >
+        }}>
         <Chip
           style={{ width: 70 }}
           onPress={() => {
@@ -124,129 +121,36 @@ export default function UserRequestAppointment({ navigation, route }) {
           active={Active == "Receive" ? true : false}
         />
       </View>
+      <View style={{ height: 8 }} />
       {Data.length == 0 ? <NoAppointment /> : null}
+
       {Data.map((doc, i) => (
         <Cart
-        key={i}
-        onPress={() => {
-          //console.log(doc)
-          navigation.navigate("UserAppointmentDetails", {
-            data: doc,
-          });
-        }}
-        status={
-          status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-        }
-        title={doc.title}
-        date={`${doc.date} ${changeTime(doc.startTime)}`}
-        name={doc.service.providerInfo.name}
-        image={doc.service.profilePhoto}
-        username={doc.service.providerInfo.name.replace(" ","").toLowerCase()}
-        position={doc.service.providerInfo.position}
-      />
+          key={i}
+          onPress={() => {
+            //console.log(doc)
+            navigation.navigate("UserAppointmentDetails", {
+              data: doc,
+            });
+          }}
+          status={
+            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+          }
+          title={doc.title}
+          date={`${doc.date} ${changeTime(doc.startTime)}`}
+          name={doc.service.providerInfo.name}
+          image={doc.service.profilePhoto}
+          username={doc.service.providerInfo.name
+            .replace(" ", "")
+            .toLowerCase()}
+          position={doc.service.providerInfo.position}
+        />
       ))}
-
-      
+      <View style={{ height: 8 }} />
     </ScrollView>
   );
 }
-// const Cart = ({ date, status, title, onPress, image,name,username }) => {
-//     //console.log(status)
-//     return (
-//       <TouchableOpacity
-//         onPress={onPress}
-//         style={{
-//           flexDirection: "row",
-//           width: width - 10,
-//           marginHorizontal: 5,
-//           justifyContent: "space-between",
-//           paddingHorizontal: 5,
-//           paddingVertical: 20,
-//           shadowColor: "#333333",
-//           shadowOffset: {
-//             width: 1,
-//             height: 1,
-//           },
-//           shadowOpacity: 0.1,
-//           elevation: 3,
-//           shadowRadius: 3,
-//           backgroundColor: "white",
-//           alignItems: "center",
-//           marginTop: 10,
-//           borderRadius: 5,
-//         }}
-//       >
-//         <Avatar
-//           style={{
-//             width: 55,
-//             height: 55,
-//           }}
-//           source={{ uri: image }}
-//         />
-//         <View
-//           style={{
-//             width: 10,
-//           }}
-//         />
-//         <View
-//           style={{
-//             flex: .5,
-//           }}
-//         >
-//           <Text numberOfLines={1}>{name?name:"Easin Arafat"}</Text>
-//           <Text numberOfLines={1}>@{username?username:"easinarafat"}</Text>
-//         </View>
-//         <View
-//           style={{
-//             width: 1,
-//             height: 40,
-//             backgroundColor: "#E2E2E2",
-//             marginHorizontal: 15,
-//           }}
-//         />
-//         <View
-//           style={{
-//             flex: 2,
-//           }}
-//         >
-//           <View
-//             style={{
-//               flexDirection: "row",
-//             }}
-//           >
-//             <Text
-//               style={{
-//                 fontSize: 14,
-//               }}
-//             >
-//               {date}
-//             </Text>
-//             <Text
-//               style={{
-//                 color: status ? status.color : "red",
-//                 fontSize: 14,
-//                 marginLeft: 10,
-//               }}
-//             >{`(${status ? status.title : "Invalid"})`}</Text>
-//           </View>
-//           <Text
-//             style={{
-//               fontSize: 14,
-//             }}
-//             numberOfLines={1}
-//           >
-//             {title ? title : "Invalid"}
-//           </Text>
-//         </View>
-//         <View
-//           style={{
-//             width: 20,
-//           }}
-//         />
-//         <AntDesign name="right" size={24} color="#666666" />
-//       </TouchableOpacity>
-//     );
-//   };
+
 const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="21.988" height="21.89" viewBox="0 0 21.988 21.89">
 <g id="Group_10006" data-name="Group 10006" transform="translate(-29.237 -142.571)">
   <rect id="Rectangle_7218" data-name="Rectangle 7218" width="21" height="18" rx="4" transform="translate(30 145.672)" fill="#666"/>
@@ -270,13 +174,11 @@ const Chip = ({ title, active, onPress, style }) => {
           alignItems: "center",
         },
         style,
-      ]}
-    >
+      ]}>
       <Text
         style={{
           color: active ? "white" : "black",
-        }}
-      >
+        }}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -290,16 +192,14 @@ const NoAppointment = () => {
         justifyContent: "center",
         alignItems: "center",
         height: height - 250,
-      }}
-    >
+      }}>
       <SvgXml xml={vectorImage} height="200" width="200" />
       <Text
         style={{
           fontSize: 16,
           fontFamily: "Poppins-Medium",
           marginTop: 10,
-        }}
-      >
+        }}>
         No Appointment Found
       </Text>
     </View>

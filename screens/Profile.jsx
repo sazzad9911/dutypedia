@@ -113,6 +113,7 @@ import Email from "./UserProfile/Email";
 import EditEmail from "./UserProfile/EditEmail";
 import Mobile from "./UserProfile/Mobile";
 import EditMobile from "./UserProfile/EditMobile";
+import UserAppointmentList from "./Seller/UserAppointment/UserAppointmentList";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -642,27 +643,33 @@ const Profile = ({ navigation }) => {
         component={InstallmentScript}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader title={"Location"} {...props}/> }}
+        options={{
+          header: (props) => <SubHeader title={"Location"} {...props} />,
+        }}
         name="UserLocation"
         component={Location}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{
+          header: (props) => <SubHeader title="Location" {...props} />,
+        }}
         name="EditLocation"
         component={EditLocation}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{ header: (props) => <SubHeader title="Email" {...props} /> }}
         name="Email"
         component={Email}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{ header: (props) => <SubHeader title="Email" {...props} /> }}
         name="EditEmail"
         component={EditEmail}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{
+          header: (props) => <SubHeader title={"Mobile"} {...props} />,
+        }}
         name="Mobile"
         component={Mobile}
       />
@@ -670,6 +677,16 @@ const Profile = ({ navigation }) => {
         options={{ headerShown: false }}
         name="EditMobile"
         component={EditMobile}
+      />
+      <Stack.Screen
+        options={{
+          // header: (props) => (
+          //   <AppointmentHeader title={"Appointment"} {...props} />
+          // ),
+          headerShown: false,
+        }}
+        name="UserAppointmentList"
+        component={UserAppointmentList}
       />
     </Stack.Navigator>
   );
@@ -868,9 +885,103 @@ const MainProfile = (props) => {
   }
   if (!user || Array.isArray(user)) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: textColor }}>Log Out screen</Text>
-      </View>
+      <View
+      style={{
+        flex: 1,
+      }}>
+      <View style={{ height: inset?.top, backgroundColor: "#F2F2F6" }} />
+      <StatusBar backgroundColor={"#F2F2F6"} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: "#F2F2F6" }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
+          />
+        }>
+        <View style={styles.container}>
+          <Avatar
+            containerStyle={{ marginTop: 12 }}
+            edit={true}
+          />
+          <Text numberOfLines={1} style={styles.headLine}>
+          Viewing as a guest
+          </Text>
+          
+          
+          <View style={[styles.subContainer, { marginBottom: 20 }]}>
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("DashboardList");
+              }}
+              style={{ paddingTop: 0 }}
+              icon={business}
+              title={"Business account"}
+              value={"Grow your business"}
+              type={""}
+            />
+            <FlatCart
+              onPress={() => {
+                setLogOut(true);
+                logOut();
+                logoutVendor();
+                dispatch({ type: "SET_VENDOR", playload: false });
+                dispatch({ type: "SET_USER", playload: [] });
+                dispatch({ type: "SET_VENDOR_INFO", playload: false });
+                navigation.navigate("Home");
+              }}
+              style={{ borderBottomWidth: 0, paddingBottom: 0 }}
+              icon={logouts}
+              title={"Logout"}
+              value={"Leave session"}
+              disableGo={true}
+              type={""}
+            />
+          </View>
+          <View style={styles.subContainer}>
+            <FlatCart
+              icon={info}
+              title={"About duty"}
+              value={"Transforming the future"}
+              type={""}
+            />
+            <FlatCart
+              icon={agreement}
+              title={"Agreements"}
+              value={"Review our agreements"}
+              type={""}
+            />
+            <FlatCart
+              icon={terms}
+              title={"Terms & condition"}
+              value={"Comply with our rules"}
+              type={""}
+            />
+            <FlatCart
+              icon={refund}
+              title={"Refund policy"}
+              value={"Fair refund policy"}
+              type={""}
+            />
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("Support");
+              }}
+              style={{ borderBottomWidth: 0, paddingBottom: 0 }}
+              icon={support}
+              title={"Support"}
+              value={"Talk to us"}
+              type={""}
+            />
+          </View>
+          
+        </View>
+      </ScrollView>
+    </View>
     );
   }
   return (
@@ -941,6 +1052,9 @@ const MainProfile = (props) => {
           </View>
           <View style={styles.subContainer}>
             <FlatCart
+              onPress={() => {
+                navigation.navigate("Mobile");
+              }}
               style={{ paddingTop: 0 }}
               icon={call}
               title={"Phone"}
@@ -948,15 +1062,19 @@ const MainProfile = (props) => {
               type={"Private"}
             />
             <FlatCart
+              onPress={() => {
+                navigation.navigate("Email");
+              }}
               icon={email}
               title={"Email"}
               value={user?.user?.email}
               type={"Private"}
             />
-            <FlatCart onPress={()=>{
-              console.log(user?.user)
-              navigation.navigate("UserLocation")
-            }}
+            <FlatCart
+              onPress={() => {
+                //console.log(user?.user)
+                navigation.navigate("UserLocation");
+              }}
               icon={location}
               title={"Address"}
               value={"Add your phone number"}

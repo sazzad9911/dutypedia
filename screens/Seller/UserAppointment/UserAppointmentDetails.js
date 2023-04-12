@@ -37,8 +37,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
             paddingHorizontal: 20,
             paddingVertical: 20,
             flexDirection: "row",
-          }}
-        >
+          }}>
           <View
             style={{
               borderWidth: 0.5,
@@ -49,8 +48,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
               justifyContent: "center",
               alignItems: "center",
               overflow: "hidden",
-            }}
-          >
+            }}>
             {data && data.service.profilePhoto ? (
               <Image
                 style={{
@@ -66,15 +64,13 @@ export default function UserAppointmentDetails({ navigation, route }) {
           <View
             style={{
               marginLeft: 20,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 16,
                 fontFamily: "Poppins-SemiBold",
                 lineHeight: 22,
-              }}
-            >
+              }}>
               {data && data.service.serviceCenterName
                 ? data.service.serviceCenterName
                 : "Invalid"}
@@ -84,8 +80,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
                 fontSize: 14,
                 fontFamily: "Poppins-SemiBold",
                 lineHeight: 18,
-              }}
-            >
+              }}>
               {data && data.service.providerInfo.title
                 ? `${data.service.providerInfo.title} `
                 : "--"}
@@ -101,8 +96,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
             <Text
               style={{
                 fontSize: 12,
-              }}
-            >
+              }}>
               Position of{" "}
               {data && data.service.providerInfo.position
                 ? data.service.providerInfo.position
@@ -113,17 +107,16 @@ export default function UserAppointmentDetails({ navigation, route }) {
         <View
           style={{
             paddingHorizontal: 20,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: 14,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             {data ? data.date : "Invalid"}
             {"    "}
-            {data ? changeTime(data.startTime) : "Invalid"}{" - "}
+            {data ? changeTime(data.startTime) : "Invalid"}
+            {" - "}
             {data ? changeTime(data.endTime) : "Invalid"}
           </Text>
           <Text
@@ -131,8 +124,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
               fontSize: 18,
               fontFamily: "Poppins-SemiBold",
               marginTop: 20,
-            }}
-          >
+            }}>
             {data ? data.title : "Invalid"}
           </Text>
           <Text
@@ -140,57 +132,50 @@ export default function UserAppointmentDetails({ navigation, route }) {
               fontSize: 14,
               marginTop: 15,
               textAlign: "justify",
-            }}
-          >
-            {data && data.description
-              ? data.description
-              : "N/A"}
+            }}>
+            {data && data.description ? data.description : "N/A"}
           </Text>
         </View>
         {data && data.status == "CANCELLED" && (
-          <Text
-            style={{
-              color: "#DA1E37",
-              textAlign: "center",
-              marginVertical: 40,
-            }}
-          >
-            Cancelled
-          </Text>
-        )}
-        {data && data.status == "COMPLETED" && (
-          <Text
-            style={{
-              color: "#4ADE80",
-              textAlign: "center",
-              marginVertical: 40,
-            }}
-          >
-            Completed
-          </Text>
-        )}
-        {data && data.status == "APPROVED" && (
-          <Text
-            style={{
-              color: "#4ADE80",
-              textAlign: "center",
-              marginVertical: 40,
-            }}
-          >
-            Approved
-          </Text>
-        )}
-        {data && data.status == "REJECTED" && (
-          <Text
-            style={{
-              color: "red",
-              textAlign: "center",
-              marginVertical: 40,
-            }}
-          >
-            Rejected
-          </Text>
-        )}
+            <Text
+              style={{
+                color: "#DA1E37",
+                textAlign: "center",
+                marginVertical: 40,
+              }}>
+              Cancelled
+            </Text>
+          )}
+          {data && data.status == "COMPLETED" && (
+            <Text
+              style={{
+                color: "#4ADE80",
+                textAlign: "center",
+                marginVertical: 40,
+              }}>
+              Completed
+            </Text>
+          )}
+          {data && data.status == "APPROVED" && (
+            <Text
+              style={{
+                color: "#4ADE80",
+                textAlign: "center",
+                marginVertical: 40,
+              }}>
+              Approved
+            </Text>
+          )}
+          {data && data.status == "REJECTED" && (
+            <Text
+              style={{
+                color: "red",
+                textAlign: "center",
+                marginVertical: 40,
+              }}>
+              Rejected
+            </Text>
+          )}
       </ScrollView>
 
       {data &&
@@ -204,8 +189,8 @@ export default function UserAppointmentDetails({ navigation, route }) {
               paddingVertical: 30,
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+              
+            }}>
             {data && data.status == "PENDING" && (
               <IconButton
                 onPress={() => {
@@ -275,7 +260,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
                 Request Pending
               </Text>
             )} */}
-            <View style={{ width: 20 }} />
+            <View style={{ width: 10 }} />
             <IconButton
               onPress={() => {
                 if (!data) {

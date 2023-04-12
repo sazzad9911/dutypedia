@@ -414,15 +414,7 @@ export default function StackRoute() {
           name="VendorAppointmentListDetails"
           component={VendorAppointmentListDetails}
         />
-        <Stack.Screen
-          options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
-          }}
-          name="UserAppointmentList"
-          component={UserAppointmentList}
-        />
+        
         <Stack.Screen
           options={{
             header: (props) => (

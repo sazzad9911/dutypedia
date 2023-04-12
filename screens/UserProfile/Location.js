@@ -14,15 +14,32 @@ import IconButton from "../../components/IconButton";
 import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { styles } from "../create_dashboard/BusinessTitle";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
-export default function Location() {
+export default function Location({navigation}) {
   const [type, setType] = useState("Only me");
   const [visible, setVisible] = React.useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
 
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View
@@ -42,7 +59,9 @@ export default function Location() {
             alignItems: "flex-end",
             marginTop: 36,
           }}>
-          <Pressable>
+          <Pressable onPress={()=>{
+            navigation.navigate("EditLocation")
+          }}>
             <Text
               style={{
                 textDecorationLine: 1,
@@ -81,8 +100,8 @@ export default function Location() {
                 LeftIcon={() => (
                   <SvgXml xml={type == "Only me" ? onlyme : pub} />
                 )}
-                Icon={() => <SvgXml xml={arrow} />}
-                onPress={openMenu}
+               // Icon={() => <SvgXml xml={arrow} />}
+                //onPress={openMenu}
                 title={type}
               />
             }

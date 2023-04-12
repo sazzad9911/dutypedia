@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
+  Pressable,
 } from "react-native";
 import Svg, { SvgXml } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
@@ -20,36 +21,39 @@ import {
 import { Color } from "../../../assets/colors";
 import { changeTime, timeConverter } from "../../../action";
 import Avatar from "../../../components/Avatar";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import UserRequestAppointment from "./UserRequestAppointment";
 const Tab = createMaterialTopTabNavigator();
 
 const status = [
   {
     title: "Incomplete",
-    color: "#E2B529",
+    color: "#1A1A1A",
   },
   {
     title: "Completed",
-    color: "#4ADE80",
+    color: "#1A1A1A",
   },
   {
     title: "Cancelled",
-    color: "#DA1E37",
+    color: "#1A1A1A",
   },
   {
     title: "Pending",
-    color: "#6366F1",
+    color: "#1A1A1A",
   },
   {
     title: "Approved",
-    color: "#6366F1",
+    color: "#1A1A1A",
   },
   {
     title: "Rejected",
-    color: "#DA1E37",
+    color: "#1A1A1A",
   },
 ];
 
@@ -67,120 +71,200 @@ export default function UserAppointmentList({ navigation, route }) {
   const [Previous, setPrevious] = React.useState();
 
   const isFocused = useIsFocused();
-  const [appointments,setAppointments]=useState(["All","Upcoming","Previous","Request"])
+  const [appointments, setAppointments] = useState([
+    "Upcoming",
+    "Previous",
+    "Request",
+  ]);
+  const inset = useSafeAreaInsets();
 
   //console.log(data.service.serviceCenterName)
-  
-  return(
-    <Tab.Navigator style={{
-      marginTop:-10
-    }} screenOptions={{
-      tabBarScrollEnabled:true,
-      tabBarIndicatorStyle: {
-        backgroundColor: backgroundColor,
-      },
-    }}>
-      {
-        appointments.map((doc,i)=>(
-          <Tab.Screen initialParams={{
-            backgroundColor:backgroundColor
-          }} key={i} name={doc} component={Screen} />
-        ))
-      }
-     
-    </Tab.Navigator>
-  )
-}
-const Screen=({navigation,route})=>{
-  const [data,setData]=useState()
-  const user=useSelector(state=>state.user)
-  const isFocused=useIsFocused()
-  const name=route.name;
-  const backgroundColor=route.params.backgroundColor
 
-  useEffect(()=>{
-    if(isFocused){
+  return (
+    <View
+      style={{
+        flex: 1,
+        paddingTop: inset?.top,
+      }}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarIndicatorStyle: {
+            backgroundColor: "#767676",
+            height: 3,
+          },
+        }}>
+        {appointments.map((doc, i) => (
+          <Tab.Screen
+            initialParams={{
+              backgroundColor: backgroundColor,
+            }}
+            key={i}
+            name={doc}
+            component={Screen}
+          />
+        ))}
+      </Tab.Navigator>
+    </View>
+  );
+}
+const Screen = ({ navigation, route }) => {
+  const [data, setData] = useState();
+  const user = useSelector((state) => state.user);
+  const isFocused = useIsFocused();
+  const name = route.name;
+  const backgroundColor = route.params.backgroundColor;
+
+  useEffect(() => {
+    if (isFocused) {
       //console.log(name)
       //getUserAppointment()
-      if(name=="All"){
-        getAllAppointment()
-      }else if(name=="Upcoming"){
-        getUserAppointment(user.token,"upcoming",user.user.id).then(res=>{
-          setData(res.data.appointments)
-        }).catch(err=>{
-          console.error(err.response.data.msg)
-        })
-      }else if(name=="Previous"){
-        getUserAppointment(user.token,"previous",user.user.id).then(res=>{
-          setData(res.data.appointments)
-        }).catch(err=>{
-          console.error(err.response.data.msg)
-        })
+      if (name == "All") {
+        getAllAppointment();
+      } else if (name == "Upcoming") {
+        getUserAppointment(user.token, "upcoming", user.user.id)
+          .then((res) => {
+            setData(res.data.appointments);
+          })
+          .catch((err) => {
+            console.error(err.response.data.msg);
+          });
+      } else if (name == "Previous") {
+        getUserAppointment(user.token, "previous", user.user.id)
+          .then((res) => {
+            setData(res.data.appointments);
+          })
+          .catch((err) => {
+            console.error(err.response.data.msg);
+          });
       }
     }
-  },[isFocused])
-  const getAllAppointment=async()=>{
-    let  arr=[]
-    const res=await getUserAppointment(user.token,"upcoming",user.user.id);
-    const newRes=await getUserAppointment(user.token,"previous",user.user.id);
-    res.data.appointments.forEach(doc=>{
-      arr.push(doc)
-    })
-    newRes.data.appointments.forEach(doc=>{
-      arr.push(doc)
-    })
-    setData(arr)
+  }, [isFocused]);
+  const getAllAppointment = async () => {
+    let arr = [];
+    const res = await getUserAppointment(user.token, "upcoming", user.user.id);
+    const newRes = await getUserAppointment(
+      user.token,
+      "previous",
+      user.user.id
+    );
+    res.data.appointments.forEach((doc) => {
+      arr.push(doc);
+    });
+    newRes.data.appointments.forEach((doc) => {
+      arr.push(doc);
+    });
+    setData(arr);
+  };
+  if (name == "Request") {
+    return <UserRequestAppointment navigation={navigation} />;
   }
-  if(name=="Request"){
-    return <UserRequestAppointment navigation={navigation}/>
-  }
-  if(!data){
+  if (!data) {
     return (
       <View
         style={{
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <ActivityIndicator size={"small"} color={backgroundColor} />
       </View>
     );
   }
-  
-  if(data.length==0){
-    return <NoAppointment/>
+
+  if (data.length == 0) {
+    return <NoAppointment />;
   }
-  return(
+  return (
     <ScrollView showsVerticalScrollIndicator={false}>
-       {data.map((doc, i) => (
-          <Cart
-            key={i}
-            onPress={() => {
-              //console.log(doc)
-              navigation.navigate("UserAppointmentDetails", {
-                data: doc,
-              });
-            }}
-            status={
-              status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
-            }
-            title={doc.title}
-            date={`${doc.date} ${changeTime(doc.startTime)}`}
-            name={doc.service.providerInfo.name}
-            image={doc.service.profilePhoto}
-            username={doc.service.providerInfo.name
-              .replace(" ", "")
-              .toLowerCase()}
-            position={doc.service.providerInfo.position}
-          />
-        ))}
-        <View style={{height:20}}/>
+      <View style={{height:8}}/>
+      {data.map((doc, i) => (
+        <Cart
+          key={i}
+          onPress={() => {
+            //console.log(doc)
+            navigation.navigate("UserAppointmentDetails", {
+              data: doc,
+            });
+          }}
+          status={
+            status.filter((s) => s.title.toUpperCase().match(doc.status))[0]
+          }
+          title={doc.title}
+          date={`${doc.date} ${changeTime(doc.startTime)} to ${changeTime(doc.endTime)}`}
+          name={doc.service.providerInfo.name}
+          image={doc.service.profilePhoto}
+          username={doc.service.providerInfo.name
+            .replace(" ", "")
+            .toLowerCase()}
+          position={doc.service.providerInfo.position}
+        />
+      ))}
+      <View style={{ height: 8 }} />
     </ScrollView>
-  )
-}
-export const Cart = ({ date, status, title, onPress, image, name, username }) => {
+  );
+};
+export const Cart = ({
+  date,
+  status,
+  title,
+  onPress,
+  image,
+  name,
+  username,
+}) => {
   //console.log(status)
+  return (
+    <Pressable style={{
+      flexDirection:"row",
+      justifyContent:"space-between",
+      paddingHorizontal:20,
+      marginVertical:8,
+      paddingVertical:4,
+      alignItems:"center",
+      
+    }} onPress={onPress}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems:"center"
+        }}>
+        <Avatar
+          style={{
+            width: 48,
+            height: 48,
+            borderColor:"#e5e5e5"
+          }}
+          source={{ uri: image }}
+        />
+        <View
+          style={{
+            marginLeft: 12,
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "700",
+            }}
+            numberOfLines={1}>
+            {name ? name : "Easin Arafat"}
+          </Text>
+          <Text style={{
+            marginTop:4,
+            fontSize:12,
+            fontWeight:"400",
+            color:"#767676"
+          }}>{date}</Text>
+        </View>
+      </View>
+      <Text
+        numberOfLines={1}
+        style={{
+          color: status ? status.color : "#1A1A1A",
+          fontSize: 12,
+          fontWeight: "500",
+        }}>{`${status ? status.title : "Invalid"}`}</Text>
+    </Pressable>
+  );
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -191,20 +275,11 @@ export const Cart = ({ date, status, title, onPress, image, name, username }) =>
         justifyContent: "space-between",
         paddingHorizontal: 5,
         paddingVertical: 10,
-        shadowColor: "#333333",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        elevation: 3,
-        shadowRadius: 3,
         backgroundColor: "white",
         alignItems: "center",
         marginTop: 10,
         borderRadius: 5,
-      }}
-    >
+      }}>
       <Avatar
         style={{
           width: 40,
@@ -220,14 +295,21 @@ export const Cart = ({ date, status, title, onPress, image, name, username }) =>
       <View
         style={{
           flex: 0.5,
-        }}
-      >
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
+        }}>
+        <Text
+          style={{
+            fontSize: 12,
+          }}
+          numberOfLines={1}>
+          {name ? name : "Easin Arafat"}
+        </Text>
+        <Text
+          style={{
+            fontSize: 12,
+          }}
+          numberOfLines={1}>
+          @{username ? username : "easinarafat"}
+        </Text>
       </View>
       <View
         style={{
@@ -240,35 +322,32 @@ export const Cart = ({ date, status, title, onPress, image, name, username }) =>
       <View
         style={{
           flex: 1.5,
-          marginLeft:5
-        }}
-      >
+          marginLeft: 5,
+        }}>
         <View
           style={{
             flexDirection: "row",
-          }}
-        >
-          <Text numberOfLines={1}
+          }}>
+          <Text
+            numberOfLines={1}
             style={{
               fontSize: 12,
-            }}
-          >
+            }}>
             {date}
           </Text>
-          <Text numberOfLines={1}
+          <Text
+            numberOfLines={1}
             style={{
               color: status ? status.color : "red",
               fontSize: 12,
               marginLeft: 10,
-            }}
-          >{`(${status ? status.title : "Invalid"})`}</Text>
+            }}>{`(${status ? status.title : "Invalid"})`}</Text>
         </View>
         <Text
           style={{
             fontSize: 14,
           }}
-          numberOfLines={1}
-        >
+          numberOfLines={1}>
           {title ? title : "Invalid"}
         </Text>
       </View>
@@ -304,13 +383,11 @@ const Chip = ({ title, active, onPress, style }) => {
           alignItems: "center",
         },
         style,
-      ]}
-    >
+      ]}>
       <Text
         style={{
           color: active ? "white" : "black",
-        }}
-      >
+        }}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -324,16 +401,14 @@ const NoAppointment = () => {
         justifyContent: "center",
         alignItems: "center",
         height: height - 250,
-      }}
-    >
+      }}>
       <SvgXml xml={vectorImage} height="200" width="200" />
       <Text
         style={{
           fontSize: 16,
           fontFamily: "Poppins-Medium",
           marginTop: 10,
-        }}
-      >
+        }}>
         No Appointment Found
       </Text>
     </View>
