@@ -77,6 +77,7 @@ import customStyle from "../../assets/stylesheet";
 import VendorSearchOrder from "./VendorSearchOrder";
 import Member from "./Member";
 import SubHeader from "../../components/SubHeader";
+import ImportantNotice from "../Seller/OrderScript/ImportantNotice";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -93,6 +94,11 @@ const Order = () => {
         options={{ headerShown: false }}
         name="VendorOrderDetails"
         component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader {...props} title={"Important Notice"}/> }}
+        name="ImportantNotice"
+        component={ImportantNotice}
       />
       <Stack.Screen
         options={{ headerShown: false }}

@@ -29,11 +29,14 @@ import { SvgXml } from "react-native-svg";
 import { logOut, logoutVendor } from "../../Class/auth";
 import Button from "./../../components/Button";
 import IconButton from "../../components/IconButton";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import Avatar from "../../components/Avatar";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { getDashboardInfo } from "../../Class/service";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import Avatar from "../../components/Profile/Avatar";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -49,7 +52,7 @@ const Menu = ({ navigation }) => {
   const [info, setInfo] = useState();
   const user = useSelector((state) => state.user);
   const isFocused = useIsFocused();
-  const inset=useSafeAreaInsets()
+  const inset = useSafeAreaInsets();
 
   useEffect(() => {
     if (user) {
@@ -76,35 +79,30 @@ const Menu = ({ navigation }) => {
     }
   }, [isFocused]);
 
-
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           height: inset?.top,
         }}
       />
-      <StatusBar barStyle="dark-content"/>
+      <StatusBar barStyle="dark-content" />
       <View
-          style={{
-            height: Platform.OS == "android" ? StatusBar.currentHeight : 0,
-          }}
-        />
+        style={{
+          height: Platform.OS == "android" ? StatusBar.currentHeight : 0,
+        }}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
-        
         <View style={styles.container}>
-          <View style={styles.pictureBox}>
-            <SvgXml
-              style={styles.icon}
-              width={"100"}
-              height={"100"}
-              xml={squire}
-            />
-            <Avatar
-              style={{ width: 80, height: 80, borderWidth: 0 }}
-              source={{ uri: vendor?.service?.profilePhoto }}
-            />
-          </View>
+          <Avatar
+            containerStyle={{ marginTop: 0 }}
+            edit={false}
+            source={
+              vendor?.service?.profilePhoto
+                ? { uri: vendor?.service?.profilePhoto }
+                : null
+            }
+          />
           <Text
             style={{
               marginTop: 24,
@@ -188,184 +186,6 @@ const Menu = ({ navigation }) => {
         </View>
       </ScrollView>
     </View>
-  );
-
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}>
-      <StatusBar barStyle="dark-content" backgroundColor={primaryColor} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ backgroundColor: secondaryColor }}>
-        <TouchableOpacity style={{ marginTop: 0 }} onPress={() => {}}>
-          <View
-            style={{
-              flexDirection: "row",
-              marginVertical: 20,
-              marginHorizontal: 20,
-              alignItems: "center",
-              marginTop: 35,
-            }}>
-            <View
-              style={{
-                height: 65,
-                width: 65,
-                borderRadius: 100,
-                borderWidth: 1,
-                borderColor: textColor,
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-              }}></View>
-
-            <View
-              style={{
-                flex: 5,
-                marginLeft: 15,
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontFamily: "Poppins-Medium",
-                  fontSize: 20,
-                  margin: 0,
-                  color: textColor,
-                }}></Text>
-              <Text
-                style={{
-                  fontFamily: "Poppins-Medium",
-                  fontSize: 15,
-                  color: textColor,
-                }}></Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontFamily: "Poppins-Light",
-                  color: "#707070",
-                }}>
-                See Your Profile
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <View style={{ height: 20 }} />
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            marginLeft: 10,
-            marginRight: 10,
-          }}>
-          {/* <Cart
-            onPress={() => {}}
-            title="Manage Order"
-            Icon={() => <SvgXml xml={manageOrder} height="30" width="30" />}
-          /> */}
-          {/* <Cart
-            onPress={() => {
-              navigation.navigate("VendorAppointmentList");
-            }}
-            title="Appointment"
-            Icon={() => <SvgXml xml={appointment} height="30" width="30" />}
-          /> */}
-          {/* <Cart
-            onPress={() => {
-              navigation.navigate("Expenses");
-            }}
-            title="Expenses"
-            Icon={() => (
-              <Image
-                resizeMode="contain"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../../assets/newIcon/expenses.png")}
-              />
-            )}
-          /> */}
-          <Cart
-            onPress={() => {}}
-            title="Notice"
-            Icon={() => (
-              <Image
-                resizeMode="contain"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../../assets/newIcon/notice.png")}
-              />
-            )}
-          />
-          <Cart
-            onPress={() => {}}
-            title="Member"
-            Icon={() => (
-              <Image
-                resizeMode="contain"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../../assets/newIcon/member.png")}
-              />
-            )}
-          />
-          {/* <Cart
-            title="Staff & Member"
-            Icon={() => <SvgXml xml={notice2} height="30" width="30" />}
-          /> */}
-          <Cart
-            onPress={() => {}}
-            title="Account Balance"
-            Icon={() => (
-              <Image
-                resizeMode="contain"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../../assets/newIcon/wallet.png")}
-              />
-            )}
-          />
-          <Cart
-            title="Customer Review"
-            Icon={() => <SvgXml xml={review} height="30" width="30" />}
-          />
-          <Cart
-            onPress={() => {}}
-            title="Support"
-            Icon={() => (
-              <Image
-                resizeMode="contain"
-                style={{
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../../assets/newIcon/support.png")}
-              />
-            )}
-          />
-        </View>
-        <IconButton
-          style={{
-            borderWidth: 0,
-            marginHorizontal: 20,
-            marginVertical: 10,
-            height: 45,
-            backgroundColor: primaryColor,
-            color: textColor,
-            borderRadius: 5,
-          }}
-          onPress={() => {}}
-          title="Logout From Dashboard"
-        />
-      </ScrollView>
-    </SafeAreaView>
   );
 };
 

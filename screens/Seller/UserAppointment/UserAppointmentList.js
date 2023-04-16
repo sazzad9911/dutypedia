@@ -86,6 +86,7 @@ export default function UserAppointmentList({ navigation, route }) {
         flex: 1,
         paddingTop: inset?.top,
       }}>
+        <StatusBar backgroundColor="white"/>
       <Tab.Navigator
         screenOptions={{
           tabBarIndicatorStyle: {

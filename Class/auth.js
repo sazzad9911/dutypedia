@@ -8,13 +8,11 @@ const userLogin = async (email, password) => {
     password: password,
   });
 
-  if (response) {
+  if (response.data) {
     await storeJson("user", response.data);
     return response.data;
   }
-  await response.catch((err) => {
-    return err;
-  });
+  return response
 };
 const checkUser = async () => {
   const res = await getJson("user");

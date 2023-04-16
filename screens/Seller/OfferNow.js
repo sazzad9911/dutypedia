@@ -172,7 +172,9 @@ const OfferNow = (props) => {
       user.user.id,
       data.subsData?data.subsData:undefined,
       data.installmentData?data.installmentData:undefined,
-      urls?urls[0]:undefined
+      urls?urls[0]:undefined,
+      gigs?gigs.id:data.service.gigs.filter((d) => d.type == type)[0]?.id,
+      gigs?gigs?.title:data.service.gigs.filter((d) => d.type == type)[0]?.title
     )
       .then((res) => {
         getNewOrderUser(res);

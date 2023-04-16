@@ -19,7 +19,7 @@ export default function StakeHolder({ navigation,route }) {
   const [layoutHeight,setLayoutHeight]=useState(0)
   const businessForm=useSelector(state=>state.businessForm)
   const dispatch=useDispatch()
-  const [number,setNumber]=useState(businessForm?.teamNumber?businessForm.teamNumber:"0")
+  const [number,setNumber]=useState(businessForm?.teamNumber)
   const data=route?.params?.data;
   const isFocused=useIsFocused()
   React.useEffect(() => {
@@ -76,7 +76,7 @@ export default function StakeHolder({ navigation,route }) {
           onChange={setNumber}
             keyboardType={"number-pad"}
             style={styles.input}
-            placeholder={" "}
+            placeholder={"0"}
           />
           <Text style={styles.text}>Minimum 1 require</Text>
           <IconButton active={parseInt(number)>0?true:false}

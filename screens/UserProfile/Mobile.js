@@ -1,4 +1,5 @@
 import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { View, ScrollView, Text } from "react-native";
 import { SvgXml } from "react-native-svg";
@@ -33,6 +34,7 @@ export default function Mobile() {
   }, [isFocused]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <StatusBar backgroundColor="white"/>
       <View
         style={{
           paddingHorizontal: 20,

@@ -123,7 +123,7 @@ export default function EditEmail() {
             }
           />
         </View>
-        <IconButton style={styles.button} title={"Update"}/>
+        <IconButton disabled={email?false:true} active={email?true:false} style={styles.button} title={"Update"}/>
       </View>
     </ScrollView>
     </KeyboardAvoidingView>

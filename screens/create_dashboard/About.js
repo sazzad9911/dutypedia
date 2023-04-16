@@ -32,6 +32,7 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function About({ navigation,route }) {
   const businessForm=useSelector(state=>state.businessForm)
@@ -61,6 +62,7 @@ export default function About({ navigation,route }) {
   const [layoutHeight,setLayoutHeight]=useState(0)
   const [about,setAbout]=useState(businessForm?.about?businessForm.about:text)
   const [length,setLength]=useState(0)
+  const inset=useSafeAreaInsets()
 
   React.useEffect(() => {
     if(businessForm?.facilities){

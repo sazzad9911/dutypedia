@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   ScrollView,
@@ -38,13 +38,16 @@ import IconButton from "../../components/IconButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityLoader from "../../components/ActivityLoader";
 import { localTimeToServerDate, serverTimeToLocalDate } from "../../action";
+import InfoCart from "./OrderScript/InfoCart";
+import OrderInfo from "./OrderScript/OrderInfo";
+import StatusCart from "./OrderScript/StatusCart";
+import { createConversation } from "../../Class/message";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
-  const secondaryColor = colors.getSecondaryColor();
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
@@ -60,57 +63,19 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       type: "ONETIME",
     },
     {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
-    {
       title: "Package",
       value: false,
       type: "PACKAGE",
     },
   ];
   const user = useSelector((state) => state.user);
-  const styles = StyleSheet.create({
-    view: {
-      flex: 1,
-      borderBottomWidth: 1,
-      borderBottomColor: "#C0FFD7",
-      justifyContent: "center",
-      borderTopWidth: 0,
-    },
-    text: {
-      fontSize: width < 350 ? 14 : 16,
-      fontFamily: "Poppins-Medium",
-      color: textColor,
-    },
-    smallText: {
-      fontSize: width < 350 ? 13 : 14,
-      fontFamily: "Poppins-Medium",
-      color: textColor,
-    },
-    newText: {
-      fontSize: 16,
-      color: "#666666",
-    },
-  });
+
   const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
   const [data, setData] = React.useState(oldData);
   const [Loader, setLoader] = React.useState(false);
-  const orderSocket = useSelector((state) => state.orderSocket);
-  const userOrders = useSelector((state) => state.userOrders);
   const dispatch = useDispatch();
-  const [Refresh, setRefresh] = React.useState(false);
-  const [Timer, setTimer] = React.useState(true);
   const type = oldData.type;
-  const [dateFrom, setDateFrom] = useState();
-  const [dateTo, setDateTo] = useState();
   const sOrder =
     route.params && route.params.subsOrder ? route.params.subsOrder : null;
   const index = route.params && route.params.index ? route.params.index : 0;
@@ -167,9 +132,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: order,
         },
       });
-      socket.emit("notificationSend",{
-        receiverId:receiverId
-      })
+      socket.emit("notificationSend", {
+        receiverId: receiverId,
+      });
       //route.params.onRefresh();
       setLoader(false);
     } catch (e) {
@@ -204,13 +169,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: res.data.order,
         },
       });
-      socket.emit("notificationSend",{
-        receiverId:receiverId
-      })
+      socket.emit("notificationSend", {
+        receiverId: receiverId,
+      });
       setData(res.data.order);
       setSubsOrder(res.data.order.subsOrders[index]);
       //route.params.onRefresh();
-      navigation.goBack()
+      navigation.goBack();
       setLoader(false);
     } catch (e) {
       console.warn(e.message);
@@ -244,26 +209,30 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           data: res.data.order,
         },
       });
-      socket.emit("notificationSend",{
-        receiverId:receiverId
-      })
+      socket.emit("notificationSend", {
+        receiverId: receiverId,
+      });
       setData(res.data.order);
       //console.log(res.data.order.installmentOrders[index])
       setInstallmentOrder(res.data.order.installmentOrders[index]);
       //route.params.onRefresh();
       setLoader(false);
-      navigation.goBack()
+      navigation.goBack();
     } catch (e) {
       console.warn(e.message);
     }
   };
+  const dataLoader=async()=>{
+    try{
+      const {data} = await getSubsOrderById(user.token, data.id);
+      setData(data.order)
+    }catch(err){
+      console.error(err.message)
+    }
+  }
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e = e.order;
-      if (e.type === "user" && e.data.id == data.id) {
-        setData(e.data);
-        //setSubsOrder(e.data.subsOrders[index]);
-      }
+      dataLoader()
     });
   }, []);
 
@@ -288,6 +257,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
+  const cancelTheOrder=useCallback(()=>{
+    console.log("gh")
+  },[])
   //console.log(data.attachment)
 
   if (Loader) {
@@ -301,8 +273,81 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     <SafeAreaView
       style={{
         flex: 1,
-      }}
-    >
+      }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <InfoCart
+          onClick={() => {
+            navigation.navigate("OtherProfile", {
+              serviceId: data ? data.service.id : null,
+            });
+          }}
+          onMessage={() => {
+            let newUser = {
+              userId: data.service.user.id,
+              user: data.service.user,
+            };
+            //createConversation()
+            navigation.navigate("ChatScreen", {
+              data: {
+                users: [newUser],
+              },
+              username: data.service.user.username,
+            });
+          }}
+          uri={data?.service?.profilePhoto}
+          title={data?.service?.serviceCenterName}
+          name={`${data?.service?.providerInfo.title} ${data.service.providerInfo.name}`}
+          position={data?.service?.providerInfo?.position}
+        />
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            {initialState.filter((d) => d.type.match(data.type))[0].title}{" "}
+            service
+          </Text>
+        </View>
+        <OrderInfo
+          title={data?.gigTitle}
+          facilities={Facilities}
+          services={ListData}
+          orderId={data?.id}
+          date={data?.createdAt}
+        />
+        <StatusCart
+          onPress={() => {
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+            });
+          }}
+          price={data?.offerPrice ? data?.offerPrice : data?.amount}
+          paid={data?.paid}
+          status={data?.status}
+          onMore={() => {
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              type: "FAILED",
+            });
+          }}
+          instruction={data?.description}
+          attachment={data?.attachment}
+          startDate={data?.deliveryDateFrom}
+          endDate={data?.deliveryDateTo}
+        />
+        {data?.status == "ACCEPTED" && data?.paid == false && (
+          <IconButton active={true} style={[styles.button,{marginBottom:12}]} title={"Pay now"} />
+        )}
+        {data?.paid == false&&exporters(data?.status).title!="Failed" && (
+          <IconButton onPress={()=>{
+            navigation.navigate("CancelOrderConfirmation",{cancel:cancelTheOrder,name:`${data?.user?.firstName} ${data?.user?.lastName}`})
+          }} style={styles.button} title={"Cancel order"} />
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  );
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -311,8 +356,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("OtherProfile", {
@@ -328,8 +372,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               alignItems: "center",
               borderColor: "#e5e5e5",
               overflow: "hidden",
-            }}
-          >
+            }}>
             {data && data.service.profilePhoto ? (
               <Image
                 style={{
@@ -346,8 +389,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             style={{
               marginLeft: 15,
               flex: 1,
-            }}
-          >
+            }}>
             <Text
               numberOfLines={1}
               style={{
@@ -355,8 +397,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginBottom: 2,
-              }}
-            >
+              }}>
               {data
                 ? data.service.serviceCenterName
                 : "Unknown Service Center Name"}
@@ -368,8 +409,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontFamily: "Poppins-Medium",
                 color: textColor,
                 marginTop: 0,
-              }}
-            >
+              }}>
               {data ? data.service.providerInfo.title : "--"}{" "}
               {data ? data.service.providerInfo.name : "--"}{" "}
               {data ? `(${data.service.providerInfo.gender})` : "(-)"}
@@ -380,8 +420,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-              }}
-            >
+              }}>
               {data ? data.service.providerInfo.position : "-"}
             </Text>
           </View>
@@ -392,8 +431,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             style={[
               styles.view,
               { borderBottomColor: backgroundColor, flex: 2 },
-            ]}
-          >
+            ]}>
             {data && (
               <Text
                 style={{
@@ -403,8 +441,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   fontSize: width < 350 ? 14 : 16,
                   marginTop: 0,
                   marginTop: 20,
-                }}
-              >
+                }}>
                 {initialState.filter((d) => d.type.match(data.type))[0].title}{" "}
                 Service
               </Text>
@@ -419,20 +456,17 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             paddingHorizontal: 20,
             marginVertical: 20,
             flexDirection: "row",
-          }}
-        >
+          }}>
           <View
             style={{
               alignItems: "flex-start",
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: width < 350 ? 14 : 16,
                 fontFamily: "Poppins-Medium",
                 color: textColor,
-              }}
-            >
+              }}>
               Order Id: {data ? data.id : "Unknown Id"}
             </Text>
             <Text
@@ -442,8 +476,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 color: textColor,
                 textAlign: "center",
                 marginTop: 2,
-              }}
-            >
+              }}>
               Date:{" "}
               {data && data.createdAt
                 ? stringDate(data.createdAt)
@@ -454,15 +487,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <View
               style={{
                 width: width / 3,
                 height: 50,
                 overflow: "hidden",
-              }}
-            >
+              }}>
               <Barcode
                 height="50"
                 width="120"
@@ -479,8 +510,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 color: textColor,
                 width: width / 3,
                 marginLeft: 5,
-              }}
-            >
+              }}>
               {data
                 ? data.id.split("").map((doc, i) => {
                     return `${doc}`;
@@ -496,26 +526,22 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             paddingVertical: 20,
             marginHorizontal: 20,
             marginTop: 20,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: width < 350 ? 16 : 18,
               fontFamily: "Poppins-Medium",
               color: textColor,
-            }}
-          >
+            }}>
             Service/ Item Name
           </Text>
           <View
-            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
-          >
+            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
             {ListData && ListData.length > 0 ? (
               <Text
                 style={{
                   fontSize: width < 350 ? 14 : 16,
-                }}
-              >
+                }}>
                 {ListData.map((doc, i) => {
                   return `${i == 0 ? "" : ", "}${doc.data.title}`;
                 })}
@@ -524,8 +550,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               <Text
                 style={{
                   color: "#505050",
-                }}
-              >
+                }}>
                 N/A
               </Text>
             )}
@@ -538,15 +563,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             paddingVertical: 20,
             marginHorizontal: 20,
             marginTop: 20,
-          }}
-        >
+          }}>
           <Text
             style={{
               fontSize: width < 350 ? 18 : 20,
               color: textColor,
               fontFamily: "Poppins-Medium",
-            }}
-          >
+            }}>
             Facilities
           </Text>
           {/* <View style={{ marginTop: 10 }}>
@@ -573,14 +596,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             )}
           </View> */}
           <View
-            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}
-          >
+            style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 10 }}>
             {Facilities && Facilities.length > 0 ? (
               <Text
                 style={{
                   fontSize: width < 350 ? 14 : 16,
-                }}
-              >
+                }}>
                 {Facilities.map((doc, i) => {
                   return `${i == 0 ? "" : ", "}${doc.title}`;
                 })}
@@ -589,8 +610,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               <Text
                 style={{
                   color: "#505050",
-                }}
-              >
+                }}>
                 N/A
               </Text>
             )}
@@ -606,8 +626,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               paddingVertical: 20,
               marginHorizontal: 20,
               marginTop: 20,
-            }}
-          >
+            }}>
             <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
               Price
             </Text>
@@ -628,22 +647,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               marginVertical: 15,
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <Pressable
               style={{
                 alignItems: "flex-end",
-              }}
-            >
+              }}>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "flex-end",
-                }}
-              >
+                }}>
                 <Text
-                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}
-                >
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
                   {installmentData
                     ? installmentData.installmentType.replace(/ly/g, "")
                     : ""}
@@ -658,8 +673,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       width: 90,
                       textAlign: "right",
                     },
-                  ]}
-                >
+                  ]}>
                   {installmentData
                     ? (
                         installmentData.totalAmount /
@@ -675,8 +689,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       fontSize: 16,
                       color: "#666666",
                       marginVertical: 5,
-                    }}
-                  >
+                    }}>
                     Advanced Payment
                   </Text>
                   <Text
@@ -686,8 +699,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       marginVertical: 5,
                       textAlign: "right",
                       width: 90,
-                    }}
-                  >
+                    }}>
                     {installmentData?.advancedPaymentAmount}৳
                   </Text>
                 </View>
@@ -705,8 +717,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 style={{
                   flexDirection: "row",
                   justifyContent: "flex-end",
-                }}
-              >
+                }}>
                 <Text style={styles.newText}>Total</Text>
 
                 <Text
@@ -716,8 +727,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       width: 90,
                       textAlign: "right",
                     },
-                  ]}
-                >
+                  ]}>
                   {installmentData?.totalAmount}৳
                 </Text>
               </View>
@@ -738,22 +748,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               marginVertical: 15,
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <Pressable
               style={{
                 alignItems: "flex-end",
-              }}
-            >
+              }}>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "flex-end",
-                }}
-              >
+                }}>
                 <Text
-                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}
-                >
+                  style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
                   {data ? data.subsData.subscriptionType : ""}
                 </Text>
 
@@ -765,8 +771,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       width: 80,
                       textAlign: "right",
                     },
-                  ]}
-                >
+                  ]}>
                   {data ? data.subsData.amount + "৳" : "Pice is empty"}
                 </Text>
               </View>
@@ -778,8 +783,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                         fontSize: 16,
                         color: "#666666",
                         marginVertical: 5,
-                      }}
-                    >
+                      }}>
                       {data.subsData.otherChargeName}
                     </Text>
                     <Text
@@ -789,8 +793,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                         marginVertical: 5,
                         textAlign: "right",
                         width: 80,
-                      }}
-                    >
+                      }}>
                       {data.subsData.otherChargeAmount}৳
                     </Text>
                   </View>
@@ -807,8 +810,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     style={{
                       flexDirection: "row",
                       justifyContent: "flex-end",
-                    }}
-                  >
+                    }}>
                     <Text style={styles.newText}>Total</Text>
 
                     <Text
@@ -818,8 +820,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                           width: 80,
                           textAlign: "right",
                         },
-                      ]}
-                    >
+                      ]}>
                       {data.subsData.amount +
                         parseInt(
                           data.subsData.otherChargeAmount
@@ -850,14 +851,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               paddingVertical: 0,
               marginHorizontal: 20,
               marginTop: 20,
-            }}
-          >
+            }}>
             <Text
               style={[
                 styles.text,
                 { fontSize: width < 350 ? 18 : 20, marginBottom: 10 },
-              ]}
-            >
+              ]}>
               Total Installment
             </Text>
             <Text style={[styles.newText, { marginBottom: 20 }]}>
@@ -876,14 +875,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               paddingVertical: 0,
               marginHorizontal: 20,
               marginTop: 20,
-            }}
-          >
+            }}>
             <Text
               style={[
                 styles.text,
                 { fontSize: width < 350 ? 18 : 20, marginBottom: 10 },
-              ]}
-            >
+              ]}>
               Duration
             </Text>
             <Text style={[styles.newText, { marginBottom: 20 }]}>
@@ -907,8 +904,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
-          }}
-        >
+          }}>
           <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
             Delivery Date
           </Text>
@@ -917,8 +913,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               flexDirection: "row",
               marginTop: 10,
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             <Text style={[styles.smallText, { flex: 0 }]}>
               {data
                 ? serverTimeToLocalDate(data.deliveryDateFrom)
@@ -956,23 +951,20 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               style={{
                 width: "100%",
                 alignItems: "flex-end",
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("SubscriptionDates", {
                     subsData: data.subsData,
                     date: data.deliveryDateFrom,
                   });
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 14,
                     marginTop: 10,
                     textDecorationLine: "underline",
-                  }}
-                >
+                  }}>
                   View all delivery date
                 </Text>
               </TouchableOpacity>
@@ -988,8 +980,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               borderBottomColor: "#C0FFD7",
               paddingVertical: 20,
               marginHorizontal: 20,
-            }}
-          >
+            }}>
             <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
               Payment Date
             </Text>
@@ -998,16 +989,14 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 flexDirection: "row",
                 marginTop: 10,
                 paddingHorizontal: 20,
-              }}
-            >
+              }}>
               <Text style={[styles.smallText, { flex: 0 }]}>
                 {data
                   ? serverTimeToLocalDate(data.deliveryDateFrom)
                   : "Unavailable Date"}{" "}
               </Text>
               <Text
-                style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}
-              >
+                style={[styles.smallText, { flex: 0, marginHorizontal: 10 }]}>
                 To
               </Text>
               {data && data.subsData ? (
@@ -1038,23 +1027,20 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               style={{
                 width: "100%",
                 alignItems: "flex-end",
-              }}
-            >
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("SubscriptionDates", {
                     subsData: data.subsData,
                     date: data.deliveryDateFrom,
                   });
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 14,
                     marginTop: 10,
                     textDecorationLine: "underline",
-                  }}
-                >
+                  }}>
                   View all payment date
                 </Text>
               </TouchableOpacity>
@@ -1069,8 +1055,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
-          }}
-        >
+          }}>
           <Text style={[styles.text, { fontSize: width < 350 ? 18 : 20 }]}>
             Payment Status
           </Text>
@@ -1093,15 +1078,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   color: "white",
                   fontSize: width < 350 ? 14 : 15,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
+                }}>
                 {subsOrder && subsOrder.paid && subsOrder.status != "REFUNDED"
                   ? "Paid"
                   : subsOrder &&
@@ -1132,15 +1115,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   color: "white",
                   fontSize: width < 350 ? 14 : 15,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
+                }}>
                 {installmentOrder &&
                 installmentOrder.paid &&
                 installmentOrder.status != "REFUNDED"
@@ -1169,15 +1150,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 borderRadius: 15,
                 paddingHorizontal: 15,
                 marginVertical: 10,
-              }}
-            >
+              }}>
               <Text
                 style={{
                   color: "white",
                   fontSize: width < 350 ? 14 : 15,
                   fontFamily: "Poppins-Medium",
-                }}
-              >
+                }}>
                 {data && data.paid && data.status != "REFUNDED"
                   ? "Paid"
                   : data && data.paid && data.status == "REFUNDED"
@@ -1195,8 +1174,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
-          }}
-        >
+          }}>
           <Text style={[styles.text, { fontSize: width < 350 ? 16 : 18 }]}>
             Service Status
           </Text>
@@ -1204,9 +1182,11 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             <Text style={[styles.smallText, { marginTop: 5 }]}>
               {subsOrder ? exporters(subsOrder.status) : "Unknown"}
             </Text>
-          ):type=="INSTALLMENT"&&installmentOrder?(
+          ) : type == "INSTALLMENT" && installmentOrder ? (
             <Text style={[styles.smallText, { marginTop: 5 }]}>
-              {installmentOrder ? exporters(installmentOrder.status) : "Unknown"}
+              {installmentOrder
+                ? exporters(installmentOrder.status)
+                : "Unknown"}
             </Text>
           ) : (
             <Text style={[styles.smallText, { marginTop: 5 }]}>
@@ -1222,8 +1202,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             borderBottomColor: "#C0FFD7",
             paddingVertical: 20,
             marginHorizontal: 20,
-          }}
-        >
+          }}>
           <Text style={[styles.text, { fontSize: width < 350 ? 20 : 22 }]}>
             Introduction
           </Text>
@@ -1239,8 +1218,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 width: "100%",
                 flexDirection: "row",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <AntDesign style={{}} name="file1" size={20} color="black" />
               <Text
                 style={{
@@ -1249,8 +1227,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   marginRight: 20,
                   marginVertical: 5,
                   marginLeft: 10,
-                }}
-              >
+                }}>
                 {data.attachment.substring(
                   data.attachment.lastIndexOf("/") + 1
                 )}
@@ -1264,8 +1241,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-              }}
-            >
+              }}>
               {subsOrder &&
                 (subsOrder.status == "ACCEPTED" ||
                   subsOrder.status == "WAITING_FOR_PAYMENT") && (
@@ -1375,8 +1351,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <Text
                     style={{
                       fontSize: width < 350 ? 14 : 16,
@@ -1384,8 +1359,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       color: textColor,
                       textAlign: "center",
                       marginTop: 20,
-                    }}
-                  >
+                    }}>
                     If you Received then Click
                   </Text>
                   <IconButton
@@ -1428,8 +1402,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   fontFamily: "Poppins-Medium",
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 Order Completed
               </Text>
             )}
@@ -1439,8 +1412,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   color: backgroundColor,
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 You requested for refund
               </Text>
             )}
@@ -1451,8 +1423,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-              }}
-            >
+              }}>
               {installmentOrder &&
                 (installmentOrder.status == "ACCEPTED" ||
                   installmentOrder.status == "WAITING_FOR_PAYMENT") && (
@@ -1460,7 +1431,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     onPress={() => {
                       setLoader(true);
                       //console.log(installmentData)
-                      if (index == 0&&installmentData.advancedPayment) {
+                      if (index == 0 && installmentData.advancedPayment) {
                         makeAdvancedPaymentInstallment(user.token, data.id)
                           .then((res) => {
                             if (res) {
@@ -1590,8 +1561,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   fontFamily: "Poppins-Medium",
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 Order Completed
               </Text>
             )}
@@ -1601,8 +1571,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   color: backgroundColor,
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 You requested for refund
               </Text>
             )}
@@ -1618,15 +1587,13 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   style={{
                     marginHorizontal: 20,
                     marginVertical: 20,
-                  }}
-                >
+                  }}>
                   <Text
                     style={{
                       fontSize: width < 350 ? 14 : 16,
                       color: textColor,
                       fontFamily: "Poppins-Medium",
-                    }}
-                  >
+                    }}>
                     Vendor Request Delivery Date
                   </Text>
                   <Text
@@ -1634,8 +1601,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                       fontSize: width < 350 ? 14 : 16,
                       color: textColor,
                       fontFamily: "Poppins-Medium",
-                    }}
-                  >
+                    }}>
                     Requested Delivery Date: {data.requestedDeliveryDate}
                   </Text>
                   <View style={{ flexDirection: "row" }}>
@@ -1736,8 +1702,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-              }}
-            >
+              }}>
               {data && data.status == "ACCEPTED" && (
                 <IconButton
                   onPress={() => {
@@ -1852,8 +1817,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: width < 350 ? 14 : 16,
@@ -1861,8 +1825,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                     color: textColor,
                     textAlign: "center",
                     marginTop: 20,
-                  }}
-                >
+                  }}>
                   If you Received then Click
                 </Text>
                 <IconButton
@@ -1913,8 +1876,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   fontFamily: "Poppins-Medium",
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 Order Completed
               </Text>
             )}
@@ -1924,8 +1886,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
                   color: backgroundColor,
                   textAlign: "center",
                   marginVertical: 20,
-                }}
-              >
+                }}>
                 You requested for refund
               </Text>
             )}
@@ -1936,26 +1897,76 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
     </SafeAreaView>
   );
 };
+
 export default OrderDetails;
 const exporters = (key) => {
   switch (key) {
     case "WAITING_FOR_ACCEPT":
-      return "Wait for accept order";
+      return {
+        title: "Request pending",
+        color: "#7566FF",
+      };
     case "ACCEPTED":
-      return "Waiting for payment";
+      return {
+        title: "Order Accepted",
+        color: "#4ADE80",
+      };
     case "WAITING_FOR_PAYMENT":
-      return "Waiting for payment";
+      return {
+        title: "Order Accepted",
+        color: "#4ADE80",
+      };
     case "PROCESSING":
-      return "Processing";
+      return {
+        title: "Processing",
+        color: "#4ADE80",
+      };
     case "DELIVERED":
-      return "Delivered";
+      return {
+        title: "Delivered",
+        color: "#4ADE80",
+      };
     case "REFUNDED":
-      return "Refunded";
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
     case "CANCELLED":
-      return "Cancelled";
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
     case "COMPLETED":
-      return "Completed";
+      return {
+        title: "Completed",
+        color: "#4ADE80",
+      };
     default:
-      return "Unknown";
+      return {
+        title: "Unknown",
+        color: "#000000",
+      };
   }
 };
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  textContainer: {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderColor: "#FAFAFA",
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: "#D1D1D1",
+    borderRadius: 4,
+    height: 40,
+    marginHorizontal: 20,
+    marginBottom: 32,
+  },
+});

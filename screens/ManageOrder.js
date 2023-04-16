@@ -102,7 +102,7 @@ const ManageOrder = ({ navigation, route }) => {
           height: inset?.top,
         }}
       />
-     
+     <StatusBar backgroundColor="white"/>
       <UserOrderHeader
         onFilter={() => {
           dispatch(setOrderRef(orderRef ? false : true));

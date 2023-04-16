@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
 import { ScrollView, View,Text } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import customStyle from "../../assets/stylesheet";
@@ -10,6 +11,7 @@ import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 export default function InitialPage({ navigation }) {
   const isFocused=useIsFocused()
   const dispatch=useDispatch()
+  const inset=useSafeAreaInsets()
 
   React.useEffect(() => {
     if (isFocused) {

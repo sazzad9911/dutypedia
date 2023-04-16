@@ -17,6 +17,7 @@ import { styles } from "../create_dashboard/BusinessTitle";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import { StatusBar } from "expo-status-bar";
 
 export default function Location({navigation}) {
   const [type, setType] = useState("Only me");
@@ -42,6 +43,7 @@ export default function Location({navigation}) {
   }, [isFocused]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <StatusBar backgroundColor="white"/>
       <View
         style={{
           paddingHorizontal: 20,
@@ -64,7 +66,7 @@ export default function Location({navigation}) {
           }}>
             <Text
               style={{
-                textDecorationLine: 1,
+                textDecorationLine: "underline",
                 fontSize: 16,
                 lineHeight: 24,
               }}>

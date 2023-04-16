@@ -230,7 +230,7 @@ export default function StackRoute() {
             component={PackageService}
           /> */}
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ header:(props)=><SubHeader title={"Login"} {...props}/> }}
           name="LogIn"
           component={Login}
         />

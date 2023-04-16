@@ -10,7 +10,8 @@ export default function FlatCart({
   value,
   type,
   disableGo,
-  onPress
+  onPress,
+  Private
 }) {
   return (
     <Pressable onPress={onPress}
@@ -25,6 +26,7 @@ export default function FlatCart({
           paddingRight: 16,
           borderBottomColor: "#E6E6E6",
           width: width - 52,
+          
         },
         style,
       ]}>
@@ -33,7 +35,9 @@ export default function FlatCart({
           flexDirection: "row",
           alignItems: "center",
         }}>
-        <SvgXml xml={icon} />
+        <SvgXml style={{
+          opacity:Private?.4:1
+        }} xml={icon} />
         <View
           style={{
             marginLeft: 16,
@@ -43,6 +47,7 @@ export default function FlatCart({
               fontSize: 14,
               lineHeight: 16,
               fontWeight: "500",
+              opacity:Private?.4:1
             }}>
             {title}
           </Text>

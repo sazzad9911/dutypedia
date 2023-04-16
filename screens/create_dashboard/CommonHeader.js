@@ -1,8 +1,10 @@
 import React from 'react'
 import { Pressable, StatusBar, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
 
 export default function CommonHeader({navigation,title,no}) {
+    const inset=useSafeAreaInsets()
   return (
     <View style={{
         paddingHorizontal:20,
@@ -10,6 +12,7 @@ export default function CommonHeader({navigation,title,no}) {
         alignItems:"center",
         paddingVertical:12,
         justifyContent:"center",
+        marginTop:inset?.top
         //marginTop:!no?StatusBar.currentHeight:0
     }}>
         <Pressable onPress={()=>{

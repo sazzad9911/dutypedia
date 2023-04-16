@@ -332,7 +332,9 @@ export const createOrder = async (
   id,
   subsData,
   installmentData,
-  attachment
+  attachment,
+  gigId,
+  gigTitle
 ) => {
   const data = {
     serviceId: serviceId,
@@ -350,6 +352,8 @@ export const createOrder = async (
     subsData: subsData,
     installmentData: installmentData,
     attachment: attachment,
+    gigId:gigId,
+    gigTitle:gigTitle
   };
   //console.log(data)
   const res = await axios.post(`${url}/server/orders/create`, data, {

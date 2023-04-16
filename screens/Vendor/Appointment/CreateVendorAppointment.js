@@ -19,7 +19,7 @@ export default function CreateVendorAppointment({ navigation, route }) {
     <SafeAreaView style={{flex:1}}>
       <Tab.Navigator tabBar={(props)=><TabBar {...props}/>}>
       <Tab.Screen name="Online User" component={Screen} />
-      <Tab.Screen name="Offline User" component={Screen} />
+     
     </Tab.Navigator>
     </SafeAreaView>
   );
@@ -163,7 +163,8 @@ const TabBar = ({
               >
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 18,
+                    fontWeight:"500"
                   }}
                 >
                   {doc.name}
@@ -173,16 +174,7 @@ const TabBar = ({
 
                 
               </Pressable>
-              {isFocused && (
-                <View
-                  style={{
-                    height: 2,
-                    backgroundColor: "#707070",
-                    width: "80%",
-                    alignSelf: "center",
-                  }}
-                />
-              )}
+              
             </View>
           );
         })}
