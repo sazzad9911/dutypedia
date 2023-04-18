@@ -34,7 +34,7 @@ const IconButton = ({
           justifyContent: "center",
           alignItems: "center",
           height: 45,
-          opacity: disabled ? 0.9 : 1,
+          
           borderWidth: active ? 0 : 1,
           borderColor: "#e5e5e5",
         },
@@ -53,7 +53,7 @@ const IconButton = ({
             fontFamily: "Poppins-SemiBold",
             fontSize:style&&style.fontSize?style.fontSize: 14,
             color: active? "white": style&&style.color?style.color:textColor,
-
+            opacity: disabled ? 0.4 : 1,
           }}
         >
           {title}

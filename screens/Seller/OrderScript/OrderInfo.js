@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { SvgXml } from "react-native-svg";
 import { serverTimeToLocalDate } from "../../../action";
 import Barcode from "../../../components/Barcode";
+import IconButton from "../../../components/IconButton";
 const { width, height } = Dimensions.get("window");
 
-export default function OrderInfo({ orderId, date,services,title,facilities }) {
+export default function OrderInfo({
+  orderId,
+  date,
+  services,
+  title,
+  facilities,
+  vendor,
+  onAddService
+}) {
+  const [wid, setWid] = useState(0);
   return (
-    <View style={{
+    <View
+      style={{
         paddingHorizontal: 20,
-    }}>
+      }}>
       <View
         style={{
           flexDirection: "row",
           marginTop: 30,
           alignItems: "center",
-          justifyContent:"space-between"
+          justifyContent: "space-between",
         }}>
-        <View>
+        <View
+          onLayout={(e) => {
+            setWid(e.nativeEvent.layout.width);
+          }}>
           <Text style={styles.text}>Order id: {orderId}</Text>
           <Text style={[styles.text, { marginTop: 11 }]}>
             Date: {serverTimeToLocalDate(date)}
@@ -25,62 +40,90 @@ export default function OrderInfo({ orderId, date,services,title,facilities }) {
         <View
           style={{
             marginLeft: 36,
-            width: 140,
+            width: width > 390 ? 130 : width - (40 + wid + 36),
           }}>
           <View
             style={{
               height: 36,
               overflow: "hidden",
-              width: 140,
+              width: width > 390 ? 130 : width - (40 + wid + 36),
             }}>
             <Barcode
               height="36"
-              width="100"
+              width={width > 390 ? 130 : width - (40 + wid + 36)}
               value={orderId ? orderId : "dsfff"}
               options={{ format: "CODE128", background: "#ffffff" }}
               rotation={0}
             />
           </View>
           <Text
+            numberOfLines={1}
             style={[
               styles.text,
-              { textAlign: "right", letterSpacing: 1.9, marginTop: 8 },
+              {
+                textAlign: "center",
+                letterSpacing: 1.1,
+                marginTop: 8,
+                marginLeft: 8,
+                fontSize: 12,
+              },
             ]}>
             {orderId}
           </Text>
         </View>
       </View>
-      <View style={{
-        marginTop:36,
-        marginBottom:24
-      }}>
+      <View
+        style={{
+          marginTop: 36,
+          marginBottom: 24,
+        }}>
         <Text style={styles.headLine}>Service/Item name</Text>
-        {services&&services.length>0?(
-            <View>
-                <Text style={[styles.text,{lineHeight:24,marginTop:12}]}>{title}</Text>
-                <Text style={[styles.text,{lineHeight:20,marginTop:12}]}>
-                {services.map((doc, i) => {
-                  return `${i == 0 ? "" : ", "}${doc.data.title}`;
-                })}
-                </Text>
+        {services && services.length > 0 ? (
+          <View>
+            <Text style={[styles.text, { lineHeight: 24, marginTop: 12 }]}>
+              {title}
+            </Text>
+            <Text style={[styles.text, { lineHeight: 20, marginTop: 12 }]}>
+              {services.map((doc, i) => {
+                return `${i == 0 ? "" : ", "}${doc.data.title}`;
+              })}
+            </Text>
+          </View>
+        ) : vendor ? (
+          <View>
+            <Text style={[styles.font, { marginTop: 24 }]}>
+              Add the service you want to sell
+            </Text>
+            <View style={{ flexDirection: "row",marginTop:12 }}>
+              <IconButton onPress={onAddService} active={true} LeftIcon={()=><SvgXml xml={icon}/>}
+               style={styles.button} title={"Add service"} />
             </View>
-        ):(
-            <Text style={[styles.font,{
-                marginTop:12,
-                color:"red"
-            }]}>Please give clear instructions to the seller via chat. They will add the services to your receipt as per your requirements.</Text>
+          </View>
+        ) : (
+          <Text
+            style={[
+              styles.font,
+              {
+                marginTop: 12,
+                color: "red",
+              },
+            ]}>
+            Please give clear instructions to the seller via chat. They will add
+            the services to your receipt as per your requirements.
+          </Text>
         )}
-        {facilities&&facilities.length>0&&(
-            <View style={{
-                marginTop:24
+        {facilities && facilities.length > 0 && (
+          <View
+            style={{
+              marginTop: 24,
             }}>
-                <Text style={styles.headLine}>Facilities</Text>
-                <Text style={[styles.text,{marginTop:12}]}>
-                {facilities.map((doc, i) => {
-                  return `${i == 0 ? "" : ", "}${doc.title}`;
-                })}
-                </Text>
-            </View>
+            <Text style={styles.headLine}>Facilities</Text>
+            <Text style={[styles.text, { marginTop: 12 }]}>
+              {facilities.map((doc, i) => {
+                return `${i == 0 ? "" : ", "}${doc.title}`;
+              })}
+            </Text>
+          </View>
         )}
       </View>
     </View>
@@ -91,13 +134,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
   },
-  headLine:{
-    fontSize:20,
-    fontWeight:"400"
+  headLine: {
+    fontSize: 20,
+    fontWeight: "400",
   },
-  font:{
-    fontWeight:"400",
-    fontSize:16,
-    lineHeight:24
-  }
+  font: {
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  button: {
+    height: 40,
+  },
 });
+const icon=`<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1 9H17M9 17V1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`

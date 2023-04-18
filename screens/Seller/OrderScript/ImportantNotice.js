@@ -43,7 +43,7 @@ export default function ImportantNotice({ navigation, route }) {
               fontWeight: "500",
               flex: 1,
             }}>
-            {type?`Refund Policy and Process`:`Regarding timely delivery for a positive experience`}
+            {type=="FAILED"?`Refund Policy and Process`:type=="DELIVERED"?`Product Received? Click 'Yes' Within 72 Hours!`:`Regarding timely delivery for a positive experience`}
           </Text>
         </View>
         <Text
@@ -53,8 +53,9 @@ export default function ImportantNotice({ navigation, route }) {
             fontWeight: "400",
             marginTop: 24,
           }}>
-          {type
-            ? `Dear valued ${name}, we understand that sometimes an order may not be delivered as expected. In such cases, we will refund your payment within 7 working days. However, if you have not received your refund within this time frame, please do not hesitate to contact our support team for further assistance. We are committed to ensuring that you have a seamless experience on our platform, and we thank you for your understanding.`
+          {type=="FAILED"
+            ? `Dear valued ${name}, we understand that sometimes an order may not be delivered as expected. In such cases, we will refund your payment within 7 working days. However, if you have not received your refund within this time frame, please do not hesitate to contact our support team for further assistance. We are committed to ensuring that you have a seamless experience on our platform, and we thank you for your understanding.`:
+            type=="DELIVERED"?(<Text>Upon receiving your product, kindly click on the "Yes, I Received" button. Failure to do so within 72 hours will result in an automatic marking of the item as received. Rest assured, we will notify you three times before this happens. For any queries, please feel free to contact our <Text style={{color:"#4ADE80"}}>support center</Text>.</Text>)
             : `Dear ${name}, please be advised that timely delivery is crucial for maintaining a positive experience on our platform. If a seller is unable to deliver the order within the specified timeframe, they may request an extension, or you can communicate with them to find a resolution. If the seller is unable to deliver the order, a refund will be issued to you, and their profile rating may be negatively impacted. We are committed to ensuring a safe and positive experience for all members of our community, and we appreciate your cooperation. Thank you for choosing our platform.`}
         </Text>
       </View>

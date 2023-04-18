@@ -17,7 +17,10 @@ export default function StatusCart({
   instruction,
   requestDate,
   onAcceptTime,
-  onRejectTime
+  onRejectTime,
+  deliveryText,
+  deliveryImage,
+  onDelivered
 }) {
   return (
     <View
@@ -124,11 +127,61 @@ export default function StatusCart({
             </View>
           </View>
         )}
+        {status=="DELIVERED"&&(
+          <View style={[{ alignItems: "flex-end" }, styles.mt16]}>
+          <Text
+            onPress={onDelivered}
+            style={[styles.small, { textDecorationLine: "underline" }]}>
+            Learn more
+          </Text>
+        </View>
+        )}
+        {deliveryText||deliveryImage?(<Text style={[styles.medium,{textAlign:"left"},styles.mt16]}>Delivery file</Text>):null}
+        {deliveryText && (
+          <>
+            <Text style={[styles.small, styles.mt16]}>{deliveryText}</Text>
+          </>
+        )}
+        {deliveryImage && (
+          <View
+            style={[
+              {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+              styles.mt16,
+            ]}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <SvgXml xml={icon} />
+              <Text
+                numberOfLines={1}
+                style={[styles.small, { marginLeft: 8, flex: 1 }]}>
+                {deliveryImage.substring(deliveryImage.lastIndexOf("/") + 1)}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => {
+                Linking.openURL(deliveryImage);
+              }}
+              style={{
+                marginLeft: 20,
+              }}>
+              <Text style={[styles.small, { color: "#4ADE80" }]}>View</Text>
+            </Pressable>
+          </View>
+        )}
+        
       </View>
       <View style={instruction||attachment?[styles.box, { paddingBottom: 0 }]:null}>
+        {instruction||attachment?(<Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>):null}
         {instruction && (
           <>
-            <Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>
             <Text style={[styles.small, styles.mt16]}>{instruction}</Text>
           </>
         )}

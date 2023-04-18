@@ -38,13 +38,15 @@ export default function AmarPay({ navigation, order,url,onClose }) {
       </View>
     );
   }
+  
 
   return (
     <WebView
-      //onLoadStart={()=>setLoader(true)}
-      //onLoadEnd={()=>setLoader(false)}
+      onLoadStart={()=>setLoader(true)}
+      onLoadEnd={()=>setLoader(false)}
       onNavigationStateChange={(newNavState)=>{
         const { url } = newNavState;
+        setLoader(false)
         console.log(url)
         let arr=url.split("=")
         if(arr[arr.length-1]=="success"){

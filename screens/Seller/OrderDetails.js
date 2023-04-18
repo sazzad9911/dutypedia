@@ -316,7 +316,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         setLoader(false);
       });
   };
+  
   const confirmDelivery=()=>{
+   
     navigation.navigate("ClintFeedBack",{order:data})
   }
 
@@ -337,6 +339,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           onClick={() => {
             navigation.navigate("OtherProfile", {
               serviceId: data ? data.service.id : null,
+              data:data
             });
           }}
           onMessage={() => {
@@ -385,6 +388,12 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               type: "FAILED",
             });
           }}
+          onDelivered={()=>{
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              type: "DELIVERED",
+            });
+          }}
           requestDate={data?.requestedDeliveryDate}
           instruction={data?.description}
           attachment={data?.attachment}
@@ -392,6 +401,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           endDate={data?.deliveryDateTo}
           onAcceptTime={() => timeRequest(true)}
           onRejectTime={() => timeRequest(false)}
+          deliveryText={data?.proofText}
+          deliveryImage={data?.proofImage}
         />
         {data?.status == "ACCEPTED" && data?.paid == false && (
           <IconButton
@@ -424,6 +435,11 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
             />
           </View>
         )}
+        {data?.cancelledBy?(
+          <Text style={styles.font}>{data.cancelledBy=="USER"?"Order cancelled":"Seller has cancelled the order"}</Text>
+        ):!data.cancelledBy&&exporters(data?.status).title == "Failed"?(
+          <Text style={styles.font}>Delivery date has expired</Text>
+        ):(<></>)}
       </ScrollView>
       <Modal animationType="slide" visible={Boolean(amarpay)}>
         <AmarPay onClose={()=>setAmarPay()} order={data} url={amarpay} navigation={navigation}/>
@@ -2056,4 +2072,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 32,
   },
+  font:{
+    fontSize:16,
+    fontWeight:"500",
+    textAlign:"center",
+    marginBottom:32,
+    color:"#EC2700"
+  }
 });

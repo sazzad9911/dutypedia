@@ -1135,22 +1135,36 @@ const MainProfile = (props) => {
               value={"Transforming the future"}
               type={""}
             />
-            <FlatCart
+            <FlatCart onPress={()=>{
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/privacy-policy",title:"Privacy Policy"})
+            }}
               icon={agreement}
-              title={"Agreements"}
-              value={"Review our agreements"}
+              title={"Privacy policy"}
+              value={"Visit our policies"}
               type={""}
             />
-            <FlatCart
+            <FlatCart onPress={()=>{
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/terms-and-conditions",title:"Terms & Conditions"})
+            }}
               icon={terms}
               title={"Terms & condition"}
               value={"Comply with our rules"}
               type={""}
             />
-            <FlatCart
+            <FlatCart onPress={()=>{
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/refund-policy",title:"Refund Policy"})
+            }}
               icon={refund}
               title={"Refund policy"}
               value={"Fair refund policy"}
+              type={""}
+            />
+            <FlatCart onPress={()=>{
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/order-policy",title:"Order Policy"})
+            }}
+              icon={refund}
+              title={"Order policy"}
+              value={"Our order policy"}
               type={""}
             />
             <FlatCart

@@ -58,7 +58,7 @@ export default function FeedBack({ navigation, route }) {
           placeholder={"type your reply...."}
         />
         <View style={{ height: 28 }} />
-        <IconButton
+        <IconButton disabled={text?false:true} active={text?true:false}
           onPress={reply}
           style={{
             height: 40,

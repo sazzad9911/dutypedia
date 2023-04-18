@@ -51,6 +51,10 @@ import {
 import { socket } from "../../Class/socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
+import ActivityLoader from "../../components/ActivityLoader";
+import InfoCart from "../Seller/OrderScript/InfoCart";
+import OrderInfo from "../Seller/OrderScript/OrderInfo";
+import StatusCart from "../Seller/OrderScript/StatusCart";
 
 const OrderDetails = ({ navigation, route }) => {
   const newData = route.params && route.params.data ? route.params.data : null;
@@ -58,7 +62,6 @@ const OrderDetails = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
-  const secondaryColor = colors.getSecondaryColor();
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
@@ -90,29 +93,6 @@ const OrderDetails = ({ navigation, route }) => {
     },
   ];
   const user = useSelector((state) => state.user);
-
-  const styles = StyleSheet.create({
-    view: {
-      flex: 1,
-      borderBottomWidth: 1,
-      borderBottomColor: "#F1EFEF",
-      justifyContent: "center",
-    },
-    text: {
-      fontSize: width < 350 ? 18 : 20,
-      fontFamily: "Poppins-Medium",
-      color: textColor,
-    },
-    smallText: {
-      fontSize: width < 350 ? 13 : 14,
-      fontFamily: "Poppins-Medium",
-      color: textColor,
-    },
-    newText: {
-      fontSize: 16,
-      color: "#666666",
-    },
-  });
   const [ListData, setListData] = React.useState([]);
   const [Facilities, setFacilities] = React.useState([]);
   const ListSelection = useSelector((state) => state.ListSelection);
@@ -126,8 +106,6 @@ const OrderDetails = ({ navigation, route }) => {
   const [RefoundDate, setRefoundDate] = React.useState();
   //console.log(data.type);
   const orderSocket = useSelector((state) => state.orderSocket);
-  const vendorOrders = useSelector((state) => state.vendorOrders);
-  const [Refresh, setRefresh] = React.useState(false);
   const [MemberId, setMemberId] = React.useState();
   const type = newData.type;
   const sOrder =
@@ -351,23 +329,148 @@ const OrderDetails = ({ navigation, route }) => {
       console.warn(e.message);
     }
   };
+  const dataLoader = async (id) => {
+    try {
+      const res = await getSubsOrderById(user.token, id);
+      setData(res.data.order);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e = e.order;
-      if (e.type === "vendor" && e.data.id == data.id) {
-        setData(e.data);
-        setSubsOrder(e.data.subsOrders[index]);
+      if(data){
+        dataLoader(data.id)
       }
     });
   }, []);
+  const addService=()=>{
+    const gigs = data.service.gigs.filter(
+      (d) => d.type == "STARTING"
+    );
+    if (gigs[0].services.category) {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(
+          gigs[0].services.options,
+          gigs[0].services.category
+        ),
+      });
+      navigation.navigate("AddServiceList", {
+        NewDataList: serverToLocal(
+         gigs[0].services.options,
+          gigs[0].services.category
+        ),
+        facilites: gigs[0].facilites.selectedOptions,
+        setListData: setListData,
+        name: "VendorOrderDetails",
+        data: data,
+      });
+    } else {
+      dispatch({
+        type: "SET_NEW_LIST_DATA",
+        playload: serverToLocal(
+          gigs[0].services,
+          gigs[0].dashboard
+        ),
+      });
+      navigation.navigate("AddServiceList", {
+        NewDataList: serverToLocal(
+         gigs[0].services,
+          gigs[0].dashboard
+        ),
+        facilites: gigs[0].facilites.selectedOptions,
+        setListData: setListData,
+        name: "VendorOrderDetails",
+        data: data,
+      });
+    }
+  }
 
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader/>
       </View>
     );
   }
+  return(
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+      <InfoCart vendor={true}
+          onClick={() => {
+            navigation.navigate("UserProfile", {
+              user:{
+                user:data.user,
+                userId:data.user.id
+              }
+            });
+          }}
+          onMessage={() => {
+            let newUser = {
+              userId: data.user.id,
+              user: data.user,
+            };
+            //createConversation()
+            navigation.navigate("ChatScreen", {
+              data: {
+                users: [newUser],
+              },
+              username: data.user.username,
+            });
+          }}
+          username={data?.user.username}
+          uri={data?.user?.profilePhoto}
+          name={`${data?.user?.firstName} ${data?.user?.lastName}`}
+        />
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>
+            {initialState.filter((d) => d.type.match(data.type))[0].title}{" "}
+            service
+          </Text>
+        </View>
+        <OrderInfo vendor={true}
+          title={data?.gigTitle}
+          facilities={Facilities}
+          services={ListData}
+          orderId={data?.id}
+          date={data?.createdAt}
+          onAddService={addService}
+        />
+        <StatusCart
+          onPress={() => {
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+            });
+          }}
+          price={data?.offerPrice ? data?.offerPrice : data?.amount}
+          paid={data?.paid}
+          status={data?.status}
+          onMore={() => {
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              type: "FAILED",
+            });
+          }}
+          onDelivered={()=>{
+            navigation.navigate("ImportantNotice", {
+              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              type: "DELIVERED",
+            });
+          }}
+          requestDate={data?.requestedDeliveryDate}
+          instruction={data?.description}
+          attachment={data?.attachment}
+          startDate={data?.deliveryDateFrom}
+          endDate={data?.deliveryDateTo}
+          onAcceptTime={() => timeRequest(true)}
+          onRejectTime={() => timeRequest(false)}
+          deliveryText={data?.proofText}
+          deliveryImage={data?.proofImage}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  )
   return (
     <SafeAreaView
       style={{
@@ -2143,6 +2246,34 @@ const OrderDetails = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  textContainer: {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderColor: "#FAFAFA",
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: "#D1D1D1",
+    borderRadius: 4,
+    height: 40,
+    marginHorizontal: 20,
+    marginBottom: 32,
+  },
+  font:{
+    fontSize:16,
+    fontWeight:"500",
+    textAlign:"center",
+    marginBottom:32,
+    color:"#EC2700"
+  }
+});
 export default OrderDetails;
 const exporters = (key) => {
   switch (key) {

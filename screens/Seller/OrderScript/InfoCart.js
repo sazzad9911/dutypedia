@@ -11,7 +11,46 @@ export default function InfoCart({
   onMessage,
   onClick,
   style,
+  vendor,
+  username
 }) {
+  if(vendor){
+    return(
+      <View
+      style={[
+        {
+          flexDirection: "row",
+          paddingHorizontal: 20,
+          alignItems: "center",
+          marginTop: 32,
+          marginBottom:36,
+        },
+        style,
+      ]}>
+      <Avatar onPress={onClick} source={{ uri: uri }} style={styles.image} />
+      <View
+        style={{
+          marginLeft: 16,
+          flex: 1,
+        }}>
+        
+        <Text numberOfLines={1} style={[styles.text, { marginRight: 60,marginTop:0}]}>
+          {name}
+        </Text>
+        <Text numberOfLines={1} style={[styles.text, { marginRight: 60 }]}>
+          @{username}
+        </Text>
+      </View>
+      <Pressable
+        style={{
+          alignSelf: "flex-end",
+        }}
+        onPress={onMessage}>
+        <SvgXml xml={icon} />
+      </Pressable>
+    </View>
+    )
+  }
   return (
     <View
       style={[

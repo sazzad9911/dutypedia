@@ -316,7 +316,7 @@ export const getPopularCategories = async (token) => {
   return res;
 };
 export const createOrder = async (
-  token, 
+  token,
   serviceId,
   type,
   amount,
@@ -352,8 +352,8 @@ export const createOrder = async (
     subsData: subsData,
     installmentData: installmentData,
     attachment: attachment,
-    gigId:gigId,
-    gigTitle:gigTitle
+    gigId: gigId,
+    gigTitle: gigTitle,
   };
   //console.log(data)
   const res = await axios.post(`${url}/server/orders/create`, data, {
@@ -363,7 +363,7 @@ export const createOrder = async (
   //console.log(res)
   return res;
 };
-export const getOrders = async (token, type, id,orderType,skip) => {
+export const getOrders = async (token, type, id, orderType, skip) => {
   if (id) {
     const res = await axios.get(
       `${url}/server/orders/${type}/get?serviceId=${id}&orderType=${orderType}&skip=${skip}`,
@@ -373,9 +373,12 @@ export const getOrders = async (token, type, id,orderType,skip) => {
     );
     return res;
   } else {
-    const res = await axios.get(`${url}/server/orders/${type}/get?orderType=${orderType}&skip=${skip}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      `${url}/server/orders/${type}/get?orderType=${orderType}&skip=${skip}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return res;
   }
 };
@@ -463,12 +466,16 @@ export const completeOfflineOrderDelivery = async (token, orderId) => {
 
   return res;
 };
-export const changeOfflineOrderDateDelivery = async (token, orderId,newDate) => {
+export const changeOfflineOrderDateDelivery = async (
+  token,
+  orderId,
+  newDate
+) => {
   const res = await axios.post(
     `${url}/server/orders/offline/update-date`,
     {
       orderId: orderId,
-      newDate:newDate
+      newDate: newDate,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -519,7 +526,6 @@ export const makePaymentOfflineSubscription = async (
   dateFrom,
   dateTo
 ) => {
-  
   const res = await axios.post(
     `${url}/server/orders/offline/make-payment-subs`,
     {
@@ -698,7 +704,6 @@ export const createVendorOrderOffline = async (
   subsData,
   installmentData
 ) => {
-
   //console.log(data)
   const res = await axios.post(
     `${url}/server/orders/offline/create`,
@@ -864,9 +869,12 @@ export const getSubsOrderById = async (token, orderId) => {
 export const getSubsOfflineOrderById = async (token, orderId) => {
   //console.log(`${url}/server/orders/get-by-id?orderId=${orderId}`)
   //console.log(token)
-  const res = await axios.get(`${url}/server/orders/offline/get-by-id/${orderId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const res = await axios.get(
+    `${url}/server/orders/offline/get-by-id/${orderId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   return res;
 };
@@ -1005,144 +1013,213 @@ export const rejectRefoundInstallment = async (token, orderId) => {
 
   return res;
 };
-export const search=async(token,data)=>{
-  const res=await axios.post(`${url}/server/services/search`,data,{
+export const search = async (token, data) => {
+  const res = await axios.post(`${url}/server/services/search`, data, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const getRating=async(serviceId)=>{
-  const res=await axios.get(`${url}/server/review/get-rating/${serviceId}`)
-  return res
-}
-export const getDashboardInfo=async(token,serviceId)=>{
-  const res=await axios.get(`${url}/server/services/summary/${serviceId}`,{
+  });
+  return res;
+};
+export const getRating = async (serviceId) => {
+  const res = await axios.get(`${url}/server/review/get-rating/${serviceId}`);
+  return res;
+};
+export const getDashboardInfo = async (token, serviceId) => {
+  const res = await axios.get(`${url}/server/services/summary/${serviceId}`, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const getReviews=async(token,serviceId)=>{
-  const res=await axios.get(`${url}/server/review/get-for-dashboard?serviceId=${serviceId}`,{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const replyReview=async(token,reviewId,text)=>{
-  const res=await axios.post(`${url}/server/review/reply`,{
-    reviewId:reviewId,
-    reply:text
-  },{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const submitVerificationIndividual=async(token,data)=>{
-  const res=await axios.post(`${url}/server/services/submit-verification-individual`,
-    data
-  ,{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const submitVerificationCompany=async(token,data)=>{
+  });
+  return res;
+};
+export const getReviews = async (token, serviceId) => {
+  const res = await axios.get(
+    `${url}/server/review/get-for-dashboard?serviceId=${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const replyReview = async (token, reviewId, text) => {
+  const res = await axios.post(
+    `${url}/server/review/reply`,
+    {
+      reviewId: reviewId,
+      reply: text,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const submitVerificationIndividual = async (token, data) => {
+  const res = await axios.post(
+    `${url}/server/services/submit-verification-individual`,
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const submitVerificationCompany = async (token, data) => {
   //console.log(data)
-  const res=await axios.post(`${url}/server/services/submit-verification-company`,
-    data
-  ,{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
+  const res = await axios.post(
+    `${url}/server/services/submit-verification-company`,
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
 
-export const getVerificationDetails=async(token,serviceId)=>{
-  const res=await axios.get(`${url}/server/services/get-verification/${serviceId}`,{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
+export const getVerificationDetails = async (token, serviceId) => {
+  const res = await axios.get(
+    `${url}/server/services/get-verification/${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
 
-export const saveBankDetails=async(token,data)=>{
-  const res=await axios.post(`${url}/server/balance/add-bank`,data,{
+export const saveBankDetails = async (token, data) => {
+  const res = await axios.post(`${url}/server/balance/add-bank`, data, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const getBankDetails=async(token,accountId)=>{
-  const res=await axios.get(`${url}/server/balance/get/bank/${accountId}`,{
+  });
+  return res;
+};
+export const getBankDetails = async (token, accountId) => {
+  const res = await axios.get(`${url}/server/balance/get/bank/${accountId}`, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
+  });
+  return res;
+};
 
-export const requestWithdraw=async(token,data)=>{
-  const res=await axios.post(`${url}/server/balance/request-withdraw`,data,{
+export const requestWithdraw = async (token, data) => {
+  const res = await axios.post(`${url}/server/balance/request-withdraw`, data, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const setLikeGigs=async(token,gigId)=>{
-  const res=await axios.post(`${url}/server/services/toggle-like/${gigId}`,{},{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
+  });
+  return res;
+};
+export const setLikeGigs = async (token, gigId) => {
+  const res = await axios.post(
+    `${url}/server/services/toggle-like/${gigId}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
 
-export const getLikeGigs=async(token)=>{
-  const res=await axios.get(`${url}/server/services/gigs/liked`,{
+export const getLikeGigs = async (token) => {
+  const res = await axios.get(`${url}/server/services/gigs/liked`, {
     headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const getDashboardReviews=async(token,serviceId)=>{
-  const res=await axios.get(`${url}/server/review/get-for-dashboard?serviceId=${serviceId}`,{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-// export const postReview=async(token,communicationRating)=>{
-//   const res=await axios.get(`${url}/server/review/add`,{
-//     headers: { Authorization: `Bearer ${token}` },
-//   })
-//   return res
-// }
-export const paymentRequestViaAmarPay=async(store_id,tran_id,signature_key,success_url,fail_url,cancel_url,amount,currency,desc,cus_name,cus_email,cus_add1,cus_add2,cus_city,cus_state,cus_postcode,cus_country,cus_phone)=>{
-  const res=await axios.post(`https://sandbox.aamarpay.com/index.php`,{
-    store_id:store_id,
-    tran_id:tran_id,
-    signature_key:signature_key,
-    success_url:success_url,
-    fail_url:fail_url,
-    cancel_url:cancel_url,
-    amount:amount,
-    currency:currency,
-    desc:desc,
-    cus_name:cus_name,
-    cus_email:cus_email,
-    cus_add1:cus_add1,
-    cus_add2:cus_add2,
-    cus_city:cus_city,
-    cus_state:cus_state,
-    cus_postcode:cus_postcode,
-    cus_country:cus_country,
-    cus_phone:cus_phone
-  })
-  return res
-}
-export const payRequest=async(token,orderId)=>{
-  const res=await axios.post(`${url}/server/payment/create`,{orderId:orderId},{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const cancelOrderByUser=async(token,orderId)=>{
-  const res=await axios.post(`${url}/server/orders/user/cancel/${orderId}`,{},{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
-export const cancelOrderByVendor=async(token,orderId)=>{
-  const res=await axios.post(`${url}/server/orders/vendor/cancel/${orderId}`,{},{
-    headers: { Authorization: `Bearer ${token}` },
-  })
-  return res
-}
+  });
+  return res;
+};
+export const getDashboardReviews = async (token, serviceId) => {
+  const res = await axios.get(
+    `${url}/server/review/get-for-dashboard?serviceId=${serviceId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const postReview = async (
+  token,
+  communicationRating,
+  describeRating,
+  qualityRating,
+  text,
+  orderId
+) => {
+  const res = await axios.post(
+    `${url}/server/review/add`,
+    {
+      communicationRating: communicationRating,
+      describeRating: describeRating,
+      qualityRating: qualityRating,
+      text: text,
+      orderId: orderId,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const paymentRequestViaAmarPay = async (
+  store_id,
+  tran_id,
+  signature_key,
+  success_url,
+  fail_url,
+  cancel_url,
+  amount,
+  currency,
+  desc,
+  cus_name,
+  cus_email,
+  cus_add1,
+  cus_add2,
+  cus_city,
+  cus_state,
+  cus_postcode,
+  cus_country,
+  cus_phone
+) => {
+  const res = await axios.post(`https://sandbox.aamarpay.com/index.php`, {
+    store_id: store_id,
+    tran_id: tran_id,
+    signature_key: signature_key,
+    success_url: success_url,
+    fail_url: fail_url,
+    cancel_url: cancel_url,
+    amount: amount,
+    currency: currency,
+    desc: desc,
+    cus_name: cus_name,
+    cus_email: cus_email,
+    cus_add1: cus_add1,
+    cus_add2: cus_add2,
+    cus_city: cus_city,
+    cus_state: cus_state,
+    cus_postcode: cus_postcode,
+    cus_country: cus_country,
+    cus_phone: cus_phone,
+  });
+  return res;
+};
+export const payRequest = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/payment/create`,
+    { orderId: orderId },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const cancelOrderByUser = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/user/cancel/${orderId}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const cancelOrderByVendor = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/vendor/cancel/${orderId}`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
