@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Pressable, Linking } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { serverTimeToLocalDate } from "../../../action";
 import customStyle from "../../../assets/stylesheet";
+import IconButton from "../../../components/IconButton";
 
 export default function StatusCart({
   price,
@@ -14,6 +15,9 @@ export default function StatusCart({
   onMore,
   attachment,
   instruction,
+  requestDate,
+  onAcceptTime,
+  onRejectTime
 }) {
   return (
     <View
@@ -109,11 +113,22 @@ export default function StatusCart({
             Payment pending
           </Text>
         )}
+        {requestDate&&status=="PROCESSING"&&(
+          <View style={styles.mt16}>
+            <Text style={styles.dpText}><Text style={styles.medium}>*</Text> Seller Request for Extended Delivery Time</Text>
+            <Text style={[styles.exSmall,styles.mt16]}>Request date <Text style={{color:"#1876F2"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
+            <View style={[{justifyContent:"flex-end",flexDirection:"row"},styles.mt16]}>
+              <IconButton onPress={onRejectTime} style={styles.button} title={"Cancel"}/>
+              <View style={{width:24}}/>
+              <IconButton onPress={onAcceptTime} active={true} style={styles.button} title={"Accept"}/>
+            </View>
+          </View>
+        )}
       </View>
       <View style={instruction||attachment?[styles.box, { paddingBottom: 0 }]:null}>
         {instruction && (
           <>
-            <Text style={styles.medium}>Instruction</Text>
+            <Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>
             <Text style={[styles.small, styles.mt16]}>{instruction}</Text>
           </>
         )}
@@ -199,6 +214,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
   },
+  dpText:{
+    fontSize:16,
+    fontWeight:"400",
+    lineHeight:20,
+    color:"#09090A"
+  },
+  exSmall:{
+    fontSize:12,
+    fontWeight:"400",
+    textAlign:"center"
+  },
+  button:{
+    height:30,
+    borderColor:"#A3A3A3",
+    borderRadius:4
+  }
 });
 const icon = `<svg width="24" height="30" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M23.9985 6.79304V26.2499C23.9985 28.3208 22.3197 29.9996 20.2487 29.9996H3.74976C1.67883 29.9996 0 28.3208 0 26.2499V3.75127C0 1.68033 1.67883 0.00150347 3.74976 0.00150347H17.207C17.4061 -0.0111249 17.6133 0.0552595 17.7792 0.22116L23.7788 6.22078C23.9447 6.38668 24.0111 6.59394 23.9985 6.79304ZM16.499 1.50141H3.74976C2.5072 1.50141 1.49991 2.50871 1.49991 3.75127V26.2499C1.49991 27.4924 2.5072 28.4997 3.74976 28.4997H20.2487C21.4913 28.4997 22.4986 27.4924 22.4986 26.2499V7.50103H17.2489C16.8347 7.50103 16.499 7.16527 16.499 6.75108V1.50141ZM17.9989 2.562V6.00113H21.438L17.9989 2.562ZM6.74958 11.9992C6.33539 11.9992 5.99962 11.6635 5.99962 11.2493C5.99962 10.8351 6.33539 10.4993 6.74958 10.4993H17.2489C17.6631 10.4993 17.9989 10.8351 17.9989 11.2493C17.9989 11.6635 17.6631 11.9992 17.2489 11.9992H6.74958ZM6.74958 16.499C6.33539 16.499 5.99962 16.1632 5.99962 15.749C5.99962 15.3348 6.33539 14.9991 6.74958 14.9991H17.2489C17.6631 14.9991 17.9989 15.3348 17.9989 15.749C17.9989 16.1632 17.6631 16.499 17.2489 16.499H6.74958ZM6.74958 20.9987C6.33539 20.9987 5.99962 20.6629 5.99962 20.2487C5.99962 19.8345 6.33539 19.4988 6.74958 19.4988H14.2491C14.6633 19.4988 14.9991 19.8345 14.9991 20.2487C14.9991 20.6629 14.6633 20.9987 14.2491 20.9987H6.74958Z" fill="black"/>

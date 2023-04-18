@@ -1,6 +1,11 @@
-import React, { useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ScrollView, View, Text, Alert } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
+import customStyle from "../../../assets/stylesheet";
+import { cancelOrderByUser } from "../../../Class/service";
+import { socket } from "../../../Class/socket";
+import ActivityLoader from "../../../components/ActivityLoader";
 import IconButton from "../../../components/IconButton";
 import ViewMore from "../../../Hooks/ViewMore";
 import { styles } from "../../create_dashboard/BusinessTitle";
@@ -8,7 +13,36 @@ import { styles } from "../../create_dashboard/BusinessTitle";
 export default function CancelOrderConfirmation({navigation,route}) {
   const [layoutHeight, setLayoutHeight] = useState();
   const name=route?.params?.name;
-  const cancel=route?.params?.cancel;
+  const order=route?.params?.order;
+  const [loader,setLoader]=useState(false)
+  const user=useSelector(state=>state.user)
+
+  const cancelTheOrder=useCallback(()=>{
+    setLoader(true)
+    cancelOrderByUser(user.token,order.id).then(res=>{
+      setLoader(false)
+      navigation.navigate("OrderDetails",{data:order})
+      socket.emit("updateOrder", {
+        receiverId: order.service.user.id,
+        order: order
+      });
+      socket.emit("updateOrder", {
+        receiverId: order.user.id,
+        order: order
+      });
+      
+    }).catch(err=>{
+      setLoader(false)
+      Alert.alert(err.response.data.msg)
+    })
+  },[])
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView>
       <View
@@ -24,7 +58,7 @@ export default function CancelOrderConfirmation({navigation,route}) {
           }}>
           Please confirm if you wish to cancel this order ?
         </Text>
-        <IconButton onPress={cancel}
+        <IconButton onPress={cancelTheOrder}
           style={{
             marginTop: 32,
             height: 38,

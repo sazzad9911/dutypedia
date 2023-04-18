@@ -25,13 +25,13 @@ export default function OrderInfo({ orderId, date,services,title,facilities }) {
         <View
           style={{
             marginLeft: 36,
-            width: width / 2 - 56,
+            width: 140,
           }}>
           <View
             style={{
               height: 36,
               overflow: "hidden",
-              width: "100%",
+              width: 140,
             }}>
             <Barcode
               height="36"
@@ -44,7 +44,7 @@ export default function OrderInfo({ orderId, date,services,title,facilities }) {
           <Text
             style={[
               styles.text,
-              { textAlign: "right", letterSpacing: "1%", marginTop: 8 },
+              { textAlign: "right", letterSpacing: 1.9, marginTop: 8 },
             ]}>
             {orderId}
           </Text>

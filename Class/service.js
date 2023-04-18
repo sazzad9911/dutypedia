@@ -1105,3 +1105,44 @@ export const getDashboardReviews=async(token,serviceId)=>{
 //   })
 //   return res
 // }
+export const paymentRequestViaAmarPay=async(store_id,tran_id,signature_key,success_url,fail_url,cancel_url,amount,currency,desc,cus_name,cus_email,cus_add1,cus_add2,cus_city,cus_state,cus_postcode,cus_country,cus_phone)=>{
+  const res=await axios.post(`https://sandbox.aamarpay.com/index.php`,{
+    store_id:store_id,
+    tran_id:tran_id,
+    signature_key:signature_key,
+    success_url:success_url,
+    fail_url:fail_url,
+    cancel_url:cancel_url,
+    amount:amount,
+    currency:currency,
+    desc:desc,
+    cus_name:cus_name,
+    cus_email:cus_email,
+    cus_add1:cus_add1,
+    cus_add2:cus_add2,
+    cus_city:cus_city,
+    cus_state:cus_state,
+    cus_postcode:cus_postcode,
+    cus_country:cus_country,
+    cus_phone:cus_phone
+  })
+  return res
+}
+export const payRequest=async(token,orderId)=>{
+  const res=await axios.post(`${url}/server/payment/create`,{orderId:orderId},{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+export const cancelOrderByUser=async(token,orderId)=>{
+  const res=await axios.post(`${url}/server/orders/user/cancel/${orderId}`,{},{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}
+export const cancelOrderByVendor=async(token,orderId)=>{
+  const res=await axios.post(`${url}/server/orders/vendor/cancel/${orderId}`,{},{
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return res
+}

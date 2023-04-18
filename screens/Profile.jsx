@@ -116,6 +116,10 @@ import EditMobile from "./UserProfile/EditMobile";
 import UserAppointmentList from "./Seller/UserAppointment/UserAppointmentList";
 import ImportantNotice from "./Seller/OrderScript/ImportantNotice";
 import CancelOrderConfirmation from "./Seller/OrderScript/CancelOrderConfirmation";
+import AmarPay from "./Seller/OrderScript/AmarPay";
+import PaymentStatus from "./Seller/OrderScript/PaymentStatus";
+import ClintFeedBack from "./Seller/OrderScript/ClintFeedBack";
+import FeedBackMessage from "./Seller/OrderScript/FeedBackMessage";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -525,6 +529,16 @@ const Profile = ({ navigation }) => {
         component={ImportantNotice}
       />
       <Stack.Screen
+        options={{ header:(props)=><SubHeader {...props} title={"Payment status"}/> }}
+        name="PaymentStatus"
+        component={PaymentStatus}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="AmarPay"
+        component={AmarPay}
+      />
+      <Stack.Screen
         options={{ header:(props)=><SubHeader {...props} title={"Cancel confirmation"}/> }}
         name="CancelOrderConfirmation"
         component={CancelOrderConfirmation}
@@ -692,6 +706,20 @@ const Profile = ({ navigation }) => {
         }}
         name="Mobile"
         component={Mobile}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <SubHeader title={"Feedback"} {...props} />,
+        }}
+        name="ClintFeedBack"
+        component={ClintFeedBack}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <SubHeader title={"Clint feedback"} {...props} />,
+        }}
+        name="FeedBackMessage"
+        component={FeedBackMessage}
       />
       <Stack.Screen
         options={{ headerShown: false }}

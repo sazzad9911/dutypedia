@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   Pressable,
+  Modal,
 } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Color } from "../../assets/colors";
@@ -28,6 +29,9 @@ import {
   receiveSubs,
   makePaymentInstallment,
   makeAdvancedPaymentInstallment,
+  paymentRequestViaAmarPay,
+  payRequest,
+  cancelOrderByUser,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
 import { serverToLocal } from "../../Class/dataConverter";
@@ -42,6 +46,8 @@ import InfoCart from "./OrderScript/InfoCart";
 import OrderInfo from "./OrderScript/OrderInfo";
 import StatusCart from "./OrderScript/StatusCart";
 import { createConversation } from "../../Class/message";
+import { useIsFocused } from "@react-navigation/native";
+import AmarPay from "./OrderScript/AmarPay";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -82,6 +88,8 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const [subsOrder, setSubsOrder] = useState(sOrder);
   const [installmentOrder, setInstallmentOrder] = useState(sOrder);
   const installmentData = data.installmentData ? data.installmentData : null;
+  const isFocused = useIsFocused();
+  const [amarpay,setAmarPay]=useState(false)
 
   React.useEffect(() => {
     //console.log(data.serviceId);
@@ -127,10 +135,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       // let arr = res.data.orders.filter((order) => order.id == data.id);
       socket.emit("updateOrder", {
         receiverId: receiverId,
-        order: {
-          type: "vendor",
-          data: order,
-        },
+        order: order,
       });
       socket.emit("notificationSend", {
         receiverId: receiverId,
@@ -222,19 +227,26 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       console.warn(e.message);
     }
   };
-  const dataLoader=async()=>{
-    try{
-      const {data} = await getSubsOrderById(user.token, data.id);
-      setData(data.order)
-    }catch(err){
-      console.error(err.message)
+  const dataLoader = async (id) => {
+    try {
+      const res = await getSubsOrderById(user.token, id);
+      setData(res.data.order);
+    } catch (err) {
+      console.error(err.message);
     }
-  }
+  };
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      dataLoader()
+      dataLoader(data?.id);
     });
   }, []);
+  useEffect(() => {
+    if (data?.id&&isFocused) {
+      //console.log(data.id)
+      // dataLoader()
+      dataLoader(data?.id)
+    }
+  }, [isFocused]);
 
   const stringDate = (d) => {
     const Months = [
@@ -257,10 +269,56 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
       Months[date.getMonth()]
     } ${date.getFullYear()}`;
   };
-  const cancelTheOrder=useCallback(()=>{
-    console.log("gh")
-  },[])
+
+  const callPayment = () => {
+    // navigation.navigate("PaymentStatus",{type:true})
+    // return
+    setLoader(true);
+    payRequest(user.token, data?.id)
+      .then((res) => {
+        setLoader(false);
+        setAmarPay(res.data.url)
+        // navigation.navigate("AmarPay", {
+        //   url: res.data.url,
+        //   orderId: data?.id,
+        //   sellerId: data?.service?.user?.id,
+        //   buyerId: data?.user?.id,
+        //   order: data,
+        // });
+      })
+      .catch((err) => {
+        setLoader(false);
+        Alert.alert(err.response.data.msg);
+        //console.error(err.response.data.msg)
+      });
+  };
   //console.log(data.attachment)
+  const timeRequest = (accepted) => {
+    setLoader(true);
+    acceptTimeRequest(user.token, data.id, data.requestedDeliveryDate, accepted)
+      .then((res) => {
+        if (res) {
+          Toast.show(`Request ${accepted ? "accepted" : "cancelled"}`, {
+            duration: Toast.durations.LONG,
+          });
+          loadData(res.data.receiverId, res.data.order);
+          socket.emit("updateOrder", {
+            receiverId: user.user.id,
+            order: res.data.order,
+          });
+          setData(res.data.order);
+        }
+      })
+      .catch((err) => {
+        Toast.show(err.response.data.msg, {
+          duration: Toast.durations.LONG,
+        });
+        setLoader(false);
+      });
+  };
+  const confirmDelivery=()=>{
+    navigation.navigate("ClintFeedBack",{order:data})
+  }
 
   if (Loader) {
     return (
@@ -327,20 +385,49 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
               type: "FAILED",
             });
           }}
+          requestDate={data?.requestedDeliveryDate}
           instruction={data?.description}
           attachment={data?.attachment}
           startDate={data?.deliveryDateFrom}
           endDate={data?.deliveryDateTo}
+          onAcceptTime={() => timeRequest(true)}
+          onRejectTime={() => timeRequest(false)}
         />
         {data?.status == "ACCEPTED" && data?.paid == false && (
-          <IconButton active={true} style={[styles.button,{marginBottom:12}]} title={"Pay now"} />
+          <IconButton
+            onPress={callPayment}
+            active={true}
+            style={[styles.button, { marginBottom: 12 }]}
+            title={"Pay now"}
+          />
         )}
-        {data?.paid == false&&exporters(data?.status).title!="Failed" && (
-          <IconButton onPress={()=>{
-            navigation.navigate("CancelOrderConfirmation",{cancel:cancelTheOrder,name:`${data?.user?.firstName} ${data?.user?.lastName}`})
-          }} style={styles.button} title={"Cancel order"} />
+        {data?.paid == false && exporters(data?.status).title != "Failed" && (
+          <IconButton
+            onPress={() => {
+              navigation.navigate("CancelOrderConfirmation", {
+                order: data,
+                name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              });
+            }}
+            style={styles.button}
+            title={"Cancel order"}
+          />
+        )}
+        {data?.status == "DELIVERED" && (
+          <View>
+            <Text style={[styles.text,{marginBottom:12,marginHorizontal:20}]}>Click 'Recived' or Auto-Receive in 72 Hours</Text>
+            <IconButton
+              onPress={confirmDelivery}
+              active={true}
+              style={[styles.button]}
+              title={"Received"}
+            />
+          </View>
         )}
       </ScrollView>
+      <Modal animationType="slide" visible={Boolean(amarpay)}>
+        <AmarPay onClose={()=>setAmarPay()} order={data} url={amarpay} navigation={navigation}/>
+      </Modal>
     </SafeAreaView>
   );
   return (
