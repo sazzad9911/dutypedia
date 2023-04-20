@@ -36,11 +36,11 @@ const SubHeader = (props) => {
         }}>
             <SvgXml xml={backIcon}/>
         </Pressable>
-        <Text style={{
+        <Text style={[{
             color:"#1A1A1A",
             fontSize:24,
             fontWeight:"500"
-        }}>{props?.title}</Text>
+        },props?.fontStyle]}>{props?.title}</Text>
     </View>
   )
 };

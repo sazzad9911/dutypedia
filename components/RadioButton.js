@@ -59,7 +59,8 @@ const RadioButton = ({ value, title, onChange, style,dark,selectStyle,margin }) 
         <Text
           style={{
             fontSize: 16,
-            marginLeft: 10,
+            marginLeft: 12,
+            fontWeight:Check?"500":"400"
           }}
         >
           {title}

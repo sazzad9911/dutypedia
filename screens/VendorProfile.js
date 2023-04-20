@@ -3340,7 +3340,7 @@ const close = `<svg xmlns="http://www.w3.org/2000/svg" width="14.121" height="14
 <path id="Path_28066" data-name="Path 28066" d="M6,18,18,6M6,6,18,18" transform="translate(-4.939 -4.939)" fill="none" stroke="#4a4a4a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
 </svg>
 `;
-const pickImage = async () => {
+export const pickImage = async () => {
   // No permissions request is necessary for launching the image library
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,

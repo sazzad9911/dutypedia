@@ -20,8 +20,11 @@ export default function StatusCart({
   onRejectTime,
   deliveryText,
   deliveryImage,
-  onDelivered
+  onDelivered,
+  vendor,
+  onCancel
 }) {
+  //console.log(status)
   return (
     <View
       style={{
@@ -50,10 +53,10 @@ export default function StatusCart({
             }}>
             <Text style={styles.small}>{price}৳</Text>
             <Text style={[styles.small, { marginTop: 8 }]}>
-              + {(price * 5) / 100}৳
+              {vendor?"- ":"+ "}{(price * 5) / 100}৳
             </Text>
             <Text style={[styles.mediumBold, { marginTop: 16 }]}>
-              {price + (price * 5) / 100}
+              {vendor?(price - (price * 5) / 100):(price + (price * 5) / 100)}
               <Text style={styles.medium}>৳</Text>
             </Text>
           </View>
@@ -86,7 +89,7 @@ export default function StatusCart({
           ]}>
           {paid && exporters(status).title != "Failed" ? "Paid" : !paid ? "Due" : "Refund"}
         </Text>
-        {exporters(status).title == "Failed" && (
+        {exporters(status).title == "Failed" &&!vendor&& (
           <View style={[{ alignItems: "flex-end" }, styles.mt16]}>
             <Text
               onPress={onMore}
@@ -102,11 +105,11 @@ export default function StatusCart({
           style={[
             styles.statusText,
             styles.mt16,
-            { color: exporters(status).color },
+            { color:vendor?exportersVendor(status).color:exporters(status).color },
           ]}>
-          {exporters(status).title}
+          {vendor?exportersVendor(status).title:exporters(status).title}
         </Text>
-        {!paid && status == "ACCEPTED" && (
+        {!paid && status == "ACCEPTED" &&!vendor&& (
           <Text
             style={[
               styles.statusText,
@@ -116,7 +119,17 @@ export default function StatusCart({
             Payment pending
           </Text>
         )}
-        {requestDate&&status=="PROCESSING"&&(
+        {!paid&&status=="ACCEPTED"&&vendor&&(
+          <Text
+          style={[
+            styles.exSmall,
+            styles.mt16,
+            { textAlign:"left", fontWeight: "400" },
+          ]}>
+          Check with Your client via chat for payment status if not received yet.
+        </Text>
+        )}
+        {requestDate&&status=="PROCESSING"&&!vendor&&(
           <View style={styles.mt16}>
             <Text style={styles.dpText}><Text style={styles.medium}>*</Text> Seller Request for Extended Delivery Time</Text>
             <Text style={[styles.exSmall,styles.mt16]}>Request date <Text style={{color:"#1876F2"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
@@ -124,6 +137,19 @@ export default function StatusCart({
               <IconButton onPress={onRejectTime} style={styles.button} title={"Cancel"}/>
               <View style={{width:24}}/>
               <IconButton onPress={onAcceptTime} active={true} style={styles.button} title={"Accept"}/>
+            </View>
+          </View>
+        )}
+        {requestDate&&status=="PROCESSING"&&vendor&&(
+          <View style={styles.mt16}>
+            <Text style={styles.dpText}><Text style={styles.medium}>*</Text> You have sent a new delivery date request. Once your client accepts the date, it will be added to your delivery date.</Text>
+            <Text style={[styles.exSmall,styles.mt16,{color:"#1876F2"}]}>Request date <Text style={{color:"#000000"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
+            <View style={[{flexDirection:"row",justifyContent:"center"},styles.mt16]}>
+              <Text onPress={onCancel} style={{
+                fontSize:14,
+                fontWeight:"400",
+                textDecorationLine:"underline"
+              }}>Cancel request</Text>
             </View>
           </View>
         )}
@@ -178,7 +204,50 @@ export default function StatusCart({
         )}
         
       </View>
-      <View style={instruction||attachment?[styles.box, { paddingBottom: 0 }]:null}>
+      {vendor?(
+        <View style={[styles.box, { paddingBottom: 0 }]}>
+        <Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>
+        {instruction?(
+          <>
+            <Text style={[styles.small, styles.mt16]}>{instruction}</Text>
+          </>
+        ):(<Text style={[styles.small, styles.mt16]}>No Instruction message found</Text>)}
+        {attachment && (
+          <View
+            style={[
+              {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+              styles.mt16,
+            ]}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+              <SvgXml xml={icon} />
+              <Text
+                numberOfLines={1}
+                style={[styles.small, { marginLeft: 8, flex: 1 }]}>
+                {attachment.substring(attachment.lastIndexOf("/") + 1)}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => {
+                Linking.openURL(attachment);
+              }}
+              style={{
+                marginLeft: 20,
+              }}>
+              <Text style={[styles.small, { color: "#4ADE80" }]}>View</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
+      ):(<View style={instruction||attachment?[styles.box, { paddingBottom: 0 }]:null}>
         {instruction||attachment?(<Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>):null}
         {instruction && (
           <>
@@ -219,7 +288,7 @@ export default function StatusCart({
             </Pressable>
           </View>
         )}
-      </View>
+      </View>)}
       <View style={{height:36}}/>
     </View>
   );
@@ -299,6 +368,55 @@ const exporters = (key) => {
       return {
         title: "Order Accepted",
         color: "#4ADE80",
+      };
+    case "WAITING_FOR_PAYMENT":
+      return {
+        title: "Order Accepted",
+        color: "#4ADE80",
+      };
+    case "PROCESSING":
+      return {
+        title: "Processing",
+        color: "#4ADE80",
+      };
+    case "DELIVERED":
+      return {
+        title: "Delivered",
+        color: "#4ADE80",
+      };
+    case "REFUNDED":
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
+    case "CANCELLED":
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
+    case "COMPLETED":
+      return {
+        title: "Completed",
+        color: "#4ADE80",
+      };
+    default:
+      return {
+        title: "Unknown",
+        color: "#000000",
+      };
+  }
+};
+const exportersVendor = (key) => {
+  switch (key) {
+    case "WAITING_FOR_ACCEPT":
+      return {
+        title: "Waiting for accept",
+        color: "#7566FF",
+      };
+    case "ACCEPTED":
+      return {
+        title: "Payment pending",
+        color: "#7566FF",
       };
     case "WAITING_FOR_PAYMENT":
       return {

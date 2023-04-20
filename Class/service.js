@@ -568,11 +568,18 @@ export const acceptTimeRequest = async (token, orderId, newTime, action) => {
 
   return res;
 };
-export const completeOrderDelivery = async (token, orderId) => {
+export const completeOrderDelivery = async (
+  token,
+  orderId,
+  proofImage,
+  proofText
+) => {
   const res = await axios.post(
     `${url}/server/orders/delivered`,
     {
       orderId: orderId,
+      proofText: proofText,
+      proofImage: proofImage,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -640,7 +647,9 @@ export const createVendorOrder = async (
   agreement,
   selectedPackage,
   subsData,
-  installmentData
+  installmentData,
+  gigId,
+  gigTitle
 ) => {
   const data = {
     userId: userId,
@@ -658,6 +667,8 @@ export const createVendorOrder = async (
     selectedPackage: selectedPackage,
     subsData: subsData,
     installmentData: installmentData,
+    gigId: gigId,
+    gigTitle: gigTitle,
   };
   //console.log(data)
   const res = await axios.post(
@@ -678,6 +689,8 @@ export const createVendorOrder = async (
       selectedPackage: selectedPackage,
       subsData: subsData,
       installmentData: installmentData,
+      gigId: gigId,
+      gigTitle: gigTitle,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -1072,7 +1085,6 @@ export const submitVerificationCompany = async (token, data) => {
   );
   return res;
 };
-
 export const getVerificationDetails = async (token, serviceId) => {
   const res = await axios.get(
     `${url}/server/services/get-verification/${serviceId}`,
@@ -1082,7 +1094,6 @@ export const getVerificationDetails = async (token, serviceId) => {
   );
   return res;
 };
-
 export const saveBankDetails = async (token, data) => {
   const res = await axios.post(`${url}/server/balance/add-bank`, data, {
     headers: { Authorization: `Bearer ${token}` },
@@ -1095,7 +1106,6 @@ export const getBankDetails = async (token, accountId) => {
   });
   return res;
 };
-
 export const requestWithdraw = async (token, data) => {
   const res = await axios.post(`${url}/server/balance/request-withdraw`, data, {
     headers: { Authorization: `Bearer ${token}` },
@@ -1112,7 +1122,6 @@ export const setLikeGigs = async (token, gigId) => {
   );
   return res;
 };
-
 export const getLikeGigs = async (token) => {
   const res = await axios.get(`${url}/server/services/gigs/liked`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -1217,6 +1226,18 @@ export const cancelOrderByVendor = async (token, orderId) => {
   const res = await axios.post(
     `${url}/server/orders/vendor/cancel/${orderId}`,
     {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res;
+};
+export const cancelRequestDate = async (token, orderId) => {
+  const res = await axios.post(
+    `${url}/server/orders/cancel-new-delivery-date-request`,
+    {
+      orderId: orderId,
+    },
     {
       headers: { Authorization: `Bearer ${token}` },
     }

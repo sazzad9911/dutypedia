@@ -2,7 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 
 export default function ImportantNotice({ navigation, route }) {
@@ -10,6 +10,7 @@ export default function ImportantNotice({ navigation, route }) {
   const type = route?.params?.type;
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
+  const vendor=useSelector(state=>state.vendor)
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -34,7 +35,20 @@ export default function ImportantNotice({ navigation, route }) {
             marginTop: 24,
           }}>
           <SvgXml xml={light} />
-          <Text
+          {vendor?(
+            <Text
+            style={{
+              marginLeft: 8,
+              color: "#1A1A1A",
+              lineHeight: 32,
+              fontSize: 24,
+              fontWeight: "500",
+              flex: 1,
+            }}>
+            {type=="FAILED"?`Refund Policy and Process`:type=="DELIVERED"?`Product Received? Click 'Yes' Within 72 Hours!`:`Delivery Time and Profile Rating.`}
+          </Text>
+          ):(
+            <Text
             style={{
               marginLeft: 8,
               color: "#1A1A1A",
@@ -45,8 +59,23 @@ export default function ImportantNotice({ navigation, route }) {
             }}>
             {type=="FAILED"?`Refund Policy and Process`:type=="DELIVERED"?`Product Received? Click 'Yes' Within 72 Hours!`:`Regarding timely delivery for a positive experience`}
           </Text>
+          )}
         </View>
-        <Text
+        {vendor?(
+          <Text
+          style={{
+            fontSize: 16,
+            lineHeight: 24,
+            fontWeight: "400",
+            marginTop: 24,
+          }}>
+          {type=="FAILED"
+            ? `Dear valued ${name}, we understand that sometimes an order may not be delivered as expected. In such cases, we will refund your payment within 7 working days. However, if you have not received your refund within this time frame, please do not hesitate to contact our support team for further assistance. We are committed to ensuring that you have a seamless experience on our platform, and we thank you for your understanding.`:
+            type=="DELIVERED"?(<Text>Upon receiving your product, kindly click on the "Yes, I Received" button. Failure to do so within 72 hours will result in an automatic marking of the item as received. Rest assured, we will notify you three times before this happens. For any queries, please feel free to contact our <Text style={{color:"#4ADE80"}}>support center</Text>.</Text>)
+            : `Dear ${name}, please be advised that timely delivery is crucial for maintaining a positive reputation on our platform. If you are unable to deliver the order within the specified timeframe, it is recommended that you communicate with the buyer and request an extension. If the buyer has already paid and you are unable to deliver the order, a refund will be issued to the buyer, which may have a negative impact on your profile rating. Thank you for your understanding and cooperation in ensuring a positive experience for all members of our community.`}
+        </Text>
+        ):(
+          <Text
           style={{
             fontSize: 16,
             lineHeight: 24,
@@ -58,6 +87,7 @@ export default function ImportantNotice({ navigation, route }) {
             type=="DELIVERED"?(<Text>Upon receiving your product, kindly click on the "Yes, I Received" button. Failure to do so within 72 hours will result in an automatic marking of the item as received. Rest assured, we will notify you three times before this happens. For any queries, please feel free to contact our <Text style={{color:"#4ADE80"}}>support center</Text>.</Text>)
             : `Dear ${name}, please be advised that timely delivery is crucial for maintaining a positive experience on our platform. If a seller is unable to deliver the order within the specified timeframe, they may request an extension, or you can communicate with them to find a resolution. If the seller is unable to deliver the order, a refund will be issued to you, and their profile rating may be negatively impacted. We are committed to ensuring a safe and positive experience for all members of our community, and we appreciate your cooperation. Thank you for choosing our platform.`}
         </Text>
+        )}
       </View>
     </ScrollView>
   );

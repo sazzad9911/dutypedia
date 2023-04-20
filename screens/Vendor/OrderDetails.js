@@ -34,6 +34,7 @@ import {
   vendorCancelInstallment,
   rejectRefoundInstallment,
   refoundInstallment,
+  cancelRequestDate,
 } from "../../Class/service";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
@@ -200,8 +201,8 @@ const OrderDetails = ({ navigation, route }) => {
       return;
     }
     if (ListSelection.length == 0) {
-      setServiceError("*There at list one service required");
-      ref.current.scrollTo({ y: 200 });
+      Alert.alert("*There at list one service required");
+
       return;
     }
     // if (Facilities.length == 0) {
@@ -339,15 +340,13 @@ const OrderDetails = ({ navigation, route }) => {
   };
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      if(data){
-        dataLoader(data.id)
+      if (data) {
+        dataLoader(data.id);
       }
     });
   }, []);
-  const addService=()=>{
-    const gigs = data.service.gigs.filter(
-      (d) => d.type == "STARTING"
-    );
+  const addService = () => {
+    const gigs = data.service.gigs.filter((d) => d.type == "STARTING");
     if (gigs[0].services.category) {
       dispatch({
         type: "SET_NEW_LIST_DATA",
@@ -358,7 +357,7 @@ const OrderDetails = ({ navigation, route }) => {
       });
       navigation.navigate("AddServiceList", {
         NewDataList: serverToLocal(
-         gigs[0].services.options,
+          gigs[0].services.options,
           gigs[0].services.category
         ),
         facilites: gigs[0].facilites.selectedOptions,
@@ -369,41 +368,55 @@ const OrderDetails = ({ navigation, route }) => {
     } else {
       dispatch({
         type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(
-          gigs[0].services,
-          gigs[0].dashboard
-        ),
+        playload: serverToLocal(gigs[0].services, gigs[0].dashboard),
       });
       navigation.navigate("AddServiceList", {
-        NewDataList: serverToLocal(
-         gigs[0].services,
-          gigs[0].dashboard
-        ),
+        NewDataList: serverToLocal(gigs[0].services, gigs[0].dashboard),
         facilites: gigs[0].facilites.selectedOptions,
         setListData: setListData,
         name: "VendorOrderDetails",
         data: data,
       });
     }
-  }
+  };
+  const cancelRequest = async () => {
+    //const res=
+    setLoader(true);
+    try {
+      await cancelRequestDate(user.token, data.id);
+      setLoader(false);
+      socket.emit("updateOrder", {
+        receiverId: data.user.id,
+        order: data,
+      });
+      socket.emit("updateOrder", {
+        receiverId: user.user.id,
+        order: data,
+      });
+    } catch (err) {
+      setLoader(false);
+      Alert.alert(err.message);
+    }
+  };
 
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader/>
+        <ActivityLoader />
       </View>
     );
   }
-  return(
-    <SafeAreaView style={{flex:1}}>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-      <InfoCart vendor={true}
+        <InfoCart
+          vendor={true}
           onClick={() => {
             navigation.navigate("UserProfile", {
-              user:{
-                user:data.user,
-                userId:data.user.id
-              }
+              user: {
+                user: data.user,
+                userId: data.user.id,
+              },
             });
           }}
           onMessage={() => {
@@ -419,6 +432,10 @@ const OrderDetails = ({ navigation, route }) => {
               username: data.user.username,
             });
           }}
+          onAgreement={() => {
+            navigation.navigate("ServiceAgreement", { data: data?.agreement });
+          }}
+          paid={data?.paid}
           username={data?.user.username}
           uri={data?.user?.profilePhoto}
           name={`${data?.user?.firstName} ${data?.user?.lastName}`}
@@ -429,18 +446,21 @@ const OrderDetails = ({ navigation, route }) => {
             service
           </Text>
         </View>
-        <OrderInfo vendor={true}
+        <OrderInfo
+          vendor={true}
           title={data?.gigTitle}
           facilities={Facilities}
           services={ListData}
           orderId={data?.id}
           date={data?.createdAt}
           onAddService={addService}
+          status={data?.status}
         />
         <StatusCart
+          vendor={true}
           onPress={() => {
             navigation.navigate("ImportantNotice", {
-              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              name: `${user?.user?.firstName} ${user?.user?.lastName}`,
             });
           }}
           price={data?.offerPrice ? data?.offerPrice : data?.amount}
@@ -448,13 +468,13 @@ const OrderDetails = ({ navigation, route }) => {
           status={data?.status}
           onMore={() => {
             navigation.navigate("ImportantNotice", {
-              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              name: `${user?.user?.firstName} ${user?.user?.lastName}`,
               type: "FAILED",
             });
           }}
-          onDelivered={()=>{
+          onDelivered={() => {
             navigation.navigate("ImportantNotice", {
-              name: `${data?.user?.firstName} ${data?.user?.lastName}`,
+              name: `${user?.user?.firstName} ${user?.user?.lastName}`,
               type: "DELIVERED",
             });
           }}
@@ -467,10 +487,83 @@ const OrderDetails = ({ navigation, route }) => {
           onRejectTime={() => timeRequest(false)}
           deliveryText={data?.proofText}
           deliveryImage={data?.proofImage}
+          onCancel={cancelRequest}
         />
+        {data?.status == "ACCEPTED" && (
+          <Text style={[styles.font, { marginBottom: 8, color: "#4ADE80" }]}>
+            Order accepted
+          </Text>
+        )}
+        {data?.status == "DELIVERED" && (
+          <Text style={[styles.font, { marginBottom: 32, color: "#4ADE80" }]}>
+            Completed
+          </Text>
+        )}
+        {data?.cancelledBy ? (
+          <Text style={styles.font}>
+            {data.cancelledBy == "USER"
+              ? "Buyer canceled this order"
+              : "You cancelled the order"}
+          </Text>
+        ) : !data.cancelledBy && exporters(data?.status).title == "Failed" ? (
+          <Text style={styles.font}>Delivery date has expired</Text>
+        ) : (
+          <></>
+        )}
+        {data?.status == "WAITING_FOR_ACCEPT" && (
+          <IconButton
+            onPress={validate}
+            active={true}
+            style={[styles.button, { marginBottom: 0 }]}
+            title={"Accept order"}
+          />
+        )}
+        {data?.status == "PROCESSING" && (
+          <View>
+            <Text
+              style={[
+                styles.text,
+                { marginBottom: 12, marginHorizontal: 20, textAlign: "center" },
+              ]}>
+              click <Text style={{ color: "#4CD964" }}>yes i delivered</Text> if
+              you already delivered your order
+            </Text>
+            <IconButton
+              onPress={() => {
+                navigation.navigate("OrderDelivery", { order: data });
+              }}
+              active={true}
+              style={[styles.button, { marginBottom: 0 }]}
+              title={"Yes I delivered"}
+            />
+          </View>
+        )}
+        {data?.status == "PROCESSING" && !data.requestedDeliveryDate && (
+          <IconButton
+            onPress={() => {
+              navigation.navigate("NeedExtraTIme", { data: data });
+            }}
+            style={[styles.button, { marginTop: 12, marginBottom: 0 }]}
+            title={"Need extra time"}
+          />
+        )}
+        {data?.status == "WAITING_FOR_ACCEPT" ||
+        data?.status == "ACCEPTED" ||
+        data?.status == "PROCESSING" ? (
+          <IconButton
+            onPress={() => {
+              navigation.navigate("CancelOrderConfirmation", {
+                order: data,
+                name: `${user?.user?.firstName} ${user?.user?.lastName}`,
+              });
+            }}
+            style={[styles.button, { marginTop: 12 }]}
+            title={"Cancel order"}
+          />
+        ) : null}
       </ScrollView>
     </SafeAreaView>
-  )
+  );
   return (
     <SafeAreaView
       style={{
@@ -691,7 +784,7 @@ const OrderDetails = ({ navigation, route }) => {
             data.type != "ONETIME" &&
             data.type != "PACKAGE" &&
             type != "SUBS" &&
-            type != "INSTALLMENT" && ( 
+            type != "INSTALLMENT" && (
               <IconButton
                 onPress={() => {
                   const gigs = data.service.gigs.filter(
@@ -707,7 +800,7 @@ const OrderDetails = ({ navigation, route }) => {
                     });
                     navigation.navigate("AddServiceList", {
                       NewDataList: serverToLocal(
-                       gigs[0].services.options,
+                        gigs[0].services.options,
                         gigs[0].services.category
                       ),
                       facilites: gigs[0].facilites.selectedOptions,
@@ -725,7 +818,7 @@ const OrderDetails = ({ navigation, route }) => {
                     });
                     navigation.navigate("AddServiceList", {
                       NewDataList: serverToLocal(
-                       gigs[0].services,
+                        gigs[0].services,
                         gigs[0].dashboard
                       ),
                       facilites: gigs[0].facilites.selectedOptions,
@@ -2266,37 +2359,62 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 32,
   },
-  font:{
-    fontSize:16,
-    fontWeight:"500",
-    textAlign:"center",
-    marginBottom:32,
-    color:"#EC2700"
-  }
+  font: {
+    fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
+    marginBottom: 32,
+    color: "#EC2700",
+  },
 });
 export default OrderDetails;
 const exporters = (key) => {
   switch (key) {
     case "WAITING_FOR_ACCEPT":
-      return "Wait for accept order";
+      return {
+        title: "Request pending",
+        color: "#7566FF",
+      };
     case "ACCEPTED":
-      return "Waiting for payment";
+      return {
+        title: "Order Accepted",
+        color: "#4ADE80",
+      };
     case "WAITING_FOR_PAYMENT":
-      return "Waiting for payment";
+      return {
+        title: "Order Accepted",
+        color: "#4ADE80",
+      };
     case "PROCESSING":
-      return "Processing";
+      return {
+        title: "Processing",
+        color: "#4ADE80",
+      };
     case "DELIVERED":
-      return "Delivered";
+      return {
+        title: "Delivered",
+        color: "#4ADE80",
+      };
     case "REFUNDED":
-      return "Refunded";
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
     case "CANCELLED":
-      return "Cancelled";
+      return {
+        title: "Failed",
+        color: "#EC2700",
+      };
     case "COMPLETED":
-      return "Completed";
-    case "PENDING":
-      return "Pending";
+      return {
+        title: "Completed",
+        color: "#4ADE80",
+      };
     default:
-      return "Unknown";
+      return {
+        title: "Unknown",
+        color: "#000000",
+      };
   }
 };
 const attachmentIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.643" height="17.152" viewBox="0 0 12.643 17.152">

@@ -95,6 +95,7 @@ const AddServiceList = (props) => {
   if (Array.isArray(Services) && Services.length == 0) {
     return null;
   }
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -239,7 +240,7 @@ const ComponentScreen = (props) => {
       ) : (
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
-          <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+          
           <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}

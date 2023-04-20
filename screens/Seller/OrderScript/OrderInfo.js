@@ -13,7 +13,8 @@ export default function OrderInfo({
   title,
   facilities,
   vendor,
-  onAddService
+  onAddService,
+  status
 }) {
   const [wid, setWid] = useState(0);
   return (
@@ -95,7 +96,7 @@ export default function OrderInfo({
               Add the service you want to sell
             </Text>
             <View style={{ flexDirection: "row",marginTop:12 }}>
-              <IconButton onPress={onAddService} active={true} LeftIcon={()=><SvgXml xml={icon}/>}
+              <IconButton disabled={status=="CANCELLED"?true:false} onPress={onAddService} active={true} LeftIcon={()=><SvgXml xml={icon}/>}
                style={styles.button} title={"Add service"} />
             </View>
           </View>

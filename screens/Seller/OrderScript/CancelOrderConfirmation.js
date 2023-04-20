@@ -3,12 +3,13 @@ import { ScrollView, View, Text, Alert } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import customStyle from "../../../assets/stylesheet";
-import { cancelOrderByUser } from "../../../Class/service";
+import { cancelOrderByUser, cancelOrderByVendor } from "../../../Class/service";
 import { socket } from "../../../Class/socket";
 import ActivityLoader from "../../../components/ActivityLoader";
 import IconButton from "../../../components/IconButton";
 import ViewMore from "../../../Hooks/ViewMore";
 import { styles } from "../../create_dashboard/BusinessTitle";
+import TextOp from "../../create_dashboard/TextOp";
 
 export default function CancelOrderConfirmation({navigation,route}) {
   const [layoutHeight, setLayoutHeight] = useState();
@@ -16,9 +17,29 @@ export default function CancelOrderConfirmation({navigation,route}) {
   const order=route?.params?.order;
   const [loader,setLoader]=useState(false)
   const user=useSelector(state=>state.user)
+  const vendor=useSelector(state=>state.vendor)
 
   const cancelTheOrder=useCallback(()=>{
     setLoader(true)
+    if(vendor){
+      cancelOrderByVendor(user.token,order.id).then(res=>{
+        setLoader(false)
+        navigation.navigate("VendorOrderDetails",{data:order})
+        socket.emit("updateOrder", {
+          receiverId: order.service.user.id,
+          order: order
+        });
+        socket.emit("updateOrder", {
+          receiverId: order.user.id,
+          order: order
+        });
+        
+      }).catch(err=>{
+        setLoader(false)
+        Alert.alert(err.response.data.msg)
+      })
+      return
+    }
     cancelOrderByUser(user.token,order.id).then(res=>{
       setLoader(false)
       navigation.navigate("OrderDetails",{data:order})
@@ -84,7 +105,46 @@ export default function CancelOrderConfirmation({navigation,route}) {
             Important message
           </Text>
         </View>
-        <ViewMore
+        {vendor?(
+          <ViewMore view={true}
+          style={{
+            marginTop: 24,
+            
+          }}
+          lowHeight={75}
+          width={135}
+          
+          position={{
+            bottom:0
+          }}
+          height={layoutHeight}
+          component={
+            <View
+              onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
+              style={{ width: "100%" }}>
+              <TextOp
+                style={{ marginTop: 0 }}
+                text={
+                  "Cancelling an order may negatively impact your seller rating."
+                }
+              />
+              <TextOp
+                style={{ marginTop: 5 }}
+                text={
+                  "If you cancel an order that has already been paid for, the buyer may request a refund, which can result in a loss of revenue for you."
+                }
+              />
+              <TextOp
+                style={{ marginTop: 5 }}
+                text={
+                  "If you cancel orders frequently, your account may be flagged and reviewed by our team for potential violation of our terms and conditions."
+                }
+              />
+              
+            </View>
+          }
+        />
+        ):(<ViewMore
           style={{
             marginTop: 24,
           }}
@@ -106,7 +166,8 @@ export default function CancelOrderConfirmation({navigation,route}) {
               Thank you.
             </Text>
           }
-        />
+        />)}
+        
       </View>
     </ScrollView>
   );

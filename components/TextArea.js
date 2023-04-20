@@ -22,6 +22,7 @@ const TextArea = ({
   innerRef,
   value,
   placeholderTextColor,
+  fontStyle
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const ref = React.useRef();
@@ -69,10 +70,10 @@ const TextArea = ({
               onSubmitEditing();
             }
           }}
-          style={{
+          style={[{
             fontFamily: "Poppins-Light",
             fontSize: 16,
-          }}
+          },fontStyle]}
           onFocus={() => {
             setFocus(true);
           }}

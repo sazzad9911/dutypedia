@@ -1136,7 +1136,7 @@ const MainProfile = (props) => {
               type={""}
             />
             <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/privacy-policy",title:"Privacy Policy"})
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/privacy-policy",title:"Privacy Policy"})
             }}
               icon={agreement}
               title={"Privacy policy"}
@@ -1144,7 +1144,7 @@ const MainProfile = (props) => {
               type={""}
             />
             <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/terms-and-conditions",title:"Terms & Conditions"})
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/terms-and-conditions",title:"Terms & Conditions"})
             }}
               icon={terms}
               title={"Terms & condition"}
@@ -1152,7 +1152,7 @@ const MainProfile = (props) => {
               type={""}
             />
             <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/refund-policy",title:"Refund Policy"})
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/refund-policy",title:"Refund Policy"})
             }}
               icon={refund}
               title={"Refund policy"}
@@ -1160,7 +1160,7 @@ const MainProfile = (props) => {
               type={""}
             />
             <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/order-policy",title:"Order Policy"})
+              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/order-policy",title:"Order Policy"})
             }}
               icon={refund}
               title={"Order policy"}

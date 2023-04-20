@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -9,13 +9,13 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
-import RadioButton from "../../components/RadioButton";
-import { Color } from "../../assets/colors";
+import RadioButton from "../../../components/RadioButton";
+import { Color } from "../../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
-import Input from "./../../components/Input";
-import IconButton from "./../../components/IconButton";
+import Input from "./../../../components/Input";
+import IconButton from "./../../../components/IconButton";
 import { SvgXml } from "react-native-svg";
-import { CheckBox } from "../Seller/Pricing";
+import { CheckBox } from "../../Seller/Pricing";
 import {
   acceptOrder,
   createOrder,
@@ -24,76 +24,33 @@ import {
   getLastOrder,
   getOfflineOrders,
   getOrders,
-} from "../../Class/service";
-import { localOptionsToServer } from "../../Class/dataConverter";
+} from "../../../Class/service";
+import { localOptionsToServer } from "../../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
-import { socket } from "../../Class/socket";
-import { setOfflineOrders } from "../../Reducers/offlineOrders";
-import ActivityLoader from "../../components/ActivityLoader";
-import SubHeader from "../../components/SubHeader";
-import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import { socket } from "../../../Class/socket";
+import { setOfflineOrders } from "../../../Reducers/offlineOrders";
+import ActivityLoader from "../../../components/ActivityLoader";
+import SubHeader from "../../../components/SubHeader";
+import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 import { useIsFocused } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
-const AcceptOrder = (props) => {
-  const isDark = useSelector((state) => state.isDark);
-  const colors = new Color(isDark);
-  const primaryColor = colors.getPrimaryColor();
-  const textColor = colors.getTextColor();
-  const backgroundColor = colors.getBackgroundColor();
+const ServiceAgreement = (props) => {
   const [Service, setService] = React.useState();
   const [Description, setDescription] = React.useState();
   const [Deliver, setDeliver] = React.useState();
-  const [Condition_1, setCondition_1] = React.useState(false);
-  const [Condition_2, setCondition_2] = React.useState(false);
-  const [Condition_3, setCondition_3] = React.useState(false);
-  const [Condition_4, setCondition_4] = React.useState(false);
-  const [ServiceError, setServiceError] = React.useState();
-  const [DeliverError, setDeliverError] = React.useState();
-  const [Confirmation_1Error, setConfirmation_1Error] = React.useState();
-  const [Confirmation_2Error, setConfirmation_2Error] = React.useState();
-  const [DescriptionError, setDescriptionError] = React.useState();
-  const user = useSelector((state) => state.user);
-  const ListSelection = useSelector((state) => state.ListSelection);
   const ref = React.useRef();
-  const params = props.route.params;
-  const [Loader, setLoader] = React.useState(true);
   const navigation = props.navigation;
-  const [DeliverMethod, setDeliverMethod] = React.useState({
-    online: [
-      "Online File Share",
-      "Deliver In Video/Voice Call",
-      "Delivered In Another Platform",
-      "Other",
-    ],
-    offline: [
-      {
-        title: "My Self",
-        // options: [
-        //   "By Walk",
-        //   "By Vehicles",
-        //   "Customer Will Come To My Place",
-        //   "Other",
-        // ],
-      },
-      // { title: "Courier Service" },
-      { title: "Our employees" },
-      { title: "Other" },
-    ],
-  });
+  const [DeliverMethod, setDeliverMethod] = React.useState();
   const [Select, setSelect] = React.useState();
   const [SubSelect, setSubSelect] = React.useState();
   const [CourierServiceName, setCourierServiceName] = React.useState();
   const [CourierServiceAddress, setCourierServiceAddress] = React.useState();
-  const vendor = useSelector((state) => state.vendor);
   const [OtherService, setOtherService] = React.useState();
-  const newVendor = params.vendor;
-  const data = params.data;
-  const userId = params.userId;
   const dispatch = useDispatch();
-  const selectedPackage = params.selectedPackage;
-  const userOffline = params.offline;
   const isFocused = useIsFocused();
+  const data = props?.route?.params?.data;
+  //console.log(data);
   //console.log(userId)
   //console.log(data)
   React.useEffect(() => {
@@ -108,285 +65,23 @@ const AcceptOrder = (props) => {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  React.useEffect(() => {
-    if (user && vendor) {
-      getLastOrder(user.token, vendor.service.id)
-        .then((res) => {
-          //console.log(res.data);
-          setLoader(false);
-          const data = res.data;
-          if (data) {
-            const agreement = data.agreement;
-            setService(agreement.serviceType);
-            setDeliver(agreement.deliverBy);
-            setSelect(
-              agreement.deliverMethodPhysical
-                ? agreement.deliverMethodPhysical
-                : agreement.deliverMethodOnline
-            );
-            setDescription(agreement.selfDeliverMethodOther);
-            setCourierServiceName(agreement.courierServiceName);
-            setCourierServiceAddress(agreement.courierServiceAddress);
-            setOtherService(agreement.otherServiceType);
-          }
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-    }
-  }, [user, vendor]);
-
-  const validate = () => {
-    setServiceError(null);
-    setDeliverError(null);
-    setConfirmation_1Error(null);
-    setConfirmation_2Error(null);
-    //console.log(Description);
-    if (!Service) {
-      setServiceError("This field is required");
-      ref.current.scrollTo({ y: 10 });
-      return;
-    }
-    if (Service == "Other" && !OtherService) {
-      setServiceError("This field is required");
-      ref.current.scrollTo({ y: 10 });
-      return;
-    }
-    if (!Deliver || !Select) {
-      setDeliverError("This field is required");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    if (Select == "My Self " ) {
-      setDeliverError("This field is required");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    if (Select == "Courier Service" && !CourierServiceName) {
-      setDeliverError("This field is required with typing");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    if (Select == "Courier Service" && !CourierServiceAddress) {
-      setDeliverError("This field is required with typing");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    if (
-      Select != "My Self" &&
-      Select != "Our employees" &&
-      Select != "My Self" &&
-      !Description
-    ) {
-      setDeliverError("This field is required with typing");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    if (SubSelect == "Other" && !Description) {
-      setDeliverError("This field is required with typing");
-      ref.current.scrollTo({ y: 400 });
-      return;
-    }
-    // if (
-    //   (Select == "Courier Service" && !CourierServiceName) ||
-    //   !CourierServiceAddress
-    // ) {
-    //   setDeliverError("This field is required");
-    //   ref.current.scrollTo({ y: 400 });
-    //   return;
-    // }
-    if (!Condition_1 || !Condition_2 || !Condition_3) {
-      setConfirmation_1Error("Be agree with all conditions");
-      ref.current.scrollTo({ y: 900 });
-      return;
-    }
-    if (!Condition_4) {
-      setConfirmation_2Error("This field is required");
-      return;
-    }
-    if (!params.facilities || !params.id) {
-      Alert.alert("Ops!", "Something went wrong. Please try again.");
-      return;
-    }
-
-    setLoader(true);
-    if (userOffline) {
-      createVendorOrderOffline(
-        user.token,
-        userId,
-        data.facilites,
-        data.services,
-        data.service.id,
-        data.type,
-        parseInt(selectedPackage ? selectedPackage.price : data.price),
-        Description,
-        parseInt(selectedPackage ? selectedPackage.price : data.price),
-        params.from,
-        params.to,
-        "VENDOR",
-        {
-          deliverMethodOnline: Select,
-          selfDeliverMethodOther: Description,
-          courierServiceName: CourierServiceName,
-          courierServiceAreaName: CourierServiceAddress,
-          otherServiceType: OtherService,
-          deliverBy: Deliver,
-          serviceType: Service,
-        },
-        selectedPackage ? selectedPackage : undefined,
-        data.subsData ? data.subsData : undefined,
-        data.installmentData ? data.installmentData : undefined
-      )
-        .then((res) => {
-          //getLoadData(res.data.receiverId,res.data.order)
-          //console.log(res.data.order)
-          getLoadData();
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-      return;
-    }
-    
-    if (newVendor) {
-      //console.log(data.installmentData)
-      createVendorOrder(
-        user.token,
-        userId,
-        data.facilites,
-        data.services,
-        data.service.id,
-        data.type,
-        parseInt(selectedPackage ? selectedPackage.price : data.price),
-        Description,
-        parseInt(selectedPackage ? selectedPackage.price : data.price),
-        params.from,
-        params.to,
-        "VENDOR",
-        {
-          deliverMethodOnline: Select,
-          selfDeliverMethodOther: Description,
-          courierServiceName: CourierServiceName,
-          courierServiceAreaName: CourierServiceAddress,
-          otherServiceType: OtherService,
-          deliverBy: Deliver,
-          serviceType: Service,
-        },
-        selectedPackage ? selectedPackage : undefined,
-        data.subsData ? data.subsData : undefined,
-        data.installmentData ? data.installmentData : undefined,
-        data.id,
-        data.title
-      )
-        .then((res) => {
-          //getLoadData(res.data.receiverId,res.data.order)
-          //console.log(res.data.order)
-          socket.emit("newOrder", {
-            receiverId: user.user.id,
-            order: {
-              type: "vendor",
-              data: res.data.order,
-            },
-          });
-          socket.emit("newOrder", {
-            receiverId: res.data.receiverId,
-            order: {
-              type: "user",
-              data: res.data.order,
-            },
-          });
-          setTimeout(() => {
-            setLoader(false);
-            navigation.navigate(data.type, { reload: res });
-          }, 300);
-        })
-        .catch((err) => {
-          setLoader(false);
-          console.warn(err.response.data.msg);
-        });
-      return;
-    }
-    acceptOrder(user.token, {
-      orderId: params.id,
-      selectedServices: {
-        options: localOptionsToServer(ListSelection),
-        type: ListSelection[0].subTitle ? 3 : ListSelection[0].title ? 2 : 1,
-        category: params.data.service.category,
-      },
-      deliverBy: Deliver,
-      serviceType: Service,
-      deliverMethodPhysical: Select,
-      facilites: params.facilities,
-      deliverMethodOnline: Select,
-      selfDeliverMethodOther: Description,
-      courierServiceName: CourierServiceName,
-      courierServiceAreaName: CourierServiceAddress,
-      otherServiceType: OtherService,
-    })
-      .then((res) => {
-        socket.emit("updateOrder", {
-          receiverId: user.user.id,
-          order: {
-            type: "vendor",
-            data: res.data.order,
-          },
-        });
-        socket.emit("updateOrder", {
-          receiverId: res.data.receiverId,
-          order: {
-            type: "user",
-            data: res.data.order,
-          },
-        });
-        setTimeout(() => {
-          setLoader(false);
-          navigation.navigate("VendorOrder", { reload: res });
-        }, 300);
-        // getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
-        //   if (ress.data) {
-        //     dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-        //     dispatch({ type: "SET_ORDER_SOCKET", playload: ress.data });
-        //     setLoader(false);
-        //     navigation.navigate("VendorOrder", { reload: response });
-        //     //console.log(res.data.orders);
-        //     //console.log(res.data.orders[0].service.serviceCenterName);
-        //   }
-        // });
-      })
-      .catch((error) => {
-        setLoader(false);
-        Alert.alert("Opps!", error.response.data.msg);
-        console.warn(error.response.data.msg);
-        navigation.goBack();
-        //console.warn(error.response.data.msg);
-      });
-  };
-  const getLoadData = () => {
-    getOfflineOrders(user.token, vendor.service.id)
-      .then((res) => {
-        dispatch(setOfflineOrders(res.data.orders));
-        navigation.navigate(data.type, { reload: res });
-      })
-      .catch((err) => {
-        console.warn(err.response.data.msg);
-      });
-  };
-  if (Loader) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader />
-      </View>
+  useEffect(() => {
+    setDeliver(data?.deliverBy);
+    setService(data?.serviceType);
+    setDeliverMethod(
+      data?.deliverMethodOnline
+        ? data?.deliverMethodOnline
+        : data?.deliverMethodPhysical
     );
-  }
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <SubHeader
         fontStyle={{
           fontSize: 20,
         }}
-        title={"Information collection"}
+        title={"Collected Information "}
         {...props}
       />
       <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
@@ -398,116 +93,30 @@ const AcceptOrder = (props) => {
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
+              flex: 1,
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={[styles.text, { flex: 1 }]}>
               What Type Of Service/Item You Want To provide?
             </Text>
           </View>
-          {ServiceError && (
-            <Text style={{ color: "red", marginVertical: 5 }}>
-              {ServiceError}
-            </Text>
-          )}
 
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Teaching/Tutorial");
-              }}
-              value={Service == "Teaching/Tutorial" ? true : false}
-              title="Teaching/Tutorial"
-            />
+          <View
+            style={{
+              flexDirection: "row",
+            }}>
+            <Pressable style={styles.box}>
+              <RadioButton
+                dark={true}
+                style={{ margin: 0, height: 20, width: 20 }}
+                selectStyle={{ height: 16, width: 16 }}
+                value={true}
+                title={Service}
+              />
+            </Pressable>
           </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Consultation");
-              }}
-              value={Service == "Consultation" ? true : false}
-              title="Consultation"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Manufacture");
-              }}
-              value={Service == "Manufacture" ? true : false}
-              title="Manufacture"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Fixing");
-              }}
-              value={Service == "Fixing" ? true : false}
-              title="Fixing"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Recover");
-              }}
-              value={Service == "Recover" ? true : false}
-              title="Recover"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Build");
-              }}
-              value={Service == "Build" ? true : false}
-              title="Build/Development"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Maintenance");
-              }}
-              value={Service == "Maintenance" ? true : false}
-              title="Maintenance"
-            />
-          </View>
-          <View style={styles.box}>
-            <RadioButton
-              dark={true}
-              style={{ margin: 0, height: 20, width: 20 }}
-              selectStyle={{ height: 16, width: 16 }}
-              onChange={() => {
-                setService("Other");
-              }}
-              value={Service == "Other" ? true : false}
-              title="Other Service"
-            />
-          </View>
-          {Service == "Other" && (
+
+          {/* {Service == "Other" && (
             <Input
               value={OtherService}
               style={{
@@ -518,19 +127,18 @@ const AcceptOrder = (props) => {
               }}
               placeholder="Describe here"
             />
-          )}
+          )} */}
           <View
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={styles.text}>
               How would you like the service to be delivered ?
             </Text>
           </View>
-          {DeliverError && <Text style={{ color: "red" }}>{DeliverError}</Text>}
+
           <View
             style={{
               flexDirection: "row",
@@ -538,82 +146,23 @@ const AcceptOrder = (props) => {
               justifyContent: "space-between",
             }}>
             <Button
-              onPress={() => {
-                setDeliver("Online");
-                setSelect(null);
-                setSubSelect(null);
-                setDescription(null);
-              }}
-              LeftIcon={Deliver == "Online" ? onlineAc : onlineDc}
-              value={Deliver == "Online" ? true : false}
-              title="Online"
-            />
-            <Button
-              onPress={() => {
-                setDeliver("Physical");
-                setSelect(null);
-                setSubSelect(null);
-                setDescription(null);
-              }}
-              LeftIcon={Deliver == "Physical" ? offlineAc : offlineDc}
-              value={Deliver == "Physical" ? true : false}
-              title="Physical"
+              LeftIcon={Deliver == "Online" ? onlineAc : offlineAc}
+              value={true}
+              title={Deliver}
             />
           </View>
-          {Deliver == "Online" ? (
-            <Animated.View entering={FadeIn}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: 32,
-                }}>
-                <SvgXml xml={info} />
-                <View style={{ marginLeft: 10 }}>
-                  <Text style={[styles.text, { marginLeft: 0 }]}>
-                    Delivery method ?
-                  </Text>
-                </View>
-              </View>
-              {DeliverMethod.online.map((doc, i) => (
-                <View style={styles.box} key={i}>
-                  <RadioButton
-                    dark={true}
-                    style={{ margin: 0, height: 20, width: 20 }}
-                    selectStyle={{ height: 16, width: 16 }}
-                    onChange={() => {
-                      setSelect(doc);
-                      setDescription(null);
-                    }}
-                    value={Select == doc ? true : false}
-                    title={doc}
-                  />
-                  {Select == doc && (
-                    <Input
-                      value={Description}
-                      onChange={(e) => {
-                        setDescription(e);
-                      }}
-                      style={{
-                        marginVertical: 10,
-                      }}
-                      placeholder="Service Name"
-                    />
-                  )}
-                </View>
-              ))}
-            </Animated.View>
-          ) : Deliver == "Physical" ? (
-            <Animated.View entering={FadeIn}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: 32,
-                }}>
-                <SvgXml xml={info} />
-                <View style={{ marginLeft: 10 ,flex:1}}>
-                  <Text style={[styles.text, { marginLeft: 0 }]}>
-                    Delivery method ?
-                  </Text>
+          <Animated.View entering={FadeIn}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 32,
+              }}>
+              <SvgXml xml={info} />
+              <View style={{ marginLeft: 10, flex: 1 }}>
+                <Text style={[styles.text, { marginLeft: 0 }]}>
+                  Delivery method ?
+                </Text>
+                {Deliver == "Physical" && (
                   <Text
                     style={{
                       fontSize: 16,
@@ -621,7 +170,7 @@ const AcceptOrder = (props) => {
                       fontWeight: "400",
                       color: "#EC2700",
                       marginBottom: 12,
-                      flex:1
+                      flex: 1,
                     }}>
                     For physical services, you are required to deliver your
                     service in person, face to face with the buyer. For more
@@ -630,69 +179,20 @@ const AcceptOrder = (props) => {
                       Order & delivery Policy section
                     </Text>
                   </Text>
-                </View>
+                )}
               </View>
-              {DeliverMethod.offline.map((doc, i) => (
-                <View style={styles.box} key={i}>
-                  <RadioButton
-                    dark={true}
-                    style={{ margin: 0, height: 20, width: 20 }}
-                    selectStyle={{ height: 16, width: 16 }}
-                    onChange={() => {
-                      setSelect(doc.title);
-                      setDescription(null);
-                      setSubSelect(null);
-                    }}
-                    value={Select == doc.title ? true : false}
-                    title={doc.title}
-                  />
-                  {Select == "My Self " && doc.title == "My Self" && (
-                    <View entering={FadeIn} style={{ marginVertical: 10 }}>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          flexWrap: "wrap",
-                          marginHorizontal: 30,
-                        }}>
-                        {doc.options &&
-                          doc.options.map((doc, i) => (
-                            <RadioButton
-                              style={{ marginLeft: 5, marginTop: 5 }}
-                              key={i}
-                              onChange={() => {
-                                setSubSelect(doc);
-                                setDescription(null);
-                              }}
-                              value={SubSelect == doc ? true : false}
-                              title={doc}
-                            />
-                          ))}
-                      </View>
-                      {SubSelect == "Other" && (
-                        <Input
-                          value={Description}
-                          onChange={(e) => setDescription(e)}
-                          placeholder="Type here"
-                        />
-                      )}
-                    </View>
-                  )}
-                  {Select == "Courier Service" &&
-                    doc.title == "Courier Service" && (
-                      <View style={{ marginBottom: 10 }}>
-                        <Input
-                          value={CourierServiceName}
-                          onChange={(e) => setCourierServiceName(e)}
-                          placeholder="Courier Service Name"
-                        />
-                        <Input
-                          value={CourierServiceAddress}
-                          onChange={(e) => setCourierServiceAddress(e)}
-                          placeholder="Branch or Area Name"
-                        />
-                      </View>
-                    )}
-                  {Select == "Other" && doc.title == "Other" && (
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View style={styles.box}>
+                <RadioButton
+                  dark={true}
+                  style={{ margin: 0, height: 20, width: 20 }}
+                  selectStyle={{ height: 16, width: 16 }}
+                  value={true}
+                  title={DeliverMethod}
+                />
+
+                {/* {Select == "Other" && doc.title == "Other" && (
                     <Input
                       value={Description}
                       onChange={(e) => {
@@ -700,117 +200,47 @@ const AcceptOrder = (props) => {
                       }}
                       placeholder="Type here"
                     />
-                  )}
-                </View>
-              ))}
-            </Animated.View>
-          ) : (
-            <></>
-          )}
+                  )} */}
+              </View>
+            </View>
+          </Animated.View>
           <View
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={styles.text}>
               If you agree, please indicate by checking the box below.
             </Text>
           </View>
-          {Confirmation_1Error && (
-            <Text style={{ color: "red" }}>{Confirmation_1Error}</Text>
-          )}
-          <CheckBox
-            value={Condition_1}
-            onChange={(e) => {
-              setCondition_1((val) => !val);
-            }}
-            style={{
-              marginTop: 24,
-              fontSize: 16,
-              alignItems: "flex-start",
-              lineHeight: 28,
-            }}
-            title="Yes, I have collected all the necessary information and understand what my customer wants."
-          />
-          <CheckBox
-            value={Condition_2}
-            onChange={(e) => {
-              setCondition_2((val) => !val);
-            }}
-            style={{
-              marginTop: 12,
-              fontSize: 16,
-              alignItems: "flex-start",
-              lineHeight: 28,
-            }}
-            title="If I provide a physical service, I will deliver it face to face and use a mask."
-          />
-          <CheckBox
-            value={Condition_3}
-            onChange={(e) => {
-              setCondition_3((val) => !val);
-            }}
-            style={{
-              marginTop: 12,
-              fontSize: 16,
-              alignItems: "flex-start",
-              lineHeight: 28,
-            }}
-            title="I will save all delivery proof documents for future inquiries"
-          />
+          <View style={[styles.flexBox, { marginTop: 24 }]}>
+            <SvgXml style={styles.icon} xml={tick} />
+            <Text style={styles.font}>
+              Yes, I have collected all the necessary information and understand
+              what my customer wants.
+            </Text>
+          </View>
+          <View style={[styles.flexBox, { marginTop: 12 }]}>
+            <SvgXml style={styles.icon} xml={tick} />
+            <Text style={styles.font}>
+              If I provide a physical service, I will deliver it face to face
+              and use a mask.
+            </Text>
+          </View>
+          <View style={[styles.flexBox, { marginTop: 12 }]}>
+            <SvgXml style={styles.icon} xml={tick} />
+            <Text style={styles.font}>
+              I will save all delivery proof documents for future inquiries
+            </Text>
+          </View>
         </View>
+        <View style={{ height: 32 }} />
       </ScrollView>
-      <View
-        style={{
-          paddingTop: 20,
-          paddingHorizontal: 20,
-          paddingBottom:12
-        }}>
-        <View style={{
-          flexDirection:"row",
-          
-        }}>
-          <CheckBox
-            style={{ fontSize: 14 }}
-            value={Condition_4}
-            onChange={(e) => {
-              setCondition_4((val) => !val);
-            }}
-          />
-          <Text style={{
-            fontSize:16,
-            fontWeight:"400",
-            
-          }}>
-            I agree with all the <Text style={{ color: "#0003FF" }}>Order</Text>{" "}
-            & <Text style={{ color: "#0003FF" }}>refund policy</Text>
-          </Text>
-        </View>
-        {Confirmation_2Error && (
-          <Text style={{ color: "red" }}>{Confirmation_2Error}</Text>
-        )}
-        <IconButton active={true}
-          onPress={() => {
-            try {
-              validate();
-            } catch (e) {
-              console.warn(e.message);
-            }
-          }}
-          style={{
-            color: textColor,
-            marginTop: 12,
-            
-          }}
-          title="Confirm"
-        />
-      </View>
     </View>
   );
 };
-export default AcceptOrder;
+export default ServiceAgreement;
 
 const styles = StyleSheet.create({
   box: {
@@ -827,6 +257,21 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     marginLeft: 10,
   },
+  flexBox: {
+    flexDirection: "row",
+    flex: 1,
+  },
+  font: {
+    fontSize: 16,
+    lineHeight: 28,
+    fontWeight: "400",
+    color: "#1A1A1A",
+    flex: 1,
+    marginLeft: 10,
+  },
+  icon: {
+    marginTop: 5,
+  },
 });
 const Button = ({ value, onPress, LeftIcon, title }) => {
   return (
@@ -835,7 +280,7 @@ const Button = ({ value, onPress, LeftIcon, title }) => {
       style={{
         borderWidth: 1,
         borderColor: "#E6E6E6",
-        width: width / 2 - 28,
+        width: width - 40,
         borderRadius: 4,
         justifyContent: "center",
         alignItems: "center",
@@ -986,5 +431,9 @@ const info = `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns=
 <rect width="23.3333" height="31.3333" fill="white"/>
 </clipPath>
 </defs>
+</svg>
+`;
+const tick = `<svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M18.3333 0.84198C17.8667 0.84198 17.45 1.02531 17.15 1.32531L6.66667 11.8253L2.85 7.99198C2.55 7.69198 2.13333 7.50865 1.66667 7.50865C0.75 7.50865 0 8.25865 0 9.17531C0 9.64198 0.183333 10.0586 0.483333 10.3586L5.48333 15.3586C5.78333 15.6586 6.2 15.842 6.66667 15.842C7.13333 15.842 7.55 15.6586 7.85 15.3586L19.5167 3.69198C19.8167 3.39198 20 2.97531 20 2.50865C20 1.59198 19.25 0.84198 18.3333 0.84198Z" fill="black"/>
 </svg>
 `;

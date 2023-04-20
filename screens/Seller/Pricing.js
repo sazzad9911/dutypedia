@@ -1186,7 +1186,7 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
     >
       <View
         style={{
-          borderColor: "#666666",
+          borderColor: "#D1D1D1",
           height: 20,
           width: 20,
           borderWidth: 1.5,
@@ -1194,6 +1194,7 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
           justifyContent: "center",
           alignItems: "center",
           marginRight: 10,
+          marginTop:2
         }}
       >
         {checked && (
@@ -1215,7 +1216,8 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
             flex: 1,
             color: style && style.color ? style.color : "black",
             fontSize: style && style.fontSize ? style.fontSize : 16,
-            margin:0
+            margin:0,
+            lineHeight:style?.lineHeight
           },
         ]}
       >

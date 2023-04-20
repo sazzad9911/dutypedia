@@ -66,14 +66,13 @@ const ComponentScreen = (props) => {
         Services.map((doc, i) => (
           <View style={styles.view} key={i}>
             <Text style={styles.text}>{doc}</Text>
-            <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
             <Table {...props} title={doc} />
           </View>
         ))
       ) : (
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
-          <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
+          
           <Table {...props} />
         </View>
       )}

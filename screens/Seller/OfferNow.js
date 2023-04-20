@@ -1,11 +1,15 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
   Image,
-  Text, 
+  Text,
   Dimensions,
   TouchableOpacity,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+  Pressable
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -38,12 +42,20 @@ import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
 import { createOrder, getOrders } from "../../Class/service";
 import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import SubHeader from "../../components/SubHeader";
 import { socket } from "../../Class/socket";
 import ActivityLoader from "../../components/ActivityLoader";
 import FixedBackHeader from "./components/FixedBackHeader";
 import { uploadFile } from "../../Class/upload";
+import { LinearGradient } from "expo-linear-gradient";
+import Avatar from "../../components/Avatar";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import { useIsFocused } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -52,8 +64,6 @@ const OfferNow = (props) => {
   const data = params ? params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
-  const primaryColor = colors.getPrimaryColor();
-  const secondaryColor = colors.getSecondaryColor();
   const textColor = colors.getTextColor();
   const backgroundColor = colors.getBackgroundColor();
   const assentColor = colors.getAssentColor();
@@ -83,10 +93,14 @@ const OfferNow = (props) => {
   const category = params.category;
   const [Offset, setOffset] = React.useState(0);
   const [TotalDuration, setTotalDuration] = React.useState([]);
-  const [installmentData,setInstallmentData]=useState(data.installmentData?data.installmentData:null)
+  const [installmentData, setInstallmentData] = useState(
+    data.installmentData ? data.installmentData : null
+  );
+  const isFocused=useIsFocused()
+  const starting=data?.service?.gigs.filter(d=>d.type=="STARTING")[0]
 
   React.useEffect(() => {
-   // console.log(data.installmentData);
+    // console.log(data.installmentData);
     if (category && service) {
       try {
         setServices(serverToLocal(service.options, service.category));
@@ -130,12 +144,12 @@ const OfferNow = (props) => {
     }
     return false;
   };
-  const validate = async() => {
+  const validate = async () => {
     if (!From) {
       setFromDateError("Invalid date");
       return;
     }
-    if (!To &&type!="SUBS"&&type!="INSTALLMENT") {
+    if (!To && type != "SUBS" && type != "INSTALLMENT") {
       setToDateError("Invalid date");
       return;
     }
@@ -146,10 +160,10 @@ const OfferNow = (props) => {
 
     setLoader(true);
     let urls;
-    if(Document){
-      let arr=[]
-      arr.push(Document)
-      urls=await uploadFile(arr,user.token)
+    if (Document) {
+      let arr = [];
+      arr.push(Document);
+      urls = await uploadFile(arr, user.token);
     }
     createOrder(
       user.token,
@@ -163,18 +177,20 @@ const OfferNow = (props) => {
       Description,
       parseInt(Price),
       From,
-      To, 
+      To,
       vendor ? "VENDOR" : "USER",
       service ? service : gigs ? gigs.services : "",
       service ? [] : gigs ? gigs.facilites.selectedOptions : "",
       selectedPackage ? selectedPackage : undefined,
       params.packageData,
       user.user.id,
-      data.subsData?data.subsData:undefined,
-      data.installmentData?data.installmentData:undefined,
-      urls?urls[0]:undefined,
-      gigs?gigs.id:data.service.gigs.filter((d) => d.type == type)[0]?.id,
-      gigs?gigs?.title:data.service.gigs.filter((d) => d.type == type)[0]?.title
+      data.subsData ? data.subsData : undefined,
+      data.installmentData ? data.installmentData : undefined,
+      urls ? urls[0] : undefined,
+      gigs ? gigs.id : data.service.gigs.filter((d) => d.type == type)[0]?.id,
+      gigs
+        ? gigs?.title
+        : data.service.gigs.filter((d) => d.type == type)[0]?.title
     )
       .then((res) => {
         getNewOrderUser(res);
@@ -223,6 +239,20 @@ const OfferNow = (props) => {
       console.warn(e.message);
     }
   };
+  const inset = useSafeAreaInsets();
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
+
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -230,12 +260,196 @@ const OfferNow = (props) => {
       </View>
     );
   }
+  
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor:"#818181"}}>
+      <View
+        style={{
+          paddingTop: inset?.top,
+          backgroundColor:"#818181"
+        }}>
+          <StatusBar backgroundColor="#818181"/>
+        <View style={{ alignItems: "center", width: width - 40 ,marginHorizontal:20}}>
+          <LinearGradient // Background Linear Gradient colors=
+            colors={["#FFAFBD", "#C9FFBF"]}
+            style={styles.top}
+            end={{ x: 0.1, y: 0.3 }}>
+            <View style={{ height: 30 }} />
+            <Text
+              style={{
+                marginTop: 12,
+                color: "#767676",
+                fontSize: 14,
+                fontWeight: "500",
+              }}>
+              {data ? data.service.serviceCenterName : "---"}
+            </Text>
+            <Text
+              style={{
+                marginTop: 8,
+                color: "#767676",
+                fontSize: 12,
+                fontWeight: "400",
+              }}>
+              {data?.service?.providerInfo?.name}
+            </Text>
+            <Text
+              style={{
+                marginTop: 8,
+                color: "#767676",
+                fontSize: 12,
+                fontWeight: "400",
+              }}>
+              {data?.service?.providerInfo?.position}
+            </Text>
+            <Text
+              style={{
+                marginTop: 15,
+                color: "#1A1A1A",
+                fontSize: 20,
+                fontWeight: "500",
+              }}>
+              starting price
+            </Text>
+            <Text
+              style={{
+                marginTop: 12,
+                color: "#09090A",
+                fontSize: 16,
+                fontWeight: "400",
+              }}>
+              {starting?.price}৳
+            </Text>
+          </LinearGradient>
+          <View style={styles.avatar}>
+            {data && data.service.profilePhoto ? (
+              <Image
+                style={{ height: 60, width: 60 }}
+                source={{ uri: data.service.profilePhoto }}
+              />
+            ) : (
+              <FontAwesome name="user" size={45} color={"#4ADE80"} />
+            )}
+          </View>
+        </View>
+        <View style={{
+          marginTop:-100,
+          borderTopLeftRadius:16,
+          borderTopRightRadius:16,
+          backgroundColor:"#ffffff",
+          zIndex:-1,
+          paddingHorizontal:20,
+          paddingTop:120
+        }}>
+          <Text style={[styles.text14Bold]}>Details</Text>
+          <View style={{
+            flexDirection:"row",justifyContent:"space-between",
+            alignItems:"center",
+            flex:1,
+            borderBottomColor:"#F1F1F1",
+            borderBottomWidth:1,
+            paddingBottom:12
+          }}>
+            <Text style={[styles.text14,{flex:1}]}>Your offer <Text style={{color:"black"}}>(Enter your amount )*</Text></Text>
+            <Input style={{
+              backgroundColor:"#F1F1F1",
+              height:40,
+              minWidth:110,
+              textAlign:"right",
+              marginHorizontal:0,
+              marginLeft:10,
+              borderBottomWidth:0
+            }}  placeholder={"00.00 ৳"}/>
+          </View>
+          <View style={styles.box}>
+            <Text style={styles.text14}>Duty Fee 5%</Text>
+            <Text style={styles.text14}>00.00 ৳</Text>
+          </View>
+          <View style={styles.box}>
+            <Text style={styles.text14}>Total pay</Text>
+            <Text style={styles.text14}>3.12 ৳</Text>
+          </View>
+          <View style={styles.box}>
+            <Text style={styles.text14}>Delivery date*</Text>
+            <View style={{flexDirection:"row"}}>
+              <Text style={{
+                color:"#09090A",
+                fontSize:16,
+                textDecorationLine:"underline",
+                fontWeight:"400"
+              }}>choose date</Text>
+              <SvgXml style={{marginLeft:8}} xml={calenderIcon}/>
+            </View>
+          </View>
+          <Text style={{
+            fontWeight:"500",
+            fontSize:16,
+            marginTop:32
+          }}>Tell your work instruction ( optional )</Text>
+          <TextArea style={{
+            borderColor:"#D1D1D1",
+            backgroundColor:"#FAFAFA",
+            marginTop:12
+          }} placeholder={" "}/>
+          <Text style={{
+            fontSize:12,
+            lineHeight:20,
+            fontWeight:"400",
+            color:"#767676"
+          }}>We recommend that you communicate your requirements to the seller in writing, as it will assist us in addressing any future inquiries more effectively.</Text>
+          <Text style={{
+            fontWeight:"500",
+            fontSize:16,
+            marginTop:32
+          }}>Attachments ( Optional )</Text>
+          <Pressable style={{
+            borderWidth:1,
+            borderStyle:"dashed",
+            padding:20,
+            marginTop:20,
+            borderColor:"#AFAFAF",
+            justifyContent:"center",
+            alignItems:"center"
+          }}>
+            <Text style={{
+              fontSize:16,
+              fontWeight:"600",
+              color:"#009FE3"
+            }}>Add File <Text style={{
+              color:"#A6A4A4",
+              fontWeight:"400"
+            }}>Here (Max 5 MB)</Text></Text>
+          </Pressable>
+          <Text style={{
+            color:"#EC2700",
+            marginTop:8,
+            fontSize:14
+          }}>Please do not share any personal Information</Text>
+          <View style={{
+            alignItems:"flex-end",
+            marginBottom:32
+          }}>
+            <Text style={{
+              fontSize:14,
+              color:"#1A1A1A",
+              textDecorationLine:"underline",
+              marginTop:20
+            }}>See How to order work</Text>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
+  );
   return (
     <View
       style={{
         flex: 1,
-      }}
-    >
+      }}>
       {/* <SubHeader
         title={
           type == "ONETIME"
@@ -253,8 +467,7 @@ const OfferNow = (props) => {
           const currentOffset = e.nativeEvent.contentOffset.y;
           setOffset(currentOffset);
         }}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={{ height: 60 }} />
         <View
           style={{
@@ -265,14 +478,12 @@ const OfferNow = (props) => {
             borderRadius: 5,
             paddingVertical: 20,
             paddingBottom: 5,
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             <View
               style={{
                 borderRadius: 30,
@@ -284,8 +495,7 @@ const OfferNow = (props) => {
                 alignItems: "center",
                 borderWidth: 1,
                 borderColor: "#C0FFD7",
-              }}
-            >
+              }}>
               {data && data.service.profilePhoto ? (
                 <Image
                   style={{ height: 60, width: 60 }}
@@ -302,8 +512,7 @@ const OfferNow = (props) => {
                   fontSize: 16,
                   fontFamily: "Poppins-SemiBold",
                   color: textColor,
-                }}
-              >
+                }}>
                 {data ? data.service.serviceCenterName : "---"}
               </Text>
               <View
@@ -311,8 +520,7 @@ const OfferNow = (props) => {
                   flexDirection: "row",
                   flex: 1,
                   width: "120%",
-                }}
-              >
+                }}>
                 <Text
                   numberOfLines={1}
                   style={{
@@ -320,8 +528,7 @@ const OfferNow = (props) => {
                     fontFamily: "Poppins-Medium",
                     color: textColor,
                     flex: 1,
-                  }}
-                >
+                  }}>
                   {data ? data.service.providerInfo.title : ""}{" "}
                   {data ? data.service.providerInfo.name : "Sazzad Hossain"}
                   <Text
@@ -330,8 +537,7 @@ const OfferNow = (props) => {
                       fontFamily: "Poppins-Medium",
                       color: textColor,
                       marginLeft: 5,
-                    }}
-                  >
+                    }}>
                     (
                     {data
                       ? data.service.providerInfo.gender.toUpperCase()
@@ -346,8 +552,7 @@ const OfferNow = (props) => {
                   fontSize: 16,
                   fontFamily: "Poppins-Medium",
                   color: textColor,
-                }}
-              >
+                }}>
                 {data ? data.service.providerInfo.position : "---"}
               </Text>
             </View>
@@ -355,105 +560,106 @@ const OfferNow = (props) => {
           <View
             style={{ height: 0, backgroundColor: "#F8F8F8", marginTop: 20 }}
           />
-          {type=="INSTALLMENT"&&installmentData.advancedPaymentAmount&&(
+          {type == "INSTALLMENT" && installmentData.advancedPaymentAmount && (
             <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: 10,
-              marginTop: 20,
-              backgroundColor: "#F8F8F8",
-              padding: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text
               style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-             Weekly Installment
-            </Text>
-            <Text
-              style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              {(installmentData?.totalAmount/installmentData?.installmentCount).toFixed(2)}৳
-            </Text>
-          </View>
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 10,
+                marginTop: 20,
+                backgroundColor: "#F8F8F8",
+                padding: 5,
+                borderRadius: 5,
+              }}>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                Weekly Installment
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                {(
+                  installmentData?.totalAmount /
+                  installmentData?.installmentCount
+                ).toFixed(2)}
+                ৳
+              </Text>
+            </View>
           )}
-          {type=="INSTALLMENT"&&installmentData.advancedPaymentAmount&&(
+          {type == "INSTALLMENT" && installmentData.advancedPaymentAmount && (
             <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: 10,
-              marginTop: 20,
-              backgroundColor: "#F8F8F8",
-              padding: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text
               style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-             Advanced Payment
-            </Text>
-            <Text
-              style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              {installmentData?.advancedPaymentAmount}৳
-            </Text>
-          </View>
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 10,
+                marginTop: 20,
+                backgroundColor: "#F8F8F8",
+                padding: 5,
+                borderRadius: 5,
+              }}>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                Advanced Payment
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                {installmentData?.advancedPaymentAmount}৳
+              </Text>
+            </View>
           )}
-          {type=="INSTALLMENT"&&(
+          {type == "INSTALLMENT" && (
             <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: 10,
-              marginTop: 20,
-              backgroundColor: "#F8F8F8",
-              padding: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text
               style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-             Total Installment
-            </Text>
-            <Text
-              style={{
-                color: "black",
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-              }}
-            >
-              {installmentData?.installmentCount}{" "}
-              {installmentData.installmentType=="Weekly"?"Week":
-              installmentData.installmentType=="Monthly"?"Month":
-              "Year"}{" x "}
-              {(installmentData.totalAmount/installmentData.installmentCount).toFixed(2)}৳
-            </Text>
-          </View>
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 10,
+                marginTop: 20,
+                backgroundColor: "#F8F8F8",
+                padding: 5,
+                borderRadius: 5,
+              }}>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                Total Installment
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 16,
+                  fontFamily: "Poppins-Medium",
+                }}>
+                {installmentData?.installmentCount}{" "}
+                {installmentData.installmentType == "Weekly"
+                  ? "Week"
+                  : installmentData.installmentType == "Monthly"
+                  ? "Month"
+                  : "Year"}
+                {" x "}
+                {(
+                  installmentData.totalAmount / installmentData.installmentCount
+                ).toFixed(2)}
+                ৳
+              </Text>
+            </View>
           )}
           {gigs && !selectedPackage && (
             <>
@@ -466,24 +672,21 @@ const OfferNow = (props) => {
                   backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
-                 {type=="INSTALLMENT"?"Total":""} Price
+                  }}>
+                  {type == "INSTALLMENT" ? "Total" : ""} Price
                 </Text>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   {gigs.subsData ? gigs.subsData.subscriptionType : ""}{" "}
                   {gigs.price}৳
                 </Text>
@@ -499,15 +702,13 @@ const OfferNow = (props) => {
                       backgroundColor: "white",
                       padding: 5,
                       borderRadius: 5,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: "black",
                         fontSize: 16,
                         fontFamily: "Poppins-Medium",
-                      }}
-                    >
+                      }}>
                       Duration
                     </Text>
                     <Text
@@ -515,8 +716,7 @@ const OfferNow = (props) => {
                         color: "black",
                         fontSize: 16,
                         fontFamily: "Poppins-Medium",
-                      }}
-                    >
+                      }}>
                       {data && data.subsData && data.subsData.payAsYouGo
                         ? "Pay As Go"
                         : `${data.subsData.totalDuration}`}
@@ -537,30 +737,30 @@ const OfferNow = (props) => {
                         backgroundColor: "white",
                         padding: 5,
                         borderRadius: 5,
-                      }}
-                    >
+                      }}>
                       <View>
-                      <Text
-                        style={{
-                          color: "black",
-                          fontSize: 16,
-                          fontFamily: "Poppins-Medium",
-                        }}
-                      >
-                        {data.subsData.otherChargeName}
-                      </Text>
-                      <Text style={{
-                        color:"red",
-                        marginTop:3
-                      }}>*This payment one time only</Text>
+                        <Text
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                            fontFamily: "Poppins-Medium",
+                          }}>
+                          {data.subsData.otherChargeName}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "red",
+                            marginTop: 3,
+                          }}>
+                          *This payment one time only
+                        </Text>
                       </View>
                       <Text
                         style={{
                           color: "black",
                           fontSize: 16,
                           fontFamily: "Poppins-Medium",
-                        }}
-                      >
+                        }}>
                         {data.subsData.otherChargeAmount}৳
                       </Text>
                     </View>
@@ -574,15 +774,13 @@ const OfferNow = (props) => {
                       backgroundColor: "#F8F8F8",
                       padding: 5,
                       borderRadius: 5,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         color: "black",
                         fontSize: 16,
                         fontFamily: "Poppins-Medium",
-                      }}
-                    >
+                      }}>
                       Total
                     </Text>
                     <Text
@@ -590,8 +788,7 @@ const OfferNow = (props) => {
                         color: "black",
                         fontSize: 16,
                         fontFamily: "Poppins-Medium",
-                      }}
-                    >
+                      }}>
                       {data.subsData.amount}৳
                     </Text>
                   </View>
@@ -606,15 +803,13 @@ const OfferNow = (props) => {
                   padding: 5,
                   borderRadius: 5,
                   marginTop: 20,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Service List
                 </Text>
               </View>
@@ -624,15 +819,13 @@ const OfferNow = (props) => {
                   flexWrap: "wrap",
                   paddingHorizontal: 25,
                   paddingVertical: 5,
-                }}
-              >
+                }}>
                 {ListData.length > 0 ? (
                   <Text
                     style={{
                       fontSize: 16,
                       color: "#535353",
-                    }}
-                  >
+                    }}>
                     {ListData.map((doc, i) => {
                       return `${i == 0 ? "" : ", "}${doc.data.title}`;
                     })}
@@ -650,15 +843,13 @@ const OfferNow = (props) => {
                   padding: 5,
                   borderRadius: 5,
                   marginTop: 15,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Facilities
                 </Text>
               </View>
@@ -669,15 +860,13 @@ const OfferNow = (props) => {
                   paddingHorizontal: 25,
                   paddingVertical: 5,
                   marginBottom: 5,
-                }}
-              >
+                }}>
                 {Facilities.length > 0 ? (
                   <Text
                     style={{
                       fontSize: 16,
                       color: "#535353",
-                    }}
-                  >
+                    }}>
                     {Facilities.map((doc, i) => {
                       return `${i == 0 ? "" : ", "}${doc.title}`;
                     })}
@@ -699,15 +888,13 @@ const OfferNow = (props) => {
                   backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Starting Price
                 </Text>
                 <Text
@@ -715,8 +902,7 @@ const OfferNow = (props) => {
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   {data ? data.service.gigs[0].price : "-"}৳
                 </Text>
               </View>
@@ -756,15 +942,13 @@ const OfferNow = (props) => {
                   backgroundColor: "#F8F8F8",
                   padding: 5,
                   borderRadius: 5,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Package
                 </Text>
                 <Text
@@ -772,8 +956,7 @@ const OfferNow = (props) => {
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Price
                 </Text>
               </View>
@@ -791,15 +974,13 @@ const OfferNow = (props) => {
                   padding: 5,
                   borderRadius: 5,
                   marginBottom: 10,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   {selectedPackage.name}
                 </Text>
                 <Text
@@ -807,8 +988,7 @@ const OfferNow = (props) => {
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   {selectedPackage.price}৳
                 </Text>
               </View>
@@ -826,15 +1006,13 @@ const OfferNow = (props) => {
                   padding: 5,
                   borderRadius: 5,
                   marginBottom: 5,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Service List
                 </Text>
               </View>
@@ -843,16 +1021,14 @@ const OfferNow = (props) => {
                   marginHorizontal: 10,
                   marginVertical: 0,
                   marginBottom: 5,
-                }}
-              >
+                }}>
                 {services ? (
                   <Text
                     style={{
                       fontSize: 16,
                       marginHorizontal: 5,
                       color: "#535353",
-                    }}
-                  >
+                    }}>
                     {services.map((doc, i) => {
                       return `${i != 0 ? ", " : ""}${doc.data.title}`;
                     })}
@@ -870,15 +1046,13 @@ const OfferNow = (props) => {
                   padding: 5,
                   borderRadius: 5,
                   marginTop: 15,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     color: "black",
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
-                  }}
-                >
+                  }}>
                   Facilities
                 </Text>
               </View>
@@ -889,15 +1063,13 @@ const OfferNow = (props) => {
                   paddingHorizontal: 25,
                   paddingVertical: 5,
                   marginBottom: 5,
-                }}
-              >
+                }}>
                 {Facilities.length > 0 ? (
                   <Text
                     style={{
                       fontSize: 16,
                       color: "#535353",
-                    }}
-                  >
+                    }}>
                     {Facilities.map((doc, i) => {
                       return `${i == 0 ? "" : ", "}${doc.title}`;
                     })}
@@ -917,28 +1089,25 @@ const OfferNow = (props) => {
               backgroundColor: "#F8F8F8",
               padding: 5,
               borderRadius: 5,
-            }}
-          >
+            }}>
             <Text
               style={{
                 color: "black",
                 fontSize: 16,
                 fontFamily: "Poppins-Medium",
-              }}
-            >
-              {type != "SUBS"&&type!="INSTALLMENT"
+              }}>
+              {type != "SUBS" && type != "INSTALLMENT"
                 ? "Delivery Time"
                 : "Choose A Date When You Want To Start Using Service"}
             </Text>
           </View>
-          {type != "SUBS"&&type!="INSTALLMENT" ? (
+          {type != "SUBS" && type != "INSTALLMENT" ? (
             <View
               style={{
                 flexDirection: "row",
                 paddingHorizontal: 20,
                 paddingVertical: 15,
-              }}
-            >
+              }}>
               <View style={{ flex: 1 }}>
                 <IconButton
                   onPress={() => {
@@ -981,8 +1150,7 @@ const OfferNow = (props) => {
                   marginHorizontal: 10,
                   marginTop: 8,
                   color: textColor,
-                }}
-              >
+                }}>
                 TO
               </Text>
               <View style={{ flex: 1 }}>
@@ -1072,14 +1240,12 @@ const OfferNow = (props) => {
                   marginHorizontal: 10,
                   flexDirection: "row",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 16,
                     margin: 5,
-                  }}
-                >
+                  }}>
                   1St Delivery Date
                 </Text>
                 <Text
@@ -1087,8 +1253,7 @@ const OfferNow = (props) => {
                     fontSize: 10,
                     margin: 5,
                     marginTop: 0,
-                  }}
-                >
+                  }}>
                   *Delivery Date Count From Your Selected Date
                 </Text>
               </View>
@@ -1098,8 +1263,7 @@ const OfferNow = (props) => {
                   fontSize: 16,
                   marginVertical: 10,
                   color: "#535353",
-                }}
-              >
+                }}>
                 {serverTimeToLocalDate(From)} to{" "}
                 {serverTimeToLocalDate(
                   From,
@@ -1116,19 +1280,22 @@ const OfferNow = (props) => {
                   ? `365 day`
                   : "7 day"}
               </Text>
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("SubscriptionDates",{subsData:data.subsData,date:From})
-              }}>
-              <Text
-                style={{
-                  textAlign: "right",
-                  marginHorizontal: 10,
-                  textDecorationLine: "underline",
-                  marginVertical: 5,
-                }}
-              >
-                View all delivery date
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: From,
+                  });
+                }}>
+                <Text
+                  style={{
+                    textAlign: "right",
+                    marginHorizontal: 10,
+                    textDecorationLine: "underline",
+                    marginVertical: 5,
+                  }}>
+                  View all delivery date
+                </Text>
               </TouchableOpacity>
 
               <View
@@ -1138,13 +1305,11 @@ const OfferNow = (props) => {
                   padding: 5,
                   flexDirection: "row",
                   marginVertical: 10,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 16,
-                  }}
-                >
+                  }}>
                   Payment Date
                 </Text>
               </View>
@@ -1157,21 +1322,18 @@ const OfferNow = (props) => {
                       marginHorizontal: 15,
                       justifyContent: "space-between",
                       marginVertical: 10,
-                    }}
-                  >
+                    }}>
                     <Text
                       style={{
                         fontSize: 14,
                         fontFamily: "Poppins-SemiBold",
-                      }}
-                    >
+                      }}>
                       1St Month
                     </Text>
                     <Text
                       style={{
                         fontSize: 14,
-                      }}
-                    >
+                      }}>
                       {serverTimeToLocalDate(From)} to{" "}
                       {serverTimeToLocalDate(
                         From,
@@ -1193,22 +1355,24 @@ const OfferNow = (props) => {
                   <View key={i} />
                 )
               )}
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("SubscriptionDates",{subsData:data.subsData,date:From})
-              }}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("SubscriptionDates", {
+                    subsData: data.subsData,
+                    date: From,
+                  });
+                }}
                 style={{
                   alignSelf: "flex-end",
                   marginHorizontal: 10,
                   marginVertical: 10,
                   marginBottom: 20,
-                }}
-              >
+                }}>
                 <Text
                   style={{
                     fontSize: 15,
                     textDecorationLine: "underline",
-                  }}
-                >
+                  }}>
                   View all delivery date
                 </Text>
               </TouchableOpacity>
@@ -1232,8 +1396,7 @@ const OfferNow = (props) => {
                 lineHeight: 20,
                 fontSize: 14,
                 fontStyle: "italic",
-              }}
-            >
+              }}>
               We Suggest To Tell Your Requirement To Seller, It Will Help Us For
               Future Inquiries.
             </Text>
@@ -1271,8 +1434,7 @@ const OfferNow = (props) => {
                   lineHeight: 20,
                   fontSize: 14,
                   fontStyle: "italic",
-                }}
-              >
+                }}>
                 Max file size: 25 MB
               </Text>
             </View>
@@ -1283,13 +1445,11 @@ const OfferNow = (props) => {
                 marginVertical: 20,
                 flexDirection: "row",
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   marginRight: 10,
-                }}
-              >
+                }}>
                 {Document.name}
               </Text>
               <Ionicons
@@ -1308,8 +1468,7 @@ const OfferNow = (props) => {
               borderTopWidth: 1,
               paddingTop: 10,
               borderTopColor: "#C0FFD7",
-            }}
-          >
+            }}>
             <TouchableOpacity
               onPress={() => {
                 setVisible(!Visible);
@@ -1317,16 +1476,14 @@ const OfferNow = (props) => {
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: 17,
                   fontFamily: "Poppins-Medium",
                   marginBottom: 10,
                   color: textColor,
-                }}
-              >
+                }}>
                 How to order work
               </Text>
               <Entypo
@@ -1381,14 +1538,12 @@ const OfferNow = (props) => {
             borderRadius: 5,
             paddingHorizontal: 10,
             paddingVertical: 10,
-          }}
-        >
+          }}>
           <View
             style={{
               flexDirection: "row",
               flex: 1,
-            }}
-          >
+            }}>
             <CheckBox
               value={Check}
               style={{ color: textColor, fontSize: 14, width: 30 }}
@@ -1402,30 +1557,26 @@ const OfferNow = (props) => {
                 fontSize: 15,
                 color: "#666666",
                 width: width - 85,
-              }}
-            >
+              }}>
               Yes, I Understand And Agree To The{" "}
               <Text
                 style={{
                   color: "#174296",
-                }}
-              >
+                }}>
                 Dutypedia Terms Of Service
               </Text>
               , Including{" "}
               <Text
                 style={{
                   color: "#174296",
-                }}
-              >
+                }}>
                 The User Agreement
               </Text>{" "}
               And{" "}
               <Text
                 style={{
                   color: "#174296",
-                }}
-              >
+                }}>
                 Privacy Policy
               </Text>
             </Text>
@@ -1456,15 +1607,13 @@ const OfferNow = (props) => {
             style={{
               alignSelf: "center",
               marginVertical: 10,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: 15,
                 textDecorationLine: "underline",
                 color: "#666666",
-              }}
-            >
+              }}>
               Cancel Order
             </Text>
           </TouchableOpacity>
@@ -1474,7 +1623,52 @@ const OfferNow = (props) => {
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  background: {
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
+  top: {
+    borderRadius: 16,
+    overflow: "hidden",
+    alignItems: "center",
+    marginTop: 40,
+    width: width - 40,
+    padding:20,
+    paddingTop:0
+  },
+  avatar: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    borderWidth: 3,
+    borderColor: "#ffffff",
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    transform: [{ translateY: 10 }],
+    zIndex: 100,
+  },
+  text14: {
+    fontSize: 14,
+    fontWeight: "400",
+    color:"#767676"
+  },
+  text14Bold: {
+    fontSize: 14,
+    fontWeight: "500",
+    color:"#1A1A1A"
+  },
+  box:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    borderBottomWidth:1,
+    borderBottomColor:"#F1F1F1",
+    paddingVertical:20
+  }
+});
 export default OfferNow;
 const Cart = ({ Icon, description, i }) => {
   const isDark = useSelector((state) => state.isDark);
@@ -1503,8 +1697,7 @@ const Cart = ({ Icon, description, i }) => {
         shadowRadius: 1,
         elevation: 1,
         marginBottom: 10,
-      }}
-    >
+      }}>
       <SvgXml xml={Icon} height="35" width="35" />
       <View style={{ flex: 1, marginLeft: 10 }}>
         <Text
@@ -1512,8 +1705,7 @@ const Cart = ({ Icon, description, i }) => {
             fontSize: 16,
             fontFamily: "Poppins-SemiBold",
             color: textColor,
-          }}
-        >
+          }}>
           Your order request
         </Text>
         <Text
@@ -1522,23 +1714,14 @@ const Cart = ({ Icon, description, i }) => {
             color: textColor,
             flex: 1,
             lineHeight: 20,
-          }}
-        >
+          }}>
           {description}
         </Text>
       </View>
     </View>
   );
 };
-const calenderIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21.38" height="21.38" viewBox="0 0 21.38 21.38">
-<g id="Group_10275" data-name="Group 10275" transform="translate(-230.839 -566.307)">
-  <path id="Path_27339" data-name="Path 27339" d="M5.582,5.625H20.3A2.207,2.207,0,0,1,22.5,7.832V21.076A2.207,2.207,0,0,1,20.3,23.283H5.582a2.207,2.207,0,0,1-2.207-2.207V7.832A2.207,2.207,0,0,1,5.582,5.625Z" transform="translate(228.589 563.278)" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="2.25"/>
-  <path id="Path_27340" data-name="Path 27340" d="M19.462,5.625H6.418a3.071,3.071,0,0,0-3.043,3.09v2.8h.736A1.582,1.582,0,0,1,5.582,10.04H20.3a1.582,1.582,0,0,1,1.472,1.472H22.5v-2.8a3.071,3.071,0,0,0-3.043-3.09Z" transform="translate(228.589 563.278)"/>
-  <path id="Path_27341" data-name="Path 27341" d="M21.332,15.743a1.1,1.1,0,1,1-1.1-1.077A1.1,1.1,0,0,1,21.332,15.743Z" transform="translate(223.14 560.151)"/>
-  <path id="Path_27343" data-name="Path 27343" d="M26.957,15.743a1.1,1.1,0,1,1-1.1-1.077A1.1,1.1,0,0,1,26.957,15.743Z" transform="translate(221.193 560.151)"/>
-  <path id="Path_27342" data-name="Path 27342" d="M9,3.375V4.847" transform="translate(226.643 564.057)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25"/>
-  <path id="Path_27344" data-name="Path 27344" d="M27,3.375V4.847" transform="translate(220.415 564.057)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25"/>
-</g>
+const calenderIcon = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.33333 1V3M13.6667 1V3M1 15V5C1 4.46957 1.21071 3.96086 1.58579 3.58579C1.96086 3.21071 2.46957 3 3 3H15C15.5304 3 16.0391 3.21071 16.4142 3.58579C16.7893 3.96086 17 4.46957 17 5V15M1 15C1 15.5304 1.21071 16.0391 1.58579 16.4142C1.96086 16.7893 2.46957 17 3 17H15C15.5304 17 16.0391 16.7893 16.4142 16.4142C16.7893 16.0391 17 15.5304 17 15M1 15V8.33333C1 7.8029 1.21071 7.29419 1.58579 6.91912C1.96086 6.54405 2.46957 6.33333 3 6.33333H15C15.5304 6.33333 16.0391 6.54405 16.4142 6.91912C16.7893 7.29419 17 7.8029 17 8.33333V15M9 9.66667H9.00711V9.67378H9V9.66667ZM9 11.6667H9.00711V11.6738H9V11.6667ZM9 13.6667H9.00711V13.6738H9V13.6667ZM7 11.6667H7.00711V11.6738H7V11.6667ZM7 13.6667H7.00711V13.6738H7V13.6667ZM5 11.6667H5.00711V11.6738H5V11.6667ZM5 13.6667H5.00711V13.6738H5V13.6667ZM11 9.66667H11.0071V9.67378H11V9.66667ZM11 11.6667H11.0071V11.6738H11V11.6667ZM11 13.6667H11.0071V13.6738H11V13.6667ZM13 9.66667H13.0071V9.67378H13V9.66667ZM13 11.6667H13.0071V11.6738H13V11.6667Z" stroke="black" stroke-opacity="0.87" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-
-`;
+`

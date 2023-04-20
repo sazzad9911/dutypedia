@@ -78,6 +78,11 @@ import VendorSearchOrder from "./VendorSearchOrder";
 import Member from "./Member";
 import SubHeader from "../../components/SubHeader";
 import ImportantNotice from "../Seller/OrderScript/ImportantNotice";
+import CancelOrderConfirmation from "../Seller/OrderScript/CancelOrderConfirmation";
+import OrderDelivery from "../Seller/OrderScript/OrderDelivery";
+import ServiceAgreement from "../Seller/OrderScript/ServiceAgreement";
+import OrderDeliveryRequirements from "../Seller/OrderScript/OrderDeliveryRequirements";
+import NeedExtraTime from "../Seller/OrderScript/NeedExtraTime";
 const Tab = createMaterialTopTabNavigator();
 
 const Stack = createStackNavigator();
@@ -99,6 +104,16 @@ const Order = () => {
         options={{ header:(props)=><SubHeader {...props} title={"Important Notice"}/> }}
         name="ImportantNotice"
         component={ImportantNotice}
+      />
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader fontStyle={{fontSize:20}} {...props} title={"Proof Requirements"}/> }}
+        name="OrderDeliveryRequirement"
+        component={OrderDeliveryRequirements}
+      />
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader fontStyle={{fontSize:20}} {...props} title={"Chose Extra Time"}/> }}
+        name="NeedExtraTIme"
+        component={NeedExtraTime}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -190,7 +205,21 @@ const Order = () => {
         name="VendorSearchOrder"
         component={VendorSearchOrder}
       />
-      
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader {...props} title={"Cancel confirmation"}/> }}
+        name="CancelOrderConfirmation"
+        component={CancelOrderConfirmation}
+      />
+      <Stack.Screen
+        options={{ header:(props)=><SubHeader {...props} title={"Sand Proof"}/> }}
+        name="OrderDelivery"
+        component={OrderDelivery}
+      />
+      <Stack.Screen
+        options={{ headerShown:false}}
+        name="ServiceAgreement"
+        component={ServiceAgreement}
+      />
     </Stack.Navigator>
   );
 };
@@ -935,11 +964,9 @@ export const Screens = ({ navigation, route }) => {
   }, [Refresh]);
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e = e.order;
       setRefresh((val) => !val);
     });
     socket.on("newOrder", (e) => {
-      e = e.order;
       setRefresh((val) => !val);
     });
   }, []);
@@ -1077,7 +1104,8 @@ export const Screens = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, paddingVertical: 8 }}>
       {NewOrders && NewOrders.length > 0 && (
-        <FlatList
+        <FlatList onRefresh={onRefresh}
+        refreshing={refreshing}
           showsVerticalScrollIndicator={false}
           data={NewOrders}
           keyExtractor={(item) => item.id}
@@ -1208,10 +1236,7 @@ export const OfflineScreens = ({ navigation, route }) => {
 
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e = e.order;
-      setTimeout(() => {
-        setRefresh((val) => !val);
-      }, 100);
+      setRefresh((val) => !val);
     });
   }, []);
 
