@@ -288,7 +288,7 @@ const Screens = ({ navigation, route }) => {
       e = e?.order;
       setRefresh((val) => !val);
     });
-    socket.on("newOrder", (e) => {
+    socket.on("getOrder", (e) => {
       e = e?.order;
       setRefresh((val) => !val);
     });

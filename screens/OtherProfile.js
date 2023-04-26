@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -85,6 +85,9 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import ActivityLoader from "../components/ActivityLoader";
 import { TopSellerCard } from "../components/LandingPage/TopSeller";
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import OfferNow from "./Seller/OfferNow";
+import { CheckBox } from "./Seller/Pricing";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -111,16 +114,16 @@ const OtherProfile = (props) => {
       value: false,
       type: "PACKAGE",
     },
-    {
-      title: "Installment",
-      value: false,
-      type: "INSTALLMENT",
-    },
-    {
-      title: "Subscription",
-      value: false,
-      type: "SUBS",
-    },
+    // {
+    //   title: "Installment",
+    //   value: false,
+    //   type: "INSTALLMENT",
+    // },
+    // {
+    //   title: "Subscription",
+    //   value: false,
+    //   type: "SUBS",
+    // },
   ];
   const [Active, setActive] = React.useState("Bargaining");
   const [NewLines, setNewLines] = React.useState(3);
@@ -199,12 +202,26 @@ const OtherProfile = (props) => {
   const [individualRating, setIndividualRating] = useState();
   const [reviews, setReviews] = useState();
   const [bargaining, setActiveBargaining] = useState(true);
-
+  const [condition,setCondition]=useState(false)
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+  const snapPoints = useMemo(() => ['90%'], []);
+  const [index,setIndex]=useState(-1)
+  const sheetRef = useRef(null);
+  const handleSheetChange = useCallback(index => {
+    setIndex(index)
+  }, []);
+  const handleSnapPress = useCallback(index => {
+    sheetRef.current?.snapTo(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+  
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setRefresh((val) => !val);
@@ -1238,6 +1255,7 @@ const OtherProfile = (props) => {
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
                 setActiveBargaining: setActiveBargaining,
+                onOpen:()=>setIndex(0)
               }}
               component={BargainingScreen}
             />
@@ -1312,7 +1330,7 @@ const OtherProfile = (props) => {
               component={PackageScreen}
             />
 
-            <Tab.Screen
+            {/* <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
                   <Text
@@ -1347,8 +1365,8 @@ const OtherProfile = (props) => {
                 data: data,
               }}
               component={Subscriptions}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
                   <Text
@@ -1383,7 +1401,7 @@ const OtherProfile = (props) => {
                 data: data,
               }}
               component={Installment}
-            />
+            /> */}
           </Tab.Navigator>
         </View>
         {bargaining && (
@@ -1559,6 +1577,33 @@ const OtherProfile = (props) => {
       )} */}
       {/* <NewBottomBar {...props}/> */}
       <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
+      {index!=-1&&(
+        <View style={{
+          backgroundColor:"#818181",
+          position:"absolute",
+          top:0,
+          width:width,
+          height:height,
+          opacity:.8
+        }}/>
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        index={index}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{
+          backgroundColor:"#ffffff",
+        }}
+        handleStyle={{
+         paddingTop:-30
+        }}
+        
+      >
+        <OfferNow navigation={navigation} type={"STARTING"} data={Data} />
+        
+      </BottomSheet>
     </View>
   );
 };
@@ -1666,6 +1711,9 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS == "ios" ? 13.5 : 12,
     fontFamily: "Poppins-SemiBold",
   },
+  contentContainer: {
+    backgroundColor: 'white',
+  },
 });
 
 const BarOption = ({ icon, title }) => {
@@ -1726,6 +1774,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ActiveService, setActiveService] = React.useState(
     ServiceList ? ServiceList[0] : NewDataList[0].mainTitle
   );
+  
   const Facilities = params.Facilities;
   const Data = params.Data;
   const Price = params.Price;
@@ -1748,7 +1797,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const newUser = useSelector((state) => state.user);
-
+  
   //console.log(Data);
 
   React.useEffect(() => {
@@ -2099,10 +2148,12 @@ const BargainingScreen = ({ navigation, route }) => {
       <View style={{ backgroundColor: primaryColor }}>
         <IconButton
           onPress={() => {
-            navigation.navigate("OfferNow", {
-              data: Data,
-              type: "STARTING",
-            });
+            params?.onOpen()
+            // navigation.navigate("OfferNow", {
+            //   data: Data,
+            //   type: "STARTING",
+
+            // });
           }}
           style={{
             borderRadius: 5,
@@ -2250,6 +2301,8 @@ const FixedScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
   const data = params.Data;
+  const snapPoints = useMemo(() => ['90%'], []);
+  const [index,setIndex]=useState(-1)
   const [Active, setActive] = React.useState(false);
 
   React.useEffect(() => {
@@ -2273,6 +2326,15 @@ const FixedScreen = ({ navigation, route }) => {
       });
     }
   }, [data + isFocused]);
+  const handleSheetChange = useCallback(index => {
+    setIndex(index)
+  }, []);
+  const handleSnapPress = useCallback(index => {
+    sheetRef.current?.snapTo(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
 
   //console.log(FixedService)
   return (
@@ -2441,8 +2503,18 @@ const PackageScreen = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
   const data = params.Data;
+  const snapPoints = useMemo(() => ['90%'], []);
+  const [index,setIndex]=useState(-1)
   const [Active, setActive] = React.useState(false);
-
+  const handleSheetChange = useCallback(index => {
+    setIndex(index)
+  }, []);
+  const handleSnapPress = useCallback(index => {
+    sheetRef.current?.snapTo(index);
+  }, []);
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       //console.log(layoutHeight);

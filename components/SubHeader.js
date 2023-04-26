@@ -18,7 +18,7 @@ const SubHeader = (props) => {
   const inset=useSafeAreaInsets()
 
   return (
-    <View style={{
+    <View style={[{
         paddingHorizontal:20,
         flexDirection:"row",
         alignItems:"center",
@@ -26,8 +26,12 @@ const SubHeader = (props) => {
         justifyContent:"center",
         marginTop:inset?.top
         //marginTop:!no?StatusBar.currentHeight:0
-    }}>
+    },props?.style]}>
         <Pressable onPress={()=>{
+            if(props.onPress){
+                props.onPress()
+                return
+            }
             navigation.goBack()
         }} style={{
             position:"absolute",
@@ -38,7 +42,7 @@ const SubHeader = (props) => {
         </Pressable>
         <Text style={[{
             color:"#1A1A1A",
-            fontSize:24,
+            fontSize:20,
             fontWeight:"500"
         },props?.fontStyle]}>{props?.title}</Text>
     </View>

@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View, Text, Alert } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Alert, Modal } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import { convertDate, dateConverter, dateDifference } from "../../../action";
@@ -81,26 +81,28 @@ export default function NeedExtraTime({ navigation, route }) {
             Icon={() => <SvgXml xml={calender} />}
             title={dates ? convertDate(dates) : "dd/mm/yy"}
           />
-          <DateTimePickerModal
-            date={new Date()}
-            isVisible={visible}
-            mode="date"
-            onConfirm={(e) => {
-              if (dateDifference(data.deliveryDateTo, e) > 0) {
-                setDate(e);
+          <Modal transparent={true} visible={visible}>
+            <DateTimePickerModal
+              date={new Date()}
+              isVisible={true}
+              mode="date"
+              onConfirm={(e) => {
+                if (dateDifference(data.deliveryDateTo, e) > 0) {
+                  setDate(e);
+                  setVisible(false);
+                } else {
+                  setVisible(false);
+                  Alert.alert(
+                    "Opps!",
+                    "You need to select upcoming date from delivery"
+                  );
+                }
+              }}
+              onCancel={() => {
                 setVisible(false);
-              } else {
-                setVisible(false);
-                Alert.alert(
-                  "Opps!",
-                  "You need to select upcoming date from delivery"
-                );
-              }
-            }}
-            onCancel={() => {
-              setVisible(false);
-            }}
-          />
+              }}
+            />
+          </Modal>
         </View>
         <IconButton
           onPress={confirm}

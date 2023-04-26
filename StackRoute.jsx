@@ -97,6 +97,9 @@ import Location from "./screens/create_dashboard/Location";
 import About from "./screens/create_dashboard/About";
 import FinalReview from "./screens/create_dashboard/FinalReview";
 import ChatImage from "./screens/message/ChatImage";
+import SignUp_1 from "./screens/signup/SignUp_1";
+import SignUp_2 from "./screens/signup/SignUp_2";
+import SignUp_3 from "./screens/signup/SignUp_3";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -233,6 +236,21 @@ export default function StackRoute() {
           options={{ header:(props)=><SubHeader title={"Login"} {...props}/> }}
           name="LogIn"
           component={Login}
+        />
+        <Stack.Screen
+          options={{ header:(props)=><SubHeader title={"Phone number verification"} {...props}/> }}
+          name="SignUp_1"
+          component={SignUp_1}
+        />
+        <Stack.Screen
+          options={{ header:(props)=><SubHeader title={"Phone number verification"} {...props}/> }}
+          name="SignUp_2"
+          component={SignUp_2}
+        />
+        <Stack.Screen
+          options={{ header:(props)=><SubHeader title={"User information"} {...props}/> }}
+          name="SignUp_3"
+          component={SignUp_3}
         />
         {/* <Stack.Screen
             options={{

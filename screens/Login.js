@@ -141,7 +141,9 @@ const Login = ({ navigation }) => {
             <Text style={styles.text}>or</Text>
             <View style={styles.line} />
           </View>
-          <IconButton
+          <IconButton onPress={()=>{
+            navigation.navigate("SignUp_1")
+          }}
             style={[styles.button, { marginBottom: 20 }]}
             title={"Create an account"}
           />

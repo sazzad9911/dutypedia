@@ -494,7 +494,7 @@ const OrderDetails = ({ navigation, route }) => {
             Order accepted
           </Text>
         )}
-        {data?.status == "DELIVERED" && (
+        {data?.status == "DELIVERED"||data?.status=="COMPLETED" && (
           <Text style={[styles.font, { marginBottom: 32, color: "#4ADE80" }]}>
             Completed
           </Text>

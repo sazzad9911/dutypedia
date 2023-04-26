@@ -966,7 +966,7 @@ export const Screens = ({ navigation, route }) => {
     socket.on("updateOrder", (e) => {
       setRefresh((val) => !val);
     });
-    socket.on("newOrder", (e) => {
+    socket.on("getOrder", (e) => {
       setRefresh((val) => !val);
     });
   }, []);

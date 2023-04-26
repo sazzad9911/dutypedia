@@ -396,7 +396,7 @@ const exporters = (key) => {
       };
     case "COMPLETED":
       return {
-        title: "Completed",
+        title: "Delivered",
         color: "#4ADE80",
       };
     default:
@@ -445,7 +445,7 @@ const exportersVendor = (key) => {
       };
     case "COMPLETED":
       return {
-        title: "Completed",
+        title: "Delivered",
         color: "#4ADE80",
       };
     default:

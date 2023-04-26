@@ -440,6 +440,9 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         ):!data.cancelledBy&&exporters(data?.status).title == "Failed"?(
           <Text style={styles.font}>Delivery date has expired</Text>
         ):(<></>)}
+        {data?.status=="COMPLETED"&&(
+          <Text style={[styles.font,{color:"#4ADE80"}]}>Order Completed</Text>
+        )}
       </ScrollView>
       <Modal animationType="slide" visible={Boolean(amarpay)}>
         <AmarPay onClose={()=>setAmarPay()} order={data} url={amarpay} navigation={navigation}/>
@@ -2041,7 +2044,7 @@ const exporters = (key) => {
       };
     case "COMPLETED":
       return {
-        title: "Completed",
+        title: "Delivered",
         color: "#4ADE80",
       };
     default:

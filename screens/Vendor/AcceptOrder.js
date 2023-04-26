@@ -340,20 +340,12 @@ const AcceptOrder = (props) => {
             data: res.data.order,
           },
         });
+       
         setTimeout(() => {
           setLoader(false);
           navigation.navigate("VendorOrder", { reload: res });
         }, 300);
-        // getOrders(user.token, "vendor", vendor.service.id).then((ress) => {
-        //   if (ress.data) {
-        //     dispatch({ type: "VENDOR_ORDERS", playload: ress.data.orders });
-        //     dispatch({ type: "SET_ORDER_SOCKET", playload: ress.data });
-        //     setLoader(false);
-        //     navigation.navigate("VendorOrder", { reload: response });
-        //     //console.log(res.data.orders);
-        //     //console.log(res.data.orders[0].service.serviceCenterName);
-        //   }
-        // });
+        
       })
       .catch((error) => {
         setLoader(false);
