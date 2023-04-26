@@ -976,11 +976,11 @@ const MainProfile = (props) => {
             />
             <FlatCart
               onPress={() => {
-                navigation.navigate("Category");
+                navigation.navigate("SignUp_1");
               }}
               style={{ paddingBottom: 0,borderBottomWidth:0 }}
               icon={openbusiness}
-              title={"Create business account"}
+              title={"Create an account"}
               value={"Grow your business"}
               type={""}
             />

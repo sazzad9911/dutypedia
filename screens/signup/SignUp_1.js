@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Platform,
   ScrollView,
@@ -10,24 +10,27 @@ import { SvgXml } from "react-native-svg";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 
-export default function SignUp_1() {
+export default function SignUp_1({navigation,route}) {
+  const [number,setNumber]=useState()
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{
           paddingHorizontal:20
         }}>
           <SvgXml width={"100%"} style={signUpStyle.mt28} xml={vector} />
           <Text style={[signUpStyle.headLine,signUpStyle.mt44]}>Enter Your Phone Number</Text>
           <Text style={[signUpStyle.mt8,signUpStyle.text]}>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat </Text>
-          <Input style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
+          <Input keyboardType={"number-pad"} value={number} onChange={setNumber} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
           
         </View>
       </ScrollView>
-      <IconButton style={signUpStyle.button} title={"Continue"} active={true}/>
+      <IconButton active={number?true:false} disabled={number?false:true} onPress={()=>{
+        navigation.navigate("SignUp_2",{number:number})
+      }} style={signUpStyle.button} title={"Continue"}/>
     </KeyboardAvoidingView>
   );
 }

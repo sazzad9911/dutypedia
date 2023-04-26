@@ -62,6 +62,9 @@ import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
+import OfferNow from "./Seller/OfferNow";
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
 
 const { width, height } = Dimensions.get("window");
 const PackageService = (props) => {
@@ -149,6 +152,12 @@ const PackageService = (props) => {
   const isFocused=useIsFocused()
   const [selectedPackage,setSelectedPackage]=React.useState()
   const [services,setServices]=React.useState()
+  const snapPoints = React.useMemo(() => ["90%"], []);
+  const [index, setIndex] = React.useState(-1);
+  const sheetRef = React.useRef(null);
+  const handleSheetChange = React.useCallback((index) => {
+    setIndex(index);
+  }, []);
 
   React.useEffect(()=>{
     if(isFocused){
@@ -922,6 +931,8 @@ const PackageService = (props) => {
           <View style={{ backgroundColor: primaryColor }}>
             <IconButton
               onPress={() => {
+                setIndex(0)
+                return
                 navigation.navigate("OfferNow", {
                   type: "PACKAGE",
                   gigs: data,
@@ -1033,10 +1044,47 @@ const PackageService = (props) => {
         position:"absolute",
         top:0,
         left:0,
-        zIndex:100
+       
        }}>
        <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
        </View>
+       {index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#818181",
+            position: "absolute",
+            top: 0,
+            width: width,
+            height: height,
+            opacity: 0.8,
+            
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        index={index}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{
+          backgroundColor: "#ffffff",
+        }}
+        handleStyle={{
+          paddingTop: -30,
+        }}>
+        <OfferNow
+          navigation={navigation}
+          type={"PACKAGE"}
+          gigs={data}
+          data={data}
+          serviceList={NewDataList}
+          facilities={Facilities}
+          selectedPackage={selectedPackage}
+          services={data.services}
+          category={Category}
+        />
+      </BottomSheet>
     </View>
   );
 };

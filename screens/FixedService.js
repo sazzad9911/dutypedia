@@ -67,6 +67,8 @@ import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import OfferNow from "./Seller/OfferNow";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -145,7 +147,12 @@ const FixedService = (props) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [scrollDirection, setScrollDirection] = React.useState(false);
   const isFocused = useIsFocused();
-
+  const snapPoints = React.useMemo(() => ["90%"], []);
+  const [index, setIndex] = React.useState(-1);
+  const sheetRef = React.useRef(null);
+  const handleSheetChange = React.useCallback((index) => {
+    setIndex(index);
+  }, []);
   React.useEffect(() => {
     if (isFocused) {
       dispatch(setHideBottomBar(true));
@@ -167,10 +174,9 @@ const FixedService = (props) => {
   React.useEffect(() => {
     setScrollEnabled(false);
     setActiveServiceData(null);
-   // console.log(data.service.user);
-   
+    // console.log(data.service.user);
+
     if (data) {
-      
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
@@ -354,8 +360,7 @@ const FixedService = (props) => {
           }
 
           setOffset(currentOffset);
-        }}
-      >
+        }}>
         <Carousel
           style={{
             backgroundColor: "black",
@@ -435,15 +440,13 @@ const FixedService = (props) => {
             paddingVertical: 3,
             borderRadius: 20,
             top: height - ((height * 30) / 100 + 70),
-          }}
-        >
+          }}>
           <Text
             style={{
               fontFamily: "Poppins-Medium",
               fontSize: 14,
               color: primaryColor,
-            }}
-          >
+            }}>
             {imageIndex + 1} Of 4
           </Text>
         </View>
@@ -456,8 +459,7 @@ const FixedService = (props) => {
             justifyContent: "center",
             elevation: 2,
             zIndex: 100,
-          }}
-        >
+          }}>
           <Menu
             contentStyle={{
               backgroundColor: primaryColor,
@@ -487,8 +489,7 @@ const FixedService = (props) => {
                 height={Platform.OS == "ios" ? "50" : "45"}
                 width={Platform.OS == "ios" ? "50" : "45"}
               />
-            }
-          >
+            }>
             <Menu.Item
               onPress={() => {
                 navigation.navigate("Support_1");
@@ -557,23 +558,20 @@ const FixedService = (props) => {
             borderTopRightRadius: 30,
             marginTop: -30,
             overflow: "hidden",
-          }}
-        >
+          }}>
           <View
             style={{
               paddingHorizontal: 20,
               paddingVertical: 0,
               backgroundColor: primaryColor,
-            }}
-          >
+            }}>
             <Text
               style={{
                 color: "#BEBBBB",
                 fontSize: 16,
                 fontFamily: "Poppins-SemiBold",
                 marginTop: 20,
-              }}
-            >
+              }}>
               #Fixed Service
             </Text>
             <View style={{ flex: 0.5 }} />
@@ -586,8 +584,7 @@ const FixedService = (props) => {
                 color: textColor,
                 paddingHorizontal: 20,
                 marginTop: 15,
-              }}
-            >
+              }}>
               {Title}
             </Text>
 
@@ -595,8 +592,7 @@ const FixedService = (props) => {
               style={{
                 marginHorizontal: 20,
                 paddingTop: 15,
-              }}
-            >
+              }}>
               <AnimatedHeight
                 onChange={(height) => {
                   //setNewNavigation(newHeight + 55 + height);
@@ -631,8 +627,7 @@ const FixedService = (props) => {
               backgroundColor: primaryColor,
               paddingHorizontal: 20,
               paddingTop: 15,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontFamily: "Poppins-SemiBold",
@@ -640,8 +635,7 @@ const FixedService = (props) => {
                 marginBottom: 20,
                 marginTop: 0,
                 color: "#535353",
-              }}
-            >
+              }}>
               Service List
             </Text>
 
@@ -652,14 +646,12 @@ const FixedService = (props) => {
                 overflow: "hidden",
 
                 height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-              }}
-            >
+              }}>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                }}
-              >
+                }}>
                 <View
                   onLayout={(e) => {
                     //console.log(e.nativeEvent.layout.height);
@@ -668,8 +660,7 @@ const FixedService = (props) => {
                   style={{
                     flex: 1.2,
                     maxHeight: 182,
-                  }}
-                >
+                  }}>
                   {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
                     ServiceList.map((item, i) => (
                       <Button
@@ -699,18 +690,18 @@ const FixedService = (props) => {
                       title={NewDataList.length > 0 && NewDataList[0].mainTitle}
                     />
                   )}
-                  {Facilities&&Facilities.length!=0&&(
+                  {Facilities && Facilities.length != 0 && (
                     <Button
-                    onPress={() => {
-                      setActiveService("Extra Facilities");
-                    }}
-                    style={
-                      ActiveService == "Extra Facilities"
-                        ? styles.activeButton
-                        : styles.inactiveButton
-                    }
-                    title={"Extra Facilities"}
-                  />
+                      onPress={() => {
+                        setActiveService("Extra Facilities");
+                      }}
+                      style={
+                        ActiveService == "Extra Facilities"
+                          ? styles.activeButton
+                          : styles.inactiveButton
+                      }
+                      title={"Extra Facilities"}
+                    />
                   )}
                 </View>
                 <View
@@ -726,8 +717,7 @@ const FixedService = (props) => {
                     flex: 2,
                     marginRight: 0,
                     maxHeight: ServiceTableHeight,
-                  }}
-                >
+                  }}>
                   {Array.isArray(SubServiceList) &&
                   SubServiceList.length > 0 ? (
                     SubServiceList.map((item, i) => (
@@ -758,8 +748,7 @@ const FixedService = (props) => {
                           fontFamily: "Poppins-SemiBold",
                           color: "#95979D",
                           lineHeight: 30,
-                        }}
-                      >
+                        }}>
                         Extra Facilities
                       </Text>
                       {Array.isArray(Facilities) &&
@@ -776,8 +765,7 @@ const FixedService = (props) => {
                                 lineHeight: 25,
                                 color: textColor,
                               }}
-                              key={i + 1}
-                            >
+                              key={i + 1}>
                               {doc.title}
                             </Text>
                           ) : null
@@ -796,16 +784,14 @@ const FixedService = (props) => {
               justifyContent: "space-between",
               marginHorizontal: 20,
               marginVertical: 25,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontSize: Platform.OS == "ios" ? 17 : 15.5,
                 color: textColor,
 
                 fontFamily: "Poppins-SemiBold",
-              }}
-            >
+              }}>
               From {Price} ৳
             </Text>
             <TouchableOpacity
@@ -819,16 +805,14 @@ const FixedService = (props) => {
                 flexDirection: "row",
                 minWidth: 10,
                 alignItems: "center",
-              }}
-            >
+              }}>
               <Text
                 style={{
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   fontFamily: "Poppins-SemiBold",
                   color: "#707070",
                   marginRight: 0,
-                }}
-              >
+                }}>
                 Show All
               </Text>
               <MaterialIcons
@@ -841,6 +825,8 @@ const FixedService = (props) => {
           <View style={{ backgroundColor: primaryColor }}>
             <IconButton
               onPress={() => {
+                setIndex(0);
+                return;
                 navigation.navigate("OfferNow", {
                   type: "ONETIME",
                   gigs: data,
@@ -867,8 +853,7 @@ const FixedService = (props) => {
           style={{
             backgroundColor: primaryColor,
             marginTop: 15,
-          }}
-        >
+          }}>
           {RelatedServices.length > 4 && (
             <View>
               <Text
@@ -878,8 +863,7 @@ const FixedService = (props) => {
                   color: textColor,
                   paddingHorizontal: 20,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 Related Service
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -900,8 +884,7 @@ const FixedService = (props) => {
                   color: textColor,
                   paddingHorizontal: 20,
                   paddingVertical: 15,
-                }}
-              >
+                }}>
                 You Might Also Like
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -950,14 +933,47 @@ const FixedService = (props) => {
           position: "absolute",
           top: 0,
           left: 0,
-          zIndex: 100,
-        }}
-      >
+         
+        }}>
         <FixedBackHeader
           navigation={navigation}
           Yoffset={offset ? offset : 0}
         />
       </View>
+      {index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#818181",
+            position: "absolute",
+            top: 0,
+            width: width,
+            height: height,
+            opacity: 0.8,
+            
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={sheetRef}
+        index={index}
+        snapPoints={snapPoints}
+        onChange={handleSheetChange}
+        enablePanDownToClose={true}
+        handleIndicatorStyle={{
+          backgroundColor: "#ffffff",
+        }}
+        handleStyle={{
+          paddingTop: -30,
+        }}>
+        <OfferNow
+          navigation={navigation}
+          type={"ONETIME"}
+          gigs={data}
+          data={data}
+          serviceList={NewDataList}
+          facilities={Facilities}
+        />
+      </BottomSheet>
     </View>
   );
 };

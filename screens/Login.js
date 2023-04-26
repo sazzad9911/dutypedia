@@ -115,7 +115,9 @@ const Login = ({ navigation }) => {
                 {EmailError}
               </Text>
             
-              <Text style={[styles.text, { textDecorationLine: "underline" }]}>
+              <Text onPress={()=>{
+                navigation.navigate("Recovery")
+              }} style={[styles.text, { textDecorationLine: "underline" }]}>
                 Forget id and password
               </Text>
             </View>

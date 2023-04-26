@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Pressable,
   Modal,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -60,6 +61,7 @@ import { StatusBar } from "expo-status-bar";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Animated, { FadeIn } from "react-native-reanimated";
 import ViewMore from "../../Hooks/ViewMore";
+import AnimatedHeight from "../../Hooks/AnimatedHeight";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -101,11 +103,15 @@ const OfferNow = (props) => {
     data.installmentData ? data.installmentData : null
   );
   const isFocused = useIsFocused();
-  const starting = data?.service?.gigs.filter((d) => d.type == "STARTING")[0];
+  const starting = data?.service?.gigs?.filter((d) => d.type == "STARTING")[0];
   const [condition, setCondition] = useState(false);
-  const [screen, setScreen] = useState("instruction");
+  const [screen, setScreen] = useState("");
   const [layoutHeight, setLayoutHeight] = useState(0);
+  const [newLayoutHeight, setNewLayoutHeight] = useState(0);
   const [cartId, setCartId] = useState();
+  const [newServices, setNewServices] = useState();
+  const [facilities, setNewFacilities] = useState();
+
   React.useEffect(() => {
     // console.log(data.installmentData);
     if (category && service) {
@@ -172,6 +178,7 @@ const OfferNow = (props) => {
       arr.push(Document);
       urls = await uploadFile(arr, user.token);
     }
+    console.log(selectedPackage?.price)
     createOrder(
       user.token,
       gigs ? gigs.service.id : data.service.id,
@@ -182,7 +189,8 @@ const OfferNow = (props) => {
         ? parseInt(gigs.price)
         : data.service.gigs.filter((d) => d.type == type)[0].price,
       Description,
-      parseInt(Price),
+      Price?
+      parseInt(Price):0,
       From,
       To,
       vendor ? "VENDOR" : "USER",
@@ -204,6 +212,7 @@ const OfferNow = (props) => {
       })
       .catch((err) => {
         setLoader(false);
+        Alert.alert(err.response.data.msg)                
         console.warn(err.response.data.msg);
       });
   };
@@ -259,7 +268,32 @@ const OfferNow = (props) => {
   //     dispatch(setHideBottomBar(false));
   //   }
   // }, [isFocused]);
-
+  React.useEffect(() => {
+    
+    if (props?.serviceList) {
+      let text = "";
+      props?.serviceList.map((doc, i) => {
+        if (i != 0) {
+          text = text + `, ${doc.title}`;
+        } else {
+          text = doc.title;
+        }
+      });
+      setServices(text);
+    }
+    if (props?.facilities) {
+      let text = "";
+      props?.facilities.map((doc, i) => {
+        if (i != 0) {
+          text = text + `, ${doc.title}`;
+        } else {
+          text = doc.title;
+        }
+      });
+      setNewFacilities(text);
+    }
+  }, [props?.serviceList, props?.facilities]);
+  //console.log(selectedPackage)
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -474,7 +508,7 @@ const OfferNow = (props) => {
             <Cart
               title={`Reviewing and Accepting the Order`}
               Icon={second}
-              description={`when you send your order request, the seller will review it to see if they can fulfill your requirements. If they can, they will accept your order. If they cannot, they may ask for more information or decline the order. So, it's important to make sure that you communicate clearly with the seller and provide all the information they need to fulfill your requirements. This will help ensure that your order is accepted and completed to your satisfaction.`}
+              description={`When you send your order request, the seller will review it to see if they can fulfill your requirements. If they can, they will accept your order. If they cannot, they may ask for more information or decline the order. So, it's important to make sure that you communicate clearly with the seller and provide all the information they need to fulfill your requirements. This will help ensure that your order is accepted and completed to your satisfaction.`}
               right={true}
             />
             <Cart
@@ -504,6 +538,8 @@ const OfferNow = (props) => {
       </Animated.View>
     );
   }
+  //console.log(serverToLocal(gigs?.services,))
+  //console.log(props.services)
 
   return (
     <Animated.View layout={FadeIn} style={{ flex: 1 }}>
@@ -553,7 +589,12 @@ const OfferNow = (props) => {
                   fontSize: 20,
                   fontWeight: "500",
                 }}>
-                starting price
+                {type == "STARTING"
+                  ? "Starting"
+                  : type == "ONETIME"
+                  ? "Fixed"
+                  : "Package"}{" "}
+                price
               </Text>
               <Text
                 style={{
@@ -562,7 +603,7 @@ const OfferNow = (props) => {
                   fontSize: 16,
                   fontWeight: "400",
                 }}>
-                {starting?.price}৳
+                {starting ? starting?.price : type=="ONETIME" ? gigs?.price : selectedPackage?.price}৳
               </Text>
             </LinearGradient>
             <View style={styles.avatar}>
@@ -577,54 +618,100 @@ const OfferNow = (props) => {
             </View>
           </View>
           <Text style={[styles.text14Bold, { marginTop: 32 }]}>Details</Text>
-          <View
-            style={{
-              flex: 1,
-              borderBottomColor: "#F1F1F1",
-              borderBottomWidth: 1,
-              paddingBottom: 12,
-            }}>
+          {type == "STARTING" ? (
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
                 flex: 1,
+                borderBottomColor: "#F1F1F1",
+                borderBottomWidth: 1,
+                paddingBottom: 12,
               }}>
-              <Text style={[styles.text14, { flex: 1 }]}>
-                Your offer{" "}
-                <Text style={{ color: "black" }}>(Enter your amount )*</Text>
-              </Text>
-              <Input
-                keyboardType={"number-pad"}
-                onChange={(e) => {
-                  if (parseInt(e) >= starting.price) {
-                    setPrice(parseInt(e));
-                    setPriceError(null);
-                  } else {
-                    setPriceError(
-                      `Price can be large or equal to ${starting.price}৳`
-                    );
-                  }
-                }}
+              <View
                 style={{
-                  backgroundColor: "#F1F1F1",
-                  height: 40,
-                  minWidth: 110,
-                  textAlign: "right",
-                  marginHorizontal: 0,
-                  marginLeft: 10,
-                  borderBottomWidth: 0,
-                }}
-                placeholder={"00.00 ৳"}
-              />
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flex: 1,
+                }}>
+                <Text style={[styles.text14, { flex: 1 }]}>
+                  Your offer{" "}
+                  <Text style={{ color: "black" }}>(Enter your amount )*</Text>
+                </Text>
+                <Input
+                  keyboardType={"number-pad"}
+                  onChange={(e) => {
+                    if (parseInt(e) >= starting.price) {
+                      setPrice(parseInt(e));
+                      setPriceError(null);
+                    } else {
+                      setPriceError(
+                        `Price can be large or equal to ${starting.price}৳`
+                      );
+                    }
+                  }}
+                  style={{
+                    backgroundColor: "#F1F1F1",
+                    height: 40,
+                    minWidth: 110,
+                    textAlign: "right",
+                    marginHorizontal: 0,
+                    marginLeft: 10,
+                    borderBottomWidth: 0,
+                  }}
+                  placeholder={"00.00 ৳"}
+                />
+              </View>
+              {PriceError && (
+                <Text style={{ marginVertical: 3, color: "red" }}>
+                  {PriceError}
+                </Text>
+              )}
             </View>
-            {PriceError && (
-              <Text style={{ marginVertical: 3, color: "red" }}>
-                {PriceError}
+          ) : (
+            <View>
+              <Text style={[styles.text14, { marginTop: 20 }]}>
+                {gigs?.title}
               </Text>
-            )}
-          </View>
+              <View style={{ flexDirection: "row", marginTop: 20 }}>
+                {gigs?.images?.map((doc, i) => (
+                  <Image
+                    key={i}
+                    style={{
+                      width: 64,
+                      height: 52,
+                      borderRadius: 4,
+                      marginLeft: i != 0 ? 16 : 0,
+                    }}
+                    source={{ uri: doc }}
+                  />
+                ))}
+              </View>
+              <Text style={[styles.text14, { marginTop: 20 }]}>
+                Service List
+              </Text>
+              <View style={{ height: 10 }} />
+              <AnimatedHeight
+                fontStyle={styles.text14}
+                text={services}
+                button={true}
+                title={"See More"}
+              />
+              {facilities && (
+                <>
+                  <Text style={[styles.text14, { marginTop: 20 }]}>
+                    Facilities
+                  </Text>
+                  <View style={{ height: 10 }} />
+                  <AnimatedHeight
+                    fontStyle={styles.text14}
+                    text={facilities}
+                    button={true}
+                    title={"See More"}
+                  />
+                </>
+              )}
+            </View>
+          )}
 
           <View style={styles.box}>
             <Text style={styles.text14}>Duty Fee 5%</Text>
@@ -2094,6 +2181,7 @@ const Cart = ({
   style,
   right,
   title,
+  onOpen,
 }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -2111,19 +2199,40 @@ const Cart = ({
         },
         style,
       ]}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-        }}>
-        <SvgXml xml={Icon} />
-        <Text style={[styles.leading, { flex: 1, marginLeft: 8 }]}>
-          {title}
-        </Text>
-      </View>
+      {right ? (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}>
+          <Text
+            style={[
+              styles.leading,
+              { flex: 1, marginRight: 8, textAlign: "right" },
+            ]}>
+            {title}
+          </Text>
+          <SvgXml xml={Icon} />
+        </View>
+      ) : (
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}>
+          <SvgXml xml={Icon} />
+          <Text style={[styles.leading, { flex: 1, marginLeft: 8 }]}>
+            {title}
+          </Text>
+        </View>
+      )}
       <ViewMore
         style={{
           marginTop: 24,
+        }}
+        onChange={(e) => {
+          if (e) {
+          }
         }}
         width={"37%"}
         height={layoutHeight}
@@ -2133,17 +2242,7 @@ const Cart = ({
               setLayoutHeight(e.nativeEvent.layout.height);
             }}
             style={[styles.spText, { marginTop: 0 }]}>
-            Please enter the name of your{" "}
-            <Text style={{ fontWeight: "700" }}>brand or company</Text> in the
-            service name form.{" "}
-            <Text style={{ fontWeight: "700" }}>
-              If you're an individual providing services
-            </Text>
-            , you may use your personal name or a brand name of your choice.
-            This name will be displayed on your profile and will be used to
-            promote your services to potential buyers. Ensure the name
-            accurately reflects your services and does not infringe on others'
-            rights. Thank you for choosing our platform!"
+            {description}
           </Text>
         }
       />

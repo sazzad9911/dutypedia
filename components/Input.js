@@ -20,7 +20,8 @@ const Input = ({
   editable,
   onPress,
   leftIcon,
-  containerStyle
+  containerStyle,
+  secureTextEntry
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -36,7 +37,7 @@ const Input = ({
   return (
     <Animated.View entering={StretchInY} style={containerStyle}>
       {leftIcon}
-      <TextInput placeholderTextColor={assentColor}
+      <TextInput secureTextEntry={secureTextEntry} placeholderTextColor={assentColor}
         ref={innerRef}
         returnKeyType={returnKeyType}
         onSubmitEditing={() => {

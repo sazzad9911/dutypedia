@@ -100,6 +100,8 @@ import ChatImage from "./screens/message/ChatImage";
 import SignUp_1 from "./screens/signup/SignUp_1";
 import SignUp_2 from "./screens/signup/SignUp_2";
 import SignUp_3 from "./screens/signup/SignUp_3";
+import Recovery from "./screens/signup/Recovery";
+import Reset from "./screens/signup/Reset";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -236,6 +238,16 @@ export default function StackRoute() {
           options={{ header:(props)=><SubHeader title={"Login"} {...props}/> }}
           name="LogIn"
           component={Login}
+        />
+        <Stack.Screen
+          options={{ header:(props)=><SubHeader title={"Phone number verification"} {...props}/> }}
+          name="Recovery"
+          component={Recovery}
+        />
+        <Stack.Screen
+          options={{ header:(props)=><SubHeader title={"Password reset"} {...props}/> }}
+          name="Reset"
+          component={Reset}
         />
         <Stack.Screen
           options={{ header:(props)=><SubHeader title={"Phone number verification"} {...props}/> }}

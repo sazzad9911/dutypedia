@@ -22,12 +22,16 @@ function ViewMore({
   smallText,
   width,
   position,
-  view
+  view,
+  onChange
 }) {
   const [newHeight, setNewHeight] = useState(lowHeight ? lowHeight : 73);
 
   React.useEffect(() => {
     //console.log(`height: ${width}`)
+   if(onChange){
+    onChange(newHeight == (lowHeight?lowHeight:73) ? true : false)
+   }
   }, [newHeight]);
 //console.log(height)
   return (
@@ -48,6 +52,7 @@ function ViewMore({
         onPress={() => {
           // setHeight(calculateHeight(Data?.service.about));
           setNewHeight((d) => (d == (lowHeight?lowHeight:73) ? height : (lowHeight?lowHeight:73)));
+          
         }}
         style={{
           flexDirection: "row",
