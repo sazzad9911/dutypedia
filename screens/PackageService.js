@@ -931,8 +931,13 @@ const PackageService = (props) => {
           <View style={{ backgroundColor: primaryColor }}>
             <IconButton
               onPress={() => {
-                setIndex(0)
-                return
+                if (newUser && newUser.token) {
+                  setIndex(0);
+                  return;
+                } else {
+                  navigation.navigate("LogIn");
+                  return;
+                }
                 navigation.navigate("OfferNow", {
                   type: "PACKAGE",
                   gigs: data,

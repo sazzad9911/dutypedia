@@ -44,6 +44,7 @@ import {
 import { dateConverter, timeConverter } from "../action";
 import { socket } from "../Class/socket";
 import { storeNotificationCount } from "../Reducers/unReadNotification";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 const { width, height } = Dimensions.get("window");
 
 const Notification = ({ navigation, route }) => {
@@ -111,6 +112,18 @@ const Notification = ({ navigation, route }) => {
       }
     });
   }, []);
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   //console.log(user)
   if (!readNotification) {
     return (

@@ -9,7 +9,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Platform,
-  Image
+  Image,
 } from "react-native";
 import { Bear } from "./../assets/icon";
 import { SvgXml } from "react-native-svg";
@@ -42,7 +42,7 @@ import {
 import { getLikeGigs, getRating, setLikeGigs } from "../Class/service";
 import { setSaveList } from "../Reducers/saveList";
 import customStyle from "../assets/stylesheet";
-import noAp from "../assets/Images/noAp.png"
+import noAp from "../assets/Images/noAp.png";
 
 const PARALLAX_HEIGHT = 330;
 const HEADER_BAR_HEIGHT = Platform.OS == "ios" ? 55 : 45;
@@ -65,7 +65,7 @@ const SaveList = ({ navigation }) => {
         paddingTop: inset?.top,
         paddingHorizontal: 20,
       }}>
-        <StatusBar backgroundColor="white"/>
+      <StatusBar backgroundColor="white" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <SvgXml
           style={{
@@ -96,12 +96,17 @@ const SaveList = ({ navigation }) => {
             flexWrap: "wrap",
             marginHorizontal: -6,
             marginVertical: 22,
+            flex: 1,
           }}>
           {saveList &&
             saveList.map((doc, i) => (
-              <TopSellerCardLike onPress={()=>{
-                navigation.navigate("OtherProfile",{serviceId:doc.gig.service.id,data:doc.gig})
-              }}
+              <TopSellerCardLike
+                onPress={() => {
+                  navigation.navigate("OtherProfile", {
+                    serviceId: doc.gig.service.id,
+                    data: doc.gig,
+                  });
+                }}
                 key={i}
                 data={doc}
                 height={130}
@@ -109,21 +114,31 @@ const SaveList = ({ navigation }) => {
               />
             ))}
           {saveList && saveList.length == 0 && (
-            <View style={customStyle.fullBox}>
-              <Image style={{
+            <View
+              style={[
+                customStyle.fullBox,
+                {
+                  alignItems: "center",
+                  justifyContent: "center",
+                  
+                },
+              ]}>
+              {/* <Image style={{
                 width:width-40,
                 height:height/2
-              }} source={noAp}/>
-              <Text style={{
-                fontSize:20,
-                fontWeight:"500",
-                marginTop:0,
-                marginBottom:36
-              }}>You did not add any list</Text>
+              }} source={noAp}/> */}
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "500",
+                  marginTop: 0,
+                  marginBottom: 36,
+                }}>
+                You did not add any list
+              </Text>
             </View>
           )}
         </View>
-        
       </ScrollView>
     </View>
   );

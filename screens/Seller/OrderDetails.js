@@ -48,6 +48,7 @@ import StatusCart from "./OrderScript/StatusCart";
 import { createConversation } from "../../Class/message";
 import { useIsFocused } from "@react-navigation/native";
 import AmarPay from "./OrderScript/AmarPay";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const OrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
@@ -90,7 +91,18 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   const installmentData = data.installmentData ? data.installmentData : null;
   const isFocused = useIsFocused();
   const [amarpay,setAmarPay]=useState(false)
-
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   React.useEffect(() => {
     //console.log(data.serviceId);
     //console.log(subsOrder)

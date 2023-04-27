@@ -50,6 +50,7 @@ import customStyle from "../assets/stylesheet";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import UserOrderHeader from "../Hooks/UserOrderHeader";
 import { setOrderRef } from "../Reducers/orderRef";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 const {width,height}=Dimensions.get("window")
 //import { Screens } from "./Vendor/Order";
 const Tab = createMaterialTopTabNavigator();
@@ -242,7 +243,18 @@ const Screens = ({ navigation, route }) => {
   const bottomSheetRef = React.useRef(null);
 
   const snapPoints = React.useMemo(() => ["25%", "60%"], []);
-
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   // callbacks
   const handleSheetChanges = React.useCallback((index) => {
     //console.log("handleSheetChanges", index);

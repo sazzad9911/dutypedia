@@ -67,7 +67,7 @@ import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import OfferNow from "./Seller/OfferNow";
 
 const { width, height } = Dimensions.get("window");
@@ -825,8 +825,14 @@ const FixedService = (props) => {
           <View style={{ backgroundColor: primaryColor }}>
             <IconButton
               onPress={() => {
-                setIndex(0);
-                return;
+                if (newUser && newUser.token) {
+                  setIndex(0);
+                  return;
+                } else {
+                  navigation.navigate("LogIn");
+                  return;
+                }
+
                 navigation.navigate("OfferNow", {
                   type: "ONETIME",
                   gigs: data,
@@ -933,7 +939,6 @@ const FixedService = (props) => {
           position: "absolute",
           top: 0,
           left: 0,
-         
         }}>
         <FixedBackHeader
           navigation={navigation}
@@ -949,7 +954,6 @@ const FixedService = (props) => {
             width: width,
             height: height,
             opacity: 0.8,
-            
           }}
         />
       )}

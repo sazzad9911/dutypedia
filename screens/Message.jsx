@@ -28,12 +28,26 @@ import SellerList from "./message/SellerList";
 import Member, { AddOnlineUser } from "./Vendor/Member";
 import UserProfile from "./UserProfile";
 import { setChatBottomRef } from "../Reducers/chatBottomRef";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 const Stack = createStackNavigator();
 
 const Message = (props) => {
   const dispatch = useDispatch();
   const chatSearchRef = useSelector((state) => state.chatSearchRef);
-
+  const isFocused=useIsFocused()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator>

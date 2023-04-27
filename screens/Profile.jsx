@@ -120,6 +120,8 @@ import AmarPay from "./Seller/OrderScript/AmarPay";
 import PaymentStatus from "./Seller/OrderScript/PaymentStatus";
 import ClintFeedBack from "./Seller/OrderScript/ClintFeedBack";
 import FeedBackMessage from "./Seller/OrderScript/FeedBackMessage";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -844,7 +846,20 @@ const MainProfile = (props) => {
     });
   };
   const inset = useSafeAreaInsets();
-
+  const isFocused=useIsFocused()
+  
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   const styles = StyleSheet.create({
     backgroundContainer: {
       minHeight: 200,
@@ -991,7 +1006,7 @@ const MainProfile = (props) => {
               navigation.navigate("WebViews",{url:"https://duty.com.bd/about",title:"About Us"})
             }}
               icon={info}
-              title={"About duty"}
+              title={"Company"}
               value={"Transforming the future"}
               type={""}
               style={{paddingTop:0}}
@@ -1131,7 +1146,7 @@ const MainProfile = (props) => {
               navigation.navigate("WebViews",{url:"https://duty.com.bd/about",title:"About Us"})
             }}
               icon={info}
-              title={"About duty"}
+              title={"Company"}
               value={"Transforming the future"}
               type={""}
             />

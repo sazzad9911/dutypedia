@@ -29,6 +29,8 @@ import ServiceListCart from "../components/LandingPage/ServiceListCart";
 import PopularCategory from "../components/LandingPage/PopularCategory";
 import TopSeller from "../components/LandingPage/TopSeller";
 import Trending from "../components/LandingPage/Trending";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 
 const Feed = ({ navigation, route }) => {
   const scrollY = new Animated.Value(0);
@@ -56,6 +58,21 @@ const Feed = ({ navigation, route }) => {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   const insets=useSafeAreaInsets()
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
+
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
 
   return (
     <View style={{ flex: 1 }}>

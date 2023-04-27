@@ -12,6 +12,7 @@ import Animated, { StretchInY } from "react-native-reanimated";
 import IconButton from "../IconButton";
 import { ScrollView } from "react-native-gesture-handler";
 import { AllData } from "../../Data/AllData";
+import { MotiView } from "moti";
 
 export default function SearchBar({
   beforeStyle,
@@ -22,14 +23,15 @@ export default function SearchBar({
   value,
   active,
   category,
-  onCategory
+  onCategory,
 }) {
   const [searchKey, setSearchKey] = useState(value);
-  
+
   if (active) {
     return (
       <Animated.View entering={StretchInY}>
-        <Container onSort={onSort}
+        <Container
+          onSort={onSort}
           onChange={onChange}
           value={value}
           style={style}
@@ -54,42 +56,82 @@ export default function SearchBar({
   );
 }
 const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
-  const ref=useRef()
+  const ref = useRef();
+  const [write, setWrite] = React.useState(false);
   return (
-    <Pressable onPress={()=>{
-      if(onPress){
-        onPress()
-      }
-      if(ref){
-        ref.current.focus()
-      }
-    }} style={[styles.container, style, beforeStyle]}>
-      <TextInput ref={ref}
-        value={value}
-        onChangeText={e=>{}}
-        placeholder="Search service"
-        style={styles.text}
-        returnKeyType="search"
-        onSubmitEditing={e=>{
-          onChange(e.nativeEvent.text)
+    <Pressable
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+        if (ref) {
+          ref.current.focus();
+        }
+      }}
+      style={[
+        styles.container,
+        {
+          paddingHorizontal: 10,
+        },
+        style,
+        beforeStyle,
+      ]}>
+      <MotiView
+        animate={{
+          scale:[0,1,{value:1,delay:200}]
         }}
-      />
+        style={{
+          flex: write ? 1 : 0,
+        }}>
+        <TextInput
+          ref={ref}
+          value={value}
+          onChangeText={(e) => {
+            if (e) {
+              setWrite(true);
+            } else {
+              setWrite(false);
+            }
+          }}
+          placeholder="Search service"
+          style={[
+            styles.text,
+            {
+              flex: 1,
+            },
+          ]}
+          returnKeyType="search"
+          onSubmitEditing={(e) => {
+            onChange(e.nativeEvent.text);
+          }}
+        />
+      </MotiView>
       <SvgXml style={styles.icon} xml={icon} />
     </Pressable>
   );
 };
-const Container = ({ afterStyle, style, onChange, value,onSort,onCategory,category }) => {
-  const [search,setSearch]=useState()
+const Container = ({
+  afterStyle,
+  style,
+  onChange,
+  value,
+  onSort,
+  onCategory,
+  category,
+}) => {
+  const [search, setSearch] = useState();
 
-  const onSearch=(val)=>{
-    if(!val){
-      return
+  const onSearch = (val) => {
+    if (!val) {
+      return;
     }
-    let arr=AllData.filter(d=>d.title.toLocaleUpperCase().match(val.toLocaleUpperCase()))
-    if(arr&&arr.length>0){
-      setSearch(arr[0])
+    let arr = AllData.filter((d) =>
+      d.title.toLocaleUpperCase().match(val.toLocaleUpperCase())
+    );
+    if (arr && arr.length > 0) {
+      setSearch(arr[0]);
     }
-  }
+  };
 
   return (
     <View>
@@ -112,14 +154,17 @@ const Container = ({ afterStyle, style, onChange, value,onSort,onCategory,catego
             autoFocus={false}
             value={value}
             returnKeyType="search"
-            onChangeText={e=>{
-              onChange(e)
-              onSearch(e)
+            onChangeText={(e) => {
+              onChange(e);
+              onSearch(e);
             }}
-            style={[styles.text,{
-              marginLeft: 27,
-              flex: 1,
-            }]}
+            style={[
+              styles.text,
+              {
+                marginLeft: 27,
+                flex: 1,
+              },
+            ]}
           />
           <SvgXml
             style={{
@@ -133,16 +178,20 @@ const Container = ({ afterStyle, style, onChange, value,onSort,onCategory,catego
         <View
           style={{
             flexDirection: "row",
-            marginBottom:18
+            marginBottom: 18,
           }}>
-            <View style={{width:22}}/>
-            {search&&search?.data?.map((doc,i)=>(
-              <IconButton active={doc?.title==category?true:false}
-               key={i} style={styles.button}
-               onPress={()=>onCategory(doc?.title)}
-                title={doc.title} />
+          <View style={{ width: 22 }} />
+          {search &&
+            search?.data?.map((doc, i) => (
+              <IconButton
+                active={doc?.title == category ? true : false}
+                key={i}
+                style={styles.button}
+                onPress={() => onCategory(doc?.title)}
+                title={doc.title}
+              />
             ))}
-          <View style={{width:22}}/>
+          <View style={{ width: 22 }} />
         </View>
       </ScrollView>
     </View>
@@ -173,13 +222,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  button:{
-    marginTop:24,
-    borderColor:"#F1EFEF",
-    borderRadius:4,
-    marginHorizontal:6,
-    height:40
-  }
+  button: {
+    marginTop: 24,
+    borderColor: "#F1EFEF",
+    borderRadius: 4,
+    marginHorizontal: 6,
+    height: 40,
+  },
 });
 const icon = `<svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.24363 1.33398C4.70476 1.33398 1.83594 4.13945 1.83594 7.60016C1.83594 11.0609 4.70476 13.8663 8.24363 13.8663C9.75789 13.8663 11.1495 13.3527 12.2461 12.4938L14.3309 14.5273L14.3863 14.5739C14.5797 14.7139 14.8538 14.6979 15.0288 14.5264C15.2212 14.3377 15.2208 14.0321 15.0279 13.8439L12.9673 11.8341C14.0131 10.719 14.6513 9.23247 14.6513 7.60016C14.6513 4.13945 11.7825 1.33398 8.24363 1.33398ZM8.24105 2.29883C11.2348 2.29883 13.6618 4.67217 13.6618 7.59984C13.6618 10.5275 11.2348 12.9009 8.24105 12.9009C5.24726 12.9009 2.82031 10.5275 2.82031 7.59984C2.82031 4.67217 5.24726 2.29883 8.24105 2.29883Z" fill="#767676"/>

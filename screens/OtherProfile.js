@@ -1255,7 +1255,13 @@ const OtherProfile = (props) => {
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
                 setActiveBargaining: setActiveBargaining,
-                onOpen:()=>setIndex(0)
+                onOpen:()=>{
+                  if(newUser&&newUser.token){
+                    setIndex(0)
+                  }else{
+                    navigation.navigate("LogIn")
+                  }
+                }
               }}
               component={BargainingScreen}
             />

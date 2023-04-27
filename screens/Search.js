@@ -25,6 +25,13 @@ import { useIsFocused } from "@react-navigation/native";
 import { search } from "../Class/service";
 import ActivityLoader from "../components/ActivityLoader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import OtherProfile from "./OtherProfile";
+import { useDispatch } from "react-redux";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import FixedService from "./FixedService";
+import PackageService from "./PackageService";
+import UserNotice from "./UserNotice";
+import CompanyCalendar from "./Seller/CompanyCalendar";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -47,7 +54,7 @@ const SearchSecond = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState(key);
   const [data, setData] = useState();
   const [category, setCategory] = useState();
-
+  
   useEffect(() => {
     search(null, {
       q: searchKey || "",
@@ -68,7 +75,7 @@ const SearchSecond = ({ navigation, route }) => {
         console.warn(err.response.data.msg);
       });
   }, [searchKey, filter, category]);
-
+  
   return (
     <HidableHeaderLayout
       header={
@@ -152,6 +159,20 @@ const SearchFirst = ({ navigation, route }) => {
 };
 const Search = () => {
   const inset = useSafeAreaInsets();
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
   return (
     <View style={{ flex: 1 }}>
       <View style={{ height: inset?.top }} />
@@ -166,6 +187,40 @@ const Search = () => {
           name="SearchSecond"
           component={SearchSecond}
         />
+        <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: "green",
+            },
+            headerShown: false,
+          }}
+          name="OtherProfile"
+          component={OtherProfile}
+        />
+        <Stack.Screen
+        options={{ headerShown: false }}
+        name="FixedService"
+        component={FixedService}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="PackageService"
+        component={PackageService}
+      />
+      <Stack.Screen
+        name="UserNotice"
+        options={{
+          headerShown: false,
+        }}
+        component={UserNotice}
+      />
+      <Stack.Screen
+        name="Company Calender"
+        options={{
+          headerShown: false,
+        }}
+        component={CompanyCalendar}
+      />
       </Stack.Navigator>
     </View>
   );
@@ -182,7 +237,7 @@ const ITEM = () => {
     </View>
   );
 };
-const SCREEN = ({ data,navigation }) => {
+const SCREEN = ({ data, navigation }) => {
   // 2 next 12; after calculating 12 if there odd number then print flat cart
   return (
     <View
