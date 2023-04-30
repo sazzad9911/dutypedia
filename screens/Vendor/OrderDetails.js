@@ -430,6 +430,7 @@ const OrderDetails = ({ navigation, route }) => {
                 users: [newUser],
               },
               username: data.user.username,
+              serviceId:data?.service?.id
             });
           }}
           onAgreement={() => {
@@ -488,6 +489,7 @@ const OrderDetails = ({ navigation, route }) => {
           deliveryText={data?.proofText}
           deliveryImage={data?.proofImage}
           onCancel={cancelRequest}
+          type={data?.type}
         />
         {data?.status == "ACCEPTED" && (
           <Text style={[styles.font, { marginBottom: 8, color: "#4ADE80" }]}>
@@ -523,7 +525,7 @@ const OrderDetails = ({ navigation, route }) => {
             <Text
               style={[
                 styles.text,
-                { marginBottom: 12, marginHorizontal: 20, textAlign: "center" },
+                { marginBottom: 12, marginHorizontal: 20, textAlign: "left" },
               ]}>
               click <Text style={{ color: "#4CD964" }}>yes i delivered</Text> if
               you already delivered your order

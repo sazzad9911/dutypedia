@@ -43,7 +43,8 @@ const SubHeader = (props) => {
         <Text style={[{
             color:"#1A1A1A",
             fontSize:20,
-            fontWeight:"500"
+            fontWeight:"500",
+           
         },props?.fontStyle]}>{props?.title}</Text>
     </View>
   )

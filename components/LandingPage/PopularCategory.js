@@ -10,11 +10,46 @@ import React, { useEffect, useState } from "react";
 import customStyle from "../../assets/stylesheet";
 import { AntDesign } from "@expo/vector-icons";
 import { SvgXml } from "react-native-svg";
-import { getLikeGigs, getRating, setLikeGigs } from "../../Class/service";
+import {
+  getLikeGigs,
+  getPopularServices,
+  getRating,
+  getStartingServices,
+  setLikeGigs,
+} from "../../Class/service";
 import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
+import { getData, storeData } from "../../Class/storage";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function PopularCategory({ onMore }) {
+  const [data, setData] = useState();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    //fetchData();
+    if (!data) {
+      store();
+    }
+  }, [isFocused]);
+  const store = async () => {
+    try {
+      const { data } = await getStartingServices();
+      setData(data?.gigs);
+      
+      //storeData("popular_category",data?.gigs);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const fetchData = async () => {
+    try {
+      const data = await getData("popular_category");
+      setData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <View
       style={{
@@ -27,38 +62,36 @@ export default function PopularCategory({ onMore }) {
           <Text style={styles.buttonText}>See all</Text>
         </TouchableOpacity>
       </View>
-      <Card />
-      <Card />
-      <Card
-        style={{
+      {data&&data.slice(0,3).map((doc,i)=>(
+        <Card  key={i} style={i==2?{
           borderBottomWidth: 0,
           paddingBottom: 0,
-        }}
-      />
+        }:null}  />
+      ))}
     </View>
   );
 }
-export const Card = ({ style, data ,onPress }) => {
+export const Card = ({ style, data, onPress }) => {
   const [like, setLike] = useState(false);
   const [rating, setRating] = useState(0);
-  const user=useSelector(state=>state.user)
-  const dispatch=useDispatch()
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getRating(data?.id).then((res) => {
       setRating(res.data.rating);
     });
   }, []);
-  const addToSaveList=async()=>{
-    if(!data){
-      return
+  const addToSaveList = async () => {
+    if (!data) {
+      return;
     }
-    const res=await setLikeGigs(user.token,data.id)
+    const res = await setLikeGigs(user.token, data.id);
     //console.log(res.data)
-    const response=await getLikeGigs(user.token);
+    const response = await getLikeGigs(user.token);
     //console.log(response.data.gigs)
-    dispatch(setSaveList(response.data.gigs))
-  }
+    dispatch(setSaveList(response.data.gigs));
+  };
   return (
     <Pressable onPress={onPress} style={[styles.container, style]}>
       <Image
@@ -83,7 +116,7 @@ export const Card = ({ style, data ,onPress }) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              addToSaveList()
+              addToSaveList();
               setLike((t) => !t);
             }}>
             <AntDesign
@@ -120,7 +153,9 @@ export const Card = ({ style, data ,onPress }) => {
         <View style={customStyle.flexBox}>
           <View style={styles.chipContainer}>
             <SvgXml width={"12"} xml={star} />
-            <Text style={styles.chipText}>{rating>parseInt(rating)?rating:`${rating}.0`}</Text>
+            <Text style={styles.chipText}>
+              {rating > parseInt(rating) ? rating : `${rating}.0`}
+            </Text>
           </View>
           <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
         </View>

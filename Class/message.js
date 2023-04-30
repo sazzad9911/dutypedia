@@ -1,9 +1,10 @@
 import axios from "axios";
 import { url } from "../action";
 
-export const createConversation=async(token,username)=>{
-    const res=await axios.post(`${url}/server/chat/conversation/create/${username}`,{
-        
+export const createConversation=async(token,username,serviceId)=>{
+    const res=await axios.post(`${url}/server/chat/conversation/create`,{
+        username:username,
+        serviceId:serviceId
     },{
         headers:{ Authorization: `Bearer ${token}` }
     })
@@ -15,8 +16,14 @@ export const getConversation=async(token)=>{
     })
     return res
 }
+export const getConversationVendor=async(token,serviceId)=>{
+    const res=await axios.get(`${url}/server/chat/conversation/get-by-service/${serviceId}`,{
+        headers:{ Authorization: `Bearer ${token}` }
+    })
+    return res
+}
 export const searchUserByName=async(token,name)=>{
-    const res=await axios.get(`${url}/server/chat/search/users?name=${name}`,{
+    const res=await axios.get(`${url}/server/chat/search/service?name=${name}`,{
         headers:{ Authorization: `Bearer ${token}` }
     })
     return res;

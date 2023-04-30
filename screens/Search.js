@@ -54,7 +54,21 @@ const SearchSecond = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState(key);
   const [data, setData] = useState();
   const [category, setCategory] = useState();
-  
+  const isFocused=useIsFocused()
+  const dispatch=useDispatch()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(()=>{
+        dispatch(setHideBottomBar(false));
+      },100)
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+    
+  }, [isFocused]);
   useEffect(() => {
     search(null, {
       q: searchKey || "",
@@ -136,7 +150,19 @@ const SearchSecond = ({ navigation, route }) => {
 const SearchFirst = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState();
   const isFocused = useIsFocused();
-
+  const dispatch=useDispatch()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      //dispatch(setHideBottomBar(false));
+      dispatch(setHideBottomBar(false));
+    } else {
+      
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+   
+  }, [isFocused]);
   useEffect(() => {
     setSearchKey();
   }, [isFocused]);
@@ -159,20 +185,7 @@ const SearchFirst = ({ navigation, route }) => {
 };
 const Search = () => {
   const inset = useSafeAreaInsets();
-  const isFocused=useIsFocused()
-  const dispatch=useDispatch()
-  React.useEffect(() => {
-    if (isFocused) {
-      //console.log("hidden")
-      dispatch(setHideBottomBar(false));
-      setTimeout(() => {
-        dispatch(setHideBottomBar(false));
-      }, 50);
-    } else {
-      //console.log("seen")
-      //dispatch(setHideBottomBar(true));
-    }
-  }, [isFocused]);
+  
   return (
     <View style={{ flex: 1 }}>
       <View style={{ height: inset?.top }} />

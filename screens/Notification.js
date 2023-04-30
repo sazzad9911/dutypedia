@@ -234,11 +234,11 @@ const NotificationCart = ({
         }
       }}
       style={[styles.cart_container, !data.opened ? styles.active : null]}>
-      {icon && <SvgXml xml={icon} width={"50"} height={"50"} />}
+      {icon ?( <SvgXml xml={icon} width={"62"} height={"62"} />):(<SvgXml xml={types[0].icon} width={"62"} height={"62"} />)}
       <View
         style={{
           flex: 1,
-          marginLeft: 10,
+          marginLeft: 12,
         }}>
         <Text style={styles.text}>
           {dateConverter(data.createdAt)} {timeConverter(data.createdAt)}
@@ -251,7 +251,7 @@ const NotificationCart = ({
           }}>
           <Text style={styles.descriptionText}>
             {data.message}
-            {verify && (
+            {/* {verify && (
               <SvgXml
                 style={{
                   marginBottom: -5,
@@ -261,7 +261,7 @@ const NotificationCart = ({
                 height={"18"}
                 width={"18"}
               />
-            )}
+            )} */}
           </Text>
         </View>
       </View>
@@ -407,8 +407,8 @@ const types = [
 ];
 const styles = StyleSheet.create({
   cart_container: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderColor: "#E1E1E1",
@@ -419,12 +419,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
   },
   text: {
-    color: "#808080",
+    color: "#4D4E4F",
     fontSize: 16,
+    lineHeight:24
   },
   descriptionText: {
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 24,
   },
   bold: {
     fontWeight: "600",

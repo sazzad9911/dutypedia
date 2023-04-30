@@ -26,7 +26,7 @@ const ChatCart = ({ navigation, active, data, number }) => {
   const user = useSelector((state) => state.user);
   const [UserInfo, setUserInfo] = React.useState();
   const [LastMessage, setLastMessage] = React.useState();
-
+  //console.log(data.serviceId)
   const styles = StyleSheet.create({
     outBox: {
       marginLeft: 20,
@@ -112,6 +112,7 @@ const ChatCart = ({ navigation, active, data, number }) => {
         navigation.navigate("ChatScreen", {
           data: data,
           username: UserInfo.username,
+          serviceId:data?.serviceId
         })
       }
       style={[styles.outBox, {}]}>

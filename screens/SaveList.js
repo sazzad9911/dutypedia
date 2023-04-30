@@ -96,7 +96,7 @@ const SaveList = ({ navigation }) => {
             flexWrap: "wrap",
             marginHorizontal: -6,
             marginVertical: 22,
-            flex: 1,
+            
           }}>
           {saveList &&
             saveList.map((doc, i) => (
@@ -120,7 +120,8 @@ const SaveList = ({ navigation }) => {
                 {
                   alignItems: "center",
                   justifyContent: "center",
-                  
+                  height:"80%",
+                 
                 },
               ]}>
               {/* <Image style={{
@@ -131,8 +132,7 @@ const SaveList = ({ navigation }) => {
                 style={{
                   fontSize: 20,
                   fontWeight: "500",
-                  marginTop: 0,
-                  marginBottom: 36,
+                  
                 }}>
                 You did not add any list
               </Text>

@@ -26,6 +26,7 @@ import {
   convertDate,
   fileFromURL,
   serverTimeToLocalDate,
+  slashDate,
 } from "../../action";
 import TextArea from "./../../components/TextArea";
 import IconButton from "./../../components/IconButton";
@@ -233,10 +234,8 @@ const OfferNow = (props) => {
     });
     setTimeout(() => {
       setLoader(false);
-      navigation.navigate("ManageOrder", {
-        reload: res,
-        active: gigs ? gigs.type : data.service.gigs[0].type,
-        type: type,
+      navigation.navigate("OrderDetails", {
+        data:res.data.order
       });
     }, 300);
     return;
@@ -344,6 +343,8 @@ const OfferNow = (props) => {
                 <DateTimePickerModal
                   date={new Date()}
                   isVisible={true}
+                  
+                  themeVariant="light"
                   mode="date"
                   onConfirm={(date) => {
                     let newDate = dateConverter(new Date());
@@ -395,6 +396,7 @@ const OfferNow = (props) => {
                 <DateTimePickerModal
                   date={new Date()}
                   isVisible={true}
+                  isDarkModeEnabled={true}
                   mode="date"
                   onConfirm={(date) => {
                     let newDate = dateConverter(new Date(From));
@@ -637,7 +639,7 @@ const OfferNow = (props) => {
                   Your offer{" "}
                   <Text style={{ color: "black" }}>(Enter your amount )*</Text>
                 </Text>
-                <Input
+                <Input value={Price}
                   keyboardType={"number-pad"}
                   onChange={(e) => {
                     if (parseInt(e) >= starting.price) {
@@ -728,7 +730,7 @@ const OfferNow = (props) => {
                 alignItems: "center",
                 flex: 1,
               }}>
-              <Text style={[styles.text14, { flex: 1 }]}>Delivery date*</Text>
+              <Text style={[styles.text14]}>Delivery date*</Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -742,11 +744,11 @@ const OfferNow = (props) => {
                   }}
                   style={{
                     color: "#09090A",
-                    fontSize: 16,
+                    fontSize: 14,
                     textDecorationLine: "underline",
                     fontWeight: "400",
                   }}>
-                  {From && To ? `${From} To ${To}` : "choose date"}
+                  {From && To ? `${slashDate(From)} To ${slashDate(To)}` : "choose date"}
                 </Text>
                 <SvgXml style={{ marginLeft: 8 }} xml={calenderIcon} />
               </View>

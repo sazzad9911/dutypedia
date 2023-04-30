@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-export default function TextOp({ number, text,style }) {
+export default function TextOp({ number, text,style,view }) {
   return (
     <View
       style={[{
@@ -9,7 +9,7 @@ export default function TextOp({ number, text,style }) {
         flexWrap:"wrap",
         
       },style]}>
-      {number?(
+      {number&&!view?(
         <Text
         style={{
           marginRight:3,
@@ -20,6 +20,20 @@ export default function TextOp({ number, text,style }) {
         }}>
         {number}
       </Text>
+      ):view&&number?(
+        <View style={{
+          width:20,
+          height:20,
+          borderRadius:10,
+          backgroundColor:"#4ADE80",
+          justifyContent:"center",
+          alignItems:"center",
+          marginRight:12
+        }}>
+          <Text style={{
+            color:"white"
+          }}>{number}</Text>
+        </View>
       ):(
         <View style={{
             backgroundColor:"#1A1A1A",

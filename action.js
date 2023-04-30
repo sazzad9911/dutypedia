@@ -214,3 +214,10 @@ export const localTimeToServerDate=(date,dayPlus)=>{
   return dateConverter(date)
 
 }
+export const slashDate=(date)=>{
+  date=new Date(date)
+  let day=date.getDate()<10?`0${date.getDate()}`:`${date.getDate()}`
+  let year=date.getFullYear();
+  let month=date.getMonth()<10?`0${date.getMonth()}`:`${date.getMonth()}`
+  return `${day}/${month}/${year}`
+}

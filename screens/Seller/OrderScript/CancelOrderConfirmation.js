@@ -22,11 +22,13 @@ export default function CancelOrderConfirmation({navigation,route}) {
   const cancelTheOrder=useCallback(()=>{
     setLoader(true)
     if(vendor){
+
       cancelOrderByVendor(user.token,order.id).then(res=>{
         setLoader(false)
+
         navigation.navigate("VendorOrderDetails",{data:order})
         socket.emit("updateOrder", {
-          receiverId: order.service.user.id,
+          receiverId: res.data.receiverId,
           order: order
         });
         socket.emit("updateOrder", {
@@ -44,7 +46,7 @@ export default function CancelOrderConfirmation({navigation,route}) {
       setLoader(false)
       navigation.navigate("OrderDetails",{data:order})
       socket.emit("updateOrder", {
-        receiverId: order.service.user.id,
+        receiverId: res.data.receiverId,
         order: order
       });
       socket.emit("updateOrder", {

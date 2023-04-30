@@ -328,7 +328,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
         setLoader(false);
       });
   };
-  
+  //console.log(data?.cancelledBy)
   const confirmDelivery=()=>{
    
     navigation.navigate("ClintFeedBack",{order:data})
@@ -415,6 +415,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           onRejectTime={() => timeRequest(false)}
           deliveryText={data?.proofText}
           deliveryImage={data?.proofImage}
+          type={data?.type}
         />
         {data?.status == "ACCEPTED" && data?.paid == false && (
           <IconButton
@@ -448,7 +449,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
           </View>
         )}
         {data?.cancelledBy?(
-          <Text style={styles.font}>{data.cancelledBy=="USER"?"Order cancelled":"Seller has cancelled the order"}</Text>
+          <Text style={styles.font}>{data.cancelledBy=="USER"?"You cancelled the order":"Seller cancelled the order"}</Text>
         ):!data.cancelledBy&&exporters(data?.status).title == "Failed"?(
           <Text style={styles.font}>Delivery date has expired</Text>
         ):(<></>)}

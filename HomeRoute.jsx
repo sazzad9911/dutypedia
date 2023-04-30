@@ -67,6 +67,7 @@ import YourInformation from "./screens/create_dashboard/YourInformation";
 import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
 import InitialPage from "./screens/create_dashboard/InitialPage";
 import AllReview from "./screens/AllReview";
+import CancelOrderConfirmation from "./screens/Seller/OrderScript/CancelOrderConfirmation";
 
 const Stack = createStackNavigator();
 
@@ -171,6 +172,15 @@ const HomeRoute = ({ navigation }) => {
         options={{ headerShown: false }}
         name="OrderDetails"
         component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => (
+            <SubHeader {...props} title={"Cancel confirmation"} />
+          ),
+        }}
+        name="CancelOrderConfirmation"
+        component={CancelOrderConfirmation}
       />
       <Stack.Screen
         name="Company Calender"

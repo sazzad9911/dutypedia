@@ -122,6 +122,9 @@ import ClintFeedBack from "./Seller/OrderScript/ClintFeedBack";
 import FeedBackMessage from "./Seller/OrderScript/FeedBackMessage";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import SupportCenter from "./support/SupportCenter";
+import SupportDescription from "./support/SupportDescription";
+import SupportForm from "./support/SupportForm";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -133,23 +136,20 @@ const Profile = ({ navigation }) => {
   //console.log(user.user.id)
   return (
     <Stack.Navigator>
-      {vendor ? (
-        <Stack.Screen
-          name="MainProfile"
-          options={{
-            headerShown: false,
-          }}
-          component={Menu}
-        />
-      ) : (
-        <Stack.Screen
-          name="MainProfile"
-          options={{
-            headerShown: false,
-          }}
-          component={MainProfile}
-        />
-      )}
+      {vendor?(<Stack.Screen
+        name="MainProfile"
+        options={{
+          headerShown: false,
+        }}
+        component={Menu}
+      />):(<Stack.Screen
+        name="MainProfile"
+        options={{
+          headerShown: false,
+        }}
+        component={MainProfile}
+      />)}
+      
       <Stack.Screen
         name="VendorProfile"
         options={{
@@ -313,7 +313,7 @@ const Profile = ({ navigation }) => {
           //     {...props}
           //   />
           // ),
-          headerShown:false
+          headerShown: false,
         }}
         component={MemberAppointment}
       />
@@ -418,9 +418,23 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="Support"
         options={{
-          header: (props) => <SubHeader title="Contact Form" {...props} />,
+          headerShown: false,
         }}
-        component={Support}
+        component={SupportCenter}
+      />
+      <Stack.Screen
+        name="SupportDescription"
+        options={{
+          headerShown: false,
+        }}
+        component={SupportDescription}
+      />
+      <Stack.Screen
+        name="SupportForm"
+        options={{
+          headerShown: false,
+        }}
+        component={SupportForm}
       />
       <Stack.Screen
         name="ImageViewer"
@@ -526,12 +540,18 @@ const Profile = ({ navigation }) => {
         component={OrderDetails}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader {...props} title={"Important Notice"}/> }}
+        options={{
+          header: (props) => (
+            <SubHeader {...props} title={"Important Notice"} />
+          ),
+        }}
         name="ImportantNotice"
         component={ImportantNotice}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader {...props} title={"Payment status"}/> }}
+        options={{
+          header: (props) => <SubHeader {...props} title={"Payment status"} />,
+        }}
         name="PaymentStatus"
         component={PaymentStatus}
       />
@@ -541,7 +561,11 @@ const Profile = ({ navigation }) => {
         component={AmarPay}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader {...props} title={"Cancel confirmation"}/> }}
+        options={{
+          header: (props) => (
+            <SubHeader {...props} title={"Cancel confirmation"} />
+          ),
+        }}
         name="CancelOrderConfirmation"
         component={CancelOrderConfirmation}
       />
@@ -846,18 +870,17 @@ const MainProfile = (props) => {
     });
   };
   const inset = useSafeAreaInsets();
-  const isFocused=useIsFocused()
-  
+  const isFocused = useIsFocused();
+  const vendor=useSelector(state=>state.vendor)
+
   React.useEffect(() => {
-    if (isFocused) {
-      //console.log("hidden")
+    if(isFocused){
       dispatch(setHideBottomBar(false));
-      setTimeout(() => {
+      setTimeout(()=>{
         dispatch(setHideBottomBar(false));
-      }, 50);
-    } else {
-      //console.log("seen")
-      //dispatch(setHideBottomBar(true));
+      },50)
+    }else{
+     // dispatch(setHideBottomBar(true));
     }
   }, [isFocused]);
   const styles = StyleSheet.create({
@@ -946,104 +969,140 @@ const MainProfile = (props) => {
       </View>
     );
   }
+  // if(vendor){
+  //   return <Menu navigation={navigation}/>
+  // }
   if (!user || Array.isArray(user)) {
     return (
       <View
-      style={{
-        flex: 1,
-      }}>
-      <View style={{ height: inset?.top, backgroundColor: "#F2F2F6" }} />
-      <StatusBar backgroundColor={"#F2F2F6"} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ backgroundColor: "#F2F2F6" }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => {
-              //setPageChange(true);
-              onRefresh();
-            }}
-          />
-        }>
-        <View style={styles.container}>
-          <Avatar
-            containerStyle={{ marginTop: 12 }}
-            edit={false}
-          />
-          <Text numberOfLines={1} style={[styles.headLine,{marginTop:28}]}>
-          Viewing as a guest
-          </Text>
-          
-          
-          <View style={[styles.subContainer, { marginTop: 28 }]}>
-          <FlatCart
-              onPress={() => {
-                
-                navigation.navigate("LogIn");
+        style={{
+          flex: 1,
+        }}>
+        <View style={{ height: inset?.top, backgroundColor: "#F2F2F6" }} />
+        <StatusBar backgroundColor={"#F2F2F6"} />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ backgroundColor: "#F2F2F6" }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                //setPageChange(true);
+                onRefresh();
               }}
-              style={{ borderBottomWidth: 1,paddingTop:0 }}
-              icon={logins}
-              title={"Login"}
-              value={"Login to discover more"}
-              disableGo={true}
-              type={""}
             />
-            <FlatCart
-              onPress={() => {
-                navigation.navigate("SignUp_1");
-              }}
-              style={{ paddingBottom: 0,borderBottomWidth:0 }}
-              icon={openbusiness}
-              title={"Create an account"}
-              value={"Grow your business"}
-              type={""}
-            />
-            
+          }>
+          <View style={styles.container}>
+            <Avatar containerStyle={{ marginTop: 12 }} edit={false} />
+            <Text
+              numberOfLines={1}
+              style={[styles.headLine, { marginTop: 28 }]}>
+              Viewing as a guest
+            </Text>
+
+            <View style={[styles.subContainer, { marginTop: 28 }]}>
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("LogIn");
+                }}
+                style={{ borderBottomWidth: 1, paddingTop: 0 }}
+                icon={logins}
+                title={"Login"}
+                value={"Login to discover more"}
+                disableGo={true}
+                type={""}
+              />
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("SignUp_1");
+                }}
+                style={{ paddingBottom: 0, borderBottomWidth: 0 }}
+                icon={openbusiness}
+                title={"Create an account"}
+                value={"Grow your business"}
+                type={""}
+              />
+            </View>
+            <View style={[styles.subContainer, { marginBottom: 20 }]}>
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/about",
+                    title: "About Us",
+                  });
+                }}
+                icon={info}
+                title={"About"}
+                value={"Transforming the future"}
+                type={""}
+                style={{ paddingTop: 0 }}
+              />
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/legal/app/privacy-policy",
+                    title: "Privacy Policy",
+                  });
+                }}
+                icon={agreement}
+                title={"Privacy Policy"}
+                value={"Review our agreements"}
+                type={""}
+              />
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/legal/app/terms-and-conditions",
+                    title: "Term & Condition",
+                  });
+                }}
+                icon={terms}
+                title={"Terms & condition"}
+                value={"Comply with our rules"}
+                type={""}
+              />
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/legal/app/refund-policy",
+                    title: "Refund policy",
+                  });
+                }}
+                icon={refund}
+                title={"Refund policy"}
+                value={"Fair refund policy"}
+                type={""}
+              />
+
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/legal/app/order-policy",
+                    title: "Order policy",
+                  });
+                }}
+                icon={refund}
+                title={"Order policy"}
+                value={"Fair refund policy"}
+                type={""}
+              />
+              <FlatCart
+                onPress={() => {
+                  navigation.navigate("WebViews", {
+                    url: "https://duty.com.bd/contact",
+                    title: "Contact Us",
+                  });
+                }}
+                style={{ borderBottomWidth: 0, paddingBottom: 0 }}
+                icon={support}
+                title={"Contact Us"}
+                value={"Talk to us"}
+                type={""}
+              />
+            </View>
           </View>
-          <View style={[styles.subContainer,{marginBottom:20}]}>
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/about",title:"About Us"})
-            }}
-              icon={info}
-              title={"Company"}
-              value={"Transforming the future"}
-              type={""}
-              style={{paddingTop:0}}
-            />
-            <FlatCart
-              icon={agreement}
-              title={"Agreements"}
-              value={"Review our agreements"}
-              type={""}
-            />
-            <FlatCart
-              icon={terms}
-              title={"Terms & condition"}
-              value={"Comply with our rules"}
-              type={""}
-            />
-            <FlatCart
-              icon={refund}
-              title={"Refund policy"}
-              value={"Fair refund policy"}
-              type={""}
-            />
-            <FlatCart
-              onPress={() => {
-                navigation.navigate("Support");
-              }}
-              style={{ borderBottomWidth: 0, paddingBottom: 0 }}
-              icon={support}
-              title={"Support"}
-              value={"Talk to us"}
-              type={""}
-            />
-          </View>
-          
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
     );
   }
   return (
@@ -1142,47 +1201,70 @@ const MainProfile = (props) => {
               value={"Add your phone number"}
               type={"Private"}
             />
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/about",title:"About Us"})
-            }}
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("WebViews", {
+                  url: "https://duty.com.bd/about",
+                  title: "About Us",
+                });
+              }}
               icon={info}
               title={"Company"}
               value={"Transforming the future"}
               type={""}
             />
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/privacy-policy",title:"Privacy Policy"})
-            }}
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("WebViews", {
+                  url: "https://duty.com.bd/legal/app/privacy-policy",
+                  title: "Privacy Policy",
+                });
+              }}
               icon={agreement}
               title={"Privacy policy"}
               value={"Visit our policies"}
               type={""}
             />
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/terms-and-conditions",title:"Terms & Conditions"})
-            }}
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("WebViews", {
+                  url: "https://duty.com.bd/legal/app/terms-and-conditions",
+                  title: "Terms & Conditions",
+                });
+              }}
               icon={terms}
               title={"Terms & condition"}
               value={"Comply with our rules"}
               type={""}
             />
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/refund-policy",title:"Refund Policy"})
-            }}
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("WebViews", {
+                  url: "https://duty.com.bd/legal/app/refund-policy",
+                  title: "Refund Policy",
+                });
+              }}
               icon={refund}
               title={"Refund policy"}
               value={"Fair refund policy"}
               type={""}
             />
-            <FlatCart onPress={()=>{
-              navigation.navigate("WebViews",{url:"https://duty.com.bd/legal/app/order-policy",title:"Order Policy"})
-            }}
+            <FlatCart
+              onPress={() => {
+                navigation.navigate("WebViews", {
+                  url: "https://duty.com.bd/legal/app/order-policy",
+                  title: "Order Policy",
+                });
+              }}
               icon={refund}
               title={"Order policy"}
               value={"Our order policy"}
               type={""}
             />
             <FlatCart
+              // onPress={()=>{
+              //   navigation.navigate("WebViews",{url:"https://duty.com.bd/profile/support",title:"Support"})
+              // }}
               onPress={() => {
                 navigation.navigate("Support");
               }}
@@ -1319,15 +1401,15 @@ const logouts = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xml
 <path d="M6.55928 13.2498L8.63071 11.1798C8.78082 11.0298 8.85087 10.8398 8.85087 10.6498C8.85087 10.4598 8.78082 10.2598 8.63071 10.1198C8.34051 9.82984 7.86018 9.82984 7.56998 10.1198L4.21765 13.4698C3.92745 13.7598 3.92745 14.2398 4.21765 14.5298L7.56998 17.8798C7.86018 18.1698 8.34051 18.1698 8.63071 17.8798C8.92091 17.5898 8.92091 17.1098 8.63071 16.8198L6.55928 14.7498H11.0024V13.2498H6.55928Z" fill="white"/>
 </svg>
 `;
-const logins=`<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+const logins = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="28" height="28" rx="4" fill="#59A7D6"/>
 <path d="M18.8074 4H16.2061C13.0045 4 11.0035 6 11.0035 9.2V13.25H15.4457L13.3747 11.18C13.3046 11.1107 13.2491 11.0281 13.2113 10.9371C13.1735 10.8461 13.1542 10.7485 13.1546 10.65C13.1546 10.46 13.2246 10.27 13.3747 10.12C13.6648 9.83 14.1451 9.83 14.4352 10.12L17.7869 13.47C18.077 13.76 18.077 14.24 17.7869 14.53L14.4352 17.88C14.1451 18.17 13.6648 18.17 13.3747 17.88C13.2351 17.7389 13.1569 17.5484 13.1569 17.35C13.1569 17.1516 13.2351 16.9611 13.3747 16.82L15.4457 14.75H11.0035V18.8C11.0035 22 13.0045 24 16.2061 24H18.7974C21.999 24 24 22 24 18.8V9.2C24.01 6 22.009 4 18.8074 4ZM4.75037 13.25C4.34017 13.25 4 13.59 4 14C4 14.41 4.34017 14.75 4.75037 14.75H11.0035V13.25H4.75037Z" fill="white"/>
 </svg>
-`
-const openbusiness=`<svg width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+`;
+const openbusiness = `<svg width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="28" height="32" rx="4" fill="#A473E9"/>
 <path d="M23.0191 7.2667C22.6649 6.86648 22.2293 6.54647 21.7415 6.32804C21.2537 6.1096 20.725 5.99778 20.1905 6.00003C19.6901 5.99941 19.1944 6.09752 18.7319 6.28874C18.2695 6.47996 17.8492 6.76055 17.4954 7.11442C17.1415 7.46829 16.8609 7.8885 16.6697 8.35097C16.4785 8.81345 16.3804 9.3091 16.381 9.80955C16.381 10.5238 16.581 11.2 16.9334 11.7715C17.1238 12.0953 17.3715 12.3905 17.6572 12.6381C18.3238 13.2476 19.2096 13.6191 20.1905 13.6191C20.6096 13.6191 21.0096 13.5524 21.381 13.4191C22.2572 13.1429 22.9905 12.5429 23.4476 11.7715C23.6477 11.4476 23.8 11.0762 23.8857 10.6953C23.9619 10.4096 24 10.1143 24 9.80955C24 8.83813 23.6286 7.94289 23.0191 7.2667ZM21.6096 10.5048H20.9048V11.2476C20.9048 11.6381 20.581 11.9619 20.1905 11.9619C19.8 11.9619 19.4762 11.6381 19.4762 11.2476V10.5048H18.7715C18.381 10.5048 18.0572 10.181 18.0572 9.7905C18.0572 9.40003 18.381 9.07622 18.7715 9.07622H19.4762V8.40003C19.4762 8.00955 19.8 7.68575 20.1905 7.68575C20.581 7.68575 20.9048 8.00955 20.9048 8.40003V9.07622H21.6096C21.799 9.07622 21.9807 9.15147 22.1146 9.28543C22.2486 9.41938 22.3238 9.60106 22.3238 9.7905C22.3238 9.97994 22.2486 10.1616 22.1146 10.2956C21.9807 10.4295 21.799 10.5048 21.6096 10.5048Z" fill="white"/>
 <path d="M23.0476 16.4762C23.0476 15.2286 22.8095 14.0286 22.3619 12.9333C22.0667 13.1429 21.7333 13.3048 21.3809 13.4191C21.2762 13.4572 21.1714 13.4857 21.0571 13.5143C21.6317 14.973 21.7692 16.5674 21.453 18.103C21.1367 19.6386 20.3804 21.0489 19.2762 22.1619C19 21.8095 18.6476 21.4857 18.2286 21.2095C15.6476 19.4762 11.419 19.4762 8.81905 21.2095C8.4 21.4857 8.05714 21.8095 7.77143 22.1619C6.27125 20.6498 5.42918 18.6062 5.42857 16.4762C5.42857 12.0095 9.05714 8.38097 13.5238 8.38097C14.5619 8.38097 15.5619 8.58097 16.4762 8.94288C16.5048 8.82859 16.5333 8.72383 16.5714 8.60954C16.6857 8.25716 16.8476 7.93335 17.0667 7.63812C15.9414 7.18172 14.7381 6.94881 13.5238 6.9524C8.27619 6.9524 4 11.2286 4 16.4762C4 19.2381 5.19048 21.7238 7.07619 23.4667C7.07619 23.4762 7.07619 23.4762 7.06667 23.4857C7.1619 23.581 7.27619 23.6571 7.37143 23.7429C7.42857 23.7905 7.47619 23.8381 7.53333 23.8762C7.70476 24.019 7.89524 24.1524 8.07619 24.2857L8.26667 24.419C8.44762 24.5429 8.63809 24.6571 8.83809 24.7619C8.90476 24.8 8.98095 24.8476 9.04762 24.8857C9.23809 24.9905 9.43809 25.0857 9.64762 25.1714C9.72381 25.2095 9.8 25.2476 9.87619 25.2762C10.0857 25.3619 10.2952 25.4381 10.5048 25.5048C10.581 25.5333 10.6571 25.5619 10.7333 25.5809C10.9619 25.6476 11.1905 25.7048 11.419 25.7619C11.4857 25.7809 11.5524 25.8 11.6286 25.8095C11.8952 25.8667 12.1619 25.9048 12.4381 25.9333C12.4762 25.9333 12.5143 25.9429 12.5524 25.9524C12.8762 25.9809 13.2 26 13.5238 26C13.8476 26 14.1714 25.9809 14.4857 25.9524C14.5238 25.9524 14.5619 25.9429 14.6 25.9333C14.8762 25.9048 15.1429 25.8667 15.4095 25.8095C15.4762 25.8 15.5429 25.7714 15.619 25.7619C15.8476 25.7048 16.0857 25.6571 16.3048 25.5809C16.3809 25.5524 16.4571 25.5238 16.5333 25.5048C16.7429 25.4286 16.9619 25.3619 17.1619 25.2762C17.2381 25.2476 17.3143 25.2095 17.3905 25.1714C17.5905 25.0857 17.7905 24.9905 17.9905 24.8857C18.0667 24.8476 18.1333 24.8 18.2 24.7619C18.3905 24.6476 18.5809 24.5429 18.7714 24.419C18.8381 24.381 18.8952 24.3333 18.9619 24.2857C19.1524 24.1524 19.3333 24.019 19.5048 23.8762C19.5619 23.8286 19.6095 23.781 19.6667 23.7429C19.7714 23.6571 19.8762 23.5714 19.9714 23.4857C19.9714 23.4762 19.9714 23.4762 19.9619 23.4667C21.8571 21.7238 23.0476 19.2381 23.0476 16.4762Z" fill="white"/>
 <path d="M13.5238 11.6476C11.5524 11.6476 9.95239 13.2476 9.95239 15.2191C9.95239 17.1524 11.4667 18.7238 13.4762 18.781H13.6476C14.5721 18.7506 15.4486 18.362 16.0919 17.6974C16.7352 17.0327 17.095 16.144 17.0952 15.2191C17.0952 13.2476 15.4952 11.6476 13.5238 11.6476Z" fill="white"/>
 </svg>
-`
+`;

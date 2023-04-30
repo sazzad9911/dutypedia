@@ -102,6 +102,7 @@ export default function ContactList({ navigation, seller, onClose, data ,bottomR
                   users: [doc],
                 },
                 username: doc.user.username,
+                serviceId:doc.serviceId
               });
             }}
             userId={doc.user.id}

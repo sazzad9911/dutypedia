@@ -299,7 +299,7 @@ const AcceptOrder = (props) => {
           });
           setTimeout(() => {
             setLoader(false);
-            navigation.navigate(data.type, { reload: res });
+            navigation.navigate("VendorOrderDetails", { data: res.data.order });
           }, 300);
         })
         .catch((err) => {
@@ -343,7 +343,7 @@ const AcceptOrder = (props) => {
        
         setTimeout(() => {
           setLoader(false);
-          navigation.navigate("VendorOrder", { reload: res });
+          navigation.navigate("VendorOrderDetails", { data: res.data.order });
         }, 300);
         
       })

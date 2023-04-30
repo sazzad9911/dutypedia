@@ -69,8 +69,7 @@ export default function FeedBackMessage({ navigation, route }) {
         />
         <IconButton
           onPress={confirmDelivery}
-          disabled={text ? false : true}
-          active={text ? true : false}
+          active={true}
           style={[styles.mt24, styles.button]}
           title={"Done"}
         />

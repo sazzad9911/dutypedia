@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 
-export default function InputButton({ style, value, onPress, placeholder,error }) {
+export default function InputButton({ style, value, onPress, placeholder,error,Icon }) {
   return (
     <View>
       <Pressable
@@ -14,7 +14,9 @@ export default function InputButton({ style, value, onPress, placeholder,error }
             borderRadius: 5,
             height: 45,
             paddingHorizontal: 10,
-            justifyContent: "center",
+            alignItems: "center",
+            flexDirection:"row",
+            justifyContent:"space-between"
           },
 
           { borderColor: "#e5e5e5" },
@@ -27,6 +29,7 @@ export default function InputButton({ style, value, onPress, placeholder,error }
           }}>
           {value ? value : placeholder}
         </Text>
+        {Icon&&(<Icon/>)}
       </Pressable>
       {error&&(<Text style={{color:"red",marginTop:5}}>{error}</Text>)}
     </View>

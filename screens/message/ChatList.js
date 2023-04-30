@@ -18,7 +18,7 @@ import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
 import ChatCart from "../../Cart/ChatCart";
-import { getConversation } from "../../Class/message";
+import { getConversation, getConversationVendor } from "../../Class/message";
 import ActivityLoader from "../../components/ActivityLoader";
 import SearchBar from "../../components/SearchBar";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -59,11 +59,24 @@ export default function ChatList(props) {
     sheetRef.current?.close();
     dispatch(setChatBottomRef(null));
   }, []);
+  const vendor=useSelector(state=>state.vendor)
 
   //console.log(chatBottomRef)
   React.useEffect(() => {
-    if (user) {
+    if (user&&!vendor) {
       getConversation(user.token)
+        .then((res) => {
+          setLoader(false);
+          setConversations(res.data.conversations);
+          setAllConversations(res.data.conversations);
+          //console.warn(res.data.conversations)
+        })
+        .catch((err) => {
+          setLoader(false);
+          console.warn(err.response.data.msg);
+        });
+    }else if(vendor){
+      getConversationVendor(user.token,vendor?.service?.id)
         .then((res) => {
           setLoader(false);
           setConversations(res.data.conversations);

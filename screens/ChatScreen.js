@@ -107,6 +107,9 @@ const ChatScreen = (props) => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
   const ref = params?.ref;
+  const serviceId=params?.serviceId;
+  const vendor=useSelector(state=>state.vendor);
+
   React.useEffect(() => {
     if (isFocused) {
       ref?.current?.close();
@@ -116,6 +119,10 @@ const ChatScreen = (props) => {
         ref?.current?.close();
         dispatch(setHideBottomBar(true));
       }, 50);
+      setTimeout(() => {
+        
+        dispatch(setHideBottomBar(true));
+      }, 150);
     } else {
       //console.log("seen")
       dispatch(setHideBottomBar(false));
@@ -129,7 +136,7 @@ const ChatScreen = (props) => {
         }
       });
       //console.log(username)
-      setId(data.id);
+     
       //console.log(user.user)
       //setMessages(data.messages);
       //setLastMessage(data.messages[data.messages.length-1])
@@ -137,9 +144,10 @@ const ChatScreen = (props) => {
   }, [data]);
   React.useEffect(() => {
     if (username && UserInfo && user) {
-      createConversation(user.token, username)
+      createConversation(user.token, username,serviceId)
         .then((res) => {
           let arr = [];
+          setId(res?.data?.conversation?.id);
           res.data.conversation.messages.map((doc, i) => {
             arr.push(
               serverMessageToLocal(

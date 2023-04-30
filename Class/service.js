@@ -300,12 +300,6 @@ export const getAllGigs = async (token) => {
   });
   return res;
 };
-export const getTopServices = async (token) => {
-  const res = await axios.get(`${url}/server/services/gigs/top`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res;
-};
 export const getPopularCategories = async (token) => {
   const res = await axios.get(
     `${url}/server/services/gigs/favourite-categories`,
@@ -1242,5 +1236,45 @@ export const cancelRequestDate = async (token, orderId) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
+  return res;
+};
+export const getStartingServices = async () => {
+  const res = await axios.get(`${url}/server/services/gigs/starting`);
+  return res;
+};
+export const getTopServices = async () => {
+  const res = await axios.get(`${url}/server/services/gigs/top`);
+  return res;
+};
+export const getPopularServices = async () => {
+  const res = await axios.get(`${url}/server/services/gigs/popular`);
+  return res;
+};
+export const getTrendingServices = async () => {
+  const res = await axios.get(`${url}/server/services/gigs/trending`);
+  return res;
+};
+export const getSuggestServices = async () => {
+  const res = await axios.get(`${url}/server/services/gigs/suggest`);
+  return res;
+};
+export const createSupport = async (token,subject,description,image) => {
+  const res = await axios.post(`${url}/server/support/create`,{
+    subject: subject,
+    message: description,
+    image: image,
+  },{
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const createReport = async (token,subject,description,serviceId) => {
+  const res = await axios.post(`${url}/server/services/report`,{
+    subject: subject,
+    message: description,
+    serviceId: serviceId,
+  },{
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return res;
 };

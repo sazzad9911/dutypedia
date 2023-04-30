@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -53,6 +53,8 @@ import {
   getRelatedServices,
   getUnRelatedServices,
   getDashboardReviews,
+  setLikeGigs,
+  getLikeGigs,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../Class/dataConverter";
@@ -88,6 +90,7 @@ import { TopSellerCard } from "../components/LandingPage/TopSeller";
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import OfferNow from "./Seller/OfferNow";
 import { CheckBox } from "./Seller/Pricing";
+import { setSaveList } from "../Reducers/saveList";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -220,6 +223,7 @@ const OtherProfile = (props) => {
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
+  const [like,setLike]=useState(false)
   
 
   const onRefresh = React.useCallback(() => {
@@ -602,6 +606,8 @@ const OtherProfile = (props) => {
     }).start();
   }, [specialtyHeight]);
 
+  const saveList = useSelector((state) => state.saveList);
+
   React.useEffect(() => {}, [newNavigation]);
   const changeScrollStatus = React.useCallback((val) => {
     //setScrollEnabled(val);
@@ -619,7 +625,27 @@ const OtherProfile = (props) => {
       }
     }
   });
+  useEffect(()=>{
+    //console.log(data)
+    let arr=saveList?.filter(d=>d.gig.id==data?.id)
+    if(arr?.length>0){
+      setLike(true)
+    }else{
+      setLike(false)
+    }
+  },[saveList?.length])
 
+  const addToSaveList=async()=>{
+    if(!data){
+      return
+    }
+    console.log(data.id)
+    const res=await setLikeGigs(newUser.token,data.id)
+    //console.log(res.data)
+    const response=await getLikeGigs(newUser.token);
+    //console.log(response.data.gigs)
+    dispatch(setSaveList(response.data.gigs))
+  }
   //console.log(newUser)
 
   if (
@@ -637,7 +663,7 @@ const OtherProfile = (props) => {
       </View>
     );
   }
-
+  
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
@@ -767,8 +793,12 @@ const OtherProfile = (props) => {
             anchor={
               <SvgXml
                 onPress={() => {
+                  if(!newUser.token){
+                    navigation.navigate("LogIn")
+                    return
+                  }
                   setVisible(!Visible);
-                  console.log("sadfa");
+                  //console.log("sadfa");
                 }}
                 style={{
                   shadowOffset: {
@@ -796,7 +826,14 @@ const OtherProfile = (props) => {
             <Menu.Item onPress={() => {}} title="Copy URL" />
           </Menu>
 
-          <SvgXml
+          <SvgXml onPress={()=>{
+            if(!newUser.token){
+              navigation.navigate("LogIn")
+              return
+            }
+            addToSaveList()
+            setLike(v=>(!v))
+          }}
             style={{
               shadowOffset: {
                 width: 0,
@@ -807,7 +844,7 @@ const OtherProfile = (props) => {
               elevation: 5,
               shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
             }}
-            xml={loveIcon}
+            xml={like?loveIconAc:loveIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
           />
@@ -829,6 +866,10 @@ const OtherProfile = (props) => {
 
           <SvgXml
             onPress={() => {
+              if(newUser&&!newUser.token){
+                navigation.navigate("LogIn")
+                return
+              }
               navigation.navigate("AppointmentList", { data: Data });
             }}
             style={{
@@ -847,6 +888,10 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
+              if(newUser&&!newUser.token){
+                navigation.navigate("LogIn")
+                return
+              }
               if (!userInfo) {
                 Alert.alert("Invalid user!");
                 return;
@@ -864,6 +909,7 @@ const OtherProfile = (props) => {
                   users: [user],
                 },
                 username: userInfo.username,
+                serviceId:data?.service?.id
               });
             }}
             style={{
@@ -1547,7 +1593,8 @@ const OtherProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
-              if (!userInfo) {
+              
+              if (!newUser.token||!userInfo) {
                 Alert.alert("Invalid user!");
                 return;
               }
@@ -1555,6 +1602,7 @@ const OtherProfile = (props) => {
                 Alert.alert("Ops!", "Self messaging is not allowed.");
                 return;
               }
+              
               let user = {
                 userId: userInfo.id,
                 user: userInfo,
@@ -2229,6 +2277,23 @@ const loveIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 </g>
 </svg>
 `;
+const loveIconAc=`<svg width="45" height="41" viewBox="0 0 45 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_6086_40919)">
+<path d="M13.415 3.1481C15.1389 2.82166 16.9219 3.04992 18.508 3.8001C20.1741 4.59864 21.5641 5.87613 22.5 7.4691C23.6045 5.57873 25.349 4.14602 27.418 3.4301C29.2529 2.81868 31.2435 2.86643 33.047 3.5651C34.9104 4.30209 36.4794 5.63182 37.512 7.3491C38.413 8.84263 38.9247 10.5385 39 12.2811V12.8701C38.8631 15.058 38.1439 17.1695 36.917 18.9861C35.4738 21.1689 33.7501 23.1525 31.79 24.8861C30.1346 26.3848 28.389 27.7808 26.563 29.0661C25.406 29.8791 24.231 30.6661 23.016 31.3901C22.8677 31.4822 22.6974 31.5327 22.5229 31.5364C22.3484 31.5401 22.1761 31.4968 22.024 31.4111C21.109 30.8761 20.224 30.2961 19.343 29.7111C16.3233 27.7041 13.5291 25.3769 11.009 22.7701C9.84309 21.5479 8.80442 20.2104 7.909 18.7781C6.78634 17.0483 6.12882 15.0582 6 13.0001V12.5861C6.03195 10.1306 6.94468 7.76822 8.572 5.9291C9.83614 4.49419 11.5385 3.51664 13.415 3.1481Z" fill="#DA1E37"/>
+</g>
+<defs>
+<filter id="filter0_d_6086_40919" x="0" y="0.00317383" width="45" height="40.5334" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="3"/>
+<feGaussianBlur stdDeviation="3"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.161 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6086_40919"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_6086_40919" result="shape"/>
+</filter>
+</defs>
+</svg>
+`
 const shareIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="51" height="50.994" viewBox="0 0 51 50.994">
 <defs>
   <filter id="Path_20916" x="0" y="0" width="51" height="50.994" filterUnits="userSpaceOnUse">

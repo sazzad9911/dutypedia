@@ -22,7 +22,8 @@ export default function StatusCart({
   deliveryImage,
   onDelivered,
   vendor,
-  onCancel
+  onCancel,
+  type
 }) {
   //console.log(status)
   return (
@@ -40,10 +41,10 @@ export default function StatusCart({
             alignItems: "center",
           }}>
           <View>
-            <Text style={styles.small}>Your Offer</Text>
+            {type!="STARTING"?(<Text style={styles.small}>Service price</Text>):(<Text style={styles.small}>{vendor?"Buyer":"Your"} Offer</Text>)}
             <Text style={[styles.small, { marginTop: 8 }]}>Duty fee 5%</Text>
             <Text style={[styles.mediumBold, { marginTop: 16 }]}>
-              Total pay
+              {vendor?"You get":"Total pay"}
             </Text>
           </View>
           <View
@@ -101,7 +102,17 @@ export default function StatusCart({
       </View>
       <View style={styles.box}>
         <Text style={styles.medium}>Service Status</Text>
-        <Text
+        {!paid?(
+          <Text
+          style={[
+            styles.statusText,
+            styles.mt16,
+            { color:vendor?exportersVendor(status).color:exporters(status).color },
+          ]}>
+          {vendor?(status=="CANCELLED"?"Cancel":exportersVendor(status).title):(status=="CANCELLED"?"Cancel":exporters(status).title)}
+        </Text>
+        ):(
+          <Text
           style={[
             styles.statusText,
             styles.mt16,
@@ -109,6 +120,7 @@ export default function StatusCart({
           ]}>
           {vendor?exportersVendor(status).title:exporters(status).title}
         </Text>
+        )}
         {!paid && status == "ACCEPTED" &&!vendor&& (
           <Text
             style={[
@@ -132,7 +144,7 @@ export default function StatusCart({
         {requestDate&&status=="PROCESSING"&&!vendor&&(
           <View style={styles.mt16}>
             <Text style={styles.dpText}><Text style={styles.medium}>*</Text> Seller Request for Extended Delivery Time</Text>
-            <Text style={[styles.exSmall,styles.mt16]}>Request date <Text style={{color:"#1876F2"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
+            <Text style={[styles.exSmall,styles.mt16,{fontSize:14,color:"#1876F2"}]}>Request date <Text style={{color:"#000000"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
             <View style={[{justifyContent:"flex-end",flexDirection:"row"},styles.mt16]}>
               <IconButton onPress={onRejectTime} style={styles.button} title={"Cancel"}/>
               <View style={{width:24}}/>
@@ -143,7 +155,7 @@ export default function StatusCart({
         {requestDate&&status=="PROCESSING"&&vendor&&(
           <View style={styles.mt16}>
             <Text style={styles.dpText}><Text style={styles.medium}>*</Text> You have sent a new delivery date request. Once your client accepts the date, it will be added to your delivery date.</Text>
-            <Text style={[styles.exSmall,styles.mt16,{color:"#1876F2"}]}>Request date <Text style={{color:"#000000"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
+            <Text style={[styles.exSmall,styles.mt16,{color:"#1876F2",fontSize:14}]}>Request date <Text style={{color:"#000000"}}>{serverTimeToLocalDate(requestDate)}</Text></Text>
             <View style={[{flexDirection:"row",justifyContent:"center"},styles.mt16]}>
               <Text onPress={onCancel} style={{
                 fontSize:14,

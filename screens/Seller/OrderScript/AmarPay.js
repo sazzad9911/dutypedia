@@ -2,7 +2,7 @@ import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { WebView } from "react-native-webview";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../../assets/stylesheet";
 import { socket } from "../../../Class/socket";
 import ActivityLoader from "../../../components/ActivityLoader";
@@ -11,6 +11,7 @@ import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 export default function AmarPay({ navigation, order,url,onClose }) {
   //const url = route?.params?.url;
   const [loader, setLoader] = useState(false);
+  const user=useSelector(state=>state.user)
   // const isFocused=useIsFocused()
   // const dispatch=useDispatch()
   // const orderId=route?.params?.orderId;
@@ -55,7 +56,7 @@ export default function AmarPay({ navigation, order,url,onClose }) {
             order: order
           });
           socket.emit("updateOrder", {
-            receiverId: order.user.id,
+            receiverId: user?.user?.id,
             order: order
           });
           onClose()

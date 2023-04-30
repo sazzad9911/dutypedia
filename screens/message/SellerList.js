@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
 import ChatMemberCart from "../../Cart/ChatMemberCart";
 import { getOnlineUser } from "../../Class/member";
-import { getConversation } from "../../Class/message";
+import { getConversation, getConversationVendor } from "../../Class/message";
 import { getOnlineUsers, getSocket } from "../../Class/socket";
 import ActivityLoader from "../../components/ActivityLoader";
 import ChatHeader from "../../components/ChatHeader";
@@ -30,17 +30,31 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
   //const searchX=route?.params?.search;
 
   React.useEffect(() => {
+   if(vendor){
+    getConversationVendor(user.token,vendor?.service?.id)
+    .then((res) => {
+      setLoader(false);
+      setMembers(res.data.conversations);
+      setAllMembers(res.data.conversations);
+      //console.warn(res.data.conversations)
+    })
+    .catch((err) => {
+      setLoader(false);
+      console.warn(err.response.data.msg);
+    });
+   }else{
     getConversation(user.token)
-      .then((res) => {
-        setLoader(false);
-        setMembers(res.data.conversations);
-        setAllMembers(res.data.conversations);
-        //console.warn(res.data.conversations)
-      })
-      .catch((err) => {
-        setLoader(false);
-        console.warn(err.response.data.msg);
-      });
+    .then((res) => {
+      setLoader(false);
+      setMembers(res.data.conversations);
+      setAllMembers(res.data.conversations);
+      //console.warn(res.data.conversations)
+    })
+    .catch((err) => {
+      setLoader(false);
+      console.warn(err.response.data.msg);
+    });
+   }
   }, [user, vendor, seller]);
   const search = (val, data) => {
     if (!Array.isArray(data)) {
@@ -127,6 +141,7 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
                   username: doc?.users?.filter(
                     (d) => d.user.id != user.user.id
                   )[0]?.user?.username,
+                  serviceId:doc?.serviceId
                 });
               }}
               userId={

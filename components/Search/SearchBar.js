@@ -58,8 +58,9 @@ export default function SearchBar({
 const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
   const ref = useRef();
   const [write, setWrite] = React.useState(false);
+  const [wid,setWidth]=React.useState(0)
   return (
-    <Pressable
+    <Pressable onLayout={e=>setWidth(e.nativeEvent.layout.width)}
       onPress={() => {
         if (onPress) {
           onPress();
@@ -77,12 +78,12 @@ const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
         beforeStyle,
       ]}>
       <MotiView
-        animate={{
-          scale:[0,1,{value:1,delay:200}]
+        animate={{ width: write ? wid-50 : 100 }}
+        transition={{
+          type: 'timing',
+          duration: 350,
         }}
-        style={{
-          flex: write ? 1 : 0,
-        }}>
+        >
         <TextInput
           ref={ref}
           value={value}

@@ -72,10 +72,11 @@ const Menu = ({ navigation }) => {
       dispatch(setHideBottomBar(false));
       setTimeout(() => {
         dispatch(setHideBottomBar(false));
-      }, 50);
+      }, 100);
     } else {
+      
       //console.log("seen")
-      // dispatch(setHideBottomBar(false));
+      //dispatch(setHideBottomBar(true));
     }
   }, [isFocused]);
 
@@ -179,6 +180,7 @@ const Menu = ({ navigation }) => {
             onPress={() => {
               logoutVendor();
               dispatch({ type: "SET_VENDOR", playload: false });
+              navigation.navigate("Feed")
             }}
             Icon={logout}
             title={"Logout"}
