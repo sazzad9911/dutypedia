@@ -91,6 +91,7 @@
     "redux": "^4.2.0",
     "rn-faded-scrollview": "^1.0.13",
     "rn-keyboard-sticky-view": "^1.0.4",
+    "rn-read-more-text": "^0.0.5",
     "socket.io-client": "^4.5.3"
   },
   "devDependencies": {

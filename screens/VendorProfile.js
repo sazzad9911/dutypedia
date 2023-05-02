@@ -142,7 +142,7 @@ const VendorProfile = (props) => {
   const [Images, setImages] = React.useState([]);
   const dispatch = useDispatch();
   const [ActiveServiceData, setActiveServiceData] = React.useState(null);
-  const [FixedService, setFixedService] = React.useState(null);
+  const [FixedService, setFixedService] = React.useState([]);
   const vendor = useSelector((state) => state.vendor);
   const [Click, setClick] = React.useState(false);
   const [Title, setTitle] = React.useState();
@@ -155,7 +155,7 @@ const VendorProfile = (props) => {
   const [RelatedServices, setRelatedServices] = React.useState();
   const [UnRelatedServices, setUnRelatedServices] = React.useState();
   const [Gigs, setGigs] = React.useState();
-  const [PackageService, setPackageService] = React.useState();
+  const [PackageService, setPackageService] = React.useState([]);
   const [packageData, setPackageData] = React.useState();
   const [selectedPackage, setSelectedPackage] = React.useState();
   const [PackageServiceList, setPackageServiceList] = React.useState();
@@ -383,32 +383,6 @@ const VendorProfile = (props) => {
       }
     }
   }, [ActiveService + Click + Refresh, isFocused]);
-  React.useEffect(() => {
-    if (newUser && Data) {
-      getOtherServices(newUser.token, data.service.id, "ONETIME")
-        .then((res) => {
-          setFixedService(res.data.gigs);
-          //console.log(res.data.gigs);
-        })
-        .catch((err) => {
-          setFixedService([]);
-          console.warn(err.response.data);
-        });
-    }
-  }, [Active + data + newUser + vendor + Data, isFocused]);
-  React.useEffect(() => {
-    if (newUser && data) {
-      getOtherServices(newUser.token, data.service.id, "PACKAGE")
-        .then((res) => {
-          setPackageService(res.data.gigs);
-          //console.log(res.data.gigs);
-        })
-        .catch((err) => {
-          setPackageService([]);
-          console.warn(err.response.data);
-        });
-    }
-  }, [data + newUser + vendor + Data, isFocused]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
@@ -437,44 +411,44 @@ const VendorProfile = (props) => {
   };
 
   const clickFixed = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
+    // setClick(true);
+    // setImages(doc.images);
+    // setGigs(doc);
+    // //console.log(doc.services);
+    // setPrice(doc.price);
+    // setFacilities(doc.facilites.selectedOptions);
+    // setTitle(doc.title);
+    // setDescription(doc.description);
+    // try {
+    //   dispatch({
+    //     type: "SET_NEW_LIST_DATA",
+    //     playload: serverToLocal(doc.services, Category),
+    //   });
+    //   setNewDataList(serverToLocal(doc.services, Category));
+    // } catch (e) {
+    //   console.log(e.message);
+    // }
     //console.log("ok");
     navigation.navigate("VendorFixedService", { data: doc });
   };
   const clickPackage = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
+    // setClick(true);
+    // setImages(doc.images);
+    // setGigs(doc);
+    // //console.log(doc.services);
+    // setPrice(doc.price);
+    // setFacilities(doc.facilites.selectedOptions);
+    // setTitle(doc.title);
+    // setDescription(doc.description);
+    // try {
+    //   dispatch({
+    //     type: "SET_NEW_LIST_DATA",
+    //     playload: serverToLocal(doc.services, Category),
+    //   });
+    //   setNewDataList(serverToLocal(doc.services, Category));
+    // } catch (e) {
+    //   console.log(e.message);
+    // }
     //console.log("ok");
     navigation.navigate("VendorPackageService", { data: doc });
   };
@@ -2307,7 +2281,7 @@ const newStar = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" 
 `;
 const FixedScreen = ({ navigation, route }) => {
   const params = route.params;
-  const FixedService = params.FixedService;
+  const [FixedService,setFixedService] = useState([])
   const onPress = params.onPress;
   const setNewNavigation = params.setNewNavigation;
   const isFocused = useIsFocused();
@@ -2319,6 +2293,8 @@ const FixedScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
   const changeScreenName = params.changeScreenName;
+  const newUser=useSelector(state=>state.user)
+  const Data=params?.Data;
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2331,6 +2307,19 @@ const FixedScreen = ({ navigation, route }) => {
       }, 50);
     }
   }, [isFocused + layoutHeight]);
+  React.useEffect(() => {
+    if (newUser && Data) {
+      getOtherServices(newUser.token, Data.service.id, "ONETIME")
+        .then((res) => {
+          setFixedService(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setFixedService([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused]);
 
   //console.log(FixedService)
   return (
@@ -2396,7 +2385,7 @@ const FixedScreen = ({ navigation, route }) => {
 };
 const PackageScreen = ({ navigation, route }) => {
   const params = route.params;
-  const PackageService = params.PackageService;
+  const [PackageService,setPackageService] = useState([])
   const onPress = route.params.onPress;
   const RelatedServices = params.RelatedServices;
   const UnRelatedServices = params.UnRelatedServices;
@@ -2407,6 +2396,8 @@ const PackageScreen = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
   const changeScreenName = params.changeScreenName;
+  const Data=params?.Data;
+  const newUser=useSelector(state=>state.user)
 
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
@@ -2415,6 +2406,19 @@ const PackageScreen = ({ navigation, route }) => {
       setNewNavigation(layoutHeight + 50);
     }
   }, [layoutHeight + isFocused]);
+  React.useEffect(() => {
+    if (newUser && Data) {
+      getOtherServices(newUser.token, Data.service.id, "PACKAGE")
+        .then((res) => {
+          setPackageService(res.data.gigs);
+          //console.log(res.data.gigs);
+        })
+        .catch((err) => {
+          setPackageService([]);
+          console.warn(err.response.data);
+        });
+    }
+  }, [isFocused]);
   //console.log(FixedService)
   return (
     <View

@@ -36,6 +36,7 @@ import { uploadFile } from "../../Class/upload";
 import IconButton from "../../components/IconButton";
 import editt from "../../assets/editt.jpg";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ActivityLoader from "../../components/ActivityLoader";
 
 const Service = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -250,16 +251,24 @@ const Service = ({ navigation, route }) => {
           direct
         )
           .then((res) => {
-            navigation.navigate("VendorProfile", { direct: businessForm });
+            //console.log(res.data)
             setLoader(false);
+            // if(type=="ONETIME"){
+            //   navigation.navigate("VendorFixedService", { data: res.data.gig });
+            // }else{
+            //   navigation.navigate("VendorPackageService", { data: res.data.gig });
+            // }
+            navigation.navigate("VendorProfile", { direct: res.data.gig });
+            
           })
           .catch((err) => {
+            Alert.alert("Ops!","Something went wring try again later")
             console.warn(err.response);
             setLoader(false);
           });
       }
 
-      Alert.alert("Image save failed")
+     // Alert.alert("Image save failed")
       return;
     }
     navigation.navigate("Address");
@@ -267,7 +276,7 @@ const Service = ({ navigation, route }) => {
   if (Loader) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader/>
       </View>
     );
   }

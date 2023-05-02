@@ -14,6 +14,7 @@ import {
   Pressable,
   Animated as Animation,
   Platform,
+  StatusBar
 } from "react-native";
 import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
@@ -78,7 +79,7 @@ import {
   useImage,
 } from "@shopify/react-native-skia";
 import Swiper from "react-native-swiper";
-import { StatusBar } from "expo-status-bar";
+
 import CustomAppStatusBar from "../Hooks/AppBar";
 import { TabbedHeaderPager } from "react-native-sticky-parallax-header";
 import BottomBar from "../components/BottomBar";
@@ -515,44 +516,28 @@ const OtherProfile = (props) => {
   };
 
   const clickFixed = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    console.log("ok");
+    // setClick(true);
+    // setImages(doc.images);
+    // setGigs(doc);
+    // //console.log(doc.services);
+    // setPrice(doc.price);
+    // setFacilities(doc.facilites.selectedOptions);
+    // setTitle(doc.title);
+    // setDescription(doc.description);
+    // try {
+    //   dispatch({
+    //     type: "SET_NEW_LIST_DATA",
+    //     playload: serverToLocal(doc.services, Category),
+    //   });
+    //   setNewDataList(serverToLocal(doc.services, Category));
+    // } catch (e) {
+    //   console.log(e.message);
+    // }
+    // console.log("ok");
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
+    
     console.log("ok");
     navigation.navigate("PackageService", { data: doc });
   };
@@ -633,7 +618,12 @@ const OtherProfile = (props) => {
     }else{
       setLike(false)
     }
-  },[saveList?.length])
+  },[saveList?.length,isFocused])
+  useEffect(()=>{
+    if(!newUser.token){
+      setLike(false)
+    }
+  },[newUser,isFocused])
 
   const addToSaveList=async()=>{
     if(!data){
@@ -1595,7 +1585,7 @@ const OtherProfile = (props) => {
             onPress={() => {
               
               if (!newUser.token||!userInfo) {
-                Alert.alert("Invalid user!");
+                navigation.navigate("LogIn")
                 return;
               }
               if (newUser.user.id == userInfo.id) {
@@ -1612,6 +1602,7 @@ const OtherProfile = (props) => {
                   users: [user],
                 },
                 username: userInfo.username,
+                serviceId:data?.service?.id
               });
             }}>
             <SvgXml xml={messageIcon} height="50" width={"50"} />
@@ -1630,7 +1621,11 @@ const OtherProfile = (props) => {
         }}/>
       )} */}
       {/* <NewBottomBar {...props}/> */}
-      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
+      <View style={{
+        position:"absolute"
+      }}>
+      
+      </View>
       {index!=-1&&(
         <View style={{
           backgroundColor:"#818181",
@@ -1640,6 +1635,9 @@ const OtherProfile = (props) => {
           height:height,
           opacity:.8
         }}/>
+      )}
+      {index==-1&&(
+        <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       )}
       <BottomSheet
         ref={sheetRef}

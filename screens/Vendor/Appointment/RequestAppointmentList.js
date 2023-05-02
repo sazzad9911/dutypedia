@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
+  Pressable,
 } from "react-native";
 import Svg, { SvgXml } from "react-native-svg";
 const { width, height } = Dimensions.get("window");
@@ -22,27 +23,27 @@ import Avatar from "../../../components/Avatar";
 const status = [
   {
     title: "Incomplete",
-    color: "#E2B529",
+    color: "#1A1A1A",
   },
   {
     title: "Completed",
-    color: "#4ADE80",
+    color: "#1A1A1A",
   },
   {
     title: "Cancelled",
-    color: "#DA1E37",
+    color: "#1A1A1A",
   },
   {
     title: "Pending",
-    color: "#6366F1",
+    color: "#1A1A1A",
   },
   {
     title: "Approved",
-    color: "#6366F1",
+    color: "#1A1A1A",
   },
   {
     title: "Rejected",
-    color: "#DA1E37",
+    color: "#1A1A1A",
   },
 ];
 
@@ -222,8 +223,68 @@ export default function RequestAppointmentList({ navigation, route }) {
     </View>
   );
 }
-const Cart = ({ date, status, title, onPress, image, name, username }) => {
+export const Cart = ({
+  date,
+  status,
+  title,
+  onPress,
+  image,
+  name,
+  username,
+}) => {
   //console.log(status)
+  return (
+    <Pressable style={{
+      flexDirection:"row",
+      justifyContent:"space-between",
+      paddingHorizontal:20,
+      marginVertical:8,
+      paddingVertical:4,
+      alignItems:"center",
+      
+    }} onPress={onPress}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems:"center"
+        }}>
+        <Avatar
+          style={{
+            width: 48,
+            height: 48,
+            borderColor:"#e5e5e5"
+          }}
+          source={{ uri: image }}
+        />
+        <View
+          style={{
+            marginLeft: 12,
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "700",
+            }}
+            numberOfLines={1}>
+            {name ? name : "Easin Arafat"}
+          </Text>
+          <Text style={{
+            marginTop:4,
+            fontSize:12,
+            fontWeight:"400",
+            color:"#767676"
+          }}>{date}</Text>
+        </View>
+      </View>
+      <Text
+        numberOfLines={1}
+        style={{
+          color: status ? status.color : "#1A1A1A",
+          fontSize: 12,
+          fontWeight: "500",
+        }}>{`${status ? status.title : "Invalid"}`}</Text>
+    </Pressable>
+  );
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -233,21 +294,12 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
         marginHorizontal: 0,
         justifyContent: "space-between",
         paddingHorizontal: 5,
-        paddingVertical: 15,
-        shadowColor: "#333333",
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
-        shadowOpacity: 0.1,
-        elevation: 3,
-        shadowRadius: 3,
+        paddingVertical: 10,
         backgroundColor: "white",
         alignItems: "center",
         marginTop: 10,
         borderRadius: 5,
-      }}
-    >
+      }}>
       <Avatar
         style={{
           width: 40,
@@ -263,54 +315,59 @@ const Cart = ({ date, status, title, onPress, image, name, username }) => {
       <View
         style={{
           flex: 0.5,
-        }}
-      >
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>{name ? name : "Easin Arafat"}</Text>
-        <Text style={{
-          fontSize:12
-        }} numberOfLines={1}>@{username ? username : "easinarafat"}</Text>
-      </View>
-      <View
-        style={{
-          width: 1,
-          height: 40,
-          backgroundColor: "#E2E2E2",
-          marginHorizontal: 15,
-        }}
-      />
-      <View
-        style={{
-          flex: 2,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 12,
-            }}
-          >
-            {date}
-          </Text>
-          <Text
-            style={{
-              color: status ? status.color : "red",
-              fontSize: 12,
-              marginLeft: 10,
-            }}
-          >{`(${status ? status.title : "Invalid"})`}</Text>
-        </View>
+        }}>
         <Text
           style={{
             fontSize: 12,
           }}
-          numberOfLines={1}
-        >
+          numberOfLines={1}>
+          {name ? name : "Easin Arafat"}
+        </Text>
+        <Text
+          style={{
+            fontSize: 12,
+          }}
+          numberOfLines={1}>
+          @{username ? username : "easinarafat"}
+        </Text>
+      </View>
+      <View
+        style={{
+          width: 1,
+          height: 30,
+          backgroundColor: "#E2E2E2",
+          marginHorizontal: 5,
+        }}
+      />
+      <View
+        style={{
+          flex: 1.5,
+          marginLeft: 5,
+        }}>
+        <View
+          style={{
+            flexDirection: "row",
+          }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 12,
+            }}>
+            {date}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={{
+              color: status ? status.color : "red",
+              fontSize: 12,
+              marginLeft: 10,
+            }}>{`(${status ? status.title : "Invalid"})`}</Text>
+        </View>
+        <Text
+          style={{
+            fontSize: 14,
+          }}
+          numberOfLines={1}>
           {title ? title : "Invalid"}
         </Text>
       </View>

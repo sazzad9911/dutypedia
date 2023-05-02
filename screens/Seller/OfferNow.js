@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   ScrollView,
@@ -66,6 +66,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import DatePickerHook from "../../Hooks/DatePickerHook";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import ReadMoreText from "rn-read-more-text";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -256,7 +257,21 @@ const OfferNow = (props) => {
       console.warn(e.message);
     }
   };
+  const renderFooter = ({ isShowingAll, toggle }) => (
+    <Text
+      style={{ color: "blue", alignSelf: "flex-end" }}
+      onPress={() => toggle()}>
+      {isShowingAll ? "Show less" : "Show more"}
+    </Text>
+  );
+  const [textRef,setTextRef] = useState();
+  const content=`We offer buyers the option to select a delivery date that is convenient for them, with the flexibility to choose a delivery window that suits their schedule. However, we also want to remind buyers to communicate with the seller about their availability to ensure a successful delivery. Before selecting a delivery date, we recommend that buyers reach out to the seller to confirm their ability to deliver during the chosen time frame. This will help avoid any potential conflicts or delays in the delivery process. We strive to provide the best possible service to our buyers and sellers, and clear communication is key to ensuring a positive experience for all parties involved. Thank you for choosing our platform for your needs.If you have any questions or concerns regarding our delivery policy, please refer to our Delivery Policy section`
   const inset = useSafeAreaInsets();
+  const handleManualToggle = () =>{
+    if(textRef){
+      textRef.toggle()
+    }
+  };
   // React.useEffect(() => {
   //   if (isFocused) {
   //     //console.log("hidden")
@@ -473,11 +488,21 @@ const OfferNow = (props) => {
                 </Text>
               }
             /> */}
+            <Pressable style={{marginTop:24}} onPress={handleManualToggle}>
+              <ReadMoreText ref={e=>setTextRef(e)}
+                style={[styles.spText, { marginTop: 0 }]}
+                limitLines={3}
+                //renderFooter={renderFooter}
+                >
+                {`${content}`}
+              </ReadMoreText>
+            </Pressable>
           </View>
         </BottomSheetScrollView>
       </Animated.View>
     );
   }
+
   if (screen == "instruction") {
     return (
       <Animated.View layout={FadeIn} style={{ flex: 1 }}>

@@ -367,7 +367,7 @@ const FinalReview = (props) => {
       }
       setLoading(false);
       dispatch({ type: "SET_VENDOR", playload: data });
-      navigation.navigate("Profile");
+      navigation.navigate("VendorProfile");
       // try{
       //   props.navigation.navigate("VendorProfile");
       // }catch(err){

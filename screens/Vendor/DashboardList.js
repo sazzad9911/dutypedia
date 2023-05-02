@@ -22,6 +22,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import IconButton from "../../components/IconButton";
 import Frame from "../../assets/Images/Frame.png"
+import { useIsFocused } from "@react-navigation/native";
 
 const DashboardList = ({ navigation, route }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -38,14 +39,25 @@ const DashboardList = ({ navigation, route }) => {
   const data = route?.params?.data;
   const vendorOrders = useSelector((state) => state.vendorOrders);
   const inset=useSafeAreaInsets()
+  const isFocused=useIsFocused()
 
   React.useEffect(() => {
-    if (Array.isArray(vendorInfo)) {
-      setData(vendorInfo);
-    } else {
-      setData([]);
+    if(user){
+      getDashboard(user.token).then((result) => {
+        if (result && result.data && result.data.dashboards) {
+          dispatch({
+            type: "SET_VENDOR_INFO",
+            playload: result.data.dashboards,
+          });
+          
+          setData(result.data.dashboards)
+        } else {
+          dispatch({ type: "SET_VENDOR_INFO", playload: false });
+          
+        }
+      });
     }
-  }, [vendorInfo]);
+  }, [isFocused]);
 
   if (Loading) {
     return (
@@ -108,11 +120,11 @@ const DashboardList = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}>
           <View style={{ height: 32 }} />
-          {vendorInfo &&
-            vendorInfo.map((doc, i) => (
+          {Data &&
+            Data.map((doc, i) => (
               <Cart key={i} onChange={click} data={doc} />
             ))}
-            {vendorInfo&&vendorInfo.length==0&&(
+            {Data&&Data.length==0&&(
               <Text style={{
                 fontSize:16,
                 marginTop:30,

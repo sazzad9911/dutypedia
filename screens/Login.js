@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -27,6 +27,8 @@ const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [loader,setLoader]=useState(false)
   const [error,setError]=useState()
+  const userRef=useRef()
+  const passRef=useRef()
 
   const login = () => {
     setEmailError(null);
@@ -96,10 +98,16 @@ const Login = ({ navigation }) => {
               marginVertical: 72,
             }}>
             <Text style={styles.lebel}>Username</Text>
-            <Input value={Email} onChange={setEmail} placeholder={" "} style={styles.input} />
+            <Input onSubmitEditing={()=>{
+              if(passRef){
+                passRef.current.focus()
+              }
+            }} returnKeyType={"next"} innerRef={userRef} value={Email} onChange={setEmail} placeholder={" "} style={styles.input} />
             <View style={{ height: 20 }} />
             <Text style={styles.lebel}>Password</Text>
-            <Input value={Password} onChange={setPassword} placeholder={" "} style={styles.input} />
+            <Input onSubmitEditing={()=>{
+              login()
+            }} returnKeyType={"go"} innerRef={passRef} value={Password} onChange={setPassword} placeholder={" "} style={styles.input} />
             <View
               style={{
                 flexDirection: "row",

@@ -83,6 +83,7 @@ const Review = (props) => {
     }
     return null;
   };
+  console.log("revice")
   React.useEffect(() => {
     // console.log('-------------------------')
     //console.log(localOptionsToServer(listData));
@@ -188,8 +189,10 @@ const Review = (props) => {
       setLoading(false);
       dispatch({ type: "SET_VENDOR", playload: data });
             //navigation.navigate("Profile");
-      navigation.navigate("Profile");
-  
+      // setTimeout(()=>{
+      //   navigation.navigate("MainProfile");
+      // },100)
+   
   };
   //console.log(Images)
   //return null

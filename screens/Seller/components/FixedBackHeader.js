@@ -21,7 +21,7 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,c
       //console.log("transparent");
       setScrollEnabled(false);
     }
-
+    //console.log(scrollEnabled)
     scrollY.setValue(Yoffset);
   }, [Yoffset]);
   return (
@@ -31,8 +31,8 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,c
        position:"absolute",
        top:0,
        justifyContent:"center",
-       alignItems:"center"
-        
+       alignItems:"center",
+       zIndex:100 
     },style]}>
       <StatusBar
         hidden={false}
@@ -53,6 +53,7 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,c
           left: 0,
           width: width,
           backgroundColor: "transparent",
+          zIndex:100
         }}
       >
         <TouchableOpacity

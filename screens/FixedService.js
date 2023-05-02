@@ -934,17 +934,7 @@ const FixedService = (props) => {
           </Pressable>
         </Animated.View>
       )} */}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-        }}>
-        <FixedBackHeader
-          navigation={navigation}
-          Yoffset={offset ? offset : 0}
-        />
-      </View>
+      
       {index != -1 && (
         <View
           style={{
@@ -956,6 +946,19 @@ const FixedService = (props) => {
             opacity: 0.8,
           }}
         />
+      )}
+      {index==-1&&(
+        <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}>
+        <FixedBackHeader
+          navigation={navigation}
+          Yoffset={offset ? offset : 0}
+        />
+      </View>
       )}
       <BottomSheet
         ref={sheetRef}

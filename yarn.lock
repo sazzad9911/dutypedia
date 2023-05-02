@@ -7246,6 +7246,11 @@ rn-keyboard-sticky-view@^1.0.4:
   resolved "https://registry.yarnpkg.com/rn-keyboard-sticky-view/-/rn-keyboard-sticky-view-1.0.4.tgz#76b9714a163fa77aac9bc7ec800f7c06d76b5c2b"
   integrity sha512-Ab+4TXYA6uGUtCmIXlyp9ta5y7oqHTpePfnMy/B9q76ssfQzzMHXGDY/rUIDL6hGC1tVJelt6HJYMzAQr9zRTQ==
 
+rn-read-more-text@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/rn-read-more-text/-/rn-read-more-text-0.0.5.tgz#a3d257cb1209d2c01b9eb99d19e9293bec0576c1"
+  integrity sha512-53FCpT+CEFPtO3/A//5F/qYlgdx6z0VE48VbskrjUaTtbmqK71BTk+UYfPiu9+MCK6rNLO+DkUmoZYsIPIg3JQ==
+
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"

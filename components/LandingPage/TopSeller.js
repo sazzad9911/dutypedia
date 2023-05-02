@@ -17,6 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { getLikeGigs, getRating, setLikeGigs } from "../../Class/service";
 import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
 export default function TopSeller({ onMore }) {
@@ -49,6 +50,7 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
   const saveList = useSelector((state) => state.saveList);
   const user=useSelector(state=>state.user)
   const dispatch=useDispatch()
+  const navigation=useNavigation()
 
   const st = StyleSheet.create({
     width: {
@@ -69,6 +71,11 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
       setLike(false)
     }
   },[saveList?.length])
+  useEffect(()=>{
+    if(!user.token){
+      setLike(false)
+    }
+  },[user])
   const addToSaveList=async()=>{
     if(!data){
       return
@@ -98,6 +105,10 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
           <TouchableOpacity
           style={styles.icon}
           onPress={() => {
+            if(!user.token){
+              navigation.navigate("LogIn")
+              return
+            }
             addToSaveList()
             setLike((t) => !t)
           }}>

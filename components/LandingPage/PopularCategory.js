@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
 import { getData, storeData } from "../../Class/storage";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 export default function PopularCategory({ onMore }) {
   const [data, setData] = useState();
@@ -76,12 +76,28 @@ export const Card = ({ style, data, onPress }) => {
   const [rating, setRating] = useState(0);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const saveList = useSelector((state) => state.saveList);
+  const navigation=useNavigation()
 
   useEffect(() => {
     getRating(data?.id).then((res) => {
       setRating(res.data.rating);
     });
   }, []);
+  useEffect(()=>{
+    //console.log(data)
+    let arr=saveList?.filter(d=>d.gig.id==data?.id)
+    if(arr?.length>0){
+      setLike(true)
+    }else{
+      setLike(false)
+    }
+  },[saveList?.length])
+  useEffect(()=>{
+    if(!user.token){
+      setLike(false)
+    }
+  },[user])
   const addToSaveList = async () => {
     if (!data) {
       return;
@@ -116,6 +132,10 @@ export const Card = ({ style, data, onPress }) => {
           </View>
           <TouchableOpacity
             onPress={() => {
+              if(!user.token){
+                navigation.navigate("LogIn")
+                return
+              }
               addToSaveList();
               setLike((t) => !t);
             }}>

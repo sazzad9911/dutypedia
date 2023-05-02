@@ -1045,14 +1045,7 @@ const PackageService = (props) => {
           </Pressable>
         </Animated.View>
       )} */}
-       <View style={{
-        position:"absolute",
-        top:0,
-        left:0,
        
-       }}>
-       <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
-       </View>
        {index != -1 && (
         <View
           style={{
@@ -1065,6 +1058,16 @@ const PackageService = (props) => {
             
           }}
         />
+      )}
+      {index==-1&&(
+        <View style={{
+          position:"absolute",
+          top:0,
+          left:0,
+         
+         }}>
+         <FixedBackHeader navigation={navigation} Yoffset={offset?offset:0}/>
+         </View>
       )}
       <BottomSheet
         ref={sheetRef}
