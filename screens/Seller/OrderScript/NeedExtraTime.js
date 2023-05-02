@@ -85,7 +85,7 @@ export default function NeedExtraTime({ navigation, route }) {
             <DateTimePickerModal
               date={new Date()}
               isVisible={true}
-              isDarkModeEnabled={true}
+              themeVariant="light"
               mode="date"
               onConfirm={(e) => {
                 if (dateDifference(data.deliveryDateTo, e) > 0) {

@@ -17,7 +17,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { Color } from "../../assets/colors";
 import Input from "./../../components/Input";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../../components/Button";
 const { width, height } = Dimensions.get("window");
 import {
@@ -63,6 +62,10 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Animated, { FadeIn } from "react-native-reanimated";
 import ViewMore from "../../Hooks/ViewMore";
 import AnimatedHeight from "../../Hooks/AnimatedHeight";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import DatePickerHook from "../../Hooks/DatePickerHook";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const OfferNow = (props) => {
   const navigation = props.navigation;
@@ -179,7 +182,7 @@ const OfferNow = (props) => {
       arr.push(Document);
       urls = await uploadFile(arr, user.token);
     }
-    console.log(selectedPackage?.price)
+    console.log(selectedPackage?.price);
     createOrder(
       user.token,
       gigs ? gigs.service.id : data.service.id,
@@ -190,8 +193,7 @@ const OfferNow = (props) => {
         ? parseInt(gigs.price)
         : data.service.gigs.filter((d) => d.type == type)[0].price,
       Description,
-      Price?
-      parseInt(Price):0,
+      Price ? parseInt(Price) : 0,
       From,
       To,
       vendor ? "VENDOR" : "USER",
@@ -213,7 +215,7 @@ const OfferNow = (props) => {
       })
       .catch((err) => {
         setLoader(false);
-        Alert.alert(err.response.data.msg)                
+        Alert.alert(err.response.data.msg);
         console.warn(err.response.data.msg);
       });
   };
@@ -235,7 +237,7 @@ const OfferNow = (props) => {
     setTimeout(() => {
       setLoader(false);
       navigation.navigate("OrderDetails", {
-        data:res.data.order
+        data: res.data.order,
       });
     }, 300);
     return;
@@ -268,7 +270,6 @@ const OfferNow = (props) => {
   //   }
   // }, [isFocused]);
   React.useEffect(() => {
-    
     if (props?.serviceList) {
       let text = "";
       props?.serviceList.map((doc, i) => {
@@ -339,30 +340,25 @@ const OfferNow = (props) => {
                   {FromDateError}
                 </Text>
               )}
-              <Modal transparent={true} visible={FromVisible}>
-                <DateTimePickerModal
-                  date={new Date()}
-                  isVisible={true}
-                  
-                  themeVariant="light"
-                  mode="date"
-                  onConfirm={(date) => {
-                    let newDate = dateConverter(new Date());
-                    let oldDate = dateConverter(date);
-                    if (dateDifference(newDate, oldDate) >= 0) {
-                      setFromDateError(null);
-                      setFrom(dateConverter(date));
-                      setFromVisible(false);
-                    } else {
-                      setFromDateError(
-                        "Please select current and current date"
-                      );
-                      setFromVisible(false);
-                    }
-                  }}
-                  onCancel={() => setFromVisible(false)}
-                />
-              </Modal>
+              <DateTimePickerModal
+                date={new Date()}
+                isVisible={FromVisible}
+                themeVariant="light"
+                mode="date"
+                onConfirm={(date) => {
+                  let newDate = dateConverter(new Date());
+                  let oldDate = dateConverter(date);
+                  if (dateDifference(newDate, oldDate) >= 0) {
+                    setFromDateError(null);
+                    setFrom(dateConverter(date));
+                    setFromVisible(false);
+                  } else {
+                    setFromDateError("Please select current and current date");
+                    setFromVisible(false);
+                  }
+                }}
+                onCancel={() => setFromVisible(false)}
+              />
             </View>
             <Text
               style={{
@@ -392,27 +388,25 @@ const OfferNow = (props) => {
                   {ToDateError}
                 </Text>
               )}
-              <Modal visible={ToVisible} transparent={true}>
-                <DateTimePickerModal
-                  date={new Date()}
-                  isVisible={true}
-                  isDarkModeEnabled={true}
-                  mode="date"
-                  onConfirm={(date) => {
-                    let newDate = dateConverter(new Date(From));
-                    let oldDate = dateConverter(date);
-                    if (dateDifference(newDate, oldDate) >= 0) {
-                      setToDateError(null);
-                      setTo(dateConverter(date));
-                      setToVisible(false);
-                    } else {
-                      setToDateError("Please select current and current date");
-                      setToVisible(false);
-                    }
-                  }}
-                  onCancel={() => setToVisible(false)}
-                />
-              </Modal>
+              <DateTimePickerModal
+                date={new Date()}
+                isVisible={ToVisible}
+                mode="date"
+                themeVariant="light"
+                onConfirm={(date) => {
+                  let newDate = dateConverter(new Date(From));
+                  let oldDate = dateConverter(date);
+                  if (dateDifference(newDate, oldDate) >= 0) {
+                    setToDateError(null);
+                    setTo(dateConverter(date));
+                    setToVisible(false);
+                  } else {
+                    setToDateError("Please select current and current date");
+                    setToVisible(false);
+                  }
+                }}
+                onCancel={() => setToVisible(false)}
+              />
             </View>
           </View>
           <IconButton
@@ -447,7 +441,7 @@ const OfferNow = (props) => {
                 Important Delivery Instructions for Buyers on our Platform
               </Text>
             </View>
-            <ViewMore
+            {/* <ViewMore
               style={{
                 marginTop: 24,
               }}
@@ -478,7 +472,7 @@ const OfferNow = (props) => {
                   </Text>
                 </Text>
               }
-            />
+            /> */}
           </View>
         </BottomSheetScrollView>
       </Animated.View>
@@ -605,7 +599,12 @@ const OfferNow = (props) => {
                   fontSize: 16,
                   fontWeight: "400",
                 }}>
-                {starting ? starting?.price : type=="ONETIME" ? gigs?.price : selectedPackage?.price}৳
+                {starting
+                  ? starting?.price
+                  : type == "ONETIME"
+                  ? gigs?.price
+                  : selectedPackage?.price}
+                ৳
               </Text>
             </LinearGradient>
             <View style={styles.avatar}>
@@ -639,7 +638,8 @@ const OfferNow = (props) => {
                   Your offer{" "}
                   <Text style={{ color: "black" }}>(Enter your amount )*</Text>
                 </Text>
-                <Input value={Price}
+                <Input
+                  value={Price}
                   keyboardType={"number-pad"}
                   onChange={(e) => {
                     if (parseInt(e) >= starting.price) {
@@ -748,7 +748,9 @@ const OfferNow = (props) => {
                     textDecorationLine: "underline",
                     fontWeight: "400",
                   }}>
-                  {From && To ? `${slashDate(From)} To ${slashDate(To)}` : "choose date"}
+                  {From && To
+                    ? `${slashDate(From)} To ${slashDate(To)}`
+                    : "choose date"}
                 </Text>
                 <SvgXml style={{ marginLeft: 8 }} xml={calenderIcon} />
               </View>

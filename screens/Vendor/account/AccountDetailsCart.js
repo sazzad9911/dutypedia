@@ -39,7 +39,7 @@ export default function AccountDetailsCart({onWithdraw,totalEarnings,amount,pend
         }}>
         <View>
           <Text style={styles.smallText}>Pending Amount</Text>
-          <Text style={styles.largeText}>{pendingAmount.toFixed(2)}৳</Text>
+          <Text style={styles.largeText}>{pendingAmount?.toFixed(2)}৳</Text>
         </View>
         <IconButton onPress={onWithdraw} style={{
             width:100,

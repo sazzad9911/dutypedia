@@ -236,7 +236,7 @@ export const Cart = ({
                 },
               ]}>
               {data?.qualityRating > parseInt(data?.qualityRating)
-                ? data?.qualityRating
+                ? data?.qualityRating?.toFixed(1)
                 : `${data?.qualityRating}.0`}
             </Text>
           </View>

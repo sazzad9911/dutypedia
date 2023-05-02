@@ -77,9 +77,9 @@ export default function ClintFeedBack({ navigation, route }) {
         <IconButton
           onPress={() => {
             navigation.navigate("FeedBackMessage", {
-              communication: communication,
-              describe: describe,
-              quality: quality,
+              communication: communication>4?5:communication>3?4:communication>2?3:communication>1?2:1,
+              describe: describe>4?5:describe>3?4:describe>2?3:describe>1?2:1,
+              quality: quality>4?5:quality>3?4:quality>2?3:quality>1?2:1,
               order: order,
             });
           }}
