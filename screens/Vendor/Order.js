@@ -211,7 +211,7 @@ const Order = () => {
         component={CancelOrderConfirmation}
       />
       <Stack.Screen
-        options={{ header:(props)=><SubHeader {...props} title={"Sand Proof"}/> }}
+        options={{ header:(props)=><SubHeader {...props} title={"Send Proof"}/> }}
         name="OrderDelivery"
         component={OrderDelivery}
       />

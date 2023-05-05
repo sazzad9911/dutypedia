@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -14,7 +20,7 @@ import {
   Pressable,
   Animated as Animation,
   Platform,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import rnTextSize, { TSFontSpecs } from "react-native-text-size";
 import { Ionicons } from "@expo/vector-icons";
@@ -88,7 +94,7 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import ActivityLoader from "../components/ActivityLoader";
 import { TopSellerCard } from "../components/LandingPage/TopSeller";
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import OfferNow from "./Seller/OfferNow";
 import { CheckBox } from "./Seller/Pricing";
 import { setSaveList } from "../Reducers/saveList";
@@ -206,26 +212,25 @@ const OtherProfile = (props) => {
   const [individualRating, setIndividualRating] = useState();
   const [reviews, setReviews] = useState();
   const [bargaining, setActiveBargaining] = useState(true);
-  const [condition,setCondition]=useState(false)
+  const [condition, setCondition] = useState(false);
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
-  const snapPoints = useMemo(() => ['90%'], []);
-  const [index,setIndex]=useState(-1)
+  const snapPoints = useMemo(() => ["90%"], []);
+  const [index, setIndex] = useState(-1);
   const sheetRef = useRef(null);
-  const handleSheetChange = useCallback(index => {
-    setIndex(index)
+  const handleSheetChange = useCallback((index) => {
+    setIndex(index);
   }, []);
-  const handleSnapPress = useCallback(index => {
+  const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapTo(index);
   }, []);
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
-  const [like,setLike]=useState(false)
-  
+  const [like, setLike] = useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -537,7 +542,6 @@ const OtherProfile = (props) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {
-    
     console.log("ok");
     navigation.navigate("PackageService", { data: doc });
   };
@@ -610,32 +614,32 @@ const OtherProfile = (props) => {
       }
     }
   });
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(data)
-    let arr=saveList?.filter(d=>d.gig.id==data?.id)
-    if(arr?.length>0){
-      setLike(true)
-    }else{
-      setLike(false)
+    let arr = saveList?.filter((d) => d.gig.id == data?.id);
+    if (arr?.length > 0) {
+      setLike(true);
+    } else {
+      setLike(false);
     }
-  },[saveList?.length,isFocused])
-  useEffect(()=>{
-    if(!newUser.token){
-      setLike(false)
+  }, [saveList?.length, isFocused]);
+  useEffect(() => {
+    if (!newUser.token) {
+      setLike(false);
     }
-  },[newUser,isFocused])
+  }, [newUser, isFocused]);
 
-  const addToSaveList=async()=>{
-    if(!data){
-      return
+  const addToSaveList = async () => {
+    if (!data) {
+      return;
     }
-    console.log(data.id)
-    const res=await setLikeGigs(newUser.token,data.id)
+    console.log(data.id);
+    const res = await setLikeGigs(newUser.token, data.id);
     //console.log(res.data)
-    const response=await getLikeGigs(newUser.token);
+    const response = await getLikeGigs(newUser.token);
     //console.log(response.data.gigs)
-    dispatch(setSaveList(response.data.gigs))
-  }
+    dispatch(setSaveList(response.data.gigs));
+  };
   //console.log(newUser)
 
   if (
@@ -649,11 +653,11 @@ const OtherProfile = (props) => {
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader/>
+        <ActivityLoader />
       </View>
     );
   }
-  
+
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
@@ -783,9 +787,9 @@ const OtherProfile = (props) => {
             anchor={
               <SvgXml
                 onPress={() => {
-                  if(!newUser.token){
-                    navigation.navigate("LogIn")
-                    return
+                  if (!newUser.token) {
+                    navigation.navigate("LogIn");
+                    return;
                   }
                   setVisible(!Visible);
                   //console.log("sadfa");
@@ -816,14 +820,15 @@ const OtherProfile = (props) => {
             <Menu.Item onPress={() => {}} title="Copy URL" />
           </Menu>
 
-          <SvgXml onPress={()=>{
-            if(!newUser.token){
-              navigation.navigate("LogIn")
-              return
-            }
-            addToSaveList()
-            setLike(v=>(!v))
-          }}
+          <SvgXml
+            onPress={() => {
+              if (!newUser.token) {
+                navigation.navigate("LogIn");
+                return;
+              }
+              addToSaveList();
+              setLike((v) => !v);
+            }}
             style={{
               shadowOffset: {
                 width: 0,
@@ -834,7 +839,7 @@ const OtherProfile = (props) => {
               elevation: 5,
               shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
             }}
-            xml={like?loveIconAc:loveIcon}
+            xml={like ? loveIconAc : loveIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
           />
@@ -856,9 +861,9 @@ const OtherProfile = (props) => {
 
           <SvgXml
             onPress={() => {
-              if(newUser&&!newUser.token){
-                navigation.navigate("LogIn")
-                return
+              if (newUser && !newUser.token) {
+                navigation.navigate("LogIn");
+                return;
               }
               navigation.navigate("AppointmentList", { data: Data });
             }}
@@ -878,9 +883,9 @@ const OtherProfile = (props) => {
           />
           <SvgXml
             onPress={() => {
-              if(newUser&&!newUser.token){
-                navigation.navigate("LogIn")
-                return
+              if (newUser && !newUser.token) {
+                navigation.navigate("LogIn");
+                return;
               }
               if (!userInfo) {
                 Alert.alert("Invalid user!");
@@ -899,7 +904,7 @@ const OtherProfile = (props) => {
                   users: [user],
                 },
                 username: userInfo.username,
-                serviceId:data?.service?.id
+                serviceId: data?.service?.id,
               });
             }}
             style={{
@@ -1291,13 +1296,13 @@ const OtherProfile = (props) => {
                 changeScrollStatus: changeScrollStatus,
                 scrollTo: scrollTo,
                 setActiveBargaining: setActiveBargaining,
-                onOpen:()=>{
-                  if(newUser&&newUser.token){
-                    setIndex(0)
-                  }else{
-                    navigation.navigate("LogIn")
+                onOpen: () => {
+                  if (newUser && newUser.token) {
+                    setIndex(0);
+                  } else {
+                    navigation.navigate("LogIn");
                   }
-                }
+                },
               }}
               component={BargainingScreen}
             />
@@ -1505,9 +1510,10 @@ const OtherProfile = (props) => {
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={{ width: 10 }} />
                     {RelatedServices.map((doc, i) => (
-                      <TopSellerCard style={{
-                        width:width/2-20
-                      }}
+                      <TopSellerCard
+                        style={{
+                          
+                        }}
                         onPress={() => {
                           navigation.navigate("OtherProfile", {
                             serviceId: doc ? doc.service.id : null,
@@ -1542,11 +1548,12 @@ const OtherProfile = (props) => {
                       //   key={i}
                       //   navigation={navigation}
                       // />
-                      <TopSellerCard style={{
-                        width:width/2-20
-                      }} 
+                      <TopSellerCard
+                        style={{
+                          
+                        }}
                         onPress={() => {
-                          navigation.navigate("OtherProfile", {
+                           navigation.navigate("OtherProfile", {
                             serviceId: doc ? doc.service.id : null,
                             data: doc,
                           });
@@ -1584,16 +1591,15 @@ const OtherProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
-              
-              if (!newUser.token||!userInfo) {
-                navigation.navigate("LogIn")
+              if (!newUser.token || !userInfo) {
+                navigation.navigate("LogIn");
                 return;
               }
               if (newUser.user.id == userInfo.id) {
                 Alert.alert("Ops!", "Self messaging is not allowed.");
                 return;
               }
-              
+
               let user = {
                 userId: userInfo.id,
                 user: userInfo,
@@ -1603,7 +1609,7 @@ const OtherProfile = (props) => {
                   users: [user],
                 },
                 username: userInfo.username,
-                serviceId:data?.service?.id
+                serviceId: data?.service?.id,
               });
             }}>
             <SvgXml xml={messageIcon} height="50" width={"50"} />
@@ -1622,23 +1628,27 @@ const OtherProfile = (props) => {
         }}/>
       )} */}
       {/* <NewBottomBar {...props}/> */}
-      <View style={{
-        position:"absolute"
-      }}>
-      
-      </View>
-      {index!=-1&&(
-        <View style={{
-          backgroundColor:"#818181",
-          position:"absolute",
-          top:0,
-          width:width,
-          height:height,
-          opacity:.8
-        }}/>
+      <View
+        style={{
+          position: "absolute",
+        }}></View>
+      {index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#818181",
+            position: "absolute",
+            top: 0,
+            width: width,
+            height: height,
+            opacity: 0.8,
+          }}
+        />
       )}
-      {index==-1&&(
-        <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
+      {index == -1 && (
+        <FixedBackHeader
+          navigation={navigation}
+          Yoffset={offset ? offset : 0}
+        />
       )}
       <BottomSheet
         ref={sheetRef}
@@ -1647,15 +1657,12 @@ const OtherProfile = (props) => {
         onChange={handleSheetChange}
         enablePanDownToClose={true}
         handleIndicatorStyle={{
-          backgroundColor:"#ffffff",
+          backgroundColor: "#ffffff",
         }}
         handleStyle={{
-         paddingTop:-30
-        }}
-        
-      >
+          paddingTop: -30,
+        }}>
         <OfferNow navigation={navigation} type={"STARTING"} data={Data} />
-        
       </BottomSheet>
     </View>
   );
@@ -1765,7 +1772,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold",
   },
   contentContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
 });
 
@@ -1827,7 +1834,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ActiveService, setActiveService] = React.useState(
     ServiceList ? ServiceList[0] : NewDataList[0].mainTitle
   );
-  
+
   const Facilities = params.Facilities;
   const Data = params.Data;
   const Price = params.Price;
@@ -1850,7 +1857,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const newUser = useSelector((state) => state.user);
-  
+
   //console.log(Data);
 
   React.useEffect(() => {
@@ -2201,7 +2208,7 @@ const BargainingScreen = ({ navigation, route }) => {
       <View style={{ backgroundColor: primaryColor }}>
         <IconButton
           onPress={() => {
-            params?.onOpen()
+            params?.onOpen();
             // navigation.navigate("OfferNow", {
             //   data: Data,
             //   type: "STARTING",
@@ -2276,7 +2283,7 @@ const loveIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
 </g>
 </svg>
 `;
-const loveIconAc=`<svg width="45" height="41" viewBox="0 0 45 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+const loveIconAc = `<svg width="45" height="41" viewBox="0 0 45 41" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_6086_40919)">
 <path d="M13.415 3.1481C15.1389 2.82166 16.9219 3.04992 18.508 3.8001C20.1741 4.59864 21.5641 5.87613 22.5 7.4691C23.6045 5.57873 25.349 4.14602 27.418 3.4301C29.2529 2.81868 31.2435 2.86643 33.047 3.5651C34.9104 4.30209 36.4794 5.63182 37.512 7.3491C38.413 8.84263 38.9247 10.5385 39 12.2811V12.8701C38.8631 15.058 38.1439 17.1695 36.917 18.9861C35.4738 21.1689 33.7501 23.1525 31.79 24.8861C30.1346 26.3848 28.389 27.7808 26.563 29.0661C25.406 29.8791 24.231 30.6661 23.016 31.3901C22.8677 31.4822 22.6974 31.5327 22.5229 31.5364C22.3484 31.5401 22.1761 31.4968 22.024 31.4111C21.109 30.8761 20.224 30.2961 19.343 29.7111C16.3233 27.7041 13.5291 25.3769 11.009 22.7701C9.84309 21.5479 8.80442 20.2104 7.909 18.7781C6.78634 17.0483 6.12882 15.0582 6 13.0001V12.5861C6.03195 10.1306 6.94468 7.76822 8.572 5.9291C9.83614 4.49419 11.5385 3.51664 13.415 3.1481Z" fill="#DA1E37"/>
 </g>
@@ -2292,7 +2299,7 @@ const loveIconAc=`<svg width="45" height="41" viewBox="0 0 45 41" fill="none" xm
 </filter>
 </defs>
 </svg>
-`
+`;
 const shareIcon = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="51" height="50.994" viewBox="0 0 51 50.994">
 <defs>
   <filter id="Path_20916" x="0" y="0" width="51" height="50.994" filterUnits="userSpaceOnUse">
@@ -2371,8 +2378,8 @@ const FixedScreen = ({ navigation, route }) => {
   const [offset, setOffset] = React.useState(0);
   const scrollTo = params.scrollTo;
   const data = params.Data;
-  const snapPoints = useMemo(() => ['90%'], []);
-  const [index,setIndex]=useState(-1)
+  const snapPoints = useMemo(() => ["90%"], []);
+  const [index, setIndex] = useState(-1);
   const [Active, setActive] = React.useState(false);
 
   React.useEffect(() => {
@@ -2396,17 +2403,17 @@ const FixedScreen = ({ navigation, route }) => {
       });
     }
   }, [data + isFocused]);
-  const handleSheetChange = useCallback(index => {
-    setIndex(index)
+  const handleSheetChange = useCallback((index) => {
+    setIndex(index);
   }, []);
-  const handleSnapPress = useCallback(index => {
+  const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapTo(index);
   }, []);
   const handleClosePress = useCallback(() => {
     sheetRef.current?.close();
   }, []);
 
-  //console.log(FixedService)
+  //console.log(FixedService?.length);
   return (
     <View
       onLayout={(e) => {
@@ -2461,33 +2468,58 @@ const FixedScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {FixedService.length == 0 ||
-          (!Active && (
-            <Animated.View
+        {!Active && FixedService.length > 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}>
+            <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                paddingHorizontal: 10,
-                backgroundColor: primaryColor,
+                flex: 1,
                 justifyContent: "center",
-                width: "100%",
-              }}
-              entering={FadeIn}>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}>
-                <SvgXml
-                  xml={serviceIcon}
-                  style={{ marginVertical: 100 }}
-                  height="200"
-                  width="200"
-                />
-              </View>
-            </Animated.View>
-          ))}
+                alignItems: "center",
+              }}>
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        {FixedService.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
         <View
           style={{
             backgroundColor: primaryColor,
@@ -2512,12 +2544,20 @@ const FixedScreen = ({ navigation, route }) => {
                 }}>
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
+                    <TopSellerCard
+                        style={{
+                          width: width / 2 - 22,
+                          height:260
+                        }}
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
+                        key={i}
+                        data={doc}
+                      />
                   ) : null
                 )}
               </View>
@@ -2543,12 +2583,20 @@ const FixedScreen = ({ navigation, route }) => {
                 }}>
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
+                    <TopSellerCard
+                        style={{
+                          width: width / 2 - 22,
+                          height:260
+                        }}
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
+                        key={i}
+                        data={doc}
+                      />
                   ) : null
                 )}
               </View>
@@ -2573,13 +2621,13 @@ const PackageScreen = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const [offset, setOffset] = React.useState(0);
   const data = params.Data;
-  const snapPoints = useMemo(() => ['90%'], []);
-  const [index,setIndex]=useState(-1)
+  const snapPoints = useMemo(() => ["90%"], []);
+  const [index, setIndex] = useState(-1);
   const [Active, setActive] = React.useState(false);
-  const handleSheetChange = useCallback(index => {
-    setIndex(index)
+  const handleSheetChange = useCallback((index) => {
+    setIndex(index);
   }, []);
-  const handleSnapPress = useCallback(index => {
+  const handleSnapPress = useCallback((index) => {
     sheetRef.current?.snapTo(index);
   }, []);
   const handleClosePress = useCallback(() => {
@@ -2665,33 +2713,58 @@ const PackageScreen = ({ navigation, route }) => {
             />
           </View>
         )}
-        {PackageService.length == 0 ||
-          (!Active && (
-            <Animated.View
+        {PackageService.length == 0 && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}>
+            <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                paddingHorizontal: 10,
-                backgroundColor: primaryColor,
+                flex: 1,
                 justifyContent: "center",
-                width: "100%",
-              }}
-              entering={FadeIn}>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}>
-                <SvgXml
-                  xml={serviceIcon}
-                  style={{ marginVertical: 100 }}
-                  height="200"
-                  width="200"
-                />
-              </View>
-            </Animated.View>
-          ))}
+                alignItems: "center",
+              }}>
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
+        {PackageService.length > 0 && !Active && (
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 10,
+              backgroundColor: primaryColor,
+              justifyContent: "center",
+              width: "100%",
+            }}
+            entering={FadeIn}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <SvgXml
+                xml={serviceIcon}
+                style={{ marginVertical: 100 }}
+                height="200"
+                width="200"
+              />
+            </View>
+          </Animated.View>
+        )}
         <View
           style={{
             backgroundColor: primaryColor,
@@ -2716,12 +2789,20 @@ const PackageScreen = ({ navigation, route }) => {
                 }}>
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
+                    <TopSellerCard
+                        style={{
+                          width: width / 2 - 22,
+                          height:260
+                        }}
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
+                        key={i}
+                        data={doc}
+                      />
                   ) : null
                 )}
               </View>
@@ -2747,12 +2828,20 @@ const PackageScreen = ({ navigation, route }) => {
                 }}>
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
-                    <RelatedService
-                      squire={true}
-                      data={doc}
-                      key={i}
-                      navigation={navigation}
-                    />
+                    <TopSellerCard
+                        style={{
+                          width: width / 2 - 22,
+                          height:260
+                        }}
+                        onPress={() => {
+                          navigation.navigate("OtherProfile", {
+                            serviceId: doc ? doc.service.id : null,
+                            data: doc,
+                          });
+                        }}
+                        key={i}
+                        data={doc}
+                      />
                   ) : null
                 )}
               </View>

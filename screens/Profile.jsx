@@ -125,6 +125,7 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import SupportCenter from "./support/SupportCenter";
 import SupportDescription from "./support/SupportDescription";
 import SupportForm from "./support/SupportForm";
+import VendorAddress from "./Vendor/VendorAddress";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -136,20 +137,24 @@ const Profile = ({ navigation }) => {
   //console.log(user.user.id)
   return (
     <Stack.Navigator>
-      {vendor?(<Stack.Screen
-        name="MainProfile"
-        options={{
-          headerShown: false,
-        }}
-        component={Menu}
-      />):(<Stack.Screen
-        name="MainProfile"
-        options={{
-          headerShown: false,
-        }}
-        component={MainProfile}
-      />)}
-      
+      {vendor ? (
+        <Stack.Screen
+          name="MainProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={Menu}
+        />
+      ) : (
+        <Stack.Screen
+          name="MainProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={MainProfile}
+        />
+      )}
+
       <Stack.Screen
         name="VendorProfile"
         options={{
@@ -443,13 +448,15 @@ const Profile = ({ navigation }) => {
         }}
         component={ImageViewer}
       />
-      <Stack.Screen
-        name="DashboardList"
-        options={{
-          headerShown: false,
-        }}
-        component={DashboardList}
-      />
+      {!vendor && (
+        <Stack.Screen
+          name="DashboardList"
+          options={{
+            headerShown: false,
+          }}
+          component={DashboardList}
+        />
+      )}
       <Stack.Screen
         name="Notice"
         options={{
@@ -754,6 +761,13 @@ const Profile = ({ navigation }) => {
       />
       <Stack.Screen
         options={{
+          header: (props) => <SubHeader {...props} title="Address" />,
+        }}
+        name="VendorAddress"
+        component={VendorAddress}
+      />
+      <Stack.Screen
+        options={{
           // header: (props) => (
           //   <AppointmentHeader title={"Appointment"} {...props} />
           // ),
@@ -871,16 +885,16 @@ const MainProfile = (props) => {
   };
   const inset = useSafeAreaInsets();
   const isFocused = useIsFocused();
-  const vendor=useSelector(state=>state.vendor)
+  const vendor = useSelector((state) => state.vendor);
 
   React.useEffect(() => {
-    if(isFocused){
+    if (isFocused) {
       dispatch(setHideBottomBar(false));
-      setTimeout(()=>{
+      setTimeout(() => {
         dispatch(setHideBottomBar(false));
-      },50)
-    }else{
-     // dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      // dispatch(setHideBottomBar(true));
     }
   }, [isFocused]);
   const styles = StyleSheet.create({

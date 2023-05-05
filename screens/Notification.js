@@ -53,6 +53,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OrderDetails from "./Vendor/OrderDetails";
 import UserOrderDetails from "./Seller/UserOrderDetails";
 import NotificationHeader from "../components/NotificationHeader";
+import ReviewScreen from "./Vendor/review/ReviewScreen";
 
 const Stack = createNativeStackNavigator();
 const formatOrderNotificationMessage = (item) => {
@@ -225,9 +226,28 @@ const NotificationScreen = ({ navigation, route }) => {
 const Notification = ({ navigation, route }) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen options={{ header: (props) => <NotificationHeader {...props} /> }} name="NotificationHome" component={NotificationScreen} />
-      <Stack.Screen options={{headerShown:false}} name="VendorOrderDetails" component={OrderDetails} />
-      <Stack.Screen options={{headerShown:false}} name="OrderDetails" component={UserOrderDetails} />
+      <Stack.Screen
+        options={{ header: (props) => <NotificationHeader {...props} /> }}
+        name="NotificationHome"
+        component={NotificationScreen}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="VendorOrderDetails_1"
+        component={OrderDetails}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="OrderDetails_1"
+        component={UserOrderDetails}
+      />
+      <Stack.Screen
+        name="CustomerReview"
+        options={{
+          headerShown: false,
+        }}
+        component={ReviewScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -269,26 +289,30 @@ const NotificationCart = ({
     }
   }, [data, user, vendor, icon]);
   const [order, setOrder] = useState();
-  useEffect(() => {
-    if (data.entityId) {
-      getSubsOrderById(user.token, data?.entityId).then((res) => {
-        setOrder(res.data.order);
-      });
-    }else{
-      setOrder()
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (data.entityId) {
+  //     getSubsOrderById(user.token, data?.entityId).then((res) => {
+  //       setOrder(res.data.order);
+  //     });
+  //   } else {
+  //     setOrder();
+  //   }
+  // }, []);
 
   return (
     <Pressable
       onPress={() => {
         // console.log(data)
         // return
+        if (data.notificationType == "REVIEW_ORDER") {
+          navigation.navigate("CustomerReview");
+          return;
+        }
         if (order && vendor) {
-          navigation.navigate("VendorOrderDetails", { data: order });
+          navigation.navigate("VendorOrderDetails_1", { orderId: data?.entityId });
         }
         if (order && !vendor) {
-          navigation.navigate("OrderDetails", { data: order });
+          navigation.navigate("OrderDetails_1", { orderId: data?.entityId });
         }
         return;
         if (actionType == "APPOINTMENT" && vendor) {

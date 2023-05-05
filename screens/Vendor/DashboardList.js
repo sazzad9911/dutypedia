@@ -43,19 +43,22 @@ const DashboardList = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if(user){
+      setLoading(true)
       getDashboard(user.token).then((result) => {
         if (result && result.data && result.data.dashboards) {
           dispatch({
             type: "SET_VENDOR_INFO",
             playload: result.data.dashboards,
           });
-          
+          setLoading(false)
           setData(result.data.dashboards)
         } else {
           dispatch({ type: "SET_VENDOR_INFO", playload: false });
-          
+          setLoading(false)
         }
-      });
+      }).catch(err=>{
+        setLoading(false)
+      })
     }
   }, [isFocused]);
 

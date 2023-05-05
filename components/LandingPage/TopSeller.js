@@ -166,9 +166,10 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
           <View
             style={{
               alignItems: "center",
+              
             }}>
             <View style={styles.chipContainer}>
-              <SvgXml width={"8"} xml={star} />
+              <SvgXml width={"8"} height={"7"} xml={star} />
               <Text style={styles.chipText}>{rating>parseInt(rating)?rating:`${rating}.0`}</Text>
             </View>
             <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
@@ -294,7 +295,7 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
             }}>
             <View style={styles.chipContainer}>
               <SvgXml width={"8"} xml={star} />
-              <Text style={styles.chipText}>{rating>parseInt(rating)?rating:`${rating}.0`}</Text>
+              <Text style={styles.chipText}>{rating>parseInt(rating)?rating.toFixed(1):`${rating}.0`}</Text>
             </View>
             <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
           </View>
@@ -334,23 +335,26 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: "row",
     backgroundColor: "#2BDE73",
-    paddingVertical: 2,
+    paddingVertical:2,
     borderRadius: 25,
-    paddingHorizontal: 4,
+    paddingHorizontal: 3,
     alignItems: "center",
     justifyContent: "center",
-    width: 45,
+    width: 40,
+    height:13
   },
   chipText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "700",
     marginLeft: 4,
     color: "white",
+    lineHeight:10
   },
   smallText: {
     fontSize: 10,
     color: "#767676",
     fontWeight: "400",
+    lineHeight:13
   },
   mediumText: {
     fontSize: 12,

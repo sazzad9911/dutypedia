@@ -1012,7 +1012,8 @@ const VendorProfile = (props) => {
             />
             <ProfileOption
               onPress={() => {
-                //navigation.navigate("Notice", { serviceId: Data.service.id });
+                
+                navigation.navigate("VendorAddress", { address:vendor?.service?.location});
               }}
               style={{
                 marginBottom: 0,

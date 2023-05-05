@@ -14,7 +14,8 @@ export default function OrderInfo({
   facilities,
   vendor,
   onAddService,
-  status
+  status,
+  serviceError
 }) {
   const [wid, setWid] = useState(0);
   return (
@@ -112,6 +113,12 @@ export default function OrderInfo({
             Please give clear instructions to the seller via chat. They will add
             the services to your receipt as per your requirements.
           </Text>
+        )}
+        {serviceError&&(
+          <Text style={{
+            marginVertical:3,
+            color:"red"
+          }}>{serviceError}</Text>
         )}
         {facilities && facilities.length > 0 && (
           <View

@@ -301,23 +301,6 @@ const TabRoute = () => {
         }}>
         {!vendor &&
           (!Array.isArray(user) && user && load ? (
-            // !NewState ? (
-            //   <Tab.Screen
-            //     name="Home"
-            //     options={{
-            //       headerShown: false,
-            //     }}
-            //     component={Home}
-            //   />
-            // ) : (
-            //   <Tab.Screen
-            //     name="Home"
-            //     options={{
-            //       headerShown: false,
-            //     }}
-            //     component={Home_Next}
-            //   />
-            // )
             <Tab.Screen
               options={{ headerShown: false }}
               name="Feed"

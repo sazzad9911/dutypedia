@@ -208,16 +208,16 @@ const OrderDetails = ({ navigation, route }) => {
       });
       return;
     }
-    if (ListSelection.length == 0) {
-      Alert.alert("*There at list one service required");
+    // if (ListSelection.length == 0) {
+    //   Alert.alert("*There at list one service required");
 
-      return;
-    }
-    // if (Facilities.length == 0) {
-    //   setFacilitiesError("*There at list one facility required");
-    //   ref.current.scrollTo({ y: 400 });
     //   return;
     // }
+    if (ListSelection.length == 0) {
+      setServiceError("*There at list one service required");
+      ref?.current?.scrollTo({ y: 200 });
+      return;
+    }
     navigation.navigate("AcceptOrder", {
       facilities: Facilities,
       id: data.id,
@@ -418,7 +418,7 @@ const OrderDetails = ({ navigation, route }) => {
   //console.log(data?.orderedBy)
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <InfoCart
           vendor={true}
           onClick={() => {
@@ -466,6 +466,7 @@ const OrderDetails = ({ navigation, route }) => {
           date={data?.createdAt}
           onAddService={addService}
           status={data?.status}
+          serviceError={ServiceError}
         />
         <StatusCart
           vendor={true}
