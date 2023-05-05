@@ -216,12 +216,11 @@ const ViewBox = ({ setEdit, times,navigation }) => {
     }
   }, []);
   const update = () => {
+  
     setLoader(true);
-    if(AllDay){
-      setTimes([])
-    }
     updateData(user.token, {
-      workingTime: Times,
+      workingTime:AllDay?[]: Times,
+      t47:AllDay,
       serviceId:vendor.service.id
     }).then((res) => {
       vendorLogin(user.token, vendor.service.id).then((res) => {

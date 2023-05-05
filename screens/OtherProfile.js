@@ -649,7 +649,7 @@ const OtherProfile = (props) => {
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader/>
       </View>
     );
   }
@@ -1483,6 +1483,7 @@ const OtherProfile = (props) => {
               individualRating={individualRating}
               data={reviews}
               navigation={navigation}
+              service={data}
             />
             <View
               style={{

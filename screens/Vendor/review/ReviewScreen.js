@@ -91,6 +91,7 @@ export default function ReviewScreen({ navigation }) {
                 onReplay={() => {
                   navigation.navigate("FeedBack",{data:doc});
                 }}
+                service={vendor?.service}
               />
             ))}
         </View>

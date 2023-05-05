@@ -32,6 +32,7 @@ import FixedService from "./FixedService";
 import PackageService from "./PackageService";
 import UserNotice from "./UserNotice";
 import CompanyCalendar from "./Seller/CompanyCalendar";
+import AllReview from "./AllReview";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -79,7 +80,8 @@ const SearchSecond = ({ navigation, route }) => {
       verified: filter?.verified,
       online: filter?.online,
       sort: filter?.orderBy,
-      category: category ? category : "",
+      category: undefined,
+      subCategory:category
     })
       .then((res) => {
         setData(res.data.gigs);
@@ -136,7 +138,7 @@ const SearchSecond = ({ navigation, route }) => {
               <FilterCard
                 onSelect={(e) => {
                   setFilter(e);
-                  //console.log(e)
+                  console.log(e)
                   sheetRef.current.close();
                 }}
               />
@@ -234,6 +236,13 @@ const Search = () => {
         }}
         component={CompanyCalendar}
       />
+      <Stack.Screen
+          options={{
+            headerShown:false
+          }}
+          name="AllReview"
+          component={AllReview}
+        />
       </Stack.Navigator>
     </View>
   );

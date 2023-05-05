@@ -268,6 +268,10 @@ const BottomBar = (props) => {
             setRoute(3);
             return;
           }
+          if(route==3){
+            navigation.navigate("NotificationHome");
+            return
+          }
           navigation.navigate("Notification");
           setRoute(3);
         }}

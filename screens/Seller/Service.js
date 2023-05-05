@@ -138,6 +138,7 @@ const Service = ({ navigation, route }) => {
     setAboutError(null);
     setImageError(null);
 
+  
     if (!CenterName) {
       setCenterNameError("This field is required");
       return;
@@ -242,10 +243,14 @@ const Service = ({ navigation, route }) => {
             });
           return
         }
+        //console.log("df")
+        //console.log(params.data)
+        // setLoader(false)
+        // return
         createOtherService(
           user.token,
           businessForm,
-          route.params.data ? route.params.data : listData,
+          params.data,
           result,
           vendor.service.id,
           direct

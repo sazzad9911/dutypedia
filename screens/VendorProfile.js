@@ -324,11 +324,12 @@ const VendorProfile = (props) => {
       });
 
       setActiveServiceData(arr);
-
       setCategory(gigs[0].services.category);
-
       try {
-        //console.log(Data.service.gigs[0].services.options)
+        // console.warn(serverToLocal(
+        //   gigs[0].services.options,
+        //   gigs[0].services.category
+        // ))
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(

@@ -23,9 +23,9 @@ import { useSelector } from "react-redux";
 import customStyle from "../assets/stylesheet";
 import ViewMore from "../Hooks/ViewMore"
 
-const ReviewCart = ({ navigation, data, individualRating }) => {
+const ReviewCart = ({ navigation, data, individualRating,service }) => {
   const [height, setHeight] = useState(220);
-
+  //console.log(service)
   return (
     <View
       style={{
@@ -44,9 +44,10 @@ const ReviewCart = ({ navigation, data, individualRating }) => {
         </Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.push("AllReview", {
+            navigation.navigate("AllReview", {
               individualRating: individualRating,
               data: data,
+              service:service?.service
             });
           }}>
           <Text style={styles.text1}>See All</Text>
@@ -62,6 +63,7 @@ const ReviewCart = ({ navigation, data, individualRating }) => {
         {data &&
           data.map((doc, i) => (
             <Cart
+              service={service?.service}
               noReplay={true}
               data={doc}
               key={i}
@@ -120,12 +122,13 @@ export const Cart = ({
   data,
   style,
   onLayout,
+  service
 }) => {
   const [button, setButton] = useState(true);
   const [day, setDay] = useState(dateDifference(data?.createdAt, new Date()));
-  const user = useSelector((state) => state.user);
+  //const user = useSelector((state) => state.user);
   //console.log(user)
-  //console.log(data)
+  //console.log(service)
   return (
     <View
       onLayout={onLayout}
@@ -155,14 +158,14 @@ export const Cart = ({
             }}
             source={{
               uri: data
-                ? data.user.profilePhoto
+                ? data?.user?.profilePhoto
                 : "https://hindidp.com/wp-content/uploads/2022/02/cute_beautiful_dp_fo_wHC8X.jpg",
             }}
           />
           <View style={{ marginLeft: 10 }}>
             <Text style={[styles.text1]}>
               {data
-                ? `${data.user.firstName} ${data.user.lastName}`
+                ? `${data?.user?.firstName} ${data?.user?.lastName}`
                 : "Sumaiya Alam"}
             </Text>
             <Text
@@ -286,11 +289,11 @@ export const Cart = ({
                   alignItems: "center",
                 }}>
                 <Avatar
-                  source={{ uri: user?.user?.profilePhoto }}
+                  source={{ uri: service?.profilePhoto }}
                   style={{ height: 25, width: 25, borderWidth: 0 }}
                 />
                 <Text style={[styles.text1, { marginLeft: 12 }]}>
-                  {`${user?.user?.firstName} ${user?.user?.lastName}`}
+                  {`${service?.user?.firstName} ${service?.user?.lastName}`}
                 </Text>
               </View>
               <ExtraLargeText

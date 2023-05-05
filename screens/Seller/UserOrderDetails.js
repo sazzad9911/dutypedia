@@ -51,7 +51,7 @@ import { useIsFocused } from "@react-navigation/native";
 import AmarPay from "./OrderScript/AmarPay";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
-const OrderDetails = ({ navigation, route, onRefresh }) => {
+const UserOrderDetails = ({ navigation, route, onRefresh }) => {
   const oldData = route.params && route.params.data ? route.params.data : null;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
@@ -2024,7 +2024,7 @@ const OrderDetails = ({ navigation, route, onRefresh }) => {
   );
 };
 
-export default OrderDetails;
+export default UserOrderDetails;
 const exporters = (key) => {
   switch (key) {
     case "WAITING_FOR_ACCEPT":

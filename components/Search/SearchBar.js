@@ -188,7 +188,7 @@ const Container = ({
                 active={doc?.title == category ? true : false}
                 key={i}
                 style={styles.button}
-                onPress={() => onCategory(doc?.title)}
+                onPress={() => onCategory(v=>v!=doc?.title?doc.title:undefined)}
                 title={doc.title}
               />
             ))}

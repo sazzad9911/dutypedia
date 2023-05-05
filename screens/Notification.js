@@ -45,9 +45,29 @@ import { dateConverter, timeConverter } from "../action";
 import { socket } from "../Class/socket";
 import { storeNotificationCount } from "../Reducers/unReadNotification";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import notificationData from "../Data/notificationData";
 const { width, height } = Dimensions.get("window");
+import { WebView } from "react-native-webview";
+import { getSubsOrderById } from "../Class/service";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import OrderDetails from "./Vendor/OrderDetails";
+import UserOrderDetails from "./Seller/UserOrderDetails";
+import NotificationHeader from "../components/NotificationHeader";
 
-const Notification = ({ navigation, route }) => {
+const Stack = createNativeStackNavigator();
+const formatOrderNotificationMessage = (item) => {
+  switch (item.notificationType) {
+    case "PAYMENT_ORDER":
+      return `${item.userFrom.firstName} ${item.userFrom.lastName} has completed the payment - you can now begin processing the service.`;
+
+    case "PAYMENT_ORDER_USER":
+      return `Payment Received - ${item.userFrom.firstName} ${item.userFrom.lastName} starting processing your service`;
+
+    default:
+      return `${item.message}`;
+  }
+};
+const NotificationScreen = ({ navigation, route }) => {
   const user = useSelector((state) => state.user);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadNotification, setUnreadNotification] = useState();
@@ -88,7 +108,7 @@ const Notification = ({ navigation, route }) => {
         setReadNotification(res.data.notifications);
       });
     }
-  }, [isFocused]);
+  }, [isFocused, user, vendor]);
   useEffect(() => {
     socket.on("notificationReceived", (e) => {
       if (vendor) {
@@ -118,7 +138,7 @@ const Notification = ({ navigation, route }) => {
       dispatch(setHideBottomBar(false));
       setTimeout(() => {
         dispatch(setHideBottomBar(false));
-      }, 50);
+      }, 150);
     } else {
       //console.log("seen")
       //dispatch(setHideBottomBar(true));
@@ -134,7 +154,7 @@ const Notification = ({ navigation, route }) => {
   }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {unreadNotification &&
+      {/* {unreadNotification &&
         unreadNotification.map((doc, i) => (
           <NotificationCart
             start={
@@ -154,10 +174,11 @@ const Notification = ({ navigation, route }) => {
             data={doc}
             key={i}
             icon={
-              types.filter((d) => d.type == doc.notificationType)?.[0]?.icon
+              notificationData.filter((d) => d.key == doc.notificationType)?.[0]
+                ?.icon
             }
           />
-        ))}
+        ))} */}
       {readNotification &&
         readNotification.map((doc, i) => (
           <NotificationCart
@@ -169,7 +190,8 @@ const Notification = ({ navigation, route }) => {
               types.filter((d) => d.type == doc.notificationType)?.[0]?.middle
             }
             verify={
-              types.filter((d) => d.type == doc.notificationType)?.[0]?.verified
+              notificationData.filter((d) => d.key == doc.notificationType)?.[0]
+                ?.verified
             }
             navigation={navigation}
             active={false}
@@ -181,8 +203,10 @@ const Notification = ({ navigation, route }) => {
             }
             data={doc}
             key={i}
+            type={doc.notificationType}
             icon={
-              types.filter((d) => d.type == doc.notificationType)?.[0]?.icon
+              notificationData.filter((d) => d.key == doc.notificationType)?.[0]
+                ?.icon
             }
           />
         ))}
@@ -196,6 +220,15 @@ const Notification = ({ navigation, route }) => {
         </Text>
       )}
     </ScrollView>
+  );
+};
+const Notification = ({ navigation, route }) => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen options={{ header: (props) => <NotificationHeader {...props} /> }} name="NotificationHome" component={NotificationScreen} />
+      <Stack.Screen options={{headerShown:false}} name="VendorOrderDetails" component={OrderDetails} />
+      <Stack.Screen options={{headerShown:false}} name="OrderDetails" component={UserOrderDetails} />
+    </Stack.Navigator>
   );
 };
 
@@ -217,11 +250,47 @@ const NotificationCart = ({
 }) => {
   //console.log(data)
   const vendor = useSelector((state) => state.vendor);
+  const user = useSelector((state) => state.user);
   const arr = data.notificationType.split("_");
   const actionType = arr[arr.length - 1];
+  let msg = formatOrderNotificationMessage(data).replace("<b>", "/");
+  msg = msg.replace("</b>", "/");
+  msg = msg.split("/");
+  const [first, setFirst] = useState();
+  const [second, setSecond] = useState();
+  const [third, setThird] = useState();
+  useEffect(() => {
+    if (msg?.length > 0) {
+      setFirst(msg[0]);
+      setSecond(msg[1]);
+      msg.length > 1 && setThird(msg[2]);
+    } else {
+      setFirst(msg[0]);
+    }
+  }, [data, user, vendor, icon]);
+  const [order, setOrder] = useState();
+  useEffect(() => {
+    if (data.entityId) {
+      getSubsOrderById(user.token, data?.entityId).then((res) => {
+        setOrder(res.data.order);
+      });
+    }else{
+      setOrder()
+    }
+  }, []);
+
   return (
     <Pressable
       onPress={() => {
+        // console.log(data)
+        // return
+        if (order && vendor) {
+          navigation.navigate("VendorOrderDetails", { data: order });
+        }
+        if (order && !vendor) {
+          navigation.navigate("OrderDetails", { data: order });
+        }
+        return;
         if (actionType == "APPOINTMENT" && vendor) {
           navigation.navigate("Search");
         } else if (actionType == "APPOINTMENT" && !vendor) {
@@ -234,7 +303,11 @@ const NotificationCart = ({
         }
       }}
       style={[styles.cart_container, !data.opened ? styles.active : null]}>
-      {icon ?( <SvgXml xml={icon} width={"62"} height={"62"} />):(<SvgXml xml={types[0].icon} width={"62"} height={"62"} />)}
+      {icon ? (
+        <SvgXml xml={icon} width={"62"} height={"62"} />
+      ) : (
+        <SvgXml xml={types[0].icon} width={"62"} height={"62"} />
+      )}
       <View
         style={{
           flex: 1,
@@ -249,9 +322,23 @@ const NotificationCart = ({
             flexDirection: "row",
             alignItems: "baseline",
           }}>
+          {/* <WebView
+            style={{
+              width:120,
+            }}
+            originWhitelist={["*"]}
+            source={{ html: `<p>${data.message}</p> ${verify?verified:""}` }}
+          /> */}
           <Text style={styles.descriptionText}>
-            {data.message}
-            {/* {verify && (
+            {first}
+            <Text
+              style={{
+                fontWeight: "700",
+              }}>
+              {second}
+            </Text>
+            {third}
+            {verify && (
               <SvgXml
                 style={{
                   marginBottom: -5,
@@ -261,7 +348,7 @@ const NotificationCart = ({
                 height={"18"}
                 width={"18"}
               />
-            )} */}
+            )}
           </Text>
         </View>
       </View>
@@ -421,7 +508,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#4D4E4F",
     fontSize: 16,
-    lineHeight:24
+    lineHeight: 24,
   },
   descriptionText: {
     fontSize: 16,

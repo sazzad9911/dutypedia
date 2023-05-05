@@ -16,6 +16,8 @@ export default function FilterCard({ onSelect }) {
   const [address, setAddress] = useState(["", ""]);
   const [min, setMin] = useState("50");
   const [max, setMax] = useState("25000");
+  const [division,setDivision]=useState()
+  const [district,setDistrict]=useState()
 
   useEffect(() => {
     if (min && max) {
@@ -103,14 +105,17 @@ export default function FilterCard({ onSelect }) {
         title={"Sort by"}
       />
       <Text style={[styles.largeText, { marginTop: 32 }]}>Location</Text>
-      <AddressPicker value={address} onChange={setAddress} />
+      <AddressPicker onDivision={e=>{
+        setDivision(e)
+        setDistrict()
+      }} onDistrict={setDistrict} value={address} onChange={setAddress} />
       <IconButton
         onPress={() => {
           onSelect({
             min: min,
             max: max,
-            division: address[0],
-            district: address[1],
+            division: division,
+            district: district,
             online: online,
             verified: verified,
             orderBy: sortBy,

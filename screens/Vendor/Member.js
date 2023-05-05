@@ -308,18 +308,7 @@ const DutyPediaUser = (props) => {
       </View>
     );
   }
-  if (Array.isArray(AllData) && AllData.length == 0) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text
-          style={{
-            fontSize: 18,
-          }}>
-          No User Found!
-        </Text>
-      </View>
-    );
-  }
+
   return (
     <View
       style={{
@@ -384,6 +373,17 @@ const DutyPediaUser = (props) => {
               navigation={navigation}
             />
           ))}
+        {AllData && AllData.length == 0 && (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center",height:height-180 }}>
+            <Text
+              style={{
+                fontSize: 18,
+              }}>
+              No User Found!
+            </Text>
+          </View>
+        )}
         <View style={{ height: 10 }} />
       </ScrollView>
       <Pressable
@@ -1293,35 +1293,34 @@ export const AddOnlineUser = ({ navigation, route }) => {
   const [Message, setMessage] = React.useState(null);
   const data = route?.params?.data;
   const [All, setAll] = useState();
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
 
   React.useEffect(() => {
     //console.log(data)
     if (user) {
-     fetch()
-        
+      fetch();
     }
-  }, [user,isFocused]);
- const fetch=async()=>{
-  const {members}=await getOnlineUser(user.token,vendor.service.id);
-  const {users}=await getRandomUser(user.token,vendor.service.id)
-  let arr=[]
-  users.map((doc)=>{
-    if(members?.filter(d=>d.userId==doc.id)?.length==0){
-     arr.push(doc)
-    }else{
-      //console.log("d")
-    }
-  })
-  
-  setData(arr)
-  setAll(arr)
- }
+  }, [user, isFocused]);
+  const fetch = async () => {
+    const { members } = await getOnlineUser(user.token, vendor.service.id);
+    const { users } = await getRandomUser(user.token, vendor.service.id);
+    let arr = [];
+    users.map((doc) => {
+      if (members?.filter((d) => d.userId == doc.id)?.length == 0) {
+        arr.push(doc);
+      } else {
+        //console.log("d")
+      }
+    });
+
+    setData(arr);
+    setAll(arr);
+  };
 
   React.useEffect(() => {
     setLoader(true);
     if (SearchValue) {
-      getUserByName(user.token, SearchValue,vendor.service.id)
+      getUserByName(user.token, SearchValue, vendor.service.id)
         .then((res) => {
           setLoader(false);
           if (res) {
@@ -1332,7 +1331,7 @@ export const AddOnlineUser = ({ navigation, route }) => {
           console.warn(err.response.data.msg);
         });
     } else {
-      setData(All)
+      setData(All);
     }
   }, [SearchValue]);
   const sendRequest = (id) => {
@@ -1383,8 +1382,7 @@ export const AddOnlineUser = ({ navigation, route }) => {
             }
             value={SearchValue}
             onChange={(val) => {
-              
-              setSearchValue(val)
+              setSearchValue(val);
             }}
             style={{
               borderRadius: 4,
@@ -1432,7 +1430,7 @@ export const AddOnlineUser = ({ navigation, route }) => {
     </KeyboardAvoidingView>
   );
 };
-const CartView = ({ doc, onChange,setMessage }) => {
+const CartView = ({ doc, onChange, setMessage }) => {
   const [Send, setSend] = React.useState(false);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
@@ -1519,13 +1517,13 @@ const CartView = ({ doc, onChange,setMessage }) => {
               if (Send) {
                 cancelOnlineUser(user.token, doc.id, vendor.service.id)
                   .then((res) => {
-                    setMessage("Request cancelled!")
+                    setMessage("Request cancelled!");
                   })
                   .catch((err) => {
                     console.warn(err.response.data.message);
                   });
-                  setSend((val) => !val);
-                  return
+                setSend((val) => !val);
+                return;
               }
               setSend((val) => !val);
               if (onChange) {
@@ -1534,7 +1532,7 @@ const CartView = ({ doc, onChange,setMessage }) => {
             }}
             style={{
               marginRight: 20,
-              marginLeft:20
+              marginLeft: 20,
             }}
             title={Send ? "Undo" : "Send Request"}>
             <SvgXml

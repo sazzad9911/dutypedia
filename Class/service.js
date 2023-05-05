@@ -64,7 +64,7 @@ export const createService = async (
         worker: businessForm.teamNumber,
         startDate: dateIs,
         workingTime: working,
-        t47: true,
+        t47:working?.length==0? true:false,
         startingPrice: businessForm.price,
         facilites: {
           title: "Choose Your Facilities",
@@ -225,6 +225,7 @@ export const createOtherServiceIndividual = async (
     installmentData: installmentData,
   };
 
+  return
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -257,6 +258,7 @@ export const getUnRelatedServices = async (token, serviceId, category) => {
   );
   return res;
 };
+
 export const getDashboardTitle = (title) => {
   const DASHBOARD = [
     "BUIDLER",
@@ -274,24 +276,17 @@ export const getDashboardTitle = (title) => {
     "PAINTER",
     "PARLOUR",
   ];
-  const text = title;
+  let text = title.toUpperCase().split("");
   let dashboard = "";
   DASHBOARD.forEach((das, i) => {
-    if (
-      das.length > 2 &&
-      das[0] == text[0].toUpperCase() &&
-      das[1] == text[1].toUpperCase() &&
-      das[2] == text[2].toUpperCase()
-    ) {
-      dashboard = DASHBOARD[i];
+    let arr=das.split("")
+    if(text[0].match("I")&&text[1].match("T")){
+      dashboard=DASHBOARD[i]
+    }else if(text[0].match(arr[0])&&text[1].match(arr[1])&&text[2].match(arr[2])){
+      dashboard=DASHBOARD[i]
     }
-    if (
-      das[0].match(text[0].toUpperCase()) &&
-      das[1].match(text[1].toUpperCase())
-    ) {
-      dashboard = DASHBOARD[i];
-    }
-  });
+  })
+  
   return dashboard;
 };
 export const getAllGigs = async (token) => {
@@ -1274,6 +1269,12 @@ export const createReport = async (token,subject,description,serviceId) => {
     message: description,
     serviceId: serviceId,
   },{
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getDutyFee = async (token) => {
+  const res = await axios.get(`${url}/server/services/get-duty-fee`,{
     headers: { Authorization: `Bearer ${token}` },
   });
   return res;

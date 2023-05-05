@@ -131,44 +131,58 @@ const serverToLocal = (data, category) => {
     let arr = [];
     data.forEach((doc) => {
       let newData = AllData.filter((d) => d.key == category)[0];
-      doc.selectedOptions.map((option) => {
-        let listData = newData.data.filter((list) => list.title == doc.title);
-        if (listData.length > 0) {
-          listData = listData[0].list;
-          for (let i = 0; i < listData.length; i++) {
-            let newArr = listData[i].data.filter(
-              (dd) => dd.title == option.title
-            );
-            if (newArr && newArr.length > 0) {
-              let tableName = listData[i].title;
-              arr.push({
-                mainTitle: newData.title,
-                title: doc.title,
-                tableName: tableName,
-                data: option,
-              });
-              break;
+      if(doc.selectedOptions){
+        doc.selectedOptions.map((option) => {
+          let listData = newData.data.filter((list) => list.title == doc.title);
+          if (listData.length > 0) {
+            //console.log(listData)
+            listData = listData[0].list;
+            for (let i = 0; i < listData.length; i++) {
+              let newArr = listData[i].data.filter(
+                (dd) => dd.title == option.title
+              );
+              if (newArr && newArr.length > 0) {
+                let tableName = listData[i].title;
+                arr.push({
+                  mainTitle: newData.title,
+                  title: doc.title,
+                  tableName: tableName,
+                  data: option,
+                });
+                break;
+              }
             }
           }
-        }
-
-        //listData=JSON.parse(listData[0])
-
-        // for (let i = 0; i < listData.length; i++) {
-        //   let newArr = listData[i].data.filter((dd) => dd.title == option.title);
-        //   if (newArr && newArr.length > 0) {
-        //     let tableName = listData[i].title;
-        //     arr.push({
-        //       mainTitle: newData.title,
-        //       title: doc.title,
-        //       tableName: tableName,
-        //       data: option,
-        //     });
-        //     break;
-        //   }
-        // }
-        // return arr;
-      });
+        });
+      }else if(doc.multiFormData){
+        doc.multiFormData.map((doc)=>{
+          let sub=doc?.title;
+          console.log(sub)
+          doc.selectedOptions.map((option) => {
+            let listData = newData.data.filter((list) => list.title == doc.title);
+            if (listData.length > 0) {
+              //console.log(listData)
+              listData = listData[0].list;
+              for (let i = 0; i < listData.length; i++) {
+                let newArr = listData[i].data.filter(
+                  (dd) => dd.title == option.title
+                );
+                if (newArr && newArr.length > 0) {
+                  let tableName = listData[i].title;
+                  arr.push({
+                    mainTitle: newData.title,
+                    subTitle:sub,
+                    title: doc.title,
+                    tableName: tableName,
+                    data: option,
+                  });
+                  break;
+                }
+              }
+            }
+          });
+        })
+      }
     });
     return arr;
   } else if (data.selectedOptions) {

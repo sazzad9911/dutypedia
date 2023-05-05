@@ -252,6 +252,8 @@ const AcceptOrder = (props) => {
     
     if (newVendor) {
       //console.log(data.installmentData)
+      // console.log(data.services)
+      // return
       createVendorOrder(
         user.token,
         userId,

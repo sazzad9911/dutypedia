@@ -12,6 +12,7 @@ const { width, height } = Dimensions.get("window");
 
 const AllReview = ({ navigation, route }) => {
   const data = route?.params?.data;
+  const service=route?.params?.service;
   const individualRating = route?.params?.individualRating;
   const isFocused=useIsFocused()
   const dispatch=useDispatch()
@@ -78,6 +79,7 @@ const AllReview = ({ navigation, route }) => {
                 style={{
                   width: width - 40,
                 }}
+                service={service}
               />
             ))}
           {data && data.length == 0 && (

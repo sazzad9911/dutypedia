@@ -42,7 +42,7 @@ import {
 } from "../../assets/OfferIcons";
 import { Entypo } from "@expo/vector-icons";
 import { CheckBox } from "../Seller/Pricing";
-import { createOrder, getOrders } from "../../Class/service";
+import { createOrder, getDutyFee, getOrders } from "../../Class/service";
 import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 import {
   SafeAreaView,
@@ -116,6 +116,7 @@ const OfferNow = (props) => {
   const [cartId, setCartId] = useState();
   const [newServices, setNewServices] = useState();
   const [facilities, setNewFacilities] = useState();
+  const [dutyFee,setDutyFee]=useState()
 
   React.useEffect(() => {
     // console.log(data.installmentData);
@@ -143,9 +144,10 @@ const OfferNow = (props) => {
       setFacilities(gigs.facilites.selectedOptions);
     }
     if (selectedPackage) {
+      //console.log(selectedPackage?.price)
       setPrice(selectedPackage.price);
     }
-  }, [gigs]);
+  }, [gigs,selectedPackage?.price]);
   React.useEffect(() => {
     if (data && data.subsData && data.subsData.totalDuration) {
       let arr = [];
@@ -154,6 +156,9 @@ const OfferNow = (props) => {
       }
       setTotalDuration(arr);
     }
+    getDutyFee(user.token).then(res=>{
+      setDutyFee(res.data.fee)
+    })
   }, [data]);
   const pickDocument = async () => {
     const result = await DocumentPicker.getDocumentAsync();
@@ -741,12 +746,12 @@ const OfferNow = (props) => {
           )}
 
           <View style={styles.box}>
-            <Text style={styles.text14}>Duty Fee 5%</Text>
-            <Text style={styles.text14}>00.00 ৳</Text>
+            <Text style={styles.text14}>Duty Fee {dutyFee?(dutyFee*100):"0"}%</Text>
+            <Text style={styles.text14}>{Price?(Price*dutyFee):"00.00"} ৳</Text>
           </View>
           <View style={styles.box}>
             <Text style={styles.text14}>Total pay</Text>
-            <Text style={styles.text14}>00.00 ৳</Text>
+            <Text style={styles.text14}>{Price?(parseInt(Price)+(parseInt(Price)*dutyFee)).toFixed(2):"00.00"} ৳</Text>
           </View>
           <View style={[styles.box, { flex: 1, flexDirection: "column" }]}>
             <View

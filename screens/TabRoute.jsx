@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "./Home";
@@ -77,6 +77,8 @@ import AppointmentHeader from "../components/Appointment/AppointmentHeader";
 import VendorAppointmentList from "./Vendor/Appointment/VendorAppointmentList";
 import { setSaveList } from "../Reducers/saveList";
 import NotificationHeader from "../components/NotificationHeader";
+import { getUnreadCount, getVendorNotificationCount } from "../Class/notification";
+import { storeNotificationCount } from "../Reducers/unReadNotification";
 
 const Tab = createBottomTabNavigator();
 
@@ -194,6 +196,23 @@ const TabRoute = () => {
     //setReload((val) => !val);
     return () => removeNetInfoSubscription();
   }, []);
+  useEffect(()=>{
+    socket.on("notificationReceived", (e) => {
+      if(vendor){
+        getNotificationVendor()
+      }else{
+        getNotification()
+      }
+    })
+  },[])
+  const getNotification=async()=>{
+   const res=await getUnreadCount(user.token)
+   dispatch(storeNotificationCount(res.data.count));
+  }
+  const getNotificationVendor=async()=>{
+    const res=await getVendorNotificationCount(user.token,vendor?.service.id)
+    dispatch(storeNotificationCount(res.data.count));
+  }
   const userOrders = async () => {
     const res = await getOrders(user.token, "user");
     setUserOrdersOffline(res.data.orders);
@@ -345,7 +364,7 @@ const TabRoute = () => {
           component={Message}
         />
         <Tab.Screen
-          options={{ header: (props) => <NotificationHeader {...props} /> }}
+          options={{ headerShown:false }}
           name="Notification"
           component={Notification}
         />

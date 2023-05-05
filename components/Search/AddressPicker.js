@@ -11,7 +11,7 @@ import Animated from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 import { DistrictList } from "../../Data/district";
 
-export default function AddressPicker({ value, onChange  }) {
+export default function AddressPicker({ value, onChange,onDistrict,onDivision  }) {
   const [openValue,setOpenValue]=useState()
   return (
     <View
@@ -19,15 +19,18 @@ export default function AddressPicker({ value, onChange  }) {
         marginTop: 12,
       }}>
       {DistrictList.map((doc, i) => (
-        <Card openValue={openValue} value={value} onChange={e=>{
+        <Card openValue={openValue} onDistrict={onDistrict} value={value} onChange={e=>{
           onChange(e)
+          if(onDivision){
+            onDivision(e?doc.title:undefined)
+          }
           setOpenValue(doc.title)
         }} key={i} data={doc} />
       ))}
     </View>
   );
 }
-const Card = ({ data, value, onChange ,openValue}) => {
+const Card = ({ data, value, onChange ,openValue,onDistrict}) => {
   const [open, setOpen] = useState(false);
   useEffect(()=>{
     if(openValue!=data.title){
@@ -40,7 +43,7 @@ const Card = ({ data, value, onChange ,openValue}) => {
         onPress={() => {
           setOpen((t) => !t);
           if(value==data.title){
-            onChange("")
+            onChange()
             return
           }
           
@@ -54,7 +57,12 @@ const Card = ({ data, value, onChange ,openValue}) => {
       </Pressable>
       {open && (
         <Animated.View>
-          {data && data.data.map((doc, i) => <SmallCard value={value} onChange={onChange} key={i} title={doc} />)}
+          {data && data.data.map((doc, i) => <SmallCard value={value} onChange={e=>{
+            onChange(e)
+            if(onDistrict){
+              onDistrict(e)
+            }
+          }} key={i} title={doc} />)}
         </Animated.View>
       )}
     </View>

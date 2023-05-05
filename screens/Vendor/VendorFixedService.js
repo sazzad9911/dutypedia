@@ -204,6 +204,7 @@ const VendorFixedService = (props) => {
       setCategory(data.service.category);
       setActiveServiceData(arr);
       try {
+       // console.log(data.services.category)
         if (data.services.category) {
           dispatch({
             type: "SET_NEW_LIST_DATA",

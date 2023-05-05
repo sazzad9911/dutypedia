@@ -50,7 +50,7 @@ const AddServiceList = (props) => {
     },
   });
   const isFocused=useIsFocused()
-
+  //console.log("df")
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -130,7 +130,7 @@ const AddServiceList = (props) => {
           onPress={() => {
             try {
               setDataError(null);
-              //console.log(Data);
+              
               dispatch({ type: "SET_LIST_SELECTION", playload: Data });
               if (params.setListData) {
                 params.setListData(Data);

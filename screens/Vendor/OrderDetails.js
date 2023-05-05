@@ -148,6 +148,10 @@ const OrderDetails = ({ navigation, route }) => {
     //console.warn(subsOrder)
     try {
       if (data && data.selectedServices && data.selectedServices.category) {
+        // console.log(serverToLocal(
+        //   data.selectedServices.options,
+        //   data.selectedServices.category
+        // ))
         setListData(
           serverToLocal(
             data.selectedServices.options,
@@ -161,8 +165,10 @@ const OrderDetails = ({ navigation, route }) => {
             data.selectedServices.category
           ),
         });
+        
       } else if (Array.isArray(data.selectedServices)) {
         let arr = [];
+       // console.log("2")
         data.selectedServices.map((doc, i) => {
           arr.push({
             title: "dfsfds",
@@ -174,6 +180,7 @@ const OrderDetails = ({ navigation, route }) => {
         setListData(arr);
         dispatch({ type: "SET_LIST_SELECTION", playload: arr });
       } else if (data && data.selectedServices) {
+        //console.log("3")
         setListData(
           serverToLocal(data.selectedServices, data.service.category)
         );
@@ -185,10 +192,11 @@ const OrderDetails = ({ navigation, route }) => {
     } catch (e) {
       console.warn(e.message);
     }
-    if (data && data.facilites && Array.isArray(data.facilites)) {
-      setFacilities(data.facilites);
+    if (data && data.facilites && Array.isArray(data.facilites.selectedOptions)) {
+      //console.log(data.facilites)
+      setFacilities(data.facilites.selectedOptions);
     }
-  }, [data]);
+  }, [data,data?.selectedServices,newData]);
   const validate = () => {
     setServiceError(null);
     setFacilitiesError(null);
@@ -261,6 +269,7 @@ const OrderDetails = ({ navigation, route }) => {
     //   console.warn(e.message);
     // }
   };
+  //console.log(ListData)
   const loadDataSubs = async (receiverId, order) => {
     if (index == null) {
       Alert.alert("Some thing went wrong");
@@ -406,6 +415,7 @@ const OrderDetails = ({ navigation, route }) => {
       </View>
     );
   }
+  //console.log(data?.orderedBy)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -490,6 +500,7 @@ const OrderDetails = ({ navigation, route }) => {
           deliveryImage={data?.proofImage}
           onCancel={cancelRequest}
           type={data?.type}
+          orderedBy={data?.orderedBy}
         />
         {data?.status == "ACCEPTED" && (
           <Text style={[styles.font, { marginBottom: 8, color: "#4ADE80" }]}>

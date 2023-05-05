@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "35837306735",
+    "project_id": "duty-5776a",
+    "storage_bucket": "duty-5776a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35837306735:android:7dfa61b64b38dbf3642a9a",
+        "android_client_info": {
+          "package_name": "com.duty.bd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35837306735-phaa4sh7b2l2hph31367k8cg3stb643q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDb-Q3Tdub-1Rx0okeVLZRLB7TXC6Hcc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35837306735-phaa4sh7b2l2hph31367k8cg3stb643q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

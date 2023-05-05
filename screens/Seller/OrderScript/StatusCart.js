@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Pressable, Linking } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useSelector } from "react-redux";
 import { serverTimeToLocalDate } from "../../../action";
 import customStyle from "../../../assets/stylesheet";
+import { getDutyFee } from "../../../Class/service";
 import IconButton from "../../../components/IconButton";
 
 export default function StatusCart({
@@ -23,9 +25,19 @@ export default function StatusCart({
   onDelivered,
   vendor,
   onCancel,
-  type
+  type,
+  orderedBy
 }) {
   //console.log(status)
+  const user=useSelector(state=>state.user)
+  const [dutyFee,setDutyFee]=useState()
+  useEffect(()=>{
+    if(user){
+      getDutyFee(user.token).then(res=>{
+        setDutyFee(res.data.fee)
+      })
+    }
+  },[])
   return (
     <View
       style={{
@@ -42,7 +54,7 @@ export default function StatusCart({
           }}>
           <View>
             {type!="STARTING"?(<Text style={styles.small}>Service price</Text>):(<Text style={styles.small}>{vendor?"Buyer":"Your"} Offer</Text>)}
-            <Text style={[styles.small, { marginTop: 8 }]}>Duty fee 5%</Text>
+            <Text style={[styles.small, { marginTop: 8 }]}>Duty fee {dutyFee?(dutyFee*100):"0"}%</Text>
             <Text style={[styles.mediumBold, { marginTop: 16 }]}>
               {vendor?"You get":"Total pay"}
             </Text>
@@ -54,10 +66,10 @@ export default function StatusCart({
             }}>
             <Text style={styles.small}>{price}৳</Text>
             <Text style={[styles.small, { marginTop: 8 }]}>
-              {vendor?"- ":"+ "}{(price * 5) / 100}৳
+              {vendor?"- ":"+ "}{(price * (dutyFee?dutyFee:1)).toFixed(2)}৳
             </Text>
             <Text style={[styles.mediumBold, { marginTop: 16 }]}>
-              {vendor?(price - (price * 5) / 100):(price + (price * 5) / 100)}
+              {vendor?(price - (price * (dutyFee?dutyFee:1))).toFixed(2):(price + (price*(dutyFee?dutyFee:1))).toFixed(2)}
               <Text style={styles.medium}>৳</Text>
             </Text>
           </View>
@@ -216,7 +228,7 @@ export default function StatusCart({
         )}
         
       </View>
-      {vendor?(
+      {vendor&&orderedBy!="VENDOR"?(
         <View style={[styles.box, { paddingBottom: 0 }]}>
         <Text style={[styles.medium,{textAlign:"left"}]}>Instruction</Text>
         {instruction?(
