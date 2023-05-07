@@ -330,6 +330,7 @@ const VendorProfile = (props) => {
         //   gigs[0].services.options,
         //   gigs[0].services.category
         // ))
+       // console.log(gigs[0].services.options)
         dispatch({
           type: "SET_NEW_LIST_DATA",
           playload: serverToLocal(
@@ -1322,6 +1323,7 @@ const VendorProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
+              dispatch({type:"SET_NEW_DATA",playload:null})
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
               const gigs = vendor.service.gigs.filter(
                 (d) => d.type == "STARTING"
@@ -1370,6 +1372,7 @@ const VendorProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
+              dispatch({type:"SET_NEW_DATA",playload:null})
               dispatch({ type: "SET_PACKAGES", playload: [] });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
               const gigs = vendor.service.gigs.filter(

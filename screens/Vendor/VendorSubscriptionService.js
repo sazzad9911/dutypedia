@@ -56,7 +56,7 @@ import {
   getUnRelatedServices,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { serverToLocal } from "../../Class/dataConverter";
+import { serverToLocal, serverToLocalNew } from "../../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 import useHandleScroll from "../../components/constants/FabView";
@@ -209,20 +209,20 @@ const VendorSubscriptionService = (props) => {
         if (data.services.category) {
           dispatch({
             type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(
+            playload: serverToLocalNew(
               data.services.options,
               data.services.category
             ),
           });
           setNewDataList(
-            serverToLocal(data.services.options, data.services.category)
+            serverToLocalNew(data.services.options, data.services.category)
           );
         } else {
           dispatch({
             type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(data.services, data.service.category),
+            playload: serverToLocalNew(data.services, data.service.category),
           });
-          setNewDataList(serverToLocal(data.services, data.service.category));
+          setNewDataList(serverToLocalNew(data.services, data.service.category));
         }
       } catch (e) {
         console.warn(e.message);
@@ -630,7 +630,7 @@ const VendorSubscriptionService = (props) => {
               <TouchableOpacity onPress={()=>{
                 const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 navigation.navigate("EditServiceList", {
-                  NewDataList: serverToLocal(
+                  NewDataList: serverToLocalNew(
                     gigs[0].services.options,
                     gigs[0].services.category
                   ),

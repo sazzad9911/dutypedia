@@ -68,6 +68,12 @@ import BusinessTitle from "./screens/create_dashboard/BusinessTitle";
 import InitialPage from "./screens/create_dashboard/InitialPage";
 import AllReview from "./screens/AllReview";
 import CancelOrderConfirmation from "./screens/Seller/OrderScript/CancelOrderConfirmation";
+import TableData from "./screens/Seller/TableData";
+import SubCategories from "./screens/Seller/SubCategories";
+import Category from "./screens/Seller/Category";
+import Pricing from "./screens/Seller/Pricing";
+import Service from "./screens/Seller/Service";
+import Address from "./screens/Seller/Address";
 
 const Stack = createStackNavigator();
 
@@ -77,25 +83,8 @@ const HomeRoute = ({ navigation }) => {
   const user = useSelector((state) => state.user);
   const [NewState, setNewState] = React.useState(false);
   const interestCategory = useSelector((state) => state.interestCategory);
-  const [Loader, setLoader] = React.useState(true);
+  const [Loader, setLoader] = React.useState(false);
   const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    if (user) {
-      getFavoriteCategories(user.token)
-        .then((result) => {
-          if (result.data.favouriteCategories.length > 0) {
-            //console.log(result.data.favouriteCategories)
-            setNewState(true);
-          }
-          setLoader(false);
-        })
-        .catch((err) => {
-          console.warn(err);
-          setLoader(false);
-        });
-    }
-  }, [interestCategory + vendor]);
 
   if (Loader) {
     return (
@@ -106,24 +95,13 @@ const HomeRoute = ({ navigation }) => {
   }
   return (
     <Stack.Navigator>
-      {!NewState ? (
-        <Stack.Screen
-          name="Home"
-          options={{
-            headerShown: false,
-          }}
-          component={Home}
-        />
-      ) : (
-        <Stack.Screen
-          name="Home"
-          options={{
-            headerShown: false,
-          }}
-          component={Feed}
-        />
-      )}
-
+      <Stack.Screen
+        name="Feed"
+        options={{
+          headerShown: false,
+        }}
+        component={Feed}
+      />
       <Stack.Screen
         name="AllPackageList"
         options={{
@@ -323,12 +301,65 @@ const HomeRoute = ({ navigation }) => {
         component={FinalReview}
       />
       <Stack.Screen
-          options={{
-            headerShown:false
-          }}
-          name="AllReview"
-          component={AllReview}
-        />
+        options={{
+          headerShown: false,
+        }}
+        name="AllReview"
+        component={AllReview}
+      />
+      {
+        //new
+      }
+      <Stack.Screen
+        name="TableData"
+        options={{
+          header: (props) => <SubHeader {...props} />,
+        }}
+        component={TableData}
+      />
+      <Stack.Screen
+        name="SubCategories"
+        options={{
+          header: (props) => <SubHeader {...props} />,
+        }}
+        component={SubCategories}
+      />
+      <Stack.Screen
+        name="Category"
+        options={{
+          headerShown: false,
+        }}
+        component={Category}
+      />
+      <Stack.Screen
+        name="SubCategories_1"
+        options={{
+          header: (props) => <SubHeader {...props} />,
+        }}
+        component={SubCategories}
+      />
+      <Stack.Screen
+        name="Pricing"
+        options={{
+          header: (props) => <SubHeader title="Pricing" {...props} />,
+        }}
+        component={Pricing}
+      />
+      <Stack.Screen
+        name="Service"
+        options={{
+          headerShown: false,
+          // : (props) => <SubHeader title="Service" {...props} />
+        }}
+        component={Service}
+      />
+      <Stack.Screen
+        name="Address"
+        options={{
+          header: (props) => <SubHeader title="Address" {...props} />,
+        }}
+        component={Address}
+      />
     </Stack.Navigator>
   );
 };

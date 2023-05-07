@@ -37,6 +37,7 @@ import { getDashboardInfo } from "../../Class/service";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import Avatar from "../../components/Profile/Avatar";
+import { serverToLocalNew } from "../../Class/dataConverter";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -55,6 +56,7 @@ const Menu = ({ navigation }) => {
   const inset = useSafeAreaInsets();
 
   useEffect(() => {
+   
     if (user) {
       getDashboardInfo(user.token, vendor.service.id)
         .then((res) => {
@@ -74,7 +76,6 @@ const Menu = ({ navigation }) => {
         dispatch(setHideBottomBar(false));
       }, 100);
     } else {
-      
       //console.log("seen")
       //dispatch(setHideBottomBar(true));
     }
@@ -180,7 +181,7 @@ const Menu = ({ navigation }) => {
             onPress={() => {
               logoutVendor();
               dispatch({ type: "SET_VENDOR", playload: false });
-              navigation.navigate("Feed")
+              navigation.navigate("Feed");
             }}
             Icon={logout}
             title={"Logout"}

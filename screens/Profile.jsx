@@ -126,6 +126,7 @@ import SupportCenter from "./support/SupportCenter";
 import SupportDescription from "./support/SupportDescription";
 import SupportForm from "./support/SupportForm";
 import VendorAddress from "./Vendor/VendorAddress";
+import Service from "./Seller/Service";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -154,7 +155,14 @@ const Profile = ({ navigation }) => {
           component={MainProfile}
         />
       )}
-
+      <Stack.Screen
+        name="Service"
+        options={{
+          headerShown: false,
+          // : (props) => <SubHeader title="Service" {...props} />
+        }}
+        component={Service}
+      />
       <Stack.Screen
         name="VendorProfile"
         options={{
@@ -1150,7 +1158,7 @@ const MainProfile = (props) => {
             source={{ uri: image }}
           />
           <Text numberOfLines={1} style={styles.headLine}>
-            {user ? user.user.firstName + " " + user.user.lastName : "-"}
+            {user ? user.user.name : ""}
           </Text>
           <Text style={styles.text}>
             {user && user.user.gender ? user.user.gender.toUpperCase() : "N/A"}
@@ -1308,7 +1316,7 @@ const MainProfile = (props) => {
                 dispatch({ type: "SET_VENDOR", playload: false });
                 dispatch({ type: "SET_USER", playload: [] });
                 dispatch({ type: "SET_VENDOR_INFO", playload: false });
-                navigation.navigate("Home");
+                navigation.navigate("Feed");
               }}
               style={{ borderBottomWidth: 0, paddingBottom: 0 }}
               icon={logouts}

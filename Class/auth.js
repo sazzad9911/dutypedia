@@ -4,7 +4,7 @@ import { storeJson, getJson } from "./storage";
 
 const userLogin = async (email, password) => {
   const response = await axios.post(`${url}/server/auth/login`, {
-    email: email,
+    phone: email,
     password: password,
   });
 
@@ -58,6 +58,30 @@ const getFavoriteCategories = async (token) => {
   });
   return res;
 };
+const sendOTP = async (number) => {
+  const res = await axios.post(`${url}/server/auth/register/send-otp`,{
+    phone:number
+  });
+  return res;
+};
+const checkOTP = async (number,otp) => {
+  const res = await axios.post(`${url}/server/auth/register/verify-otp`,{
+    phone:number,
+    otp:otp
+  });
+  return res;
+};
+const registerUser=async(token,name,username,password,age,gender)=>{
+  const res = await axios.post(`${url}/server/auth/register`,{
+    token:token,
+    name:name,
+    username:username,
+    password:password,
+    age:age,
+    gender:gender
+  });
+  return res;
+}
 export {
   userLogin,
   checkUser,
@@ -67,4 +91,7 @@ export {
   vendorLogin,
   getFavoriteCategories,
   setFavoriteCategories,
+  sendOTP,
+  checkOTP,
+  registerUser
 };

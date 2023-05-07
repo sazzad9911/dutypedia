@@ -103,6 +103,7 @@ const EditServiceList = (props) => {
     }else{
         setData(serverToLocal(gigs.services,gigs.service.category))
     }
+    //console.log(NewDataList)
     //setData(ListSelection);
   }, [gigs.id]);
   const updateData = () => {
@@ -142,7 +143,9 @@ const EditServiceList = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TopTabBar {...props} id={true} />}>
+      <Tab.Navigator tabBar={(props) => <TopTabBar style={{
+        marginTop:0
+      }} {...props} id={true} />}>
         {Services.map((doc, i) => (
           <Tab.Screen
             key={i}
@@ -217,8 +220,10 @@ const ComponentScreen = (props) => {
   });
   const NewDataList=params.NewDataList;
   const isFocused=useIsFocused()
+  //console.log(NewDataList)
 
   React.useEffect(() => {
+    
     let arr = [];
     if (NewDataList) {
         NewDataList.map((item, i) => {
@@ -228,10 +233,13 @@ const ComponentScreen = (props) => {
           }
         }
       });
+
     }
+   
     if (Array.isArray(arr) && arr.length > 0) {
       setServices(uniq(arr));
-      //console.log(uniq(arr))
+     // console.log(uniq(arr))
+     
     }
   }, [props.route.name,isFocused]);
   return (
@@ -254,7 +262,7 @@ const ComponentScreen = (props) => {
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
           <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
-          <Table Data={params.Data} setData={params.setData} {...props} />
+          <Table NewDataList={NewDataList} Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
       <View style={{ height: 80 }} />

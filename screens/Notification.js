@@ -54,6 +54,7 @@ import OrderDetails from "./Vendor/OrderDetails";
 import UserOrderDetails from "./Seller/UserOrderDetails";
 import NotificationHeader from "../components/NotificationHeader";
 import ReviewScreen from "./Vendor/review/ReviewScreen";
+import VendorOrderDetails from "./Vendor/VendorOrderDetails";
 
 const Stack = createNativeStackNavigator();
 const formatOrderNotificationMessage = (item) => {
@@ -93,7 +94,7 @@ const NotificationScreen = ({ navigation, route }) => {
       getVendorNotification(user.token, vendor.service.id).then((res) => {
         setReadNotification(res.data.notifications);
       });
-    } else {
+    } else if(user) {
       getUnreadCount(user.token)
         .then((res) => {
           setUnreadCount(res.data.count);
@@ -234,7 +235,7 @@ const Notification = ({ navigation, route }) => {
       <Stack.Screen
         options={{ headerShown: false }}
         name="VendorOrderDetails_1"
-        component={OrderDetails}
+        component={VendorOrderDetails}
       />
       <Stack.Screen
         options={{ headerShown: false }}
@@ -308,10 +309,10 @@ const NotificationCart = ({
           navigation.navigate("CustomerReview");
           return;
         }
-        if (order && vendor) {
+        if (data.notificationType.includes("ORDER") && vendor) {
           navigation.navigate("VendorOrderDetails_1", { orderId: data?.entityId });
         }
-        if (order && !vendor) {
+        if (data.notificationType.includes("ORDER") && !vendor) {
           navigation.navigate("OrderDetails_1", { orderId: data?.entityId });
         }
         return;

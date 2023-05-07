@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ const { width, height } = Dimensions.get("window");
 const AddServiceList = (props) => {
   const [Services, setServices] = React.useState([]);
   const params = props.route.params;
+  const facilities = params?.facilities;
   const [Name, setName] = React.useState(
     params.NewDataList.length > 0 ? params.NewDataList[0] : "Name"
   );
@@ -49,7 +50,7 @@ const AddServiceList = (props) => {
       color: textColor,
     },
   });
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
   //console.log("df")
   React.useEffect(() => {
     if (isFocused) {
@@ -91,15 +92,15 @@ const AddServiceList = (props) => {
   React.useEffect(() => {
     setData(ListSelection);
   }, [ListSelection]);
+  
 
   if (Array.isArray(Services) && Services.length == 0) {
     return null;
   }
-  
 
   return (
     <View style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TopTabBar {...props}/>}>
+      <Tab.Navigator tabBar={(props) => <TopTabBar {...props} />}>
         {Services.map((doc, i) => (
           <Tab.Screen
             key={i}
@@ -111,18 +112,21 @@ const AddServiceList = (props) => {
             }}
           />
         ))}
-        {/* <Tab.Screen
-          name={"Extra Facilities"}
-          initialParams={{
-            facilites: params.facilites,
-            setData: setFacilities,
-          }}
-          component={ExtraFacilities}
-        /> */}
+        {facilities && (
+          <Tab.Screen
+            name={"Extra Facilities"}
+            initialParams={{
+              facilites: params.facilites,
+              setData: setFacilities,
+            }}
+            component={ExtraFacilities}
+          />
+        )}
       </Tab.Navigator>
-      <View style={{
-        paddingVertical:12
-      }}>
+      <View
+        style={{
+          paddingVertical: 12,
+        }}>
         {DataError && (
           <Text style={{ color: "red", textAlign: "center" }}>{DataError}</Text>
         )}
@@ -130,10 +134,13 @@ const AddServiceList = (props) => {
           onPress={() => {
             try {
               setDataError(null);
-              
+
               dispatch({ type: "SET_LIST_SELECTION", playload: Data });
               if (params.setListData) {
                 params.setListData(Data);
+                if(params.setFacilities){
+                  params.setFacilities(Facilities)
+                }
                 navigation.navigate(params.name, { data: params.data });
                 //console.log(ListSelection);
               } else {
@@ -153,8 +160,7 @@ const AddServiceList = (props) => {
                   });
                   return;
                 }
-                if(params.data=="INSTALLMENT"){
-
+                if (params.data == "INSTALLMENT") {
                   //console.log("pp")
                   navigation.navigate("AddInstallment", {
                     data: Data,
@@ -228,7 +234,7 @@ const ComponentScreen = (props) => {
         Services.map((doc, i) => (
           <View style={[styles.view]} key={i}>
             <Text style={styles.text}>{doc}</Text>
-            
+
             <Table
               Data={params.Data}
               setData={params.setData}
@@ -240,11 +246,10 @@ const ComponentScreen = (props) => {
       ) : (
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
-          
+
           <Table Data={params.Data} setData={params.setData} {...props} />
         </View>
       )}
-      
     </ScrollView>
   );
 };
@@ -304,25 +309,22 @@ const Table = (props) => {
       style={{
         flexDirection: "row",
         flexWrap: "wrap",
-      }}
-    >
+      }}>
       {Array.isArray(Data) &&
         Data.map((item, i) => (
           <View
             style={{
               width: width / 2 - 30,
-              marginRight:i==0?12: 0,
+              marginRight: i == 0 ? 12 : 0,
             }}
-            key={i}
-          >
+            key={i}>
             <Text
               style={{
                 fontSize: 16,
                 fontWeight: "400",
-                marginVertical:20,
-                marginBottom:12
-              }}
-            >
+                marginVertical: 20,
+                marginBottom: 12,
+              }}>
               {item}
             </Text>
             <Rows
@@ -404,8 +406,8 @@ const Rows = ({ title, item, name, setData, Data }) => {
           <CheckBox
             style={{
               width: width / 2 - 30,
-              alignItems:"flex-start",
-              marginVertical:8
+              alignItems: "flex-start",
+              marginVertical: 8,
             }}
             key={i}
             value={
@@ -469,9 +471,8 @@ const ExtraFacilities = (props) => {
       marginVertical: 10,
     },
     text: {
-      fontFamily: "Poppins-Medium",
-      fontSize: 15,
-      color: textColor,
+      fontWeight: "500",
+      fontSize: 20,
     },
   });
   return (
@@ -484,7 +485,7 @@ const ExtraFacilities = (props) => {
             <CheckBox
               onChange={(e) => {
                 try {
-                  params.setFacilities((val) => {
+                  params.setData((val) => {
                     let arr = val.filter((s) => s.title.match(e));
                     if (arr.length > 0) {
                       return val.filter((s) => s.title != e);
@@ -495,6 +496,9 @@ const ExtraFacilities = (props) => {
                 } catch (err) {
                   console.warn(err.message);
                 }
+              }}
+              style={{
+                marginTop: 20,
               }}
               key={i}
               title={doc.title}

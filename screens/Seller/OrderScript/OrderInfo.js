@@ -15,9 +15,11 @@ export default function OrderInfo({
   vendor,
   onAddService,
   status,
-  serviceError
+  serviceError,
+  type
 }) {
   const [wid, setWid] = useState(0);
+  
   return (
     <View
       style={{
@@ -125,7 +127,7 @@ export default function OrderInfo({
             style={{
               marginTop: 24,
             }}>
-            <Text style={styles.headLine}>Facilities</Text>
+            <Text style={styles.headLine}>{type=="PACKAGE"?"Package":"Extra"} Facilities</Text>
             <Text style={[styles.text, { marginTop: 12 }]}>
               {facilities.map((doc, i) => {
                 return `${i == 0 ? "" : ", "}${doc.title}`;

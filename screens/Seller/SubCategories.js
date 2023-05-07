@@ -24,6 +24,8 @@ import {
 } from "../../action";
 import InputModal from "./InputModal";
 import IconButton from "../../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const SubCategories = ({ navigation, route }) => {
   const title = route.params.title;
@@ -39,6 +41,19 @@ const SubCategories = ({ navigation, route }) => {
   const listData = useSelector((state) => state.listData);
   const [ModalVisible, setModalVisible] = React.useState(false);
   const direct = route.params&&route.params.direct?route.params.direct:false;
+  const isFocused=useIsFocused()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
     //console.log(listData)

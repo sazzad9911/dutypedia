@@ -77,7 +77,10 @@ import AppointmentHeader from "../components/Appointment/AppointmentHeader";
 import VendorAppointmentList from "./Vendor/Appointment/VendorAppointmentList";
 import { setSaveList } from "../Reducers/saveList";
 import NotificationHeader from "../components/NotificationHeader";
-import { getUnreadCount, getVendorNotificationCount } from "../Class/notification";
+import {
+  getUnreadCount,
+  getVendorNotificationCount,
+} from "../Class/notification";
 import { storeNotificationCount } from "../Reducers/unReadNotification";
 
 const Tab = createBottomTabNavigator();
@@ -111,17 +114,17 @@ const TabRoute = () => {
       setLoader(true);
       getFavoriteCategories(user.token)
         .then((result) => {
+          setLoader(false);
           if (result.data.favouriteCategories.length > 0) {
             //console.log(result.data.favouriteCategories)
             setNewState(true);
-            setLoader(false);
           }
         })
         .catch((err) => {
           console.warn(err);
           setLoader(false);
         });
-        loadSaveList()
+      loadSaveList();
     }
   }, [user]);
   const updateVendorInfo = async (id) => {
@@ -130,17 +133,16 @@ const TabRoute = () => {
       dispatch({ type: "SET_VENDOR", playload: res.data });
     }
   };
-  const loadSaveList=async()=>{
-    const {data}=await getLikeGigs(user.token);
-    dispatch(setSaveList(data.gigs))
-  }
+  const loadSaveList = async () => {
+    const { data } = await getLikeGigs(user.token);
+    dispatch(setSaveList(data.gigs));
+  };
 
   React.useEffect(() => {
     checkVendor().then((res) => {
       if (res) {
-        updateVendorInfo(res.service.id).catch((err) => {
-          dispatch({ type: "SET_VENDOR", playload: res });
-        });
+        dispatch({ type: "SET_VENDOR", playload: res });
+        updateVendorInfo(res.service.id)
       }
     });
     getJson("serviceSettings").then((data) => {
@@ -166,18 +168,18 @@ const TabRoute = () => {
         //console.log(res)
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
-          getDashboard(res.token).then((result) => {
-            if (result && result.data && result.data.dashboards) {
-              dispatch({
-                type: "SET_VENDOR_INFO",
-                playload: result.data.dashboards,
-              });
-              setLoad(!load);
-            } else {
-              dispatch({ type: "SET_VENDOR_INFO", playload: false });
-              setLoad(!load);
-            }
-          });
+          // getDashboard(res.token).then((result) => {
+          //   if (result && result.data && result.data.dashboards) {
+          //     dispatch({
+          //       type: "SET_VENDOR_INFO",
+          //       playload: result.data.dashboards,
+          //     });
+          //     setLoad(!load);
+          //   } else {
+          //     dispatch({ type: "SET_VENDOR_INFO", playload: false });
+          //     setLoad(!load);
+          //   }
+          // });
         } else {
           setLoad(!load);
           dispatch({ type: "SET_USER", playload: [] });
@@ -196,23 +198,26 @@ const TabRoute = () => {
     //setReload((val) => !val);
     return () => removeNetInfoSubscription();
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     socket.on("notificationReceived", (e) => {
-      if(vendor){
-        getNotificationVendor()
-      }else{
-        getNotification()
+      if (vendor) {
+        getNotificationVendor();
+      } else if (user) {
+        getNotification();
       }
-    })
-  },[])
-  const getNotification=async()=>{
-   const res=await getUnreadCount(user.token)
-   dispatch(storeNotificationCount(res.data.count));
-  }
-  const getNotificationVendor=async()=>{
-    const res=await getVendorNotificationCount(user.token,vendor?.service.id)
+    });
+  }, []);
+  const getNotification = async () => {
+    const res = await getUnreadCount(user.token);
     dispatch(storeNotificationCount(res.data.count));
-  }
+  };
+  const getNotificationVendor = async () => {
+    const res = await getVendorNotificationCount(
+      user.token,
+      vendor?.service.id
+    );
+    dispatch(storeNotificationCount(res.data.count));
+  };
   const userOrders = async () => {
     const res = await getOrders(user.token, "user");
     setUserOrdersOffline(res.data.orders);
@@ -278,7 +283,7 @@ const TabRoute = () => {
     setIsRegistered(isRegistered);
   };
 
-  if (!user || !load || Loader) {
+  if (!user) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="small" color={backgroundColor} />
@@ -287,7 +292,6 @@ const TabRoute = () => {
   }
   return (
     <View style={{ flex: 1 }}>
-      
       <Tab.Navigator
         tabBar={(props) => {
           if (
@@ -299,20 +303,13 @@ const TabRoute = () => {
           }
           return <BottomBar {...props} />;
         }}>
-        {!vendor &&
-          (!Array.isArray(user) && user && load ? (
-            <Tab.Screen
-              options={{ headerShown: false }}
-              name="Feed"
-              component={HomeRoute}
-            />
-          ) : (
-            <Tab.Screen
-              options={{ headerShown: false }}
-              name="Feed"
-              component={Feed}
-            />
-          ))}
+        {!vendor && (
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Feed"
+            component={HomeRoute}
+          />
+        )}
         {vendor && (
           <Tab.Screen
             options={{ headerShown: false }}
@@ -347,7 +344,7 @@ const TabRoute = () => {
           component={Message}
         />
         <Tab.Screen
-          options={{ headerShown:false }}
+          options={{ headerShown: false }}
           name="Notification"
           component={Notification}
         />

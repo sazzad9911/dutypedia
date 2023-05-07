@@ -528,7 +528,7 @@ const VendorFixedService = (props) => {
           <View
             style={{
               paddingHorizontal: 20,
-              paddingVertical: 0,
+              paddingVertical: 10,
               backgroundColor: primaryColor,
               flexDirection: "row",
               justifyContent: "space-between",
@@ -540,13 +540,15 @@ const VendorFixedService = (props) => {
                 color: "#BEBBBB",
                 fontSize: 16,
                 fontFamily: "Poppins-SemiBold",
-                marginTop: 20,
+                marginTop:10
               }}
             >
               #Fixed Service
             </Text>
 
-            <TouchableOpacity onPress={()=>{
+            <TouchableOpacity style={{
+              
+            }} onPress={()=>{
               
               navigation.navigate("EditService",{data:data,gigs:data})
             }}>
@@ -611,7 +613,8 @@ const VendorFixedService = (props) => {
             <View style={{
               flexDirection:"row",
               justifyContent:"space-between",
-              alignItems:"center"
+              alignItems:"flex-start",
+              
             }}>
               <Text
                 style={{
@@ -624,7 +627,9 @@ const VendorFixedService = (props) => {
               >
                 Service List
               </Text>
-              <TouchableOpacity onPress={()=>{
+              <TouchableOpacity style={{
+                marginTop:-20
+              }}  onPress={()=>{
                 const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 
                 navigation.navigate("EditServiceList", {
@@ -638,7 +643,7 @@ const VendorFixedService = (props) => {
                 });
                
               }}>
-                <SvgXml xml={editIcon} height="50" width={"50"} />
+                <SvgXml xml={editIcon} height={"50"} width={"50"} />
               </TouchableOpacity>
             </View>
 

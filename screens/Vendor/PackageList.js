@@ -378,17 +378,7 @@ export const Screen = ({ navigation, route }) => {
                   title={NewDataList.length > 0 && NewDataList[0].mainTitle}
                 />
               )}
-              <Button
-                onPress={() => {
-                  setActiveService("Extra Facilities");
-                }}
-                style={
-                  ActiveService == "Extra Facilities"
-                    ? styles.activeButton
-                    : styles.inactiveButton
-                }
-                title={"Extra Facilities"}
-              />
+              
             </View>
             <View
               style={{
@@ -474,7 +464,7 @@ export const Screen = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate("Service List_1", {
               NewDataList: NewDataList,
-              facilites: Facilities,
+              //facilites: Facilities,
             });
           }}
           style={{

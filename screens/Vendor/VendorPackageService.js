@@ -557,7 +557,7 @@ const VendorPackageService = (props) => {
                 color: "#BEBBBB",
                 fontSize: 16,
                 fontFamily: "Poppins-SemiBold",
-                marginTop: 20,
+                marginTop: 10,
               }}
             >
               #Package Service
@@ -705,7 +705,9 @@ const VendorPackageService = (props) => {
               >
                 Service List
               </Text>
-              <TouchableOpacity onPress={()=>{
+              <TouchableOpacity style={{
+                marginTop:-20
+              }} onPress={()=>{
                 const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
                 
                 navigation.navigate("EditServiceList", {

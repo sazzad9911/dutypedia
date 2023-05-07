@@ -20,6 +20,8 @@ import { DivisionList } from "../../Data/division";
 import { DistrictList } from "../../Data/district";
 import {useSelector,useDispatch} from 'react-redux';
 import IconButton from "../../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const Address = ({ navigation }) => {
   const DATA = ["Dhaka", "Borishal", "Slyhet"];
@@ -35,6 +37,7 @@ const Address = ({ navigation }) => {
   const [AddressError, setAddressError] = React.useState();
   const dispatch = useDispatch();
   const businessForm = useSelector((state) => state.businessForm);
+  const isFocused=useIsFocused()
 
   const searchDistrict = (value) => {
     if (value) {
@@ -90,6 +93,18 @@ const Address = ({ navigation }) => {
     dispatch({type:'ADDRESS',playload:address})
     navigation.navigate("Review");
   };
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

@@ -193,9 +193,15 @@ const OrderDetails = ({ navigation, route }) => {
       console.warn(e.message);
     }
     if (data && data.facilites && Array.isArray(data.facilites.selectedOptions)) {
-      //console.log(data.facilites)
+      
       setFacilities(data.facilites.selectedOptions);
+    }else if(Array.isArray(data.facilites)){
+      setFacilities(data.facilites);
     }
+    if(data.type=="PACKAGE"){
+      setFacilities(data.selectedPackage?.features)
+    }
+    //console.log(data.selectedPackage)
   }, [data,data?.selectedServices,newData]);
   const validate = () => {
     setServiceError(null);
@@ -356,37 +362,25 @@ const OrderDetails = ({ navigation, route }) => {
   }, []);
   const addService = () => {
     const gigs = data.service.gigs.filter((d) => d.type == "STARTING");
-    if (gigs[0].services.category) {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(
-          gigs[0].services.options,
-          gigs[0].services.category
-        ),
-      });
-      navigation.navigate("AddServiceList", {
-        NewDataList: serverToLocal(
-          gigs[0].services.options,
-          gigs[0].services.category
-        ),
-        facilites: gigs[0].facilites.selectedOptions,
-        setListData: setListData,
-        name: "VendorOrderDetails",
-        data: data,
-      });
-    } else {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(gigs[0].services, gigs[0].dashboard),
-      });
-      navigation.navigate("AddServiceList", {
-        NewDataList: serverToLocal(gigs[0].services, gigs[0].dashboard),
-        facilites: gigs[0].facilites.selectedOptions,
-        setListData: setListData,
-        name: "VendorOrderDetails",
-        data: data,
-      });
-    }
+    dispatch({
+      type: "SET_NEW_LIST_DATA",
+      playload: serverToLocal(
+        gigs[0].services.options,
+        gigs[0].services.category
+      ),
+    });
+    navigation.navigate("AddServiceList", {
+      NewDataList: serverToLocal(
+        gigs[0].services.options,
+        gigs[0].services.category
+      ),
+      facilites: gigs[0].facilites.selectedOptions,
+      setListData: setListData,
+      name: "VendorOrderDetails",
+      data: data,
+      setFacilities:setFacilities,
+      facilities:true
+    });
   };
   const cancelRequest = async () => {
     //const res=
@@ -449,7 +443,7 @@ const OrderDetails = ({ navigation, route }) => {
           paid={data?.paid}
           username={data?.user.username}
           uri={data?.user?.profilePhoto}
-          name={`${data?.user?.firstName} ${data?.user?.lastName}`}
+          name={`${data?.user?.name}`}
         />
         <View style={styles.textContainer}>
           <Text style={styles.text}>
@@ -467,6 +461,7 @@ const OrderDetails = ({ navigation, route }) => {
           onAddService={addService}
           status={data?.status}
           serviceError={ServiceError}
+          type={data?.type}
         />
         <StatusCart
           vendor={true}

@@ -63,9 +63,11 @@ const BottomBar = (props) => {
   }, []);
   React.useEffect(() => {
     //console.log(props.state.index);
-    setRoute(props.state.index);
-    press(props.state.index)
-  }, [props.state.index]);
+    if (props.state.index) {
+      setRoute(props.state.index);
+      press(props.state.index);
+    }
+  }, [props?.state?.index]);
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -97,23 +99,22 @@ const BottomBar = (props) => {
     button: {
       justifyContent: "center",
       alignItems: "center",
-      width:width/5,
-      
+      width: width / 5,
     },
     text: {
       fontSize: 10,
       color: "#000000",
-      fontWeight:"400",
-      marginBottom:2
+      fontWeight: "400",
+      marginBottom: 2,
     },
     active: {
       color: "#4ADE80",
-      fontWeight:"500"
+      fontWeight: "500",
     },
   });
   const press = (v) => {
     Animated.spring(translateValue, {
-      toValue: v * ((width / 5)),
+      toValue: v * (width / 5),
       velocity: 10,
       useNativeDriver: true,
     }).start();
@@ -268,9 +269,9 @@ const BottomBar = (props) => {
             setRoute(3);
             return;
           }
-          if(route==3){
+          if (route == 3) {
             navigation.navigate("NotificationHome");
-            return
+            return;
           }
           navigation.navigate("Notification");
           setRoute(3);
@@ -310,7 +311,6 @@ const BottomBar = (props) => {
           // }
           if (route === 4) {
             try {
-              
               navigation.navigate("MainProfile");
             } catch (e) {
               navigation.navigate("Profile");
@@ -326,7 +326,7 @@ const BottomBar = (props) => {
         {vendor ? (
           <>
             {route == 4 ? (
-               <SvgXml xml={activeProfile} height="20" width="20" />
+              <SvgXml xml={activeProfile} height="20" width="20" />
             ) : (
               <SvgXml xml={profile} height="20" width="20" />
             )}

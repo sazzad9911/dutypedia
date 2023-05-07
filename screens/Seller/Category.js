@@ -6,6 +6,8 @@ import BackHeader from "./../../components/BackHeader";
 import { setListData } from "../../action";
 import {AllData }from '../../Data/AllData'
 import { shortAZ } from './../../action';
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const Category = (props) => {
   const Data = useSelector((state) => state.allData);
@@ -18,12 +20,20 @@ const Category = (props) => {
   const [allData, setAllData] = React.useState(AllData);
   const dispatch = useDispatch();
   const [count, setCount] = React.useState(0);
+  const isFocused=useIsFocused()
 
   React.useEffect(() => {
-    //setAllData(Data);
-    // console.log(Data.length)
-  
-  }, []);
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
 
   React.useEffect(() => {
     // Interval to update count

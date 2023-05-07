@@ -37,6 +37,8 @@ import IconButton from "../../components/IconButton";
 import editt from "../../assets/editt.jpg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityLoader from "../../components/ActivityLoader";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const Service = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -93,7 +95,21 @@ const Service = ({ navigation, route }) => {
   const params = route.params;
   const type = params?.type;
   const subsData = params?.subsData;
-  const installmentData=params?.installmentData
+  const installmentData=params?.installmentData;
+  const isFocused=useIsFocused()
+
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(true));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(true));
+      }, 50);
+    } else {
+      //console.log("seen")
+      dispatch(setHideBottomBar(false));
+    }
+  }, [isFocused]);
   
 
   React.useEffect(() => {
@@ -189,7 +205,7 @@ const Service = ({ navigation, route }) => {
       blobImages.push(fileFromURL(ThirdImage));
       blobImages.push(fileFromURL(ForthImage));
       const result = await uploadFile(blobImages, user.token);
-      if (result) {
+      if (Array.isArray(result)) {
         if (type=="SUBS") {
           if (!subsData) {
             Alert.alert("Invalid Data format");
@@ -249,11 +265,16 @@ const Service = ({ navigation, route }) => {
         // return
         createOtherService(
           user.token,
-          businessForm,
+          {
+            serviceTitle: CenterName,
+            price: parseInt(Price),
+            description: Description,
+            packageData: undefined,
+          },
           params.data,
           result,
           vendor.service.id,
-          direct
+          "ONETIME"
         )
           .then((res) => {
             //console.log(res.data)
@@ -267,14 +288,16 @@ const Service = ({ navigation, route }) => {
             
           })
           .catch((err) => {
-            Alert.alert("Ops!","Something went wring try again later")
+            Alert.alert("Ops!","Something went wrong try again")
             console.warn(err.response);
             setLoader(false);
           });
-      }
 
-     // Alert.alert("Image save failed")
-      return;
+        return
+      }
+      setLoader(false);
+     Alert.alert("Image save failed")
+      return;  
     }
     navigation.navigate("Address");
   };

@@ -37,14 +37,14 @@ const TopTabBar = (props) => {
   }, [props.state.index]);
   return (
     <View
-      style={{
+      style={[{
         backgroundColor: primaryColor,
         borderTopWidth: 0,
         borderTopColor: "#e5e5e5",
         paddingTop: props.id ? 35 : 0,
         marginHorizontal:12,
         marginVertical:28
-      }}
+      },props?.style]}
     >
       <ScrollView
         ref={(ref) => setScrollRef(ref)}

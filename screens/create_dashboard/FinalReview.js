@@ -778,7 +778,7 @@ if(loading){
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:newData?.address });
+                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:newData?.address,noEdit:true });
               }}
               style={{
                 marginBottom: 0,

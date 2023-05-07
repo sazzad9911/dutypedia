@@ -145,6 +145,9 @@ const UserOrderDetails = ({ navigation, route, onRefresh }) => {
     }else if(Array.isArray(data.facilites)){
       setFacilities(data.facilites);
     }
+    if(data.type=="PACKAGE"){
+      setFacilities(data.selectedPackage?.features)
+    }
   }, [data]);
   const loadData = async (receiverId, order) => {
     //setLoader(false);

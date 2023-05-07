@@ -273,56 +273,7 @@ export default function StackRoute() {
           /> */}
 
         
-        <Stack.Screen
-          name="TableData"
-          options={{
-            header: (props) => <SubHeader {...props} />,
-          }}
-          component={TableData}
-        />
-        <Stack.Screen
-          name="SubCategories"
-          options={{
-            header: (props) => <SubHeader {...props} />,
-          }}
-          component={SubCategories}
-        />
-        <Stack.Screen
-          name="Category"
-          options={{
-            headerShown: false,
-          }}
-          component={Category}
-        />
-        <Stack.Screen
-          name="SubCategories_1"
-          options={{
-            header: (props) => <SubHeader {...props} />,
-          }}
-          component={SubCategories}
-        />
-        <Stack.Screen
-          name="Pricing"
-          options={{
-            header: (props) => <SubHeader title="Pricing" {...props} />,
-          }}
-          component={Pricing}
-        />
-        <Stack.Screen
-          name="Service"
-          options={{
-            headerShown: false,
-            // : (props) => <SubHeader title="Service" {...props} />
-          }}
-          component={Service}
-        />
-        <Stack.Screen
-          name="Address"
-          options={{
-            header: (props) => <SubHeader title="Address" {...props} />,
-          }}
-          component={Address}
-        />
+        
         <Stack.Screen
           name="Review"
           options={{

@@ -126,7 +126,7 @@ function uniq(a) {
     return !pos || item != ary[pos - 1];
   });
 }
-const serverToLocal = (data, category) => {
+const serverToLocalOld = (data, category) => {
   if (Array.isArray(data)) {
     let arr = [];
     data.forEach((doc) => {
@@ -227,4 +227,183 @@ const serverToLocal = (data, category) => {
     return [];
   }
 };
-export { localOptionsToServer, serverToLocal };
+const DATA = [
+  {
+    title: "Builder Services",
+    key:"BUIDLER",
+  },
+  {
+    title: "Business Services",
+    key:"BUSINESS",
+  },
+  {
+    title: "Cooker Service",
+    key:"COOKER",
+  },
+  {
+    title: "Electrician & Mechanician",
+    key:"ELECTRICIAN",
+  },
+  {
+    title: "Entertainment",
+    key:"ENTERTAINMENT",
+  },
+  {
+    title: "House Keeper",
+    key:"HOUSEKEEPER",
+  },
+  {
+    title: "It & Technology",
+    key:"IT",
+  },
+  {
+    title: "Lawyer Service",
+    key:"LAWYER",
+  },
+  {
+    title: "Music & Audio Service",
+    key:"MUSIC",
+  },
+  {
+    title: "Painter",
+    key:"PAINTER",
+  },
+  {
+    title: "Online Tution",
+    key:"ONLINETUTION",
+  },
+  {
+    title: "Parlour & Saloon",
+    key:"PARLOUR",
+  },
+  {
+    title: "Labor",
+    key:"LABOR",
+  },
+  {
+    title: "Life Style",
+    key:"LIFESTYLE",
+  },
+];
+const serverToLocalNew=(options,category)=>{
+  let mainTitle=DATA.filter(d=>d.key.match(category))[0].title;
+  let arr=[]
+  if(options?.selectedOptions){
+    options.selectedOptions.forEach((doc)=>{
+      arr.push({
+        mainTitle: mainTitle,
+        tableName: options?.title,
+        data: doc,
+      });
+    })
+  }else if(Array.isArray(options)){
+    options.forEach((doc)=>{
+      let title=doc?.title;
+      if(doc.selectedOptions){
+        doc.selectedOptions.forEach((d)=>{
+          arr.push({
+            mainTitle: mainTitle,
+            title:title,
+            tableName: doc?.title,
+            data: d,
+          })
+        })
+      }else if(doc.multiFormData){
+        doc.multiFormData.forEach((d)=>{
+          let subTitle=d?.title;
+          d.selectedOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: d?.title,
+              data: e,
+            })
+          })
+        })
+      }
+    })
+  }else if(!options.title){
+    for(var key in options){
+      let title=key;
+      options[key].forEach((doc)=>{
+        let subTitle=doc?.title;
+        doc?.multiFormData?.forEach((d)=>{
+          let tableName=d?.title;
+          d.selectedOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: tableName,
+              data: e,
+            });
+          })
+        })
+      })
+    }
+  }
+  return arr
+}
+const serverToLocal=(options,category)=>{
+  let mainTitle=DATA.filter(d=>d.key.match(category))[0].title;
+  let arr=[]
+  if(options?.selectedOptions){
+    options.selectedOptions.forEach((doc)=>{
+      arr.push({
+        mainTitle: mainTitle,
+        tableName: options?.title,
+        data: doc,
+      });
+    })
+  }else if(Array.isArray(options)){
+    options.forEach((doc)=>{
+      let title=doc?.title;
+      if(doc.selectedOptions){
+        doc.selectedOptions.forEach((d)=>{
+          arr.push({
+            mainTitle: mainTitle,
+            title:title,
+            tableName: doc?.title,
+            data: d,
+          })
+        })
+      }else if(doc.multiFormData){
+        doc.multiFormData.forEach((d)=>{
+          let subTitle=d?.title;
+          d.selectedOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: d?.title,
+              data: e,
+            })
+          })
+        })
+      }
+    })
+  }else if(!options.title){
+    for(var key in options){
+      let title=key;
+      options[key].forEach((doc)=>{
+        let subTitle=doc?.title;
+        doc?.multiFormData?.forEach((d)=>{
+          let tableName=d?.title;
+          d.selectedOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: tableName,
+              data: e,
+            });
+          })
+        })
+      })
+    }
+  }
+  return arr
+}
+export { localOptionsToServer, serverToLocal,serverToLocalNew };
+

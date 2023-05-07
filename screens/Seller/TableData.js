@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ScrollView,
   Dimensions,
@@ -54,6 +54,20 @@ const TableData = (props) => {
   const route = props.route;
   const direct =
     route.params && route.params.direct ? route.params.direct : false;
+    const isFocused=useIsFocused()
+
+    React.useEffect(() => {
+      if (isFocused) {
+        //console.log("hidden")
+        dispatch(setHideBottomBar(true));
+        setTimeout(() => {
+          dispatch(setHideBottomBar(true));
+        }, 50);
+      } else {
+        //console.log("seen")
+        dispatch(setHideBottomBar(false));
+      }
+    }, [isFocused]);
 
   React.useEffect(() => {
     if (newSelectedData.length != 0) {
@@ -407,6 +421,8 @@ const Table = ({
 import { Observable } from "object-observer";
 import InputModal from "./InputModal";
 import IconButton from "../../components/IconButton";
+import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 const Rows = ({
   title,
   data,

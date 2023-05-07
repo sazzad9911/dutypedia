@@ -1,45 +1,135 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  View,Text
+  View,
+  Text,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { checkOTP, sendOTP } from "../../Class/auth";
+import ActivityLoader from "../../components/ActivityLoader";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 
-export default function SignUp_2({navigation,route}) {
-  const number=route?.params?.number;
-  const [otp,setOtp]=useState()
-  const name=route?.params?.name;
-  
+export default function SignUp_2({ navigation, route }) {
+  const number = route?.params?.number;
+  const [otp, setOtp] = useState();
+  const name = route?.params?.name;
+  const [error, setError] = useState(false);
+  const [counter, setCounter] = useState(90);
+  const [loader, setLoader] = useState(false);
+  const [token, setToken] = useState();
+
+  useEffect(() => {
+    const timer =
+      counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+    return () => clearInterval(timer);
+  }, [counter]);
+  const resendOTP = async () => {
+    setError();
+    setLoader(true);
+    setCounter(90);
+    setOtp()
+    try {
+      await sendOTP(number);
+      setLoader(false);
+    } catch (err) {
+      setLoader(false);
+      console.error(err.message);
+    }
+  };
+  const check = () => {
+    setError();
+    setLoader(true);
+    checkOTP(number, otp)
+      .then((res) => {
+        setLoader(false);
+        navigation.navigate("SignUp_3",{token:res.data?.token})
+        //console.log(res.data);
+      })
+      .catch((err) => {
+        setLoader(false);
+        setError(err.response.data.msg);
+      });
+  };
+  if (loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityLoader />
+      </View>
+    );
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{
-          paddingHorizontal:20
-        }}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+          }}>
           <SvgXml width={"100%"} style={signUpStyle.mt28} xml={vector} />
-          <Text style={[signUpStyle.headLine,signUpStyle.mt44]}>Verify your Number</Text>
-          <Text style={[signUpStyle.mt8,signUpStyle.text]}>We have sent a code to your {number}. Please enter the code to proceed.</Text>
-          <Input keyboardType={"number-pad"} value={otp} onChange={setOtp} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
-          
+          <Text style={[signUpStyle.headLine, signUpStyle.mt44]}>
+            Verify your Number
+          </Text>
+          <Text style={[signUpStyle.mt8, signUpStyle.text]}>
+            We have sent a code to your {number}. Please enter the code to
+            proceed.
+          </Text>
+          <Input
+            keyboardType={"number-pad"}
+            value={otp}
+            onChange={setOtp}
+            style={[signUpStyle.input, signUpStyle.mt18]}
+            placeholder={" "}
+          />
+          {counter > 0&&!error ? (
+            <Text style={[signUpStyle.text]}>
+              Wait {counter}s before requesting another code
+            </Text>
+          ) :!error? (
+            <Text style={[signUpStyle.text]}>
+              Did not get it yet?{" "}
+              <Text
+                onPress={resendOTP}
+                style={{
+                  color: "red",
+                  textDecorationLine: "underline",
+                }}>
+                Send again
+              </Text>
+              .
+            </Text>
+          ):error?(
+            <Text style={[signUpStyle.text,{color:"red"}]}>
+            The code you entered does not match. {" "}
+              <Text
+                onPress={resendOTP}
+                style={{
+                  color: "black",
+                  textDecorationLine: "underline",
+                }}>
+                Send again
+              </Text>
+              .
+            </Text>
+          ):null}
         </View>
       </ScrollView>
-      <IconButton  disabled={otp?false:true}
-      active={otp?true:false}
-       onPress={()=>{
-        if(name){
-          navigation.navigate(name)
-          return
-        }
-        navigation.navigate("SignUp_3")
-      }} style={signUpStyle.button} title={"Continue"} />
+      <IconButton
+        disabled={otp && counter > 0 ? false : true}
+        active={otp && counter > 0 ? true : false}
+        onPress={() => {
+          check()
+          
+        }}
+        style={signUpStyle.button}
+        title={"Continue"}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -171,7 +261,7 @@ const vector = `<svg width="301" height="200" viewBox="0 0 301 200" fill="none" 
 <path d="M298.839 40.3165C298.699 40.2663 298.56 40.2237 298.42 40.1877C298.382 40.057 298.337 39.9263 298.285 39.7956C298.061 39.271 297.767 38.7459 297.176 38.2212C296.586 38.7459 296.292 39.271 296.068 39.7956C296.015 39.9277 295.97 40.0594 295.932 40.191C295.793 40.2275 295.654 40.2701 295.515 40.3203C294.96 40.5324 294.407 40.8109 293.853 41.3705C294.407 41.9302 294.96 42.2087 295.515 42.4208C295.652 42.4705 295.79 42.5131 295.928 42.5491C295.966 42.6812 296.011 42.8129 296.064 42.945C296.288 43.4701 296.582 43.9952 297.176 44.5199C297.771 43.9952 298.065 43.4701 298.289 42.945C298.341 42.8143 298.386 42.6836 298.424 42.5524C298.562 42.5165 298.701 42.4743 298.839 42.4246C299.392 42.2129 299.947 41.9336 300.5 41.3705C299.947 40.8075 299.392 40.5282 298.839 40.3165Z" fill="#D0F6FF"/>
 <path d="M211.701 16.0108C211.561 15.9606 211.422 15.918 211.282 15.882C211.244 15.7514 211.199 15.6207 211.147 15.49C210.923 14.9653 210.629 14.4402 210.039 13.9155C209.448 14.4402 209.154 14.9653 208.931 15.49C208.878 15.6221 208.832 15.7537 208.794 15.8854C208.655 15.9218 208.516 15.9644 208.377 16.0146C207.823 16.2268 207.269 16.5052 206.715 17.0649C207.269 17.6246 207.823 17.903 208.377 18.1151C208.514 18.1649 208.652 18.2075 208.79 18.2435C208.828 18.3756 208.874 18.5072 208.926 18.6393C209.15 19.1644 209.444 19.6896 210.039 20.2142C210.633 19.6896 210.928 19.1644 211.151 18.6393C211.203 18.5086 211.248 18.3779 211.286 18.2473C211.424 18.2108 211.563 18.1686 211.701 18.1189C212.254 17.9073 212.809 17.6279 213.362 17.0649C212.809 16.5019 212.254 16.2225 211.701 16.0108Z" fill="#D0F6FF"/>
 </svg>
-`
+`;
 const signUpStyle = StyleSheet.create({
   mt28: {
     marginTop: 28,
@@ -189,7 +279,7 @@ const signUpStyle = StyleSheet.create({
     backgroundColor: "#F1F1F1",
     borderRadius: 4,
     borderBottomWidth: 0,
-    marginHorizontal:0
+    marginHorizontal: 0,
   },
   headLine: {
     fontSize: 24,
@@ -201,8 +291,8 @@ const signUpStyle = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 24,
   },
-  button:{
-    marginHorizontal:20,
-    marginVertical:20
-  }
+  button: {
+    marginHorizontal: 20,
+    marginVertical: 20,
+  },
 });

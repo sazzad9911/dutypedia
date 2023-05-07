@@ -679,12 +679,12 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
                   {data
                     ? user
                       ? `${data.service.providerInfo.title}`
-                      : data.user.firstName
+                      : data.user.name
                     : "Um"}{" "}
                   {data
                     ? user
                       ? `${data.service.providerInfo.name}`
-                      : data.user.lastName
+                      : ""
                     : "Um"}
                 </Text>
               )}

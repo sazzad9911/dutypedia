@@ -1038,6 +1038,7 @@ const plusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12.261" height=
 </g>
 </svg>
 `;
+
 export const AddScreen = ({ navigation, route }) => {
   const setPackage =
     route.params && route.params.setPackage ? route.params.setPackage : null;
@@ -1884,7 +1885,7 @@ export const AddScreen = ({ navigation, route }) => {
               onPress={() => {
                 setTotalFeature((val) => [...val, uuid.v4()]);
               }}
-              LeftIcon={() => <SvgXml xml={plusIcon} height="15" width="15" />}
+              LeftIcon={() => <Entypo name="plus" size={24} color="black" />}
               style={{
                 justifyContent: "flex-start",
                 borderWidth: 0,

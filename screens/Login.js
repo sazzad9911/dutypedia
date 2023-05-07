@@ -98,7 +98,7 @@ const Login = ({ navigation }) => {
               marginVertical: 72,
             }}>
             <Text style={styles.lebel}>Username</Text>
-            <Input onSubmitEditing={()=>{
+            <Input autoCapitalize={"none"} onSubmitEditing={()=>{
               if(passRef){
                 passRef.current.focus()
               }

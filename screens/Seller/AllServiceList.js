@@ -11,6 +11,7 @@ const AllServiceList = () => {
   const [Services, setServices] = React.useState([]);
   const [Name, setName] = React.useState(listData[0].mainTitle);
   React.useEffect(() => {
+   
     let arr = [];
     if (listData) {
       listData.map((item, i) => {

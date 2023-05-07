@@ -4,33 +4,89 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  View,Text
+  View,
+  Text,
+  Alert,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { sendOTP } from "../../Class/auth";
+import ActivityLoader from "../../components/ActivityLoader";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 
-export default function SignUp_1({navigation,route}) {
-  const [number,setNumber]=useState()
+export default function SignUp_1({ navigation, route }) {
+  const [number, setNumber] = useState();
+  const [error, setError] = useState();
+  const [loader, setLoader] = useState(false);
+  const sendOtp = async () => {
+    setLoader(true);
+    setError();
+    sendOTP(number)
+      .catch((err) => {
+        setError(err.response.data.msg);
+      })
+      .finally((res) => {
+        setLoader(false);
+        
+        if(!error){
+          navigation.navigate("SignUp_2", { number: number });
+        }
+      });
+  };
+
+  if (loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{
-          paddingHorizontal:20
-        }}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+          }}>
           <SvgXml width={"100%"} style={signUpStyle.mt28} xml={vector} />
-          <Text style={[signUpStyle.headLine,signUpStyle.mt44]}>Enter Your Phone Number</Text>
-          <Text style={[signUpStyle.mt8,signUpStyle.text]}>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat </Text>
-          <Input keyboardType={"number-pad"} value={number} onChange={setNumber} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
-          
+          <Text style={[signUpStyle.headLine, signUpStyle.mt44]}>
+            Enter Your Phone Number
+          </Text>
+          <Text style={[signUpStyle.mt8, signUpStyle.text]}>
+            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
+            sint. Velit officia consequat{" "}
+          </Text>
+          <Input
+            error={error}
+            keyboardType={"number-pad"}
+            value={number}
+            onChange={setNumber}
+            style={[signUpStyle.input, signUpStyle.mt18]}
+            placeholder={" "}
+          />
         </View>
       </ScrollView>
-      <IconButton active={number?true:false} disabled={number?false:true} onPress={()=>{
-        navigation.navigate("SignUp_2",{number:number})
-      }} style={signUpStyle.button} title={"Continue"}/>
+      <IconButton
+        active={number ? true : false}
+        disabled={number ? false : true}
+        onPress={() => {
+          let arr = number.split("");
+          if (arr.length != 11) {
+            setError("*Number must is not valid");
+            return;
+          }
+          if (arr[0] != "0" || arr[1] != "1") {
+            setError("*Number must is not valid");
+            return;
+          }
+          sendOtp();
+        }}
+        style={signUpStyle.button}
+        title={"Continue"}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -251,7 +307,7 @@ const signUpStyle = StyleSheet.create({
     backgroundColor: "#F1F1F1",
     borderRadius: 4,
     borderBottomWidth: 0,
-    marginHorizontal:0
+    marginHorizontal: 0,
   },
   headLine: {
     fontSize: 24,
@@ -263,8 +319,8 @@ const signUpStyle = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 24,
   },
-  button:{
-    marginHorizontal:20,
-    marginVertical:20
-  }
+  button: {
+    marginHorizontal: 20,
+    marginVertical: 20,
+  },
 });

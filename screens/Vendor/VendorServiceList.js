@@ -166,6 +166,7 @@ const Screens = ({ navigation, route }) => {
   if (Loader) {
     return <ActivityLoader />;
   }
+  
 
   if (!Data) {
     return (

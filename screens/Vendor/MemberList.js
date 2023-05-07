@@ -446,8 +446,8 @@ const UserCart = ({ data, onSelect }) => {
                     fontSize: 16,
                     fontFamily: "Poppins-Medium",
                   }}>
-                  {data ? data.user.firstName : "Um"}{" "}
-                  {data ? data.user.lastName : "Um"}
+                  {data ? data.user.name : "Um"}{" "}
+                  
                 </Text>
               ) : (
                 <Text

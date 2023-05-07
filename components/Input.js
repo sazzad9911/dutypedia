@@ -21,7 +21,8 @@ const Input = ({
   onPress,
   leftIcon,
   containerStyle,
-  secureTextEntry
+  secureTextEntry,
+  autoCapitalize
 }) => {
   const [Focus, setFocus] = React.useState(false);
   const [Error, setError] = React.useState();
@@ -45,6 +46,7 @@ const Input = ({
             onSubmitEditing();
           }
         }}
+        autoCapitalize={autoCapitalize}
         onPressIn={onPress}
         editable={editable}
         keyboardType={keyboardType}
