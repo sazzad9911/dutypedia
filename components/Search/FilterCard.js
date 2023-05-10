@@ -171,5 +171,6 @@ const styles = StyleSheet.create({
     marginTop: 32,
     borderRadius: 8,
     color: "#ffffff",
+    marginBottom:35
   },
 });

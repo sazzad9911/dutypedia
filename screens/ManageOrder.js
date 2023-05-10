@@ -297,11 +297,11 @@ const Screens = ({ navigation, route }) => {
   }, [ Refresh]);
   React.useEffect(() => {
     socket.on("updateOrder", (e) => {
-      e = e?.order;
+      //e = e?.order;
       setRefresh((val) => !val);
     });
     socket.on("getOrder", (e) => {
-      e = e?.order;
+     // e = e?.order;
       setRefresh((val) => !val);
     });
   }, []);
@@ -371,6 +371,8 @@ const Screens = ({ navigation, route }) => {
           }
           navigation.navigate("OrderDetails", {
             data: item,
+            orderId:item?.id,
+            type:item?.type
           });
         }}
         key={item.id}
@@ -406,7 +408,8 @@ const Screens = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, paddingVertical: 8 }}>
       {Orders && Orders.length > 0 && (
-        <FlatList
+        <FlatList onRefresh={onRefresh}
+         refreshing={refreshing}
           showsVerticalScrollIndicator={false}
           data={Orders}
           keyExtractor={(item, i) => i}

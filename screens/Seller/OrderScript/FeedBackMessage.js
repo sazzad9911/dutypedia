@@ -29,7 +29,7 @@ export default function FeedBackMessage({ navigation, route }) {
         text,
         order?.id
       );
-      navigation.navigate("OrderDetails",{data:order})
+      navigation.navigate("OrderDetails",{data:order,orderId:order?.id,type:order.type})
       socket.emit("updateOrder", {
         receiverId: order.user.id,
         order: order,

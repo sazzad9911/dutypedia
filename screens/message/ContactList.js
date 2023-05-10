@@ -107,14 +107,14 @@ export default function ContactList({ navigation, seller, onClose, data ,bottomR
             }}
             userId={doc.user.id}
             key={i}
-            name={`${doc.user.firstName} ${doc.user.lastName}`}
+            name={`${doc.user.name}`}
             username={`${doc.user.username}`}
             image={{ uri: doc.user.profilePhoto }}
           />
         ))}
 
       {Members && Members.length == 0 && (
-        <View style={customStyle.fullBox}>
+        <View style={[customStyle.fullBox,{minHeight:350}]}>
           <SvgXml xml={noResult} />
           <Text
             style={{

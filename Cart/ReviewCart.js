@@ -165,7 +165,7 @@ export const Cart = ({
           <View style={{ marginLeft: 10 }}>
             <Text style={[styles.text1]}>
               {data
-                ? `${data?.user?.firstName} ${data?.user?.lastName}`
+                ? `${data?.user?.name}`
                 : "Sumaiya Alam"}
             </Text>
             <Text

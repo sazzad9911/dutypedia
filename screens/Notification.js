@@ -60,10 +60,10 @@ const Stack = createNativeStackNavigator();
 const formatOrderNotificationMessage = (item) => {
   switch (item.notificationType) {
     case "PAYMENT_ORDER":
-      return `${item.userFrom.firstName} ${item.userFrom.lastName} has completed the payment - you can now begin processing the service.`;
+      return `<b>${item.userFrom.name}</b> has completed the payment - you can now begin processing the service.`;
 
     case "PAYMENT_ORDER_USER":
-      return `Payment Received - ${item.userFrom.firstName} ${item.userFrom.lastName} starting processing your service`;
+      return `Payment Received - <b>${item.userFrom.name}</b> starting processing your service`;
 
     default:
       return `${item.message}`;
@@ -284,27 +284,20 @@ const NotificationCart = ({
     if (msg?.length > 0) {
       setFirst(msg[0]);
       setSecond(msg[1]);
-      msg.length > 1 && setThird(msg[2]);
+      if(msg.length>1){
+        setThird(msg[2]);
+      }
     } else {
       setFirst(msg[0]);
     }
   }, [data, user, vendor, icon]);
   const [order, setOrder] = useState();
-  // useEffect(() => {
-  //   if (data.entityId) {
-  //     getSubsOrderById(user.token, data?.entityId).then((res) => {
-  //       setOrder(res.data.order);
-  //     });
-  //   } else {
-  //     setOrder();
-  //   }
-  // }, []);
+  
 
   return (
     <Pressable
       onPress={() => {
-        // console.log(data)
-        // return
+        
         if (data.notificationType == "REVIEW_ORDER") {
           navigation.navigate("CustomerReview");
           return;

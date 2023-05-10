@@ -17,7 +17,7 @@ export default function TransactionCart({data}) {
         <View style={styles.flexBox}>
           <Avatar style={{width:30,height:30,margin:4}} />
           <View>
-            <Text style={[styles.textLarge,{fontWeight:"700"}]}>{data&&`${data.user.firstName} ${data.user.lastName}`}</Text>
+            <Text style={[styles.textLarge,{fontWeight:"700"}]}>{data&&`${data.user.name}`}</Text>
             <Text style={styles.smallText}>@{data&&`${data.user.username}`}</Text>
           </View>
         </View>

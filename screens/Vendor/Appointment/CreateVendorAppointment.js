@@ -80,11 +80,11 @@ const Screen = ({navigation,route}) => {
           <Cart key={i} onPress={()=>{
             navigation.navigate("AppointmentForm",{data:doc})
           }} name={doc.user?
-          `${doc.user.firstName} ${doc.user.lastName}`:`${doc.name}`}
+          `${doc.user.name}`:`${doc.name}`}
            gender={doc.user?doc.user.gender:doc.gender} 
            image={doc.user?doc.user.profilePhoto:doc.profilePhoto}
            username={doc.name?`@${doc.name.replace(" ","").toLowerCase()}`:doc.user?
-           `@${doc.user.firstName.toLowerCase()}`
+           `@${doc.user.name.toLowerCase()}`
            :`@invalid`} />
         ))
       }

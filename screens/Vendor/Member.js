@@ -380,7 +380,7 @@ const DutyPediaUser = (props) => {
               style={{
                 fontSize: 18,
               }}>
-              No User Found!
+              No Member Found!
             </Text>
           </View>
         )}
@@ -488,8 +488,8 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
               fontSize: 16,
               fontWeight: "400",
             }}>
-            {doc.user.firstName
-              ? doc.user.firstName + " " + doc.user.lastName
+            {doc.user.name
+              ? doc.user.name
               : "Easin Arafat"}
           </Text>
           <Pressable
@@ -498,7 +498,7 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
             }}
             onPress={() => {
               setModalVisible((val) => !val);
-              setSelectUser(`${doc.user.firstName} ${doc.user.lastName}`);
+              setSelectUser(`${doc.user.name}`);
             }}>
             {/* <Feather name="send" size={22} color={backgroundColor} />
         <View style={{ width: 15 }} />
@@ -1501,7 +1501,7 @@ const CartView = ({ doc, onChange, setMessage }) => {
               lineHeight: 20,
               flex: 1,
             }}>
-            {doc.firstName + " " + doc.lastName}
+            {doc.name}
           </Text>
           {/* <Text
             numberOfLines={1}

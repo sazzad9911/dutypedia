@@ -74,6 +74,9 @@ import Category from "./screens/Seller/Category";
 import Pricing from "./screens/Seller/Pricing";
 import Service from "./screens/Seller/Service";
 import Address from "./screens/Seller/Address";
+import ServiceOrder from "./screens/order/ServiceOrder";
+import ChooseDateOrder from "./screens/order/ChooseDateOrder";
+import InstructionOrder from "./screens/order/InstructionOrder";
 
 const Stack = createStackNavigator();
 
@@ -359,6 +362,27 @@ const HomeRoute = ({ navigation }) => {
           header: (props) => <SubHeader title="Address" {...props} />,
         }}
         component={Address}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ServiceOrder"
+        component={ServiceOrder}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ChooseDateOrder"
+        component={ChooseDateOrder}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="InstructionOrder"
+        component={InstructionOrder}
       />
     </Stack.Navigator>
   );

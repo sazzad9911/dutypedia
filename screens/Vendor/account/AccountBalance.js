@@ -66,7 +66,7 @@ export default function AccountBalance({ navigation }) {
           }}
           verified={vendor?.service?.verified}
           id={data?.id}
-          name={`${user?.user.firstName} ${user?.user.lastName}`}
+          name={`${user?.user.name}`}
         />
         <AccountDetailsCart
           amount={data?.balance}

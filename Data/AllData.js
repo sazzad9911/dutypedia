@@ -2928,7 +2928,7 @@ export const AllData = [
         list: [
           {
             title: "Cooking Lessons",
-            data:[]
+            data:OnlineTutionOptions.CookingLessons
           }
         ],
       },

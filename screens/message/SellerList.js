@@ -151,10 +151,7 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
               key={i}
               name={`${
                 doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
-                  ?.firstName
-              } ${
-                doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
-                  ?.lastName
+                  ?.name
               }`}
               username={`${
                 doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
@@ -167,7 +164,7 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
             />
           ))}
         {Members && Members.length == 0 && (
-          <View style={customStyle.fullBox}>
+          <View style={[customStyle.fullBox,{minHeight:350}]}>
             <SvgXml xml={noResult} />
             <Text
               style={{

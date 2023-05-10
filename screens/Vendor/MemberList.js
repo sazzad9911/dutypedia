@@ -76,7 +76,7 @@ export default function MemberList({ navigation, route }) {
     } else {
       setUsers(
         Data?.filter((d) =>
-          d.user.firstName.toUpperCase().match(Search.toUpperCase())
+          d.user.name.toUpperCase().match(Search.toUpperCase())
         )
       );
     }

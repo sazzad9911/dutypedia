@@ -29,7 +29,7 @@ export default function OrderDelivery({ navigation, route }) {
       const res = await uploadFile(arr, user.token);
       const r=await completeOrderDelivery(user.token, order?.id, res[0], text);
       setLoader(false);
-      navigation.navigate("VendorOrderDetails",{data:order})
+      navigation.navigate("VendorOrderDetails",{data:order,orderId:order?.id,type:order.type})
       socket.emit("updateOrder", {
         receiverId: r.data.receiverId,
         order: order

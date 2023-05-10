@@ -153,7 +153,7 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
                
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
-              {data?`${data.service.user.firstName} ${data.service.user.lastName}`:"Easin Arafat It consulting center"}
+              {data?`${data.service.user.name}`:"Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>
                 {data

@@ -85,7 +85,7 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
                 lineHeight: 18,
               }}
             >
-              {data?`${data.user.firstName} ${data.user.lastName}`:"Invalid"}
+              {data?`${data.user.name}`:"Invalid"}
             </Text>
             <Text
               style={{

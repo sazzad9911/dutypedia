@@ -330,7 +330,7 @@ const ChatScreen = (props) => {
       <StatusBar style="dark" backgroundColor="#ffffff" />
       <ChatHead
         user={UserInfo}
-        name={UserInfo ? `${UserInfo.firstName} ${UserInfo.lastName}` : null}
+        name={UserInfo ? `${UserInfo.name}` : null}
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}
       />
@@ -648,7 +648,7 @@ const serverMessageToLocal = (message, user) => {
       createdAt: message.createdAt,
       user: {
         _id: user.id,
-        name: `${user.firstName} ${user.lastName}`,
+        name: `${user.name}`,
         avatar: user.profilePhoto,
       },
       image: message.image,

@@ -94,7 +94,7 @@ export default function PaymentStatus({ navigation, route }) {
       )}
       <IconButton
         onPress={() => {
-          navigation.navigate("OrderDetails", {data:order});
+          navigation.navigate("OrderDetails", {data:order,orderId:order?.id,type:order.type});
           socket.emit("updateOrder", {
             receiverId: order?.service?.user?.id,
             order: order

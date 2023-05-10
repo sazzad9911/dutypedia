@@ -187,7 +187,7 @@ export default function AppointmentForm({ navigation, route }) {
               }}
             >
               {data && data.user
-                ? `${data.user.firstName} ${data.user.lastName}`
+                ? `${data.user.name}`
                 : data.name}
             </Text>
             <Text
@@ -197,7 +197,7 @@ export default function AppointmentForm({ navigation, route }) {
               }}
             >
               {data && data.user
-                ? `@${data.user.firstName.toLowerCase()}`
+                ? `@${data.user.name.toLowerCase()}`
                 : `${data.name.toLowerCase()}`}
             </Text>
           </View>

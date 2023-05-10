@@ -136,7 +136,7 @@ export default function OnlineUserProfile({navigation,route}) {
             color: textColor,
           }}
         >
-          {user?`${user.firstName} ${user.lastName}`:`Invalid user`}
+          {user?`${user.name}`:`Invalid user`}
           <Text
             style={{
               fontSize: 14,

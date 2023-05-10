@@ -188,7 +188,7 @@ const Screen = ({ navigation, route }) => {
         }
         title={doc.title}
         date={`${doc.date} ${changeTime(doc.startTime)}`}
-        name={`${doc.user.firstName} ${doc.user.lastName}`}
+        name={`${doc.user.name}`}
         image={doc.user.profilePhoto}
         username={doc.user.username}
       />

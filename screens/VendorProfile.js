@@ -764,11 +764,9 @@ const VendorProfile = (props) => {
               marginVertical: 15,
               flex: 1,
             }}>
-            <TouchableOpacity
-              onPress={() => {
+            <Avatar onPress={()=>{
                 setModalVisible((val) => !val);
-              }}>
-              <Avatar
+              }}
                 style={{
                   width: 40,
                   height: 40,
@@ -776,7 +774,6 @@ const VendorProfile = (props) => {
                 }}
                 source={{ uri: Data ? Data.service.profilePhoto : null }}
               />
-            </TouchableOpacity>
             <View
               style={{
                 flex: 3,
@@ -871,7 +868,8 @@ const VendorProfile = (props) => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("EditVendorInfo", { data: Data });
+                  dispatch({type:"SET_NEW_DATA",playload:null})
+                  navigation.navigate("EditBusinessTitle", { data: Data });
                 }}
                 style={{}}>
                 <SvgXml xml={editIcon} height="50" width={"50"} />
@@ -1176,78 +1174,6 @@ const VendorProfile = (props) => {
               }}
               component={PackageScreen}
             />
-            {/* <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[4].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[4].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickSubscription,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={Subscriptions}
-            />
-            <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[3].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[3].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickInstallment,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}
-              component={Installment}
-            /> */}
             <Tab.Screen
               options={{
                 tabBarLabel: ({ focused, color, size }) => (
@@ -1496,6 +1422,8 @@ const VendorProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
+      
+      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       {offset < 100 && offset > -1 && (
         <Animated.View
           style={{
@@ -1505,12 +1433,12 @@ const VendorProfile = (props) => {
             right: 20,
             padding: 5,
             borderRadius: 5,
-            zIndex: 50,
+            zIndex: 250,
           }}
           layout={FadeIn}>
           <Pressable
             onPress={async () => {
-              //console.log("ok");
+              console.log("ok");
               const res = await pickImage();
               setWallPhoto(res.uri);
               uploadProfileImage(res, false);
@@ -1519,7 +1447,6 @@ const VendorProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       <Modal
         visible={modalVisible}
         animationType="slide"

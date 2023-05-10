@@ -301,7 +301,7 @@ const AcceptOrder = (props) => {
           });
           setTimeout(() => {
             setLoader(false);
-            navigation.navigate("VendorOrderDetails", { data: res.data.order });
+            navigation.navigate("VendorOrderDetails", { data: res.data.order,orderId:res.data.order?.id,type:res.data.order?.type });
           }, 300);
         })
         .catch((err) => {
@@ -345,7 +345,7 @@ const AcceptOrder = (props) => {
        
         setTimeout(() => {
           setLoader(false);
-          navigation.navigate("VendorOrderDetails", { data: res.data.order });
+          navigation.navigate("VendorOrderDetails", { data: res.data.order,orderId:res.data.order?.id,type:res.data.order?.type });
         }, 300);
         
       })

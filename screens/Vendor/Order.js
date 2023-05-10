@@ -472,47 +472,7 @@ const VendorOrder = ({ navigation, route }) => {
           <ActivityLoader />
         </View>
       )}
-      {/* <View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 0,
-          zIndex: 0,
-          backgroundColor: primaryColor,
-          marginHorizontal: 55,
-          borderRadius: 25,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: width - 110,
-          shadowOffset: {
-            height: 0,
-            width: 0,
-          },
-          shadowColor: "black",
-          shadowOpacity: 0.2,
-          shadowRadius: 5,
-          elevation: 3,
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          shadowTopRadius: 0,
-        }}>
-        
-        <TouchableOpacity
-          onPress={() => {
-            let state = offlineOrder;
-            setOfflineOrder(null);
-            setTimeout(() => {
-              setOfflineOrder(!state);
-            }, 100);
-          }}
-          style={styles.view}>
-          <SvgXml xml={re} height="20" />
-          <Text style={styles.text}>
-            {offlineOrder ? "Offline User" : "Dutypedia User"}
-          </Text>
-        </TouchableOpacity>
-        
-      </View> */}
+      
       {Index != -1 && (
         <View
           style={{
@@ -1039,7 +999,7 @@ export const Screens = ({ navigation, route }) => {
     ({ item }) => (
       <OrderCart
         onSelect={(e) => {
-          //console.log(e)
+          
           //dispatch({ type: "ORDER_STATE", playload: e });
           //dispatch({ type: "ORDER_STATE", playload: e });
           setOpen((val) => {
@@ -1051,6 +1011,7 @@ export const Screens = ({ navigation, route }) => {
           });
         }}
         onPress={() => {
+          
           if (item.type == "SUBS" && item.status != "WAITING_FOR_ACCEPT") {
             navigation.navigate("SubscriptionScript", { data: item });
             return;
@@ -1064,6 +1025,8 @@ export const Screens = ({ navigation, route }) => {
           }
           navigation.navigate("VendorOrderDetails", {
             data: item,
+            orderId:item?.id,
+            type:item?.type
           });
         }}
         key={item.id}
@@ -1330,15 +1293,15 @@ export const OfflineScreens = ({ navigation, route }) => {
         stickyHeaderIndices={[0]}
         scrollEventThrottle={16}
         stickyHeaderHiddenOnScroll={true}
-        // refreshControl={
-        //   <RefreshControl
-        //     refreshing={refreshing}
-        //     onRefresh={() => {
-        //       //setPageChange(true);
-        //       onRefresh();
-        //     }}
-        //   />
-        // }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
+          />
+        }
         showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);

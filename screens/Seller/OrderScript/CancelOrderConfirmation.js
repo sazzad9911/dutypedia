@@ -26,7 +26,7 @@ export default function CancelOrderConfirmation({navigation,route}) {
       cancelOrderByVendor(user.token,order.id).then(res=>{
         setLoader(false)
 
-        navigation.navigate("VendorOrderDetails",{data:order})
+        navigation.navigate("VendorOrderDetails",{data:order,orderId:order?.id,type:order.type})
         socket.emit("updateOrder", {
           receiverId: res.data.receiverId,
           order: order
@@ -44,7 +44,7 @@ export default function CancelOrderConfirmation({navigation,route}) {
     }
     cancelOrderByUser(user.token,order.id).then(res=>{
       setLoader(false)
-      navigation.navigate("OrderDetails",{data:order})
+      navigation.navigate("OrderDetails",{data:order,orderId:order?.id,type:order.type})
       socket.emit("updateOrder", {
         receiverId: res.data.receiverId,
         order: order

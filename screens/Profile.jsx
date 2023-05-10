@@ -127,6 +127,15 @@ import SupportDescription from "./support/SupportDescription";
 import SupportForm from "./support/SupportForm";
 import VendorAddress from "./Vendor/VendorAddress";
 import Service from "./Seller/Service";
+import ServiceOrder from "./order/ServiceOrder";
+import ChooseDateOrder from "./order/ChooseDateOrder";
+import InstructionOrder from "./order/InstructionOrder";
+import CommonHeader from "./create_dashboard/CommonHeader";
+import EditSkills from "./Profile/EditSkills";
+import EditStakeHolder from "./Profile/EditStakeHolder";
+import EditYourInformation from "./Profile/EditYourInformation";
+import EditBusinessTitle from "./Profile/EditBusinessTitle";
+import EditVendorAddress from "./Vendor/EditVendorAddress";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -769,10 +778,17 @@ const Profile = ({ navigation }) => {
       />
       <Stack.Screen
         options={{
-          header: (props) => <SubHeader {...props} title="Address" />,
+          header: (props) => <SubHeader {...props} title="Location" />,
         }}
         name="VendorAddress"
         component={VendorAddress}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <SubHeader {...props} title="Location" />,
+        }}
+        name="EditVendorAddress"
+        component={EditVendorAddress}
       />
       <Stack.Screen
         options={{
@@ -783,6 +799,55 @@ const Profile = ({ navigation }) => {
         }}
         name="UserAppointmentList"
         component={UserAppointmentList}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ServiceOrder"
+        component={ServiceOrder}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="ChooseDateOrder"
+        component={ChooseDateOrder}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="InstructionOrder"
+        component={InstructionOrder}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Business Title"} />,
+        }}
+        name="EditBusinessTitle"
+        component={EditBusinessTitle}
+      />
+       <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Your Information"} />,
+        }}
+        name="EditYourInformation"
+        component={EditYourInformation}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Stakeholder"} />,
+        }}
+        name="EditStakeHolder"
+        component={EditStakeHolder}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Skills"} />,
+        }}
+        name="EditSkills"
+        component={EditSkills}
       />
     </Stack.Navigator>
   );

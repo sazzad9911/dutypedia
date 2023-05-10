@@ -690,4 +690,42 @@ export const OnlineTutionOptions = {
       title: "Full Set Up",
     },
   ],
+  CookingLessons: [
+    {
+      id: 166,
+      title: "Bangali cooking lessons",
+    },
+    {
+      id: 167,
+      title: "French cooking lessons",
+    },
+    {
+      id: 168,
+      title: "Thai cooking lessons",
+    },
+    {
+      id: 169,
+      title: "Japanese cooking lessons",
+    },
+    {
+      id: 170,
+      title: "Indian cooking lessons",
+    },
+    {
+      id: 171,
+      title: "Mexican cooking lessons",
+    },
+    {
+      id: 172,
+      title: "Chinese cooking lessons",
+    },
+    {
+      id: 173,
+      title: "Mediterranean cooking lessons",
+    },
+    {
+      id: 174,
+      title: "Vegetarian and vegan cooking lessons",
+    },
+  ],
 };

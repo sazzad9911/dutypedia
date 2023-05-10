@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   View,
   Image,
@@ -6,6 +6,9 @@ import {
   ScrollView,
   Pressable,
   Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Group from "./../../assets/Images/Group.png";
@@ -15,18 +18,42 @@ import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { styles } from "../create_dashboard/BusinessTitle";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
-import { StatusBar } from "expo-status-bar";
+import InputButton from "../Vendor/account/InputButton";
+import { Screen } from "../create_dashboard/Location";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import Input from "../../components/Input";
+import TextArea from "../../components/TextArea";
+import { updateData } from "../../Class/update";
+import { getService } from "../../Class/service";
+import ActivityLoader from "../../components/ActivityLoader";
 
-export default function VendorAddress({ navigation,route }) {
+export default function EditVendorAddress({ navigation ,route}) {
   const [type, setType] = useState("Only me");
   const [visible, setVisible] = React.useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const address=route?.params?.address;
-  //console.log(address)
+  const [division, setDivision] = useState();
+  const [district, setDistrict] = useState();
+  const [area, setArea] = useState();
+  const [address, setAddress] = useState();
+  const [index, setIndex] = useState(-1);
+  const bottomSheetRef = useRef(null);
+  const [select, setSelect] = useState();
+  const [districtError, setDistrictError] = useState();
+  const [areaError, setAreaError] = useState();
+  // variables
+  const snapPoints = useMemo(() => ["70%"], []);
+  const handleSheetChanges = useCallback((index) => {
+    //console.log('handleSheetChanges', index);
+    setIndex(index);
+  }, []);
+  const oldAddress=route?.params?.address;
+  const [loader,setLoader]=useState(false)
+  const vendor=useSelector(state=>state.vendor)
+  const user=useSelector(state=>state.user)
 
   const openMenu = () => setVisible(true);
 
@@ -43,78 +70,82 @@ export default function VendorAddress({ navigation,route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  React.useEffect(()=>{
+    if(oldAddress){
+        setDivision(oldAddress?.region)
+        setDistrict(oldAddress?.city)
+        setArea(oldAddress?.area)
+        setAddress(oldAddress?.address)
+    }
+  },[])
+
+  const updateInfo=()=>{
+    setLoader(true)
+    updateData(user.token,{
+      serviceId:vendor.service.id,
+      address:{
+        address:address,
+        area:area,
+        city:district,
+        region:division,
+      }
+    }).then(res=>{
+      updateVendorInfo()
+    }).catch(err=>{
+      setLoader(false)
+      Alert.alert(err.response.data.msg)
+      console.error(err.response.data.msg)
+    })
+  }
+  const updateVendorInfo=async()=>{
+    const res=await getService(user.token,vendor.service.id);
+    if(res){
+      setLoader(false)
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      navigation.navigate("VendorProfile")
+    }
+  }
+  if(loader){
+    return(
+        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+            <ActivityLoader/>
+        </View>
+    )
+  }
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <StatusBar backgroundColor="white" />
-      <View
-        style={{
-          paddingHorizontal: 20,
-        }}>
-        <Image
-          style={{
-            width: width - 40,
-            height: 230,
-            marginTop: 36,
-          }}
-          source={Group}
-        />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
-            alignItems: "flex-end",
-            marginTop: 36,
+            paddingHorizontal: 20,
           }}>
-          <Pressable
-            onPress={() => {
-              navigation.navigate("EditVendorAddress",{address:address});
-            }}>
-            <Text
-              style={{
-                textDecorationLine: "underline",
-                fontSize: 16,
-                lineHeight: 24,
-              }}>
-              Edit
-            </Text>
-          </Pressable>
-          <View
+          <Image
             style={{
-              flexDirection: "row",
-              width: "100%",
-              marginVertical: 4,
-            }}>
-            <SvgXml xml={addressIcon} />
-            <Text
-              style={{
-                fontWeight: "500",
-                lineHeight: 24,
-                fontSize: 16,
-                marginLeft: 10,
-                flex:1
-              }}>
-                {address?.address}{address?.address?", ":""}
-                {address?.area}{", "}
-                {address?.city}{", "}
-                {address?.region}
-            
-            </Text>
-          </View>
-          
-        </View>
-        <View style={{ marginBottom: 32 }}>
-          <View style={{ flexDirection: "row", marginTop: 36 }}>
-            <SvgXml xml={light} />
-            <Text
-              style={{
-                fontWeight: "500",
-                lineHeight: 32,
-                fontSize: 24,
-                marginLeft: 8,
-                flex: 1,
-              }}>
-              Tips for address
-            </Text>
-          </View>
-          <ViewMore
+              width: width - 40,
+              height: 230,
+              marginTop: 36,
+            }}
+            source={Group}
+          />
+
+          <View style={{ marginBottom: 32 }}>
+            <View style={{ flexDirection: "row", marginTop: 36 }}>
+              <SvgXml xml={light} />
+              <Text
+                style={{
+                  fontWeight: "500",
+                  lineHeight: 32,
+                  fontSize: 24,
+                  marginLeft: 8,
+                  flex: 1,
+                }}>
+                Tips for address
+              </Text>
+            </View>
+            <ViewMore
             view={true}
             style={{
               marginTop: 24,
@@ -140,12 +171,143 @@ export default function VendorAddress({ navigation,route }) {
               </Text>
             }
           />
+          </View>
+          <View>
+            <Text style={[newStyle.text, { marginTop: 0 }]}>Division</Text>
+            <InputButton
+              value={division}
+              onPress={() => {
+                setSelect("Division");
+                setIndex(0);
+              }}
+              style={[styles.input, { marginTop: 8, borderColor: "#a3a3a3" }]}
+              placeholder={"Division"}
+            />
+
+            <View style={{ flexDirection: "row", marginTop: 12 }}>
+              <View>
+                <Text style={newStyle.text}>District</Text>
+                <InputButton
+                  error={districtError}
+                  onPress={() => {
+                    setDistrictError();
+                    setAreaError();
+                    if (!division) {
+                      setDistrictError("Select division");
+                      return;
+                    }
+                    setSelect("District");
+                    setIndex(0);
+                  }}
+                  value={district}
+                  style={[
+                    styles.input,
+                    {
+                      marginTop: 8,
+                      width: width / 2 - 26.5,
+                      borderColor: "#a3a3a3",
+                    },
+                  ]}
+                  placeholder="District"
+                />
+              </View>
+              <View style={{ width: 13 }} />
+              <View>
+                <Text style={newStyle.text}>Thana</Text>
+                <InputButton
+                  error={areaError}
+                  onPress={() => {
+                    setDistrictError();
+                    setAreaError();
+                    if (!district) {
+                      setAreaError("Select district");
+                      return;
+                    }
+                    setSelect("Area");
+                    setIndex(0);
+                  }}
+                  value={area}
+                  style={[
+                    styles.input,
+                    {
+                      marginTop: 8,
+                      width: width / 2 - 26.5,
+                      borderColor: "#a3a3a3",
+                    },
+                  ]}
+                  placeholder="Thana"
+                />
+              </View>
+            </View>
+            <Text style={[newStyle.text, { marginTop: 12 }]}>Address</Text>
+            <TextArea
+              value={address}
+              onChange={setAddress}
+              style={[styles.input, { marginTop: 8, borderColor: "#a3a3a3" }]}
+              placeholder={"Address"}
+            />
+           
+            <IconButton onPress={updateInfo}
+              active={division && district && area ? true : false}
+              disabled={division && district && area ? false : true}
+              style={[styles.button,{marginTop:36}]}
+              title={"Update"}
+            />
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {index != -1 && (
+        <View
+          style={{
+            backgroundColor: "#00000010",
+            position: "absolute",
+            width: width,
+            height: height,
+            top: 0,
+          }}
+        />
+      )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={index}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+        onChange={handleSheetChanges}>
+        {select == "Division" ? (
+          <Screen
+            onChange={(e) => {
+              setDivision(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={division}
+            type={select}
+          />
+        ) : select == "District" ? (
+          <Screen
+            onChange={(e) => {
+              setDistrict(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={district}
+            type={select}
+            value={division}
+          />
+        ) : (
+          <Screen
+            onChange={(e) => {
+              setArea(e);
+            }}
+            onClose={() => bottomSheetRef?.current?.close()}
+            select={area}
+            type={select}
+            value={district}
+          />
+        )}
+      </BottomSheet>
+    </KeyboardAvoidingView>
   );
 }
-const addressIcon = `<svg width="18" height="29" viewBox="0 0 18 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+const address = `<svg width="18" height="29" viewBox="0 0 18 29" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 10.7C16.45 6.08 12.42 4 8.87998 4H8.86998C5.33998 4 1.29998 6.07 0.249978 10.69C-0.920022 15.85 2.23998 20.22 5.09998 22.97C6.1137 23.9512 7.46918 24.4998 8.87998 24.5C10.24 24.5 11.6 23.99 12.65 22.97C15.51 20.22 18.67 15.86 17.5 10.7ZM8.87998 15.71C8.46631 15.71 8.0567 15.6285 7.67453 15.4702C7.29235 15.3119 6.9451 15.0799 6.65259 14.7874C6.36009 14.4949 6.12806 14.1476 5.96976 13.7655C5.81146 13.3833 5.72998 12.9737 5.72998 12.56C5.72998 12.1463 5.81146 11.7367 5.96976 11.3545C6.12806 10.9724 6.36009 10.6251 6.65259 10.3326C6.9451 10.0401 7.29235 9.80808 7.67453 9.64978C8.0567 9.49148 8.46631 9.41 8.87998 9.41C9.71541 9.41 10.5166 9.74187 11.1074 10.3326C11.6981 10.9234 12.03 11.7246 12.03 12.56C12.03 13.3954 11.6981 14.1966 11.1074 14.7874C10.5166 15.3781 9.71541 15.71 8.87998 15.71Z" fill="#767676"/>
 </svg>
 `;
@@ -171,3 +333,10 @@ const arrow = `<svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="
 <path d="M13 1L8.06061 6.5118C7.47727 7.16273 6.52273 7.16273 5.93939 6.5118L1 1" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
+const newStyle = StyleSheet.create({
+  text: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "400",
+  },
+});

@@ -221,3 +221,6 @@ export const slashDate=(date)=>{
   let month=date.getMonth()<10?`0${date.getMonth()}`:`${date.getMonth()}`
   return `${day}/${month}/${year}`
 }
+export const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};

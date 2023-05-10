@@ -35,7 +35,7 @@ const AllService = (props) => {
     let arr = [];
     if (newListData) {
         newListData.map((item, i) => {
-        if (item.title) {
+        if (item?.title) {
           arr.push(item.title);
         } else {
           setName(item.mainTitle);
@@ -43,7 +43,7 @@ const AllService = (props) => {
       });
     }
     if(Array.isArray(newListData)&& newListData.length>0&&!newListData[0].title) {
-      arr.push(newListData[0].mainTitle);
+      arr.push(newListData[0]?.mainTitle);
     }
     if (arr.length > 0) {
       setServices(uniq(arr));
@@ -96,7 +96,7 @@ const ComponentScreen = (props) => {
     if (newListData) {
         newListData.map((item, i) => {
         if (item.title && item.title === props.route.name) {
-          if (item.subTitle) {
+          if (item?.subTitle) {
             arr.push(item.subTitle);
           }
         }
@@ -160,16 +160,16 @@ const Table = (props) => {
     let arr = [];
     if (title) {
         newListData.map((item, i) => {
-        if (item.subTitle.match(title) && item.title.match(name)) {
+        if (item?.subTitle?.match(title) && item?.title?.match(name)) {
           arr.push(item.tableName);
         }
       });
       setData(uniq(arr));
     } else {
         newListData.map((item, i) => {
-        if (item.title && item.title.match(name)) {
+        if (item.title && item.title?.match(name)) {
           arr.push(item.tableName);
-        } else if (item.mainTitle && item.mainTitle.match(name)) {
+        } else if (item.mainTitle && item.mainTitle?.match(name)) {
           arr.push(item.tableName);
         }
       });

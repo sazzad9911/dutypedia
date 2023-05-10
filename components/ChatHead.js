@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
   Modal,
@@ -10,20 +9,12 @@ import {
   Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Zocial } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import OutsideView from "react-native-detect-press-outside";
 import { Switch } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
-import { SafeAreaView } from "react-native-safe-area-context";
-//import CallingScreen from "../screens/CallingScreen";
-//import AudioCallScreen from "../screens/AudioCallScreen";
-import { setCallingScreen } from "../Reducers/callingScreen";
-import { socket } from "../Class/socket";
 import { SvgXml } from "react-native-svg";
 import { getUserInfo } from "../Class/member";
 
@@ -86,8 +77,6 @@ const ChatHead = ({ navigation, name, image, user }) => {
   });
   const [CallingScreenVisible, setCallingScreenVisible] = React.useState(false);
   const dispatch = useDispatch();
-  const newUser = useSelector((state) => state.user);
-  const callingScreen = useSelector((state) => state.callingScreen);
   const vendor = useSelector((state) => state.vendor);
   const users = useSelector((state) => state.user);
   const [data, setData] = useState();
@@ -99,46 +88,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
       setData(res.data);
     });
   }, []);
-  const makeVideoCall = () => {
-    dispatch(
-      setCallingScreen({
-        callerId: user.id,
-        roomId: user.id,
-        callerName: name,
-        audioOnly: false,
-      })
-    );
-    setCallingScreenVisible(true);
-    socket?.emit("callUser", {
-      receiverId: user.id,
-      data: {
-        roomId: newUser.user.id,
-        from: newUser.user.id,
-        name: `${newUser.user.firstName} ${newUser.user.lastName}`,
-        audioOnly: false,
-      },
-    });
-  };
-  const makeAudioCall = () => {
-    dispatch(
-      setCallingScreen({
-        callerId: user.id,
-        roomId: user.id,
-        callerName: name,
-        audioOnly: true,
-      })
-    );
-    setCallingScreenVisible(true);
-    socket?.emit("callUser", {
-      receiverId: user.id,
-      data: {
-        roomId: newUser.user.id,
-        from: newUser.user.id,
-        name: `${newUser.user.firstName} ${newUser.user.lastName}`,
-        audioOnly: true,
-      },
-    });
-  };
+
 
   //console.log(data)
   return (
@@ -149,7 +99,6 @@ const ChatHead = ({ navigation, name, image, user }) => {
         paddingHorizontal: 20,
         alignItems: "center",
         flexDirection: "row",
-        //backgroundColor: "#4ADE80",
         borderBottomWidth: 1,
         borderBottomColor: "#F1EFEF",
       }}>
@@ -206,14 +155,7 @@ const ChatHead = ({ navigation, name, image, user }) => {
         }}>
         <MenuBar setVisible={setVisible} />
       </Modal>
-      <Modal visible={CallingScreenVisible}>
-        {/* {callingScreen && (
-          <CallingScreen setVisible={()=>{
-            dispatch(setCallingScreen(null))
-            setCallingScreenVisible(false)
-          }} user={user.id} audio={callingScreen.audioOnly} />
-        )} */}
-      </Modal>
+      
     </View>
   );
 };

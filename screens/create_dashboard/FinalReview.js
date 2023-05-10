@@ -548,11 +548,10 @@ if(loading){
               marginVertical: 15,
               flex: 1,
             }}>
-            <TouchableOpacity
-              onPress={() => {
+            
+              <Avatar onPress={() => {
                 setModalVisible((val) => !val);
-              }}>
-              <Avatar
+              }}
                 style={{
                   width: 40,
                   height: 40,
@@ -560,7 +559,6 @@ if(loading){
                 }}
                 source={{ uri: image }}
               />
-            </TouchableOpacity>
             <View
               style={{
                 flex: 3,
@@ -927,6 +925,8 @@ if(loading){
         />
       </View>
       
+     
+      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       {offset < 100 && offset > -1 && (
         <Animated.View
           style={{
@@ -936,7 +936,7 @@ if(loading){
             right: 20,
             padding: 5,
             borderRadius: 5,
-            zIndex: 50,
+            zIndex: 150,
           }}
           layout={FadeIn}>
           <Pressable
@@ -950,7 +950,6 @@ if(loading){
           </Pressable>
         </Animated.View>
       )}
-      <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       <Modal
         visible={modalVisible}
         animationType="slide"

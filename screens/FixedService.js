@@ -826,18 +826,19 @@ const FixedService = (props) => {
             <IconButton
               onPress={() => {
                 if (newUser && newUser.token) {
-                  setIndex(0);
-                  return;
+                  navigation.navigate("ServiceOrder", {
+                    type: "ONETIME",
+                    gigs: data,
+                    data: data,
+                    facilities:Facilities,
+                    serviceList:NewDataList
+                  });
                 } else {
                   navigation.navigate("LogIn");
                   return;
                 }
 
-                navigation.navigate("OfferNow", {
-                  type: "ONETIME",
-                  gigs: data,
-                  data: data,
-                });
+                
               }}
               style={{
                 borderRadius: 5,
@@ -935,18 +936,6 @@ const FixedService = (props) => {
         </Animated.View>
       )} */}
       
-      {index != -1 && (
-        <View
-          style={{
-            backgroundColor: "#818181",
-            position: "absolute",
-            top: 0,
-            width: width,
-            height: height,
-            opacity: 0.8,
-          }}
-        />
-      )}
       {index==-1&&(
         <View
         style={{
@@ -960,7 +949,7 @@ const FixedService = (props) => {
         />
       </View>
       )}
-      <BottomSheet
+      {/* <BottomSheet
         ref={sheetRef}
         index={index}
         snapPoints={snapPoints}
@@ -980,7 +969,7 @@ const FixedService = (props) => {
           serviceList={NewDataList}
           facilities={Facilities}
         />
-      </BottomSheet>
+      </BottomSheet> */}
     </View>
   );
 };

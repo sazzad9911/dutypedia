@@ -33,6 +33,9 @@ import PackageService from "./PackageService";
 import UserNotice from "./UserNotice";
 import CompanyCalendar from "./Seller/CompanyCalendar";
 import AllReview from "./AllReview";
+import ServiceOrder from "./order/ServiceOrder";
+import ChooseDateOrder from "./order/ChooseDateOrder";
+import InstructionOrder from "./order/InstructionOrder";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -55,33 +58,34 @@ const SearchSecond = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState(key);
   const [data, setData] = useState();
   const [category, setCategory] = useState();
-  const isFocused=useIsFocused()
-  const dispatch=useDispatch()
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
       dispatch(setHideBottomBar(false));
-      setTimeout(()=>{
+      setTimeout(() => {
         dispatch(setHideBottomBar(false));
-      },100)
+      }, 100);
     } else {
       //console.log("seen")
       //dispatch(setHideBottomBar(true));
     }
-    
   }, [isFocused]);
   useEffect(() => {
+    console.log(filter?.min)
+    console.log(filter?.max)
     search(null, {
       q: searchKey || "",
-      min: filter?.min,
-      max: filter?.max,
+      min: filter?.min?parseInt(filter?.min):null,
+      max: filter?.max?parseInt(filter?.max):null,
       division: filter ? filter.division : "",
       district: filter?.district,
       verified: filter?.verified,
       online: filter?.online,
       sort: filter?.orderBy,
       category: undefined,
-      subCategory:category
+      subCategory: category,
     })
       .then((res) => {
         setData(res.data.gigs);
@@ -91,7 +95,7 @@ const SearchSecond = ({ navigation, route }) => {
         console.warn(err.response.data.msg);
       });
   }, [searchKey, filter, category]);
-  
+
   return (
     <HidableHeaderLayout
       header={
@@ -138,7 +142,7 @@ const SearchSecond = ({ navigation, route }) => {
               <FilterCard
                 onSelect={(e) => {
                   setFilter(e);
-                  console.log(e)
+                  console.log(e);
                   sheetRef.current.close();
                 }}
               />
@@ -152,18 +156,16 @@ const SearchSecond = ({ navigation, route }) => {
 const SearchFirst = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState();
   const isFocused = useIsFocused();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
       //dispatch(setHideBottomBar(false));
       dispatch(setHideBottomBar(false));
     } else {
-      
       //console.log("seen")
       //dispatch(setHideBottomBar(true));
     }
-   
   }, [isFocused]);
   useEffect(() => {
     setSearchKey();
@@ -187,7 +189,7 @@ const SearchFirst = ({ navigation, route }) => {
 };
 const Search = () => {
   const inset = useSafeAreaInsets();
-  
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ height: inset?.top }} />
@@ -213,35 +215,56 @@ const Search = () => {
           component={OtherProfile}
         />
         <Stack.Screen
-        options={{ headerShown: false }}
-        name="FixedService"
-        component={FixedService}
-      />
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="PackageService"
-        component={PackageService}
-      />
-      <Stack.Screen
-        name="UserNotice"
-        options={{
-          headerShown: false,
-        }}
-        component={UserNotice}
-      />
-      <Stack.Screen
-        name="Company Calender"
-        options={{
-          headerShown: false,
-        }}
-        component={CompanyCalendar}
-      />
-      <Stack.Screen
+          options={{ headerShown: false }}
+          name="FixedService"
+          component={FixedService}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="PackageService"
+          component={PackageService}
+        />
+        <Stack.Screen
+          name="UserNotice"
           options={{
-            headerShown:false
+            headerShown: false,
+          }}
+          component={UserNotice}
+        />
+        <Stack.Screen
+          name="Company Calender"
+          options={{
+            headerShown: false,
+          }}
+          component={CompanyCalendar}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
           }}
           name="AllReview"
           component={AllReview}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="ServiceOrder"
+          component={ServiceOrder}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="ChooseDateOrder"
+          component={ChooseDateOrder}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="InstructionOrder"
+          component={InstructionOrder}
         />
       </Stack.Navigator>
     </View>

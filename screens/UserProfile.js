@@ -112,7 +112,7 @@ export default function UserProfile({ navigation, route }) {
               flex: 1,
             }}>
             {user
-              ? `${user.user.firstName} ${user.user.lastName}`
+              ? `${user.user.name}`
               : `Invalid user`}
           </Text>
           <Text
@@ -276,7 +276,7 @@ export default function UserProfile({ navigation, route }) {
               color: textColor,
             }}>
             {user
-              ? `${user.user.firstName} ${user.user.lastName}`
+              ? `${user.user.name}`
               : `Invalid user`}
             <Text
               style={{
@@ -895,25 +895,15 @@ const Screens = ({ navigation, route }) => {
               onPress={() => {
                 navigation.navigate("VendorOrderDetails", {
                   data: doc,
+                  orderId:doc?.id,
+                  type:doc?.type
                 });
               }}
               data={doc}
               key={i}
             />
           ))}
-        {/* {Orders && Orders.length != 0 && (
-          <DataTable.Pagination
-            page={page}
-            numberOfPages={Math.ceil(total / 20)}
-            onPageChange={(page) => setPage(page)}
-            label={`${parseInt(total / 20) + 1} of ${page + 1}`}
-            // showFastPaginationControls
-            // numberOfItemsPerPageList={numberOfItemsPerPageList}
-            // numberOfItemsPerPage={numberOfItemsPerPage}
-            // onItemsPerPageChange={onItemsPerPageChange}
-            selectPageDropdownLabel={"Rows per page"}
-          />
-        )} */}
+    
         <View style={{ height: 80 }} />
       </ScrollView>
       {Orders && Orders.length == 0 && (

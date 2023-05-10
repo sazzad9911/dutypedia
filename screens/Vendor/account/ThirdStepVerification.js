@@ -104,9 +104,9 @@ export default function ThirdStepVerification({ navigation, route }) {
         serviceId: vendor.service.id,
         firstName: data.name.split(" ")[0],
         lastName: data.name.split(" ")[1],
+        name:data.name,
         dob: localTimeToServerDate(data.date),
         gender: data.gender,
-
         presentDivision: data.presentAddress.division,
         presentDistrict: data.presentAddress.district,
         presentThana: data.presentAddress.upazila,

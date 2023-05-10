@@ -218,39 +218,7 @@ const TabRoute = () => {
     );
     dispatch(storeNotificationCount(res.data.count));
   };
-  const userOrders = async () => {
-    const res = await getOrders(user.token, "user");
-    setUserOrdersOffline(res.data.orders);
-    dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-    return;
-    const data = await getUserOrdersOffline();
-    if (data) {
-      dispatch({ type: "USER_ORDERS", playload: data });
-    } else {
-      const res = await getOrders(user.token, "user");
-      setUserOrdersOffline(res.data.orders);
-      dispatch({ type: "USER_ORDERS", playload: res.data.orders });
-    }
-  };
-  const vendorOrders = async () => {
-    const res = await getOrders(user.token, "vendor", vendor.service.id);
-    setVendorOrdersOffline(res.data.orders);
-    dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-    return;
-    const data = await getVendorOrdersOffline();
-    if (data) {
-      dispatch({ type: "VENDOR_ORDERS", playload: data });
-    } else {
-      const res = await getOrders(user.token, "vendor", vendor.service.id);
-      setVendorOrdersOffline(res.data.orders);
-      dispatch({ type: "VENDOR_ORDERS", playload: res.data.orders });
-    }
-  };
-  const offlineOrders = async () => {
-    const res = await getOfflineOrders(user.token, vendor.service.id);
-    //console.log(res.data.orders)
-    dispatch(setOfflineOrders(res.data.orders));
-  };
+
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     socket.on("connect", () => {
       getSocket(user.user.id);

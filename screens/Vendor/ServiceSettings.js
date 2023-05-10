@@ -3,9 +3,10 @@ import { View, ScrollView, Text, Platform, Switch, Dimensions } from "react-nati
 import { textColor, backgroundColor, primaryColor } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { storeJson } from "../../Class/storage";
-import { changeActiveService } from "../../Class/service";
+import { changeActiveService, getService } from "../../Class/service";
 import { vendorLogin } from "../../Class/auth";
 import { useIsFocused } from "@react-navigation/native";
+import ActivityLoader from "../../components/ActivityLoader";
 const {width,height}=Dimensions.get("window")
 const ServiceSettings = ({ navigation, route }) => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
@@ -39,12 +40,24 @@ const ServiceSettings = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const isFocused = useIsFocused();
   const changeScreenName = params.changeScreenName;
-
+  const user=useSelector(state=>state.user)
+  const dispatch=useDispatch()
+  
+ 
   React.useEffect(() => {
     // console.log(serviceSettings);
+    if(vendor){
+      updateVendorInfo(vendor?.service?.id)
+    }
+  }, [isFocused]);
+  const updateVendorInfo = async (id) => {
+    const res = await getService(user.token, id);
+    if (res) {
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+    }
     let arr = initialState;
-    if (Array.isArray(vendor.service.activeServiceTypes)) {
-      vendor.service.activeServiceTypes.forEach((doc) => {
+    if (Array.isArray(res.data.service.activeServiceTypes)) {
+      res.data.service.activeServiceTypes.forEach((doc) => {
         arr = arr.map((d) => {
           if (d.type == doc) {
             return {
@@ -59,7 +72,7 @@ const ServiceSettings = ({ navigation, route }) => {
       });
     }
     setData(arr);
-  }, [vendor]);
+  };
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       changeScreenName("Settings");
@@ -71,6 +84,7 @@ const ServiceSettings = ({ navigation, route }) => {
     }
   }, [layoutHeight + isFocused]);
 
+  
   return (
     <View
       onLayout={(e) => {
@@ -105,6 +119,11 @@ const ServiceSettings = ({ navigation, route }) => {
               value={doc.value}
             />
           ))}
+          {!Data&&(
+            <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
+              <ActivityLoader/>
+            </View>
+          )}
       </View>
     </View>
   );
