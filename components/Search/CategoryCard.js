@@ -1,13 +1,13 @@
 import React from 'react'
-import { View,Text, StyleSheet } from 'react-native'
+import { View,Text, StyleSheet, Pressable } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 import { AllData } from '../../Data/AllData'
 
-export default function CategoryCard({data}) {
+export default function CategoryCard({data,onPress}) {
   const category=AllData.filter(d=>d.key.match(data.key))[0]
   
   return (
-    <View style={{
+    <Pressable onPress={onPress} style={{
       flexDirection:"row",
       marginHorizontal:28,
       alignItems:"center",
@@ -27,7 +27,7 @@ export default function CategoryCard({data}) {
          return i!=0?`, ${doc.title}`:`${doc.title}`
         })}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 const styles=StyleSheet.create({

@@ -949,10 +949,12 @@ export const Days = ({
   open,
   values,
   allDay,
-  style
+  style,
+  disabled,
+  checked
 }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
-  const [day, setDay] = React.useState(false);
+  const [day, setDay] = React.useState(checked?true:false);
   const [OpeningTime, setOpeningTime] = React.useState();
   const [ClosingTime, setClosingTime] = React.useState();
   const [Open, setOpen] = React.useState(false);
@@ -961,6 +963,9 @@ export const Days = ({
   React.useEffect(() => {
     setError(error);
   }, [error]);
+  useEffect(()=>{
+    setDay(checked)
+  },[checked])
   React.useEffect(() => {
     if (Array.isArray(value)) {
       let arr = value.filter((item) => item.title == title);
@@ -1022,6 +1027,7 @@ export const Days = ({
         <CheckBox style={{
           width:120
         }}
+        disabled={disabled}
           value={day}
           onChange={() => {
             setDay(!day);

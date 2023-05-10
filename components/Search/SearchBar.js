@@ -58,9 +58,10 @@ export default function SearchBar({
 const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
   const ref = useRef();
   const [write, setWrite] = React.useState(false);
-  const [wid,setWidth]=React.useState(0)
+  const [wid, setWidth] = React.useState(0);
   return (
-    <Pressable onLayout={e=>setWidth(e.nativeEvent.layout.width)}
+    <Pressable
+      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
       onPress={() => {
         if (onPress) {
           onPress();
@@ -78,12 +79,11 @@ const NormalScreen = ({ beforeStyle, onChange, onPress, style, value }) => {
         beforeStyle,
       ]}>
       <MotiView
-        animate={{ width: write ? wid-50 : 100 }}
+        animate={{ width: write ? wid - 50 : 100 }}
         transition={{
-          type: 'timing',
+          type: "timing",
           duration: 350,
-        }}
-        >
+        }}>
         <TextInput
           ref={ref}
           value={value}
@@ -133,6 +133,11 @@ const Container = ({
       setSearch(arr[0]);
     }
   };
+  useEffect(()=>{
+    if(value){
+      onSearch(value)
+    }
+  },[value])
 
   return (
     <View>
@@ -182,13 +187,21 @@ const Container = ({
             marginBottom: 18,
           }}>
           <View style={{ width: 22 }} />
+          <IconButton
+            active={"All" == category ? true : false}
+            style={styles.button}
+            onPress={() => onCategory((v) => (v != "All" ? "All" : undefined))}
+            title={"All"}
+          />
           {search &&
             search?.data?.map((doc, i) => (
               <IconButton
                 active={doc?.title == category ? true : false}
                 key={i}
                 style={styles.button}
-                onPress={() => onCategory(v=>v!=doc?.title?doc.title:undefined)}
+                onPress={() =>
+                  onCategory((v) => (v != doc?.title ? doc.title : undefined))
+                }
                 title={doc.title}
               />
             ))}

@@ -36,6 +36,7 @@ import AllReview from "./AllReview";
 import ServiceOrder from "./order/ServiceOrder";
 import ChooseDateOrder from "./order/ChooseDateOrder";
 import InstructionOrder from "./order/InstructionOrder";
+import SubHeader from "../components/SubHeader";
 const Stack = createNativeStackNavigator();
 
 const SearchSecond = ({ navigation, route }) => {
@@ -183,7 +184,9 @@ const SearchFirst = ({ navigation, route }) => {
           value={searchKey}
         />
       }
-      component={<ITEM />}
+      component={<ITEM onSelect={e=>{
+        navigation.navigate("SearchSecond", { key: e });
+      }} />}
     />
   );
 };
@@ -234,7 +237,7 @@ const Search = () => {
         <Stack.Screen
           name="Company Calender"
           options={{
-            headerShown: false,
+            header:props=><SubHeader {...props} title={"Working Time"}/>,
           }}
           component={CompanyCalendar}
         />
@@ -272,11 +275,11 @@ const Search = () => {
 };
 
 export default Search;
-const ITEM = () => {
+const ITEM = ({onSelect}) => {
   return (
     <View>
       {CATEGORY_LIST.sort((a, b) => a.title > b.title).map((doc, i) => (
-        <CategoryCard key={i} data={doc} />
+        <CategoryCard onPress={()=>onSelect(doc.title)} key={i} data={doc} />
       ))}
       <View style={{ height: 36 }} />
     </View>

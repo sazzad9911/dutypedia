@@ -702,7 +702,7 @@ const Profile = ({ navigation }) => {
       <Stack.Screen
         name="Company Calender"
         options={{
-          headerShown: false,
+          header:props=><SubHeader {...props} title={"Working Time"}/>,
         }}
         component={CompanyCalendar}
       />

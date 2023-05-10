@@ -1,3 +1,4 @@
+import { allTimeConverter } from "../action";
 import { AllData } from "../Data/AllData";
 
 const localOptionsToServer = (data) => {
@@ -405,5 +406,20 @@ const serverToLocal=(options,category)=>{
   }
   return arr
 }
-export { localOptionsToServer, serverToLocal,serverToLocalNew };
+const serverTimeToLocalTime=(object)=>{
+  return{
+    title:object?.day,
+    openingTime:new Date(`2010-11-12T${object?.open}`),
+    closingTime:new Date(`2010-11-12T${object?.close}`)
+  }
+}
+const localTimeToServerTime=(object)=>{
+  return{
+    day:object?.title,
+    open:allTimeConverter(object?.openingTime),
+    close:allTimeConverter(object?.closingTime)
+  }
+}
+
+export { localOptionsToServer, serverToLocal,serverToLocalNew,serverTimeToLocalTime,localTimeToServerTime };
 

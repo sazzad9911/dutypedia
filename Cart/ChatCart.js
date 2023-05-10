@@ -155,7 +155,7 @@ const ChatCart = ({ navigation, active, data, number }) => {
         <View style={{}}>
           <Text style={styles.head}>
             {UserInfo
-              ? `${UserInfo.firstName} ${UserInfo.lastName}`
+              ? `${UserInfo.name}`
               : "Sefa Khandakar"}
           </Text>
           {LastMessage && (

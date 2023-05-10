@@ -992,7 +992,8 @@ const VendorProfile = (props) => {
             }}>
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Company Calender", { vendor: Data });
+                
+                navigation.navigate("Company Calender", { workingTime: Data?.service?.workingTime,t47:Data?.service?.t47 });
               }}
               Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
               title="Company Calender"
