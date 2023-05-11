@@ -36,7 +36,7 @@ const BackHeader = (props) => {
           size={22}
           color="black"
         />
-        <Text style={styles.text}>{props.title?props.title:'Dutypedia'}</Text>
+        <Text style={styles.text}>{props.title?props.title:'Duty'}</Text>
       </View>
       <TouchableOpacity
         onPress={() => {
@@ -59,12 +59,11 @@ const BackHeader = (props) => {
           value={props.value}
           onChangeText={props.onChange}
           placeholder={
-            props.placeholder ? props.placeholder : "Search On Dutypedia"
+            props.placeholder ? props.placeholder : "Search On Duty"
           }
           style={{
             color: textColor,
-            fontFamily: "Poppins-Medium",
-            width:props.inputWidth? props.inputWidth:180
+            width:props.inputWidth? props.inputWidth:120
           }}
         ></TextInput>
       </TouchableOpacity>
@@ -99,5 +98,6 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 15,
+    
   },
 });

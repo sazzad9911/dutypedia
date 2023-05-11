@@ -24,6 +24,10 @@ export default function SearchBar({
   active,
   category,
   onCategory,
+  subData,
+  onSubCategory,
+  onSelectCategory,
+  selectedSub
 }) {
   const [searchKey, setSearchKey] = useState(value);
 
@@ -38,6 +42,10 @@ export default function SearchBar({
           afterStyle={afterStyle}
           category={category}
           onCategory={onCategory}
+          subData={subData}
+          onSelectCategory={onSelectCategory}
+          onSubCategory={onSubCategory}
+          selectedSub={selectedSub}
         />
       </Animated.View>
     );
@@ -119,6 +127,10 @@ const Container = ({
   onSort,
   onCategory,
   category,
+  subData,
+  onSubCategory,
+  onSelectCategory,
+  selectedSub
 }) => {
   const [search, setSearch] = useState();
 
@@ -133,11 +145,11 @@ const Container = ({
       setSearch(arr[0]);
     }
   };
-  useEffect(()=>{
-    if(value){
-      onSearch(value)
+  useEffect(() => {
+    if (value) {
+      onSearch(value);
     }
-  },[value])
+  }, [value]);
 
   return (
     <View>
@@ -190,21 +202,47 @@ const Container = ({
           <IconButton
             active={"All" == category ? true : false}
             style={styles.button}
-            onPress={() => onCategory((v) => (v != "All" ? "All" : undefined))}
+            onPress={() => {
+              if (subData && onSubCategory) {
+                onSubCategory((v) => (v != "All" ? "All" : undefined));
+              } else {
+                onCategory((v) => (v != "All" ? "All" : undefined));
+              }
+            }}
             title={"All"}
           />
           {search &&
+            !subData &&
             search?.data?.map((doc, i) => (
               <IconButton
                 active={doc?.title == category ? true : false}
                 key={i}
                 style={styles.button}
-                onPress={() =>
-                  onCategory((v) => (v != doc?.title ? doc.title : undefined))
-                }
+                onPress={() => {
+                  
+                  onCategory((v) => (v != doc?.title ? doc.title : undefined));
+                  if (onSelectCategory && doc.data) {
+                    onSelectCategory(doc.data,doc?.title);
+                  }
+                }}
                 title={doc.title}
               />
             ))}
+          {subData?.map((doc, i) => (
+            <IconButton
+              active={doc?.title == selectedSub ? true : false}
+              key={i}
+              style={styles.button}
+              onPress={() => {
+                onSubCategory
+                  ? onSubCategory((v) =>
+                      v != doc?.title ? doc.title : undefined
+                    )
+                  : null;
+              }}
+              title={doc.title}
+            />
+          ))}
           <View style={{ width: 22 }} />
         </View>
       </ScrollView>

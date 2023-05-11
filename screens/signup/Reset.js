@@ -10,9 +10,54 @@ import { SvgXml } from "react-native-svg";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import pic from "../../assets/Images/pic.jpeg"
+import ActivityLoader from "../../components/ActivityLoader";
+import { resetUserPassword } from "../../Class/auth";
 
 export default function Reset({navigation,route}) {
-  const [number,setNumber]=useState("dfd")
+  
+  const [password,setPassword]=useState()
+  const [rePassword,setRePassword]=useState()
+  const [passwordError,setPasswordError]=useState()
+  const [rePasswordError,setRePasswordError]=useState()
+  const username=route?.params?.username;
+  const token=route?.params?.token;
+  const [loader,setLoader]=useState(false)
+
+
+  const verify = async() => {
+    setPasswordError()
+    setRePasswordError()
+
+    if(password.split("")?.length<8){
+      setPasswordError("Minimum 8 character")
+      return
+    }
+    if(password!==rePassword){
+      setRePasswordError("Password not matched")
+      return
+    }
+    setLoader(true)
+   try{
+    await resetUserPassword(token,password).catch(err=>{
+      //console.log()
+      setPasswordError(err.response.data.msg)
+    }).then(res=>{
+      navigation.navigate("LogIn")
+    })
+    
+   }catch(err){
+    setLoader(false)
+    console.log(err.message)
+   }
+
+  };
+  if(loader){
+    return(
+      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -32,15 +77,16 @@ export default function Reset({navigation,route}) {
             fontWeight:"600",
             marginTop:20,
             color:"#4ADE80"
-          }}>Eaxinarafat</Text>
+          }}>{username}</Text>
           <Text style={[signUpStyle.text,{marginTop:32,lineHeight:14}]}>Create new password</Text>
-          <Input secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Type password"}/>
+          <Input error={passwordError} value={password} onChange={setPassword} secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Type password"}/>
           <Text style={[signUpStyle.text,{marginTop:20,lineHeight:14}]}>Retype password</Text>
-          <Input secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Retype password"}/>
+          <Input error={rePasswordError} value={rePassword} onChange={setRePassword} secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Retype password"}/>
         </View>
       </ScrollView>
-      <IconButton active={number?true:false} disabled={number?false:true} onPress={()=>{
+      <IconButton active={password&&rePassword?true:false} disabled={password&&rePassword?false:true} onPress={()=>{
        // navigation.navigate("SignUp_2",{number:number,name:"Reset"})
+       verify()
       }} style={signUpStyle.button} title={"Confirm"}/>
     </KeyboardAvoidingView>
   );

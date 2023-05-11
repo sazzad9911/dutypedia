@@ -10,9 +10,36 @@ import { SvgXml } from "react-native-svg";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import photo from "../../assets/Images/photo.jpeg"
+import { resetUser } from "../../Class/auth";
+import customStyle from "../../assets/stylesheet";
+import ActivityLoader from "../../components/ActivityLoader";
 
 export default function Recovery({navigation,route}) {
   const [number,setNumber]=useState()
+  const [error, setError] = useState();
+  const [loader, setLoader] = useState(false);
+  const sendOtp = async () => {
+    setLoader(true);
+    setError();
+    resetUser(number)
+      .catch((err) => {
+        setError(err.response.data.msg);
+      })
+      .then((res) => {
+        setLoader(false);
+        
+        if(!error){
+          navigation.navigate("SignUp_2", { number: number,reset:true });
+        }
+      });
+  };
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -28,12 +55,12 @@ export default function Recovery({navigation,route}) {
           }]} source={photo}   />
           <Text style={[signUpStyle.headLine,signUpStyle.mt44]}>Enter Your Phone Number</Text>
           <Text style={[signUpStyle.mt8,signUpStyle.text]}>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat </Text>
-          <Input keyboardType={"number-pad"} value={number} onChange={setNumber} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
+          <Input error={error} keyboardType={"number-pad"} value={number} onChange={setNumber} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
           
         </View>
       </ScrollView>
       <IconButton active={number?true:false} disabled={number?false:true} onPress={()=>{
-        navigation.navigate("SignUp_2",{number:number,name:"Reset"})
+        sendOtp()
       }} style={signUpStyle.button} title={"Continue"}/>
     </KeyboardAvoidingView>
   );

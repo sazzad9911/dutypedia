@@ -13,8 +13,9 @@ import { useSelector, useDispatch } from "react-redux";
 import Avatar from "../components/Avatar";
 import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
 import { getSocket } from "../Class/socket";
+import logo from "./../assets/logo.png"
 
-const ChatCart = ({ navigation, active, data, number }) => {
+const ChatCart = ({ navigation, active, data, number,readOnly }) => {
   const [Active, setActive] = React.useState(active);
   //const navigation = props.navigation;
   const isDark = useSelector((state) => state.isDark);
@@ -117,12 +118,14 @@ const ChatCart = ({ navigation, active, data, number }) => {
       }
       style={[styles.outBox, {}]}>
       <View style={styles.image}>
-        <Avatar
+        {readOnly?(
+          <Image source={logo} style={styles.image}/>
+        ):(<Avatar
           style={styles.image}
           source={{
             uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
           }}
-        />
+        />)}
         {Active && (
           <View
             style={{

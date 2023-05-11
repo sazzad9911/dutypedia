@@ -3172,7 +3172,7 @@ export const AllData = [
     key:"LABOR",
     list: [
       {
-        title: "Painter",
+        title: "Labor",
         data: MainLabor,
       },
     ],

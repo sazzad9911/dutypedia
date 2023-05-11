@@ -7,6 +7,7 @@ import {
   Modal,
   Platform,
   Pressable,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Color } from "./../assets/colors";
@@ -17,8 +18,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Avatar from "./Avatar";
 import { SvgXml } from "react-native-svg";
 import { getUserInfo } from "../Class/member";
+import logo from "./../assets/logo.png";
 
-const ChatHead = ({ navigation, name, image, user }) => {
+const ChatHead = ({ navigation, name, image, user, readOnly }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -89,7 +91,6 @@ const ChatHead = ({ navigation, name, image, user }) => {
     });
   }, []);
 
-
   //console.log(data)
   return (
     <View
@@ -109,18 +110,29 @@ const ChatHead = ({ navigation, name, image, user }) => {
           }}>
           <SvgXml xml={backIcon} />
         </Pressable>
-        <Pressable style={{
-          flexDirection:"row",
-          alignSelf:"center"
-        }}
+        <Pressable
+          style={{
+            flexDirection: "row",
+            alignSelf: "center",
+          }}
           onPress={() => {
             if (data) {
               navigation.navigate("UserProfile", { user: data });
             }
           }}>
-          <Avatar style={styles.image} source={{ uri: image ? image : null }} />
+          {readOnly ? (
+            <Image style={[styles.image,{borderWidth:.2}]} source={logo} />
+          ) : (
+            <Avatar
+              style={styles.image}
+              source={{ uri: image ? image : null }}
+            />
+          )}
 
-          <Text style={styles.text}>{name ? `${name}` : "Sefa Khandakar"}</Text>
+          <Text style={styles.text}>
+            {name ? `${name}` : "Sefa Khandakar"}
+            {readOnly ? " Support" : ""}
+          </Text>
         </Pressable>
       </View>
 
@@ -140,12 +152,14 @@ const ChatHead = ({ navigation, name, image, user }) => {
           </Pressable>
         )}
         <View style={{ width: 16 }} />
-        <Pressable
-          onPress={() => {
-            setNotify((v) => !v);
-          }}>
-          <SvgXml xml={notify ? notification : noNotification} />
-        </Pressable>
+        {!readOnly && (
+          <Pressable
+            onPress={() => {
+              setNotify((v) => !v);
+            }}>
+            <SvgXml xml={notify ? notification : noNotification} />
+          </Pressable>
+        )}
       </View>
       <Modal
         transparent={true}
@@ -155,7 +169,6 @@ const ChatHead = ({ navigation, name, image, user }) => {
         }}>
         <MenuBar setVisible={setVisible} />
       </Modal>
-      
     </View>
   );
 };

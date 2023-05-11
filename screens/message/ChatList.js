@@ -152,7 +152,7 @@ export default function ChatList(props) {
           <View style={{ height: 0 }} />
           {Conversations &&
             Conversations.map((doc, i) => (
-              <ChatCart data={doc} key={i} {...props} />
+              <ChatCart readOnly={doc.readOnly} data={doc} key={i} {...props} />
             ))}
           {Conversations && Conversations.length == 0 && (
             <View style={customStyle.fullBox}>

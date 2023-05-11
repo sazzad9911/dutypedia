@@ -274,14 +274,14 @@ const TabRoute = () => {
         {!vendor && (
           <Tab.Screen
             options={{ headerShown: false }}
-            name="Feed"
+            name="Home"
             component={HomeRoute}
           />
         )}
         {vendor && (
           <Tab.Screen
             options={{ headerShown: false }}
-            name="Feed"
+            name="Home"
             component={Order}
           />
         )}

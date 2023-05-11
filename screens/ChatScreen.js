@@ -109,6 +109,7 @@ const ChatScreen = (props) => {
   const ref = params?.ref;
   const serviceId=params?.serviceId;
   const vendor=useSelector(state=>state.vendor);
+  const [readOnly,setReadOnly]=useState(false)
 
   React.useEffect(() => {
     if (isFocused) {
@@ -157,7 +158,8 @@ const ChatScreen = (props) => {
             );
           });
           setMessages(arr.reverse());
-          //console.log(res.data.conversation.messages)
+          setReadOnly(res.data.conversation.readOnly)
+          
         })
         .catch((err) => {
           console.error(err.response.data.msg);
@@ -333,6 +335,7 @@ const ChatScreen = (props) => {
         name={UserInfo ? `${UserInfo.name}` : null}
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}
+        readOnly={readOnly}
       />
       <FlatList
         data={Messages}
@@ -342,7 +345,20 @@ const ChatScreen = (props) => {
         keyExtractor={(item) => item._id.toString()}
         inverted
       />
-      <BottomBar onSend={send} {...props} />
+      {!readOnly&&(<BottomBar onSend={send} {...props} />)}
+      {readOnly&&(
+        <Text style={{
+          fontSize:16,
+          lineHeight:24,
+          fontWeight:"400",
+          color:"#4D4E4F",
+          marginHorizontal:20,
+          marginVertical:30
+        }}>Can’t reply here. If you have other inquiry check our <Text style={{
+          color:"#4ADE80",
+          fontWeight:"500"
+        }}>support link.</Text> </Text>
+      )}
     </KeyboardAvoidingView>
   );
 };

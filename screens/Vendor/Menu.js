@@ -124,12 +124,7 @@ const Menu = ({ navigation }) => {
               lineHeight: 18,
               color: "#767676",
             }}>
-            {vendor &&
-            vendor.service &&
-            vendor.service.providerInfo &&
-            vendor.service.providerInfo.title
-              ? vendor.service.providerInfo.title + " "
-              : "Mr" + " "}
+            
             {vendor &&
             vendor.service &&
             vendor.service.providerInfo &&

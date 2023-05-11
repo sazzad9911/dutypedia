@@ -157,7 +157,7 @@ const BottomBar = (props) => {
             navigation.navigate("Feed");
             setRoute(0);
           } else {
-            navigation.navigate("Feed");
+            navigation.navigate("Home");
             setRoute(0);
           }
           press(0);

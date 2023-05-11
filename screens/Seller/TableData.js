@@ -108,7 +108,7 @@ const TableData = (props) => {
               if (direct) {
                 navigation.navigate("Service", { direct: direct });
               } else {
-                navigation.navigate("Pricing");
+                navigation.navigate("BusinessTitle");
               }
               setButtonPress(false);
               dispatch({
@@ -127,7 +127,7 @@ const TableData = (props) => {
               marginTop: 20,
               marginBottom: 10,
               borderRadius: 5,
-              backgroundColor: buttonPress ? backgroundColor : "#707070",
+              backgroundColor: buttonPress ? "#4ADE80" : "#707070",
               color: "white",
               marginHorizontal: 20,
               borderWidth: 0,

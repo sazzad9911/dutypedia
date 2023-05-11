@@ -808,7 +808,7 @@ const VendorProfile = (props) => {
                       fontFamily: "Poppins-SemiBold",
                     }}>
                     {Data
-                      ? `${Data.service.providerInfo.title} ${
+                      ? `${
                           Data.service.providerInfo.name
                         } (${Data.service.providerInfo.gender.toUpperCase()})`
                       : null}

@@ -8,7 +8,7 @@ import {
   Text,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { checkOTP, sendOTP } from "../../Class/auth";
+import { checkOTP, checkResetUser, resetUser, sendOTP } from "../../Class/auth";
 import ActivityLoader from "../../components/ActivityLoader";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
@@ -21,6 +21,7 @@ export default function SignUp_2({ navigation, route }) {
   const [counter, setCounter] = useState(90);
   const [loader, setLoader] = useState(false);
   const [token, setToken] = useState();
+  const reset=route?.params?.reset
 
   useEffect(() => {
     const timer =
@@ -32,6 +33,16 @@ export default function SignUp_2({ navigation, route }) {
     setLoader(true);
     setCounter(90);
     setOtp()
+    if(reset){
+      try {
+        await resetUser(number);
+        setLoader(false);
+      } catch (err) {
+        setLoader(false);
+        console.error(err.message);
+      }
+      return
+    }
     try {
       await sendOTP(number);
       setLoader(false);
@@ -43,6 +54,20 @@ export default function SignUp_2({ navigation, route }) {
   const check = () => {
     setError();
     setLoader(true);
+    if(reset){
+      checkResetUser(number,otp)
+      .then((res) => {
+        setLoader(false);
+        //console.log(res.data);
+        navigation.navigate("Reset",{token:res.data?.token,username:res.data?.username})
+        //console.log(res.data);
+      })
+      .catch((err) => {
+        setLoader(false);
+        setError(err.response.data.msg);
+      });
+      return
+    }
     checkOTP(number, otp)
       .then((res) => {
         setLoader(false);

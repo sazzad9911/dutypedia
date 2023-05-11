@@ -64,6 +64,26 @@ const sendOTP = async (number) => {
   });
   return res;
 };
+const resetUser = async (number) => {
+  const res = await axios.post(`${url}/server/auth/reset/send-otp`,{
+    phone:number
+  });
+  return res;
+};
+const checkResetUser = async (number,otp) => {
+  const res = await axios.post(`${url}/server/auth/reset/verify-otp`,{
+    phone:number,
+    otp:otp
+  });
+  return res;
+};
+const resetUserPassword=async(token,password)=>{
+  const res = await axios.post(`${url}/server/auth/reset`,{
+    token:token,
+    password:password,
+  });
+  return res;
+}
 const checkOTP = async (number,otp) => {
   const res = await axios.post(`${url}/server/auth/register/verify-otp`,{
     phone:number,
@@ -93,5 +113,8 @@ export {
   setFavoriteCategories,
   sendOTP,
   checkOTP,
-  registerUser
+  registerUser,
+  resetUser,
+  checkResetUser,
+  resetUserPassword
 };
