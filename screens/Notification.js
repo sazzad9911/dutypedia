@@ -298,6 +298,10 @@ const NotificationCart = ({
     <Pressable
       onPress={() => {
         
+        if(data.notificationType=="NEW_APPOINTMENT"){
+          navigation.navigate(vendor?"VendorAppointmentListDetails":"UserAppointmentDetails",{appointmentId:data?.entityId});
+          return;
+        }
         if (data.notificationType == "REVIEW_ORDER") {
           navigation.navigate("CustomerReview");
           return;

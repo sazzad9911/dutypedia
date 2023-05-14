@@ -116,7 +116,7 @@ const ChatHead = ({ navigation, name, image, user, readOnly }) => {
             alignSelf: "center",
           }}
           onPress={() => {
-            if (data) {
+            if (data&&!readOnly) {
               navigation.navigate("UserProfile", { user: data });
             }
           }}>

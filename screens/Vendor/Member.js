@@ -386,7 +386,7 @@ const DutyPediaUser = (props) => {
         )}
         <View style={{ height: 10 }} />
       </ScrollView>
-      <Pressable
+      {/* <Pressable
         onPress={() => {
           navigation.navigate("AddOnlineUser", {
             onChange: null,
@@ -405,7 +405,7 @@ const DutyPediaUser = (props) => {
           position: "absolute",
         }}>
         <SvgXml xml={whiteContact} height={"20"} width={"20"} />
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 };
@@ -603,7 +603,7 @@ const OnlineCart = ({ doc, i, reload, onPress, navigation }) => {
                   justifyContent: "flex-start",
                   height: 40,
                 }}
-                title={`Remove Message To ${selectUser}`}
+                title={`Remove ${selectUser}`}
               />
             </View>
           </View>

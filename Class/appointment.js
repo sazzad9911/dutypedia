@@ -1,20 +1,29 @@
 import axios from "axios";
 import { url } from "../action";
 
-const createAppointment=async(token,serviceId,date,startTime,endTime,title,description)=>{
+const createAppointment=async(token,serviceId,date,startTime,endTime,title,description,updateDate)=>{
     const res=axios.post(`${url}/server/appointment/create`,{
         serviceId:serviceId,
         date:date,
         startTime,
         endTime:endTime,
         title:title,
-        description:description
+        description:description,
+        updateDate:updateDate
     },{
         headers:{Authorization: `Bearer ${token}`}
     })
     return res
 }
-const createOnlineAppointment=async(token,serviceId,date,startTime,endTime,title,description,memberId)=>{
+const deleteAppointment=async(token,appointmentId)=>{
+    const res=axios.put(`${url}/server/appointment/delete`,{
+       appoId:appointmentId
+    },{
+        headers:{Authorization: `Bearer ${token}`}
+    })
+    return res
+}
+const createOnlineAppointment=async(token,serviceId,date,startTime,endTime,title,description,memberId,updateDate)=>{
     const res=axios.post(`${url}/server/appointment/create/online`,{
         serviceId:serviceId,
         date:date,
@@ -22,7 +31,8 @@ const createOnlineAppointment=async(token,serviceId,date,startTime,endTime,title
         endTime:endTime,
         title:title,
         description:description,
-        memberId:memberId
+        memberId:memberId,
+        updateDate:updateDate
     },{
         headers:{Authorization: `Bearer ${token}`}
     })
@@ -72,11 +82,19 @@ const getUserAppointment=async(token,type,serviceId)=>{
     })
     return res
 }
+const getAppointmentById=async(token,appointmentId)=>{
+    const res=axios.get(`${url}/server/appointment/get-by-id/${appointmentId}`,{
+        headers:{Authorization: `Bearer ${token}`}
+    })
+    return res
+}
 export {createAppointment,
     getAppointment,
     changeAppointment,
     createOnlineAppointment,
     createOfflineAppointment,
     getVendorAppointment,
-    getUserAppointment
+    getUserAppointment,
+    deleteAppointment,
+    getAppointmentById
 }

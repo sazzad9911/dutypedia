@@ -46,6 +46,7 @@ export default function SupportForm({ navigation, route }) {
   const [loader, setLoader] = useState(false);
   const [visible, setVisible] = useState(false);
   const user = useSelector((state) => state.user);
+  const vendor=useSelector(state=>state.vendor)
 
   // callbacks
   const handleSheetChange = React.useCallback((index) => {
@@ -65,7 +66,7 @@ export default function SupportForm({ navigation, route }) {
         setLoader(true)
         const res = await uploadFile(arr, user.token);
         
-        await createSupport(user.token, subject, description, res[0]);
+        await createSupport(user.token, subject, description, res[0],vendor?vendor?.service?.id:undefined);
         setLoader(false)
         setVisible(true)
       } catch (err) {
@@ -74,7 +75,7 @@ export default function SupportForm({ navigation, route }) {
     } else {
       try {
         setLoader(true)
-        await createSupport(user.token, subject, description, null);
+        await createSupport(user.token, subject, description, null,vendor?vendor?.service?.id:undefined);
         setLoader(false)
         setVisible(true)
       } catch (err) {

@@ -64,8 +64,9 @@ const BottomBar = (props) => {
   React.useEffect(() => {
     //console.log(props.state.index);
     if (props.state.index) {
-      setRoute(props.state.index);
       press(props.state.index);
+      setRoute(props.state.index);
+      
     }
   }, [props?.state?.index]);
   React.useEffect(() => {
@@ -283,7 +284,7 @@ const BottomBar = (props) => {
               position: "absolute",
               top: -5,
               left: 25,
-              zIndex: 10,
+              zIndex: 100,
             }}>
             {unReadNotification}
           </Badge>

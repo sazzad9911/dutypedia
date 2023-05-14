@@ -10,6 +10,13 @@
       ],
       [
         "react-native-background-fetch"
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/logo.png",
+          "color": "#ffffff"
+        }
       ]
     ],
     "name": "Duty",

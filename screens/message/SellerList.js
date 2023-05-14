@@ -97,23 +97,7 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
       onScroll={(e) => {
         scrollY.setValue(e.nativeEvent.contentOffset.y);
       }}>
-      {/* <Animated.View
-      style={[
-        {
-          transform: [{ translateY: translateY }],
-          top: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "white",
-          zIndex: 500,
-        },
-      ]}
-    >
-        <SearchBar onChange={e=>{
-          setMembers(search(e,AllMembers))
-        }} />
-    </Animated.View> */}
-
+      
       <View
         style={{
           paddingHorizontal: 20,

@@ -1253,11 +1253,12 @@ export const getSuggestServices = async () => {
   const res = await axios.get(`${url}/server/services/gigs/suggest`);
   return res;
 };
-export const createSupport = async (token,subject,description,image) => {
+export const createSupport = async (token,subject,description,image,serviceId) => {
   const res = await axios.post(`${url}/server/support/create`,{
     subject: subject,
     message: description,
     image: image,
+    serviceId:serviceId
   },{
     headers: { Authorization: `Bearer ${token}` },
   });

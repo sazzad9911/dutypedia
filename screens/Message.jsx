@@ -30,6 +30,7 @@ import UserProfile from "./UserProfile";
 import { setChatBottomRef } from "../Reducers/chatBottomRef";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
+import SupportForm from "./support/SupportForm";
 const Stack = createStackNavigator();
 
 const Message = (props) => {
@@ -86,8 +87,14 @@ const Message = (props) => {
           name="UserProfile"
           component={UserProfile}
         />
+        <Stack.Screen
+        name="SupportForm"
+        options={{
+          headerShown: false,
+        }}
+        component={SupportForm}
+      />
       </Stack.Navigator>
-      
     </View>
   );
 };

@@ -98,6 +98,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import OfferNow from "./Seller/OfferNow";
 import { CheckBox } from "./Seller/Pricing";
 import { setSaveList } from "../Reducers/saveList";
+import ProfileSkeleton from "../components/ProfileSkeleton";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -321,7 +322,7 @@ const OtherProfile = (props) => {
           console.warn(error.response.data);
         });
     }
-  }, [serviceId + data]);
+  }, [serviceId + data,Refresh]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
@@ -381,7 +382,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data]);
+  }, [Bargaining + Data,Refresh]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -446,7 +447,7 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + serviceId + Data]);
+  }, [data + newUser + serviceId + Data,Refresh]);
   React.useEffect(() => {
     if (newUser && data) {
       //setLoader(true);
@@ -479,7 +480,7 @@ const OtherProfile = (props) => {
           console.warn(err.response);
         });
     }
-  }, [data + serviceId + Data]);
+  }, [data + serviceId + Data,Refresh]);
   React.useEffect(() => {
     if (data) {
       getDashboardReviews(newUser.token, data?.service?.id)
@@ -492,101 +493,23 @@ const OtherProfile = (props) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [data]);
+  }, [data,Refresh]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
-  }, [Specialty]);
-  const showCart = (doc) => {
-    setGigs(doc);
-    setClick(true);
-    setImages(doc.images);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
+  }, [Specialty,Refresh]);
+  
   const clickFixed = (doc) => {
-    // setClick(true);
-    // setImages(doc.images);
-    // setGigs(doc);
-    // //console.log(doc.services);
-    // setPrice(doc.price);
-    // setFacilities(doc.facilites.selectedOptions);
-    // setTitle(doc.title);
-    // setDescription(doc.description);
-    // try {
-    //   dispatch({
-    //     type: "SET_NEW_LIST_DATA",
-    //     playload: serverToLocal(doc.services, Category),
-    //   });
-    //   setNewDataList(serverToLocal(doc.services, Category));
-    // } catch (e) {
-    //   console.log(e.message);
-    // }
-    // console.log("ok");
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {
     console.log("ok");
     navigation.navigate("PackageService", { data: doc });
   };
-  const clickSubs = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    console.log("ok");
-    navigation.navigate("SubscriptionService", { data: doc });
-  };
-  const clickInstallment = (doc) => {
-    setClick(true);
-    setImages(doc.images);
-    setGigs(doc);
-    //console.log(doc.services);
-    setPrice(doc.price);
-    setFacilities(doc.facilites.selectedOptions);
-    setTitle(doc.title);
-    setDescription(doc.description);
-    try {
-      dispatch({
-        type: "SET_NEW_LIST_DATA",
-        playload: serverToLocal(doc.services, Category),
-      });
-      setNewDataList(serverToLocal(doc.services, Category));
-    } catch (e) {
-      console.log(e.message);
-    }
-    console.log("ok");
-    navigation.navigate("InstallmentService", { data: doc });
-  };
+  
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -640,7 +563,7 @@ const OtherProfile = (props) => {
     //console.log(response.data.gigs)
     dispatch(setSaveList(response.data.gigs));
   };
-  //console.log(newUser)
+  
 
   if (
     Loader ||
@@ -652,11 +575,10 @@ const OtherProfile = (props) => {
     !NewDataList
   ) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader />
-      </View>
+      <ProfileSkeleton/>
     );
   }
+  
 
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
@@ -865,7 +787,8 @@ const OtherProfile = (props) => {
                 navigation.navigate("LogIn");
                 return;
               }
-              navigation.navigate("AppointmentList", { data: Data });
+              navigation.navigate("CreateAppointment", { data: Data });
+              //navigation.navigate("AppointmentList", { data: Data });
             }}
             style={{
               shadowOffset: {

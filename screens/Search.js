@@ -191,7 +191,7 @@ const SearchThird = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const [loader, setLoader] = useState(false);
   const [subCategory,setSubCategory]=useState()
-  const [selectedSub,setSelectedSub]=useState()
+  const [selectedSub,setSelectedSub]=useState("All")
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")

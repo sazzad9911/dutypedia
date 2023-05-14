@@ -42,6 +42,7 @@ export default function MemberList({ navigation, route }) {
   const offline = route.params.offline;
   const inset = useSafeAreaInsets();
   const [users, setUsers] = useState();
+  
 
   React.useEffect(() => {
     if (user && vendor) {

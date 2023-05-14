@@ -195,6 +195,7 @@ export default function RequestAppointmentList({ navigation, route }) {
             name={`${doc.user.name}`}
             image={doc.user.profilePhoto}
             username={doc.user.username}
+            
           />
         ))}
         <View style={{

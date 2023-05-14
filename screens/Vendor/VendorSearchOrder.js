@@ -336,47 +336,6 @@ const VendorSearchOrder = ({ navigation, route }) => {
           <ActivityLoader />
         </View>
       )}
-      {/* <View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 0,
-          zIndex: 0,
-          backgroundColor: primaryColor,
-          marginHorizontal: 55,
-          borderRadius: 25,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: width - 110,
-          shadowOffset: {
-            height: 0,
-            width: 0,
-          },
-          shadowColor: "black",
-          shadowOpacity: 0.2,
-          shadowRadius: 5,
-          elevation: 3,
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          shadowTopRadius: 0,
-        }}>
-        
-        <TouchableOpacity
-          onPress={() => {
-            let state = offlineOrder;
-            setOfflineOrder(null);
-            setTimeout(() => {
-              setOfflineOrder(!state);
-            }, 100);
-          }}
-          style={styles.view}>
-          <SvgXml xml={re} height="20" />
-          <Text style={styles.text}>
-            {offlineOrder ? "Offline User" : "Dutypedia User"}
-          </Text>
-        </TouchableOpacity>
-        
-      </View> */}
       <BottomSheet
         enablePanDownToClose={true}
         ref={bottomSheetRef}
@@ -869,7 +828,7 @@ export const Screens = ({ navigation, route }) => {
         let text = searchOrderRef;
         text = text.split(" ")[0];
         let arr = AllOrders.filter((d) =>
-          d.user.firstName.toUpperCase().match(text.toUpperCase())
+          d.user.name.toUpperCase().match(text.toUpperCase())
         );
         setNewOrders(arr);
       }
@@ -881,9 +840,6 @@ export const Screens = ({ navigation, route }) => {
     ({ item }) => (
       <OrderCart
         onSelect={(e) => {
-          //console.log(e)
-          //dispatch({ type: "ORDER_STATE", playload: e });
-          //dispatch({ type: "ORDER_STATE", playload: e });
           setOpen((val) => {
             if (val != e) {
               return e;

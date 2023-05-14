@@ -38,6 +38,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import Avatar from "../../components/Profile/Avatar";
 import { serverToLocalNew } from "../../Class/dataConverter";
+import ProfileSkeleton from "../../components/ProfileSkeleton";
 
 const Menu = ({ navigation }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -54,6 +55,7 @@ const Menu = ({ navigation }) => {
   const user = useSelector((state) => state.user);
   const isFocused = useIsFocused();
   const inset = useSafeAreaInsets();
+  const [late,setLate]=useState(false)
 
   useEffect(() => {
    
@@ -70,6 +72,7 @@ const Menu = ({ navigation }) => {
   }, []);
   React.useEffect(() => {
     if (isFocused) {
+      setLate(false)
       //console.log("hidden")
       dispatch(setHideBottomBar(false));
       setTimeout(() => {
@@ -80,6 +83,7 @@ const Menu = ({ navigation }) => {
       //dispatch(setHideBottomBar(true));
     }
   }, [isFocused]);
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -136,7 +140,10 @@ const Menu = ({ navigation }) => {
         <View
           style={{ paddingHorizontal: 28, paddingTop: 31, paddingBottom: 52 }}>
           <Cart
-            onPress={() => navigation.navigate("VendorProfile")}
+            onPress={() =>{
+              //navigation.navigate("Member")
+              navigation.navigate("VendorProfile")
+            }}
             Icon={icon}
             title={"View Profile"}
             text={`${info?.services ? info?.services : "0"} Services`}
@@ -176,7 +183,7 @@ const Menu = ({ navigation }) => {
             onPress={() => {
               logoutVendor();
               dispatch({ type: "SET_VENDOR", playload: false });
-              navigation.navigate("Feed");
+              //navigation.navigate("Home");
             }}
             Icon={logout}
             title={"Logout"}

@@ -354,7 +354,9 @@ const ChatScreen = (props) => {
           color:"#4D4E4F",
           marginHorizontal:20,
           marginVertical:30
-        }}>Can’t reply here. If you have other inquiry check our <Text style={{
+        }}>Can’t reply here. If you have other inquiry check our <Text onPress={()=>{
+          props.navigation.navigate("SupportForm")
+        }} style={{
           color:"#4ADE80",
           fontWeight:"500"
         }}>support link.</Text> </Text>

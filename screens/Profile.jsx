@@ -136,6 +136,7 @@ import EditStakeHolder from "./Profile/EditStakeHolder";
 import EditYourInformation from "./Profile/EditYourInformation";
 import EditBusinessTitle from "./Profile/EditBusinessTitle";
 import EditVendorAddress from "./Vendor/EditVendorAddress";
+import FakeVendorProfile from "./Vendor/FakeVendorProfile";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -178,6 +179,13 @@ const Profile = ({ navigation }) => {
           headerShown: false,
         }}
         component={VendorProfile}
+      />
+       <Stack.Screen
+        name="FakeVendorProfile"
+        options={{
+          headerShown: false,
+        }}
+        component={FakeVendorProfile}
       />
       <Stack.Screen
         name="EditVendorInfo"
@@ -849,6 +857,16 @@ const Profile = ({ navigation }) => {
         name="EditSkills"
         component={EditSkills}
       />
+       <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: "green",
+            },
+            headerShown: false,
+          }}
+          name="OtherProfile"
+          component={OtherProfile}
+        />
     </Stack.Navigator>
   );
 };

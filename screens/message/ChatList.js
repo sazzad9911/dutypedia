@@ -214,7 +214,7 @@ export default function ChatList(props) {
               />
             )}
           </BottomSheetScrollView>
-          {type != "Search" && (
+          {/* {type != "Search" && (
             <Pressable
               onPress={() => {
                 handleClosePress();
@@ -233,7 +233,7 @@ export default function ChatList(props) {
               }}>
               <SvgXml xml={contact} />
             </Pressable>
-          )}
+          )} */}
         </BottomSheet>
       )}
     </View>

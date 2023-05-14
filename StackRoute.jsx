@@ -102,6 +102,7 @@ import SignUp_2 from "./screens/signup/SignUp_2";
 import SignUp_3 from "./screens/signup/SignUp_3";
 import Recovery from "./screens/signup/Recovery";
 import Reset from "./screens/signup/Reset";
+import UserProfile from "./screens/UserProfile";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -338,18 +339,14 @@ export default function StackRoute() {
         />
         <Stack.Screen
           options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
+           headerShown:false
           }}
           name="CreateAppointment"
           component={CreateAppointment}
         />
         <Stack.Screen
           options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
+            headerShown:false
           }}
           name="AppointmentDetails"
           component={AppointmentDetails}
@@ -370,9 +367,7 @@ export default function StackRoute() {
         />
         <Stack.Screen
           options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
+            headerShown:false
           }}
           name="AppointmentForm"
           component={AppointmentForm}
@@ -388,9 +383,7 @@ export default function StackRoute() {
         />
         <Stack.Screen
           options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
+            headerShown:false
           }}
           name="VendorAppointmentListDetails"
           component={VendorAppointmentListDetails}
@@ -407,9 +400,7 @@ export default function StackRoute() {
         />
         <Stack.Screen
           options={{
-            header: (props) => (
-              <AppointmentHeader title={"Appointment"} {...props} />
-            ),
+            headerShown:false
           }}
           name="UserAppointmentDetails"
           component={UserAppointmentDetails}
@@ -452,6 +443,11 @@ export default function StackRoute() {
         {
           //new service account screens
         }
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="UserProfile"
+          component={UserProfile}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

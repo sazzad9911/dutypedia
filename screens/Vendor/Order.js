@@ -377,7 +377,6 @@ const VendorOrder = ({ navigation, route }) => {
           navigation.navigate("MemberList", { offline: offlineOrder });
         }}
         onFilter={() => {
-          //dispatch(setOrderRef(orderRef?false:true));
           setIndex(1);
         }}
         allOrders={allOrders}
@@ -561,11 +560,6 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
           onPress();
           dispatch({ type: "SET_LIST_SELECTION", playload: [] });
         }
-        return;
-        setOpen((val) => !val);
-        if (onSelect) {
-          onSelect(data.id);
-        }
       }}>
       <View
         style={{
@@ -745,27 +739,10 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
               </Text>
             )}
 
-            {/* <View
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                
-                <View style={{ width: 10 }} />
-                {type == "SUBS"||type=="INSTALLMENT" && (
-                  <SvgXml xml={notify} height="15" width={"15"} />
-                )}
-              </View> */}
+        
           </View>
         </View>
-        {/* <View
-          style={{
-            height: 1,
-            backgroundColor: "#F1EFEF",
-            marginLeft: 60,
-            marginTop: 10,
-          }}
-        /> */}
+      
       </View>
     </Pressable>
   );
@@ -1068,7 +1045,7 @@ export const Screens = ({ navigation, route }) => {
     <View style={{ flex: 1, paddingVertical: 8 }}>
       {NewOrders && NewOrders.length > 0 && (
         <FlatList onRefresh={onRefresh}
-        refreshing={refreshing}
+          refreshing={refreshing}
           showsVerticalScrollIndicator={false}
           data={NewOrders}
           keyExtractor={(item) => item.id}

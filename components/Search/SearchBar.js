@@ -199,7 +199,8 @@ const Container = ({
             marginBottom: 18,
           }}>
           <View style={{ width: 22 }} />
-          <IconButton
+          {search?.data?.length>0&&!subData&&(
+            <IconButton
             active={"All" == category ? true : false}
             style={styles.button}
             onPress={() => {
@@ -211,6 +212,19 @@ const Container = ({
             }}
             title={"All"}
           />
+          )}
+          {subData?.length>0&&(
+            <IconButton
+            active={"All" == selectedSub ? true : false}
+            style={styles.button}
+            onPress={() => {
+              if (subData && onSubCategory) {
+                onSubCategory((v) => (v != "All" ? "All" : undefined));
+              } 
+            }}
+            title={"All"}
+          />
+          )}
           {search &&
             !subData &&
             search?.data?.map((doc, i) => (

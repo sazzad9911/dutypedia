@@ -1,365 +1,488 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
-import { View, ScrollView, Text, Image,KeyboardAvoidingView,Platform, Alert } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Pressable,
+  Dimensions,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import IconButton from "../../../components/IconButton";
 import Input from "../../../components/Input";
 import TextArea from "../../../components/TextArea";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { allTimeConverter, changeTime, convertDate, dateDifference } from "../../../action";
+import {
+  allTimeConverter,
+  changeTime,
+  convertDate,
+  dateConverter,
+  dateDifference,
+} from "../../../action";
 import { createAppointment } from "../../../Class/appointment";
 import { useSelector } from "react-redux";
 import { ActivityIndicator } from "react-native-paper";
 import { Color } from "../../../assets/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+const { width, height } = Dimensions.get("window");
 
-export default function CreateAppointment({navigation,route}) {
+export default function CreateAppointment({ navigation, route }) {
   const [image, setImage] = React.useState();
-  const [date,setDate]=React.useState()
-  const [DateError,setDateError]=React.useState()
-  const [DateVisible,setDateVisible]=React.useState()
-  const [FromTime,setFromTime]=React.useState()
-  const [FromTimeError,setFromTimeError]=React.useState()
-  const [FromTimeVisible,setFromTimeVisible]=React.useState()
-  const [ToTime,setToTime]=React.useState()
-  const [ToTimeError,setToTimeError]=React.useState()
-  const [ToTimeVisible,setToTimeVisible]=React.useState()
-  const newDate=new Date()
-  const [selectDate,setSelectDate]=React.useState()
-  const [Title,setTitle]=React.useState()
-  const [Description,setDescription]=React.useState()
-  const [TitleError,setTitleError]=React.useState()
-  const data=route.params&&route.params.data?route.params.data:null;
-  const user=useSelector(state=>state.user)
-  const vendor=useSelector(state=>state.vendor)
-  const [Loader,setLoader]=React.useState(false)
-  const isDark=useSelector(state=>state.isDark)
-  const  colors=new Color(isDark)
-  const backgroundColor=colors.getBackgroundColor()
-  
+  const [date, setDate] = React.useState();
+  const [DateError, setDateError] = React.useState();
+  const [DateVisible, setDateVisible] = React.useState();
+  const [FromTime, setFromTime] = React.useState();
+  const [FromTimeError, setFromTimeError] = React.useState();
+  const [FromTimeVisible, setFromTimeVisible] = React.useState();
+  const [ToTime, setToTime] = React.useState();
+  const [ToTimeError, setToTimeError] = React.useState();
+  const [ToTimeVisible, setToTimeVisible] = React.useState();
+  const newDate = new Date();
+  const [selectDate, setSelectDate] = React.useState();
+  const [Title, setTitle] = React.useState();
+  const [Description, setDescription] = React.useState();
+  const [TitleError, setTitleError] = React.useState();
+  const [DescriptionError, setDescriptionError] = useState();
+  const data = route.params && route.params.data ? route.params.data : null;
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [Loader, setLoader] = React.useState(false);
+  const isDark = useSelector((state) => state.isDark);
+  const colors = new Color(isDark);
+  const backgroundColor = colors.getBackgroundColor();
+  const inset = useSafeAreaInsets();
+  const [updateDate,setUpdateDate]=useState()
 
-
-  const validate=()=>{
-    setDateError("")
-    setFromTimeError("")
-    setTitleError("")
-    if(!date){
+  const validate = () => {
+    setDateError("");
+    setFromTimeError("");
+    setTitleError("");
+    if (!date) {
       setDateError("Date is required");
-      return
+      return;
     }
-    if(!FromTime ||!ToTime){
+    if (!FromTime || !ToTime || !updateDate) {
       setFromTimeError("Time is required");
-      return
+      return;
     }
-    if(!Title){
+    if (!Title) {
       setTitleError("Title is required");
-      return
+      return;
     }
-    if(!user||!data){
-      Alert.alert("Opps!","Invalid Authentication")
-      return
+    if (!user || !data) {
+      Alert.alert("Opps!", "Invalid Authentication");
+      return;
     }
-    setLoader(true)
-    createAppointment(user.token,data.service.id,
-      date,FromTime,ToTime,Title,Description).then(res=>{
-        console.warn("Appointment created")
-        setLoader(false)
-        navigation.goBack()
-      }).catch(err=>{
-        setLoader(false)
-        console.warn(err.response.data.msg)
-      })
-  }
-  if(Loader){
-    return(
-      <View style={{
-        flex:1,justifyContent:"center",alignItems:"center"
-      }}>
-        <ActivityIndicator size={"small"} color={backgroundColor}/>
-      </View>
+    if (Title?.split("")?.length > 50) {
+      setTitleError("Max character 50");
+      return;
+    }
+    if (Description?.split("")?.length > 1000) {
+      setDescriptionError("Max character 50");
+      return;
+    }
+    setLoader(true);
+    createAppointment(
+      user.token,
+      data.service.id,
+      date,
+      FromTime,
+      ToTime,
+      Title,
+      Description,
+      updateDate
     )
+      .then((res) => {
+        console.warn("Appointment created");
+        setLoader(false);
+        navigation.goBack()
+        setTimeout(()=>{
+          navigation.navigate("AppointmentDetails",{
+            data:data,
+            appointment:res.data.appointment,
+            back:true,
+          });
+        },10)
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err.response.data.msg);
+      });
+  };
+  if (Loader) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <ActivityIndicator size={"small"} color={backgroundColor} />
+      </View>
+    );
   }
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : null}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
-    <ScrollView>
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 20,
-          flexDirection: "row",
-        }}
-      >
+    <KeyboardAvoidingView
+      style={{ flex: 1, paddingTop: inset?.top }}
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Pressable
+          onPress={() => {
+            navigation.goBack();
+          }}
+          style={{
+            position: "absolute",
+            top: 12,
+            zIndex: 100,
+            left: 20,
+          }}>
+          <SvgXml xml={back} />
+        </Pressable>
         <View
           style={{
-            borderWidth: 0.5,
-            borderColor: "#707070",
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            justifyContent: "center",
+            paddingHorizontal: 20,
+            marginTop: 12,
             alignItems: "center",
-            overflow: "hidden",
-          }}
-        >
-          {data&&data.service.profilePhoto ? (
-            <Image style={{
-              width:60,
-              height:60
-            }} source={{ uri: data.service.profilePhoto }} />
-          ) : (
-            <FontAwesome name="user" size={45} color="black" />
-          )}
+          }}>
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderColor: "#707070",
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              justifyContent: "center",
+              alignItems: "center",
+              overflow: "hidden",
+            }}>
+            {data && data.service.profilePhoto ? (
+              <Image
+                style={{
+                  width: 100,
+                  height: 100,
+                }}
+                source={{ uri: data.service.profilePhoto }}
+              />
+            ) : (
+              <FontAwesome name="user" size={80} color="black" />
+            )}
+          </View>
+          <View
+            style={{
+              marginTop: 20,
+              alignItems: "center",
+            }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: 24,
+                fontWeight: "400",
+              }}>
+              {data && data.service.serviceCenterName
+                ? data.service.serviceCenterName
+                : "Invalid"}
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+                color: "#767676",
+                marginTop: 12,
+              }}>
+              {data && data.service.providerInfo.name
+                ? data.service.providerInfo.name
+                : "Invalid"}
+            </Text>
+            <Text
+              style={{
+                ontSize: 16,
+                fontWeight: "400",
+                color: "#767676",
+                marginTop: 12,
+              }}>
+              {data && data.service.providerInfo.position
+                ? data.service.providerInfo.position
+                : "Invalid"}
+            </Text>
+          </View>
         </View>
         <View
           style={{
-            marginLeft: 20,
-          }}
-        >
+            paddingHorizontal: 20,
+            marginTop: 36,
+          }}>
           <Text
             style={{
               fontSize: 16,
-              fontFamily: "Poppins-SemiBold",
-              lineHeight: 22,
-            }}
-          >
-            {data&&data.service.serviceCenterName?data.service.serviceCenterName:"Invalid"}
+              fontWeight: "400",
+            }}>
+            Select date
           </Text>
-          <Text
+          <IconButton
+            onPress={() => {
+              setDateVisible(!DateVisible);
+            }}
             style={{
-              fontSize: 14,
-              fontFamily: "Poppins-SemiBold",
-              lineHeight: 18,
+              marginTop: 12,
+              color: "#767676",
             }}
-          >{data&&data.service.providerInfo.title?`${data.service.providerInfo.title} `:"--"}
-            {data&&data.service.providerInfo.name?data.service.providerInfo.name:"Invalid"}
-            {` (${data&&data.service.providerInfo.gender?data.service.providerInfo.gender.toUpperCase():"Invalid"})`}
-          </Text>
-          <Text
-            style={{
-              fontSize: 12,
-              lineHeight: 18,
-            }}
-          >
-            Position of {data&&data.service.providerInfo.position?data.service.providerInfo.position:"Invalid"}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-          }}
-        >
-          Select date
-        </Text>
-        <IconButton onPress={()=>{
-          setDateVisible(!DateVisible)
-        }}
-          style={{
-            width: 150,
-            marginVertical: 10,
-          }}
-          title={date?date:"YYYY-MM-DD"}
-          Icon={() => <SvgXml xml={calender} height="20" width="20" />}
-        />
-        <DateTimePickerModal date={new Date()}
-          isVisible={DateVisible}
-          mode="date"
-          onConfirm={e=>{
-            setDateError("")
-            if(dateDifference(newDate,e)<0){
-              setDateError("Please select upcoming date")
-              return
-            }
-            setDate(convertDate(e))
-            //console.log(convertDate(e))
-            setDateVisible(!DateVisible)
-          }}
-          onCancel={()=>{
-            setDateVisible(!DateVisible)
-          }}
-        />
-        {DateError&&(
-          <Text style={{
-            color:"red"
-          }}>{DateError}</Text>
-        )}
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            marginVertical: 10,
-          }}
-        >
-          Select time
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }}
-        >
-          <IconButton onPress={()=>{
-            setFromTimeVisible(!FromTimeVisible)
-          }}
-            style={{
-              width: 150,
-              justifyContent: "space-between",
-            }}
-            title={FromTime?changeTime(FromTime):"--:-- --"}
-            Icon={() => <SvgXml xml={calender} height="20" width="20" />}
-          />
-          <DateTimePickerModal date={new Date()}
-            isVisible={FromTimeVisible}
-            mode="time"
-            onConfirm={e=>{
-              setFromTimeError("")
-              let newTime=allTimeConverter(e)
-              if(newTime.split(":")[0]<allTimeConverter(newDate).split(":")[0]){
-                setFromTimeError("Please select upcoming time");
-                return
-              }
-              setFromTime(allTimeConverter(e))
-              setFromTimeVisible(!FromTimeVisible)
-            }}
-            onCancel={()=>{
-              setFromTimeVisible(!FromTimeVisible)
-            }}
-          />
-          
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
-              marginHorizontal: 20,
-            }}
-          >
-            To
-          </Text>
-          <IconButton onPress={()=>{
-            setToTimeVisible(!ToTimeVisible)
-          }}
-            style={{
-              width: 150,
-              justifyContent: "space-between",
-            }}
-            title={ToTime?changeTime(ToTime):"--:-- --"}
+            title={date ? date : "yyyy-mm-dd"}
             Icon={() => <SvgXml xml={calender} height="20" width="20" />}
           />
           <DateTimePickerModal
-          date={new Date()}
-            isVisible={ToTimeVisible}
-            mode="time"
-            onConfirm={e=>{
-              let time=allTimeConverter(e)
-              setFromTimeError("")
-              //console.log(newTime.split(":")[1])
-              if(!FromTime){
-                setFromTimeError("Please select upcoming time from start time.")
-                return
+            date={new Date()}
+            isVisible={DateVisible}
+            mode="date"
+            onConfirm={(e) => {
+              setDateError("");
+              if (dateDifference(newDate, e) < 0) {
+                setDateError("Please select upcoming date");
+                return;
               }
-              if(FromTime.split(":")[0]>time.split(":")[0]){
-                setFromTimeError("Please select upcoming time from start time.")
-                return
-              }
-              if((FromTime.split(":")[0]==time.split(":")[0])&&(parseInt(FromTime.split(":")[1])>parseInt(time.split(":")[1]))){
-                setFromTimeError("Please select upcoming time from start time.")
-                return
-              }
-              setToTime(allTimeConverter(e))
-              setToTimeVisible(!ToTimeVisible)
+              setDate(dateConverter(e));
+              //console.log(convertDate(e))
+              setDateVisible(!DateVisible);
             }}
-            onCancel={()=>{
-              setToTimeVisible(!ToTimeVisible)
+            onCancel={() => {
+              setDateVisible(!DateVisible);
             }}
           />
-        </View>
-        {FromTimeError&&(
-            <Text style={{
-              color:"red",
-              marginTop:5
-            }}>{FromTimeError}</Text>
+          {DateError && (
+            <Text
+              style={{
+                color: "red",
+              }}>
+              {DateError}
+            </Text>
           )}
-        <Text
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "400",
+              marginTop: 24,
+            }}>
+            Select time
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              marginTop: 12,
+            }}>
+            <IconButton
+              onPress={() => {
+                setFromTimeVisible(!FromTimeVisible);
+              }}
+              style={{
+                width: width / 2 - 42,
+                justifyContent: "flex-start",
+              }}
+              title={FromTime ? changeTime(FromTime) : "--:-- --"}
+              LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
+            />
+            <DateTimePickerModal
+              date={new Date()}
+              isVisible={FromTimeVisible}
+              mode="time"
+              onConfirm={(e) => {
+                setFromTimeError("");
+                let newTime = allTimeConverter(e);
+                if (
+                  newTime.split(":")[0] <
+                  allTimeConverter(newDate).split(":")[0]
+                ) {
+                  setFromTimeError("Please select upcoming time");
+                  return;
+                }
+                
+                setFromTime(allTimeConverter(e));
+                setFromTimeVisible(!FromTimeVisible);
+              }}
+              onCancel={() => {
+                setFromTimeVisible(!FromTimeVisible);
+              }}
+            />
+
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+                marginHorizontal: 12,
+                width: 20,
+              }}>
+              To
+            </Text>
+            <IconButton
+              onPress={() => {
+                setToTimeVisible(!ToTimeVisible);
+              }}
+              style={{
+                width: width / 2 - 42,
+                justifyContent: "flex-start",
+              }}
+              title={ToTime ? changeTime(ToTime) : "--:-- --"}
+              LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
+            />
+            <DateTimePickerModal
+              date={new Date()}
+              isVisible={ToTimeVisible}
+              mode="time"
+              onConfirm={(e) => {
+                let time = allTimeConverter(e);
+                setFromTimeError("");
+                //console.log(newTime.split(":")[1])
+                if (!FromTime) {
+                  setFromTimeError(
+                    "Please select upcoming time from start time."
+                  );
+                  return;
+                }
+                if (FromTime.split(":")[0] > time.split(":")[0]) {
+                  setFromTimeError(
+                    "Please select upcoming time from start time."
+                  );
+                  return;
+                }
+                if (
+                  FromTime.split(":")[0] == time.split(":")[0] &&
+                  parseInt(FromTime.split(":")[1]) >
+                    parseInt(time.split(":")[1])
+                ) {
+                  setFromTimeError(
+                    "Please select upcoming time from start time."
+                  );
+                  return;
+                }
+                setUpdateDate(e)
+                setToTime(allTimeConverter(e));
+                setToTimeVisible(!ToTimeVisible);
+              }}
+              onCancel={() => {
+                setToTimeVisible(!ToTimeVisible);
+              }}
+            />
+          </View>
+          {FromTimeError && (
+            <Text
+              style={{
+                color: "red",
+                marginTop: 5,
+              }}>
+              {FromTimeError}
+            </Text>
+          )}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 24,
+              alignItems: "center",
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+              }}>
+              Subject
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "#767676",
+              }}>
+              Max 50 character
+            </Text>
+          </View>
+          <Input
+            value={Title}
+            onChange={(e) => {
+              setTitle(e);
+            }}
+            style={{
+              marginHorizontal: 0,
+              borderWidth: 1,
+              marginTop: 12,
+            }}
+            placeholder={"Subject"}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 24,
+              alignItems: "center",
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+              }}>
+              Describe
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "#767676",
+              }}>
+              Max 1000 character
+            </Text>
+          </View>
+          <TextArea
+            value={Description}
+            onChange={(e) => {
+              setDescription(e);
+            }}
+            style={{
+              marginTop: 12,
+            }}
+            placeholder={""}
+          />
+        </View>
+        <View
           style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            marginVertical: 10,
-            marginTop: 20,
-          }}
-        >
-          Title
-        </Text>
-        <Input value={Title} onChange={e=>{
-          setTitle(e)
-        }}
-          style={{
-            marginHorizontal: 0,
-            borderWidth: 1,
-          }}
-          placeholder={""}
-        />
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "Poppins-Medium",
-            marginVertical: 10,
-            marginTop: 20,
-          }}
-        >
-          Describe
-        </Text>
-        <TextArea value={Description} onChange={e=>{
-          setDescription(e)
-        }} placeholder={""} />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginHorizontal: 20,
-          marginVertical: 30,
-          justifyContent: "flex-end",
-        }}
-      >
-        <IconButton onPress={validate}
-          style={{
-            backgroundColor: "#4ADE80",
-            color: "white",
-          }}
-          title={"Send Appointment Request"}
-        />
-        <View style={{ width: 20 }} />
-        <IconButton onPress={()=>{
-          navigation.goBack()
-        }}
-          style={{
-            width: 120,
-            borderColor: "#E22424",
-            color: "#E22424",
-            borderWidth: 1,
-          }}
-          title={"Cancel"}
-        />
-      </View>
-    </ScrollView>
+            marginHorizontal: 20,
+            marginTop: 22,
+            marginBottom: 32,
+          }}>
+          <IconButton
+            onPress={validate}
+            style={{
+              backgroundColor: "#4ADE80",
+              color: "white",
+            }}
+            title={"Create Now"}
+          />
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.036" viewBox="0 0 18.129 18.036">
-<g id="_000000ff" data-name="#000000ff" transform="translate(-6.401 -6.715)">
-  <path id="Path_19748" data-name="Path 19748" d="M11.523,7.079a.642.642,0,0,1,1.182.055,8.463,8.463,0,0,1,.033,1.215q2.726,0,5.454,0a8.556,8.556,0,0,1,.031-1.205A.639.639,0,0,1,19.411,7.1a7.548,7.548,0,0,1,.039,1.251c.755.017,1.511-.035,2.264.028A3.182,3.182,0,0,1,24.459,11a23.1,23.1,0,0,1,.027,3.149c0,2.515.011,5.029-.006,7.545a3.161,3.161,0,0,1-3.194,3.053q-5.823,0-11.648,0a3.183,3.183,0,0,1-3.2-3.345c.006-2.365,0-4.73,0-7.1,0-1.057-.1-2.118,0-3.174a3.162,3.162,0,0,1,2-2.559,9.512,9.512,0,0,1,3.034-.225,6.984,6.984,0,0,1,.044-1.27M8.256,10.244c-.644.606-.522,1.541-.518,2.338H23.191c.006-.8.121-1.734-.521-2.34-.834-.875-2.151-.469-3.218-.563a4.715,4.715,0,0,1-.074,1.3.633.633,0,0,1-1.139-.046,6.4,6.4,0,0,1-.047-1.253q-2.726,0-5.454,0a6.3,6.3,0,0,1-.049,1.254.637.637,0,0,1-1.141.049,4.949,4.949,0,0,1-.071-1.3c-1.067.1-2.387-.313-3.221.565m1.9,5.534a.837.837,0,1,0,1.073,1.04.843.843,0,0,0-1.073-1.04m3.308.019a.838.838,0,1,0,1.157.873.843.843,0,0,0-1.157-.873m3.32.014a.837.837,0,1,0,1.193.7.846.846,0,0,0-1.193-.7m3.44-.031A.837.837,0,1,0,21.3,16.823a.842.842,0,0,0-1.075-1.043M10.189,19.123a.837.837,0,1,0,1.05,1.017.843.843,0,0,0-1.05-1.017m10.069,0a.836.836,0,1,0,1.053,1.012.841.841,0,0,0-1.053-1.012m-6.933.1a.836.836,0,1,0,1.29.59.843.843,0,0,0-1.29-.59m3.424-.041a.836.836,0,1,0,1.224.64A.843.843,0,0,0,16.749,19.188Z" transform="translate(0)" fill="#666"/>
-</g>
+const calender = `<svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.41667 1V2.75M12.5833 1V2.75M1.5 13.25V4.5C1.5 4.03587 1.68437 3.59075 2.01256 3.26256C2.34075 2.93437 2.78587 2.75 3.25 2.75H13.75C14.2141 2.75 14.6592 2.93437 14.9874 3.26256C15.3156 3.59075 15.5 4.03587 15.5 4.5V13.25M1.5 13.25C1.5 13.7141 1.68437 14.1592 2.01256 14.4874C2.34075 14.8156 2.78587 15 3.25 15H13.75C14.2141 15 14.6592 14.8156 14.9874 14.4874C15.3156 14.1592 15.5 13.7141 15.5 13.25M1.5 13.25V7.41667C1.5 6.95254 1.68437 6.50742 2.01256 6.17923C2.34075 5.85104 2.78587 5.66667 3.25 5.66667H13.75C14.2141 5.66667 14.6592 5.85104 14.9874 6.17923C15.3156 6.50742 15.5 6.95254 15.5 7.41667V13.25M8.5 8.58333H8.50622V8.58956H8.5V8.58333ZM8.5 10.3333H8.50622V10.3396H8.5V10.3333ZM8.5 12.0833H8.50622V12.0896H8.5V12.0833ZM6.75 10.3333H6.75622V10.3396H6.75V10.3333ZM6.75 12.0833H6.75622V12.0896H6.75V12.0833ZM5 10.3333H5.00622V10.3396H5V10.3333ZM5 12.0833H5.00622V12.0896H5V12.0833ZM10.25 8.58333H10.2562V8.58956H10.25V8.58333ZM10.25 10.3333H10.2562V10.3396H10.25V10.3333ZM10.25 12.0833H10.2562V12.0896H10.25V12.0833ZM12 8.58333H12.0062V8.58956H12V8.58333ZM12 10.3333H12.0062V10.3396H12V10.3333Z" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
-const clock = `<svg id="_000000ff" data-name="#000000ff" xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.129" viewBox="0 0 18.129 18.129">
-<path id="Path_19965" data-name="Path 19965" d="M8.8,0h.5a9.077,9.077,0,0,1,8.833,8.8v.529a9.065,9.065,0,0,1-3.422,6.828,9,9,0,0,1-3.3,1.667,9.33,9.33,0,0,1-2.107.306H8.834A9.085,9.085,0,0,1,0,9.331V8.8A9.077,9.077,0,0,1,8.8,0M8.745,3.322a.652.652,0,0,0-.328.574q0,2.584,0,5.168a.658.658,0,0,0,.264.523q1.605,1.282,3.209,2.566a.646.646,0,0,0,.991-.785,1.1,1.1,0,0,0-.347-.358c-.94-.75-1.877-1.5-2.82-2.252-.007-1.621,0-3.241,0-4.862a.648.648,0,0,0-.967-.574Z" fill="#666"/>
+const clock = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6706_46385)">
+<path d="M14.6667 8.00004C14.6667 11.68 11.68 14.6667 8.00001 14.6667C4.32001 14.6667 1.33334 11.68 1.33334 8.00004C1.33334 4.32004 4.32001 1.33337 8.00001 1.33337C11.68 1.33337 14.6667 4.32004 14.6667 8.00004Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10.4733 10.12L8.40666 8.88671C8.04666 8.67338 7.75333 8.16005 7.75333 7.74005V5.00671" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_6706_46385">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+`;
+const back = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 19.5L7.5 12L15 4.5" stroke="#191C1F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;

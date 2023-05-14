@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Pressable,
+  Dimensions,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import IconButton from "../../../components/IconButton";
@@ -18,6 +20,7 @@ import {
   allTimeConverter,
   changeTime,
   convertDate,
+  dateConverter,
   dateDifference,
 } from "../../../action";
 import {
@@ -29,6 +32,8 @@ import { useSelector } from "react-redux";
 import { ActivityIndicator } from "react-native-paper";
 import { Color } from "../../../assets/colors";
 import { socket } from "../../../Class/socket";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+const { width, height } = Dimensions.get("window");
 
 export default function AppointmentForm({ navigation, route }) {
   const [image, setImage] = React.useState();
@@ -53,6 +58,8 @@ export default function AppointmentForm({ navigation, route }) {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const backgroundColor = colors.getBackgroundColor();
+  const inset = useSafeAreaInsets();
+  const [updateDate,setUpdateDate]=useState()
 
   const validate = () => {
     setDateError("");
@@ -62,7 +69,7 @@ export default function AppointmentForm({ navigation, route }) {
       setDateError("Date is required");
       return;
     }
-    if (!FromTime || !ToTime) {
+    if (!FromTime || !ToTime||!updateDate) {
       setFromTimeError("Time is required");
       return;
     }
@@ -74,7 +81,6 @@ export default function AppointmentForm({ navigation, route }) {
       Alert.alert("Opps!", "Invalid Authentication");
       return;
     }
-    
 
     if (data.user) {
       setLoader(true);
@@ -86,15 +92,22 @@ export default function AppointmentForm({ navigation, route }) {
         ToTime,
         Title,
         Description,
-        data.userId
+        data.userId,
+        updateDate
       )
         .then((res) => {
           console.warn("Appointment created");
           setLoader(false);
-          socket.emit("notificationSend",{
-            receiverId:res.data?.receiverId
-          })
-          navigation.navigate("VendorAppointmentList")
+          socket.emit("notificationSend", {
+            receiverId: res.data?.receiverId,
+          });
+          console.log(res.data.appointment)
+          navigation.navigate("Search")
+          setTimeout(()=>{
+            navigation.navigate("VendorAppointmentListDetails",{
+              data:res.data.appointment
+            });
+          },10)
         })
         .catch((err) => {
           setLoader(false);
@@ -102,16 +115,27 @@ export default function AppointmentForm({ navigation, route }) {
         });
       return;
     }
-    setLoader(true)
-    createOfflineAppointment(user.token,vendor.service.id,
-      date,FromTime,ToTime,Title,Description,data.id).then(res=>{
-        console.warn("Appointment created")
-        setLoader(false)
-        navigation.navigate("VendorAppointmentList")
-      }).catch(err=>{
-        setLoader(false)
-        console.warn(err.response.data.msg)
+    setLoader(true);
+    createOfflineAppointment(
+      user.token,
+      vendor.service.id,
+      date,
+      FromTime,
+      ToTime,
+      Title,
+      Description,
+      data.id,
+      updateDate
+    )
+      .then((res) => {
+        console.warn("Appointment created");
+        setLoader(false);
+        navigation.navigate("VendorAppointmentList");
       })
+      .catch((err) => {
+        setLoader(false);
+        console.warn(err.response.data.msg);
+      });
   };
   if (Loader) {
     return (
@@ -120,8 +144,7 @@ export default function AppointmentForm({ navigation, route }) {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-        }}
-      >
+        }}>
         <ActivityIndicator size={"small"} color={backgroundColor} />
       </View>
     );
@@ -129,91 +152,91 @@ export default function AppointmentForm({ navigation, route }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, paddingTop: inset?.top }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-    >
-      <ScrollView>
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Pressable onPress={()=>{
+          navigation.goBack()
+        }}
+          style={{
+            position: "absolute",
+            top: 12,
+            zIndex:100,
+            left:20,
+          }}>
+          <SvgXml xml={back} />
+        </Pressable>
         <View
           style={{
             paddingHorizontal: 20,
-            paddingVertical: 20,
-            flexDirection: "row",
-          }}
-        >
+            marginTop: 12,
+            alignItems: "center",
+          }}>
           <View
             style={{
               borderWidth: 0.5,
               borderColor: "#707070",
-              width: 60,
-              height: 60,
-              borderRadius: 30,
+              width: 100,
+              height: 100,
+              borderRadius: 50,
               justifyContent: "center",
               alignItems: "center",
               overflow: "hidden",
-            }}
-          >
+            }}>
             {data && data.user && data.user.profilePhoto ? (
               <Image
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 100,
+                  height: 100,
                 }}
                 source={{ uri: data.user.profilePhoto }}
               />
             ) : data && data.profilePhoto ? (
               <Image
                 style={{
-                  width: 60,
-                  height: 60,
+                  width: 100,
+                  height: 100,
                 }}
                 source={{ uri: data.profilePhoto }}
               />
             ) : (
-              <FontAwesome name="user" size={45} color="black" />
+              <FontAwesome name="user" size={80} color="black" />
             )}
           </View>
           <View
             style={{
-              marginLeft: 20,
-              justifyContent: "center",
-            }}
-          >
+              marginTop: 20,
+              alignItems: "center",
+            }}>
             <Text
               style={{
-                fontSize: 16,
-                fontFamily: "Poppins-Medium",
-                lineHeight: 18,
-              }}
-            >
-              {data && data.user
-                ? `${data.user.name}`
-                : data.name}
+                fontSize: 24,
+                fontWeight: "400",
+              }}>
+              {data && data.user ? `${data.user.name}` : data.name}
             </Text>
             <Text
               style={{
                 fontSize: 12,
-                lineHeight: 18,
-              }}
-            >
-              {data && data.user
-                ? `@${data.user.name.toLowerCase()}`
-                : `${data.name.toLowerCase()}`}
+                fontWeight: "400",
+                color: "#767676",
+                marginTop: 10,
+              }}>
+              {`${data?.user?.gender.toUpperCase()}`}
             </Text>
           </View>
         </View>
         <View
           style={{
             paddingHorizontal: 20,
-            paddingVertical: 10,
-          }}
-        >
+            marginTop: 36,
+          }}>
           <Text
             style={{
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
-            }}
-          >
+              fontSize: 16,
+              fontWeight: "400",
+            }}>
             Select date
           </Text>
           <IconButton
@@ -221,10 +244,10 @@ export default function AppointmentForm({ navigation, route }) {
               setDateVisible(!DateVisible);
             }}
             style={{
-              width: 150,
-              marginVertical: 10,
+              marginTop: 12,
+              color: "#767676",
             }}
-            title={date ? date : "YYYY-MM-DD"}
+            title={date ? date : "yyyy-mm-dd"}
             Icon={() => <SvgXml xml={calender} height="20" width="20" />}
           />
           <DateTimePickerModal
@@ -237,7 +260,7 @@ export default function AppointmentForm({ navigation, route }) {
                 setDateError("Please select upcoming date");
                 return;
               }
-              setDate(convertDate(e));
+              setDate(dateConverter(e));
               //console.log(convertDate(e))
               setDateVisible(!DateVisible);
             }}
@@ -249,18 +272,16 @@ export default function AppointmentForm({ navigation, route }) {
             <Text
               style={{
                 color: "red",
-              }}
-            >
+              }}>
               {DateError}
             </Text>
           )}
           <Text
             style={{
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
-              marginVertical: 10,
-            }}
-          >
+              fontSize: 16,
+              fontWeight: "400",
+              marginTop: 24,
+            }}>
             Select time
           </Text>
           <View
@@ -268,18 +289,18 @@ export default function AppointmentForm({ navigation, route }) {
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center",
-            }}
-          >
+              marginTop: 12,
+            }}>
             <IconButton
               onPress={() => {
                 setFromTimeVisible(!FromTimeVisible);
               }}
               style={{
-                width: 150,
-                justifyContent: "space-between",
+                width: width / 2 - 42,
+                justifyContent: "flex-start",
               }}
               title={FromTime ? changeTime(FromTime) : "--:-- --"}
-              Icon={() => <SvgXml xml={calender} height="20" width="20" />}
+              LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
               date={new Date()}
@@ -296,6 +317,7 @@ export default function AppointmentForm({ navigation, route }) {
                   return;
                 }
                 setFromTime(allTimeConverter(e));
+               
                 setFromTimeVisible(!FromTimeVisible);
               }}
               onCancel={() => {
@@ -305,11 +327,11 @@ export default function AppointmentForm({ navigation, route }) {
 
             <Text
               style={{
-                fontSize: 14,
-                fontFamily: "Poppins-Medium",
-                marginHorizontal: 20,
-              }}
-            >
+                fontSize: 16,
+                fontWeight: "400",
+                marginHorizontal: 12,
+                width: 20,
+              }}>
               To
             </Text>
             <IconButton
@@ -317,11 +339,11 @@ export default function AppointmentForm({ navigation, route }) {
                 setToTimeVisible(!ToTimeVisible);
               }}
               style={{
-                width: 150,
-                justifyContent: "space-between",
+                width: width / 2 - 42,
+                justifyContent: "flex-start",
               }}
               title={ToTime ? changeTime(ToTime) : "--:-- --"}
-              Icon={() => <SvgXml xml={calender} height="20" width="20" />}
+              LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
               date={new Date()}
@@ -353,6 +375,7 @@ export default function AppointmentForm({ navigation, route }) {
                   );
                   return;
                 }
+                setUpdateDate(e)
                 setToTime(allTimeConverter(e));
                 setToTimeVisible(!ToTimeVisible);
               }}
@@ -366,21 +389,34 @@ export default function AppointmentForm({ navigation, route }) {
               style={{
                 color: "red",
                 marginTop: 5,
-              }}
-            >
+              }}>
               {FromTimeError}
             </Text>
           )}
-          <Text
+          <View
             style={{
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
-              marginVertical: 10,
-              marginTop: 20,
-            }}
-          >
-            Title
-          </Text>
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 24,
+              alignItems: "center",
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+              }}>
+              Subject
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "#767676",
+              }}>
+              Max 50 character
+            </Text>
+          </View>
+
           <Input
             value={Title}
             onChange={(e) => {
@@ -389,20 +425,37 @@ export default function AppointmentForm({ navigation, route }) {
             style={{
               marginHorizontal: 0,
               borderWidth: 1,
+              marginTop: 12,
             }}
-            placeholder={""}
+            placeholder={"Subject"}
           />
-          <Text
+          <View
             style={{
-              fontSize: 14,
-              fontFamily: "Poppins-Medium",
-              marginVertical: 10,
-              marginTop: 20,
-            }}
-          >
-            Describe
-          </Text>
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 24,
+              alignItems: "center",
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+              }}>
+              Describe
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "#767676",
+              }}>
+              Max 1000 character
+            </Text>
+          </View>
           <TextArea
+            style={{
+              marginTop: 12,
+            }}
             value={Description}
             onChange={(e) => {
               setDescription(e);
@@ -412,45 +465,43 @@ export default function AppointmentForm({ navigation, route }) {
         </View>
         <View
           style={{
-            flexDirection: "row",
+            
             marginHorizontal: 20,
-            marginVertical: 30,
-            justifyContent: "flex-end",
-          }}
-        >
+            marginTop: 22,
+            marginBottom:32
+          }}>
           <IconButton
             onPress={validate}
             style={{
               backgroundColor: "#4ADE80",
               color: "white",
             }}
-            title={"Send Appointment Request"}
+            title={"Create Now"}
           />
           <View style={{ width: 20 }} />
-          <IconButton
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              width: 120,
-              borderColor: "#E22424",
-              color: "#E22424",
-              borderWidth: 1,
-            }}
-            title={"Cancel"}
-          />
+          
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
-const calender = `<svg xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.036" viewBox="0 0 18.129 18.036">
-<g id="_000000ff" data-name="#000000ff" transform="translate(-6.401 -6.715)">
-  <path id="Path_19748" data-name="Path 19748" d="M11.523,7.079a.642.642,0,0,1,1.182.055,8.463,8.463,0,0,1,.033,1.215q2.726,0,5.454,0a8.556,8.556,0,0,1,.031-1.205A.639.639,0,0,1,19.411,7.1a7.548,7.548,0,0,1,.039,1.251c.755.017,1.511-.035,2.264.028A3.182,3.182,0,0,1,24.459,11a23.1,23.1,0,0,1,.027,3.149c0,2.515.011,5.029-.006,7.545a3.161,3.161,0,0,1-3.194,3.053q-5.823,0-11.648,0a3.183,3.183,0,0,1-3.2-3.345c.006-2.365,0-4.73,0-7.1,0-1.057-.1-2.118,0-3.174a3.162,3.162,0,0,1,2-2.559,9.512,9.512,0,0,1,3.034-.225,6.984,6.984,0,0,1,.044-1.27M8.256,10.244c-.644.606-.522,1.541-.518,2.338H23.191c.006-.8.121-1.734-.521-2.34-.834-.875-2.151-.469-3.218-.563a4.715,4.715,0,0,1-.074,1.3.633.633,0,0,1-1.139-.046,6.4,6.4,0,0,1-.047-1.253q-2.726,0-5.454,0a6.3,6.3,0,0,1-.049,1.254.637.637,0,0,1-1.141.049,4.949,4.949,0,0,1-.071-1.3c-1.067.1-2.387-.313-3.221.565m1.9,5.534a.837.837,0,1,0,1.073,1.04.843.843,0,0,0-1.073-1.04m3.308.019a.838.838,0,1,0,1.157.873.843.843,0,0,0-1.157-.873m3.32.014a.837.837,0,1,0,1.193.7.846.846,0,0,0-1.193-.7m3.44-.031A.837.837,0,1,0,21.3,16.823a.842.842,0,0,0-1.075-1.043M10.189,19.123a.837.837,0,1,0,1.05,1.017.843.843,0,0,0-1.05-1.017m10.069,0a.836.836,0,1,0,1.053,1.012.841.841,0,0,0-1.053-1.012m-6.933.1a.836.836,0,1,0,1.29.59.843.843,0,0,0-1.29-.59m3.424-.041a.836.836,0,1,0,1.224.64A.843.843,0,0,0,16.749,19.188Z" transform="translate(0)" fill="#666"/>
-</g>
+const calender = `<svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.41667 1V2.75M12.5833 1V2.75M1.5 13.25V4.5C1.5 4.03587 1.68437 3.59075 2.01256 3.26256C2.34075 2.93437 2.78587 2.75 3.25 2.75H13.75C14.2141 2.75 14.6592 2.93437 14.9874 3.26256C15.3156 3.59075 15.5 4.03587 15.5 4.5V13.25M1.5 13.25C1.5 13.7141 1.68437 14.1592 2.01256 14.4874C2.34075 14.8156 2.78587 15 3.25 15H13.75C14.2141 15 14.6592 14.8156 14.9874 14.4874C15.3156 14.1592 15.5 13.7141 15.5 13.25M1.5 13.25V7.41667C1.5 6.95254 1.68437 6.50742 2.01256 6.17923C2.34075 5.85104 2.78587 5.66667 3.25 5.66667H13.75C14.2141 5.66667 14.6592 5.85104 14.9874 6.17923C15.3156 6.50742 15.5 6.95254 15.5 7.41667V13.25M8.5 8.58333H8.50622V8.58956H8.5V8.58333ZM8.5 10.3333H8.50622V10.3396H8.5V10.3333ZM8.5 12.0833H8.50622V12.0896H8.5V12.0833ZM6.75 10.3333H6.75622V10.3396H6.75V10.3333ZM6.75 12.0833H6.75622V12.0896H6.75V12.0833ZM5 10.3333H5.00622V10.3396H5V10.3333ZM5 12.0833H5.00622V12.0896H5V12.0833ZM10.25 8.58333H10.2562V8.58956H10.25V8.58333ZM10.25 10.3333H10.2562V10.3396H10.25V10.3333ZM10.25 12.0833H10.2562V12.0896H10.25V12.0833ZM12 8.58333H12.0062V8.58956H12V8.58333ZM12 10.3333H12.0062V10.3396H12V10.3333Z" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
-const clock = `<svg id="_000000ff" data-name="#000000ff" xmlns="http://www.w3.org/2000/svg" width="18.129" height="18.129" viewBox="0 0 18.129 18.129">
-<path id="Path_19965" data-name="Path 19965" d="M8.8,0h.5a9.077,9.077,0,0,1,8.833,8.8v.529a9.065,9.065,0,0,1-3.422,6.828,9,9,0,0,1-3.3,1.667,9.33,9.33,0,0,1-2.107.306H8.834A9.085,9.085,0,0,1,0,9.331V8.8A9.077,9.077,0,0,1,8.8,0M8.745,3.322a.652.652,0,0,0-.328.574q0,2.584,0,5.168a.658.658,0,0,0,.264.523q1.605,1.282,3.209,2.566a.646.646,0,0,0,.991-.785,1.1,1.1,0,0,0-.347-.358c-.94-.75-1.877-1.5-2.82-2.252-.007-1.621,0-3.241,0-4.862a.648.648,0,0,0-.967-.574Z" fill="#666"/>
+const clock = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6706_46385)">
+<path d="M14.6667 8.00004C14.6667 11.68 11.68 14.6667 8.00001 14.6667C4.32001 14.6667 1.33334 11.68 1.33334 8.00004C1.33334 4.32004 4.32001 1.33337 8.00001 1.33337C11.68 1.33337 14.6667 4.32004 14.6667 8.00004Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10.4733 10.12L8.40666 8.88671C8.04666 8.67338 7.75333 8.16005 7.75333 7.74005V5.00671" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_6706_46385">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+`;
+const back = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 19.5L7.5 12L15 4.5" stroke="#191C1F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
