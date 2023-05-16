@@ -7,7 +7,7 @@ import { changeAppointment, deleteAppointment, getAppointmentById } from "../../
 import { useSelector } from "react-redux";
 import { Color } from "../../../assets/colors";
 import { ActivityIndicator } from "react-native-paper";
-import { changeTime } from "../../../action";
+import { changeTime, serverTimeToLocalDate } from "../../../action";
 import { SafeAreaView } from "moti";
 
 export default function UserAppointmentDetails({ navigation, route }) {
@@ -148,7 +148,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
               textAlign:"center",
               marginTop:12
             }}>
-            {data ? data.date : "Invalid"}
+            {data ? serverTimeToLocalDate(data.date) : "Invalid"}
             {"    "}
             {data ? changeTime(data.startTime) : "Invalid"}
             {" - "}

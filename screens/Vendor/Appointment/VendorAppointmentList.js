@@ -271,7 +271,7 @@ export const Cart = ({
             fontWeight:"400",
             color:"#767676"
           }}>
-          {diff==0?"Today":diff==1&&type=="UPCOMING"?"Tomorrow":diff==-1&&type=="PREVIOUS"?"Yesterday":serverTimeToLocalDate(date)}
+          {diff==-1?"Today":diff==0&&type=="UPCOMING"?"Tomorrow":diff==-2&&type=="PREVIOUS"?"Yesterday":serverTimeToLocalDate(date)}
 
           {"  "}
           {changeTime(startTime)}{" - "}

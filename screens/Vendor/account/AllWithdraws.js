@@ -15,6 +15,7 @@ import ActivityLoader from "../../../components/ActivityLoader";
 import { NoThing } from "./RecentTransaction";
 import { dateDifference } from "../../../action";
 import { allExporters } from "./expoters";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 
 export const AllWithdraws = () => {
@@ -39,6 +40,7 @@ export const AllWithdraws = () => {
         });
     }
   }, [isFocused]);
+  const inset=useSafeAreaInsets()
 
   useEffect(() => {
     if (filterDate) {
@@ -100,6 +102,7 @@ export const AllWithdraws = () => {
       style={{
         flex: 1,
         paddingHorizontal: 20,
+        paddingTop:inset?.top
       }}>
       <ScrollView
         onScroll={(e) => {

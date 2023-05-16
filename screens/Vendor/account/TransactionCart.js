@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, View,Text } from "react-native";
 import { convertDate, dateConverter, serverTimeToLocal, serverTimeToLocalDate } from "../../../action";
 import Avatar from "../../../components/Avatar";
-import { exporters } from "./expoters";
 import { types } from "./types";
 
 export default function TransactionCart({data}) {
@@ -21,8 +20,10 @@ export default function TransactionCart({data}) {
             <Text style={styles.smallText}>@{data&&`${data.user.username}`}</Text>
           </View>
         </View>
-        <View>
-          <Text style={styles.textLarge}>{data&&`${data.amount}`}</Text>
+        <View style={{
+          alignItems:"flex-end"
+        }}>
+          {data?.type=="STARTING"?(<Text style={styles.textLarge}>{data&&`${data.offerPrice-(data.offerPrice*data.dutyFee)}`}৳</Text>):(<Text style={styles.textLarge}>{data&&`${data.amount-(data.amount*data.dutyFee)}`}৳</Text>)}
           <Text style={styles.smallText}>{data&&exporters(data.status)}</Text>
         </View>
       </View>
@@ -54,3 +55,27 @@ const styles=StyleSheet.create({
     paddingVertical:5
   }
 })
+const exporters = (key) => {
+  switch (key) {
+    case "WAITING_FOR_ACCEPT":
+      return "Wait for accept order";
+    case "ACCEPTED":
+      return "Waiting for payment";
+    case "WAITING_FOR_PAYMENT":
+      return "Waiting for payment";
+    case "PROCESSING":
+      return "Processing";
+    case "DELIVERED":
+      return "Pending";
+    case "REFUNDED":
+      return "Refunded";
+    case "CANCELLED":
+      return "Refunded";
+    case "COMPLETED":
+      return "Paid";
+    case "PENDING":
+      return "Pending";
+    default:
+      return "Unknown";
+  }
+};

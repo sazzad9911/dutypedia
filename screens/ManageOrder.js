@@ -36,7 +36,6 @@ import {
   paidIcon,
   completeIcon,
 } from "../assets/icon";
-import NewTabe from "./Vendor/components/NewTabe";
 import { OrderCart } from "./Vendor/Order";
 import { useIsFocused } from "@react-navigation/native";
 import {

@@ -32,7 +32,8 @@ export default function FixedBackHeader({ Yoffset, navigation,style,scrollSize,c
        top:0,
        justifyContent:"center",
        alignItems:"center",
-       zIndex:100 
+       zIndex:100 ,
+      
     },style]}>
       <StatusBar
         hidden={false}

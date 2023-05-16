@@ -13,6 +13,7 @@ import { getAllTransactions } from "../../../Class/account";
 import { dateDifference } from "../../../action";
 import ActivityLoader from "../../../components/ActivityLoader";
 import { NoThing } from "./RecentTransaction";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 
 export default function AllTransactions() {
@@ -37,6 +38,7 @@ export default function AllTransactions() {
   const vendor=useSelector(state=>state.vendor)
   const [filterDate,setFilterDate]=useState()
   const [filterTypes,setFilterTypes]=useState()
+  const inset=useSafeAreaInsets()
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -50,17 +52,6 @@ export default function AllTransactions() {
     setFilterTypes()
     hideDatePicker();
   };
-
-  // React.useEffect(() => {
-  //   if (isFocused) {
-  //     dispatch(setHideBottomBar(true));
-  //   } else {
-  //     //dispatch(setHideBottomBar(false));
-  //   }
-  //   setTimeout(() => {
-  //     dispatch(setHideBottomBar(true));
-  //   }, 50);
-  // }, [isFocused]);
   useEffect(()=>{
     if(user&&vendor){
       getAllTransactions(user.token,vendor.service.id).then(res=>{
@@ -89,10 +80,10 @@ export default function AllTransactions() {
       setData(allData)
     }
   },[filterDate,filterTypes])
-  
+  //console.log(data[2])
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 20 }}>
+    <View style={{ flex: 1, paddingHorizontal: 20,paddingTop:inset?.top }}>
       <ScrollView
         style={{ flexGrow: 1 }}
         onScroll={(e) => {

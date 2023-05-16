@@ -18,6 +18,7 @@ import RecentWithdraw from "./RecentWithdraw";
 import IconButton from "../../../components/IconButton";
 import { getAccountInfo } from "../../../Class/account";
 import { getVerificationDetails } from "../../../Class/service";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 
 export default function AccountBalance({ navigation }) {
@@ -28,6 +29,7 @@ export default function AccountBalance({ navigation }) {
   const vendor = useSelector((state) => state.vendor);
   const [data, setData] = useState();
   const [verification, setVerification] = useState();
+  const inset=useSafeAreaInsets()
   //console.log(vendor.service.verified)
 
   // React.useEffect(() => {
@@ -52,8 +54,8 @@ export default function AccountBalance({ navigation }) {
     });
   }, [isFocused]);
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: 15, marginTop: StatusBar.currentHeight }} />
+    <View style={{ flex: 1,paddingTop:inset?.top }}>
+     
       <ScrollView showsVerticalScrollIndicator={false}>
         
         <MasterCart

@@ -79,9 +79,7 @@ export default function MemberAppointment({ navigation, route }) {
             backgroundColor: "#767676",
             height: 2,
           },
-          tabBarStyle:{
-            marginHorizontal:20
-          }
+          
         }}>
         {list.map((doc, i) => (
           <Tab.Screen

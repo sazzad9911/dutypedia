@@ -317,7 +317,7 @@ const OrderDetails = ({ navigation, route }) => {
       Alert.alert(err.message);
     }
   };
-  //console.log(Loader)
+  //console.log(data?.agreement)
   
   if (Loader || !data) {
     return <ReceiptSkeleton />;

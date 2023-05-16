@@ -556,6 +556,7 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
   return (
     <Pressable
       onPress={() => {
+        
         if (onPress) {
           onPress();
           dispatch({ type: "SET_LIST_SELECTION", playload: [] });
@@ -655,18 +656,18 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
                   numberOfLines={1}
                   style={{
                     color:
-                      data.paid && data.status != "REFUNDED"
+                      data.paid && data.status != "CANCELLED"
                         ? null
-                        : data.paid && data.status == "REFUNDED"
+                        : data.paid && data.status == "CANCELLED"
                         ? "#EC2700"
                         : "#7566FF",
                     fontSize: 12,
                     fontWeight: "400",
                   }}>
                   (
-                  {data && data.paid && data.status != "REFUNDED"
+                  {data && data.paid && data.status != "CANCELLED"
                     ? "Paid"
-                    : data && data.paid && data.status == "REFUNDED"
+                    : data && data.paid && data.status == "CANCELLED"
                     ? "Refunded"
                     : "Due"}
                   )
@@ -683,7 +684,7 @@ export const OrderCart = ({ data, onPress, onSelect, user, open }) => {
               paddingHorizontal: 8,
               borderRadius: 30,
               backgroundColor:
-                data?.status == "REFUNDED" ? "#EC2700" : "#4ADE80",
+               data?.paid&& data?.status == "CANCELLED" ? "#EC2700" : "#4ADE80",
               marginLeft: 30,
             }}>
             {type == "SUBS" ? (

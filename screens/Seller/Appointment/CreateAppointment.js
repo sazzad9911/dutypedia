@@ -32,7 +32,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function CreateAppointment({ navigation, route }) {
   const [image, setImage] = React.useState();
-  const [date, setDate] = React.useState();
+  const [date, setDate] = React.useState(convertDate(new Date()));
   const [DateError, setDateError] = React.useState();
   const [DateVisible, setDateVisible] = React.useState();
   const [FromTime, setFromTime] = React.useState();
@@ -288,7 +288,7 @@ export default function CreateAppointment({ navigation, route }) {
               LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
-              date={new Date()}
+              date={new Date(date)}
               isVisible={FromTimeVisible}
               mode="time"
               onConfirm={(e) => {
@@ -331,7 +331,7 @@ export default function CreateAppointment({ navigation, route }) {
               LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
-              date={new Date()}
+              date={new Date(date)}
               isVisible={ToTimeVisible}
               mode="time"
               onConfirm={(e) => {

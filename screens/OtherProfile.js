@@ -1539,27 +1539,10 @@ const OtherProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      {/* {Platform.OS=="ios"&&(
-        <View style={{
-          position:"absolute",
-          left:0,
-          top:0,
-          height:24,
-          backgroundColor:scrollEnabled? primaryColor:"transparent",
-          zIndex:600,
-          width:width
-        }}/>
-      )} */}
-      {/* <NewBottomBar {...props}/> */}
-
       
-      {/* {index == -1 && (
-        <FixedBackHeader
-          navigation={navigation}
-          Yoffset={offset ? offset : 0}
-        />
-      )} */}
-      <FixedBackHeader
+      <FixedBackHeader style={{
+        marginTop:-15
+      }}
           navigation={navigation}
           Yoffset={offset ? offset : 0}
         />

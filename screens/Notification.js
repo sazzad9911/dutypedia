@@ -55,6 +55,9 @@ import UserOrderDetails from "./Seller/UserOrderDetails";
 import NotificationHeader from "../components/NotificationHeader";
 import ReviewScreen from "./Vendor/review/ReviewScreen";
 import VendorOrderDetails from "./Vendor/VendorOrderDetails";
+import AccountBalance from "./Vendor/account/AccountBalance";
+import AllTransactions from "./Vendor/account/AllTransactions";
+import { AllWithdraws } from "./Vendor/account/AllWithdraws";
 
 const Stack = createNativeStackNavigator();
 const formatOrderNotificationMessage = (item) => {
@@ -249,6 +252,36 @@ const Notification = ({ navigation, route }) => {
         }}
         component={ReviewScreen}
       />
+      <Stack.Screen
+        name="VendorAccountBalance"
+        options={{
+          // header: (props) => (
+          //   <AccountHeader title="Account Balance" {...props} />
+          // ),
+          headerShown: false,
+        }}
+        component={AccountBalance}
+      />
+      <Stack.Screen
+        name="AllTransactions"
+        options={{
+          // header: (props) => (
+          //   <AccountHeader title="All transaction" {...props} />
+          // ),
+          headerShown: false,
+        }}
+        component={AllTransactions}
+      />
+      <Stack.Screen
+        name="AllWithdraws"
+        options={{
+          // header: (props) => (
+          //   <AccountHeader title="All withdraw" {...props} />
+          // ),
+          headerShown: false,
+        }}
+        component={AllWithdraws}
+      />
     </Stack.Navigator>
   );
 };
@@ -297,7 +330,10 @@ const NotificationCart = ({
   return (
     <Pressable
       onPress={() => {
-        
+        if(data.notificationType=="VERIFICATION_REJECTED"||data.notificationType=="VERIFICATION_ACCEPTED"){
+          navigation.navigate("VendorAccountBalance");
+          return;
+        }
         if(data.notificationType=="NEW_APPOINTMENT"){
           navigation.navigate(vendor?"VendorAppointmentListDetails":"UserAppointmentDetails",{appointmentId:data?.entityId});
           return;

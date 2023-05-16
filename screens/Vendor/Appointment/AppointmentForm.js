@@ -37,7 +37,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function AppointmentForm({ navigation, route }) {
   const [image, setImage] = React.useState();
-  const [date, setDate] = React.useState();
+  const [date, setDate] = React.useState(convertDate(new Date()));
   const [DateError, setDateError] = React.useState();
   const [DateVisible, setDateVisible] = React.useState();
   const [FromTime, setFromTime] = React.useState();
@@ -92,7 +92,7 @@ export default function AppointmentForm({ navigation, route }) {
         ToTime,
         Title,
         Description,
-        data.userId,
+        data.user.id,
         updateDate
       )
         .then((res) => {
@@ -101,7 +101,7 @@ export default function AppointmentForm({ navigation, route }) {
           socket.emit("notificationSend", {
             receiverId: res.data?.receiverId,
           });
-          console.log(res.data.appointment)
+          //console.log(res.data.appointment)
           navigation.navigate("Search")
           setTimeout(()=>{
             navigation.navigate("VendorAppointmentListDetails",{
@@ -303,7 +303,7 @@ export default function AppointmentForm({ navigation, route }) {
               LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
-              date={new Date()}
+              date={new Date(date)}
               isVisible={FromTimeVisible}
               mode="time"
               onConfirm={(e) => {
@@ -336,6 +336,7 @@ export default function AppointmentForm({ navigation, route }) {
             </Text>
             <IconButton
               onPress={() => {
+                
                 setToTimeVisible(!ToTimeVisible);
               }}
               style={{
@@ -346,7 +347,7 @@ export default function AppointmentForm({ navigation, route }) {
               LeftIcon={() => <SvgXml xml={clock} height="20" width="20" />}
             />
             <DateTimePickerModal
-              date={new Date()}
+              date={new Date(date)}
               isVisible={ToTimeVisible}
               mode="time"
               onConfirm={(e) => {
@@ -375,6 +376,7 @@ export default function AppointmentForm({ navigation, route }) {
                   );
                   return;
                 }
+                //console.log(e)
                 setUpdateDate(e)
                 setToTime(allTimeConverter(e));
                 setToTimeVisible(!ToTimeVisible);
