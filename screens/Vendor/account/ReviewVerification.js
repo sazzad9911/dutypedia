@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
-import { ScrollView, StatusBar, View,Text } from "react-native";
+import { ScrollView, StatusBar, View,Text, SafeAreaView } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../components/IconButton";
@@ -20,8 +20,8 @@ export default function ReviewVerification({navigation}) {
     }, 50);
   }, [isFocused]);
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: StatusBar.currentHeight }} />
+    <SafeAreaView style={{ flex: 1 }}>
+    
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -62,7 +62,7 @@ export default function ReviewVerification({navigation}) {
           }} title={"Cancel"}/>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 const vectorImage = `<svg width="337" height="229" viewBox="0 0 337 229" fill="none" xmlns="http://www.w3.org/2000/svg">

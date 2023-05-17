@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -63,12 +63,13 @@ const BottomBar = (props) => {
   }, []);
   React.useEffect(() => {
     //console.log(props.state.index);
-    if (props.state.index) {
-      press(props.state.index);
-      setRoute(props.state.index);
-      
-    }
+
+    setRoute(props.state.index);
   }, [props?.state?.index]);
+  useEffect(() => {
+    press(route);
+  }, [route]);
+
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);

@@ -34,6 +34,7 @@ import ActivityLoader from "../components/ActivityLoader";
 import Avatar from "../components/Profile/Avatar";
 import SquireCart from "../components/Profile/SquireCart";
 import FlatCart from "../components/Profile/FlatCart";
+import { allTimeConverter, dateDifference, serverTimeToLocalDate, timeConverter } from "../action";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -47,6 +48,7 @@ export default function UserProfile({ navigation, route }) {
   const ref = React.useRef();
   const vendor = useSelector((state) => state.vendor);
   const inset = useSafeAreaInsets();
+  //console.log(user)
   const ViewBox = ({ Icon, title, onPress }) => {
     return (
       <TouchableOpacity
@@ -130,7 +132,10 @@ export default function UserProfile({ navigation, route }) {
               fontWeight: "400",
               lineHeight: 14,
             }}>
-            Last seen today 12:00 pm
+            Last seen{" "}
+            {dateDifference(user?.user?.lastSeen,new Date())==0?"today":serverTimeToLocalDate(user?.user?.lastSeen)}
+            {" "}
+            {timeConverter(user?.user?.lastSeen)}
           </Text>
         </View>
         <View
@@ -181,38 +186,39 @@ export default function UserProfile({ navigation, route }) {
         <View style={styles.subContainer}>
           <FlatCart
             onPress={() => {
-              navigation.navigate("Mobile");
+              //navigation.navigate("Mobile");
             }}
             style={{ paddingTop: 0 }}
             icon={call}
             title={"Phone"}
-            value={"Private"}
+            value={user?.user?.hidePhone?"Private":user?.user?.phone}
             type={"Private"}
             disableGo={true}
-            Private={true}
+            Private={user?.user?.hidePhone}
           />
           <FlatCart
             onPress={() => {
-              navigation.navigate("Email");
+              //navigation.navigate("Email");
             }}
             icon={email}
             title={"Email"}
-            value={user?.user?.email}
+            value={user?.user?.hideEmail?"Private":(user?.user?.email?user?.user?.email:"No email added")}
             type={"Private"}
             disableGo={true}
+            Private={user?.user?.hideEmail}
           />
           <FlatCart
             onPress={() => {
               //console.log(user?.user)
-              navigation.navigate("UserLocation");
+              //navigation.navigate("UserLocation");
             }}
             icon={location}
             title={"Address"}
-            value={"Add your phone number"}
+            value={user?.user?.hideAddress?"Private":user?.user?.address?`${user?.user?.address.division}, ${user?.user?.address.district}, ${user?.user?.address?.thana}${user?.user?.address.address?", ":""}${user?.user?.address.address?user?.user?.address.address:""}`:"No address added!"}
             type={"Private"}
             disableGo={true}
             style={{ borderBottomWidth: 0, paddingBottom: 0 }}
-            Private={true}
+            Private={user?.user?.hideAddress}
           />
         </View>
         <View style={[styles.subContainer, { marginBottom: 20 }]}>

@@ -1,26 +1,31 @@
 import { translate } from "@shopify/react-native-skia";
 import React from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 
 export default function AccountHeader({ navigation, title }) {
+  const inset = useSafeAreaInsets();
   return (
     <View
       style={{
         flexDirection: "row",
         justifyContent: "center",
         paddingHorizontal: 20,
-        paddingVertical: 10,
-        alignItems:"center",
-        marginTop:Platform.OS=="android"?25:0
+        alignItems: "center",
+        marginTop: Platform.OS == "android" ? 25 : 0,
+        paddingTop: inset?.top + 10,
+        paddingBottom:10,
       }}>
       <TouchableOpacity
         style={{
           position: "absolute",
           left: 20,
-          height:"100%",
-          
+          height: "100%",
+          top:inset?.top+10
         }}
         onPress={() => {
           navigation.goBack();

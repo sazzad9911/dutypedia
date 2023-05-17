@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -15,7 +15,7 @@ import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { styles } from "../create_dashboard/BusinessTitle";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { StatusBar } from "expo-status-bar";
 
@@ -25,6 +25,7 @@ export default function Location({navigation}) {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const isFocused=useIsFocused()
   const dispatch=useDispatch()
+  const user=useSelector(state=>state.user)
 
   const openMenu = () => setVisible(true);
 
@@ -41,6 +42,12 @@ export default function Location({navigation}) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  useEffect(()=>{
+    if(user){
+      setType(user?.user?.hideAddress?"Only me":"Public")
+      console.log(user?.user?.address)
+    }
+  },[user?.user?.address,user?.user?.address])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor="white"/>
@@ -87,7 +94,7 @@ export default function Location({navigation}) {
                 fontSize: 16,
                 marginLeft: 10,
               }}>
-              Bandar,narayanganj,dhaka Bandar, narayanganj, dhaka
+              {user?.user?.address?`${user?.user?.address.division}, ${user?.user?.address.district}, ${user?.user?.address?.thana}${user?.user?.address.address?", ":""}${user?.user?.address.address?user?.user?.address.address:""}`:"No address added!"}
             </Text>
           </View>
           <MenuItem

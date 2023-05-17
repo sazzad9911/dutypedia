@@ -107,9 +107,9 @@ const ChatScreen = (props) => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
   const ref = params?.ref;
-  const serviceId=params?.serviceId;
-  const vendor=useSelector(state=>state.vendor);
-  const [readOnly,setReadOnly]=useState(false)
+  const serviceId = params?.serviceId;
+  const vendor = useSelector((state) => state.vendor);
+  const [readOnly, setReadOnly] = useState(false);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -121,7 +121,6 @@ const ChatScreen = (props) => {
         dispatch(setHideBottomBar(true));
       }, 50);
       setTimeout(() => {
-        
         dispatch(setHideBottomBar(true));
       }, 150);
     } else {
@@ -137,7 +136,7 @@ const ChatScreen = (props) => {
         }
       });
       //console.log(username)
-     
+
       //console.log(user.user)
       //setMessages(data.messages);
       //setLastMessage(data.messages[data.messages.length-1])
@@ -145,7 +144,7 @@ const ChatScreen = (props) => {
   }, [data]);
   React.useEffect(() => {
     if (username && UserInfo && user) {
-      createConversation(user.token, username,serviceId)
+      createConversation(user.token, username, serviceId)
         .then((res) => {
           let arr = [];
           setId(res?.data?.conversation?.id);
@@ -158,8 +157,7 @@ const ChatScreen = (props) => {
             );
           });
           setMessages(arr.reverse());
-          setReadOnly(res.data.conversation.readOnly)
-          
+          setReadOnly(res.data.conversation.readOnly);
         })
         .catch((err) => {
           console.error(err.response.data.msg);
@@ -239,6 +237,63 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
   const RenderBubble = (props) => {
     const currentMessage = props?.item;
+    if (currentMessage?.image && currentMessage?.text) {
+      //console.log(currentMessage?.image)
+      let arr = currentMessage?.image.split("/");
+      let newArr = arr[arr.length - 1]?.split(".");
+      let type = newArr[newArr.length - 1];
+      let three = newArr[0].split("")?.slice(-3)?.join("");
+      return (
+        <Pressable
+          onPress={() => {
+            props.navigation.navigate("ChatImage", {
+              uri: currentMessage?.image,
+            });
+          }}
+          style={[
+            newStyles.imageBox,
+            {
+              alignSelf:
+                UserInfo?.id == currentMessage?.user?._id
+                  ? "flex-start"
+                  : "flex-end",
+              height: "auto" 
+            },
+          ]}>
+          <Image
+            style={newStyles.image}
+            source={{ uri: currentMessage.image }}
+          />
+          <View style={{ flexDirection: "row", paddingHorizontal: 8, flex: 1 }}>
+            <Text
+              numberOfLines={1}
+              style={[newStyles.dateText, { textAlign: "left", flex: 1 }]}>
+              {arr[arr.length - 1]}
+            </Text>
+            <Text style={newStyles.dateText}>
+              {three}.{type}{" "}
+            </Text>
+            <View style={{ width: 8 }} />
+            <Text style={newStyles.dateText}>
+              {dateDifference(new Date(), currentMessage.createdAt) == 0
+                ? timeConverter(currentMessage.createdAt)
+                : dateDifference(new Date(), currentMessage.createdAt) == 1
+                ? "Yesterday"
+                : serverTimeToLocal(currentMessage.createdAt)}
+            </Text>
+          </View>
+          {currentMessage && (
+            <Text
+              style={[
+                newStyles.text,
+                { marginHorizontal: 8, marginBottom: 3 },
+              ]}>
+              {currentMessage?.text}
+            </Text>
+          )}
+        </Pressable>
+      );
+    }
 
     if (currentMessage?.image) {
       //console.log(currentMessage?.image)
@@ -345,21 +400,29 @@ const ChatScreen = (props) => {
         keyExtractor={(item) => item._id.toString()}
         inverted
       />
-      {!readOnly&&(<BottomBar onSend={send} {...props} />)}
-      {readOnly&&(
-        <Text style={{
-          fontSize:16,
-          lineHeight:24,
-          fontWeight:"400",
-          color:"#4D4E4F",
-          marginHorizontal:20,
-          marginVertical:30
-        }}>Can’t reply here. If you have other inquiry check our <Text onPress={()=>{
-          props.navigation.navigate("SupportForm")
-        }} style={{
-          color:"#4ADE80",
-          fontWeight:"500"
-        }}>support link.</Text> </Text>
+      {!readOnly && <BottomBar onSend={send} {...props} />}
+      {readOnly && (
+        <Text
+          style={{
+            fontSize: 16,
+            lineHeight: 24,
+            fontWeight: "400",
+            color: "#4D4E4F",
+            marginHorizontal: 20,
+            marginVertical: 30,
+          }}>
+          Can’t reply here. If you have other inquiry check our{" "}
+          <Text
+            onPress={() => {
+              props.navigation.navigate("SupportForm");
+            }}
+            style={{
+              color: "#4ADE80",
+              fontWeight: "500",
+            }}>
+            support link.
+          </Text>{" "}
+        </Text>
       )}
     </KeyboardAvoidingView>
   );
@@ -439,17 +502,15 @@ const BottomBar = (props) => {
   return (
     <View style={styles.view}>
       {focused ? (
-        <Pressable style={{
-          paddingRight: 8,
-          paddingBottom: 12,
-        }}
+        <Pressable
+          style={{
+            paddingRight: 8,
+            paddingBottom: 12,
+          }}
           onPress={() => {
             setFocused(false);
           }}>
-          <SvgXml
-            
-            xml={com}
-          />
+          <SvgXml xml={com} />
         </Pressable>
       ) : (
         <Animated.View style={{ flexDirection: "row" }} entering={FadeIn}>

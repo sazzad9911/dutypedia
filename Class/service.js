@@ -1054,6 +1054,7 @@ export const replyReview = async (token, reviewId, text) => {
   return res;
 };
 export const submitVerificationIndividual = async (token, data) => {
+  //console.log(data)
   const res = await axios.post(
     `${url}/server/services/submit-verification-individual`,
     data,
@@ -1084,6 +1085,7 @@ export const getVerificationDetails = async (token, serviceId) => {
   return res;
 };
 export const saveBankDetails = async (token, data) => {
+  console.log(data)
   const res = await axios.post(`${url}/server/balance/add-bank`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });

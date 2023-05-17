@@ -1,21 +1,22 @@
 import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, Pressable, Text } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconButton from "../../components/IconButton";
 import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { styles } from "../create_dashboard/BusinessTitle";
 
-export default function Email({navigation}) {
+export default function Email({navigation,route}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [layoutHeight,setLayoutHeight]=useState(0)
   const [type, setType] = useState("Only me");
   const [visible, setVisible] = React.useState(false);
+  const user=useSelector(state=>state.user)?.user;
 
   const openMenu = () => setVisible(true);
 
@@ -32,6 +33,11 @@ export default function Email({navigation}) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  useEffect(()=>{
+    if(user){
+      setType(user.hideEmail?"Only me":"Public")
+    }
+  },[user?.hideEmail,user?.email])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor="white"/>
@@ -51,7 +57,7 @@ export default function Email({navigation}) {
             marginTop: 36,
           }}>
           <Pressable onPress={()=>{
-            navigation.navigate("EditEmail")
+            navigation.navigate("EditEmail",{user:user})
           }}>
             <Text
               style={{
@@ -79,7 +85,7 @@ export default function Email({navigation}) {
               fontSize: 20,
               flex: 1,
             }}>
-            easinarafat.aryan.bd.77.jp@gmail.com
+            {user?.email?user.email:"No email added"}
           </Text>
         </View>
         <View

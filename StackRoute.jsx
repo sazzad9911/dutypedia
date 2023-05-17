@@ -103,6 +103,7 @@ import SignUp_3 from "./screens/signup/SignUp_3";
 import Recovery from "./screens/signup/Recovery";
 import Reset from "./screens/signup/Reset";
 import UserProfile from "./screens/UserProfile";
+import WebViews from "./screens/WebViews";
 
 export default function StackRoute() {
   const user = useSelector((state) => state.user);
@@ -448,6 +449,11 @@ export default function StackRoute() {
           name="UserProfile"
           component={UserProfile}
         />
+        <Stack.Screen
+        options={{ headerShown: false }}
+        name="WebViewsGlobal"
+        component={WebViews}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

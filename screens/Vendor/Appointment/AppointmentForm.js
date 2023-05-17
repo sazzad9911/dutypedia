@@ -22,6 +22,7 @@ import {
   convertDate,
   dateConverter,
   dateDifference,
+  timeConverter,
 } from "../../../action";
 import {
   createAppointment,
@@ -37,7 +38,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function AppointmentForm({ navigation, route }) {
   const [image, setImage] = React.useState();
-  const [date, setDate] = React.useState(convertDate(new Date()));
+  const [date, setDate] = React.useState();
   const [DateError, setDateError] = React.useState();
   const [DateVisible, setDateVisible] = React.useState();
   const [FromTime, setFromTime] = React.useState();
@@ -111,7 +112,7 @@ export default function AppointmentForm({ navigation, route }) {
         })
         .catch((err) => {
           setLoader(false);
-          console.warn(err.response.data.msg);
+          Alert.alert(err.response.data.msg);
         });
       return;
     }
@@ -120,8 +121,8 @@ export default function AppointmentForm({ navigation, route }) {
       user.token,
       vendor.service.id,
       date,
-      FromTime,
-      ToTime,
+      allTimeConverter(FromTime),
+      allTimeConverter(ToTime),
       Title,
       Description,
       data.id,
@@ -293,6 +294,10 @@ export default function AppointmentForm({ navigation, route }) {
             }}>
             <IconButton
               onPress={() => {
+                if(!date){
+                  Alert.alert("Select date first")
+                  return
+                }
                 setFromTimeVisible(!FromTimeVisible);
               }}
               style={{
@@ -309,15 +314,12 @@ export default function AppointmentForm({ navigation, route }) {
               onConfirm={(e) => {
                 setFromTimeError("");
                 let newTime = allTimeConverter(e);
-                if (
-                  newTime.split(":")[0] <
-                  allTimeConverter(newDate).split(":")[0]
-                ) {
+                if(e<new Date()){
                   setFromTimeError("Please select upcoming time");
                   return;
                 }
+                
                 setFromTime(allTimeConverter(e));
-               
                 setFromTimeVisible(!FromTimeVisible);
               }}
               onCancel={() => {
@@ -336,7 +338,10 @@ export default function AppointmentForm({ navigation, route }) {
             </Text>
             <IconButton
               onPress={() => {
-                
+                if(!date){
+                  Alert.alert("Select date first")
+                  return
+                }
                 setToTimeVisible(!ToTimeVisible);
               }}
               style={{
@@ -360,14 +365,14 @@ export default function AppointmentForm({ navigation, route }) {
                   );
                   return;
                 }
-                if (FromTime.split(":")[0] > time.split(":")[0]) {
+                if (parseInt(FromTime.split(":")[0]) > parseInt(time.split(":")[0])) {
                   setFromTimeError(
                     "Please select upcoming time from start time."
                   );
                   return;
                 }
                 if (
-                  FromTime.split(":")[0] == time.split(":")[0] &&
+                  parseInt(FromTime.split(":")[0]) == parseInt(time.split(":")[0]) &&
                   parseInt(FromTime.split(":")[1]) >
                     parseInt(time.split(":")[1])
                 ) {
@@ -376,7 +381,17 @@ export default function AppointmentForm({ navigation, route }) {
                   );
                   return;
                 }
-                //console.log(e)
+                if (
+                  parseInt(FromTime.split(":")[0]) == parseInt(time.split(":")[0]) &&
+                  parseInt(FromTime.split(":")[1]) ==
+                    parseInt(time.split(":")[1])
+                ) {
+                  setFromTimeError(
+                    "Please select upcoming time from start time."
+                  );
+                  return;
+                }
+                
                 setUpdateDate(e)
                 setToTime(allTimeConverter(e));
                 setToTimeVisible(!ToTimeVisible);

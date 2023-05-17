@@ -8,6 +8,7 @@ import {
   Pressable,
   StatusBar,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -103,7 +104,7 @@ export default function ThirdStepVerification({ navigation, route }) {
       submitVerificationIndividual(user.token, {
         serviceId: vendor.service.id,
         firstName: data.name.split(" ")[0],
-        lastName: data.name.split(" ")[1],
+        lastName: data.name.split(" ")[1]?data.name.split(" ")[1]:data.name.split(" ")[0],
         name:data.name,
         dob: localTimeToServerDate(data.date),
         gender: data.gender,
@@ -139,8 +140,8 @@ export default function ThirdStepVerification({ navigation, route }) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: StatusBar.currentHeight }} />
+    <SafeAreaView style={{ flex: 1 }}>
+     
       <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -266,7 +267,7 @@ export default function ThirdStepVerification({ navigation, route }) {
           />
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 const plus = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

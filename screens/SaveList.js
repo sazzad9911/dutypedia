@@ -43,6 +43,7 @@ import { getLikeGigs, getRating, setLikeGigs } from "../Class/service";
 import { setSaveList } from "../Reducers/saveList";
 import customStyle from "../assets/stylesheet";
 import noAp from "../assets/Images/noAp.png";
+import { setHideBottomBar } from "../Reducers/hideBottomBar";
 
 const PARALLAX_HEIGHT = 330;
 const HEADER_BAR_HEIGHT = Platform.OS == "ios" ? 55 : 45;
@@ -55,8 +56,19 @@ const SaveList = ({ navigation }) => {
   const [data, setData] = useState();
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user);
-  useEffect(() => {
-    //console.log(saveList);
+  const dispatch=useDispatch()
+
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
   }, [isFocused]);
   return (
     <View

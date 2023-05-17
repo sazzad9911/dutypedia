@@ -38,8 +38,8 @@ export default function WithdrawSecond({ navigation, route }) {
       );
       return;
     }
-    if (parseInt(amount) < 100) {
-      setAmountError("*Minimum request amount 100BDT");
+    if (parseInt(amount) < 500) {
+      setAmountError("*Minimum request amount 500BDT");
       return;
     }
     if (!check) {

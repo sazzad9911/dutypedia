@@ -17,6 +17,12 @@
           "icon": "./local/assets/logo.png",
           "color": "#ffffff"
         }
+      ],
+      [
+        "expo-updates",
+        {
+          "username": "sazzad991"
+        }
       ]
     ],
     "name": "Duty",

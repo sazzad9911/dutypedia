@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Image,
@@ -7,7 +13,7 @@ import {
   Pressable,
   Text,
   StyleSheet,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Group from "./../../assets/Images/Group.png";
@@ -17,13 +23,18 @@ import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { styles } from "../create_dashboard/BusinessTitle";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import InputButton from "../Vendor/account/InputButton";
 import { Screen } from "../create_dashboard/Location";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
+import { updateUserAddress, updateUserData } from "../../Class/update";
+import { getUserInfo } from "../../Class/member";
+import { storeJson } from "../../Class/storage";
+import customStyle from "../../assets/stylesheet";
+import ActivityLoader from "../../components/ActivityLoader";
 
 export default function EditLocation({ navigation }) {
   const [type, setType] = useState("Only me");
@@ -41,12 +52,14 @@ export default function EditLocation({ navigation }) {
   const [districtError, setDistrictError] = useState();
   const [areaError, setAreaError] = useState();
   // variables
+  const user = useSelector((state) => state.user);
+  const [loader, setLoader] = useState(false);
   const snapPoints = useMemo(() => ["70%"], []);
   const handleSheetChanges = useCallback((index) => {
     //console.log('handleSheetChanges', index);
     setIndex(index);
   }, []);
-
+  //console.log(user?.user)
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
@@ -62,6 +75,65 @@ export default function EditLocation({ navigation }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (user?.user?.address) {
+      setDivision(user?.user?.address?.division)
+      setDistrict(user?.user?.address?.district)
+      setArea(user?.user?.address?.thana)
+      setAddress(user?.user?.address?.address)
+    }
+    if (user) {
+      setType(user?.user?.hideAddress ? "Only me" : "Public");
+    }
+  }, [user?.user?.address]);
+
+  const updateUser = async (types) => {
+    // console.log(`${division}, ${district}, ${area}${address?",":""} ${address?address:""}`)
+    // return
+    setLoader(true);
+    try {
+      await updateUserAddress(user.token, division, district, area, address);
+    } catch (err) {
+      console.error(err.message);
+    }
+
+    updateUserData(user.token, {
+      hideAddress: type == "Only me" ? true : false,
+    })
+      .then((res) => {
+        //console.log(res.data)
+        getUser(res.data.token);
+        console.warn("Upload Successful");
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error(err.response.data.msg);
+      });
+  };
+  const getUser = async (token) => {
+    const res = await getUserInfo(user.token, user.user.id);
+    setLoader(false);
+    storeJson("user", {
+      token: token,
+      user: res.data.user,
+    });
+    dispatch({
+      type: "SET_USER",
+      playload: {
+        token: token,
+        user: res.data.user,
+      },
+    });
+    navigation.goBack();
+  };
+  if (loader) {
+    return (
+      <View style={customStyle.fullBox}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -225,7 +297,7 @@ export default function EditLocation({ navigation }) {
             <View
               style={{
                 alignItems: "flex-end",
-                marginTop:24
+                marginTop: 24,
               }}>
               <MenuItem
                 onChange={setType}
@@ -247,9 +319,10 @@ export default function EditLocation({ navigation }) {
               />
             </View>
             <IconButton
+              onPress={updateUser}
               active={division && district && area ? true : false}
               disabled={division && district && area ? false : true}
-              style={[styles.button,{marginTop:36}]}
+              style={[styles.button, { marginTop: 36 }]}
               title={"Update"}
             />
           </View>

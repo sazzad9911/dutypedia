@@ -13,7 +13,7 @@ const { width, height } = Dimensions.get("window");
 import { ActivityIndicator, FAB } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAppointment,
   getUserAppointment,
@@ -115,6 +115,19 @@ const Screen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const name = route.name;
   const backgroundColor = route.params.backgroundColor;
+  const dispatch=useDispatch()
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (isFocused) {
@@ -402,6 +415,7 @@ const Chip = ({ title, active, onPress, style }) => {
 };
 import appointment from "../../../assets/appointment.jpeg"
 import { Cart } from "../../Vendor/Appointment/VendorAppointmentList";
+import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 const NoAppointment = () => {
   return (
     <View 

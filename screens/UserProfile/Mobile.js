@@ -1,21 +1,30 @@
 import { useIsFocused } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import customStyle from "../../assets/stylesheet";
+import { getUserInfo } from "../../Class/member";
+import { storeJson } from "../../Class/storage";
+import { updateUserData } from "../../Class/update";
+import ActivityLoader from "../../components/ActivityLoader";
 import IconButton from "../../components/IconButton";
 import MenuItem from "../../components/Profile/MenuItem";
 import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { styles } from "../create_dashboard/BusinessTitle";
 
-export default function Mobile() {
+export default function Mobile({navigation,route}) {
   const [type, setType] = useState("Only me");
   const [visible, setVisible] = React.useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
+  const user=route?.params?.user;
+  const newUser=useSelector(state=>state.user)
+  const [loader,setLoader]=useState(false)
+  //console.log(number)
 
   const openMenu = () => setVisible(true);
 
@@ -32,6 +41,50 @@ export default function Mobile() {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  useEffect(()=>{
+    if(user){
+      setType(user.hidePhone?"Only me":"Public")
+    }
+  },[user])
+
+  const updateUser = async (types) => {
+    setLoader(true)
+    updateUserData(newUser.token, {
+      hidePhone:types=="Only me"?true:false
+    })
+      .then((res) => {
+        //console.log(res.data)
+        getUser(res.data.token);
+        console.warn("Upload Successful");
+      })
+      .catch((err) => {
+        setLoader(false)
+        console.error(err.response.data.msg);
+      });
+  };
+  const getUser = async (token) => {
+    const res = await getUserInfo(newUser.token, newUser.user.id);
+    setLoader(false)
+    storeJson("user", {
+      token: token,
+      user: res.data.user,
+    });
+    dispatch({
+      type: "SET_USER",
+      playload: {
+        token: token,
+        user: res.data.user,
+      },
+    });
+    navigation.goBack()
+  };
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor="white"/>
@@ -60,7 +113,7 @@ export default function Mobile() {
               fontSize: 20,
               flex: 1,
             }}>
-            01676182543
+            {user?.phone}
           </Text>
         </View>
         <View
@@ -69,7 +122,10 @@ export default function Mobile() {
             marginTop: 12,
           }}>
           <MenuItem
-            onChange={setType}
+            onChange={(e)=>{
+              setType(e)
+              updateUser(e)
+            }}
             visible={visible}
             onClose={closeMenu}
             button={

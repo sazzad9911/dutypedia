@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 
-export default function ChatHeader({ navigation, route,onContact,onSearch }) {
+export default function ChatHeader({ navigation, route, onContact, onSearch }) {
   const vendor = useSelector((state) => state.vendor);
   const inset = useSafeAreaInsets();
   return (
@@ -16,14 +16,9 @@ export default function ChatHeader({ navigation, route,onContact,onSearch }) {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        borderBottomColor:"#E6E6E6",
-        borderBottomWidth:1
+        borderBottomColor: "#E6E6E6",
+        borderBottomWidth: 1,
       }}>
-      {vendor && (
-        <Pressable onPress={onContact}>
-          <SvgXml xml={contact} />
-        </Pressable>
-      )}
       <Text
         style={{
           fontSize: 24,
@@ -31,9 +26,16 @@ export default function ChatHeader({ navigation, route,onContact,onSearch }) {
         }}>
         Inbox
       </Text>
-      <Pressable onPress={onSearch}>
-        <SvgXml xml={search} />
-      </Pressable>
+      {!vendor && (
+        <Pressable onPress={onSearch}>
+          <SvgXml xml={search} />
+        </Pressable>
+      )}
+      {vendor && (
+        <Pressable onPress={onContact}>
+          <SvgXml xml={contact} />
+        </Pressable>
+      )}
     </View>
   );
 }

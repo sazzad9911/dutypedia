@@ -19,6 +19,8 @@ import IconButton from "../../../components/IconButton";
 import { getAccountInfo } from "../../../Class/account";
 import { getVerificationDetails } from "../../../Class/service";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import customStyle from "../../../assets/stylesheet";
+import ActivityLoader from "../../../components/ActivityLoader";
 const { width, height } = Dimensions.get("window");
 
 export default function AccountBalance({ navigation }) {
@@ -42,7 +44,7 @@ export default function AccountBalance({ navigation }) {
   useEffect(() => {
     getAccountInfo(user.token, vendor.service.id)
       .then((res) => {
-        //console.log(res.data)
+        
         setData(res.data);
       })
       .catch((err) => {
@@ -50,9 +52,17 @@ export default function AccountBalance({ navigation }) {
       });
     getVerificationDetails(user.token, vendor.service.id).then((res) => {
       //console.log(res.data)
+      //console.log(res.data.verification)
       setVerification(res.data.verification);
     });
   }, [isFocused]);
+  if(!data){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <View style={{ flex: 1,paddingTop:inset?.top }}>
      
@@ -60,13 +70,13 @@ export default function AccountBalance({ navigation }) {
         
         <MasterCart
           onVerify={() => {
-            if(!verification?.accept){
-              navigation.navigate("ReviewVerification");
+            if(!verification){
+              navigation.navigate("FirstStepVerification");
               return
             }
-            navigation.navigate("FirstStepVerification");
+            navigation.navigate("ReviewVerification");
           }}
-          verified={vendor?.service?.verified}
+          verified={data?.service?.verified}
           id={data?.id}
           name={`${user?.user.name}`}
         />
@@ -78,7 +88,7 @@ export default function AccountBalance({ navigation }) {
             
             
             if (verification?.accept) {
-              navigation.navigate("WithdrawFirst");
+              navigation.navigate("WithdrawFirst",{id:data?.id});
             }else if(!verification){
               navigation.navigate("RequestVerification")
               

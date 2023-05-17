@@ -1,8 +1,13 @@
 import { useIsFocused } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, ScrollView, Pressable, Text,KeyboardAvoidingView, Platform } from "react-native";
 import { SvgXml } from "react-native-svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import customStyle from "../../assets/stylesheet";
+import { getUserInfo } from "../../Class/member";
+import { storeJson } from "../../Class/storage";
+import { updateUserData } from "../../Class/update";
+import ActivityLoader from "../../components/ActivityLoader";
 import IconButton from "../../components/IconButton";
 import Input from "../../components/Input";
 import MenuItem from "../../components/Profile/MenuItem";
@@ -10,13 +15,16 @@ import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { styles } from "../create_dashboard/BusinessTitle";
 
-export default function EditEmail() {
+export default function EditEmail({navigation,route}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [layoutHeight,setLayoutHeight]=useState(0)
   const [type, setType] = useState("Only me");
   const [visible, setVisible] = React.useState(false);
   const [email,setEmail]=useState()
+  const user=route?.params?.user;
+  const newUser=useSelector(state=>state.user)
+  const [loader,setLoader]=useState(false)
 
   const openMenu = () => setVisible(true);
 
@@ -33,6 +41,51 @@ export default function EditEmail() {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  useEffect(()=>{
+    if(user){
+      setEmail(user?.email)
+      setType(user?.hideEmail?"Only me":"Public")
+    }
+  },[user])
+  const updateUser = async (types) => {
+    setLoader(true)
+    updateUserData(newUser.token, {
+      hideEmail:type=="Only me"?true:false,
+      email:email
+    })
+      .then((res) => {
+        //console.log(res.data)
+        getUser(res.data.token);
+        console.warn("Upload Successful");
+      })
+      .catch((err) => {
+        setLoader(false)
+        console.error(err.response.data.msg);
+      });
+  };
+  const getUser = async (token) => {
+    const res = await getUserInfo(newUser.token, newUser.user.id);
+    setLoader(false)
+    storeJson("user", {
+      token: token,
+      user: res.data.user,
+    });
+    dispatch({
+      type: "SET_USER",
+      playload: {
+        token: token,
+        user: res.data.user,
+      },
+    });
+    navigation.goBack()
+  };
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -123,7 +176,7 @@ export default function EditEmail() {
             }
           />
         </View>
-        <IconButton disabled={email?false:true} active={email?true:false} style={styles.button} title={"Update"}/>
+        <IconButton onPress={updateUser} disabled={email?false:true} active={email?true:false} style={styles.button} title={"Update"}/>
       </View>
     </ScrollView>
     </KeyboardAvoidingView>

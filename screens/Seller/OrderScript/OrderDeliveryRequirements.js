@@ -5,7 +5,7 @@ import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../../Reducers/hideBottomBar";
 
-export default function OrderDeliveryRequirements() {
+export default function OrderDeliveryRequirements({navigation,route}) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const vendor = useSelector((state) => state.vendor);
@@ -26,7 +26,7 @@ export default function OrderDeliveryRequirements() {
       <View
         style={{
           paddingHorizontal: 20,
-          paddingBottom:32
+          paddingBottom: 32,
         }}>
         <View
           style={{
@@ -94,11 +94,17 @@ export default function OrderDeliveryRequirements() {
           Please double-check your products and their condition before sending
           them out for delivery to ensure that the customer receives their order
           as expected.please refer to our{" "}
-          <Text style={{ color: "#4ADE80" }}>
+          <Text
+            onPress={() => {
+              navigation.navigate("WebViewsGlobal", {
+                url: "https://duty.com.bd/legal/order-policy",
+                title: "Order Policy",
+              });
+            }}
+            style={{ color: "#4ADE80" }}>
             Order & Delivery Policy section
           </Text>
         </Text>
-
       </View>
     </ScrollView>
   );

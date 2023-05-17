@@ -37,8 +37,10 @@ export default function WithdrawFirst({ navigation, route }) {
   const isFocused = useIsFocused();
   const user = useSelector((state) => state.user);
   const [loader, setLoader] = useState(false);
-  const vendor=useSelector(state=>state.vendor)
-
+  const vendor = useSelector((state) => state.vendor);
+  const [routingNumber, setRoutingNumber] = useState();
+  const [routingNumberError, setRoutingNumberError] = useState();
+  //console.log(id)
   const save = async () => {
     setNameError();
     setBankNameError();
@@ -47,12 +49,17 @@ export default function WithdrawFirst({ navigation, route }) {
     setOwnerShipError();
     setAccountHolderError();
     setHolderNameError();
+    setRoutingNumberError();
     if (!bankName) {
       setBankNameError("*Bank name is required");
       return;
     }
     if (!branchName) {
       setBranchNameError("*Branch name is required");
+      return;
+    }
+    if (!routingNumber) {
+      setRoutingNumberError("*Routing number is required");
       return;
     }
     if (!accountNumber) {
@@ -73,16 +80,16 @@ export default function WithdrawFirst({ navigation, route }) {
       return;
     }
     setLoader(true);
-    try {
-      await saveBankDetails(user.token, {
-        serviceId: vendor.service.id,
-        accountId:id,
-        bankName: bankName,
-        branchName: branchName,
-        accountNumber: accountNumber,
-        accountHolderName: holderName,
-        relation:accountHolder==="Other"?name:accountHolder,
-      });
+    saveBankDetails(user.token, {
+      serviceId: vendor.service.id,
+      accountId: id,
+      bankName: bankName,
+      branchName: branchName,
+      accountNumber: accountNumber,
+      accountHolderName: holderName,
+      relation: accountHolder === "Other" ? name : accountHolder,
+      routingNumber: routingNumber,
+    }).then((res) => {
       setLoader(false);
       navigation.navigate("WithdrawSecond", {
         data: {
@@ -95,37 +102,47 @@ export default function WithdrawFirst({ navigation, route }) {
           amount: amount,
         },
       });
-    } catch (err) {
-      setLoader(false);
-      Alert.alert(err.code,err.message)
-      console.error(err.message);
-    }
+    })
+      .catch((err) => {
+        setLoader(false);
+        Alert.alert(err.response.data.msg);
+      })
+      
   };
   useEffect(() => {
     getBankDetails(user.token, id)
       .then((res) => {
         //console.log(res.data)
         if (res.data.bankDetails) {
-          let details=res.data.bankDetails;
-          setHolderName(details.accountHolderName)
-          setAccountNumber(details.accountNumber)
-          setBankName(details.bankName)
-          setBranchName(details.branchName)
-          setAccountHolder(details.relation!="Myself"&&details.relation!="Father"&&details.relation!="Mother"&&details.relation!="Brother"&&details.relation!="Sister"?"Other":details.relation)
-          setName(details.relation)
+          let details = res.data.bankDetails;
+          setHolderName(details.accountHolderName);
+          setAccountNumber(details.accountNumber);
+          setBankName(details.bankName);
+          setBranchName(details.branchName);
+          setAccountHolder(
+            details.relation != "Myself" &&
+              details.relation != "Father" &&
+              details.relation != "Mother" &&
+              details.relation != "Brother" &&
+              details.relation != "Sister"
+              ? "Other"
+              : details.relation
+          );
+          setName(details.relation);
+          setRoutingNumber(details.routingNumber);
         }
       })
       .catch((err) => {
         console.error(err.response.data.msg);
       });
   }, [isFocused]);
-  
-  if(loader){
-    return(
+
+  if (loader) {
+    return (
       <View style={customStyle.fullBox}>
-        <ActivityLoader/>
+        <ActivityLoader />
       </View>
-    )
+    );
   }
 
   return (
@@ -152,6 +169,13 @@ export default function WithdrawFirst({ navigation, route }) {
             value={branchName}
             onChange={(e) => setBranchName(e)}
             placeholder={"Branch name"}
+            style={[styles.input, styles.gap2]}
+          />
+          <Input
+            error={routingNumberError}
+            value={routingNumber}
+            onChange={(e) => setRoutingNumber(e)}
+            placeholder={"Routing number"}
             style={[styles.input, styles.gap2]}
           />
 

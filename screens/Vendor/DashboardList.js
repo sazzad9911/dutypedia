@@ -23,6 +23,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import IconButton from "../../components/IconButton";
 import Frame from "../../assets/Images/Frame.png"
 import { useIsFocused } from "@react-navigation/native";
+import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const DashboardList = ({ navigation, route }) => {
   const vendorInfo = useSelector((state) => state.vendorInfo);
@@ -59,6 +60,18 @@ const DashboardList = ({ navigation, route }) => {
       }).catch(err=>{
         setLoading(false)
       })
+    }
+  }, [isFocused]);
+  React.useEffect(() => {
+    if (isFocused) {
+      //console.log("hidden")
+      dispatch(setHideBottomBar(false));
+      setTimeout(() => {
+        dispatch(setHideBottomBar(false));
+      }, 50);
+    } else {
+      //console.log("seen")
+      //dispatch(setHideBottomBar(true));
     }
   }, [isFocused]);
 

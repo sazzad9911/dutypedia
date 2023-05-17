@@ -413,6 +413,11 @@ const serverTimeToLocalTime=(object)=>{
     closingTime:new Date(`2010-11-12T${object?.close}`)
   }
 }
+const mixDateTime=(date,time)=>{
+  //date formate 2010-01-05
+  //time format 22:10
+  return new Date(`${date}T${time}`);
+}
 const localTimeToServerTime=(object)=>{
   return{
     day:object?.title,

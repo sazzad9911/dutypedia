@@ -23,6 +23,7 @@ import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { DistrictList } from "../../../Data/district";
 import InputButton from "./InputButton";
 import { SvgXml } from "react-native-svg";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const { width, height } = Dimensions.get("window");
 
 export default function SecondStepVerification({ navigation, route }) {
@@ -61,6 +62,7 @@ export default function SecondStepVerification({ navigation, route }) {
   const [presentError,setPresentError]=useState()
   const [permanentError,setPermanentError]=useState()
   const [dateError,setDateError]=useState()
+  const inset=useSafeAreaInsets()
 
   React.useEffect(() => {
     if (index == -1) {
@@ -138,10 +140,10 @@ export default function SecondStepVerification({ navigation, route }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1,paddingTop:inset?.top }}
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
-      <View style={{ height: 1, marginTop: StatusBar.currentHeight }} />
+     
       <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -273,7 +275,7 @@ export default function SecondStepVerification({ navigation, route }) {
                     styles.padding,
                   ]}
                   onChange={setPresentUpazila}
-                  placeholder={"Upazilla"}
+                  placeholder={"Upazilla/City"}
                 />
                 <Input
                   style={[
@@ -343,7 +345,7 @@ export default function SecondStepVerification({ navigation, route }) {
               value={permanentUpazila}
               onChange={setPermanentUpazila}
               style={[styles.input, { width: width / 2 - 48 }, styles.padding]}
-              placeholder={"Upazilla"}
+              placeholder={"Upazilla/City"}
             />
             <Input
               value={permanentPostalCode}

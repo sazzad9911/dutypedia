@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
-import { Dimensions, Image, ScrollView, StatusBar, Text, View } from "react-native";
+import { Dimensions, Image, SafeAreaView, ScrollView, StatusBar, Text, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../components/IconButton";
@@ -24,10 +24,10 @@ export default function RequestVerification({ navigation }) {
   }, [isFocused]);
 
   return (
-    <View style={{
+    <SafeAreaView style={{
       flex:1
     }}>
-      <View style={{height:StatusBar.currentHeight}}/>
+      
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -97,6 +97,6 @@ export default function RequestVerification({ navigation }) {
           />
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

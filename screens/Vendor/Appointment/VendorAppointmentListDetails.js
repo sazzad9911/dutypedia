@@ -38,7 +38,12 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
   useEffect(()=>{
     if(route?.params?.appointmentId&&!data){
       getAppointmentById(user.token,route?.params?.appointmentId).then(res=>{
-        setData(res.data.appointment)
+        if(res.data.appointment){
+          setData(res.data.appointment)
+        }else{
+          Alert.alert("This appointment is no longer available.")
+          navigation.goBack()
+        }
       })
     }
   },[route?.params?.appointmentId])

@@ -42,8 +42,9 @@ import IconButton from "./components/IconButton";
 //import { getStream } from "./Utils";
 import { socket } from "./Class/socket";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import * as Updates from "expo-updates";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -60,6 +61,41 @@ export default function App() {
       background: secondaryColor,
     },
   };
+  useEffect(() => {
+    onFetchUpdateAsync();
+  }, []);
+  async function onFetchUpdateAsync() {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        Alert.alert(
+          "Update!",
+          "New update is available. Are you want to download?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: async () => {
+                try {
+                  await Updates.fetchUpdateAsync();
+                  await Updates.reloadAsync();
+                } catch (err) {
+                  Alert.alert("Ops!", err.message);
+                }
+              },
+            },
+          ]
+        );
+      }
+    } catch (error) {
+      // You can also add an alert() to see the error message in case of an error when fetching updates.
+      console.error(`Error fetching latest Expo update: ${error}`);
+    }
+  }
 
   const [fontsLoaded] = useFonts({
     "Poppins-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
@@ -94,6 +130,7 @@ export default function App() {
     console.log(network);
   };
   //getNetwork()
+ 
 
   return (
     <Provider store={store}>
@@ -115,24 +152,30 @@ const Views = () => {
   const textColor = colors.getTextColor();
   const statusBar = useSelector((state) => state.statusBar);
   const [ModalVisible, setModalVisible] = React.useState(false);
-  const [expoPushToken, setExpoPushToken] = React.useState('');
+  const [expoPushToken, setExpoPushToken] = React.useState("");
   const [notification, setNotification] = React.useState(false);
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
 
   React.useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then((token) =>
+      setExpoPushToken(token)
+    );
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
@@ -185,28 +228,29 @@ const WebRTC = () => {
 async function registerForPushNotificationsAsync() {
   let token;
   if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
+    if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
-    if (finalStatus !== 'granted') {
-      Alert.alert('Failed to get push token for push notification!');
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!");
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);
   } else {
-    Alert.alert('Must use physical device for Push Notifications');
+    Alert.alert("Must use physical device for Push Notifications");
   }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
+      lightColor: "#FF231F7C",
     });
   }
 
