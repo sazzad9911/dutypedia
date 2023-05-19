@@ -734,7 +734,7 @@ const OtherProfile = (props) => {
             }>
             <Menu.Item
               onPress={() => {
-                navigation.navigate("Support_1");
+                navigation.navigate("Support_1",{serviceId:Data?.service?.id});
                 setVisible(!Visible);
               }}
               title="Report"

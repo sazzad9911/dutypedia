@@ -287,7 +287,7 @@ const Table = (props) => {
     let arr = [];
     if (title) {
       newListData.map((item, i) => {
-        if (item.subTitle.match(title) && item.title.match(name)) {
+        if (item?.subTitle?.match(title) && item?.title?.match(name)) {
           arr.push(item.tableName);
         }
       });

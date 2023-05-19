@@ -25,6 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Animated, { FadeIn } from "react-native-reanimated";
 import RequestAppointmentList from "./RequestAppointmentList";
+import moment from 'moment';
 const Tab = createMaterialTopTabNavigator();
 const status = [
   {
@@ -273,10 +274,11 @@ export const Cart = ({
             fontWeight:"400",
             color:"#767676"
           }}>
-          {diff==0?"Today":diff==1&&type=="UPCOMING"?"Tomorrow":diff==-1&&type=="PREVIOUS"?"Yesterday":serverTimeToLocalDate(date)}
-
+            {}
+          {diff<2?moment(new Date(`${date}`)).calendar().split(" at")[0]:serverTimeToLocalDate(date)}
           {"  "}
-          {changeTime(startTime)}{" - "}
+           {changeTime(startTime)}
+          {" - "}
           {changeTime(endTime)}
           </Text>
         </View>

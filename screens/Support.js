@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,12 +15,49 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import IconButton from "../components/IconButton";
+import { createReport } from "../Class/service";
+import { useSelector } from "react-redux";
+import customStyle from "../assets/stylesheet";
+import ActivityLoader from "../components/ActivityLoader";
 
 const Support = ({ navigation,route}) => {
   const ref = React.useRef();
   const [Images, setImages] = React.useState([]);
   const [Visible, setVisible] = React.useState(false);
+  const [subject,setSubject]=useState()
+  const [description,setDescription]=useState()
+  const [loader,setLoader]=useState(false)
+  const [subjectError,setSubjectError]=useState()
+  const [descriptionError,setDescriptionError]=useState()
+  const user=useSelector(state=>state.user)
+  const serviceId=route?.params?.serviceId;
 
+  const send=()=>{
+    setSubjectError()
+    if(!subject){
+      setSubjectError("Subject is required")
+      return
+    }
+    if(!user){
+      navigation.navigate("LogIn")
+      return
+    }
+    if(!serviceId){
+      Alert.alert("Ops!","Invalid seller profile")
+      return
+    }
+    setLoader(true)
+    createReport(user.token,subject,description,serviceId)
+    .then(res=>{
+      setLoader(false)
+      setVisible(true);
+      setSubject()
+      setDescription()
+    }).catch(err=>{
+      setLoader(false)
+      Alert.alert(err.response.data.msg)
+    })
+  }
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -61,6 +98,13 @@ const Support = ({ navigation,route}) => {
   React.useEffect(() => {
     
   },[])
+  if(loader){
+    return(
+      <View style={customStyle.fullBox}>
+        <ActivityLoader/>
+      </View>
+    )
+  }
   return (
     <ScrollView>
       <View
@@ -89,7 +133,7 @@ const Support = ({ navigation,route}) => {
        fontFamily: 'Poppins-Medium'}}>
         Subject
       </Text>
-      <TextInput
+      <TextInput value={subject} onChangeText={setSubject}
         style={{
           borderWidth: 1,
           borderColor: "#e5e5e0",
@@ -102,6 +146,13 @@ const Support = ({ navigation,route}) => {
           fontFamily:'Poppins-Medium'
         }}
       />
+      {subjectError&&(
+        <Text style={{
+          color:"red",
+          marginVertical:2,
+          marginHorizontal: 30,
+        }}>{subjectError}</Text>
+      )}
       <Text style={{ fontSize: 16,
        marginLeft: 30,
         marginTop: 10,
@@ -123,7 +174,7 @@ const Support = ({ navigation,route}) => {
           height: 160,
         }}
       >
-        <TextInput
+        <TextInput value={description} onChangeText={setDescription}
           ref={ref}
           style={{ width: "100%", fontSize: 14,fontFamily:'Poppins-Medium' }}
           multiline={true}
@@ -131,7 +182,7 @@ const Support = ({ navigation,route}) => {
       facts, we can quickly resolve your request."
         />
       </TouchableOpacity>
-      <View
+      {/* <View
         style={{
           marginHorizontal: 30,
         }}
@@ -236,10 +287,10 @@ const Support = ({ navigation,route}) => {
         >
           ......................................
         </Text>
-      </View>
+      </View> */}
       <IconButton
         onPress={() => {
-          setVisible(true);
+          send()
         }}
         style={{
           marginHorizontal: 30,
@@ -247,6 +298,7 @@ const Support = ({ navigation,route}) => {
           height: 45,
           backgroundColor: "#03D303",
           color: "white",
+          marginTop:30
         }}
         title={route.name=='Support_1'?"Send Report":"Send Request"}
       />

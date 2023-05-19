@@ -102,6 +102,14 @@ const registerUser=async(token,name,username,password,age,gender)=>{
   });
   return res;
 }
+const updateDeviceToken=async(token,deviceToken)=>{
+  const res = await axios.post(`${url}/server/auth/update-device-token`,{
+    deviceToken:deviceToken
+  },{
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+}
 export {
   userLogin,
   checkUser,
@@ -116,5 +124,6 @@ export {
   registerUser,
   resetUser,
   checkResetUser,
-  resetUserPassword
+  resetUserPassword,
+  updateDeviceToken
 };

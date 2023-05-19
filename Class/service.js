@@ -1015,8 +1015,9 @@ export const rejectRefoundInstallment = async (token, orderId) => {
 
   return res;
 };
-export const search = async (token, data) => {
-  const res = await axios.post(`${url}/server/services/search`, data, {
+export const search = async (token, data,sub) => {
+  console.log(data)
+  const res = await axios.post(`${url}/server/services/search?q=${sub}`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res;
@@ -1269,7 +1270,7 @@ export const createSupport = async (token,subject,description,image,serviceId) =
 export const createReport = async (token,subject,description,serviceId) => {
   const res = await axios.post(`${url}/server/services/report`,{
     subject: subject,
-    message: description,
+    description: description,
     serviceId: serviceId,
   },{
     headers: { Authorization: `Bearer ${token}` },

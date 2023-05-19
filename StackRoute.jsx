@@ -121,45 +121,7 @@ export default function StackRoute() {
   const [userId, setUserId] = React.useState();
 
   
-  React.useEffect(() => {
-    checkUser()
-      .then((res) => {
-        //console.log(res)
-        if (res) {
-          setUserId(res.user.id);
-          dispatch({ type: "SET_USER", playload: res });
-          getDashboard(res.token).then((result) => {
-            if (result && result.data && result.data.dashboards) {
-              dispatch({
-                type: "SET_VENDOR_INFO",
-                playload: result.data.dashboards,
-              });
-              setLoad(!load);
-            } else {
-              dispatch({ type: "SET_VENDOR_INFO", playload: false });
-              setLoad(!load);
-            }
-          });
-        } else {
-          setLoad(!load);
-          dispatch({ type: "SET_USER", playload: [] });
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-    getJson("theme").then((data) => {
-      if (data) {
-        dispatch({ type: "SET_THEME", playload: data });
-      }
-    });
-    (async () => {
-      const net = await Network.getNetworkStateAsync();
-      if (net && !net.isConnected) {
-        Alert.alert("Ops!", "You are offline");
-      }
-    })();
-  }, []);
+ 
   React.useEffect(() => {
     if (userId) {
       socket.on("connect", () => {
@@ -175,13 +137,6 @@ export default function StackRoute() {
     },
   };
 
-  if (!user && !load) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: textColor }}>Loading.....</Text>
-      </View>
-    );
-  }
 
   return (
     <NavigationContainer theme={MyTheme}>

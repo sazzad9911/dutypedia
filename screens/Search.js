@@ -58,6 +58,7 @@ const SearchSecond = ({ navigation, route }) => {
   const [filter, setFilter] = useState();
   const params = route?.params;
   const key = params?.key;
+  const mainCategory=params?.mainCategory;
   const [searchKey, setSearchKey] = useState(key);
   const [data, setData] = useState();
   const [category, setCategory] = useState("All");
@@ -79,9 +80,10 @@ const SearchSecond = ({ navigation, route }) => {
     }
   }, [isFocused]);
   useEffect(() => {
+    //console.log(category)
     setLoader(true);
     search(null, {
-      q: searchKey || "",
+      q:!mainCategory? searchKey:undefined,
       min: filter?.min ? parseInt(filter?.min) : null,
       max: filter?.max ? parseInt(filter?.max) : null,
       division: filter ? filter.division : "",
@@ -89,7 +91,7 @@ const SearchSecond = ({ navigation, route }) => {
       verified: filter?.verified,
       online: filter?.online,
       sort: filter?.orderBy,
-      category: undefined,
+      category: category=="All"?mainCategory:category,
       subCategory: category,
     })
       .then((res) => {
@@ -215,9 +217,9 @@ const SearchThird = ({ navigation, route }) => {
       verified: filter?.verified,
       online: filter?.online,
       sort: filter?.orderBy,
-      category: undefined,
+      category: key,
       subCategory: category,
-    })
+    },selectedSub=="All"?undefined:selectedSub)
       .then((res) => {
         setData(res.data.gigs);
         setLoader(false);
@@ -227,7 +229,7 @@ const SearchThird = ({ navigation, route }) => {
         setLoader(false);
         console.warn(err.response.data.msg);
       });
-  }, [searchKey, filter, category]);
+  }, [searchKey, filter, category,selectedSub]);
 
   return (
     <HidableHeaderLayout
@@ -326,7 +328,7 @@ const SearchFirst = ({ navigation, route }) => {
       component={
         <ITEM
           onSelect={(e) => {
-            navigation.navigate("SearchSecond", { key: e });
+            navigation.navigate("SearchSecond", { key: e?.split(" ")[0],mainCategory:e?.split(" ")[0] });
           }}
         />
       }

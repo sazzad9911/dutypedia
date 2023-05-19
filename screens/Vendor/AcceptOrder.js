@@ -158,7 +158,7 @@ const AcceptOrder = (props) => {
       ref.current.scrollTo({ y: 400 });
       return;
     }
-    if (Select == "My Self " ) {
+    if (Select == "My Self ") {
       setDeliverError("This field is required");
       ref.current.scrollTo({ y: 400 });
       return;
@@ -249,7 +249,7 @@ const AcceptOrder = (props) => {
         });
       return;
     }
-    
+
     if (newVendor) {
       //console.log(data.installmentData)
       // console.log(data.services)
@@ -301,7 +301,11 @@ const AcceptOrder = (props) => {
           });
           setTimeout(() => {
             setLoader(false);
-            navigation.navigate("VendorOrderDetails", { data: res.data.order,orderId:res.data.order?.id,type:res.data.order?.type });
+            navigation.navigate("VendorOrderDetails", {
+              data: res.data.order,
+              orderId: res.data.order?.id,
+              type: res.data.order?.type,
+            });
           }, 300);
         })
         .catch((err) => {
@@ -342,12 +346,15 @@ const AcceptOrder = (props) => {
             data: res.data.order,
           },
         });
-       
+
         setTimeout(() => {
           setLoader(false);
-          navigation.navigate("VendorOrderDetails", { data: res.data.order,orderId:res.data.order?.id,type:res.data.order?.type });
+          navigation.navigate("VendorOrderDetails", {
+            data: res.data.order,
+            orderId: res.data.order?.id,
+            type: res.data.order?.type,
+          });
         }, 300);
-        
       })
       .catch((error) => {
         setLoader(false);
@@ -392,10 +399,10 @@ const AcceptOrder = (props) => {
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
+              flex: 1,
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={[styles.text, { flex: 1 }]}>
               What Type Of Service/Item You Want To provide?
             </Text>
           </View>
@@ -517,10 +524,10 @@ const AcceptOrder = (props) => {
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
+              flex: 1,
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={[styles.text, { flex: 1 }]}>
               How would you like the service to be delivered ?
             </Text>
           </View>
@@ -604,7 +611,7 @@ const AcceptOrder = (props) => {
                   marginTop: 32,
                 }}>
                 <SvgXml xml={info} />
-                <View style={{ marginLeft: 10 ,flex:1}}>
+                <View style={{ marginLeft: 10, flex: 1 }}>
                   <Text style={[styles.text, { marginLeft: 0 }]}>
                     Delivery method ?
                   </Text>
@@ -615,12 +622,19 @@ const AcceptOrder = (props) => {
                       fontWeight: "400",
                       color: "#EC2700",
                       marginBottom: 12,
-                      flex:1
+                      flex: 1,
                     }}>
                     For physical services, you are required to deliver your
                     service in person, face to face with the buyer. For more
                     details, please refer to our{" "}
-                    <Text style={{ color: "#0003FF" }}>
+                    <Text
+                      onPress={() => {
+                        navigation.navigate("WebViewsGlobal", {
+                          url: "https://duty.com.bd/legal/app/order-policy",
+                          title: "Order Policy",
+                        });
+                      }}
+                      style={{ color: "#0003FF" }}>
                       Order & delivery Policy section
                     </Text>
                   </Text>
@@ -705,10 +719,10 @@ const AcceptOrder = (props) => {
             style={{
               flexDirection: "row",
               marginTop: 32,
-              flex:1
+              flex: 1,
             }}>
             <SvgXml xml={info} />
-            <Text style={[styles.text,{flex:1}]}>
+            <Text style={[styles.text, { flex: 1 }]}>
               If you agree, please indicate by checking the box below.
             </Text>
           </View>
@@ -760,12 +774,12 @@ const AcceptOrder = (props) => {
         style={{
           paddingTop: 20,
           paddingHorizontal: 20,
-          paddingBottom:12
+          paddingBottom: 12,
         }}>
-        <View style={{
-          flexDirection:"row",
-          
-        }}>
+        <View
+          style={{
+            flexDirection: "row",
+          }}>
           <CheckBox
             style={{ fontSize: 14 }}
             value={Condition_4}
@@ -773,19 +787,38 @@ const AcceptOrder = (props) => {
               setCondition_4((val) => !val);
             }}
           />
-          <Text style={{
-            fontSize:16,
-            fontWeight:"400",
-            
-          }}>
-            I agree with all the <Text style={{ color: "#0003FF" }}>Order</Text>{" "}
-            & <Text style={{ color: "#0003FF" }}>refund policy</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "400",
+            }}>
+            I agree with all the{" "}
+            <Text onPress={() => {
+              navigation.navigate("WebViewsGlobal", {
+                url: "https://duty.com.bd/legal/app/order-policy",
+                title: "Order Policy",
+              });
+            }} style={{ color: "#0003FF" }}>
+              Order
+            </Text>
+            {" "}&{" "}
+            <Text
+              onPress={() => {
+                navigation.navigate("WebViewsGlobal", {
+                  url: "https://duty.com.bd/legal/app/refund-policy",
+                  title: "Refund policy",
+                });
+              }}
+              style={{ color: "#0003FF" }}>
+              refund policy
+            </Text>
           </Text>
         </View>
         {Confirmation_2Error && (
           <Text style={{ color: "red" }}>{Confirmation_2Error}</Text>
         )}
-        <IconButton active={true}
+        <IconButton
+          active={true}
           onPress={() => {
             try {
               validate();
@@ -796,7 +829,6 @@ const AcceptOrder = (props) => {
           style={{
             color: textColor,
             marginTop: 12,
-            
           }}
           title="Confirm"
         />

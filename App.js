@@ -11,14 +11,8 @@ import {
 } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { TransitionSpecs } from "@react-navigation/stack";
-import TabRoute from "./screens/TabRoute";
-import ChatScreen from "./screens/ChatScreen";
-import ChatHead from "./components/ChatHead";
-import OtherProfile from "./screens/OtherProfile";
 const Stack = createStackNavigator();
-import { secondaryColor } from "./assets/colors";
-import SearchScreen from "./screens/SearchScreen";
+import { secondaryColor } from "./assets/colors"
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
@@ -30,7 +24,7 @@ import {
   MD3LightTheme as Default,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { checkUser } from "./Class/auth";
+import { checkUser, updateDeviceToken } from "./Class/auth";
 import StackRoute from "./StackRoute";
 import { useSelector } from "react-redux";
 import { Color } from "./assets/colors";
@@ -125,13 +119,7 @@ export default function App() {
       fontFamily: "Poppins-Medium",
     },
   };
-  const getNetwork = async () => {
-    const network = await Network.getNetworkStateAsync();
-    console.log(network);
-  };
-  //getNetwork()
- 
-
+  
   return (
     <Provider store={store}>
       <SafeAreaProvider>
@@ -156,11 +144,17 @@ const Views = () => {
   const [notification, setNotification] = React.useState(false);
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
+  const user = useSelector((state) => state.user);
 
   React.useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+      if (user?.token&&token) {
+        updateDeviceToken(user.token,token).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }
+    });
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -178,7 +172,7 @@ const Views = () => {
       );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [user]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* <CustomAppStatusBar
@@ -222,9 +216,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const WebRTC = () => {
-  return null;
-};
 async function registerForPushNotificationsAsync() {
   let token;
   if (Device.isDevice) {
