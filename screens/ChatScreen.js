@@ -25,7 +25,7 @@ import { assentColor, Color } from "../assets/colors";
 import { useDispatch, useSelector } from "react-redux";
 import ChatHead from "../components/ChatHead";
 import ActivityLoader from "../components/ActivityLoader";
-import { createConversation, sendMessage } from "../Class/message";
+import { createConversation, seenMessage, sendMessage } from "../Class/message";
 import { useIsFocused } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import IconButton from "../components/IconButton";
@@ -129,6 +129,7 @@ const ChatScreen = (props) => {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  
   React.useEffect(() => {
     //console.log(data?.serviceId);
     if (data) {
@@ -185,6 +186,11 @@ const ChatScreen = (props) => {
           )
         )
       );
+      if(isFocused){
+        seenMessage(user?.token,message?.message?.id).catch(err=>{
+          console.error(err.response.data.msg)
+        })
+      }
       setMessage()
     }
   }, [message]);

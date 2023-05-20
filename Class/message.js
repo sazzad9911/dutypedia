@@ -38,3 +38,15 @@ export const sendMessage=async(token,text,image,conversationId)=>{
     })
     return res
 }
+export const getMessageUnReadCount=async(token,conversationId)=>{
+    const res=await axios.get(`${url}/server/chat/messages/count-unread/${conversationId}`,{
+        headers:{ Authorization: `Bearer ${token}` }
+    })
+    return res
+}
+export const seenMessage=async(token,messageId)=>{
+    const res=await axios.put(`${url}/server/chat/messages/seen/${messageId}`,{
+        headers:{ Authorization: `Bearer ${token}` }
+    })
+    return res
+}

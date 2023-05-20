@@ -18,7 +18,7 @@ import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
 import ChatCart from "../../Cart/ChatCart";
-import { getConversation, getConversationVendor } from "../../Class/message";
+import { getConversation, getConversationVendor, getMessageUnReadCount } from "../../Class/message";
 import ActivityLoader from "../../components/ActivityLoader";
 import SearchBar from "../../components/SearchBar";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -27,6 +27,8 @@ import SellerList from "./SellerList";
 import ContactList from "./ContactList";
 import { setChatBottomRef } from "../../Reducers/chatBottomRef";
 import ChatHeader from "./ChatHeader";
+import { socket } from "../../Class/socket";
+import { getUnreadNotification } from "../../Class/notification";
 
 export default function ChatList(props) {
   const scrollY = new Animated.Value(0);
@@ -60,6 +62,7 @@ export default function ChatList(props) {
     dispatch(setChatBottomRef(null));
   }, []);
   const vendor=useSelector(state=>state.vendor)
+  const [newMessage,setNewMessage]=useState(false)
 
   //console.log(chatBottomRef)
   React.useEffect(() => {
@@ -88,7 +91,15 @@ export default function ChatList(props) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user, isFocused,vendor]);
+    //setNewMessage()
+  }, [user, isFocused,vendor,newMessage]);
+
+  useEffect(()=>{
+    socket?.on("getMessage",e=>{
+      setNewMessage(e)
+    })
+  },[])
+  
 
   const search = (val, data) => {
     if (!Array.isArray(data)) {

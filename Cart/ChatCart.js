@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -12,8 +12,9 @@ const { width, height } = Dimensions.get("window");
 import { useSelector, useDispatch } from "react-redux";
 import Avatar from "../components/Avatar";
 import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
-import { getSocket } from "../Class/socket";
+import { getSocket, socket } from "../Class/socket";
 import logo from "./../assets/logo.png";
+import { getMessageUnReadCount } from "../Class/message";
 
 const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   const [Active, setActive] = React.useState(active);
@@ -28,6 +29,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   const [UserInfo, setUserInfo] = React.useState();
   const [LastMessage, setLastMessage] = React.useState();
   const vendor = useSelector((state) => state.vendor);
+  const [count, setCount] = useState(0);
   //console.log(data.serviceId)
   const styles = StyleSheet.create({
     outBox: {
@@ -54,7 +56,6 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
     head: {
       fontSize: 16,
       fontWeight: "700",
-      
     },
     text: {
       fontSize: 12,
@@ -82,6 +83,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   });
   React.useEffect(() => {
     if (data) {
+      getCount(data.id)
       data.users.map((doc) => {
         if (doc.user.id != user.user.id) {
           setUserInfo(doc.user);
@@ -103,6 +105,16 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
       });
     }
   }, [UserInfo]);
+
+  const getCount = async (id) => {
+    try {
+      const res = await getMessageUnReadCount(user?.token, id);
+      //console.log(res.data.count)
+      setCount(res.data.count);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   if (!UserInfo) {
     return null;
@@ -165,17 +177,15 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
           justifyContent: "space-between",
           paddingVertical: 12,
         }}>
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
           {vendor && !data?.readOnly ? (
             <Text style={styles.head}>
               {UserInfo ? `${UserInfo.name}` : "Sefa Khandakar"}
             </Text>
           ) : data?.readOnly ? (
-            <Text style={styles.head}>
-              Duty
-            </Text>
+            <Text style={styles.head}>Duty</Text>
           ) : (
-            <Text numberOfLines={1} style={[styles.head,{flex:1}]}>
+            <Text numberOfLines={1} style={[styles.head, { flex: 1 }]}>
               {data.service
                 ? `${data.service.serviceCenterName}`
                 : "Sefa Khandakar"}
@@ -198,7 +208,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
               flex: 1,
             },
           ]}>
-          {number && (
+          {count > 0 && (
             <View
               style={{
                 backgroundColor: "#4ADE80",
@@ -207,7 +217,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
                 borderRadius: 8,
                 justifyContent: "center",
                 alignItems: "center",
-                marginBottom: 4,
+                marginBottom: 8,
               }}>
               <Text
                 style={{
@@ -215,7 +225,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
                   color: "#ffffff",
                   fontWeight: "700",
                 }}>
-                {number}
+                {count}
               </Text>
             </View>
           )}
