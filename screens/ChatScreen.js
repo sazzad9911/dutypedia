@@ -598,7 +598,7 @@ const BottomBar = (props) => {
           value={Message}
           onChangeText={(value) => {
             setFocused(true);
-            if (value.split("").length > 190) {
+            if (value.split("").length > 1000) {
               return;
             }
             setMessage(value);
