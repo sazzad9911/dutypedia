@@ -665,8 +665,9 @@ const BottomBar = (props) => {
               return;
             }
             props.onSend(Message).then(() => {
-              setMessage("");
+              //setMessage("");
             });
+            setMessage("");
           }}>
           <SvgXml xml={send} />
         </TouchableOpacity>
