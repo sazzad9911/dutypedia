@@ -45,7 +45,8 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
+//import { EvilIcons } from '@expo/vector-icons';
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -130,7 +131,7 @@ const ChatScreen = (props) => {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  
+
   React.useEffect(() => {
     //console.log(data?.serviceId);
     if (data) {
@@ -147,9 +148,7 @@ const ChatScreen = (props) => {
     }
   }, [data]);
   React.useEffect(() => {
-
     if (username && UserInfo && user) {
-      
       createConversation(user.token, username, serviceId)
         .then((res) => {
           let arr = [];
@@ -189,18 +188,19 @@ const ChatScreen = (props) => {
           )
         )
       );
-      if(isFocused&&user){
-        try{
-          seenMessage(user?.token,message?.message?.id)
-        }catch(err){
-          console.error(err.message)
+      if (isFocused && user) {
+        try {
+          seenMessage(user?.token, message?.message?.id);
+        } catch (err) {
+          console.error(err.message);
         }
       }
-      setMessage()
+      setMessage();
     }
   }, [message]);
 
   const send = async (message, image) => {
+    const id = uuid.v1();
     if (image) {
       let blobImages = [];
       blobImages.push(fileFromURL(image));
@@ -221,7 +221,6 @@ const ChatScreen = (props) => {
             receiverId: UserInfo.id,
             message: res.data.message,
           });
-         
         }
       } else {
         //console.log(result)
@@ -229,27 +228,37 @@ const ChatScreen = (props) => {
       }
       return;
     }
-    let data={
-      clear:false,
-      conversationId:Id,
+
+    let data = {
+      clear: false,
+      conversationId: Id,
       createdAt: new Date(),
-      deleted:false,
-      id:uuid.v1(),
-      image:null,
-      seen:false,
-      senderId:user?.user?.id,
-      text:message,
-      updatedAt:new Date()
-    }
+      deleted: false,
+      id: id,
+      image: null,
+      seen: false,
+      senderId: user?.user?.id,
+      text: message,
+      updatedAt: new Date(),
+      send: true,
+    };
+    setMessages((val) =>
+      GiftedChat.append(val, serverMessageToLocal(data, user.user))
+    );
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
-      setMessages((val) =>
-        GiftedChat.append(
-          val,
-          serverMessageToLocal(res.data.message, user.user)
-        )
-      );
-      console.warn(res.data.message)
+      setMessages((prev) => {
+        return prev.map((message) => {
+          if (message._id === id) {
+            return {
+              ...message,
+              send: false,
+            };
+          }
+          return message;
+        });
+      });
+      //console.warn(res.data.message)
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       //console.log(UserInfo?.id);
@@ -258,7 +267,6 @@ const ChatScreen = (props) => {
         receiverId: UserInfo.id,
         message: res.data.message,
       });
-     
     }
   };
 
@@ -410,17 +418,39 @@ const ChatScreen = (props) => {
     }
 
     return (
-      <View style={newStyles.receiverBox}>
-        <Text style={[newStyles.text, { color: "white" }]}>
-          {currentMessage?.text}
-        </Text>
-        <Text style={[newStyles.dateText, { color: "white" }]}>
-          {dateDifference(new Date(), currentMessage.createdAt) == 0
-            ? timeConverter(currentMessage.createdAt)
-            : dateDifference(new Date(), currentMessage.createdAt) == 1
-            ? "Yesterday"
-            : serverTimeToLocal(currentMessage.createdAt)}
-        </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "flex-end",
+          marginRight: 20,
+          marginVertical: 8,
+        }}>
+        <View style={newStyles.receiverBox}>
+          <Text style={[newStyles.text, { color: "white" }]}>
+            {currentMessage?.text}
+          </Text>
+          <Text style={[newStyles.dateText, { color: "white" }]}>
+            {dateDifference(new Date(), currentMessage.createdAt) == 0
+              ? timeConverter(currentMessage.createdAt)
+              : dateDifference(new Date(), currentMessage.createdAt) == 1
+              ? "Yesterday"
+              : serverTimeToLocal(currentMessage.createdAt)}
+          </Text>
+        </View>
+       {currentMessage?.send?( <View
+          style={{
+            borderRadius: 10,
+            width: 14,
+            height: 14,
+            borderWidth: 1,
+            borderColor: "#4ADE80",
+            marginLeft:5,
+            marginHorizontal:5
+          }}
+        />):(<EvilIcons style={{
+          marginLeft:5,
+        }} name="check" size={20} color="#4ADE80" />)}
       </View>
     );
   };
@@ -787,6 +817,7 @@ const serverMessageToLocal = (message, user) => {
       },
       image: message.image,
       sent: message.seen,
+      send: message?.send,
     };
   }
   return null;
@@ -844,8 +875,6 @@ const newStyles = StyleSheet.create({
     backgroundColor: "#4ADE80",
     borderBottomRightRadius: 4,
     alignSelf: "flex-end",
-    marginRight: 28,
-    marginVertical: 8,
   },
   imageBox: {
     width: "60%",
