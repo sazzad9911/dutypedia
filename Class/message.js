@@ -39,6 +39,8 @@ export const sendMessage=async(token,text,image,conversationId)=>{
     return res
 }
 export const getMessageUnReadCount=async(token,conversationId)=>{
+    //console.log(`${url}/server/chat/messages/count-unread/${conversationId}`)
+    //console.warn(token)
     const res=await axios.get(`${url}/server/chat/messages/count-unread/${conversationId}`,{
         headers:{ Authorization: `Bearer ${token}` }
     })

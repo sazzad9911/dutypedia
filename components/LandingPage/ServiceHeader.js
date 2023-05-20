@@ -1,15 +1,18 @@
 import React from 'react'
 import { Pressable, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
 
 export default function ServiceHeader({navigation,route}) {
-  return (
+  
+    return (
     <View style={{
         flexDirection:"row",
         alignItems:"center",
-        paddingHorizontal:28,
+        paddingHorizontal:20,
         paddingVertical:32,
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        
     }}>
         <Pressable onPress={()=>{
             navigation.goBack()

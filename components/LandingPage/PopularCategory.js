@@ -53,7 +53,7 @@ export default function PopularCategory({ onMore }) {
   return (
     <View
       style={{
-        marginHorizontal: 28,
+        marginHorizontal: 20,
         marginBottom: 20,
       }}>
       <View style={[customStyle.flexBox, { marginTop: 20, marginBottom: 8 }]}>

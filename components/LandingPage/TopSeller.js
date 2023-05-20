@@ -20,31 +20,31 @@ import { setSaveList } from "../../Reducers/saveList";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 
-export default function TopSeller({ onMore }) {
+export default function TopSeller({ onMore,title }) {
   return (
     <View>
       <View
         style={[
           customStyle.flexBox,
-          { marginTop: 20, marginBottom: 18, marginHorizontal: 28 },
+          { marginTop: 20, marginBottom: 18, marginHorizontal: 20 },
         ]}>
-        <Text style={customStyle.landingHeadLine}>Top Seller</Text>
+        <Text style={customStyle.landingHeadLine}>{title?title:"Top Seller"}</Text>
         <TouchableOpacity onPress={onMore}>
           <Text style={customStyle.landingButtonText}>See all</Text>
         </TouchableOpacity>
       </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-        <View style={{ width: 22 }} />
-        <TopSellerCard />
-        <TopSellerCard />
-        <TopSellerCard />
-        <TopSellerCard />
-        <View style={{ width: 22 }} />
+        <View style={{ width: 14 }} />
+        <TopSellerCard avatar={true} />
+        <TopSellerCard avatar={true} />
+        <TopSellerCard avatar={true}/>
+        <TopSellerCard avatar={true}/>
+        <View style={{ width: 14 }} />
       </ScrollView>
     </View>
   );
 }
-export const TopSellerCard = ({ width, style, height, data,onPress }) => {
+export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => {
   const [like, setLike] = useState(false);
   const [rating,setRating]=useState(0)
   const saveList = useSelector((state) => state.saveList);
@@ -137,7 +137,8 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
               flex: 2,
               
             }}>
-            <View>
+            {avatar&&(
+              <View>
               <Avatar
                 style={styles.avatar}
                 source={{
@@ -147,6 +148,7 @@ export const TopSellerCard = ({ width, style, height, data,onPress }) => {
                 }}
               />
             </View>
+            )}
             <View
               style={{
                 flex: 1,

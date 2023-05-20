@@ -21,7 +21,7 @@ export default function Trending({onMore}) {
       <View
         style={[
           customStyle.flexBox,
-          { marginTop: 34, marginBottom: 18, marginHorizontal: 28 },
+          { marginTop: 34, marginBottom: 18, marginHorizontal: 20 },
         ]}>
         <Text style={customStyle.landingHeadLine}>All time trending</Text>
         <TouchableOpacity onPress={onMore}>
@@ -29,12 +29,12 @@ export default function Trending({onMore}) {
         </TouchableOpacity>
       </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-        <View style={{ width: 22 }} />
+        <View style={{ width: 14 }} />
         <TrendingCart />
         <TrendingCart />
         <TrendingCart />
         <TrendingCart />
-        <View style={{ width: 22 }} />
+        <View style={{ width: 14 }} />
       </ScrollView>
     </View>
   );

@@ -45,6 +45,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
+import uuid from 'react-native-uuid';
 
 const ChatScreen = (props) => {
   const scrollRef = React.useRef();
@@ -146,7 +147,9 @@ const ChatScreen = (props) => {
     }
   }, [data]);
   React.useEffect(() => {
+
     if (username && UserInfo && user) {
+      
       createConversation(user.token, username, serviceId)
         .then((res) => {
           let arr = [];
@@ -186,10 +189,12 @@ const ChatScreen = (props) => {
           )
         )
       );
-      if(isFocused){
-        seenMessage(user?.token,message?.message?.id).catch(err=>{
-          console.error(err.response.data.msg)
-        })
+      if(isFocused&&user){
+        try{
+          seenMessage(user?.token,message?.message?.id)
+        }catch(err){
+          console.error(err.message)
+        }
       }
       setMessage()
     }
@@ -224,6 +229,18 @@ const ChatScreen = (props) => {
       }
       return;
     }
+    let data={
+      clear:false,
+      conversationId:Id,
+      createdAt: new Date(),
+      deleted:false,
+      id:uuid.v1(),
+      image:null,
+      seen:false,
+      senderId:user?.user?.id,
+      text:message,
+      updatedAt:new Date()
+    }
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
       setMessages((val) =>
@@ -232,6 +249,7 @@ const ChatScreen = (props) => {
           serverMessageToLocal(res.data.message, user.user)
         )
       );
+      console.warn(res.data.message)
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       //console.log(UserInfo?.id);

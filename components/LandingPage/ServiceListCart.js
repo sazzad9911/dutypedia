@@ -11,11 +11,11 @@ export default function ServiceListCart() {
         marginVertical:20
     }}>
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
-            <View style={{width:20}}/>
+            <View style={{width:12}}/>
             {CATEGORY_LIST.map((doc,i)=>(
                 <Cart key={i} data={doc}/>
             ))}
-            <View style={{width:20}}/>
+            <View style={{width:12}}/>
         </ScrollView>
     </View>
   )

@@ -122,7 +122,7 @@ const Feed = ({ navigation, route }) => {
               justifyContent: "space-between",
               marginTop:Platform.OS=="ios"?0:10,
               alignItems:"center",
-              paddingHorizontal:28,
+              paddingHorizontal:20,
               paddingBottom:20
             }}
           >
@@ -167,7 +167,7 @@ const Feed = ({ navigation, route }) => {
           }
           navigation.navigate("InitialServiceCreate")
           }} colors={["#5C258D","#4389A2"]}/>
-        <TopSeller onMore={()=>{
+        <TopSeller title={"Some Suggest"} onMore={()=>{
           navigation.navigate("ServiceScreen")
         }}/>
         <View>
@@ -177,9 +177,9 @@ const Feed = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
           horizontal={true}
         >
-          <View style={{width:22}}/>
+          <View style={{width:14}}/>
           {AllData && AllData.map((item, i) => <Cart key={i} data={item} />)}
-          <View style={{width:22}}/>
+          <View style={{width:14}}/>
         </ScrollView>
         </View>
         <View style={{ height: 20}} />
@@ -197,7 +197,7 @@ const styles=StyleSheet.create({
   text:{
     fontSize:24,
     fontWeight:"700",
-    marginHorizontal:28,
+    marginHorizontal:20,
     color:"#484848",
     marginTop:20,
     marginBottom:18

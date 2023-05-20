@@ -11,7 +11,7 @@ export default function JoinCart({style,onJoin,colors,onClick}) {
     <View style={[{
         backgroundColor:"green",
         borderRadius:23,
-        marginHorizontal:28,
+        marginHorizontal:20,
         overflow:"hidden",
         marginVertical:20
     },style]}>

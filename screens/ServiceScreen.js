@@ -8,6 +8,7 @@ import {
   Dimensions,
   Animated
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import customStyle from "../assets/stylesheet";
 import ServiceHeader from "../components/LandingPage/ServiceHeader";
 import { TopSellerCard } from "../components/LandingPage/TopSeller";
@@ -20,9 +21,10 @@ export default function ServiceScreen({ onMore, navigation }) {
     inputRange: [0, 200],
     outputRange: [0, -200],
   });
+  //const inset=useSafeAreaInsets()
   
   return (
-    <ScrollView style={{ flexGrow: 1 }} scrollEventThrottle={16} onScroll={(e) => {
+    <ScrollView style={{ flexGrow: 1,}} scrollEventThrottle={16} onScroll={(e) => {
       scrollY.setValue(e.nativeEvent.contentOffset.y);
       //scroll;
     }} stickyHeaderHiddenOnScroll={true} stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
@@ -42,7 +44,7 @@ export default function ServiceScreen({ onMore, navigation }) {
       <View
         style={[
           customStyle.flexBox,
-          { marginTop: 0, marginBottom: 18, marginHorizontal: 28 },
+          { marginTop: 0, marginBottom: 18, marginHorizontal: 20 },
         ]}>
         <Text style={customStyle.landingHeadLine}>Top Seller</Text>
         <TouchableOpacity onPress={onMore}>
@@ -51,7 +53,7 @@ export default function ServiceScreen({ onMore, navigation }) {
       </View>
       <View
         style={{
-          marginHorizontal: 22,
+          marginHorizontal: 14,
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "center",
@@ -60,32 +62,32 @@ export default function ServiceScreen({ onMore, navigation }) {
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 - 26}
         />
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 -26 }
         />
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 - 26}
         />
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 - 26}
         />
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 - 26}
         />
         <TopSellerCard
           height={130}
           style={styles.card}
-          width={width / 2 - 34}
+          width={width / 2 - 26}
         />
       </View>
     </ScrollView>
