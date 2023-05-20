@@ -170,6 +170,7 @@ const ChatScreen = (props) => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
       //console.log(`tp: ${UserInfo?.id}`)
+      //console.log(e)
       setMessage(e);
     });
   }, []);
@@ -197,23 +198,19 @@ const ChatScreen = (props) => {
       if (result) {
         const res = await sendMessage(user.token, message, result[0], Id);
         if (res.data) {
-          // setMessages((val) =>
-          //   GiftedChat.append(
-          //     val,
-          //     serverMessageToLocal(res.data.message, user.user)
-          //   )
-          // );
+          setMessages((val) =>
+            GiftedChat.append(
+              val,
+              serverMessageToLocal(res.data.message, user.user)
+            )
+          );
           //console.log(UserInfo?.id);
           socket.emit("sendMessage", {
             senderId: user?.user.id,
             receiverId: UserInfo.id,
             message: res.data.message,
           });
-          socket.emit("sendMessage", {
-            senderId: UserInfo.id ,
-            receiverId: user?.user.id,
-            message: res.data.message,
-          });
+         
         }
       } else {
         //console.log(result)
@@ -223,12 +220,12 @@ const ChatScreen = (props) => {
     }
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
-      // setMessages((val) =>
-      //   GiftedChat.append(
-      //     val,
-      //     serverMessageToLocal(res.data.message, user.user)
-      //   )
-      // );
+      setMessages((val) =>
+        GiftedChat.append(
+          val,
+          serverMessageToLocal(res.data.message, user.user)
+        )
+      );
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       //console.log(UserInfo?.id);
@@ -237,11 +234,7 @@ const ChatScreen = (props) => {
         receiverId: UserInfo.id,
         message: res.data.message,
       });
-      socket.emit("sendMessage", {
-        senderId: UserInfo.id,
-        receiverId: user?.user.id,
-        message: res.data.message,
-      });
+     
     }
   };
 
