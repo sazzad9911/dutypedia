@@ -129,7 +129,7 @@ const ChatScreen = (props) => {
     }
   }, [isFocused]);
   React.useEffect(() => {
-    console.log(user?.user?.id)
+    //console.log(data?.serviceId);
     if (data) {
       data.users.map((doc) => {
         if (doc.user.id != user.user.id) {
@@ -169,9 +169,29 @@ const ChatScreen = (props) => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
       //console.log(`tp: ${UserInfo?.id}`)
-      setMessages((val) =>
-        GiftedChat.append(val, serverMessageToLocal(e.message, data?.users?.filter(d=>d.user.id!=user?.user?.id)[0]?.user))
-      );
+      if (vendor) {
+        if (vendor?.service?.id == data?.serviceId) {
+          setMessages((val) =>
+            GiftedChat.append(
+              val,
+              serverMessageToLocal(
+                e.message,
+                data?.users?.filter((d) => d.user.id != user?.user?.id)[0]?.user
+              )
+            )
+          );
+        }
+      } else {
+        setMessages((val) =>
+          GiftedChat.append(
+            val,
+            serverMessageToLocal(
+              e.message,
+              data?.users?.filter((d) => d.user.id != user?.user?.id)[0]?.user
+            )
+          )
+        );
+      }
     });
   }, []);
 
@@ -241,8 +261,8 @@ const ChatScreen = (props) => {
   const RenderBubble = (props) => {
     const currentMessage = props?.item;
     //console.log(currentMessage?.user?._id)
-    if(!currentMessage){
-      return null
+    if (!currentMessage) {
+      return null;
     }
     if (currentMessage?.image && currentMessage?.text) {
       //console.log(currentMessage?.image)
@@ -264,7 +284,7 @@ const ChatScreen = (props) => {
                 UserInfo?.id == currentMessage?.user?._id
                   ? "flex-start"
                   : "flex-end",
-              height: "auto" 
+              height: "auto",
             },
           ]}>
           <Image
@@ -352,7 +372,11 @@ const ChatScreen = (props) => {
     if (UserInfo?.id == currentMessage?.user?._id) {
       return (
         <View style={newStyles.senderBox}>
-          <Text style={newStyles.title}>{vendor?currentMessage.user.name:data?.service?.serviceCenterName}</Text>
+          <Text style={newStyles.title}>
+            {vendor
+              ? currentMessage.user.name
+              : data?.service?.serviceCenterName}
+          </Text>
           <Text style={newStyles.text}>{currentMessage?.text}</Text>
           <Text style={newStyles.dateText}>
             {dateDifference(new Date(), currentMessage.createdAt) == 0
@@ -380,9 +404,9 @@ const ChatScreen = (props) => {
       </View>
     );
   };
-  const LeftBubble=(props)=>{
+  const LeftBubble = (props) => {
     const currentMessage = props?.item;
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -408,7 +432,7 @@ const ChatScreen = (props) => {
         renderItem={(pr) => (
           <RenderBubble navigation={props.navigation} {...pr} />
         )}
-        keyExtractor={(item,i) => i.toString()}
+        keyExtractor={(item, i) => i.toString()}
         inverted
       />
       {!readOnly && <BottomBar onSend={send} {...props} />}
