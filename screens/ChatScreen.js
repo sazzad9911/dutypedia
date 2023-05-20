@@ -423,7 +423,7 @@ const ChatScreen = (props) => {
           flexDirection: "row",
           justifyContent: "flex-end",
           alignItems: "flex-end",
-          marginRight: 20,
+          marginRight: 16,
           marginVertical: 8,
         }}>
         <View style={newStyles.receiverBox}>
@@ -844,19 +844,19 @@ const com = `<svg width="9" height="18" viewBox="0 0 9 18" fill="none" xmlns="ht
 const newStyles = StyleSheet.create({
   dateText: {
     fontSize: 12,
-    lineHeight: 14,
+    
     fontWeight: "400",
     marginTop: 4,
     textAlign: "right",
   },
   text: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
   },
   title: {
     fontSize: 14,
-    lineHeight: 24,
+   
     fontWeight: "500",
     color: "#21AD54",
   },
@@ -866,7 +866,7 @@ const newStyles = StyleSheet.create({
     maxWidth: "60%",
     borderRadius: 12,
     borderBottomLeftRadius: 4,
-    marginLeft: 28,
+    marginLeft: 20,
     marginVertical: 8,
   },
   receiverBox: {
@@ -885,7 +885,7 @@ const newStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E6E6E6",
     marginVertical: 8,
-    marginHorizontal: 28,
+    marginHorizontal: 20,
   },
   image: {
     width: "100%",
