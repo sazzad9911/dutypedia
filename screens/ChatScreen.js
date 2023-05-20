@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -110,6 +110,7 @@ const ChatScreen = (props) => {
   const serviceId = params?.serviceId;
   const vendor = useSelector((state) => state.vendor);
   const [readOnly, setReadOnly] = useState(false);
+  const [message, setMessage] = useState();
 
   React.useEffect(() => {
     if (isFocused) {
@@ -169,31 +170,23 @@ const ChatScreen = (props) => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
       //console.log(`tp: ${UserInfo?.id}`)
-      if (vendor) {
-        if (vendor?.service?.id == data?.serviceId) {
-          setMessages((val) =>
-            GiftedChat.append(
-              val,
-              serverMessageToLocal(
-                e.message,
-                data?.users?.filter((d) => d.user.id != user?.user?.id)[0]?.user
-              )
-            )
-          );
-        }
-      } else {
-        setMessages((val) =>
-          GiftedChat.append(
-            val,
-            serverMessageToLocal(
-              e.message,
-              data?.users?.filter((d) => d.user.id != user?.user?.id)[0]?.user
-            )
-          )
-        );
-      }
+      setMessage(e);
     });
   }, []);
+  useEffect(() => {
+    if (message && message?.message?.conversationId == Id) {
+      setMessages((val) =>
+        GiftedChat.append(
+          val,
+          serverMessageToLocal(
+            message.message,
+            data?.users?.filter((d) => d.user.id != user?.user?.id)[0]?.user
+          )
+        )
+      );
+      setMessage()
+    }
+  }, [message]);
 
   const send = async (message, image) => {
     if (image) {
@@ -204,16 +197,21 @@ const ChatScreen = (props) => {
       if (result) {
         const res = await sendMessage(user.token, message, result[0], Id);
         if (res.data) {
-          setMessages((val) =>
-            GiftedChat.append(
-              val,
-              serverMessageToLocal(res.data.message, user.user)
-            )
-          );
-          console.log(UserInfo?.id);
+          // setMessages((val) =>
+          //   GiftedChat.append(
+          //     val,
+          //     serverMessageToLocal(res.data.message, user.user)
+          //   )
+          // );
+          //console.log(UserInfo?.id);
           socket.emit("sendMessage", {
             senderId: user?.user.id,
             receiverId: UserInfo.id,
+            message: res.data.message,
+          });
+          socket.emit("sendMessage", {
+            senderId: UserInfo.id ,
+            receiverId: user?.user.id,
             message: res.data.message,
           });
         }
@@ -225,18 +223,23 @@ const ChatScreen = (props) => {
     }
     const res = await sendMessage(user.token, message, null, Id);
     if (res.data) {
-      setMessages((val) =>
-        GiftedChat.append(
-          val,
-          serverMessageToLocal(res.data.message, user.user)
-        )
-      );
+      // setMessages((val) =>
+      //   GiftedChat.append(
+      //     val,
+      //     serverMessageToLocal(res.data.message, user.user)
+      //   )
+      // );
       //console.log(user.user.id);
       //console.log(UserInfo.id);
       //console.log(UserInfo?.id);
       socket.emit("sendMessage", {
         senderId: user?.user.id,
         receiverId: UserInfo.id,
+        message: res.data.message,
+      });
+      socket.emit("sendMessage", {
+        senderId: UserInfo.id,
+        receiverId: user?.user.id,
         message: res.data.message,
       });
     }
