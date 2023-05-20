@@ -233,7 +233,7 @@ const ChatScreen = (props) => {
       );
       //console.log(user.user.id);
       //console.log(UserInfo.id);
-      console.log(UserInfo?.id);
+      //console.log(UserInfo?.id);
       socket.emit("sendMessage", {
         senderId: user?.user.id,
         receiverId: UserInfo.id,
