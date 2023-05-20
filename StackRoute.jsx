@@ -122,13 +122,6 @@ export default function StackRoute() {
 
   
  
-  React.useEffect(() => {
-    if (userId) {
-      socket.on("connect", () => {
-        getSocket(userId);
-      });
-    }
-  }, [socket + userId]);
   const MyTheme = {
     ...DefaultTheme,
     colors: {

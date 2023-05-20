@@ -825,9 +825,12 @@ const OtherProfile = (props) => {
               navigation.navigate("ChatScreen", {
                 data: {
                   users: [user],
+                  service:Data?.service,
+                  serviceId:Data?.service?.id
                 },
                 username: userInfo.username,
                 serviceId: data?.service?.id,
+                
               });
             }}
             style={{

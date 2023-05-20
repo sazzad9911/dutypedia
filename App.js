@@ -12,7 +12,7 @@ import {
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 const Stack = createStackNavigator();
-import { secondaryColor } from "./assets/colors"
+import { secondaryColor } from "./assets/colors";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
@@ -34,11 +34,12 @@ import CustomAppStatusBar from "./Hooks/AppBar";
 import Button from "./components/Button";
 import IconButton from "./components/IconButton";
 //import { getStream } from "./Utils";
-import { socket } from "./Class/socket";
+import { getSocket, socket } from "./Class/socket";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -119,7 +120,7 @@ export default function App() {
       fontFamily: "Poppins-Medium",
     },
   };
-  
+
   return (
     <Provider store={store}>
       <SafeAreaProvider>
@@ -145,17 +146,11 @@ const Views = () => {
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
   const user = useSelector((state) => state.user);
+  const [isOffline,setIsOffline]=useState(false)
 
   React.useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-      if (user?.token&&token) {
-        updateDeviceToken(user.token,token).catch(err=>{
-          console.error(err.response.data.msg)
-        })
-      }
-    });
-
+    regNotification()
+    getNetworkStatus()
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
@@ -173,6 +168,30 @@ const Views = () => {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, [user]);
+  React.useEffect(()=>{
+    
+    if(!Array.isArray(user)&&user?.token){
+      socket.on("connect", () => {
+        getSocket(user.user.id);
+      });
+    }
+  },[isOffline,user])
+  const regNotification = async () => {
+    const token = await registerForPushNotificationsAsync();
+    setExpoPushToken(token);
+    if (!Array.isArray(user) && user?.token && token) {
+      await updateDeviceToken(user.token, token);
+    }
+  };
+  const getNetworkStatus=async()=>{
+    const res=await Network.getNetworkStateAsync();
+    if(!res.isConnected){
+      setIsOffline(true)
+      Alert.alert("Ops!","You are offline")
+    }else{
+      setIsOffline(false)
+    }
+  }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* <CustomAppStatusBar

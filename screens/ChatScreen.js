@@ -129,6 +129,7 @@ const ChatScreen = (props) => {
     }
   }, [isFocused]);
   React.useEffect(() => {
+    console.log(user?.user?.id)
     if (data) {
       data.users.map((doc) => {
         if (doc.user.id != user.user.id) {
@@ -167,8 +168,9 @@ const ChatScreen = (props) => {
   React.useEffect(() => {
     socket.on("getMessage", (e) => {
       //setMessages((val) => [...val, e.message]);
+      //console.log(`tp: ${UserInfo?.id}`)
       setMessages((val) =>
-        GiftedChat.append(val, serverMessageToLocal(e.message, data.users))
+        GiftedChat.append(val, serverMessageToLocal(e.message, data?.users?.filter(d=>d.user.id!=user?.user?.id)[0]?.user))
       );
     });
   }, []);
@@ -185,12 +187,12 @@ const ChatScreen = (props) => {
           setMessages((val) =>
             GiftedChat.append(
               val,
-              serverMessageToLocal(res.data.message, data.users)
+              serverMessageToLocal(res.data.message, user.user)
             )
           );
-          //console.log(UserInfo.id);
+          console.log(UserInfo?.id);
           socket.emit("sendMessage", {
-            senderId: user.user.id,
+            senderId: user?.user.id,
             receiverId: UserInfo.id,
             message: res.data.message,
           });
@@ -206,13 +208,14 @@ const ChatScreen = (props) => {
       setMessages((val) =>
         GiftedChat.append(
           val,
-          serverMessageToLocal(res.data.message, data.users)
+          serverMessageToLocal(res.data.message, user.user)
         )
       );
       //console.log(user.user.id);
       //console.log(UserInfo.id);
+      console.log(UserInfo?.id);
       socket.emit("sendMessage", {
-        senderId: user.user.id,
+        senderId: user?.user.id,
         receiverId: UserInfo.id,
         message: res.data.message,
       });
@@ -237,6 +240,10 @@ const ChatScreen = (props) => {
   //return <AudioCallScreen user={UserInfo}/>
   const RenderBubble = (props) => {
     const currentMessage = props?.item;
+    //console.log(currentMessage?.user?._id)
+    if(!currentMessage){
+      return null
+    }
     if (currentMessage?.image && currentMessage?.text) {
       //console.log(currentMessage?.image)
       let arr = currentMessage?.image.split("/");
@@ -345,7 +352,7 @@ const ChatScreen = (props) => {
     if (UserInfo?.id == currentMessage?.user?._id) {
       return (
         <View style={newStyles.senderBox}>
-          <Text style={newStyles.title}>{currentMessage.user.name}</Text>
+          <Text style={newStyles.title}>{vendor?currentMessage.user.name:data?.service?.serviceCenterName}</Text>
           <Text style={newStyles.text}>{currentMessage?.text}</Text>
           <Text style={newStyles.dateText}>
             {dateDifference(new Date(), currentMessage.createdAt) == 0
@@ -373,6 +380,9 @@ const ChatScreen = (props) => {
       </View>
     );
   };
+  const LeftBubble=(props)=>{
+    const currentMessage = props?.item;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -390,6 +400,7 @@ const ChatScreen = (props) => {
         name={UserInfo ? `${UserInfo.name}` : null}
         image={UserInfo ? UserInfo.profilePhoto : null}
         {...props}
+        message={data}
         readOnly={readOnly}
       />
       <FlatList
@@ -397,7 +408,7 @@ const ChatScreen = (props) => {
         renderItem={(pr) => (
           <RenderBubble navigation={props.navigation} {...pr} />
         )}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item,i) => i.toString()}
         inverted
       />
       {!readOnly && <BottomBar onSend={send} {...props} />}

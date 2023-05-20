@@ -13,9 +13,9 @@ import { useSelector, useDispatch } from "react-redux";
 import Avatar from "../components/Avatar";
 import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
 import { getSocket } from "../Class/socket";
-import logo from "./../assets/logo.png"
+import logo from "./../assets/logo.png";
 
-const ChatCart = ({ navigation, active, data, number,readOnly }) => {
+const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   const [Active, setActive] = React.useState(active);
   //const navigation = props.navigation;
   const isDark = useSelector((state) => state.isDark);
@@ -27,6 +27,7 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
   const user = useSelector((state) => state.user);
   const [UserInfo, setUserInfo] = React.useState();
   const [LastMessage, setLastMessage] = React.useState();
+  const vendor = useSelector((state) => state.vendor);
   //console.log(data.serviceId)
   const styles = StyleSheet.create({
     outBox: {
@@ -37,7 +38,7 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
       borderRadius: 10,
       flexDirection: "row",
       alignItems: "center",
-      marginTop:12
+      marginTop: 12,
     },
     box: {
       marginLeft: 20,
@@ -53,7 +54,7 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
     head: {
       fontSize: 16,
       fontWeight: "700",
-      lineHeight: 16,
+      
     },
     text: {
       fontSize: 12,
@@ -113,19 +114,29 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
         navigation.navigate("ChatScreen", {
           data: data,
           username: UserInfo.username,
-          serviceId:data?.serviceId
+          serviceId: data?.serviceId,
         })
       }
       style={[styles.outBox, {}]}>
       <View style={styles.image}>
-        {readOnly?(
-          <Image source={logo} style={styles.image}/>
-        ):(<Avatar
-          style={styles.image}
-          source={{
-            uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
-          }}
-        />)}
+        {readOnly ? (
+          <Image source={logo} style={styles.image} />
+        ) : (
+          <Avatar
+            style={styles.image}
+            source={
+              vendor
+                ? {
+                    uri: UserInfo.profilePhoto ? UserInfo.profilePhoto : null,
+                  }
+                : {
+                    uri: data?.service?.profilePhoto
+                      ? data.service.profilePhoto
+                      : null,
+                  }
+            }
+          />
+        )}
         {Active && (
           <View
             style={{
@@ -147,22 +158,33 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          borderBottomWidth:1,
-          borderBottomColor:"#E6E6E6",
-          flex:1,
-          height:"100%",
-          justifyContent:"space-between",
-          paddingVertical:12,
-          
+          borderBottomWidth: 1,
+          borderBottomColor: "#E6E6E6",
+          flex: 1,
+          height: "100%",
+          justifyContent: "space-between",
+          paddingVertical: 12,
         }}>
-        <View style={{}}>
-          <Text style={styles.head}>
-            {UserInfo
-              ? `${UserInfo.name}`
-              : "Sefa Khandakar"}
-          </Text>
+        <View style={{flex:1}}>
+          {vendor && !data?.readOnly ? (
+            <Text style={styles.head}>
+              {UserInfo ? `${UserInfo.name}` : "Sefa Khandakar"}
+            </Text>
+          ) : data?.readOnly ? (
+            <Text style={styles.head}>
+              Duty
+            </Text>
+          ) : (
+            <Text numberOfLines={1} style={[styles.head,{flex:1}]}>
+              {data.service
+                ? `${data.service.serviceCenterName}`
+                : "Sefa Khandakar"}
+            </Text>
+          )}
           {LastMessage && (
-            <Text numberOfLines={1} style={[styles.text, { marginTop: 4,maxWidth:"60%" }]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.text, { marginTop: 4, maxWidth: "60%" }]}>
               {LastMessage ? LastMessage.text : null}
             </Text>
           )}
@@ -172,8 +194,8 @@ const ChatCart = ({ navigation, active, data, number,readOnly }) => {
             styles.box,
             {
               alignItems: "flex-end",
-              paddingRight:20,
-              flex:1
+              paddingRight: 20,
+              flex: 1,
             },
           ]}>
           {number && (

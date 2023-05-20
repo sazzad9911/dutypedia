@@ -198,6 +198,13 @@ const TabRoute = () => {
     //setReload((val) => !val);
     return () => removeNetInfoSubscription();
   }, []);
+  React.useEffect(()=>{
+    if(!Array.isArray(user)&&user?.user?.id){
+      socket.on("connect", () => {
+        getSocket(user.user.id);
+      });
+    }
+  },[user])
   useEffect(() => {
     socket.on("notificationReceived", (e) => {
       if (vendor) {
@@ -220,9 +227,11 @@ const TabRoute = () => {
   };
 
   TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-    socket.on("connect", () => {
-      getSocket(user.user.id);
-    });
+    if(!Array.isArray(user)&&user.user){
+      socket.on("connect", () => {
+        getSocket(user?.user?.id);
+      });
+    }
     setInterval(() => setReload((val) => !val), [2000]);
     // Be sure to return the successful result type!
     return BackgroundFetch.BackgroundFetchResult.NewData;

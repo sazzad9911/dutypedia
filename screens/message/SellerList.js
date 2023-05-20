@@ -48,7 +48,7 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
       setLoader(false);
       setMembers(res.data.conversations);
       setAllMembers(res.data.conversations);
-      //console.warn(res.data.conversations)
+      //console.warn(res.data.conversations[0])
     })
     .catch((err) => {
       setLoader(false);
@@ -133,17 +133,19 @@ export default function SellerList({ navigation, seller, onClose, data,bottomRef
                   ?.id
               }
               key={i}
-              name={`${
+              name={vendor?`${
                 doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
                   ?.name
-              }`}
+              }`:`${doc?.service?.serviceCenterName}`}
               username={`${
                 doc?.users?.filter((d) => d.user.id != user.user.id)[0]?.user
                   ?.username
               }`}
-              image={{
+              image={vendor?{
                 uri: doc?.users?.filter((d) => d.user.id != user.user.id)[0]
                   ?.user?.profilePhoto,
+              }:{
+                uri: doc?.service?.profilePhoto,
               }}
             />
           ))}

@@ -69,7 +69,7 @@ export default function ChatList(props) {
           setLoader(false);
           setConversations(res.data.conversations);
           setAllConversations(res.data.conversations);
-          //console.warn(res.data.conversations)
+          //console.log(res.data.conversations[0])
         })
         .catch((err) => {
           setLoader(false);
@@ -88,7 +88,7 @@ export default function ChatList(props) {
           console.warn(err.response.data.msg);
         });
     }
-  }, [user, isFocused]);
+  }, [user, isFocused,vendor]);
 
   const search = (val, data) => {
     if (!Array.isArray(data)) {

@@ -20,7 +20,7 @@ import { SvgXml } from "react-native-svg";
 import { getUserInfo } from "../Class/member";
 import logo from "./../assets/logo.png";
 
-const ChatHead = ({ navigation, name, image, user, readOnly }) => {
+const ChatHead = ({ navigation, name, image, user, readOnly,message }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -49,7 +49,8 @@ const ChatHead = ({ navigation, name, image, user, readOnly }) => {
       fontSize: 20,
       fontWeight: "500",
       color: "#000000",
-      lineHeight: 23,
+      
+      flex:1
     },
     icon: {
       marginLeft: 20,
@@ -117,7 +118,15 @@ const ChatHead = ({ navigation, name, image, user, readOnly }) => {
           }}
           onPress={() => {
             if (data&&!readOnly) {
-              navigation.navigate("UserProfile", { user: data });
+              if(vendor){
+                navigation.navigate("UserProfile", { user: data });
+              }else{
+                navigation.navigate("OtherProfile", {
+                  serviceId: message.serviceId,
+                  data: message,
+                });
+              }
+              
             }
           }}>
           {readOnly ? (
@@ -125,14 +134,17 @@ const ChatHead = ({ navigation, name, image, user, readOnly }) => {
           ) : (
             <Avatar
               style={styles.image}
-              source={{ uri: image ? image : null }}
+              source={vendor?{ uri: image ? image : null }:{ uri: message?.service ? message?.service?.profilePhoto : null }}
             />
           )}
 
-          <Text style={styles.text}>
-            {name ? `${name}` : "Sefa Khandakar"}
+          {readOnly||vendor?(<Text numberOfLines={1} style={styles.text}>
+            {name ? `${name}` : "-----"}
             {readOnly ? " Support" : ""}
-          </Text>
+          </Text>):(<Text numberOfLines={1} style={styles.text}>
+            {message?.service ? `${message?.service?.serviceCenterName}` : "-----"}
+            {readOnly ? " Support" : ""}
+          </Text>)}
         </Pressable>
       </View>
 

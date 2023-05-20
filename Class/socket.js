@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 const URL = "https://duty.com.bd";
 const socket = io(URL,{
   reconnection: true,
-  reconnectionDelay: 100,
+  reconnectionDelay: 1000,
   reconnectionAttempts: 989538344345623,
 });
 const getSocket = (id) => {

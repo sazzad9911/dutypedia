@@ -31,12 +31,13 @@ import { setChatBottomRef } from "../Reducers/chatBottomRef";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import SupportForm from "./support/SupportForm";
+import OtherProfile from "./OtherProfile";
 const Stack = createStackNavigator();
 
 const Message = (props) => {
   const dispatch = useDispatch();
   const chatSearchRef = useSelector((state) => state.chatSearchRef);
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -54,7 +55,7 @@ const Message = (props) => {
       <Stack.Navigator>
         <Stack.Screen
           options={{
-            headerShown:false
+            headerShown: false,
           }}
           name="MessageScreen"
           component={ChatList}
@@ -67,7 +68,16 @@ const Message = (props) => {
           component={ChatScreen}
         />
 
-        
+        <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: "green",
+            },
+            headerShown: false,
+          }}
+          name="OtherProfile"
+          component={OtherProfile}
+        />
         <Stack.Screen
           name="Member"
           options={{
@@ -88,17 +98,15 @@ const Message = (props) => {
           component={UserProfile}
         />
         <Stack.Screen
-        name="SupportForm"
-        options={{
-          headerShown: false,
-        }}
-        component={SupportForm}
-      />
+          name="SupportForm"
+          options={{
+            headerShown: false,
+          }}
+          component={SupportForm}
+        />
       </Stack.Navigator>
     </View>
   );
 };
 
 export default Message;
-
-
