@@ -107,6 +107,9 @@ export default function ChatList(props) {
     socket?.on("getMessage",e=>{
       setNewMessage(e)
     })
+    return () => {
+      socket?.off("getMessage");
+    };
   },[])
   
 

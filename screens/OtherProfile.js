@@ -2760,7 +2760,7 @@ const calculateHeight = (text, plus, minus) => {
   let lineHeight = Platform.OS == "ios" ? 26 : 26;
   let letterWidth = Platform.OS == "ios" ? 8 : 8;
   let height = ((textLength * letterWidth) / (width - 40)) * lineHeight;
-  if (plus) {
+  if (plus) { 
     return height + plus;
   }
   if (minus) {

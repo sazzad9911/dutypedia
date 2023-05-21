@@ -273,6 +273,9 @@ const OrderDetails = ({ navigation, route }) => {
         dataLoader(orderId);
       }
     });
+    return () => {
+      socket?.off("updateOrder");
+    };
   }, []);
 
   const addService = () => {

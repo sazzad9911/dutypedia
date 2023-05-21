@@ -128,7 +128,7 @@ const TabRoute = () => {
     }
   }, [user]);
   const updateVendorInfo = async (id) => {
-    const res = await getService(user.token, id);
+    const res = await getService(user?.token, id);
     if (res) {
       dispatch({ type: "SET_VENDOR", playload: res.data });
     }
@@ -167,28 +167,19 @@ const TabRoute = () => {
       .then((res) => {
         //console.log(res)
         if (res) {
-          dispatch({ type: "SET_USER", playload: res });
-          // getDashboard(res.token).then((result) => {
-          //   if (result && result.data && result.data.dashboards) {
-          //     dispatch({
-          //       type: "SET_VENDOR_INFO",
-          //       playload: result.data.dashboards,
-          //     });
-          //     setLoad(!load);
-          //   } else {
-          //     dispatch({ type: "SET_VENDOR_INFO", playload: false });
-          //     setLoad(!load);
-          //   }
-          // });
+         dispatch({ type: "SET_USER", playload: res });
+         
         } else {
           setLoad(!load);
-          dispatch({ type: "SET_USER", playload: [] });
+          //dispatch({ type: "SET_USER", playload: [] });
         }
       })
       .catch((err) => {
         console.log(err.message);
       });
+    
   }, []);
+  
   React.useEffect(() => {
     const removeNetInfoSubscription = NetInfo.addEventListener((state) => {
       const offline = !(state.isConnected && state.isInternetReachable);
@@ -198,13 +189,13 @@ const TabRoute = () => {
     //setReload((val) => !val);
     return () => removeNetInfoSubscription();
   }, []);
-  React.useEffect(()=>{
-    if(!Array.isArray(user)&&user?.user?.id){
-      socket.on("connect", () => {
-        getSocket(user.user.id);
-      });
-    }
-  },[user])
+  // React.useEffect(()=>{
+  //   if(!Array.isArray(user)&&user?.user?.id){
+  //     socket.on("connect", () => {
+  //       getSocket(user.user.id);
+  //     });
+  //   }
+  // },[user])
   useEffect(() => {
     socket.on("notificationReceived", (e) => {
       if (vendor) {

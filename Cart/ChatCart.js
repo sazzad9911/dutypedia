@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get("window");
 import { useSelector, useDispatch } from "react-redux";
 import Avatar from "../components/Avatar";
 import { dateDifference, serverTimeToLocal, timeConverter } from "../action";
-import { getSocket, socket } from "../Class/socket";
+import {  socket } from "../Class/socket";
 import logo from "./../assets/logo.png";
 import { getMessageUnReadCount } from "../Class/message";
 
@@ -60,7 +60,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
     text: {
       fontSize: 12,
       fontWeight: "400",
-      lineHeight: 12,
+      
       color: "#767676",
     },
     date: {
@@ -94,7 +94,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   }, [data]);
   useEffect(() => {
     if (UserInfo) {
-      const socket = getSocket(UserInfo.id);
+      //const socket = getSocket(UserInfo.id);
       socket.on("getUsers", (users) => {
         if (Array.isArray(users)) {
           let arr = users.filter((d) => d.userId == UserInfo.id);

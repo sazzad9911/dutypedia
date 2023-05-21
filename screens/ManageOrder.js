@@ -303,6 +303,10 @@ const Screens = ({ navigation, route }) => {
      // e = e?.order;
       setRefresh((val) => !val);
     });
+    return () => {
+      socket?.off("updateOrder");
+      socket?.off("getOrder");
+    };
   }, []);
 
   React.useEffect(() => {

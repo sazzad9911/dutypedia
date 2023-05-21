@@ -136,6 +136,9 @@ const NotificationScreen = ({ navigation, route }) => {
           });
       }
     });
+    return () => {
+      socket?.off("notificationReceived");
+    };
   }, []);
   React.useEffect(() => {
     if (isFocused) {

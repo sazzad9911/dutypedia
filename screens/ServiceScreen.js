@@ -69,7 +69,9 @@ export default function ServiceScreen({ onMore, navigation, route }) {
             marginBottom: 22,
           }}>
           {data.map((doc, i) => (
-            <TopSellerCard
+            <TopSellerCard onPress={()=>{
+              navigation?.navigate("OtherProfile",{data:doc,serviceId:doc?.service?.id})
+            }}
               key={i}
               height={130}
               data={doc}

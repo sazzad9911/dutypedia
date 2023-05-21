@@ -169,12 +169,12 @@ const Views = () => {
     };
   }, [user]);
   React.useEffect(()=>{
-    
-    if(!Array.isArray(user)&&user?.token){
+    if(!Array.isArray(user)&&user?.user?.id){
       socket.on("connect", () => {
-        getSocket(user.user.id);
+        getSocket(user?.user?.id);
       });
     }
+    
   },[isOffline,user])
   const regNotification = async () => {
     const token = await registerForPushNotificationsAsync();

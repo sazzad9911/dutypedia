@@ -202,6 +202,9 @@ const UserOrderDetails = ({ navigation, route }) => {
         setLoader(false);
       }
     });
+    return () => {
+      socket?.off("updateOrder");
+    };
   }, []);
   useEffect(() => {
     if (data?.id && isFocused) {

@@ -151,6 +151,7 @@ const ChatScreen = (props) => {
       //setMessages(data.messages);
       //setLastMessage(data.messages[data.messages.length-1])
     }
+    console.log(user?.user?.id)
   }, [data]);
   React.useEffect(() => {
     if (username && UserInfo && user) {
@@ -181,9 +182,13 @@ const ChatScreen = (props) => {
       //console.log(e)
       setMessage(e);
     });
+    return () => {
+      socket?.off("getMessage");
+    };
   }, []);
   useEffect(() => {
     if (message && message?.message?.conversationId == Id) {
+      console.log(message?.senderId)
       setMessages((val) =>
         GiftedChat.append(
           val,
@@ -205,6 +210,10 @@ const ChatScreen = (props) => {
   }, [message]);
 
   const send = async (message, image) => {
+    if(!UserInfo){
+      Alert.alert("Invalid")
+      return
+    }
     const id = uuid.v1();
     if (image) {
       let blobImages = [];

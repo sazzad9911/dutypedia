@@ -899,6 +899,7 @@ const MainProfile = (props) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setRefresh((val) => !val);
+    getUser(user?.token)
     //dispatch({ type: "SET_INTEREST_CATEGORY", playload: "Home" });
     wait(1000).then(() => setRefreshing(false));
   }, []);

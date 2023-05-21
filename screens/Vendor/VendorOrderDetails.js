@@ -257,6 +257,9 @@ const OrderDetails = ({ navigation, route }) => {
         dataLoader(orderId);
       }
     });
+    return () => {
+      socket?.off("updateOrder");
+    };
   }, []);
   const addService = () => {
     const gigs = data.service.gigs.filter((d) => d.type == "STARTING");
