@@ -114,6 +114,7 @@ const ChatScreen = (props) => {
   const vendor = useSelector((state) => state.vendor);
   const [readOnly, setReadOnly] = useState(false);
   const [message, setMessage] = useState();
+  const [show, setShow] = useState(false);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -134,6 +135,9 @@ const ChatScreen = (props) => {
   }, [isFocused]);
 
   React.useEffect(() => {
+    setTimeout(() => {
+      setShow(true);
+    }, 50);
     //console.log(data?.serviceId);
     if (data) {
       data.users.map((doc) => {
@@ -272,18 +276,13 @@ const ChatScreen = (props) => {
   };
 
   if (!Messages) {
-    return <ChatSkeleton/>
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <ActivityLoader />
+      <View style={{ flex: 1, }}>
+        <ChatSkeleton />
       </View>
     );
   }
+
   //return <VideoCallingScreen/>
   //return <CallingScreen user={UserInfo} audio={false}/>
   //return <AudioCallScreen user={UserInfo}/>
@@ -439,19 +438,28 @@ const ChatScreen = (props) => {
               : serverTimeToLocal(currentMessage.createdAt)}
           </Text>
         </View>
-       {currentMessage?.send?( <View
-          style={{
-            borderRadius: 10,
-            width: 14,
-            height: 14,
-            borderWidth: 1,
-            borderColor: "#4ADE80",
-            marginLeft:5,
-            marginHorizontal:5
-          }}
-        />):(<EvilIcons style={{
-          marginLeft:5,
-        }} name="check" size={20} color="#4ADE80" />)}
+        {currentMessage?.send ? (
+          <View
+            style={{
+              borderRadius: 10,
+              width: 14,
+              height: 14,
+              borderWidth: 1,
+              borderColor: "#4ADE80",
+              marginLeft: 5,
+              marginHorizontal: 5,
+            }}
+          />
+        ) : (
+          <EvilIcons
+            style={{
+              marginLeft: 5,
+            }}
+            name="check"
+            size={20}
+            color="#4ADE80"
+          />
+        )}
       </View>
     );
   };
@@ -491,7 +499,7 @@ const ChatScreen = (props) => {
         <Text
           style={{
             fontSize: 16,
-           
+
             fontWeight: "400",
             color: "#4D4E4F",
             marginHorizontal: 20,
@@ -845,19 +853,19 @@ const com = `<svg width="9" height="18" viewBox="0 0 9 18" fill="none" xmlns="ht
 const newStyles = StyleSheet.create({
   dateText: {
     fontSize: 12,
-    
+
     fontWeight: "400",
     marginTop: 4,
     textAlign: "right",
   },
   text: {
     fontSize: 16,
-    
+
     fontWeight: "400",
   },
   title: {
     fontSize: 14,
-   
+
     fontWeight: "500",
     color: "#21AD54",
   },

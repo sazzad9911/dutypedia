@@ -10,7 +10,7 @@ export default function ChatSkeleton() {
   return (
     
     <SafeAreaView style={{ flex: 1 }}>
-      <MotiView
+      <View
         transition={{
           type: "timing",
         }}
@@ -463,7 +463,7 @@ export default function ChatSkeleton() {
           />
           </View>
         </View>
-      </MotiView>
+      </View>
     </SafeAreaView>
    
   );
