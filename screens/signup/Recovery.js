@@ -54,7 +54,7 @@ export default function Recovery({navigation,route}) {
             width:"100%"
           }]} source={photo}   />
           <Text style={[signUpStyle.headLine,signUpStyle.mt44]}>Enter Your Phone Number</Text>
-          <Text style={[signUpStyle.mt8,signUpStyle.text]}>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat </Text>
+          <Text style={[signUpStyle.mt8,signUpStyle.text]}>Your privacy is important to us. Rest assured, your number will only be used for verification purposes. </Text>
           <Input error={error} keyboardType={"number-pad"} value={number} onChange={setNumber} style={[signUpStyle.input,signUpStyle.mt18]} placeholder={" "}/>
           
         </View>

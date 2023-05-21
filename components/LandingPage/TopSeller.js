@@ -25,21 +25,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
 import { useNavigation } from "@react-navigation/native";
 import ActivityLoader from "../ActivityLoader";
+import { getJson, storeData, storeJson } from "../../Class/storage";
 const { width, height } = Dimensions.get("window");
 
-export default function TopSeller({ onMore, title,navigation }) {
+export default function TopSeller({ onMore, title,navigation,refresh }) {
   const [data, setData] = useState();
   useEffect(() => {
    if(title){
+    fetchSuggest()
     getSuggest()
    }else{
+    fetchData()
     getData();
    }
-  }, []);
+  }, [refresh]);
   const getData = async () => {
     try {
       const { data } = await getTopServices();
       setData(data?.gigs);
+      await storeJson("top_seller",data?.gigs)
     } catch (err) {
       console.error(err.message);
     }
@@ -48,6 +52,23 @@ export default function TopSeller({ onMore, title,navigation }) {
     try {
       const { data } = await getSuggestServices();
       setData(data?.gigs);
+      await storeJson("some_suggest",data?.gigs)
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const fetchData = async () => {
+    try {
+      const data = await getJson("top_seller");
+      setData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const fetchSuggest = async () => {
+    try {
+      const data = await getJson("some_suggest");
+      setData(data);
     } catch (err) {
       console.error(err.message);
     }
@@ -421,6 +442,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginLeft: 4,
     color: "white",
+    lineHeight:8
   },
   smallText: {
     fontSize: 10,

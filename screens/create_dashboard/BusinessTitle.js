@@ -163,7 +163,7 @@ export const styles = StyleSheet.create({
   },
   spText: {
     fontSize: 16,
-    
+    lineHeight: 24,
     fontWeight: "400",
     marginTop: 24,
     color:"#1A1A1A"

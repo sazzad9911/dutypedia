@@ -56,8 +56,7 @@ export default function SignUp_1({ navigation, route }) {
             Enter Your Phone Number
           </Text>
           <Text style={[signUpStyle.mt8, signUpStyle.text]}>
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat{" "}
+          Your privacy is important to us. Rest assured, your number will only be used for verification purposes.
           </Text>
           <Input
             error={error}

@@ -19,31 +19,31 @@ import {
 } from "../../Class/service";
 import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
-import { getData, storeData } from "../../Class/storage";
+import { getData, getJson, storeData, storeJson } from "../../Class/storage";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import ActivityLoader from "../ActivityLoader";
 
-export default function PopularCategory({ onMore, navigation }) {
+export default function PopularCategory({ onMore, navigation,refresh }) {
   const [data, setData] = useState();
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    //fetchData();
+    fetchData();
     store();
-  }, [isFocused]);
+  }, [refresh]);
   const store = async () => {
     try {
       const { data } = await getPopularServices();
       setData(data?.gigs);
       //console.log(data?.gigs)
-      //storeData("popular_category",data?.gigs);
+      storeJson("popular_category",data?.gigs);
     } catch (err) {
       console.error(err.message);
     }
   };
   const fetchData = async () => {
     try {
-      const data = await getData("popular_category");
+      const data = await getJson("popular_category");
       setData(data);
     } catch (err) {
       console.error(err.message);

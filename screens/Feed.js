@@ -151,13 +151,13 @@ const Feed = ({ navigation, route }) => {
           navigation.navigate("InitialServiceCreate")
         }}/>
         <ServiceListCart navigation={navigation}/>
-        <PopularCategory navigation={navigation} onMore={(data)=>{
+        <PopularCategory refresh={refreshing} navigation={navigation} onMore={(data)=>{
           navigation.navigate("ServiceScreen",{data:data})
         }}/>
-        <TopSeller navigation={navigation} onMore={(data)=>{
+        <TopSeller refresh={refreshing} navigation={navigation} onMore={(data)=>{
           navigation.navigate("ServiceScreen",{data:data})
         }}/>
-        <Trending navigation={navigation} onMore={(data)=>{
+        <Trending refresh={refreshing} navigation={navigation} onMore={(data)=>{
           navigation.navigate("ServiceScreen",{data:data})
         }}/>
         <JoinCart onClick={()=>{
@@ -167,7 +167,7 @@ const Feed = ({ navigation, route }) => {
           }
           navigation.navigate("InitialServiceCreate")
           }} colors={["#5C258D","#4389A2"]}/>
-        <TopSeller navigation={navigation} title={"Some Suggest"} onMore={(data)=>{
+        <TopSeller refresh={refreshing} navigation={navigation} title={"Some Suggest"} onMore={(data)=>{
           navigation.navigate("ServiceScreen",{data:data})
         }}/>
         <View>

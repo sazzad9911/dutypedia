@@ -81,10 +81,10 @@ function ViewMore({
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   textAlign: "justify",
                   fontWeight: "500",
-                  
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
                   color: "#4ADE80",
                   fontWeight: "700",
-                  
+                  lineHeight: 24,
                   fontSize: 16,
                 },
                 fontStyle,
@@ -121,10 +121,10 @@ function ViewMore({
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
                   textAlign: "justify",
                   fontWeight: "500",
-                  
+                  lineHeight: Platform.OS == "ios" ? 30 : 25,
                   color: "#4ADE80",
                   fontWeight: "700",
-                  
+                  lineHeight: 24,
                   fontSize: 16,
                 },
                 fontStyle,

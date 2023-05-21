@@ -15,21 +15,32 @@ import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
 import { getLikeGigs, getRating, getTrendingServices, setLikeGigs } from "../../Class/service";
+import { getJson, storeData, storeJson } from "../../Class/storage";
 import { setSaveList } from "../../Reducers/saveList";
 import ActivityLoader from "../ActivityLoader";
 import Avatar from "../Avatar";
 const { width, height } = Dimensions.get("window");
 
-export default function Trending({onMore,navigation}) {
+export default function Trending({onMore,navigation,refresh}) {
   const [data,setData]=useState()
   useEffect(()=>{
+    fetchData()
     getData()
-  },[])
+  },[refresh])
   const getData = async () => {
     try {
       const { data } = await getTrendingServices();
       setData(data?.gigs);
+      await storeJson("trending",data?.gigs)
       //console.log(data?.gigs[0])
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const fetchData = async () => {
+    try {
+      const data = await getJson("trending");
+      setData(data);
     } catch (err) {
       console.error(err.message);
     }
