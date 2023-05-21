@@ -151,14 +151,14 @@ const Feed = ({ navigation, route }) => {
           navigation.navigate("InitialServiceCreate")
         }}/>
         <ServiceListCart/>
-        <PopularCategory onMore={()=>{
-          navigation.navigate("ServiceScreen")
+        <PopularCategory navigation={navigation} onMore={(data)=>{
+          navigation.navigate("ServiceScreen",{data:data})
         }}/>
-        <TopSeller onMore={()=>{
-          navigation.navigate("ServiceScreen")
+        <TopSeller navigation={navigation} onMore={(data)=>{
+          navigation.navigate("ServiceScreen",{data:data})
         }}/>
-        <Trending onMore={()=>{
-          navigation.navigate("ServiceScreen")
+        <Trending navigation={navigation} onMore={(data)=>{
+          navigation.navigate("ServiceScreen",{data:data})
         }}/>
         <JoinCart onClick={()=>{
           if (Array.isArray(user)) {
@@ -167,8 +167,8 @@ const Feed = ({ navigation, route }) => {
           }
           navigation.navigate("InitialServiceCreate")
           }} colors={["#5C258D","#4389A2"]}/>
-        <TopSeller title={"Some Suggest"} onMore={()=>{
-          navigation.navigate("ServiceScreen")
+        <TopSeller navigation={navigation} title={"Some Suggest"} onMore={(data)=>{
+          navigation.navigate("ServiceScreen",{data:data})
         }}/>
         <View>
         <Text style={styles.text}>Category</Text>

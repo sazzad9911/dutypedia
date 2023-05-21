@@ -1,5 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
-import React,{useState} from "react";
+import { useNavigation } from "@react-navigation/native";
+import React,{useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -11,11 +12,27 @@ import {
   Pressable
 } from "react-native";
 import { SvgXml } from "react-native-svg";
+import { useDispatch, useSelector } from "react-redux";
 import customStyle from "../../assets/stylesheet";
+import { getLikeGigs, getRating, getTrendingServices, setLikeGigs } from "../../Class/service";
+import { setSaveList } from "../../Reducers/saveList";
+import ActivityLoader from "../ActivityLoader";
 import Avatar from "../Avatar";
 const { width, height } = Dimensions.get("window");
 
-export default function Trending({onMore}) {
+export default function Trending({onMore,navigation}) {
+  const [data,setData]=useState()
+  useEffect(()=>{
+    getData()
+  })
+  const getData = async () => {
+    try {
+      const { data } = await getTrendingServices();
+      setData(data?.gigs);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <View style={{marginBottom:14}}>
       <View
@@ -24,36 +41,92 @@ export default function Trending({onMore}) {
           { marginTop: 34, marginBottom: 18, marginHorizontal: 20 },
         ]}>
         <Text style={customStyle.landingHeadLine}>All time trending</Text>
-        <TouchableOpacity onPress={onMore}>
+        <TouchableOpacity onPress={()=>onMore(data)}>
           <Text style={customStyle.landingButtonText}>See all</Text>
         </TouchableOpacity>
       </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
         <View style={{ width: 14 }} />
-        <TrendingCart />
-        <TrendingCart />
-        <TrendingCart />
-        <TrendingCart />
+        {data&&data.map((doc,i)=>(
+          <TrendingCart data={doc} onPress={() => {
+            navigation?.navigate("OtherProfile", {
+              serviceId: doc?.service?.id,
+              data: doc,
+            });
+          }} key={i} />
+        ))}
+       {!data && (
+          <View style={[customStyle.fullBox, { height: 220 }]}>
+            <ActivityLoader />
+          </View>
+        )}
+        {data && data.length == 0 && (
+          <View style={[customStyle.fullBox, { height: 220 }]}>
+            <Text style={customStyle.mediumText}>No Service!</Text>
+          </View>
+        )}
         <View style={{ width: 14 }} />
       </ScrollView>
     </View>
   );
 }
-export const TrendingCart = () => {
+export const TrendingCart = ({data,onPress}) => {
   const [like, setLike] = useState(false);
-
+  const [rating, setRating] = useState(0);
+  const saveList = useSelector((state) => state.saveList);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  useEffect(() => {
+    getRating(data?.id).then((res) => {
+      setRating(res.data.rating);
+    });
+  }, []);
+  useEffect(() => {
+    //console.log(data)
+    let arr = saveList?.filter((d) => d.gig.id == data?.id);
+    if (arr?.length > 0) {
+      setLike(true);
+    } else {
+      setLike(false);
+    }
+  }, [saveList?.length]);
+  useEffect(() => {
+    if (!user.token) {
+      setLike(false);
+    }
+  }, [user]);
+  const addToSaveList = async () => {
+    if (!data) {
+      return;
+    }
+    const res = await setLikeGigs(user.token, data.id);
+    //console.log(res.data)
+    const response = await getLikeGigs(user.token);
+    //console.log(response.data.gigs)
+    dispatch(setSaveList(response.data.gigs));
+  };
   return (
-    <Pressable style={styles.container}>
+    <Pressable onPress={onPress} style={styles.container}>
       <View>
         <Image
           style={styles.image}
           source={{
-            uri: "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
+            uri: data
+              ? data.images[0]
+              : "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
           }}
         />
         <TouchableOpacity
           style={styles.icon}
-          onPress={() => setLike((t) => !t)}>
+          onPress={() => {
+            if (!user.token) {
+              navigation.navigate("LogIn");
+              return;
+            }
+            addToSaveList();
+            setLike((t) => !t);
+          }}>
           <AntDesign
             name={like ? "heart" : "hearto"}
             size={16}
@@ -63,7 +136,9 @@ export const TrendingCart = () => {
       </View>
       <View style={styles.lineBox}>
         <Text style={styles.headLine} numberOfLines={2}>
-          devlop,customize web app and fix bug using vue js,p and other things{" "}
+        {data
+            ? data.title
+            : "devlop,customize web app and fix bug using vue js,p and other things"}
         </Text>
         <View
           style={[
@@ -79,7 +154,9 @@ export const TrendingCart = () => {
               <Avatar
                 style={styles.avatar}
                 source={{
-                  uri: "https://media.istockphoto.com/id/1375264815/photo/beautiful-afro-woman.jpg?b=1&s=170667a&w=0&k=20&c=V052sAKDF76elxBGk2ozB0hxafANXLjVmBNKFfPTdTY=",
+                  uri: data
+                    ? data.service.profilePhoto
+                    : "https://media.istockphoto.com/id/1375264815/photo/beautiful-afro-woman.jpg?b=1&s=170667a&w=0&k=20&c=V052sAKDF76elxBGk2ozB0hxafANXLjVmBNKFfPTdTY=",
                 }}
               />
             </View>
@@ -88,10 +165,14 @@ export const TrendingCart = () => {
                 flex: 1,
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
-                Easin Arafat It consulting center
+              {data
+                  ? `${data.service.user.name}`
+                  : "Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>
-                Easin Arafat It consulting center
+              {data
+                  ? data.service.serviceCenterName
+                  : "Easin Arafat It consulting center"}
               </Text>
             </View>
           </View>
@@ -103,9 +184,9 @@ export const TrendingCart = () => {
             }}>
             <View style={styles.chipContainer}>
               <SvgXml width={"8"} xml={star} />
-              <Text style={styles.chipText}>5.0</Text>
+              <Text style={styles.chipText}>{rating > parseInt(rating) ? rating : `${rating}.0`}</Text>
             </View>
-            <Text style={styles.hugeText}>50000৳</Text>
+            <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
           </View>
         </View>
       </View>

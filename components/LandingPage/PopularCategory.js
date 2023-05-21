@@ -21,22 +21,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
 import { getData, storeData } from "../../Class/storage";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import ActivityLoader from "../ActivityLoader";
 
-export default function PopularCategory({ onMore }) {
+export default function PopularCategory({ onMore, navigation }) {
   const [data, setData] = useState();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     //fetchData();
-    if (!data) {
-      store();
-    }
+    store();
   }, [isFocused]);
   const store = async () => {
     try {
-      const { data } = await getStartingServices();
+      const { data } = await getPopularServices();
       setData(data?.gigs);
-      
+      //console.log(data?.gigs)
       //storeData("popular_category",data?.gigs);
     } catch (err) {
       console.error(err.message);
@@ -58,16 +57,44 @@ export default function PopularCategory({ onMore }) {
       }}>
       <View style={[customStyle.flexBox, { marginTop: 20, marginBottom: 8 }]}>
         <Text style={customStyle.landingHeadLine}>Popular Category</Text>
-        <TouchableOpacity onPress={onMore}>
+        <TouchableOpacity
+          onPress={() => {
+            onMore(data);
+          }}>
           <Text style={styles.buttonText}>See all</Text>
         </TouchableOpacity>
       </View>
-      {data&&data.slice(0,3).map((doc,i)=>(
-        <Card  key={i} style={i==2?{
-          borderBottomWidth: 0,
-          paddingBottom: 0,
-        }:null}  />
-      ))}
+      {data &&
+        data?.slice(0, 3).map((doc, i) => (
+          <Card
+            onPress={() => {
+              navigation?.navigate("OtherProfile", {
+                serviceId: doc?.service?.id,
+                data: doc,
+              });
+            }}
+            data={doc}
+            key={i}
+            style={
+              i == 2
+                ? {
+                    borderBottomWidth: 0,
+                    paddingBottom: 0,
+                  }
+                : null
+            }
+          />
+        ))}
+      {!data && (
+        <View style={[customStyle.fullBox, { height: 220 }]}>
+          <ActivityLoader />
+        </View>
+      )}
+      {data && data.length == 0 && (
+        <View style={[customStyle.fullBox, { height: 220 }]}>
+          <Text style={customStyle.mediumText}>No Service!</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -77,27 +104,27 @@ export const Card = ({ style, data, onPress }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const saveList = useSelector((state) => state.saveList);
-  const navigation=useNavigation()
+  const navigation = useNavigation();
 
   useEffect(() => {
     getRating(data?.id).then((res) => {
       setRating(res.data.rating);
     });
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(data)
-    let arr=saveList?.filter(d=>d.gig.id==data?.id)
-    if(arr?.length>0){
-      setLike(true)
-    }else{
-      setLike(false)
+    let arr = saveList?.filter((d) => d.gig.id == data?.id);
+    if (arr?.length > 0) {
+      setLike(true);
+    } else {
+      setLike(false);
     }
-  },[saveList?.length])
-  useEffect(()=>{
-    if(!user.token){
-      setLike(false)
+  }, [saveList?.length]);
+  useEffect(() => {
+    if (!user.token) {
+      setLike(false);
     }
-  },[user])
+  }, [user]);
   const addToSaveList = async () => {
     if (!data) {
       return;
@@ -132,9 +159,9 @@ export const Card = ({ style, data, onPress }) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              if(!user.token){
-                navigation.navigate("LogIn")
-                return
+              if (!user.token) {
+                navigation.navigate("LogIn");
+                return;
               }
               addToSaveList();
               setLike((t) => !t);

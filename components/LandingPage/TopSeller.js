@@ -14,13 +14,44 @@ import { SvgXml } from "react-native-svg";
 import customStyle from "../../assets/stylesheet";
 import Avatar from "../Avatar";
 import { AntDesign } from "@expo/vector-icons";
-import { getLikeGigs, getRating, setLikeGigs } from "../../Class/service";
+import {
+  getLikeGigs,
+  getRating,
+  getSuggestServices,
+  getTopServices,
+  setLikeGigs,
+} from "../../Class/service";
 import { useDispatch, useSelector } from "react-redux";
 import { setSaveList } from "../../Reducers/saveList";
 import { useNavigation } from "@react-navigation/native";
+import ActivityLoader from "../ActivityLoader";
 const { width, height } = Dimensions.get("window");
 
-export default function TopSeller({ onMore,title }) {
+export default function TopSeller({ onMore, title,navigation }) {
+  const [data, setData] = useState();
+  useEffect(() => {
+   if(title){
+    getSuggest()
+   }else{
+    getData();
+   }
+  }, []);
+  const getData = async () => {
+    try {
+      const { data } = await getTopServices();
+      setData(data?.gigs);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const getSuggest = async () => {
+    try {
+      const { data } = await getSuggestServices();
+      setData(data?.gigs);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <View>
       <View
@@ -28,29 +59,53 @@ export default function TopSeller({ onMore,title }) {
           customStyle.flexBox,
           { marginTop: 20, marginBottom: 18, marginHorizontal: 20 },
         ]}>
-        <Text style={customStyle.landingHeadLine}>{title?title:"Top Seller"}</Text>
-        <TouchableOpacity onPress={onMore}>
+        <Text style={customStyle.landingHeadLine}>
+          {title ? title : "Top Seller"}
+        </Text>
+        <TouchableOpacity onPress={() => onMore(data)}>
           <Text style={customStyle.landingButtonText}>See all</Text>
         </TouchableOpacity>
       </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
         <View style={{ width: 14 }} />
-        <TopSellerCard avatar={true} />
-        <TopSellerCard avatar={true} />
-        <TopSellerCard avatar={true}/>
-        <TopSellerCard avatar={true}/>
+        {data &&
+          data.map((doc, i) => (
+            <TopSellerCard onPress={() => {
+              navigation?.navigate("OtherProfile", {
+                serviceId: doc?.service?.id,
+                data: doc,
+              });
+            }} key={i} data={doc} avatar={true} />
+          ))}
+        {!data && (
+          <View style={[customStyle.fullBox, { height: 220 }]}>
+            <ActivityLoader />
+          </View>
+        )}
+        {data && data.length == 0 && (
+          <View style={[customStyle.fullBox, { height: 220 }]}>
+            <Text style={customStyle.mediumText}>No Service!</Text>
+          </View>
+        )}
         <View style={{ width: 14 }} />
       </ScrollView>
     </View>
   );
 }
-export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => {
+export const TopSellerCard = ({
+  width,
+  style,
+  height,
+  data,
+  onPress,
+  avatar,
+}) => {
   const [like, setLike] = useState(false);
-  const [rating,setRating]=useState(0)
+  const [rating, setRating] = useState(0);
   const saveList = useSelector((state) => state.saveList);
-  const user=useSelector(state=>state.user)
-  const dispatch=useDispatch()
-  const navigation=useNavigation()
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const st = StyleSheet.create({
     width: {
@@ -58,36 +113,38 @@ export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => 
     },
   });
   useEffect(() => {
-    getRating(data?.id).then(res=>{
-      setRating(res.data.rating)
-    })
+    getRating(data?.id).then((res) => {
+      setRating(res.data.rating);
+    });
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(data)
-    let arr=saveList?.filter(d=>d.gig.id==data?.id)
-    if(arr?.length>0){
-      setLike(true)
-    }else{
-      setLike(false)
+    let arr = saveList?.filter((d) => d.gig.id == data?.id);
+    if (arr?.length > 0) {
+      setLike(true);
+    } else {
+      setLike(false);
     }
-  },[saveList?.length])
-  useEffect(()=>{
-    if(!user.token){
-      setLike(false)
+  }, [saveList?.length]);
+  useEffect(() => {
+    if (!user.token) {
+      setLike(false);
     }
-  },[user])
-  const addToSaveList=async()=>{
-    if(!data){
-      return
+  }, [user]);
+  const addToSaveList = async () => {
+    if (!data) {
+      return;
     }
-    const res=await setLikeGigs(user.token,data.id)
+    const res = await setLikeGigs(user.token, data.id);
     //console.log(res.data)
-    const response=await getLikeGigs(user.token);
+    const response = await getLikeGigs(user.token);
     //console.log(response.data.gigs)
-    dispatch(setSaveList(response.data.gigs))
-  }
+    dispatch(setSaveList(response.data.gigs));
+  };
   return (
-    <Pressable onPress={onPress} style={[styles.container, width ? st.width : null, style]}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.container, width ? st.width : null, style]}>
       <View>
         <Image
           style={[
@@ -101,23 +158,23 @@ export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => 
               : "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
           }}
         />
-        {user&&(
+        {user && (
           <TouchableOpacity
-          style={styles.icon}
-          onPress={() => {
-            if(!user.token){
-              navigation.navigate("LogIn")
-              return
-            }
-            addToSaveList()
-            setLike((t) => !t)
-          }}>
-          <AntDesign
-            name={like ? "heart" : "hearto"}
-            size={16}
-            color={like ? "red" : "#FFFFFF"}
-          />
-        </TouchableOpacity>
+            style={styles.icon}
+            onPress={() => {
+              if (!user.token) {
+                navigation.navigate("LogIn");
+                return;
+              }
+              addToSaveList();
+              setLike((t) => !t);
+            }}>
+            <AntDesign
+              name={like ? "heart" : "hearto"}
+              size={16}
+              color={like ? "red" : "#FFFFFF"}
+            />
+          </TouchableOpacity>
         )}
       </View>
       <View style={styles.lineBox}>
@@ -129,33 +186,37 @@ export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => 
         <View
           style={[
             customStyle.flexBox,
-            { marginTop: 8, justifyContent: "space-between",alignItems:"flex-end" },
+            {
+              marginTop: 8,
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+            },
           ]}>
           <View
             style={{
               flexDirection: "row",
               flex: 2,
-              
             }}>
-            {avatar&&(
+            {avatar && (
               <View>
-              <Avatar
-                style={styles.avatar}
-                source={{
-                  uri: data
-                    ? data.service.profilePhoto
-                    : "https://media.istockphoto.com/id/1375264815/photo/beautiful-afro-woman.jpg?b=1&s=170667a&w=0&k=20&c=V052sAKDF76elxBGk2ozB0hxafANXLjVmBNKFfPTdTY=",
-                }}
-              />
-            </View>
+                <Avatar
+                  style={styles.avatar}
+                  source={{
+                    uri: data
+                      ? data.service.profilePhoto
+                      : "https://media.istockphoto.com/id/1375264815/photo/beautiful-afro-woman.jpg?b=1&s=170667a&w=0&k=20&c=V052sAKDF76elxBGk2ozB0hxafANXLjVmBNKFfPTdTY=",
+                  }}
+                />
+              </View>
             )}
             <View
               style={{
                 flex: 1,
-               
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
-              {data?`${data.service.user.name}`:"Easin Arafat It consulting center"}
+                {data
+                  ? `${data.service.user.name}`
+                  : "Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>
                 {data
@@ -168,11 +229,12 @@ export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => 
           <View
             style={{
               alignItems: "center",
-              
             }}>
             <View style={styles.chipContainer}>
               <SvgXml width={"8"} height={"7"} xml={star} />
-              <Text style={styles.chipText}>{rating>parseInt(rating)?rating:`${rating}.0`}</Text>
+              <Text style={styles.chipText}>
+                {rating > parseInt(rating) ? rating : `${rating}.0`}
+              </Text>
             </View>
             <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
           </View>
@@ -181,13 +243,13 @@ export const TopSellerCard = ({ width, style, height, data,onPress,avatar }) => 
     </Pressable>
   );
 };
-export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
+export const TopSellerCardLike = ({ width, style, height, data, onPress }) => {
   const [like, setLike] = useState(false);
-  const [rating,setRating]=useState(0)
+  const [rating, setRating] = useState(0);
   const saveList = useSelector((state) => state.saveList);
-  const user=useSelector(state=>state.user)
-  const dispatch=useDispatch()
-  data=data.gig;
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  data = data.gig;
 
   const st = StyleSheet.create({
     width: {
@@ -195,32 +257,34 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
     },
   });
   useEffect(() => {
-    getRating(data?.id).then(res=>{
-      setRating(res.data.rating)
-    })
+    getRating(data?.id).then((res) => {
+      setRating(res.data.rating);
+    });
   }, []);
-  useEffect(()=>{
+  useEffect(() => {
     //console.log(data)
-    let arr=saveList?.filter(d=>d.gig.id==data?.id)
-    if(arr?.length>0){
-      setLike(true)
-    }else{
-      setLike(false)
+    let arr = saveList?.filter((d) => d.gig.id == data?.id);
+    if (arr?.length > 0) {
+      setLike(true);
+    } else {
+      setLike(false);
     }
-  },[saveList?.length])
-  const addToSaveList=async()=>{
-    if(!data){
-      return
+  }, [saveList?.length]);
+  const addToSaveList = async () => {
+    if (!data) {
+      return;
     }
-    const res=await setLikeGigs(user.token,data.id)
+    const res = await setLikeGigs(user.token, data.id);
     //console.log(res.data)
-    const response=await getLikeGigs(user.token);
+    const response = await getLikeGigs(user.token);
     //console.log(response.data.gigs)
-    dispatch(setSaveList(response.data.gigs))
-  }
+    dispatch(setSaveList(response.data.gigs));
+  };
   //console.log(data)
   return (
-    <Pressable onPress={onPress} style={[styles.container, width ? st.width : null, style]}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.container, width ? st.width : null, style]}>
       <View>
         <Image
           style={[
@@ -234,19 +298,19 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
               : "https://www.cleansweepofamerica.com/wp-content/uploads/2020/10/office-cleaning-service.jpeg",
           }}
         />
-        {user&&(
+        {user && (
           <TouchableOpacity
-          style={styles.icon}
-          onPress={() => {
-            addToSaveList()
-            setLike((t) => !t)
-          }}>
-          <AntDesign
-            name={like ? "heart" : "hearto"}
-            size={16}
-            color={like ? "red" : "#FFFFFF"}
-          />
-        </TouchableOpacity>
+            style={styles.icon}
+            onPress={() => {
+              addToSaveList();
+              setLike((t) => !t);
+            }}>
+            <AntDesign
+              name={like ? "heart" : "hearto"}
+              size={16}
+              color={like ? "red" : "#FFFFFF"}
+            />
+          </TouchableOpacity>
         )}
       </View>
       <View style={styles.lineBox}>
@@ -258,13 +322,16 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
         <View
           style={[
             customStyle.flexBox,
-            { marginTop: 8, justifyContent: "space-between",alignItems:"flex-end" },
+            {
+              marginTop: 8,
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+            },
           ]}>
           <View
             style={{
               flexDirection: "row",
               flex: 2,
-              
             }}>
             <View>
               <Avatar
@@ -281,7 +348,9 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
                 flex: 1,
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
-              {data?`${data.service.user.firstName} ${data.service.user.lastName}`:"Easin Arafat It consulting center"}
+                {data
+                  ? `${data.service.user.firstName} ${data.service.user.lastName}`
+                  : "Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>
                 {data
@@ -297,7 +366,9 @@ export const TopSellerCardLike = ({ width, style, height, data,onPress }) => {
             }}>
             <View style={styles.chipContainer}>
               <SvgXml width={"8"} xml={star} />
-              <Text style={styles.chipText}>{rating>parseInt(rating)?rating.toFixed(1):`${rating}.0`}</Text>
+              <Text style={styles.chipText}>
+                {rating > parseInt(rating) ? rating.toFixed(1) : `${rating}.0`}
+              </Text>
             </View>
             <Text style={styles.hugeText}>{data ? data.price : "00"}৳</Text>
           </View>
@@ -322,8 +393,8 @@ const styles = StyleSheet.create({
   lineBox: {
     marginVertical: 12,
     paddingHorizontal: 8,
-    flex:1,
-    justifyContent:"space-between"
+    flex: 1,
+    justifyContent: "space-between",
   },
   headLine: {
     fontSize: 14,
@@ -337,20 +408,19 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: "row",
     backgroundColor: "#2BDE73",
-    paddingVertical:2,
+    paddingVertical: 2,
     borderRadius: 25,
     paddingHorizontal: 3,
     alignItems: "center",
     justifyContent: "center",
     width: 40,
-    height:13
+    height: 13,
   },
   chipText: {
     fontSize: 10,
     fontWeight: "700",
     marginLeft: 4,
     color: "white",
-   
   },
   smallText: {
     fontSize: 10,
