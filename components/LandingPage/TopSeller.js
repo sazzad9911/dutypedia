@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginLeft: 4,
     color: "white",
-    lineHeight:8
+    lineHeight:11
   },
   smallText: {
     fontSize: 10,
