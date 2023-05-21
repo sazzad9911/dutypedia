@@ -20,7 +20,7 @@ export default function NoResult() {
         }}>No Services found</Text>
         <Text style={{
           fontSize:12,
-          lineHeight:16,
+          
           fontWeight:"400"
         }}>We couldn't find what you were looking for. Please try searching for something else or choose a category from the menu.</Text>
     </View>

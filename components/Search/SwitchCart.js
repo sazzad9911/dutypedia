@@ -15,7 +15,7 @@ export default function SwitchCart({ style, title, value, onChange }) {
       <Text
         style={{
           fontSize: 16,
-          lineHeight: 18,
+          
           fontWeight: "400",
         }}>
         {title}

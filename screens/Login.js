@@ -107,7 +107,7 @@ const Login = ({ navigation }) => {
             <Text style={styles.lebel}>Password</Text>
             <Input onSubmitEditing={()=>{
               login()
-            }} returnKeyType={"go"} innerRef={passRef} value={Password} onChange={setPassword} placeholder={" "} style={styles.input} />
+            }} secureTextEntry={true} returnKeyType={"go"} innerRef={passRef} value={Password} onChange={setPassword} placeholder={" "} style={styles.input} />
             <View
               style={{
                 flexDirection: "row",
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    lineHeight: 16,
+    
     fontWeight: "400",
   },
   input: {

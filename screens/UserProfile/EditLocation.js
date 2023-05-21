@@ -159,7 +159,7 @@ export default function EditLocation({ navigation }) {
               <Text
                 style={{
                   fontWeight: "500",
-                  lineHeight: 32,
+                  
                   fontSize: 24,
                   marginLeft: 8,
                   flex: 1,
@@ -408,7 +408,7 @@ const arrow = `<svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="
 const newStyle = StyleSheet.create({
   text: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
   },
 });

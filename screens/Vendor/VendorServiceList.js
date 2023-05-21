@@ -93,7 +93,7 @@ export default function VendorServiceList({ navigation, route }) {
                   style={{
                     fontWeight: "500",
                     fontSize: 16,
-                    lineHeight: 16,
+
                     color: focused ? "#000000" : "#A3A3A3",
                   }}>
                   {`${initialState[i].name} `}
@@ -245,7 +245,7 @@ const Screens = ({ navigation, route }) => {
           marginHorizontal: 20,
           marginVertical: 16,
           marginTop: 32,
-          lineHeight: 28,
+
         }}>
         Select Service
       </Text>

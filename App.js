@@ -1,4 +1,4 @@
-//import {  } from "expo-status-bar";
+
 import {
   StyleSheet,
   Text,

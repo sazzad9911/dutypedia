@@ -75,7 +75,7 @@ export default function Location({navigation}) {
               style={{
                 textDecorationLine: "underline",
                 fontSize: 16,
-                lineHeight: 24,
+                
               }}>
               Edit
             </Text>
@@ -90,7 +90,7 @@ export default function Location({navigation}) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 24,
+                
                 fontSize: 16,
                 marginLeft: 10,
               }}>
@@ -122,7 +122,7 @@ export default function Location({navigation}) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 32,
+                
                 fontSize: 24,
                 marginLeft: 8,
                 flex: 1,

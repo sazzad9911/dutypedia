@@ -173,7 +173,7 @@ export default function UserAppointmentDetails({ navigation, route }) {
               fontSize: 16,
               marginTop: 24,
               textAlign: "justify",
-              lineHeight:24
+              
             }}>
             {data && data.description ? data.description : "N/A"}
           </Text>

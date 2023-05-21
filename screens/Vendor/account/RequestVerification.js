@@ -47,7 +47,7 @@ export default function RequestVerification({ navigation }) {
               color: "#09090A",
               fontSize: 24,
               fontWeight: "400",
-              lineHeight: 31,
+              
               marginTop: 28,
             }}>
             Verify Your Account Before Withdrawing Funds
@@ -56,7 +56,7 @@ export default function RequestVerification({ navigation }) {
             style={{
               fontSize: 16,
               fontWeight: "400",
-              lineHeight: 23,
+              
               marginTop: 28,
               color: "#484848",
             }}>

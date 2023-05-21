@@ -108,7 +108,7 @@ export default function EditEmail({navigation,route}) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 32,
+                
                 fontSize: 24,
                 marginLeft: 8,
                 flex: 1,

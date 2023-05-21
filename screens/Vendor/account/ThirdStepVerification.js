@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "400",
-    lineHeight: 23,
+    
   },
   small: {
     fontSize: 14,

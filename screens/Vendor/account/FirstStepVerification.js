@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
   headLine: {
     fontSize: 24,
     fontWeight: "500",
-    lineHeight: 29,
+    
   },
   text: {
     fontSize: 16,
     fontWeight: "400",
-    lineHeight: 19,
+    
   },
 });
 const vector = `<svg width="337" height="280" viewBox="0 0 337 280" fill="none" xmlns="http://www.w3.org/2000/svg">

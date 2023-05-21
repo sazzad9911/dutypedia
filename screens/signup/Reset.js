@@ -71,16 +71,16 @@ export default function Reset({navigation,route}) {
             height:253,
             width:"100%"
           }]} source={pic}   />
-          <Text style={[signUpStyle.text,signUpStyle.mt44,{lineHeight:14}]}>Your Username</Text>
+          <Text style={[signUpStyle.text,signUpStyle.mt44]}>Your Username</Text>
           <Text style={{
             fontSize:16,
             fontWeight:"600",
             marginTop:20,
             color:"#4ADE80"
           }}>{username}</Text>
-          <Text style={[signUpStyle.text,{marginTop:32,lineHeight:14}]}>Create new password</Text>
+          <Text style={[signUpStyle.text,{marginTop:32}]}>Create new password</Text>
           <Input error={passwordError} value={password} onChange={setPassword} secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Type password"}/>
-          <Text style={[signUpStyle.text,{marginTop:20,lineHeight:14}]}>Retype password</Text>
+          <Text style={[signUpStyle.text,{marginTop:20}]}>Retype password</Text>
           <Input error={rePasswordError} value={rePassword} onChange={setRePassword} secureTextEntry={true} style={[signUpStyle.input,signUpStyle.mt8]} placeholder={"Retype password"}/>
         </View>
       </ScrollView>
@@ -114,12 +114,10 @@ const signUpStyle = StyleSheet.create({
   headLine: {
     fontSize: 24,
     fontWeight: "700",
-    lineHeight: 30,
   },
   text: {
     fontSize: 14,
     fontWeight: "400",
-    lineHeight: 24,
   },
   button:{
     marginHorizontal:20,

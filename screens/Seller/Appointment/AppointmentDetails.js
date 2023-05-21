@@ -165,7 +165,7 @@ export default function AppointmentDetails({ navigation, route }) {
               fontSize: 16,
               marginTop: 24,
               textAlign: "justify",
-              lineHeight: 24,
+              
             }}>
             {appointment && appointment.description
               ? appointment.description

@@ -114,7 +114,7 @@ const Menu = ({ navigation }) => {
               marginTop: 24,
               fontWeight: "800",
               fontSize: 20,
-              lineHeight: 24,
+              
             }}>
             {vendor && vendor.service && vendor.service.serviceCenterName
               ? vendor.service.serviceCenterName
@@ -125,7 +125,7 @@ const Menu = ({ navigation }) => {
               marginTop: 12,
               fontSize: 16,
               fontWeight: "500",
-              lineHeight: 18,
+              
               color: "#767676",
             }}>
             
@@ -244,7 +244,7 @@ const Cart = ({ title, Icon, onPress, text }) => {
             marginLeft: 10,
             fontSize: 14,
             fontWeight: "500",
-            lineHeight: 16,
+            
           }}>
           {title}
         </Text>
@@ -256,7 +256,7 @@ const Cart = ({ title, Icon, onPress, text }) => {
             color: "#A3A3A3",
             fontWeight: "400",
             fontSize: 14,
-            lineHeight: 16,
+            
           }}>
           {text}
         </Text>

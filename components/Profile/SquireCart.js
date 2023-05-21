@@ -12,7 +12,6 @@ export default function SquireCart({style,icon,title,onPress}) {
             marginTop:8,
             fontSize:12,
             color:"#000000",
-            lineHeight:14,
         }}>{title}</Text>
     </Pressable>
   )

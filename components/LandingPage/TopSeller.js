@@ -350,13 +350,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginLeft: 4,
     color: "white",
-    lineHeight:10
+   
   },
   smallText: {
     fontSize: 10,
     color: "#767676",
     fontWeight: "400",
-    lineHeight:13
   },
   mediumText: {
     fontSize: 12,

@@ -46,6 +46,7 @@ import { StatusBar } from "expo-status-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import uuid from "react-native-uuid";
+import ChatSkeleton from "../components/ChatSkeleton";
 //import { EvilIcons } from '@expo/vector-icons';
 
 const ChatScreen = (props) => {
@@ -271,7 +272,7 @@ const ChatScreen = (props) => {
   };
 
   if (!Messages) {
-    return null;
+    return <ChatSkeleton/>
     return (
       <View
         style={{
@@ -490,7 +491,7 @@ const ChatScreen = (props) => {
         <Text
           style={{
             fontSize: 16,
-            lineHeight: 24,
+           
             fontWeight: "400",
             color: "#4D4E4F",
             marginHorizontal: 20,

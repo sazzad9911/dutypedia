@@ -266,7 +266,7 @@ const Rows = ({ title, item, name }) => {
       style={{
         fontSize: 14,
         fontWeight: "400",
-        lineHeight:20
+        
       }}
     >
       {text}
@@ -308,7 +308,7 @@ const ExtraFacilities = (props) => {
               fontSize:14,
               fontWeight: "400",
               marginTop:0,
-              lineHeight:20
+              
             }} key={i}>{doc.title}</Text>
           )}
       </View>

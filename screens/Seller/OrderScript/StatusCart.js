@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   dpText:{
     fontSize:16,
     fontWeight:"400",
-    lineHeight:20,
+    
     color:"#09090A"
   },
   exSmall:{

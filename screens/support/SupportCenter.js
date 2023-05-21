@@ -22,7 +22,7 @@ export default function SupportCenter({navigation,route}) {
             style={{
               fontWeight: "500",
               fontSize: 24,
-              lineHeight: 44,
+              
               alignItems: "center",
             }}>
             FAQ & Support Center
@@ -37,7 +37,7 @@ export default function SupportCenter({navigation,route}) {
             style={{
               color: "#4D4E4F",
               fontSize: 16,
-              lineHeight: 24,
+              
               fontWeight: "400",
               marginTop: 24,
             }}>
@@ -46,7 +46,7 @@ export default function SupportCenter({navigation,route}) {
           <Text
             style={{
               fontSize: 16,
-              lineHeight: 32,
+              
               fontWeight: "400",
               marginTop: 32,
             }}>
@@ -58,7 +58,7 @@ export default function SupportCenter({navigation,route}) {
           }}
             style={{
               fontSize: 16,
-              lineHeight: 28,
+              
               fontWeight: "400",
               color: "#4ADE80",
             }}>
@@ -299,7 +299,7 @@ const Cart = ({ title, description, onPress }) => {
           style={{
             fontSize: 16,
             fontWeight: "500",
-            lineHeight: 32,
+            
             flex: 1,
             marginRight: 20,
           }}>

@@ -618,7 +618,7 @@ const AcceptOrder = (props) => {
                   <Text
                     style={{
                       fontSize: 16,
-                      lineHeight: 28,
+                      
                       fontWeight: "400",
                       color: "#EC2700",
                       marginBottom: 12,
@@ -738,7 +738,7 @@ const AcceptOrder = (props) => {
               marginTop: 24,
               fontSize: 16,
               alignItems: "flex-start",
-              lineHeight: 28,
+              
             }}
             title="Yes, I have collected all the necessary information and understand what my customer wants."
           />
@@ -751,7 +751,7 @@ const AcceptOrder = (props) => {
               marginTop: 12,
               fontSize: 16,
               alignItems: "flex-start",
-              lineHeight: 28,
+              
             }}
             title="If I provide a physical service, I will deliver it face to face and use a mask."
           />
@@ -764,7 +764,7 @@ const AcceptOrder = (props) => {
               marginTop: 12,
               fontSize: 16,
               alignItems: "flex-start",
-              lineHeight: 28,
+              
             }}
             title="I will save all delivery proof documents for future inquiries"
           />
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "500",
     fontSize: 16,
-    lineHeight: 28,
+    
     marginLeft: 10,
   },
 });

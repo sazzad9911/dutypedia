@@ -257,7 +257,7 @@ const VendorSearchOrder = ({ navigation, route }) => {
                   style={{
                     fontWeight: "500",
                     fontSize: 16,
-                    lineHeight: 16,
+                    
                     color: focused ? "#000000" : "#A3A3A3",
                   }}>
                   {`${initialState[i].title}`}
@@ -306,7 +306,7 @@ const VendorSearchOrder = ({ navigation, route }) => {
                   style={{
                     fontWeight: "500",
                     fontSize: 16,
-                    lineHeight: 16,
+                    
                     color: focused ? "#ffffff" : "#E8E8E8",
                   }}>
                   {`${initialState[i].title}`}

@@ -13,6 +13,7 @@ import {
   Text,
   TextInput,
   Pressable,
+  RefreshControl,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +30,7 @@ import { setChatBottomRef } from "../../Reducers/chatBottomRef";
 import ChatHeader from "./ChatHeader";
 import { socket } from "../../Class/socket";
 import { getUnreadNotification } from "../../Class/notification";
+import { wait } from "../../action";
 
 export default function ChatList(props) {
   const scrollY = new Animated.Value(0);
@@ -63,6 +65,11 @@ export default function ChatList(props) {
   }, []);
   const vendor=useSelector(state=>state.vendor)
   const [newMessage,setNewMessage]=useState(false)
+  const [refreshing,setRefreshing]=useState(false)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   //console.log(chatBottomRef)
   React.useEffect(() => {
@@ -92,7 +99,7 @@ export default function ChatList(props) {
         });
     }
     //setNewMessage()
-  }, [user, isFocused,vendor,newMessage]);
+  }, [user, isFocused,vendor,newMessage,refreshing]);
 
   useEffect(()=>{
     socket?.on("getMessage",e=>{
@@ -153,6 +160,15 @@ export default function ChatList(props) {
         showsVerticalScrollIndicator={false}
         stickyHeaderHiddenOnScroll={true}
         stickyHeaderIndices={[0]}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              //setPageChange(true);
+              onRefresh();
+            }}
+          />
+        }
         onScroll={(e) => {
           scrollY.setValue(e.nativeEvent.contentOffset.y);
         }}>

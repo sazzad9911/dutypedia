@@ -33,13 +33,13 @@ export default function ReviewVerification({navigation}) {
           <Text style={{
             marginTop:28,
             fontSize:24,
-            lineHeight:31,
+            
             fontWeight:"400"
           }}>Your verification is currently under review.</Text>
           <Text style={{
             fontSize:16,
             fontWeight:"400",
-            lineHeight:24,
+            
             marginTop:28,
             color:"#484848"
           }}>

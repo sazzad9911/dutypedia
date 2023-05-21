@@ -62,7 +62,7 @@ export default function Email({navigation,route}) {
             <Text
               style={{
                 fontSize: 16,
-                lineHeight: 24,
+                
                 fontWeight: "400",
                 textDecorationLine: "underline",
               }}>
@@ -81,7 +81,7 @@ export default function Email({navigation,route}) {
             style={{
               marginLeft: 10,
               fontWeight: "500",
-              lineHeight: 24,
+              
               fontSize: 20,
               flex: 1,
             }}>
@@ -118,7 +118,7 @@ export default function Email({navigation,route}) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 32,
+                
                 fontSize: 24,
                 marginLeft: 8,
                 flex: 1,

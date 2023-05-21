@@ -147,7 +147,7 @@ export default function EditBusinessTitle({ navigation,route }) {
 export const styles = StyleSheet.create({
   headLine: {
     fontSize: 24,
-    lineHeight: 28,
+    
     fontWeight: "500",
   },
   input: {
@@ -168,7 +168,7 @@ export const styles = StyleSheet.create({
   },
   spText: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
     marginTop: 24,
     color:"#1A1A1A"

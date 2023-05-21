@@ -38,7 +38,7 @@ export default function OrderDeliveryRequirements({navigation,route}) {
             style={{
               marginLeft: 8,
               color: "#1A1A1A",
-              lineHeight: 32,
+              
               fontSize: 24,
               fontWeight: "500",
               flex: 1,
@@ -122,7 +122,7 @@ const light = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
     marginTop: 24,
   },

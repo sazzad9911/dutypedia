@@ -109,7 +109,7 @@ export default function Mobile({navigation,route}) {
             style={{
               marginLeft: 10,
               fontWeight: "500",
-              lineHeight: 24,
+              
               fontSize: 20,
               flex: 1,
             }}>
@@ -149,7 +149,7 @@ export default function Mobile({navigation,route}) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 32,
+                
                 fontSize: 24,
                 marginLeft: 8,
                 flex: 1,

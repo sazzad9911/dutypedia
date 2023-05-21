@@ -402,7 +402,7 @@ const VendorOrder = ({ navigation, route }) => {
                     style={{
                       fontWeight: "500",
                       fontSize: 16,
-                      lineHeight: 16,
+                      
                       color: focused ? "#000000" : "#A3A3A3",
                     }}>
                     {`${initialState[i].title}`}

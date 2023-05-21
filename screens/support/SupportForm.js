@@ -108,7 +108,7 @@ export default function SupportForm({ navigation, route }) {
             style={{
               fontWeight: "500",
               fontSize: 24,
-              lineHeight: 44,
+              
               alignItems: "center",
             }}>
             Support Center
@@ -123,7 +123,7 @@ export default function SupportForm({ navigation, route }) {
             style={{
               color: "#000000",
               fontSize: 20,
-              lineHeight: 32,
+              
               fontWeight: "500",
               marginTop: 36,
             }}>
@@ -174,7 +174,7 @@ export default function SupportForm({ navigation, route }) {
             style={{
               fontSize: 20,
               fontWeight: "500",
-              lineHeight: 28,
+              
             }}>
             Subject<Text style={{ color: "red" }}>*</Text>
           </Text>
@@ -189,7 +189,7 @@ export default function SupportForm({ navigation, route }) {
             style={{
               fontSize: 20,
               fontWeight: "500",
-              lineHeight: 28,
+              
             }}>
             Description<Text style={{ color: "red" }}>*</Text>
           </Text>
@@ -204,7 +204,7 @@ export default function SupportForm({ navigation, route }) {
             style={{
               fontSize: 20,
               fontWeight: "500",
-              lineHeight: 28,
+              
             }}>
             Attachments
           </Text>
@@ -311,7 +311,7 @@ export default function SupportForm({ navigation, route }) {
         <Text
           style={{
             fontSize: 16,
-            lineHeight: 24,
+            
             color: "#1A1A1A",
             fontWeight: "500",
             textAlign: "center",
@@ -361,14 +361,14 @@ export default function SupportForm({ navigation, route }) {
             style={{
               fontSize: 24,
               fontWeight: "500",
-              lineHeight: 44,
+              
             }}>
             Your request is submited!
           </Text>
           <Text
             style={{
               fontSize: 16,
-              lineHeight: 32,
+             
               fontWeight: "400",
               color: "#4D4E4F",
             }}>
@@ -383,7 +383,7 @@ export default function SupportForm({ navigation, route }) {
             }}
             style={{
               fontSize: 16,
-              lineHeight: 32,
+              
               fontWeight: "400",
               color: "#4ADE80",
             }}>

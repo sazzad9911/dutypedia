@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins-Medium",
     marginHorizontal: 20,
-    lineHeight: 35,
+    
   },
   input: {
     borderWidth: 1,

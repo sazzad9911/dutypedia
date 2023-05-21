@@ -42,7 +42,7 @@ const AllReviewHeader = (props) => {
           fontWeight: "500",
           fontSize: 20,
           color: "#000000",
-          lineHeight: 20,
+          
           flex: 1,
           textAlign: "center",
         }}>

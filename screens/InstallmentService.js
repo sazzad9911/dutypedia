@@ -768,7 +768,7 @@ const InstallmentService = (props) => {
                           fontSize: Platform.OS == "ios" ? 16.5 : 15,
                           fontFamily: "Poppins-SemiBold",
                           color: "#95979D",
-                          lineHeight: 30,
+                          
                         }}
                       >
                         Extra Facilities
@@ -784,7 +784,7 @@ const InstallmentService = (props) => {
                               style={{
                                 fontSize: Platform.OS == "ios" ? 16.5 : 15,
                                 fontFamily: "Poppins-Medium",
-                                lineHeight: 25,
+
                                 color: textColor,
                               }}
                               key={i + 1}

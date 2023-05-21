@@ -1946,7 +1946,7 @@ const BargainingScreen = ({ navigation, route }) => {
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
-                      lineHeight: 30,
+                      
                     }}>
                     Extra Facilities
                   </Text>
@@ -1961,7 +1961,7 @@ const BargainingScreen = ({ navigation, route }) => {
                           style={{
                             fontSize: Platform.OS == "ios" ? 16.5 : 15,
                             fontFamily: "Poppins-Medium",
-                            lineHeight: 25,
+                            
                             color: textColor,
                           }}
                           key={i + 1}>
@@ -2406,7 +2406,7 @@ export const ServiceTable = ({
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             margin: 0,
             color: "#535353",
-            lineHeight: 30,
+            
           }}>
           {item}
         </Text>
@@ -2422,7 +2422,7 @@ export const ServiceTable = ({
                     fontFamily: "Poppins-Medium",
                     fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     color: "#95979D",
-                    lineHeight: 30,
+                    
                   }}>
                   {doc}
                 </Text>
@@ -2444,7 +2444,7 @@ export const ServiceTable = ({
               fontFamily: "Poppins-Medium",
               fontSize: Platform.OS == "ios" ? 16.5 : 15,
               color: "#95979D",
-              lineHeight: 30,
+              
             }}>
             {name}
           </Text>
@@ -2503,7 +2503,7 @@ export const Rows = ({ title, item, name, NewDataList, height, index }) => {
         fontSize: Platform.OS == "ios" ? 16.5 : 15,
         fontFamily: "Poppins-Medium",
         color: textColor,
-        lineHeight: 25,
+        
         maxHeight: 160,
       }}>
       {text}

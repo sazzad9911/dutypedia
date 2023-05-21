@@ -130,7 +130,7 @@ export default function UserProfile({ navigation, route }) {
               fontSize: 12,
               marginTop: 4,
               fontWeight: "400",
-              lineHeight: 14,
+              
             }}>
             Last seen{" "}
             {dateDifference(user?.user?.lastSeen,new Date())==0?"today":serverTimeToLocalDate(user?.user?.lastSeen)}

@@ -44,7 +44,7 @@ const styles=StyleSheet.create({
     text2:{
         fontSize:12,
         fontWeight:"400",
-        lineHeight:20,
+        
         color:"white",
         marginTop:12
     },

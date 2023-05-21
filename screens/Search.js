@@ -49,12 +49,6 @@ const SearchSecond = ({ navigation, route }) => {
   const handleSheetChange = React.useCallback((index) => {
     setIndex(index);
   }, []);
-  const handleSnapPress = React.useCallback((index) => {
-    sheetRef.current?.snapToIndex(index);
-  }, []);
-  const handleClosePress = React.useCallback(() => {
-    sheetRef.current?.close();
-  }, []);
   const [filter, setFilter] = useState();
   const params = route?.params;
   const key = params?.key;
@@ -453,7 +447,7 @@ const SCREEN = ({ data, navigation, loader }) => {
     <View
       style={{
         flexDirection: "row",
-        marginHorizontal: 28,
+        marginHorizontal: 20,
         flex: 1,
         flexWrap: "wrap",
       }}>
@@ -547,11 +541,11 @@ const SCREEN = ({ data, navigation, loader }) => {
 };
 const styles = StyleSheet.create({
   header: {
-    marginHorizontal: 28,
+    marginHorizontal: 20,
     marginTop: 36,
     backgroundColor: "white",
   },
   cart: {
-    width: width / 2 - 40,
+    width: width / 2 - 32,
   },
 });

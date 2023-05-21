@@ -80,12 +80,12 @@ export default function FeedBackMessage({ navigation, route }) {
 const styles = StyleSheet.create({
   headLine: {
     fontSize: 24,
-    lineHeight: 32,
+    
     fontWeight: "500",
   },
   text: {
     fontSize: 16,
-    lineHeight: 24,
+   
     fontWeight: "400",
   },
   font: {

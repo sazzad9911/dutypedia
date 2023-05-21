@@ -1498,7 +1498,7 @@ const CartView = ({ doc, onChange, setMessage }) => {
             style={{
               fontSize: 16,
               fontWeight: "400",
-              lineHeight: 20,
+              
               flex: 1,
             }}>
             {doc.name}

@@ -213,7 +213,7 @@ export default function EditPackageService({ navigation, route }) {
                 fontSize: 20,
                 fontFamily: "Poppins-SemiBold",
                 marginTop: 10,
-                lineHeight: 28,
+                
               }}
             >
               Add Your Best Package Service
@@ -1220,7 +1220,7 @@ export const AddScreen = ({ navigation, route }) => {
                 fontSize: 20,
                 fontFamily: "Poppins-SemiBold",
                 marginTop: 30,
-                lineHeight: 28,
+                
               }}
             >
               Add Your Package Title, Price & Feature

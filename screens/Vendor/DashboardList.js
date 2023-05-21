@@ -124,7 +124,7 @@ const DashboardList = ({ navigation, route }) => {
         <View style={{ height: 32 }} />
         <Text style={{
           fontSize:24,
-          lineHeight:32,
+          
           fontWeight:"500",
           marginHorizontal:20
         }}>Login or create your business account</Text>
@@ -162,7 +162,7 @@ const DashboardList = ({ navigation, route }) => {
             color: textColor,
             fontSize:16,
             fontWeight:"400",
-            lineHeight:24,
+            
             marginVertical:28
           }}
           title={"Create an another business account"}
@@ -241,7 +241,7 @@ const Cart = ({ data, onChange }) => {
               fontSize: 16,
               fontWeight: "400",
               color: "#1A1A1A",
-              lineHeight:24
+              
             }}>
             {title ? title : "Sazzad It Center"}
           </Text>

@@ -82,7 +82,7 @@ export default function ChatImage({ navigation, route }) {
             style={{
               color: "#ffffff",
               fontSize: 16,
-              lineHeight: 18,
+
               fontWeight: "400",
               flex:1
             }}>

@@ -9,7 +9,7 @@ export default function CategoryCard({data,onPress}) {
   return (
     <Pressable onPress={onPress} style={{
       flexDirection:"row",
-      marginHorizontal:28,
+      marginHorizontal:20,
       alignItems:"center",
       marginTop:24
 
@@ -33,12 +33,11 @@ export default function CategoryCard({data,onPress}) {
 const styles=StyleSheet.create({
   headline:{
     fontSize:16,
-    lineHeight:18,
     fontWeight:"500"
   },
   normalText:{
     fontSize:12,
-    lineHeight:14,
+    
     fontWeight:"400",
     marginTop:4,
     color:"#767676"

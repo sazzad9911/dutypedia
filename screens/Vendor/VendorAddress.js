@@ -71,7 +71,7 @@ export default function VendorAddress({ navigation,route }) {
               style={{
                 textDecorationLine: "underline",
                 fontSize: 16,
-                lineHeight: 24,
+                
               }}>
               Edit
             </Text>
@@ -86,7 +86,7 @@ export default function VendorAddress({ navigation,route }) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 24,
+                
                 fontSize: 16,
                 marginLeft: 10,
                 flex:1
@@ -106,7 +106,7 @@ export default function VendorAddress({ navigation,route }) {
             <Text
               style={{
                 fontWeight: "500",
-                lineHeight: 32,
+               
                 fontSize: 24,
                 marginLeft: 8,
                 flex: 1,

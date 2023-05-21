@@ -29,7 +29,7 @@ export default function PaymentStatus({ navigation, route }) {
           <Text
             style={{
               fontSize: 24,
-              lineHeight: 36,
+              
               fontWeight: "400",
               marginTop: 32,
             }}>
@@ -53,7 +53,7 @@ export default function PaymentStatus({ navigation, route }) {
               style={{
                 marginTop: 32,
                 fontSize: 20,
-                lineHeight: 36,
+                
                 fontWeight: "400",
                 textAlign: "center",
               }}>

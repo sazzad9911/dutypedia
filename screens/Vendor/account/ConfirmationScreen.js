@@ -38,7 +38,7 @@ export default function ConfirmationScreen({navigation}) {
         fontSize:16,
         fontWeight:"400",
         color:"#484848",
-        lineHeight:23
+        
       }}>
         Thank you for submitting your verification documents. We are now
         reviewing your information and will notify you of the verification

@@ -112,7 +112,7 @@ export default function OrderDelivery({ navigation, route }) {
             <Text
               style={{
                 fontSize: 16,
-                lineHeight: 24,
+                
                 fontWeight: "400",
                 marginTop: 32,
                 textAlign: "center",

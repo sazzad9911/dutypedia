@@ -40,7 +40,7 @@ export default function ImportantNotice({ navigation, route }) {
             style={{
               marginLeft: 8,
               color: "#1A1A1A",
-              lineHeight: 32,
+              
               fontSize: 24,
               fontWeight: "500",
               flex: 1,
@@ -52,7 +52,7 @@ export default function ImportantNotice({ navigation, route }) {
             style={{
               marginLeft: 8,
               color: "#1A1A1A",
-              lineHeight: 32,
+             
               fontSize: 24,
               fontWeight: "500",
               flex: 1,
@@ -65,7 +65,7 @@ export default function ImportantNotice({ navigation, route }) {
           <Text
           style={{
             fontSize: 16,
-            lineHeight: 24,
+            
             fontWeight: "400",
             marginTop: 24,
           }}>
@@ -78,7 +78,7 @@ export default function ImportantNotice({ navigation, route }) {
           <Text
           style={{
             fontSize: 16,
-            lineHeight: 24,
+            
             fontWeight: "400",
             marginTop: 24,
           }}>

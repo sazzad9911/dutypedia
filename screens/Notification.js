@@ -566,11 +566,11 @@ const styles = StyleSheet.create({
   text: {
     color: "#4D4E4F",
     fontSize: 16,
-    lineHeight: 24,
+    
   },
   descriptionText: {
     fontSize: 16,
-    lineHeight: 24,
+    
   },
   bold: {
     fontWeight: "600",

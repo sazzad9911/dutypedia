@@ -151,13 +151,12 @@ const InputBox = ({ value, onChange }) => {
 const styles = StyleSheet.create({
   largeText: {
     fontSize: 20,
-    lineHeight: 23,
+    
     fontWeight: "400",
   },
   mediumText: {
     fontWeight: "400",
     fontSize: 16,
-    lineHeight: 19,
   },
   lineBox: {
     marginVertical: 32,

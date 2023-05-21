@@ -618,6 +618,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 23,
     fontFamily: "Poppins-Bold",
-    lineHeight: 30,
+    
   },
 });

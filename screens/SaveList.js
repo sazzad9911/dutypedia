@@ -98,7 +98,7 @@ const SaveList = ({ navigation }) => {
             marginLeft: 5,
             fontWeight: "600",
             fontSize: 24,
-            lineHeight: 28,
+            
           }}>
           Save List
         </Text>

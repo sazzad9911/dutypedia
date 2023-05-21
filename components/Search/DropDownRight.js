@@ -29,7 +29,7 @@ export default function DropDownRight({ style, title, data, value, onChange }) {
         <Text
           style={{
             fontSize: 20,
-            lineHeight: 23,
+            
             fontWeight: "400",
           }}>
           {title}
@@ -41,7 +41,7 @@ export default function DropDownRight({ style, title, data, value, onChange }) {
           <Text
             style={{
               fontSize: 14,
-              lineHeight: 23,
+              
               fontWeight: "400",
               marginRight:4
             }}>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: "400",
-    lineHeight: 16,
+    
   },
   active: {
     color: "#4ADE80",

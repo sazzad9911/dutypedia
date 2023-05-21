@@ -166,7 +166,7 @@ const ServiceAgreement = (props) => {
                   <Text
                     style={{
                       fontSize: 16,
-                      lineHeight: 28,
+                      
                       fontWeight: "400",
                       color: "#EC2700",
                       marginBottom: 12,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "500",
     fontSize: 16,
-    lineHeight: 28,
+    
     marginLeft: 10,
   },
   flexBox: {
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   font: {
     fontSize: 16,
-    lineHeight: 28,
+    
     fontWeight: "400",
     color: "#1A1A1A",
     flex: 1,

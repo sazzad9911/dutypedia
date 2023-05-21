@@ -581,7 +581,7 @@ const OfferNow = (props) => {
           <Text
             style={{
               fontSize: 12,
-              lineHeight: 20,
+              
               fontWeight: "400",
               color: "#767676",
             }}>
@@ -780,20 +780,20 @@ const styles = StyleSheet.create({
   },
   spText: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
     marginTop: 24,
     color: "#1A1A1A",
   },
   headLine: {
     fontSize: 24,
-    lineHeight: 28,
+    
     fontWeight: "500",
   },
   leading: {
     fontSize: 24,
     fontWeight: "500",
-    lineHeight: 32,
+    
   },
 });
 export default OfferNow;

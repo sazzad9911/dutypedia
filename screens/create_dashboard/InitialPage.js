@@ -36,7 +36,7 @@ export default function InitialPage({ navigation }) {
         </View>
         <Text style={{
             fontSize:16,
-            lineHeight:24,
+           
             fontWeight:"400"
         }}>
           We understand that creating an account may take some time, but please

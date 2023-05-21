@@ -84,10 +84,10 @@ export default function OrderInfo({
         <Text style={styles.headLine}>Service/Item name</Text>
         {services && services.length > 0 ? (
           <View>
-            <Text style={[styles.text, { lineHeight: 24, marginTop: 12 }]}>
+            <Text style={[styles.text, { marginTop: 12 }]}>
               {title}
             </Text>
-            <Text style={[styles.text, { lineHeight: 20, marginTop: 12 }]}>
+            <Text style={[styles.text, { marginTop: 12 }]}>
               {services.map((doc, i) => {
                 return `${i == 0 ? "" : ", "}${doc.data.title}`;
               })}
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   font: {
     fontWeight: "400",
     fontSize: 16,
-    lineHeight: 24,
+    
   },
   button: {
     height: 40,

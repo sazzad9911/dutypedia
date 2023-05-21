@@ -344,7 +344,7 @@ const Service = ({ navigation, route }) => {
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "black",
-                    lineHeight: 30,
+                    
                   }}>
                   Upload{"\n"}Your
                 </Text>
@@ -353,7 +353,7 @@ const Service = ({ navigation, route }) => {
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "#DA1E37",
-                    lineHeight: 30,
+                    
                   }}>
                   High <Text style={{color:"black"}}>Quality</Text>
                 </Text>
@@ -362,7 +362,7 @@ const Service = ({ navigation, route }) => {
                     fontSize: 22,
                     fontFamily: "Poppins-Bold",
                     color: "#6366F1",
-                    lineHeight: 30,
+                    
                   }}>
                   Photo
                 </Text>

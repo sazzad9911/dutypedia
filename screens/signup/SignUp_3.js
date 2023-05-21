@@ -265,7 +265,7 @@ export default function SignUp_3({ navigation, route }) {
             style={{
               flex: 1,
               fontWeight: "500",
-              lineHeight: 24,
+              
               fontSize: 14,
             }}>
             I agree with all of Duty's{" "}

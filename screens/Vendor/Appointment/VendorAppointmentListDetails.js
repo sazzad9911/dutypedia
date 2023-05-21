@@ -177,7 +177,7 @@ export default function VendorAppointmentListDetails({ navigation, route }) {
               fontSize: 16,
               marginTop: 24,
               textAlign: "justify",
-              lineHeight:24
+              
             }}
           >
             {data && data.description

@@ -45,7 +45,7 @@ export default function FlatCart({
           <Text
             style={{
               fontSize: 14,
-              lineHeight: 16,
+             
               fontWeight: "500",
               opacity:Private?.4:1
             }}>

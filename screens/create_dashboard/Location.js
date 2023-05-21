@@ -1136,7 +1136,6 @@ const newStyles = StyleSheet.create({
     color: "#484848",
     fontWeight: "400",
     fontSize: 16,
-    lineHeight: 19,
   },
   errorText: {
     color: "red",

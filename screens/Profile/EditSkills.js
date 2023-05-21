@@ -213,7 +213,7 @@ export default function EditSkills({ navigation, route }) {
               ))}
             </View>
           )}
-          <Text style={[styles.text, { marginTop: 32, lineHeight: 24 }]}>
+          <Text style={[styles.text, { marginTop: 32,}]}>
             Example : Bridge Builder, Business Plans, Graphic design, Events
             Items, Bike repair, photographer, Baby Care, Business lawyers,
             Cooking Lessons, Dj Mixing{" "}
@@ -294,7 +294,7 @@ const AddBox = ({ onChange }) => {
         <Text
           style={{
             fontSize: 14,
-            lineHeight: 24,
+            
             color: text ? "#ffffff" : "#767676",
           }}>
           Add

@@ -348,7 +348,7 @@ const AlertDesign = ({ visible }) => {
           color: "red",
           fontSize: 16,
           margin: 30,
-          lineHeight: 25,
+          
           fontFamily: 'Poppins-Medium'
           
         }}

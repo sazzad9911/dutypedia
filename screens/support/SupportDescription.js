@@ -31,7 +31,7 @@ export default function SupportDescription({ navigation, route }) {
         <Text
           style={{
             fontSize: 16,
-            lineHeight: 24,
+            
             color: "#0B0B0B",
             fontWeight: "500",
             marginLeft: 10,
@@ -288,7 +288,7 @@ const backIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xm
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
-    lineHeight: 24,
+    
     fontWeight: "400",
     color: "#4D4E4F",
   },

@@ -99,7 +99,7 @@ export default function CancelOrderConfirmation({navigation,route}) {
             style={{
               marginLeft: 8,
               color: "#1A1A1A",
-              lineHeight: 32,
+            
               fontSize: 24,
               fontWeight: "500",
               flex: 1,
