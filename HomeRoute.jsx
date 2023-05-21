@@ -77,6 +77,7 @@ import Address from "./screens/Seller/Address";
 import ServiceOrder from "./screens/order/ServiceOrder";
 import ChooseDateOrder from "./screens/order/ChooseDateOrder";
 import InstructionOrder from "./screens/order/InstructionOrder";
+import { SearchSecond, SearchThird } from "./screens/Search";
 
 const Stack = createStackNavigator();
 
@@ -112,7 +113,16 @@ const HomeRoute = ({ navigation }) => {
         }}
         component={AllPackageList}
       />
-
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SearchSecond"
+        component={SearchSecond}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="SearchThird"
+        component={SearchThird}
+      />
       {/* <Stack.Screen
         options={{ headerShown: false }}
         name="Notice"
@@ -166,7 +176,7 @@ const HomeRoute = ({ navigation }) => {
       <Stack.Screen
         name="Company Calender"
         options={{
-          header:props=><SubHeader {...props} title={"Working Time"}/>,
+          header: (props) => <SubHeader {...props} title={"Working Time"} />,
         }}
         component={CompanyCalendar}
       />

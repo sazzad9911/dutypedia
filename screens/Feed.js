@@ -150,7 +150,7 @@ const Feed = ({ navigation, route }) => {
           }
           navigation.navigate("InitialServiceCreate")
         }}/>
-        <ServiceListCart/>
+        <ServiceListCart navigation={navigation}/>
         <PopularCategory navigation={navigation} onMore={(data)=>{
           navigation.navigate("ServiceScreen",{data:data})
         }}/>
@@ -178,7 +178,9 @@ const Feed = ({ navigation, route }) => {
           horizontal={true}
         >
           <View style={{width:14}}/>
-          {AllData && AllData.map((item, i) => <Cart key={i} data={item} />)}
+          {AllData && AllData.map((item, i) => <Cart onPress={()=>{
+            navigation.navigate("SearchSecond", { key: item?.title?.split(" ")[0],mainCategory:item?.title?.split(" ")[0] });
+          }} key={i} data={item} />)}
           <View style={{width:14}}/>
         </ScrollView>
         </View>

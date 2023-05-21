@@ -14,6 +14,7 @@ import {
   TextInput,
   Pressable,
   RefreshControl,
+  Dimensions,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +32,7 @@ import ChatHeader from "./ChatHeader";
 import { socket } from "../../Class/socket";
 import { getUnreadNotification } from "../../Class/notification";
 import { wait } from "../../action";
+const {height,width}=Dimensions.get("window")
 
 export default function ChatList(props) {
   const scrollY = new Animated.Value(0);
@@ -182,8 +184,8 @@ export default function ChatList(props) {
               <ChatCart readOnly={doc.readOnly} data={doc} key={i} {...props} />
             ))}
           {Conversations && Conversations.length == 0 && (
-            <View style={customStyle.fullBox}>
-              <SvgXml xml={noResult} />
+            <View style={[customStyle.fullBox,{height:height-200}]}>
+             
               <Text
                 style={{
                   marginVertical: 20,

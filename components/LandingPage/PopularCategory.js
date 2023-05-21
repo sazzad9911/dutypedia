@@ -179,9 +179,9 @@ export const Card = ({ style, data, onPress }) => {
         </View>
         <View style={[customStyle.flexBox]}>
           <Text style={[styles.smallText, { flex: 1 }]} numberOfLines={1}>
-            {data
-              ? `${data.service.user.name}`
-              : "Easin Arafat It consulting center"}
+          {data
+                  ? `${data?.service?.providerInfo?.name}`
+                  : "Easin Arafat It consulting center"}
           </Text>
           <View
             style={{

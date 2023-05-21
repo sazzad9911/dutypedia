@@ -214,8 +214,8 @@ export const TopSellerCard = ({
                 flex: 1,
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
-                {data
-                  ? `${data.service.user.name}`
+              {data
+                  ? `${data?.service?.providerInfo?.name}`
                   : "Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>

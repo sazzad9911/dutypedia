@@ -41,7 +41,7 @@ import customStyle from "../assets/stylesheet";
 import OrderDetails from "./Seller/OrderDetails";
 const Stack = createNativeStackNavigator();
 
-const SearchSecond = ({ navigation, route }) => {
+export const SearchSecond = ({ navigation, route }) => {
   const sheetRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["25%", "50%", "90%"], []);
   const [index, setIndex] = useState(-1);
@@ -162,7 +162,7 @@ const SearchSecond = ({ navigation, route }) => {
     />
   );
 };
-const SearchThird = ({ navigation, route }) => {
+export const SearchThird = ({ navigation, route }) => {
   const sheetRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ["25%", "50%", "90%"], []);
   const [index, setIndex] = useState(-1);
@@ -289,7 +289,7 @@ const SearchThird = ({ navigation, route }) => {
     />
   );
 };
-const SearchFirst = ({ navigation, route }) => {
+export const SearchFirst = ({ navigation, route }) => {
   const [searchKey, setSearchKey] = useState();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();

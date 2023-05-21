@@ -5,7 +5,7 @@ import { AllData } from '../../Data/AllData'
 import { CATEGORY_LIST } from '../../Data/newIcon'
 const {width,height}=Dimensions.get("window")
 
-export default function ServiceListCart() {
+export default function ServiceListCart({navigation}) {
   return (
     <View style={{
         marginVertical:20
@@ -13,16 +13,18 @@ export default function ServiceListCart() {
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
             <View style={{width:12}}/>
             {CATEGORY_LIST.map((doc,i)=>(
-                <Cart key={i} data={doc}/>
+                <Cart onPress={()=>{
+                    navigation?.navigate("SearchSecond", { key: doc?.title?.split(" ")[0],mainCategory:doc?.title?.split(" ")[0] });
+                  }} key={i} data={doc}/>
             ))}
             <View style={{width:12}}/>
         </ScrollView>
     </View>
   )
 }
-const Cart=({data})=>{
+const Cart=({data,onPress})=>{
     return(
-        <Pressable style={{
+        <Pressable onPress={onPress} style={{
             height:width/4-5,
             backgroundColor:data.color,
             marginHorizontal:6,

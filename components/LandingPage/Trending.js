@@ -24,11 +24,12 @@ export default function Trending({onMore,navigation}) {
   const [data,setData]=useState()
   useEffect(()=>{
     getData()
-  })
+  },[])
   const getData = async () => {
     try {
       const { data } = await getTrendingServices();
       setData(data?.gigs);
+      //console.log(data?.gigs[0])
     } catch (err) {
       console.error(err.message);
     }
@@ -106,6 +107,7 @@ export const TrendingCart = ({data,onPress}) => {
     //console.log(response.data.gigs)
     dispatch(setSaveList(response.data.gigs));
   };
+  
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <View>
@@ -166,7 +168,7 @@ export const TrendingCart = ({data,onPress}) => {
               }}>
               <Text style={styles.smallText} numberOfLines={1}>
               {data
-                  ? `${data.service.user.name}`
+                  ? `${data.service.providerInfo.name}`
                   : "Easin Arafat It consulting center"}
               </Text>
               <Text style={styles.mediumText} numberOfLines={1}>
