@@ -61,8 +61,8 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
       });
       //setDetailsText(text);
       //console.log(totalText)
-      console.log(size)
-      if (newHeight == minHeight && arr.length > (size - 2)) {
+      //console.log(arr.l)
+      if (newHeight == minHeight && arr.length > size - 2) {
         setTimeout(() => {
           setDetailsText(totalText + `${"..."}`);
         }, 200);
@@ -148,7 +148,7 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
           {detailsText}
           {button &&
             newHeight == minHeight &&
-            detailsText.split("").length > (size-4)  && (
+            detailsText.split("").length > (size-2)  && (
               <Text
                 style={[{
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,
@@ -161,6 +161,7 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
                 {title?title:"More"}
               </Text>
             )}
+            
         </Animated.Text>
       </Pressable>
     </MotiView>

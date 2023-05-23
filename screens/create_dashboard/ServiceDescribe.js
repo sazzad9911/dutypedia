@@ -155,9 +155,9 @@ export default function ServiceDescribe({ navigation,route }) {
           </Text>
           <TextArea value={serviceDescription}
           onChange={e=>{
-            if(e?.split("")?.length>2000){
-              return
-            }
+            // if(e?.split("")?.length>2000){
+            //   return
+            // }
             setServiceDescription(e)
           }}
           error={serviceDescriptionError}
