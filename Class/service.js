@@ -7,7 +7,14 @@ import { AllData } from "../Data/AllData";
 
 const timePick = (date) => {
   date = new Date(date);
-  return `${date.getHours()}:${date.getMinutes()}`;
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+
+  var strTime = `${hours < 10 ? `0${hours}` : hours}:${
+    minutes < 10 ? `0${minutes}` : minutes
+  }`;
+
+  return strTime;
 };
 
 export const createService = async (
@@ -25,8 +32,8 @@ export const createService = async (
     businessForm.workingTime.forEach((doc) => {
       working.push({
         day: doc.title,
-        open: timePick(doc.openingTime.toString()),
-        close: timePick(doc.closingTime.toString()),
+        open: timePick(doc.openingTime),
+        close: timePick(doc.closingTime),
       });
     });
   myHeaders.append("Authorization", `Bearer ${token}`);
