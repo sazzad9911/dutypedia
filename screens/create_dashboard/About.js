@@ -142,7 +142,7 @@ export default function About({ navigation,route }) {
             }}
             placeholder={"Type here"}
           />
-          <Text style={styles.text}>Max 2000 characters </Text>
+          <Text style={styles.text}>Max 2000/{about?about?.split("")?.length:"0"} characters </Text>
           <View>
             <Text
               style={{

@@ -782,7 +782,12 @@ if(loading){
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:newData?.address,noEdit:true });
+                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:{
+                  address:newData?.address?.address,
+                  area:newData?.address?.area,
+                  city:newData?.address?.district,
+                  region:newData?.address?.division
+                },noEdit:true });
               }}
               style={{
                 marginBottom: 0,
