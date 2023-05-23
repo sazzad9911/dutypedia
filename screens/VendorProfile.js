@@ -242,7 +242,7 @@ const VendorProfile = (props) => {
       //setPackageService(null);
       let response = { data: vendor };
       if (response.data) {
-        const gigs = response.data.service.gigs.filter(
+        const gigs = vendor.service.gigs.filter(
           (d) => d.type == "STARTING"
         );
         setData(vendor);
@@ -1229,6 +1229,7 @@ const ServiceTab = ({
   FixedService,
   PackageService,
 }) => {
+  
   return (
     <View>
       <View style={{ height: 2, backgroundColor: "#FAFAFA" }} />
@@ -1684,6 +1685,10 @@ const BargainingScreen = ({ navigation, route }) => {
       }, 0);
     }
   }, [navHeight + isFocused + textHeight]);
+  const vendor=useSelector(state=>state.vendor)
+  const gigs = vendor.service.gigs.filter(
+    (d) => d.type == "STARTING"
+  );
 
   return (
     <View
@@ -1718,7 +1723,7 @@ const BargainingScreen = ({ navigation, route }) => {
             paddingHorizontal: 20,
             marginTop: 20,
           }}>
-          {Title}
+          {gigs?gigs[0].title:""}
         </Text>
 
         <View
@@ -1734,7 +1739,7 @@ const BargainingScreen = ({ navigation, route }) => {
               setTextHeight(height - 50);
             }}
             button={true}
-            text={Description}
+            text={gigs?gigs[0].description:""}
           />
         </View>
         <View
@@ -1747,10 +1752,8 @@ const BargainingScreen = ({ navigation, route }) => {
           }}>
           <TouchableOpacity
             onPress={() => {
-              const gigs = Data.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              navigation.navigate("EditService", { data: Data, gigs: gigs[0] });
+              
+              navigation.navigate("EditService", { data: vendor, gigs: gigs[0] });
             }}
             style={{}}>
             <SvgXml xml={editIcon} height="50" width={"50"} />
@@ -1764,7 +1767,7 @@ const BargainingScreen = ({ navigation, route }) => {
           width={width}
           height={width + 30}
           autoPlay={false}
-          data={Images}
+          data={gigs[0].images}
           scrollAnimationDuration={500}
           onSnapToItem={(index) => {}}
           renderItem={({ index }) => (
@@ -1773,7 +1776,7 @@ const BargainingScreen = ({ navigation, route }) => {
                 width: width,
                 height: width + 30,
               }}
-              source={{ uri: Images[index] }}
+              source={{ uri: gigs[0].images[index] }}
             />
           )}
         />
@@ -1801,9 +1804,7 @@ const BargainingScreen = ({ navigation, route }) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              const gigs = Data.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
+              
               const data = AllData.filter(
                 (d) => d.key == gigs[0].services.category
               )[0];
@@ -1992,7 +1993,7 @@ const BargainingScreen = ({ navigation, route }) => {
 
             fontFamily: "Poppins-SemiBold",
           }}>
-          From {Price} ৳
+          From {gigs[0].price} ৳
         </Text>
         <TouchableOpacity
           onPress={() => {
