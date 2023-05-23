@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -838,8 +838,8 @@ const VendorProfile = (props) => {
               </TouchableOpacity> */}
             </View>
             <AnimatedHeight
-              id={Data.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
-              text={Data.service.about}
+              id={vendor.service.id == "W8kHHhBuKG4jkXPNJ32Mw" ? true : false}
+              text={vendor.service.about}
             />
           </View>
           <Pressable
@@ -1588,11 +1588,12 @@ const BargainingScreen = ({ navigation, route }) => {
   const ServiceList = params.ServiceList;
   const sub = params.SubServiceList;
   const [SubServiceList, setSubServiceList] = React.useState(sub);
-  const NewDataList = params.NewDataList;
+  //const NewDataList = params.NewDataList;
+  const [NewDataList,setNewDataList]=useState([])
   const [ActiveService, setActiveService] = React.useState(
     ServiceList ? ServiceList[0] : NewDataList[0].mainTitle
   );
-  const Facilities = params.Facilities;
+  //const Facilities = params.Facilities;
   const Data = params.Data;
   const Price = params.Price;
   const startingHeight = 120;
@@ -1614,8 +1615,22 @@ const BargainingScreen = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const changeScreenName = params.changeScreenName;
   const dispatch = useDispatch();
+  
+  const vendor=useSelector(state=>state.vendor)
+  const gigs = vendor.service.gigs.filter(
+    (d) => d.type == "STARTING"
+  );
+  const Facilities=gigs[0]?.facilites?.selectedOptions
   //console.log(Data);
-
+  // React.useEffect(()=>{
+  //   try{
+  //     setNewDataList(
+  //       serverToLocal(gigs[0].services.options, gigs[0].services.category)
+  //     );
+  //   }catch(err){
+  //     console.error(err.message)
+  //   }
+  // },[gigs])
   React.useEffect(() => {
     if (ServiceList && ServiceList.length > 0) {
       setActiveService(ServiceList[0]);
@@ -1625,6 +1640,7 @@ const BargainingScreen = ({ navigation, route }) => {
       setActiveService(NewDataList[0].mainTitle);
       return;
     }
+    
   }, [NewDataList + ServiceList]);
   React.useEffect(() => {
     setSubServiceList([]);
@@ -1684,11 +1700,9 @@ const BargainingScreen = ({ navigation, route }) => {
         setNewNavigation(navHeight + textHeight);
       }, 0);
     }
+    //setFacilities();
   }, [navHeight + isFocused + textHeight]);
-  const vendor=useSelector(state=>state.vendor)
-  const gigs = vendor.service.gigs.filter(
-    (d) => d.type == "STARTING"
-  );
+  
 
   return (
     <View
@@ -1999,7 +2013,7 @@ const BargainingScreen = ({ navigation, route }) => {
           onPress={() => {
             navigation.navigate("Service List_1", {
               NewDataList: NewDataList,
-              facilites: Facilities,
+              facilites: Facilities.length>0?Facilities:null,
             });
           }}
           style={{
