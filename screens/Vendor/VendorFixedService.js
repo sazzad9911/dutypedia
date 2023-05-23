@@ -814,7 +814,7 @@ const VendorFixedService = (props) => {
               onPress={() => {
                 navigation.navigate("Service List_1", {
                   NewDataList: NewDataList,
-                  facilites: Facilities,
+                  facilites: Facilities?.length>0?Facilities:null,
                 });
               }}
               style={{

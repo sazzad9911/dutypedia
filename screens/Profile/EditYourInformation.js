@@ -204,7 +204,10 @@ export default function EditYourInformation({ navigation, route }) {
             <AutoComplete
               innerRef={suggestionBox}
               value={position}
-              onChange={setPosition}
+              onChange={e=>{
+                console.log(e)
+                setPosition(e)
+              }}
               onFocus={() => setGenderPress(false)}
             />
           </View>
