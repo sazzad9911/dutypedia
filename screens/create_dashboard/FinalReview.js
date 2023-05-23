@@ -918,7 +918,12 @@ if(loading){
           }}
          
         />
-        <Text style={{fontSize:16}}>I agree with all the <Text style={{color:"blue"}}>terms and conditions</Text></Text>
+        <Text style={{fontSize:16}}>I agree with all the <Text onPress={()=>{
+          navigation.navigate("WebViewsGlobal", {
+            url: "https://duty.com.bd/legal/app/terms-and-conditions",
+            title: "Terms & Conditions",
+          });
+        }} style={{color:"blue"}}>terms and conditions</Text></Text>
         </Pressable>
         <IconButton
           onPress={confirm}
