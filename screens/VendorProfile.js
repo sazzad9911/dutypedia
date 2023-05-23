@@ -228,6 +228,7 @@ const VendorProfile = (props) => {
   }, [isFocused]);
 
   React.useEffect(() => {
+    //setLoader(false)
     setActive("Bargaining");
     //setLoader(true);
     setTimeout(()=>setLoader(true),1200)
@@ -244,11 +245,11 @@ const VendorProfile = (props) => {
         const gigs = response.data.service.gigs.filter(
           (d) => d.type == "STARTING"
         );
-        setData(response.data);
-        setSpecialty(response.data.service.speciality);
+        setData(vendor);
+        setSpecialty(vendor.service.speciality);
 
-        setBackgroundImage(response.data.service.wallPhoto);
-        setImage(response.data.service.profilePhoto);
+        setBackgroundImage(vendor.service.wallPhoto);
+        setImage(vendor.service.profilePhoto);
         setImages(gigs[0].images);
         setPrice(gigs[0].price);
         setTitle(gigs[0].title);
@@ -443,7 +444,7 @@ const VendorProfile = (props) => {
     }
     setImageUploader(false);
   };
-  //console.log(SeeMore)
+  //console.warn(data?.service)
 
   if (
     !Data ||
@@ -1165,7 +1166,7 @@ const VendorProfile = (props) => {
           layout={FadeIn}>
           <Pressable
             onPress={async () => {
-              console.log("ok");
+              //console.log("ok");
               const res = await pickImage();
               setWallPhoto(res.uri);
               uploadProfileImage(res, false);

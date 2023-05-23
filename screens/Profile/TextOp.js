@@ -48,7 +48,7 @@ export default function TextOp({ number, text,style,view }) {
         style={{
           flex: 1,
           fontSize: 16,
-          
+          lineHeight:24,
           fontWeight: "400",
           color: "#1A1A1A",
         }}>
