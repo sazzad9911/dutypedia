@@ -34,7 +34,7 @@ export default function StakeHolder({ navigation,route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-
+  const toEn = n => n.replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -73,14 +73,19 @@ export default function StakeHolder({ navigation,route }) {
             Number of employees/team member
           </Text>
           <Input value={number}
-          onChange={setNumber}
+          onChange={(e)=>{
+            if(e?.split("")?.length>8){
+              return
+            }
+            setNumber(toEn(e))
+          }}
             keyboardType={"number-pad"}
             style={styles.input}
             placeholder={"0"}
           />
           <Text style={styles.text}>Minimum 1 require</Text>
-          <IconButton active={parseInt(number)>0&&parseInt(number)<1000000?true:false}
-          disabled={parseInt(number)>0&&parseInt(number)<1000000?false:true}
+          <IconButton active={parseInt(number)>0?true:false}
+          disabled={parseInt(number)>0?false:true}
             onPress={() => {
               dispatch({ type: "TEAM_NUMBER", playload: number });
               navigation.navigate("Established",{

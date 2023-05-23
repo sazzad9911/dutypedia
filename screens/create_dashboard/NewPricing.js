@@ -134,6 +134,9 @@ export default function NewPricing({ navigation, route }) {
             value={price}
             onChange={e=>{
              // console.log(toEn(e))
+             if(e?.split("")?.length>8){
+              return
+             }
               setPrice(toEn(e))
             }}
             keyboardType={"number-pad"}

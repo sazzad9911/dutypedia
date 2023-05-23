@@ -141,7 +141,12 @@ export default function ServiceDescribe({ navigation,route }) {
             Service title
           </Text>
           <Input value={serviceTitle} 
-          onChange={setServiceTitle}
+          onChange={e=>{
+            if(e?.split("")?.length>100){
+              return
+            }
+            setServiceTitle(e)
+          }}
           error={serviceTitleError}
            style={styles.input} placeholder={"Type service title"} />
           <Text style={styles.text}>Max 100 characters </Text>
@@ -149,12 +154,17 @@ export default function ServiceDescribe({ navigation,route }) {
             Service Description
           </Text>
           <TextArea value={serviceDescription}
-          onChange={setServiceDescription}
+          onChange={e=>{
+            if(e?.split("")?.length>2000){
+              return
+            }
+            setServiceDescription(e)
+          }}
           error={serviceDescriptionError}
             placeholder={"Describe your service"}
             style={styles.input}
           />
-          <Text style={styles.text}>Max 1000 characters </Text>
+          <Text style={styles.text}>Max 2000 characters </Text>
           <Text style={[styles.headLine, { marginTop: 36 }]}>Add Photo</Text>
           <View style={{
             flexDirection:"row",

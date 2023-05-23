@@ -297,6 +297,9 @@ export default function CompanyCalendar({ navigation, route }) {
               {TimeError}
             </Text>
           )}
+          {!vendor&&(
+            <View style={{height:40}}/>
+          )}
           {vendor&&(<IconButton
             active={checked || time > 0 ? true : false}
             disabled={checked || time ? false : true}

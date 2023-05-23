@@ -135,15 +135,19 @@ export default function Skills({ navigation, route }) {
             }
           />
           <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
-          <AddBox
+          {skills&&skills.length<26&&(
+            <AddBox
             onChange={(e) => {
+              
               try {
+
                 setSkill((d) => [...d, e]);
               } catch (e) {
                 console.log(e.message);
               }
             }}
           />
+          )}
           <Text style={styles.text}>Max 25 character </Text>
           {skills && skills.length > 0 && (
             <View
@@ -213,7 +217,12 @@ const AddBox = ({ onChange }) => {
       }}>
       <TextInput
         value={text}
-        onChangeText={setText}
+        onChangeText={(e)=>{
+          if(e?.split("")?.length>25){
+            return
+          }
+          setText(e)
+        }}
         style={{
           flex: 1,
         }}

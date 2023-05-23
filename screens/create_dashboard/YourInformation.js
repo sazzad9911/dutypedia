@@ -170,7 +170,7 @@ export default function YourInformation({ navigation, route }) {
             }}>
             <View>
               {genderPress && (
-                <View ref={childRef} style={newStyle.box}>
+                <View ref={childRef} style={[newStyle.box]}>
                   {genderData.map((doc, i) => (
                     <Pressable
                       onPress={() => {
@@ -187,7 +187,9 @@ export default function YourInformation({ navigation, route }) {
                   ))}
                 </View>
               )}
-              <ExButton
+              <ExButton style={{
+                marginTop:2
+              }}
                 value={gender}
                 onPress={() => {
                   setGenderPress((t) => !t);
@@ -195,7 +197,7 @@ export default function YourInformation({ navigation, route }) {
                 }}
               />
             </View>
-            <View>
+            <View style={{flex:1}}>
               <AutoComplete
                 innerRef={suggestionBox}
                 value={position}
@@ -218,6 +220,7 @@ export default function YourInformation({ navigation, route }) {
             active={name && gender && position ? true : false}
             disabled={!name || !position || !gender ? true : false}
             onPress={() => {
+              setSpecialtyError()
               if (name?.split("")?.length > 20) {
                 setNameError("*Name must with in 20 character");
                 return;
@@ -521,12 +524,12 @@ const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="n
 const text = `If you are registering as an individual, simply fill in your name and gender, and for the "position" field, you can enter any title or role that best describes you, such as "freelancer" or "consultant." If you are registering as a company, you can still use your own name and provide your position within the company.
 By providing this information, you will help us connect you with the right buyers and sellers on our platform. Thank you for choosing our marketplace and we look forward to seeing you succeed!`;
 
-const ExButton = ({ value, onPress, innerRef }) => {
+const ExButton = ({ value, onPress, innerRef,style }) => {
   return (
     <Pressable
       ref={innerRef}
       onPress={onPress}
-      style={{
+      style={[{
         width: 80,
         height: 45,
         borderRadius: 5,
@@ -535,7 +538,7 @@ const ExButton = ({ value, onPress, innerRef }) => {
         borderWidth: 1,
         alignItems: "center",
         justifyContent: "center",
-      }}>
+      },style]}>
       <Text
         style={{
           color: "#767676",

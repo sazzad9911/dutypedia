@@ -26,6 +26,7 @@ export default function VendorAddress({ navigation,route }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const address=route?.params?.address;
+  const noEdit=route?.params?.noEdit;
   //console.log(address)
 
   const openMenu = () => setVisible(true);
@@ -63,7 +64,8 @@ export default function VendorAddress({ navigation,route }) {
             alignItems: "flex-end",
             marginTop: 36,
           }}>
-          <Pressable
+          {!noEdit&&(
+            <Pressable
             onPress={() => {
               navigation.navigate("EditVendorAddress",{address:address});
             }}>
@@ -76,6 +78,7 @@ export default function VendorAddress({ navigation,route }) {
               Edit
             </Text>
           </Pressable>
+          )}
           <View
             style={{
               flexDirection: "row",

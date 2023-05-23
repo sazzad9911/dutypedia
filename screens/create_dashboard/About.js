@@ -134,9 +134,15 @@ export default function About({ navigation,route }) {
           <TextArea
             style={styles.input}
             value={about}
-            onChange={setAbout}
+            onChange={e=>{
+              if(e?.split("")?.length>2000){
+                return
+              }
+              setAbout(e)
+            }}
             placeholder={"Type here"}
           />
+          <Text style={styles.text}>Max 2000 characters </Text>
           <View>
             <Text
               style={{
@@ -144,7 +150,7 @@ export default function About({ navigation,route }) {
                 fontWeight: "400",
                 marginTop: 36,
               }}>
-              Choose your facilities
+              Choose your extra facilities
             </Text>
             {Array.isArray(Service) &&
               Service.map((doc, i) => (

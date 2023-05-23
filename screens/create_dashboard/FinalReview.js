@@ -57,7 +57,7 @@ import {
   createService,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { serverToLocal } from "../../Class/dataConverter";
+import { localTimeToServerTime, serverTimeToLocalTime, serverToLocal } from "../../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useIsFocused } from "@react-navigation/native";
 import Avatar from "../../components/Avatar";
@@ -88,7 +88,7 @@ import FixedBackHeader from "../Seller/components/FixedBackHeader";
 import ServiceSettings from "../Vendor/ServiceSettings";
 import ActivityLoader from "../../components/ActivityLoader";
 import { AllData } from "../../Data/AllData";
-import { fileFromURL, setListData } from "../../action";
+import { fileFromURL, localTimeToServerDate, setListData } from "../../action";
 import * as ImagePicker from "expo-image-picker";
 import { uploadFile } from "../../Class/upload";
 import { updateData } from "../../Class/update";
@@ -764,12 +764,18 @@ if(loading){
             onLayout={(e) => {
               if (OpenDetails) {
                 //setCalenderHeight(e.nativeEvent.layout.height);
-              }
+              } 
             }}>
             
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Company Calender", { workingTime:newData?.workingTime });
+                //console.log(newData?.workingTime)
+                let arr=[]
+                newData?.workingTime?.map((doc,i)=>{
+                  arr.push(localTimeToServerTime(doc))
+                })
+                
+                navigation.navigate("Company Calender", { workingTime:arr,t47:arr?.length==0?true:false });
               }}
               Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
               title="Company Calender"
