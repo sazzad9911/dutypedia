@@ -173,7 +173,12 @@ export default function Location({ navigation, route }) {
           </View>
           <Input
             value={address}
-            onChange={setAddress}
+            onChange={e=>{
+              if(e?.split("")?.length>100){
+                return
+              }
+              setAddress(e)
+            }}
             style={[styles.input, { marginTop: 8 }]}
             placeholder={"Address"}
           />

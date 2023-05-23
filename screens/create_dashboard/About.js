@@ -39,6 +39,7 @@ export default function About({ navigation,route }) {
   const dispatch=useDispatch()
   const isFocused=useIsFocused()
   const [date, setDate] = useState();
+  const [aboutError,setAboutError]=useState()
   const data=route?.params?.data;
   const [Service, setService] = React.useState([
     {
@@ -131,13 +132,11 @@ export default function About({ navigation,route }) {
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             About Your Business
           </Text>
-          <TextArea
+          <TextArea error={aboutError}
             style={styles.input}
             value={about}
             onChange={e=>{
-              if(e?.split("")?.length>2000){
-                return
-              }
+              
               setAbout(e)
             }}
             placeholder={"Type here"}
@@ -207,7 +206,10 @@ export default function About({ navigation,route }) {
           <IconButton active={about?true:false}
           disabled={about?false:true}
             onPress={() => {
-              
+              if(about?.split("")?.length>2000){
+                setAboutError("*Max 2000 character")
+                return
+              }
               dispatch({ type: "FACILITIES", playload: Service });
               dispatch({ type: "ABOUT", playload: about });
               navigation.navigate("FinalReview",{
