@@ -61,7 +61,8 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
       });
       //setDetailsText(text);
       //console.log(totalText)
-      if (newHeight == minHeight && arr.length > size - 2) {
+      console.log(size)
+      if (newHeight == minHeight && arr.length > (size - 2)) {
         setTimeout(() => {
           setDetailsText(totalText + `${"..."}`);
         }, 200);
@@ -80,6 +81,7 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
       }
     }, 300);
   }, [textHeight]);
+  //console.log(size)
 
   return (
     <MotiView
@@ -146,7 +148,7 @@ function AnimatedHeight({ text, button, id, onChange,title,fontStyle,numberOfLin
           {detailsText}
           {button &&
             newHeight == minHeight &&
-            detailsText.split("").length > size - 2 && (
+            detailsText.split("").length > (size-4)  && (
               <Text
                 style={[{
                   fontSize: Platform.OS == "ios" ? 16.5 : 15,

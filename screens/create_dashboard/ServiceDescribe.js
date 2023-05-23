@@ -199,8 +199,8 @@ export default function ServiceDescribe({ navigation,route }) {
                 serviceTitleError("*Max 100 character required")
                 return
               }
-              if(serviceDescription.split("").length>1000){
-                setServiceDescriptionError("*Max 1000 character required")
+              if(serviceDescription.split("").length>2000){
+                setServiceDescriptionError("*Max 2000 character required")
                 return
               }
               dispatch({ type: "SERVICE_TITLE", playload: serviceTitle });

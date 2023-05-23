@@ -135,7 +135,7 @@ export default function Skills({ navigation, route }) {
             }
           />
           <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
-          {skills&&skills.length<26&&(
+          {skills&&skills.length<25&&(
             <AddBox
             onChange={(e) => {
               
