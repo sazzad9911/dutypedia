@@ -507,7 +507,7 @@ const OfferNow = (props) => {
               Duty Fee {dutyFee ? dutyFee * 100 : "0"}%
             </Text>
             <Text style={styles.text14}>
-              {Price ? Price * dutyFee : "00.00"} ৳
+              {Price ? (Price * dutyFee).toFixed(2) : "00.00"} ৳
             </Text>
           </View>
           <View style={styles.box}>

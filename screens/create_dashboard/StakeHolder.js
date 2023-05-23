@@ -79,8 +79,8 @@ export default function StakeHolder({ navigation,route }) {
             placeholder={"0"}
           />
           <Text style={styles.text}>Minimum 1 require</Text>
-          <IconButton active={parseInt(number)>0?true:false}
-          disabled={parseInt(number)>0?false:true}
+          <IconButton active={parseInt(number)>0&&parseInt(number)<1000000?true:false}
+          disabled={parseInt(number)>0&&parseInt(number)<1000000?false:true}
             onPress={() => {
               dispatch({ type: "TEAM_NUMBER", playload: number });
               navigation.navigate("Established",{

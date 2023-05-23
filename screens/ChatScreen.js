@@ -135,9 +135,7 @@ const ChatScreen = (props) => {
   }, [isFocused]);
 
   React.useEffect(() => {
-    setTimeout(() => {
-      setShow(true);
-    }, 50);
+    
     //console.log(data?.serviceId);
     if (data) {
       data.users.map((doc) => {
@@ -151,7 +149,7 @@ const ChatScreen = (props) => {
       //setMessages(data.messages);
       //setLastMessage(data.messages[data.messages.length-1])
     }
-    console.log(user?.user?.id)
+   // console.log(user?.user?.id)
   }, [data]);
   React.useEffect(() => {
     if (username && UserInfo && user) {
@@ -188,7 +186,7 @@ const ChatScreen = (props) => {
   }, []);
   useEffect(() => {
     if (message && message?.message?.conversationId == Id) {
-      console.log(message?.senderId)
+      //console.log(message?.senderId)
       setMessages((val) =>
         GiftedChat.append(
           val,

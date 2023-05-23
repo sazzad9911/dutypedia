@@ -95,7 +95,13 @@ export default function Established({ navigation, route }) {
           <Text style={[styles.headLine, { marginTop: 36 }]}>
             Established/starting date
           </Text>
-          <CustomInput value={date} onChange={setDate} />
+          <CustomInput value={date} onChange={(e)=>{
+            if(e>new Date()){
+              setDate(new Date())
+              return
+            }
+            setDate(e)
+          }} />
           <IconButton
             active={date ? true : false}
             disabled={date ? false : true}

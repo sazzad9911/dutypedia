@@ -6,7 +6,7 @@ const socket = io(URL,{
   reconnectionAttempts: 989538344345623,
 });
 const getSocket = (id) => {
-  console.log(id)
+  //console.log(id)
   socket.emit("join", id);
   return socket;
 };

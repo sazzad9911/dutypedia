@@ -45,7 +45,7 @@ export default function NewPricing({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  
+  const toEn = n => n.replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -132,7 +132,10 @@ export default function NewPricing({ navigation, route }) {
           <Input error={priceError}
 
             value={price}
-            onChange={setPrice}
+            onChange={e=>{
+             // console.log(toEn(e))
+              setPrice(toEn(e))
+            }}
             keyboardType={"number-pad"}
             style={styles.input}
             placeholder={"00.00 ৳"}
@@ -146,6 +149,7 @@ export default function NewPricing({ navigation, route }) {
                 setPriceError("*Minimum 50 taka required")
                 return
               }
+
               dispatch({ type: "PRICE", playload: price });
               navigation.navigate("Skills", {
                 data: {

@@ -120,7 +120,7 @@ export default function BusinessTitle({ navigation }) {
                 setNameError("*Service center name is required");
                 return;
               }
-              if (name.split("").length > 50) {
+              if (name?.split("")?.length > 50) {
                 setNameError("*Max text size is 50 character");
                 return;
               }

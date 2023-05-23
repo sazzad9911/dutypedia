@@ -1081,7 +1081,7 @@ export const Days = ({
               mode="time"
               onConfirm={(e) => {
                 if (ClosingTime && ClosingTime < e) {
-                  setError(`Opening time can't be earlier from closing time.`);
+                  setError(`Opening time can't be later from closing time.`);
                   setOpen(false);
                   setOpeningTime(null);
                   return;

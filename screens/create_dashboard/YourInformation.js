@@ -78,10 +78,11 @@ export default function YourInformation({ navigation, route }) {
   const genderData = ["Male", "Female", "Other"];
   const [genderPress, setGenderPress] = useState(false);
   const [layoutHeight, setLayoutHeight] = useState(0);
+  const [specialtyError, setSpecialtyError] = useState();
   const childRef = useRef();
   const serviceCenterName = route?.params?.serviceCenterName;
   const suggestionBox = useRef();
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -164,7 +165,8 @@ export default function YourInformation({ navigation, route }) {
             style={{
               flexDirection: "row",
               marginTop: 16,
-              alignItems: "center",
+              alignItems: "flex-start",
+
             }}>
             <View>
               {genderPress && (
@@ -193,19 +195,35 @@ export default function YourInformation({ navigation, route }) {
                 }}
               />
             </View>
-            <AutoComplete
-              innerRef={suggestionBox}
-              value={position}
-              onChange={setPosition}
-              onFocus={() => setGenderPress(false)}
-            />
+            <View>
+              <AutoComplete
+                innerRef={suggestionBox}
+                value={position}
+                onChange={setPosition}
+                onFocus={() => setGenderPress(false)}
+              />
+              {specialtyError && (
+                <Text
+                  style={{
+                    marginVertical: 3,
+                    color: "red",
+                    marginLeft:10
+                  }}>
+                  {specialtyError}
+                </Text>
+              )}
+            </View>
           </View>
           <IconButton
             active={name && gender && position ? true : false}
             disabled={!name || !position || !gender ? true : false}
             onPress={() => {
-              if (name.split("").length > 20) {
+              if (name?.split("")?.length > 20) {
                 setNameError("*Name must with in 20 character");
+                return;
+              }
+              if (position?.split("")?.length > 25) {
+                setSpecialtyError("*Position must with in 25 character");
                 return;
               }
               dispatch({ type: "NAME", playload: name });

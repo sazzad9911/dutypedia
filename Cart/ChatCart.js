@@ -83,6 +83,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
   });
   React.useEffect(() => {
     if (data) {
+      //console.log(data)
       getCount(data.id)
       data.users.map((doc) => {
         if (doc.user.id != user.user.id) {
@@ -180,7 +181,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
         <View style={{ flex: 1 }}>
           {vendor && !data?.readOnly ? (
             <Text style={styles.head}>
-              {UserInfo ? `${UserInfo.name}` : "Sefa Khandakar"}
+              {UserInfo ? `${UserInfo.name}` : "------"}
             </Text>
           ) : data?.readOnly ? (
             <Text style={styles.head}>Duty</Text>
@@ -188,7 +189,7 @@ const ChatCart = ({ navigation, active, data, number, readOnly }) => {
             <Text numberOfLines={1} style={[styles.head, { flex: 1 }]}>
               {data.service
                 ? `${data.service.serviceCenterName}`
-                : "Sefa Khandakar"}
+                : "------"}
             </Text>
           )}
           {LastMessage && (

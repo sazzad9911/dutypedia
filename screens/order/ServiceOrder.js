@@ -36,9 +36,7 @@ export default function ServiceOrder({ navigation, route }) {
         flex: 1,
       }}>
       <SubHeader
-        style={{
-          marginTop: 0,
-        }}
+        
         navigation={navigation}
         title={
           type == "STARTING"
