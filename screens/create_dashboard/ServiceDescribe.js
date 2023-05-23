@@ -164,7 +164,7 @@ export default function ServiceDescribe({ navigation,route }) {
             placeholder={"Describe your service"}
             style={styles.input}
           />
-          <Text style={styles.text}>Max 2000 characters </Text>
+          <Text style={styles.text}>Max 2000/{serviceDescription?serviceDescription?.split("")?.length:"0"} characters </Text>
           <Text style={[styles.headLine, { marginTop: 36 }]}>Add Photo</Text>
           <View style={{
             flexDirection:"row",
