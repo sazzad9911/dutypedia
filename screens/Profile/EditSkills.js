@@ -41,9 +41,7 @@ export default function EditSkills({ navigation, route }) {
   const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [length, setLength] = useState(0);
-  const [loader, setLoader] = useState(false);
-  const user = useSelector((state) => state.user);
-  const vendor = useSelector((state) => state.vendor);
+  
 
   useEffect(() => {
     setLength(skills.length);
@@ -65,43 +63,7 @@ export default function EditSkills({ navigation, route }) {
       setSkill(data.data?.service?.speciality?.split(","));
     }
   }, []);
-  const updateInfo = () => {
-    setLoader(true);
-    updateData(user.token, {
-      serviceId: vendor.service.id,
-      serviceCenterName: data?.serviceCenterName,
-      providerInfo: {
-        title: " ",
-        name: data?.providerName,
-        gender: data?.gender,
-        position: data?.position,
-      },
-      worker: parseInt(data?.numberOfTeam),
-      speciality: skills?.join(),
-    })
-      .then((res) => {
-        updateVendorInfo();
-      })
-      .catch((err) => {
-        setLoader(false);
-        console.error(err.response.data.msg);
-      });
-  };
-  const updateVendorInfo = async () => {
-    const res = await getService(user.token, vendor.service.id);
-    if (res) {
-      setLoader(false);
-      dispatch({ type: "SET_VENDOR", playload: res.data });
-      navigation.navigate("VendorProfile");
-    }
-  };
-  if (loader) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityLoader />
-      </View>
-    );
-  }
+  
 
   return (
     <KeyboardAvoidingView
@@ -184,7 +146,8 @@ export default function EditSkills({ navigation, route }) {
             }
           />
           <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
-          <AddBox
+          {length<25&&(
+            <AddBox
             onChange={(e) => {
               try {
                 setSkill((d) => [...d, e]);
@@ -193,6 +156,7 @@ export default function EditSkills({ navigation, route }) {
               }
             }}
           />
+          )}
           <Text style={styles.text}>Max 25 character </Text>
           {skills && skills.length > 0 && (
             <View
@@ -222,7 +186,8 @@ export default function EditSkills({ navigation, route }) {
             active={length > 0 ? true : false}
             disabled={length > 0 ? false : true}
             onPress={() => {
-            //   dispatch({ type: "SPECIALITY", playload: skills });
+              
+             dispatch({ type: "SPECIALITY", playload: skills });
             //   navigation.navigate("ServiceDescribe", {
             //     data: {
             //       serviceCenterName: data.serviceCenterName,
@@ -237,10 +202,21 @@ export default function EditSkills({ navigation, route }) {
             //       skills: skills,
             //     },
             //   });
-              updateInfo()
+              //updateInfo()
+              navigation?.navigate("EditAbout",{
+                data:{
+                  serviceCenterName:data?.serviceCenterName,
+                  providerName:data?.providerName,
+                  gender:data?.gender,
+                  worker:data?.numberOfTeam,
+                  speciality: skills?.join(),
+                  position:data?.position,
+                  data:data?.data
+                }
+              })
             }}
             style={styles.button}
-            title={"Update"}
+            title={"Continue"}
           />
         </View>
       </ScrollView>
@@ -264,7 +240,12 @@ const AddBox = ({ onChange }) => {
       }}>
       <TextInput
         value={text}
-        onChangeText={setText}
+        onChangeText={e=>{
+          if(e?.split("")?.length>25){
+            return
+          }
+          setText(e)
+        }}
         style={{
           flex: 1,
         }}

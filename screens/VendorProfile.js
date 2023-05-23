@@ -1588,8 +1588,8 @@ const BargainingScreen = ({ navigation, route }) => {
   const ServiceList = params.ServiceList;
   const sub = params.SubServiceList;
   const [SubServiceList, setSubServiceList] = React.useState(sub);
-  //const NewDataList = params.NewDataList;
-  const [NewDataList,setNewDataList]=useState([])
+  const NewDataList = params.NewDataList;
+  //const [NewDataList,setNewDataList]=useState([])
   const [ActiveService, setActiveService] = React.useState(
     ServiceList ? ServiceList[0] : NewDataList[0].mainTitle
   );
@@ -1615,12 +1615,14 @@ const BargainingScreen = ({ navigation, route }) => {
   const scrollTo = params.scrollTo;
   const changeScreenName = params.changeScreenName;
   const dispatch = useDispatch();
-  
+  //const [Facilities,setFacilities]=useState([])
+  //const [NewDataList,setNewDataList]=useState([])
   const vendor=useSelector(state=>state.vendor)
   const gigs = vendor.service.gigs.filter(
     (d) => d.type == "STARTING"
   );
-  const Facilities=gigs[0]?.facilites?.selectedOptions
+  const Facilities=gigs[0]?.facilites?.selectedOptions;
+
   //console.log(Data);
   // React.useEffect(()=>{
   //   try{

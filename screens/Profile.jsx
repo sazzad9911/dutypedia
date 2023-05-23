@@ -138,6 +138,7 @@ import EditBusinessTitle from "./Profile/EditBusinessTitle";
 import EditVendorAddress from "./Vendor/EditVendorAddress";
 import FakeVendorProfile from "./Vendor/FakeVendorProfile";
 import EditServicePrice from "./Profile/EditServicePrice";
+import EditAbout from "./Profile/EditAbout";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -866,6 +867,13 @@ const Profile = ({ navigation }) => {
         }}
         name="EditSkills"
         component={EditSkills}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"About"} />,
+        }}
+        name="EditAbout"
+        component={EditAbout}
       />
        <Stack.Screen
           options={{

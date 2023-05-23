@@ -40,6 +40,7 @@ export default function EditStakeHolder({ navigation,route }) {
         setNumber(data?.data?.service?.worker.toString())
     }
   },[])
+  const toEn = n => n.replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
 
   return (
     <KeyboardAvoidingView
@@ -79,7 +80,7 @@ export default function EditStakeHolder({ navigation,route }) {
             Number of employees/team member
           </Text>
           <Input value={number}
-          onChange={setNumber}
+          onChange={e=>setNumber(toEn(e))}
             keyboardType={"number-pad"}
             style={styles.input}
             placeholder={"0"}
