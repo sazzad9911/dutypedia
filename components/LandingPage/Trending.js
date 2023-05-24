@@ -107,7 +107,7 @@ export const TrendingCart = ({data,onPress}) => {
     if (!user.token) {
       setLike(false);
     }
-  }, [user]);
+  }, [user]); 
   const addToSaveList = async () => {
     if (!data) {
       return;
@@ -156,7 +156,7 @@ export const TrendingCart = ({data,onPress}) => {
         <View
           style={[
             customStyle.flexBox,
-            { marginTop: 8, justifyContent: "space-between" },
+            { marginTop: 8, justifyContent: "space-between",alignItems:"flex-end" },
           ]}>
           <View
             style={{
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   lineBox: {
     marginVertical: 12,
     paddingHorizontal: 8,
+    flex:1
   },
   headLine: {
     fontSize: 14,

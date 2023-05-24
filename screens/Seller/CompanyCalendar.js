@@ -13,6 +13,7 @@ import Input from "../../components/Input";
 import { icon, styles } from "../../screens/create_dashboard/BusinessTitle";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {
+  changeTime,
   convertDate,
   serverTimeToLocal,
   serverTimeToLocalDate,
@@ -24,14 +25,18 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
-import { localTimeToServerTime, serverTimeToLocalTime } from "../../Class/dataConverter";
+import {
+  localTimeToServerTime,
+  serverTimeToLocalTime,
+} from "../../Class/dataConverter";
 import { updateData } from "../../Class/update";
 import { getService } from "../../Class/service";
 import customStyle from "../../assets/stylesheet";
 import ActivityLoader from "../../components/ActivityLoader";
+import { Feather } from '@expo/vector-icons';
 
 export default function CompanyCalendar({ navigation, route }) {
-  const businessForm=useSelector(state=>state.businessForm)
+  const businessForm = useSelector((state) => state.businessForm);
   const [checked, setChecked] = useState(false);
   const [visible, setVisible] = React.useState({
     title: "",
@@ -43,13 +48,16 @@ export default function CompanyCalendar({ navigation, route }) {
   const [layoutHeight, setLayoutHeight] = useState(0);
   const data = route?.params?.data;
   const [time, setTime] = useState(0);
-  const dispatch=useDispatch()
-  const isFocused=useIsFocused()
-  const t47=route?.params?.t47;
-  const workingTime=route?.params?.workingTime;
-  const user=useSelector(state=>state.user)
-  const vendor=useSelector(state=>state.vendor)
-  const [loader,setLoader]=useState(false)
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const t47 = route?.params?.t47;
+  const workingTime = route?.params?.workingTime;
+  const user = useSelector((state) => state.user);
+  const vendor = useSelector((state) => state.vendor);
+  const [loader, setLoader] = useState(false);
+  const days=[
+    "Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"
+  ]
 
   React.useEffect(() => {
     if (isFocused) {
@@ -63,50 +71,54 @@ export default function CompanyCalendar({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  useEffect(()=>{
-    let arr=[]
-    workingTime?.map((doc)=>{
-      arr.push(serverTimeToLocalTime(doc))
-    })
-    if(t47){
-      setChecked(true)
-    }else{
-      setChecked(false)
+  useEffect(() => {
+    
+    let arr = [];
+    workingTime?.map((doc) => {
+      arr.push(serverTimeToLocalTime(doc));
+    });
+    if (t47) {
+      setChecked(true);
+    } else {
+      setChecked(false);
     }
-    setTimes(arr)
-  },[t47,workingTime])
-  const updateInfo=()=>{
-    setLoader(true)
-    let arr=[]
-    Times?.map((doc)=>{
-      if(doc){
-        arr.push(localTimeToServerTime(doc))
+    setTimes(arr);
+  }, [t47, workingTime]);
+  const updateInfo = () => {
+    setLoader(true);
+    let arr = [];
+    Times?.map((doc) => {
+      if (doc) {
+        arr.push(localTimeToServerTime(doc));
       }
+    });
+    updateData(user.token, {
+      serviceId: vendor.service.id,
+      workingTime: arr,
+      t47:checked
     })
-    updateData(user.token,{
-      serviceId:vendor.service.id,
-      workingTime:arr
-    }).then(res=>{
-      updateVendorInfo()
-    }).catch(err=>{
-      setLoader(false)
-      console.error(err.response.data.msg)
-    })
-  }
-  const updateVendorInfo=async()=>{
-    const res=await getService(user.token,vendor.service.id);
-    if(res){
-      setLoader(false)
+      .then((res) => {
+        updateVendorInfo();
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error(err.response.data.msg);
+      });
+  };
+  const updateVendorInfo = async () => {
+    const res = await getService(user.token, vendor.service.id);
+    if (res) {
+      setLoader(false);
       dispatch({ type: "SET_VENDOR", playload: res.data });
-      navigation.goBack()
+      navigation.goBack();
     }
-  }
-  if(loader){
-    return(
+  };
+  if (loader) {
+    return (
       <View style={customStyle.fullBox}>
-        <ActivityLoader/>
+        <ActivityLoader />
       </View>
-    )
+    );
   }
   return (
     <KeyboardAvoidingView
@@ -120,209 +132,249 @@ export default function CompanyCalendar({ navigation, route }) {
             paddingHorizontal: 20,
           }}>
           <SvgXml width={"100%"} xml={vectorImage} />
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-              marginTop: 36,
-            }}>
-            <SvgXml
-              style={{
-                marginRight: 8,
-              }}
-              xml={icon}
-            />
-            <Text style={[styles.headLine, { flex: 1 }]}>
-              Tips for set up the working time
-            </Text>
-          </View>
-          <ViewMore
-            style={{
-              marginTop: 24,
-            }}
-            width={142}
-            height={layoutHeight}
-            component={
-              <Text
-                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
-                style={[styles.spText, { marginTop: 0 }]}>
-                We require information on your working time to help potential
-                buyers understand when you're available to provide your
-                services. If you are a{" "}
-                <Text style={{ fontWeight: "700" }}>company</Text>, please input
-                your working hours as accurately as possible. If you are an{" "}
-                <Text style={{ fontWeight: "700" }}>individual</Text>, please
-                enter the days and times when you are usually available to work.
-                However, if you have a flexible schedule or can work any day,
-                please enter your preferred working hours instead. This will
-                help buyers determine whether your services fit their needs.
-              </Text>
-            }
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 36,
-              justifyContent: "space-between",
-            }}>
-            <Text style={[styles.headLine, { marginTop: 0 }]}>Select time</Text>
-            <CheckBox
-              value={checked}
-              onChange={() => {
-                setChecked(!checked);
-              }}
-              disabled={vendor?false:true}
-              title={"24/7 open"}
-              style={{
-                width: 110,
-                justifyContent: "flex-end",
-              }}
-            />
-          </View>
-          <View style={{ height: 24 }} />
-          {!checked ? (
-            <Animated.View entering={FadeIn}>
-              <Days
-                value={Times}
-                error={TimesError[0]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[0] = val;
-                  
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+          {vendor ? (
+            <>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flex: 1,
+                  marginTop: 36,
+                }}>
+                <SvgXml
+                  style={{
+                    marginRight: 8,
+                  }}
+                  xml={icon}
+                />
+                <Text style={[styles.headLine, { flex: 1 }]}>
+                  Tips for set up the working time
+                </Text>
+              </View>
+              <ViewMore
+                style={{
+                  marginTop: 24,
                 }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Saturday"
+                width={142}
+                height={layoutHeight}
+                component={
+                  <Text
+                    onLayout={(e) =>
+                      setLayoutHeight(e.nativeEvent.layout.height)
+                    }
+                    style={[styles.spText, { marginTop: 0 }]}>
+                    We require information on your working time to help
+                    potential buyers understand when you're available to provide
+                    your services. If you are a{" "}
+                    <Text style={{ fontWeight: "700" }}>company</Text>, please
+                    input your working hours as accurately as possible. If you
+                    are an <Text style={{ fontWeight: "700" }}>individual</Text>
+                    , please enter the days and times when you are usually
+                    available to work. However, if you have a flexible schedule
+                    or can work any day, please enter your preferred working
+                    hours instead. This will help buyers determine whether your
+                    services fit their needs.
+                  </Text>
+                }
               />
-              <Days
-                value={Times}
-                error={TimesError[1]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[1] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Sunday"
-                style={{ marginTop: 16 }}
-              />
-              <Days
-                value={Times}
-                error={TimesError[2]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[2] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Monday"
-                style={{ marginTop: 16 }}
-              />
-              <Days
-                value={Times}
-                error={TimesError[3]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[3] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Tuesday"
-                style={{ marginTop: 16 }}
-              />
-              <Days
-                value={Times}
-                error={TimesError[4]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[4] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Wednesday"
-                style={{ marginTop: 16 }}
-              />
-              <Days
-                value={Times}
-                error={TimesError[5]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[5] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Thursday"
-                style={{ marginTop: 16 }}
-              />
-              <Days
-                value={Times}
-                error={TimesError[6]}
-                onChange={(val) => {
-                  let arr = Times;
-                  arr[6] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
-                }}
-                disabled={vendor?false:true}
-                setVisible={setVisible}
-                title="Friday"
-                style={{ marginTop: 16 }}
-              />
-            </Animated.View>
-          ) : (
-            <></>
-          )}
-          {TimeError && (
-            <Text
-              style={{
-                fontSize: 12,
-                marginLeft: 2,
-                fontFamily: "Poppins-Light",
-                color: "red",
-                marginTop: 3,
-              }}>
-              {TimeError}
-            </Text>
-          )}
-          {!vendor&&(
-            <View style={{height:40}}/>
-          )}
-          {vendor&&(<IconButton
-            active={checked || time > 0 ? true : false}
-            disabled={checked || time ? false : true}
-            onPress={() => {
-              //console.log(Times);
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 36,
+                  justifyContent: "space-between",
+                }}>
+                <Text style={[styles.headLine, { marginTop: 0 }]}>
+                  Select time
+                </Text>
+                <CheckBox
+                  value={checked}
+                  onChange={() => {
+                    setChecked(!checked);
+                  }}
+                  disabled={vendor ? false : true}
+                  title={"24/7 open"}
+                  style={{
+                    width: 110,
+                    justifyContent: "flex-end",
+                  }}
+                />
+              </View>
+              <View style={{ height: 24 }} />
+              {!checked ? (
+                <Animated.View entering={FadeIn}>
+                  <Days
+                    value={Times}
+                    error={TimesError[0]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[0] = val;
 
-              if (!checked && Times.length == 0) {
-                setTimeError("Please select any time");
-                //scrollingTo(250);
-                return;
-              }
-              updateInfo()
-             
-            }}
-            style={styles.button}
-            title={"Update"}
-          />)}
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Saturday"
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[1]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[1] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Sunday"
+                    style={{ marginTop: 16 }}
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[2]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[2] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Monday"
+                    style={{ marginTop: 16 }}
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[3]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[3] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Tuesday"
+                    style={{ marginTop: 16 }}
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[4]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[4] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Wednesday"
+                    style={{ marginTop: 16 }}
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[5]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[5] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Thursday"
+                    style={{ marginTop: 16 }}
+                  />
+                  <Days
+                    value={Times}
+                    error={TimesError[6]}
+                    onChange={(val) => {
+                      let arr = Times;
+                      arr[6] = val;
+                      setTimes(arr);
+                      setTime((d) => d + 1);
+                    }}
+                    disabled={vendor ? false : true}
+                    setVisible={setVisible}
+                    title="Friday"
+                    style={{ marginTop: 16 }}
+                  />
+                </Animated.View>
+              ) : (
+                <></>
+              )}
+              {TimeError && (
+                <Text
+                  style={{
+                    fontSize: 12,
+                    marginLeft: 2,
+                    fontFamily: "Poppins-Light",
+                    color: "red",
+                    marginTop: 3,
+                  }}>
+                  {TimeError}
+                </Text>
+              )}
+
+              <IconButton
+                active={checked || time > 0 ? true : false}
+                disabled={checked || time ? false : true}
+                onPress={() => {
+                  //console.log(Times);
+
+                  if (!checked && Times.length == 0) {
+                    setTimeError("Please select any time");
+                    //scrollingTo(250);
+                    return;
+                  }
+                  updateInfo();
+                }}
+                style={styles.button}
+                title={"Update"}
+              />
+            </>
+          ) : (
+            <View>
+              {days.map((doc,i)=>(
+                <TimeCart title={doc} t47={t47} workingTime={workingTime} key={i}/>
+              ))}
+              <View style={{height:28}}/>
+            </View>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+const TimeCart=({t47,workingTime,title})=>{
+  const time=workingTime?.filter(d=>d.day.toLowerCase().match(title.toLowerCase()))
 
+  return(
+    <View style={{
+      flexDirection:"row",
+      justifyContent:"space-between",
+      marginTop:28,
+      alignItems:"center"
+    }}>
+      <Text style={{
+        fontSize:16,
+        fontWeight:"400"
+      }}>{title}</Text>
+      <View style={{
+        flexDirection:"row",
+        alignItems:"center"
+      }}>
+      <Feather name="clock" size={20} color="black" />
+        <Text style={{
+          marginLeft:5,
+          fontSize:12,
+          fontWeight:"400"
+        }}>{t47?"24/7 open":`${time&&time?.length>0?`${changeTime(time[0].open)} - ${changeTime(time[0].close)}`:"Close"}`}</Text>
+      </View>
+    </View>
+  )
+}
 const vectorImage = `<svg width="353" height="230" viewBox="0 0 353 230" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M227.272 173.622C226.68 174.528 226.113 175.441 225.989 176.538C224.186 176.671 222.383 176.804 220.58 176.944C218.848 177.077 217.058 176.652 215.359 177.191C215.353 177.356 215.353 177.521 215.346 177.686C217.852 177.73 220.359 177.781 222.871 177.825C220.905 178.174 218.952 178.142 217.006 178.193C216.342 178.212 215.685 178.446 215.027 178.586C215.027 178.865 215.034 179.137 215.034 179.416C215.034 180.367 215.034 181.318 215.034 182.263C215.034 182.542 215.027 182.821 215.027 183.094C215.027 183.823 215.027 184.552 215.027 185.395C214.135 185.465 213.523 185.515 212.911 185.553C211.447 185.636 211.447 185.629 211.238 187.202C211.245 187.481 211.251 187.76 211.251 188.039C211.245 188.172 211.238 188.305 211.232 188.432C210.6 189.522 210.6 190.613 211.232 191.703C212.775 191.709 214.311 191.716 215.854 191.722C216.583 191.855 217.306 192.084 218.041 192.103C219.955 192.16 221.869 192.122 223.783 192.122C219.525 192.641 215.242 192.388 210.633 192.635C210.88 193.922 211.063 194.879 211.245 195.83C211.245 196.23 211.251 196.629 211.251 197.029C210.457 197.079 209.657 197.124 208.543 197.194C208.791 198.17 208.96 198.842 209.129 199.514C208.7 200.503 209.487 200.294 209.995 200.357C208.993 200.788 208.55 201.479 208.687 202.589C208.797 203.457 208.713 204.351 208.713 205.239C208.713 205.524 208.713 205.809 208.713 206.088C208.713 206.824 208.654 207.566 208.719 208.301C208.804 209.208 208.986 210.102 209.123 211.002C209.123 211.274 209.123 211.541 209.129 211.813C208.986 212.631 208.849 213.455 208.706 214.273C208.843 214.546 208.986 214.825 209.123 215.097C209.826 215.37 210.529 215.643 211.225 215.915C211.225 216.194 211.232 216.473 211.232 216.752C211.232 218.248 211.232 219.751 211.232 221.247C211.375 221.799 211.512 222.35 211.655 222.902C211.512 223.314 211.369 223.726 211.225 224.132C211.225 224.538 211.225 224.943 211.232 225.343C210.399 226.034 211.271 226.706 211.251 227.391C211.108 227.391 210.972 227.397 210.828 227.397C210.099 227.257 209.37 227.017 208.641 227.004C205.64 226.959 202.639 226.915 199.645 227.023C198.492 227.061 197.835 226.649 197.34 225.755C196.032 224.544 194.274 224.322 192.679 223.707C191.097 223.098 189.568 222.344 188.018 221.653C189.236 220.03 189.092 218.16 189.001 216.315C188.91 214.476 188.78 212.638 188.637 210.805C187.895 201.492 187.133 192.179 186.397 182.865C186.326 181.99 186.397 181.109 186.404 180.228C187.803 177.432 187.517 176.272 184.965 174.661C184.457 174.344 183.846 174.186 183.292 173.945C182.439 173.577 181.587 173.197 180.734 172.823C180.506 172.683 180.298 172.493 180.05 172.411C176.815 171.352 173.586 170.249 170.325 169.273C165.859 167.935 161.367 166.686 156.882 165.399C156.602 165.266 156.322 165.126 156.042 164.993C158.308 163.18 157.221 160.644 157.383 158.247C158.21 158.209 158.894 158.133 159.577 158.152C161.953 158.216 164.329 158.342 166.705 158.387C175.526 158.539 184.347 158.691 193.167 158.793C200.732 158.881 208.303 158.875 215.867 158.964C218.588 158.996 221.302 159.198 224.05 159.319C224.258 159.763 224.46 160.187 224.662 160.612C224.935 162.013 225.195 163.414 225.475 164.809C226.074 167.764 226.68 170.693 227.272 173.622Z" fill="#F3E9DC"/>
 <path d="M124.483 165.811C123.982 164.397 124.308 162.977 124.49 161.57C125.525 153.702 126.977 145.91 129.457 138.334C130.993 133.636 132.842 129.071 135.81 125.001C138.408 121.438 141.695 118.991 146.304 118.566C148.901 118.655 151.251 119.536 153.484 120.76C154.832 122.687 156.225 124.582 156.772 126.916C156.16 127.676 156.596 128.139 157.26 128.539C157.175 128.881 157.091 129.223 156.947 129.794C155.274 128 154.636 125.8 152.872 124.411C153.191 125.629 153.595 126.789 154.22 127.822C156.622 131.791 159.187 135.671 161.504 139.691C162.884 142.081 164.733 143.412 167.532 143.761C170.982 144.186 174.406 144.839 177.85 145.339C180.122 145.669 182.407 145.904 184.685 146.176C185.506 146.316 186.332 146.424 187.146 146.607C187.953 146.798 188.754 147.045 189.542 147.317C190.388 147.615 190.694 148.262 190.577 149.105C190.459 149.949 189.958 150.475 189.112 150.614C188.565 150.703 187.992 150.703 187.439 150.659C186.189 150.557 184.952 150.304 183.702 150.297C175.376 150.266 167.057 150.278 158.731 150.272C157.696 150.272 156.661 150.234 155.626 150.215C155.698 149.048 155.261 148.097 154.435 147.267C154.051 146.88 153.738 146.424 153.419 145.98C151.056 142.696 148.726 139.386 146.304 136.147C145.822 135.506 145.295 134.606 143.993 134.847C144.136 135.861 144.058 136.939 144.442 137.827C145.9 141.212 147.521 144.528 149.058 147.882C149.383 148.585 149.624 149.327 149.995 150.278C149.246 150.278 148.83 150.278 148.42 150.278C147.996 150.278 147.58 150.259 147.157 150.285C145.425 150.386 144.748 151.001 144.663 152.668C144.605 153.892 144.611 155.128 144.657 156.352C144.716 157.905 145.236 158.387 146.838 158.469C147.86 158.52 148.888 158.558 150.262 158.615C149.774 161.297 149.539 163.77 148.582 166.109C148.485 166.344 148.224 166.521 148.042 166.724C147.925 166.794 147.808 166.901 147.684 166.927C143.205 167.675 138.727 168.258 134.144 167.992C131.019 167.808 128.012 167.447 125.304 165.792C125.095 165.672 124.75 165.798 124.483 165.811Z" fill="#3681C2"/>
@@ -558,3 +610,7 @@ const dateIcon = `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xm
 <path d="M7.75 4V6.25M18.25 4V6.25M4 19.75V8.5C4 7.90326 4.23705 7.33097 4.65901 6.90901C5.08097 6.48705 5.65326 6.25 6.25 6.25H19.75C20.3467 6.25 20.919 6.48705 21.341 6.90901C21.7629 7.33097 22 7.90326 22 8.5V19.75M4 19.75C4 20.3467 4.23705 20.919 4.65901 21.341C5.08097 21.7629 5.65326 22 6.25 22H19.75C20.3467 22 20.919 21.7629 21.341 21.341C21.7629 20.919 22 20.3467 22 19.75M4 19.75V12.25C4 11.6533 4.23705 11.081 4.65901 10.659C5.08097 10.2371 5.65326 10 6.25 10H19.75C20.3467 10 20.919 10.2371 21.341 10.659C21.7629 11.081 22 11.6533 22 12.25V19.75M13 13.75H13.008V13.758H13V13.75ZM13 16H13.008V16.008H13V16ZM13 18.25H13.008V18.258H13V18.25ZM10.75 16H10.758V16.008H10.75V16ZM10.75 18.25H10.758V18.258H10.75V18.25ZM8.5 16H8.508V16.008H8.5V16ZM8.5 18.25H8.508V18.258H8.5V18.25ZM15.25 13.75H15.258V13.758H15.25V13.75ZM15.25 16H15.258V16.008H15.25V16ZM15.25 18.25H15.258V18.258H15.25V18.25ZM17.5 13.75H17.508V13.758H17.5V13.75ZM17.5 16H17.508V16.008H17.5V16Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 `;
+const clock=`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.6666 7.99999C14.6666 11.68 11.68 14.6667 7.99998 14.6667C4.31998 14.6667 1.33331 11.68 1.33331 7.99999C1.33331 4.31999 4.31998 1.33333 7.99998 1.33333C11.68 1.33333 14.6666 4.31999 14.6666 7.99999Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`

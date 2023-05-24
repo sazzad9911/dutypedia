@@ -1080,12 +1080,12 @@ export const Days = ({
               isVisible={Open}
               mode="time"
               onConfirm={(e) => {
-                if (ClosingTime && ClosingTime < e) {
-                  setError(`Opening time can't be later from closing time.`);
-                  setOpen(false);
-                  setOpeningTime(null);
-                  return;
-                }
+                // if (ClosingTime && ClosingTime < e) {
+                //   setError(`Opening time can't be later from closing time.`);
+                //   setOpen(false);
+                //   setOpeningTime(null);
+                //   return;
+                // }
                 setError(null);
                 setOpeningTime(e);
                 setOpen(false);
@@ -1140,12 +1140,12 @@ export const Days = ({
               isVisible={Close}
               mode="time"
               onConfirm={(e) => {
-                if (OpeningTime && OpeningTime >= e) {
-                  setError(`Opening time can't be earlier from closing time.`);
-                  setClose(false);
-                  setClosingTime(null);
-                  return;
-                }
+                // if (OpeningTime && OpeningTime >= e) {
+                //   setError(`Opening time can't be earlier from closing time.`);
+                //   setClose(false);
+                //   setClosingTime(null);
+                //   return;
+                // }
                 setError(null);
                 setClosingTime(e);
                 setClose(false);

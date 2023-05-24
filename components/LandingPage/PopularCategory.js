@@ -151,7 +151,7 @@ export const Card = ({ style, data, onPress }) => {
             style={{
               flex: 7,
             }}>
-            <Text style={[styles.headLine]}>
+            <Text numberOfLines={2} style={[styles.headLine]}>
               {data
                 ? data.title
                 : "I will give you best it service & best support"}

@@ -1832,7 +1832,7 @@ const BargainingScreen = ({ navigation, route }) => {
                     gigs[0].services.category
                   )
                 )
-              );
+              ); 
               if (data.data) {
                 navigation.navigate("EditSubCategory", {
                   title: data.title,

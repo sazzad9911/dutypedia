@@ -211,6 +211,7 @@ export const TopSellerCard = ({
               marginTop: 8,
               justifyContent: "space-between",
               alignItems: "flex-end",
+              
             },
           ]}>
           <View
@@ -347,6 +348,7 @@ export const TopSellerCardLike = ({ width, style, height, data, onPress }) => {
               marginTop: 8,
               justifyContent: "space-between",
               alignItems: "flex-end",
+              
             },
           ]}>
           <View
