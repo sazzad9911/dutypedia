@@ -36,6 +36,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { updateData, updateGigsData } from "../../Class/update";
 import ActivityLoader from "../../components/ActivityLoader";
 import { getService } from "../../Class/service";
+import { convertServerFacilities } from "../../Class/dataConverter";
 
 export default function EditAbout({ navigation, route }) {
   const businessForm = useSelector((state) => state.businessForm);
@@ -91,7 +92,7 @@ export default function EditAbout({ navigation, route }) {
       setAbout(data?.data?.service?.about);
       
       Service.map((d) => {
-        let f = gigs[0]?.facilites?.selectedOptions.filter(
+        let f = convertServerFacilities(gigs[0]?.facilites).filter(
           (s) => s.title == d.title
         );
         if (f?.length > 0) {

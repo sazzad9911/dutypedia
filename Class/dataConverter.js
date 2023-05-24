@@ -132,7 +132,7 @@ const serverToLocalOld = (data, category) => {
     let arr = [];
     data.forEach((doc) => {
       let newData = AllData.filter((d) => d.key == category)[0];
-      if(doc.selectedOptions){
+      if (doc.selectedOptions) {
         doc.selectedOptions.map((option) => {
           let listData = newData.data.filter((list) => list.title == doc.title);
           if (listData.length > 0) {
@@ -155,12 +155,14 @@ const serverToLocalOld = (data, category) => {
             }
           }
         });
-      }else if(doc.multiFormData){
-        doc.multiFormData.map((doc)=>{
-          let sub=doc?.title;
-          console.log(sub)
+      } else if (doc.multiFormData) {
+        doc.multiFormData.map((doc) => {
+          let sub = doc?.title;
+          console.log(sub);
           doc.selectedOptions.map((option) => {
-            let listData = newData.data.filter((list) => list.title == doc.title);
+            let listData = newData.data.filter(
+              (list) => list.title == doc.title
+            );
             if (listData.length > 0) {
               //console.log(listData)
               listData = listData[0].list;
@@ -172,7 +174,7 @@ const serverToLocalOld = (data, category) => {
                   let tableName = listData[i].title;
                   arr.push({
                     mainTitle: newData.title,
-                    subTitle:sub,
+                    subTitle: sub,
                     title: doc.title,
                     tableName: tableName,
                     data: option,
@@ -182,7 +184,7 @@ const serverToLocalOld = (data, category) => {
               }
             }
           });
-        })
+        });
       }
     });
     return arr;
@@ -231,234 +233,257 @@ const serverToLocalOld = (data, category) => {
 const DATA = [
   {
     title: "Builder Services",
-    key:"BUIDLER",
+    key: "BUIDLER",
   },
   {
     title: "Business Services",
-    key:"BUSINESS",
+    key: "BUSINESS",
   },
   {
     title: "Cooker Service",
-    key:"COOKER",
+    key: "COOKER",
   },
   {
     title: "Electrician & Mechanician",
-    key:"ELECTRICIAN",
+    key: "ELECTRICIAN",
   },
   {
     title: "Entertainment",
-    key:"ENTERTAINMENT",
+    key: "ENTERTAINMENT",
   },
   {
     title: "House Keeper",
-    key:"HOUSEKEEPER",
+    key: "HOUSEKEEPER",
   },
   {
     title: "It & Technology",
-    key:"IT",
+    key: "IT",
   },
   {
     title: "Lawyer Service",
-    key:"LAWYER",
+    key: "LAWYER",
   },
   {
     title: "Music & Audio Service",
-    key:"MUSIC",
+    key: "MUSIC",
   },
   {
     title: "Painter",
-    key:"PAINTER",
+    key: "PAINTER",
   },
   {
     title: "Online Tution",
-    key:"ONLINETUTION",
+    key: "ONLINETUTION",
   },
   {
     title: "Parlour & Saloon",
-    key:"PARLOUR",
+    key: "PARLOUR",
   },
   {
     title: "Labor",
-    key:"LABOR",
+    key: "LABOR",
   },
   {
     title: "Life Style",
-    key:"LIFESTYLE",
+    key: "LIFESTYLE",
   },
 ];
-const serverToLocalNew=(options,category)=>{
-  let mainTitle=DATA.filter(d=>d.key.match(category))[0].title;
-  let arr=[]
-  if(options?.selectedOptions){
-    options.selectedOptions.forEach((doc)=>{
+const serverToLocalNew = (options, category) => {
+  let mainTitle = DATA.filter((d) => d.key.match(category))[0].title;
+  let arr = [];
+  if (options?.selectedOptions) {
+    options.selectedOptions.forEach((doc) => {
       arr.push({
         mainTitle: mainTitle,
         tableName: options?.title,
         data: doc,
       });
-    })
-  }else if(Array.isArray(options)){
-    options.forEach((doc)=>{
-      let title=doc?.title;
-      if(doc.selectedOptions){
-        doc.selectedOptions.forEach((d)=>{
+    });
+  } else if (Array.isArray(options)) {
+    options.forEach((doc) => {
+      let title = doc?.title;
+      if (doc.selectedOptions) {
+        doc.selectedOptions.forEach((d) => {
           arr.push({
             mainTitle: mainTitle,
-            title:title,
+            title: title,
             tableName: doc?.title,
             data: d,
-          })
-        })
-      }else if(doc.multiFormData){
-        doc.multiFormData.forEach((d)=>{
-          let subTitle=d?.title;
-          d.selectedOptions.forEach((e)=>{
+          });
+        });
+      } else if (doc.multiFormData) {
+        doc.multiFormData.forEach((d) => {
+          let subTitle = d?.title;
+          d.selectedOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: d?.title,
               data: e,
-            })
-          })
-        })
+            });
+          });
+        });
       }
-    })
-  }else if(!options.title){
-    for(var key in options){
-      let title=key;
-      options[key].forEach((doc)=>{
-        let subTitle=doc?.title;
-        doc?.multiFormData?.forEach((d)=>{
-          let tableName=d?.title;
-          d.selectedOptions.forEach((e)=>{
+    });
+  } else if (!options.title) {
+    for (var key in options) {
+      let title = key;
+      options[key].forEach((doc) => {
+        let subTitle = doc?.title;
+        doc?.multiFormData?.forEach((d) => {
+          let tableName = d?.title;
+          d.selectedOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: tableName,
               data: e,
             });
-          })
-        })
-      })
+          });
+        });
+      });
     }
   }
-  return arr
-}
-const serverToLocal=(options,category)=>{
-  let mainTitle=DATA.filter(d=>d.key.match(category))[0].title;
-  let arr=[]
-  if(options?.selectedOptions){
-    options.selectedOptions.forEach((doc)=>{
+  return arr;
+};
+const serverToLocal = (options, category) => {
+  let mainTitle = DATA.filter((d) => d.key.match(category))[0].title;
+  let arr = [];
+  if (options?.selectedOptions) {
+    options.selectedOptions.forEach((doc) => {
       arr.push({
         mainTitle: mainTitle,
         tableName: options?.title,
         data: doc,
       });
-    })
-  }else if(options?.customOptions){
-    options.customOptions.forEach((doc)=>{
+    });
+  } else if (options?.customOptions) {
+    options.customOptions.forEach((doc) => {
       arr.push({
         mainTitle: mainTitle,
         tableName: options?.title,
         data: doc,
       });
-    })
-  }else if(Array.isArray(options)){
-    options.forEach((doc)=>{
-      let title=doc?.title;
-      if(doc.selectedOptions){
-        doc.selectedOptions.forEach((d)=>{
+    });
+  } else if (Array.isArray(options)) {
+    options.forEach((doc) => {
+      let title = doc?.title;
+      if (doc.selectedOptions) {
+        doc.selectedOptions.forEach((d) => {
           arr.push({
             mainTitle: mainTitle,
-            title:title,
+            title: title,
             tableName: doc?.title,
             data: d,
-          })
-        })
-        doc.customOptions.forEach((d)=>{
+          });
+        });
+        doc.customOptions.forEach((d) => {
           arr.push({
             mainTitle: mainTitle,
-            title:title,
+            title: title,
             tableName: doc?.title,
             data: d,
-          })
-        })
-      }else if(doc.multiFormData){
-        doc.multiFormData.forEach((d)=>{
-          let subTitle=d?.title;
-          d.selectedOptions.forEach((e)=>{
+          });
+        });
+      } else if (doc.multiFormData) {
+        doc.multiFormData.forEach((d) => {
+          let subTitle = d?.title;
+          d.selectedOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: d?.title,
               data: e,
-            })
-          })
-          d.customOptions.forEach((e)=>{
+            });
+          });
+          d.customOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: d?.title,
               data: e,
-            })
-          })
-        })
+            });
+          });
+        });
       }
-    })
-  }else if(!options.title){
-    for(var key in options){
-      let title=key;
-      options[key].forEach((doc)=>{
-        let subTitle=doc?.title;
-        doc?.multiFormData?.forEach((d)=>{
-          let tableName=d?.title;
-          d.selectedOptions.forEach((e)=>{
+    });
+  } else if (!options.title) {
+    for (var key in options) {
+      let title = key;
+      options[key].forEach((doc) => {
+        let subTitle = doc?.title;
+        doc?.multiFormData?.forEach((d) => {
+          let tableName = d?.title;
+          d.selectedOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: tableName,
               data: e,
             });
-          })
-          d.customOptions.forEach((e)=>{
+          });
+          d.customOptions.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
-              title:title,
-              subTitle:subTitle,
+              title: title,
+              subTitle: subTitle,
               tableName: tableName,
               data: e,
             });
-          })
-        })
-      })
+          });
+        });
+      });
     }
   }
-  return arr
-}
-const serverTimeToLocalTime=(object)=>{
-  return{
-    title:object?.day,
-    openingTime:new Date(`2010-11-12T${object?.open}`),
-    closingTime:new Date(`2010-11-12T${object?.close}`)
-  }
-}
-const mixDateTime=(date,time)=>{
+  return arr;
+};
+const serverTimeToLocalTime = (object) => {
+  return {
+    title: object?.day,
+    openingTime: new Date(`2010-11-12T${object?.open}`),
+    closingTime: new Date(`2010-11-12T${object?.close}`),
+  };
+};
+const mixDateTime = (date, time) => {
   //date formate 2010-01-05
   //time format 22:10
   return new Date(`${date}T${time}`);
-}
-const localTimeToServerTime=(object)=>{
-  return{
-    day:object?.title,
-    open:allTimeConverter(object?.openingTime),
-    close:allTimeConverter(object?.closingTime)
-  }
-}
+};
+const localTimeToServerTime = (object) => {
+  return {
+    day: object?.title,
+    open: allTimeConverter(object?.openingTime),
+    close: allTimeConverter(object?.closingTime),
+  };
+};
+const convertServerFacilities = (facilities) => {
+  let arr = [];
+  facilities?.selectedOptions?.map((doc) => {
+    arr.push(doc);
+  });
+  facilities?.customOptions?.map((doc) => {
+    arr.push(doc);
+  });
+  return arr;
+};
+const convertLocalFacilities = (data) => {
+  return {
+    title: "Selected Options",
+    selectedOptions: data,
+  };
+};
 
-export { localOptionsToServer, serverToLocal,serverToLocalNew,serverTimeToLocalTime,localTimeToServerTime };
-
+export {
+  localOptionsToServer,
+  serverToLocal,
+  serverToLocalNew,
+  serverTimeToLocalTime,
+  localTimeToServerTime,
+  convertLocalFacilities,
+  convertServerFacilities,
+};

@@ -57,7 +57,7 @@ import {
   getFullRating,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { serverToLocal } from "../Class/dataConverter";
+import { convertServerFacilities, serverToLocal } from "../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useIsFocused } from "@react-navigation/native";
 import Avatar from "../components/Avatar";
@@ -257,7 +257,7 @@ const VendorProfile = (props) => {
         setTitle(gigs[0].title);
         setDescription(gigs[0].description);
         //setNewDataList(response.data.service.gigs[0].services.options)
-        setFacilities(gigs[0].facilites.selectedOptions);
+        setFacilities(convertServerFacilities(gigs[0]?.facilites));
         let arr = initialState;
         response.data.service.activeServiceTypes.forEach((doc) => {
           arr = arr.map((d) => {
@@ -1629,7 +1629,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const gigs = vendor.service.gigs.filter(
     (d) => d.type == "STARTING"
   );
-  const Facilities=gigs[0]?.facilites?.selectedOptions;
+  const Facilities=convertServerFacilities(gigs[0]?.facilites)
 
   //console.log(Data);
   // React.useEffect(()=>{
