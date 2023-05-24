@@ -471,7 +471,7 @@ const PackageService = (props) => {
             {imageIndex + 1} Of 4
           </Text>
         </View>
-       {newUser?.user?.id!=Data?.service?.user?.id&&(
+       {newUser?.user?.username!=Data?.service?.user?.username&&(
          <View
          style={{
            position: "absolute",
@@ -906,7 +906,7 @@ const PackageService = (props) => {
             </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: primaryColor }}>
-            {newUser?.user?.id!=Data?.service?.user?.id&&(
+            {newUser?.user?.username!=Data?.service?.user?.username&&(
               <IconButton
               onPress={() => {
                 if (newUser && newUser.token) {

@@ -1290,3 +1290,9 @@ export const getDutyFee = async (token) => {
   });
   return res;
 };
+export const getFullRating = async (token,serviceId) => {
+  const res = await axios.get(`${url}/server/review/get-rating/${serviceId}`,{
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};

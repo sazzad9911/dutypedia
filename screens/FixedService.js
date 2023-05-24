@@ -177,7 +177,7 @@ const FixedService = (props) => {
     // console.log(data.service.user);
 
     if (data) {
-      console.log(data?.service?.user)
+      //console.log(data?.service?.user)
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
@@ -451,7 +451,7 @@ const FixedService = (props) => {
             {imageIndex + 1} Of 4
           </Text>
         </View>
-        {newUser?.user?.id!=Data?.service?.user?.id&&(
+        {newUser?.user?.username!=Data?.service?.user?.username&&(
           <View
           style={{
             position: "absolute",
@@ -826,7 +826,7 @@ const FixedService = (props) => {
             </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: primaryColor }}>
-            {newUser?.user?.id!=Data?.service?.id&&(
+            {newUser?.user?.username!=Data?.service?.user?.username&&(
               <IconButton
               onPress={() => {
                 if (newUser && newUser.token) {

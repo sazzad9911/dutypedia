@@ -62,6 +62,7 @@ import {
   getDashboardReviews,
   setLikeGigs,
   getLikeGigs,
+  getFullRating,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../Class/dataConverter";
@@ -214,6 +215,7 @@ const OtherProfile = (props) => {
   const [reviews, setReviews] = useState();
   const [bargaining, setActiveBargaining] = useState(true);
   const [condition, setCondition] = useState(false);
+  const [rating,setRating]=useState(0)
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
   const wait = (timeout) => {
@@ -501,6 +503,13 @@ const OtherProfile = (props) => {
       setSpecialty(arr);
     }
   }, [Specialty, Refresh]);
+  React.useState(()=>{
+    if(newUser&&data){
+      getFullRating(newUser?.token,data?.service?.id).then(res=>{
+        setRating(res?.data?.rating)
+      })
+    }
+  },[data,newUser])
 
   const clickFixed = (doc) => {
     navigation.navigate("FixedService", { data: doc });
@@ -900,7 +909,7 @@ const OtherProfile = (props) => {
                     color: "#FFC107",
                     marginLeft: 5,
                   }}>
-                  4.6
+                  {rating.toFixed(1)}
                 </Text>
               </View>
               <Text

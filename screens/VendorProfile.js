@@ -54,6 +54,7 @@ import {
   getOtherServices,
   getRelatedServices,
   getUnRelatedServices,
+  getFullRating,
 } from "../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { serverToLocal } from "../Class/dataConverter";
@@ -201,6 +202,7 @@ const VendorProfile = (props) => {
   const changeScreenName = React.useCallback((val) => {
     setScreenName(val);
   });
+  const [rating,setRating]=useState(0)
   const [wallPhoto, setWallPhoto] = useState(data.service.wallPhoto);
   const [modalVisible, setModalVisible] = useState(false);
   //console.log(SeeMore)
@@ -384,7 +386,13 @@ const VendorProfile = (props) => {
       setSpecialty(arr);
     }
   }, [Specialty, isFocused]);
-
+  React.useState(()=>{
+    if(newUser&&data){
+      getFullRating(newUser?.token,data?.service?.id).then(res=>{
+        setRating(res?.data?.rating)
+      })
+    }
+  },[data,newUser])
   const clickFixed = (doc) => {
     navigation.navigate("VendorFixedService", { data: doc });
   };
@@ -634,7 +642,7 @@ const VendorProfile = (props) => {
                     color: "#FFC107",
                     marginLeft: 5,
                   }}>
-                  4.6
+                  {rating.toFixed(1)}
                 </Text>
               </View>
               <Text
