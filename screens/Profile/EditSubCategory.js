@@ -155,7 +155,8 @@ const EditSubCategory = ({ navigation, route }) => {
       gigId:gigs.id,
       services:{
         options:localOptionsToServer(listData),
-        category:gigs.services.category
+        category:gigs.services.category,
+        type:gigs?.services?.type
       }
     }).then(res=>{
       updateVendorInfo()
