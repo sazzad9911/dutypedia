@@ -149,7 +149,7 @@ const Service = ({ navigation, route }) => {
     setDescriptionError(null);
     setAboutError(null);
     setImageError(null);
-    
+
     if (!CenterName) {
       setCenterNameError("This field is required");
       return;
@@ -191,7 +191,7 @@ const Service = ({ navigation, route }) => {
       dispatch({ type: "FACILITIES", playload: Facilities });
     }
     
-
+    
     if (direct) {
       //ongoing function-------------
       setLoader(true);
@@ -266,6 +266,7 @@ const Service = ({ navigation, route }) => {
             price: parseInt(Price),
             description: Description,
             packageData: undefined,
+            facilities:Facilities
           },
           params.data,
           result,

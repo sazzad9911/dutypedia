@@ -4,6 +4,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import TopTabBar from "../Seller/components/TopTabBar";
 import { useSelector } from "react-redux";
 import { Color } from "../../assets/colors";
+import { useIsFocused } from "@react-navigation/native";
 const Tab = createMaterialTopTabNavigator();
 
 const AllService = (props) => {
@@ -17,6 +18,7 @@ const AllService = (props) => {
   const textColor=colors.getTextColor();
   const secondaryColor=colors.getSecondaryColor();
   const backgroundColor=colors.getBackgroundColor();
+  const isFocused=useIsFocused()
   //console.log("hgj")
   const styles = StyleSheet.create({
     view: {
@@ -49,7 +51,7 @@ const AllService = (props) => {
       setServices(uniq(arr));
     }
     //console.log(Services)
-  }, [newListData]);
+  }, [newListData,isFocused]);
 
   if (Array.isArray(Services) && Services.length == 0) {
     return null;

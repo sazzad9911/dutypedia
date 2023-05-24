@@ -399,7 +399,7 @@ const serverToLocal = (options, category) => {
               data: e,
             });
           });
-          d?.customOptions?.forEach((e) => {
+          d.customOptions?.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
               title: title,
@@ -464,10 +464,18 @@ const localTimeToServerTime = (object) => {
 const convertServerFacilities = (facilities) => {
   let arr = [];
   facilities?.selectedOptions?.map((doc) => {
-    arr.push(doc);
+    arr.push({
+      id:doc?.id,
+      title:doc?.title,
+      checked:true
+    });
   });
   facilities?.customOptions?.map((doc) => {
-    arr.push(doc);
+    arr.push({
+      id:doc?.id,
+      title:doc?.title,
+      checked:true
+    });
   });
   return arr;
 };

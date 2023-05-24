@@ -186,6 +186,7 @@ export const createOtherService = async (
     type: type,
     packageData: businessForm.packageData,
   };
+  
   const res = await axios.post(`${url}/server/services/create/gig`, data, {
     headers: { Authorization: `Bearer ${token}` },
   });
