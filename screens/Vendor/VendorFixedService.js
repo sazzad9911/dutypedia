@@ -56,7 +56,7 @@ import {
   getUnRelatedServices,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { serverToLocal } from "../../Class/dataConverter";
+import { convertServerFacilities, serverToLocal } from "../../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 import useHandleScroll from "../../components/constants/FabView";
@@ -185,7 +185,7 @@ const VendorFixedService = (props) => {
       setTitle(data.title);
       setDescription(data.description);
       //setNewDataList(response.data.service.gigs[0].services.options)
-      setFacilities(data.facilites.selectedOptions);
+      setFacilities(convertServerFacilities(data.facilites));
       let arr = initialState;
       data.service.activeServiceTypes.forEach((doc) => {
         arr = arr.map((d) => {
