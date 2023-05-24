@@ -212,7 +212,12 @@ export const createOtherServiceIndividual = async (
         ? installmentData.totalAmount
         : price
     ),
-    facilites: businessForm.facilities,
+    facilites: {
+      title: "Choose Your Facilities",
+      selectedOptions: Array.isArray()
+        ? businessForm.facilities.filter((data) => data.checked == true)
+        : [],
+    },
     services: {
       category: getDashboardTitle(listData[0].mainTitle),
       type: listData[0].subTitle ? 3 : listData[0].title ? 2 : 1,

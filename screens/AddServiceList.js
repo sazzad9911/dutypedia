@@ -133,8 +133,6 @@ const AddServiceList = (props) => {
         <IconButton
           onPress={() => {
             try {
-              setDataError(null);
-
               dispatch({ type: "SET_LIST_SELECTION", playload: Data });
               if (params.setListData) {
                 params.setListData(Data);

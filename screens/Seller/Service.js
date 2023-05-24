@@ -149,8 +149,7 @@ const Service = ({ navigation, route }) => {
     setDescriptionError(null);
     setAboutError(null);
     setImageError(null);
-
-  
+    
     if (!CenterName) {
       setCenterNameError("This field is required");
       return;
@@ -191,6 +190,7 @@ const Service = ({ navigation, route }) => {
       dispatch({ type: "PRICE", playload: Price });
       dispatch({ type: "FACILITIES", playload: Facilities });
     }
+    
 
     if (direct) {
       //ongoing function-------------

@@ -371,7 +371,7 @@ const serverToLocal = (options, category) => {
     options.forEach((doc) => {
       let title = doc?.title;
       if (doc.selectedOptions) {
-        doc.selectedOptions.forEach((d) => {
+        doc?.selectedOptions?.forEach((d) => {
           arr.push({
             mainTitle: mainTitle,
             title: title,
@@ -379,7 +379,7 @@ const serverToLocal = (options, category) => {
             data: d,
           });
         });
-        doc.customOptions.forEach((d) => {
+        doc?.customOptions?.forEach((d) => {
           arr.push({
             mainTitle: mainTitle,
             title: title,
@@ -390,7 +390,7 @@ const serverToLocal = (options, category) => {
       } else if (doc.multiFormData) {
         doc.multiFormData.forEach((d) => {
           let subTitle = d?.title;
-          d.selectedOptions.forEach((e) => {
+          d?.selectedOptions?.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
               title: title,
@@ -399,7 +399,7 @@ const serverToLocal = (options, category) => {
               data: e,
             });
           });
-          d.customOptions.forEach((e) => {
+          d?.customOptions?.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
               title: title,
@@ -418,7 +418,7 @@ const serverToLocal = (options, category) => {
         let subTitle = doc?.title;
         doc?.multiFormData?.forEach((d) => {
           let tableName = d?.title;
-          d.selectedOptions.forEach((e) => {
+          d?.selectedOptions?.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
               title: title,
@@ -427,7 +427,7 @@ const serverToLocal = (options, category) => {
               data: e,
             });
           });
-          d.customOptions.forEach((e) => {
+          d?.customOptions?.forEach((e) => {
             arr.push({
               mainTitle: mainTitle,
               title: title,
