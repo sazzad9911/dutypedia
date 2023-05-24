@@ -280,6 +280,8 @@ const OtherProfile = (props) => {
             setTitle(gigs[0].title);
             setDescription(gigs[0].description);
             //setNewDataList(response.data.service.gigs[0].services.options)
+            console.log(gigs[0].facilites)
+
             setFacilities(gigs[0].facilites.selectedOptions);
             let arr = initialState;
             response.data.service.activeServiceTypes.forEach((doc) => {
@@ -565,7 +567,7 @@ const OtherProfile = (props) => {
     if (!data) {
       return;
     }
-    console.log(data.id);
+    
     const res = await setLikeGigs(newUser.token, data.id);
     //console.log(res.data)
     const response = await getLikeGigs(newUser.token);
