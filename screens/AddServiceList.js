@@ -170,6 +170,7 @@ const AddServiceList = (props) => {
                 navigation.navigate("Service", {
                   direct: params.data,
                   data: Data,
+                  
                 });
               }
             } catch (e) {

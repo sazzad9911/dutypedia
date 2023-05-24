@@ -258,6 +258,7 @@ const VendorProfile = (props) => {
         setDescription(gigs[0].description);
         //setNewDataList(response.data.service.gigs[0].services.options)
         setFacilities(convertServerFacilities(gigs[0]?.facilites));
+        
         let arr = initialState;
         response.data.service.activeServiceTypes.forEach((doc) => {
           arr = arr.map((d) => {
@@ -985,11 +986,13 @@ const VendorProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
+              
               dispatch({ type: "SET_NEW_DATA", playload: null });
               dispatch({ type: "SET_LIST_SELECTION", playload: [] });
               const gigs = vendor.service.gigs.filter(
                 (d) => d.type == "STARTING"
               );
+              
               dispatch({
                 type: "SET_NEW_LIST_DATA",
                 playload: serverToLocal(

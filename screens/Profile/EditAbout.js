@@ -90,41 +90,35 @@ export default function EditAbout({ navigation, route }) {
     }
     if (data?.data) {
       setAbout(data?.data?.service?.about);
-      
-      Service.map((d) => {
-        let f = convertServerFacilities(gigs[0]?.facilites).filter(
-          (s) => s.title == d.title
-        );
-        if (f?.length > 0) {
-          let id = d.id;
-          setService((prev) => {
-            return prev.map((data) => {
-              if (data.id === id) {
-                return {
-                  ...data,
-                  checked: true,
-                };
-              }
-              return data;
-            });
+      try {
+        let f = convertServerFacilities(gigs[0]?.facilites);
+        let arr = [];
+        f.map((doc) => {
+          arr.push({
+            id: doc.id,
+            title: doc.title,
+            checked: true,
           });
-        }
-      });
+        });
+        setService(arr);
+      } catch (e) {
+        console.error(e.message);
+      }
     }
   }, [isFocused]);
   const updateInfo = async () => {
     setLoader(true);
-    let fac=Service.filter(d=>d.checked)
-    try{
-        await updateGigsData(user?.token,{
-            gigId:gigs[0]?.id,
-            facilites:{
-                title:"Selected Options",
-                selectedOptions:fac
-            }
-        })
-    }catch(err){
-        console.error(err.message)
+    let fac = Service.filter((d) => d.checked);
+    try {
+      await updateGigsData(user?.token, {
+        gigId: gigs[0]?.id,
+        facilites: {
+          title: "Selected Options",
+          selectedOptions: fac,
+        },
+      });
+    } catch (err) {
+      console.error(err.message);
     }
     updateData(user.token, {
       serviceId: vendor.service.id,
@@ -137,7 +131,7 @@ export default function EditAbout({ navigation, route }) {
       },
       worker: parseInt(data?.worker),
       speciality: data?.speciality,
-      about:about
+      about: about,
     })
       .then((res) => {
         updateVendorInfo();
@@ -234,7 +228,7 @@ export default function EditAbout({ navigation, route }) {
                 fontWeight: "400",
                 marginTop: 36,
               }}>
-              Choose your extra facilities
+              Add your extra facilities
             </Text>
             {Array.isArray(Service) &&
               Service.map((doc, i) => (
@@ -296,7 +290,7 @@ export default function EditAbout({ navigation, route }) {
                 setAboutError("*Max 2000 character");
                 return;
               }
-              updateInfo()
+              updateInfo();
             }}
             style={styles.button}
             title={"Update"}

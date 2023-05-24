@@ -42,7 +42,7 @@ export default function MemberList({ navigation, route }) {
   const offline = route.params.offline;
   const inset = useSafeAreaInsets();
   const [users, setUsers] = useState();
-  
+
 
   React.useEffect(() => {
     if (user && vendor) {
@@ -198,7 +198,7 @@ export default function MemberList({ navigation, route }) {
           <View
             style={{
               alignItems: "center",
-              height: "100%",
+              height: "60%",
               paddingTop: "20%",
               justifyContent: "center",
             }}>
@@ -217,7 +217,7 @@ export default function MemberList({ navigation, route }) {
           <View
             style={{
               alignItems: "center",
-              height: "100%",
+              height: "60%",
               paddingTop: "20%",
               justifyContent: "center",
             }}>

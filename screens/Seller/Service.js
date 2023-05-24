@@ -39,6 +39,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityLoader from "../../components/ActivityLoader";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import { convertServerFacilities } from "../../Class/dataConverter";
 
 const Service = ({ navigation, route }) => {
   const [CenterName, setCenterName] = React.useState();
@@ -57,23 +58,8 @@ const Service = ({ navigation, route }) => {
   const businessForm = useSelector((state) => state.businessForm);
   const [Price, setPrice] = React.useState();
   const [PriceError, setPriceError] = React.useState();
-  const [Facilities, setFacilities] = React.useState([
-    {
-      id: 1,
-      title: "Home Delivery Available",
-      checked: false,
-    },
-    {
-      id: 2,
-      title: "Home Service Available",
-      checked: false,
-    },
-    {
-      id: 3,
-      title: "Online Support Available",
-      checked: false,
-    },
-  ]);
+  const facilities=route?.params?.facilities
+  const [Facilities, setFacilities] = React.useState([]);
   const [FacilitiesError, setFacilitiesError] = React.useState();
   const [FacilitiesCounter, setFacilitiesCounter] = React.useState(0);
   const user = useSelector((state) => state.user);
@@ -97,9 +83,19 @@ const Service = ({ navigation, route }) => {
   const subsData = params?.subsData;
   const installmentData=params?.installmentData;
   const isFocused=useIsFocused()
+  
 
   React.useEffect(() => {
     if (isFocused) {
+      
+      try{
+        const gigs = vendor.service.gigs.filter(
+          (d) => d.type == "STARTING"
+        );
+        setFacilities(convertServerFacilities(gigs[0].facilites))
+      }catch(err){
+        console.error(err.message)
+      }
       //console.log("hidden")
       dispatch(setHideBottomBar(true));
       setTimeout(() => {
