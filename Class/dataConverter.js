@@ -357,11 +357,27 @@ const serverToLocal=(options,category)=>{
         data: doc,
       });
     })
+  }else if(options?.customOptions){
+    options.customOptions.forEach((doc)=>{
+      arr.push({
+        mainTitle: mainTitle,
+        tableName: options?.title,
+        data: doc,
+      });
+    })
   }else if(Array.isArray(options)){
     options.forEach((doc)=>{
       let title=doc?.title;
       if(doc.selectedOptions){
         doc.selectedOptions.forEach((d)=>{
+          arr.push({
+            mainTitle: mainTitle,
+            title:title,
+            tableName: doc?.title,
+            data: d,
+          })
+        })
+        doc.customOptions.forEach((d)=>{
           arr.push({
             mainTitle: mainTitle,
             title:title,
@@ -381,6 +397,15 @@ const serverToLocal=(options,category)=>{
               data: e,
             })
           })
+          d.customOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: d?.title,
+              data: e,
+            })
+          })
         })
       }
     })
@@ -392,6 +417,15 @@ const serverToLocal=(options,category)=>{
         doc?.multiFormData?.forEach((d)=>{
           let tableName=d?.title;
           d.selectedOptions.forEach((e)=>{
+            arr.push({
+              mainTitle: mainTitle,
+              title:title,
+              subTitle:subTitle,
+              tableName: tableName,
+              data: e,
+            });
+          })
+          d.customOptions.forEach((e)=>{
             arr.push({
               mainTitle: mainTitle,
               title:title,
