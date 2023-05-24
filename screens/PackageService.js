@@ -471,106 +471,108 @@ const PackageService = (props) => {
             {imageIndex + 1} Of 4
           </Text>
         </View>
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 10,
-            height: height - (height * 30) / 100,
-            justifyContent: "center",
-            elevation: 2,
-            zIndex: 100,
-          }}>
-          <Menu
-            contentStyle={{
-              backgroundColor: primaryColor,
-            }}
-            visible={Visible}
-            onDismiss={() => {
-              setVisible(!Visible);
-            }}
-            anchor={
-              <SvgXml
-                onPress={() => {
-                  setVisible(!Visible);
-                  //console.log("sadfa");
-                }}
-                style={{
-                  shadowOffset: {
-                    width: 0,
-                    height: 3,
-                  },
-                  shadowColor: "#DDDDDD",
-                  shadowRadius: Platform.OS == "ios" ? 4 : 20,
-                  elevation: 0,
-                  shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-                  marginLeft: 0,
-                }}
-                xml={threeDot}
-                height={Platform.OS == "ios" ? "50" : "45"}
-                width={Platform.OS == "ios" ? "50" : "45"}
-              />
-            }>
-            <Menu.Item
-              onPress={() => {
-                navigation.navigate("Support_1");
-                setVisible(!Visible);
-              }}
-              title="Report"
-            />
-            <Menu.Item onPress={() => {}} title="Copy URL" />
-          </Menu>
+       {newUser?.user?.id!=Data?.service?.user?.id&&(
+         <View
+         style={{
+           position: "absolute",
+           top: 0,
+           right: 10,
+           height: height - (height * 30) / 100,
+           justifyContent: "center",
+           elevation: 2,
+           zIndex: 100,
+         }}>
+         <Menu
+           contentStyle={{
+             backgroundColor: primaryColor,
+           }}
+           visible={Visible}
+           onDismiss={() => {
+             setVisible(!Visible);
+           }}
+           anchor={
+             <SvgXml
+               onPress={() => {
+                 setVisible(!Visible);
+                 //console.log("sadfa");
+               }}
+               style={{
+                 shadowOffset: {
+                   width: 0,
+                   height: 3,
+                 },
+                 shadowColor: "#DDDDDD",
+                 shadowRadius: Platform.OS == "ios" ? 4 : 20,
+                 elevation: 0,
+                 shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+                 marginLeft: 0,
+               }}
+               xml={threeDot}
+               height={Platform.OS == "ios" ? "50" : "45"}
+               width={Platform.OS == "ios" ? "50" : "45"}
+             />
+           }>
+           <Menu.Item
+             onPress={() => {
+               navigation.navigate("Support_1");
+               setVisible(!Visible);
+             }}
+             title="Report"
+           />
+           <Menu.Item onPress={() => {}} title="Copy URL" />
+         </Menu>
 
-          <SvgXml
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 5,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={loveIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-          <SvgXml
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={shareIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
+         <SvgXml
+           style={{
+             shadowOffset: {
+               width: 0,
+               height: 3,
+             },
+             shadowColor: "#DDDDDD",
+             shadowRadius: Platform.OS == "ios" ? 4 : 20,
+             elevation: 5,
+             shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+           }}
+           xml={loveIcon}
+           height={Platform.OS == "ios" ? "50" : "45"}
+           width={Platform.OS == "ios" ? "50" : "45"}
+         />
+         <SvgXml
+           style={{
+             shadowOffset: {
+               width: 0,
+               height: 3,
+             },
+             shadowColor: "#DDDDDD",
+             shadowRadius: Platform.OS == "ios" ? 4 : 20,
+             elevation: 0,
+             shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+           }}
+           xml={shareIcon}
+           height={Platform.OS == "ios" ? "50" : "45"}
+           width={Platform.OS == "ios" ? "50" : "45"}
+         />
 
-          {/* <SvgXml
-            onPress={() => {
-              navigation.navigate("Message", { data: Data });
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: Platform.OS == "ios" ? "#DDDDDD" : "#000000",
-              shadowRadius: Platform.OS == "ios" ? 4 : 30,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={messageIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          /> */}
-        </View>
+         {/* <SvgXml
+           onPress={() => {
+             navigation.navigate("Message", { data: Data });
+           }}
+           style={{
+             shadowOffset: {
+               width: 0,
+               height: 3,
+             },
+             shadowColor: Platform.OS == "ios" ? "#DDDDDD" : "#000000",
+             shadowRadius: Platform.OS == "ios" ? 4 : 30,
+             elevation: 0,
+             shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+           }}
+           xml={messageIcon}
+           height={Platform.OS == "ios" ? "50" : "45"}
+           width={Platform.OS == "ios" ? "50" : "45"}
+         /> */}
+       </View>
+       )}
 
         <View
           style={{
@@ -904,7 +906,8 @@ const PackageService = (props) => {
             </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: primaryColor }}>
-            <IconButton
+            {newUser?.user?.id!=Data?.service?.user?.id&&(
+              <IconButton
               onPress={() => {
                 if (newUser && newUser.token) {
                   //console.log(selectedPackage)
@@ -943,6 +946,7 @@ const PackageService = (props) => {
               }}
               title={`Continue`}
             />
+            )}
           </View>
         </View>
 

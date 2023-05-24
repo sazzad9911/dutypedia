@@ -177,6 +177,7 @@ const FixedService = (props) => {
     // console.log(data.service.user);
 
     if (data) {
+      console.log(data?.service?.user)
       setData(data);
       setSpecialty(data.service.speciality);
       setBackgroundImage(data.service.wallPhoto);
@@ -450,7 +451,8 @@ const FixedService = (props) => {
             {imageIndex + 1} Of 4
           </Text>
         </View>
-        <View
+        {newUser?.user?.id!=Data?.service?.user?.id&&(
+          <View
           style={{
             position: "absolute",
             top: 0,
@@ -550,6 +552,7 @@ const FixedService = (props) => {
             width={Platform.OS == "ios" ? "50" : "45"}
           /> */}
         </View>
+        )}
 
         <View
           style={{
@@ -823,7 +826,8 @@ const FixedService = (props) => {
             </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: primaryColor }}>
-            <IconButton
+            {newUser?.user?.id!=Data?.service?.id&&(
+              <IconButton
               onPress={() => {
                 if (newUser && newUser.token) {
                   navigation.navigate("ServiceOrder", {
@@ -852,6 +856,7 @@ const FixedService = (props) => {
               }}
               title={`Continue`}
             />
+            )}
           </View>
         </View>
 

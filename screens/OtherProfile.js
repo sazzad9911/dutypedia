@@ -322,7 +322,7 @@ const OtherProfile = (props) => {
           console.warn(error.response.data);
         });
     }
-  }, [serviceId + data,Refresh]);
+  }, [serviceId + data, Refresh]);
   React.useEffect(() => {
     setActive("Bargaining");
     //setLoader(true);
@@ -382,7 +382,7 @@ const OtherProfile = (props) => {
         // );
       }
     }
-  }, [Bargaining + Data,Refresh]);
+  }, [Bargaining + Data, Refresh]);
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -447,7 +447,7 @@ const OtherProfile = (props) => {
           console.warn(err.response.data);
         });
     }
-  }, [data + newUser + serviceId + Data,Refresh]);
+  }, [data + newUser + serviceId + Data, Refresh]);
   React.useEffect(() => {
     if (newUser && data) {
       //setLoader(true);
@@ -480,7 +480,7 @@ const OtherProfile = (props) => {
           console.warn(err.response);
         });
     }
-  }, [data + serviceId + Data,Refresh]);
+  }, [data + serviceId + Data, Refresh]);
   React.useEffect(() => {
     if (data) {
       getDashboardReviews(newUser.token, data?.service?.id)
@@ -493,23 +493,23 @@ const OtherProfile = (props) => {
           console.error(err.response.data.msg);
         });
     }
-  }, [data,Refresh]);
+  }, [data, Refresh]);
 
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
-  }, [Specialty,Refresh]);
-  
+  }, [Specialty, Refresh]);
+
   const clickFixed = (doc) => {
     navigation.navigate("FixedService", { data: doc });
   };
   const clickPackage = (doc) => {
-    console.log("ok");
+    //console.log("ok");
     navigation.navigate("PackageService", { data: doc });
   };
-  
+
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -563,7 +563,6 @@ const OtherProfile = (props) => {
     //console.log(response.data.gigs)
     dispatch(setSaveList(response.data.gigs));
   };
-  
 
   if (
     Loader ||
@@ -574,11 +573,8 @@ const OtherProfile = (props) => {
     !UnRelatedServices ||
     !NewDataList
   ) {
-    return (
-      <ProfileSkeleton/>
-    );
+    return <ProfileSkeleton />;
   }
-  
 
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
@@ -687,167 +683,170 @@ const OtherProfile = (props) => {
             />
           )}
         </Canvas>
-
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 10,
-            height: height - (height * 30) / 100,
-            justifyContent: "center",
-            elevation: 2,
-            zIndex: 100,
-          }}>
-          <Menu
-            contentStyle={{
-              backgroundColor: primaryColor,
-            }}
-            visible={Visible}
-            onDismiss={() => {
-              setVisible(!Visible);
-            }}
-            anchor={
-              <SvgXml
-                onPress={() => {
-                  if (!newUser.token) {
-                    navigation.navigate("LogIn");
-                    return;
-                  }
-                  setVisible(!Visible);
-                  //console.log("sadfa");
-                }}
-                style={{
-                  shadowOffset: {
-                    width: 0,
-                    height: 3,
-                  },
-                  shadowColor: "#DDDDDD",
-                  shadowRadius: Platform.OS == "ios" ? 4 : 20,
-                  elevation: 0,
-                  shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-                  marginLeft: 0,
-                }}
-                xml={threeDot}
-                height={Platform.OS == "ios" ? "50" : "45"}
-                width={Platform.OS == "ios" ? "50" : "45"}
-              />
-            }>
-            <Menu.Item
-              onPress={() => {
-                navigation.navigate("Support_1",{serviceId:Data?.service?.id});
+        {newUser?.user?.id != Data?.service?.user?.id && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 10,
+              height: height - (height * 30) / 100,
+              justifyContent: "center",
+              elevation: 2,
+              zIndex: 100,
+            }}>
+            <Menu
+              contentStyle={{
+                backgroundColor: primaryColor,
+              }}
+              visible={Visible}
+              onDismiss={() => {
                 setVisible(!Visible);
               }}
-              title="Report"
-            />
-            <Menu.Item onPress={() => {}} title="Copy URL" />
-          </Menu>
+              anchor={
+                <SvgXml
+                  onPress={() => {
+                    if (!newUser.token) {
+                      navigation.navigate("LogIn");
+                      return;
+                    }
+                    setVisible(!Visible);
+                    //console.log("sadfa");
+                  }}
+                  style={{
+                    shadowOffset: {
+                      width: 0,
+                      height: 3,
+                    },
+                    shadowColor: "#DDDDDD",
+                    shadowRadius: Platform.OS == "ios" ? 4 : 20,
+                    elevation: 0,
+                    shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+                    marginLeft: 0,
+                  }}
+                  xml={threeDot}
+                  height={Platform.OS == "ios" ? "50" : "45"}
+                  width={Platform.OS == "ios" ? "50" : "45"}
+                />
+              }>
+              <Menu.Item
+                onPress={() => {
+                  navigation.navigate("Support_1", {
+                    serviceId: Data?.service?.id,
+                  });
+                  setVisible(!Visible);
+                }}
+                title="Report"
+              />
+              <Menu.Item onPress={() => {}} title="Copy URL" />
+            </Menu>
 
-          <SvgXml
-            onPress={() => {
-              if (!newUser.token) {
-                navigation.navigate("LogIn");
-                return;
-              }
-              addToSaveList();
-              setLike((v) => !v);
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 5,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={like ? loveIconAc : loveIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-          <SvgXml
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={shareIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-
-          <SvgXml
-            onPress={() => {
-              if (newUser && !newUser.token) {
-                navigation.navigate("LogIn");
-                return;
-              }
-              navigation.navigate("CreateAppointment", { data: Data });
-              //navigation.navigate("AppointmentList", { data: Data });
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: "#DDDDDD",
-              shadowRadius: Platform.OS == "ios" ? 4 : 20,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={newCalender}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-          <SvgXml
-            onPress={() => {
-              if (newUser && !newUser.token) {
-                navigation.navigate("LogIn");
-                return;
-              }
-              if (!userInfo) {
-                Alert.alert("Invalid user!");
-                return;
-              }
-              if (newUser.user.id == userInfo.id) {
-                Alert.alert("Ops!", "Self messaging is not allowed.");
-                return;
-              }
-              let user = {
-                userId: userInfo.id,
-                user: userInfo,
-              };
-              navigation.navigate("ChatScreen", {
-                data: {
-                  users: [user],
-                  service:Data?.service,
-                  serviceId:Data?.service?.id
+            <SvgXml
+              onPress={() => {
+                if (!newUser.token) {
+                  navigation.navigate("LogIn");
+                  return;
+                }
+                addToSaveList();
+                setLike((v) => !v);
+              }}
+              style={{
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
                 },
-                username: userInfo.username,
-                serviceId: data?.service?.id,
-                
-              });
-            }}
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 3,
-              },
-              shadowColor: Platform.OS == "ios" ? "#DDDDDD" : "#000000",
-              shadowRadius: Platform.OS == "ios" ? 4 : 30,
-              elevation: 0,
-              shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
-            }}
-            xml={messageIcon}
-            height={Platform.OS == "ios" ? "50" : "45"}
-            width={Platform.OS == "ios" ? "50" : "45"}
-          />
-        </View>
+                shadowColor: "#DDDDDD",
+                shadowRadius: Platform.OS == "ios" ? 4 : 20,
+                elevation: 5,
+                shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+              }}
+              xml={like ? loveIconAc : loveIcon}
+              height={Platform.OS == "ios" ? "50" : "45"}
+              width={Platform.OS == "ios" ? "50" : "45"}
+            />
+            <SvgXml
+              style={{
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowColor: "#DDDDDD",
+                shadowRadius: Platform.OS == "ios" ? 4 : 20,
+                elevation: 0,
+                shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+              }}
+              xml={shareIcon}
+              height={Platform.OS == "ios" ? "50" : "45"}
+              width={Platform.OS == "ios" ? "50" : "45"}
+            />
+
+            <SvgXml
+              onPress={() => {
+                if (newUser && !newUser.token) {
+                  navigation.navigate("LogIn");
+                  return;
+                }
+                navigation.navigate("CreateAppointment", { data: Data });
+                //navigation.navigate("AppointmentList", { data: Data });
+              }}
+              style={{
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowColor: "#DDDDDD",
+                shadowRadius: Platform.OS == "ios" ? 4 : 20,
+                elevation: 0,
+                shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+              }}
+              xml={newCalender}
+              height={Platform.OS == "ios" ? "50" : "45"}
+              width={Platform.OS == "ios" ? "50" : "45"}
+            />
+            <SvgXml
+              onPress={() => {
+                if (newUser && !newUser.token) {
+                  navigation.navigate("LogIn");
+                  return;
+                }
+                if (!userInfo) {
+                  Alert.alert("Invalid user!");
+                  return;
+                }
+                if (newUser.user.id == userInfo.id) {
+                  Alert.alert("Ops!", "Self messaging is not allowed.");
+                  return;
+                }
+                let user = {
+                  userId: userInfo.id,
+                  user: userInfo,
+                };
+                navigation.navigate("ChatScreen", {
+                  data: {
+                    users: [user],
+                    service: Data?.service,
+                    serviceId: Data?.service?.id,
+                  },
+                  username: userInfo.username,
+                  serviceId: data?.service?.id,
+                });
+              }}
+              style={{
+                shadowOffset: {
+                  width: 0,
+                  height: 3,
+                },
+                shadowColor: Platform.OS == "ios" ? "#DDDDDD" : "#000000",
+                shadowRadius: Platform.OS == "ios" ? 4 : 30,
+                elevation: 0,
+                shadowOpacity: Platform.OS == "ios" ? 0.5 : 1,
+              }}
+              xml={messageIcon}
+              height={Platform.OS == "ios" ? "50" : "45"}
+              width={Platform.OS == "ios" ? "50" : "45"}
+            />
+          </View>
+        )}
+
         <View
           style={{
             backgroundColor: primaryColor,
@@ -1124,7 +1123,10 @@ const OtherProfile = (props) => {
             }}>
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Company Calender", { workingTime: Data?.service?.workingTime,t47:Data?.service?.t47 });
+                navigation.navigate("Company Calender", {
+                  workingTime: Data?.service?.workingTime,
+                  t47: Data?.service?.t47,
+                });
               }}
               Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
               title="Company Calender"
@@ -1152,11 +1154,11 @@ const OtherProfile = (props) => {
 
         <View
           transition={{ type: "timing" }}
-          animate={{ height: newNavigation }}
+          animate={{ height: newUser?.user?.id==Data?.service?.user?.id? (newNavigation-40):newNavigation }}
           style={[
             {
               overflow: "hidden",
-              height: newNavigation,
+              height: newUser?.user?.id==Data?.service?.user?.id? (newNavigation-40):newNavigation,
             },
           ]}>
           <Tab.Navigator
@@ -1437,9 +1439,7 @@ const OtherProfile = (props) => {
                     <View style={{ width: 10 }} />
                     {RelatedServices.map((doc, i) => (
                       <TopSellerCard
-                        style={{
-                          
-                        }}
+                        style={{}}
                         onPress={() => {
                           navigation.navigate("OtherProfile", {
                             serviceId: doc ? doc.service.id : null,
@@ -1475,11 +1475,9 @@ const OtherProfile = (props) => {
                       //   navigation={navigation}
                       // />
                       <TopSellerCard
-                        style={{
-                          
-                        }}
+                        style={{}}
                         onPress={() => {
-                           navigation.navigate("OtherProfile", {
+                          navigation.navigate("OtherProfile", {
                             serviceId: doc ? doc.service.id : null,
                             data: doc,
                           });
@@ -1542,14 +1540,15 @@ const OtherProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      
-      <FixedBackHeader style={{
-        marginTop:-15
-      }}
-          navigation={navigation}
-          Yoffset={offset ? offset : 0}
-        />
-      
+
+      <FixedBackHeader
+        style={{
+          marginTop: -15,
+        }}
+        navigation={navigation}
+        Yoffset={offset ? offset : 0}
+      />
+
       {/* <BottomSheet
         ref={sheetRef}
         index={index}
@@ -1564,7 +1563,6 @@ const OtherProfile = (props) => {
         }}>
         <OfferNow navigation={navigation} type={"STARTING"} data={Data} />
       </BottomSheet> */}
-      
     </View>
   );
 };
@@ -2031,7 +2029,6 @@ const BargainingScreen = ({ navigation, route }) => {
                       fontSize: Platform.OS == "ios" ? 16.5 : 15,
                       fontFamily: "Poppins-SemiBold",
                       color: "#95979D",
-                      
                     }}>
                     Extra Facilities
                   </Text>
@@ -2046,7 +2043,7 @@ const BargainingScreen = ({ navigation, route }) => {
                           style={{
                             fontSize: Platform.OS == "ios" ? 16.5 : 15,
                             fontFamily: "Poppins-Medium",
-                            
+
                             color: textColor,
                           }}
                           key={i + 1}>
@@ -2107,27 +2104,28 @@ const BargainingScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <View style={{ backgroundColor: primaryColor }}>
-        <IconButton
-          onPress={() => {
-            //params?.onOpen();
-            navigation.navigate("ServiceOrder", {
-              data: Data,
-              type: "STARTING",
-
-            });
-          }}
-          style={{
-            borderRadius: 5,
-            marginHorizontal: 20,
-            backgroundColor: "#FEA31E",
-            borderWidth: 0,
-            marginVertical: 0,
-            color: textColor,
-            marginTop: 0,
-            height: 40,
-          }}
-          title="Offer Now"
-        />
+        {newUser?.user?.id != Data?.service?.user?.id && (
+          <IconButton
+            onPress={() => {
+              //params?.onOpen();
+              navigation.navigate("ServiceOrder", {
+                data: Data,
+                type: "STARTING",
+              });
+            }}
+            style={{
+              borderRadius: 5,
+              marginHorizontal: 20,
+              backgroundColor: "#FEA31E",
+              borderWidth: 0,
+              marginVertical: 0,
+              color: textColor,
+              marginTop: 0,
+              height: 40,
+            }}
+            title="Offer Now"
+          />
+        )}
       </View>
     </View>
   );
@@ -2446,19 +2444,19 @@ const FixedScreen = ({ navigation, route }) => {
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
                     <TopSellerCard
-                        style={{
-                          width: width / 2 - 22,
-                          height:260
-                        }}
-                        onPress={() => {
-                          navigation.navigate("OtherProfile", {
-                            serviceId: doc ? doc.service.id : null,
-                            data: doc,
-                          });
-                        }}
-                        key={i}
-                        data={doc}
-                      />
+                      style={{
+                        width: width / 2 - 22,
+                        height: 260,
+                      }}
+                      onPress={() => {
+                        navigation.navigate("OtherProfile", {
+                          serviceId: doc ? doc.service.id : null,
+                          data: doc,
+                        });
+                      }}
+                      key={i}
+                      data={doc}
+                    />
                   ) : null
                 )}
               </View>
@@ -2485,19 +2483,19 @@ const FixedScreen = ({ navigation, route }) => {
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
                     <TopSellerCard
-                        style={{
-                          width: width / 2 - 22,
-                          height:260
-                        }}
-                        onPress={() => {
-                          navigation.navigate("OtherProfile", {
-                            serviceId: doc ? doc.service.id : null,
-                            data: doc,
-                          });
-                        }}
-                        key={i}
-                        data={doc}
-                      />
+                      style={{
+                        width: width / 2 - 22,
+                        height: 260,
+                      }}
+                      onPress={() => {
+                        navigation.navigate("OtherProfile", {
+                          serviceId: doc ? doc.service.id : null,
+                          data: doc,
+                        });
+                      }}
+                      key={i}
+                      data={doc}
+                    />
                   ) : null
                 )}
               </View>
@@ -2691,19 +2689,19 @@ const PackageScreen = ({ navigation, route }) => {
                 {RelatedServices.map((doc, i) =>
                   i < 6 ? (
                     <TopSellerCard
-                        style={{
-                          width: width / 2 - 22,
-                          height:260
-                        }}
-                        onPress={() => {
-                          navigation.navigate("OtherProfile", {
-                            serviceId: doc ? doc.service.id : null,
-                            data: doc,
-                          });
-                        }}
-                        key={i}
-                        data={doc}
-                      />
+                      style={{
+                        width: width / 2 - 22,
+                        height: 260,
+                      }}
+                      onPress={() => {
+                        navigation.navigate("OtherProfile", {
+                          serviceId: doc ? doc.service.id : null,
+                          data: doc,
+                        });
+                      }}
+                      key={i}
+                      data={doc}
+                    />
                   ) : null
                 )}
               </View>
@@ -2730,19 +2728,19 @@ const PackageScreen = ({ navigation, route }) => {
                 {UnRelatedServices.map((doc, i) =>
                   i < 50 ? (
                     <TopSellerCard
-                        style={{
-                          width: width / 2 - 22,
-                          height:260
-                        }}
-                        onPress={() => {
-                          navigation.navigate("OtherProfile", {
-                            serviceId: doc ? doc.service.id : null,
-                            data: doc,
-                          });
-                        }}
-                        key={i}
-                        data={doc}
-                      />
+                      style={{
+                        width: width / 2 - 22,
+                        height: 260,
+                      }}
+                      onPress={() => {
+                        navigation.navigate("OtherProfile", {
+                          serviceId: doc ? doc.service.id : null,
+                          data: doc,
+                        });
+                      }}
+                      key={i}
+                      data={doc}
+                    />
                   ) : null
                 )}
               </View>
@@ -2760,7 +2758,7 @@ const calculateHeight = (text, plus, minus) => {
   let lineHeight = Platform.OS == "ios" ? 26 : 26;
   let letterWidth = Platform.OS == "ios" ? 8 : 8;
   let height = ((textLength * letterWidth) / (width - 40)) * lineHeight;
-  if (plus) { 
+  if (plus) {
     return height + plus;
   }
   if (minus) {
@@ -2822,4 +2820,3 @@ const refreshIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14.646" heig
 </g>
 </svg>
 `;
-
