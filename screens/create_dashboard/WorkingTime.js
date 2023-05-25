@@ -32,7 +32,7 @@ export default function WorkingTime({ navigation, route }) {
     title: "",
     visible: false,
   });
-  const [Times, setTimes] = React.useState(Array.isArray(businessForm?.workingTime)?businessForm.workingTime:[]);
+  const [Times, setTimes] = React.useState(Array.isArray(businessForm?.workingTime)?businessForm.workingTime:[{},{},{},{},{},{},{}]);
   const [TimesError, setTimesError] = React.useState([]);
   const [TimeError, setTimeError] = React.useState();
   const [layoutHeight, setLayoutHeight] = useState(0);
@@ -40,6 +40,13 @@ export default function WorkingTime({ navigation, route }) {
   const [time, setTime] = useState(0);
   const dispatch=useDispatch()
   const isFocused=useIsFocused()
+  const [sat,setSat]=useState()
+  const [sun,setSun]=useState()
+  const [mon,setMon]=useState()
+  const [tue,setTue]=useState()
+  const [wed,setWed]=useState()
+  const [thu,setThu]=useState()
+  const [fri,setFri]=useState()
 
   React.useEffect(() => {
     if (isFocused) {
@@ -53,6 +60,41 @@ export default function WorkingTime({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
+  const setAllTimes=(value)=>{
+    if(!sat){
+      setSat(value)
+    }
+    if(!sun){
+      setSun(value)
+    }
+    if(!mon){
+      setMon(value)
+    }
+    if(!tue){
+      setTue(value)
+    }
+    if(!wed){
+      setWed(value)
+    }
+    if(!thu){
+      setThu(value)
+    }
+    if(!fri){
+      setFri(value)
+    }
+    
+  }
+  useEffect(()=>{
+    let arr=[]
+    arr.push(sat)
+    arr.push(sun)
+    arr.push(mon)
+    arr.push(tue)
+    arr.push(wed)
+    arr.push(thu)
+    arr.push(fri)
+    setTimes(arr)
+  },[sat,sun,mon,tue,wed,thu,fri])
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -128,90 +170,118 @@ export default function WorkingTime({ navigation, route }) {
           {!checked ? (
             <Animated.View entering={FadeIn}>
               <Days
-                value={Times}
+                dayValue={sat}
                 error={TimesError[0]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[0] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setSat(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Saturday"
               />
               <Days
-                value={Times}
+                dayValue={sun}
                 error={TimesError[1]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[1] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setSun(val)
+                 
                 }}
                 setVisible={setVisible}
                 title="Sunday"
                 style={{ marginTop: 16 }}
               />
               <Days
-                value={Times}
+                dayValue={mon}
                 error={TimesError[2]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[2] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setMon(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Monday"
                 style={{ marginTop: 16 }}
               />
               <Days
-                value={Times}
+                dayValue={tue}
                 error={TimesError[3]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[3] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setTue(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Tuesday"
                 style={{ marginTop: 16 }}
               />
               <Days
-                value={Times}
+                dayValue={wed}
                 error={TimesError[4]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[4] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setWed(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Wednesday"
                 style={{ marginTop: 16 }}
               />
               <Days
-                value={Times}
+                dayValue={thu}
                 error={TimesError[5]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[5] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setThu(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Thursday"
                 style={{ marginTop: 16 }}
               />
               <Days
-                value={Times}
+                dayValue={fri}
                 error={TimesError[6]}
                 onChange={(val) => {
-                  let arr = Times;
-                  arr[6] = val;
-                  setTimes(arr);
-                  setTime((d) => d + 1);
+                  setAllTimes({
+                    checked:false,
+                    openingTime:val.openingTime,
+                    closingTime:val?.closingTime,
+                    title:val?.title
+                  })
+                  setFri(val)
+                  
                 }}
                 setVisible={setVisible}
                 title="Friday"
@@ -234,19 +304,20 @@ export default function WorkingTime({ navigation, route }) {
             </Text>
           )}
           <IconButton
-            active={checked || time > 0 ? true : false}
-            disabled={checked || time ? false : true}
+            active={checked || Times?.filter(d=>d?.checked)?.length > 0 ? true : false}
+            disabled={checked || Times?.filter(d=>d?.checked)?.length>0 ? false : true}
             onPress={() => {
-              //console.log(Times);
+              
 
-              if (!checked && Times.length == 0) {
+              if (!checked && Times?.filter(d=>d?.checked)?.length == 0) {
                 setTimeError("Please select any time");
                 //scrollingTo(250);
                 return;
               }
+              
               dispatch({
                 type: "WORKING_TIME",
-                playload: Times.length == 0 ? true : Times,
+                playload: Times?.filter(d=>d?.checked)?.length == 0 ? true : Times,
               });
               navigation.navigate("NewPricing", {
                 data: {
@@ -256,7 +327,7 @@ export default function WorkingTime({ navigation, route }) {
                   position: data.position,
                   numberOfTeam: data.numberOfTeam,
                   established: data.established,
-                  workingTime: Times,
+                  workingTime: Times?.filter(d=>d?.checked),
                   fullTime: checked,
                 },
               });

@@ -71,7 +71,7 @@ export const createService = async (
         worker: businessForm.teamNumber,
         startDate: dateIs,
         workingTime: working,
-        t47:working?.length==0? true:false,
+        t47:businessForm?.t47,
         startingPrice: businessForm.price,
         facilites: {
           title: "Choose Your Facilities",

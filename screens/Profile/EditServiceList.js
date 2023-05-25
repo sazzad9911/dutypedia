@@ -304,14 +304,14 @@ const Table = (props) => {
     let arr = [];
     if (title) {
         NewDataList.map((item, i) => {
-        if (item.subTitle.match(title) && item.title.match(name)) {
+        if (item?.subTitle?.match(title) && item?.title?.match(name)) {
           arr.push(item.tableName);
         }
       });
       setData(uniq(arr));
     } else {
         NewDataList.map((item, i) => {
-        if (item.title && item.title.match(name)) {
+        if (item?.title && item?.title.match(name)) {
           arr.push(item.tableName);
         } else if (item.mainTitle && item.mainTitle.match(name)) {
           arr.push(item.tableName);

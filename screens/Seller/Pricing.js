@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Animated as Animation,
-  Pressable
+  Pressable,
 } from "react-native";
 import {
   primaryColor,
@@ -330,13 +330,11 @@ const Pricing = ({ navigation, route }) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <Animation.ScrollView
         ref={(ref) => setRef(ref)}
         scrollToOverflowEnabled={true}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={styles.viewBox}>
           <Text style={styles.text}>Informations</Text>
           <Input
@@ -375,15 +373,13 @@ const Pricing = ({ navigation, route }) => {
               {
                 marginTop: 5,
               },
-            ]}
-          >
+            ]}>
             Service Provider Information
           </Text>
           <View
             style={{
               flexDirection: "row",
-            }}
-          >
+            }}>
             <SuggestionBox
               innerRef={titleRef}
               placeholder="Title"
@@ -483,8 +479,7 @@ const Pricing = ({ navigation, route }) => {
               fontSize: 15,
               fontFamily: "Poppins-Medium",
               marginTop: 10,
-            }}
-          >
+            }}>
             How many team/ Worker do you have?
           </Text>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
@@ -497,8 +492,7 @@ const Pricing = ({ navigation, route }) => {
                   setTeamNumber(`${num - 1}`);
                 }
               }}
-              style={styles.button}
-            >
+              style={styles.button}>
               <FontAwesome5 name="minus" size={20} color="#707070" />
             </TouchableOpacity>
             <TextInput
@@ -539,8 +533,7 @@ const Pricing = ({ navigation, route }) => {
                 let num = parseInt(TeamNumber) + 1;
                 setTeamNumber(`${num}`);
               }}
-              style={styles.button}
-            >
+              style={styles.button}>
               <FontAwesome name="plus" size={20} color="#707070" />
             </TouchableOpacity>
           </View>
@@ -552,8 +545,7 @@ const Pricing = ({ navigation, route }) => {
                 fontFamily: "Poppins-Light",
                 color: "red",
                 marginTop: 3,
-              }}
-            >
+              }}>
               {TeamNumberError}
             </Text>
           )}
@@ -563,8 +555,7 @@ const Pricing = ({ navigation, route }) => {
               fontSize: 15,
               fontFamily: "Poppins-Medium",
               marginTop: 10,
-            }}
-          >
+            }}>
             Established/ Starting Date
           </Text>
           <View style={{ flexDirection: "row" }}>
@@ -613,8 +604,7 @@ const Pricing = ({ navigation, route }) => {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-            }}
-          >
+            }}>
             <Text style={styles.text}>Times</Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
@@ -627,8 +617,7 @@ const Pricing = ({ navigation, route }) => {
                   alignItems: "center",
                   borderRadius: 5,
                   marginRight: Platform.OS == "ios" ? 10 : 0,
-                }}
-              >
+                }}>
                 <CheckBox
                   value={checked}
                   onChange={() => {
@@ -730,8 +719,7 @@ const Pricing = ({ navigation, route }) => {
                 fontFamily: "Poppins-Light",
                 color: "red",
                 marginTop: 3,
-              }}
-            >
+              }}>
               {TimeError}
             </Text>
           )}
@@ -759,8 +747,7 @@ const Pricing = ({ navigation, route }) => {
               {
                 marginTop: 10,
               },
-            ]}
-          >
+            ]}>
             Choose your facilities
           </Text>
           {Array.isArray(Service) &&
@@ -794,8 +781,7 @@ const Pricing = ({ navigation, route }) => {
                 fontFamily: "Poppins-Light",
                 color: "red",
                 marginTop: 3,
-              }}
-            >
+              }}>
               {ServiceError}
             </Text>
           )}
@@ -877,8 +863,7 @@ const Pricing = ({ navigation, route }) => {
           transparent={true}
           animationType="fade"
           visible={buttonVisible}
-          onRequestClose={() => setButtonVisible((val) => !val)}
-        >
+          onRequestClose={() => setButtonVisible((val) => !val)}>
           <InputModal
             onChange={(val) => {
               let arr = Service;
@@ -951,10 +936,11 @@ export const Days = ({
   allDay,
   style,
   disabled,
-  checked
+  checked,
+  dayValue,
 }) => {
   const [date, setDate] = React.useState(new Date(1598051730000));
-  const [day, setDay] = React.useState(checked?true:false);
+  const [day, setDay] = React.useState(checked ? true : false);
   const [OpeningTime, setOpeningTime] = React.useState();
   const [ClosingTime, setClosingTime] = React.useState();
   const [Open, setOpen] = React.useState(false);
@@ -963,9 +949,9 @@ export const Days = ({
   React.useEffect(() => {
     setError(error);
   }, [error]);
-  useEffect(()=>{
-    setDay(checked)
-  },[checked])
+  useEffect(() => {
+    setDay(checked);
+  }, [checked]);
   React.useEffect(() => {
     if (Array.isArray(value)) {
       let arr = value.filter((item) => item.title == title);
@@ -988,6 +974,13 @@ export const Days = ({
       }
     }
   }, [values]);
+  React.useEffect(() => {
+    if (dayValue) {
+      setDay(dayValue?.checked);
+      setOpeningTime(dayValue?.openingTime);
+      setClosingTime(dayValue?.closingTime);
+    }
+  }, [dayValue]);
   const toTime = (timestamp) => {
     let date = new Date(timestamp);
     var hours = date.getHours();
@@ -1008,26 +1001,27 @@ export const Days = ({
     let newTime = val.split(":");
     return new Date(`2010-10-10 ${newTime[0]}:${newTime[1]}:00`);
   };
-  useEffect(()=>{
-    if (onChange&& ClosingTime&&OpeningTime) {
+  useEffect(() => {
+    if (onChange && ClosingTime && OpeningTime) {
       onChange({
         title: title,
         openingTime: OpeningTime,
         closingTime: ClosingTime,
+        checked: day,
       });
     }
-  },[OpeningTime,ClosingTime])
+  }, [OpeningTime, ClosingTime, day]);
 
   return (
     <View style={style}>
       <View
         onPress={() => {}}
-        style={{ flexDirection: "row", alignItems: "center" }}
-      >
-        <CheckBox style={{
-          width:120
-        }}
-        disabled={disabled}
+        style={{ flexDirection: "row", alignItems: "center" }}>
+        <CheckBox
+          style={{
+            width: 120,
+          }}
+          disabled={disabled}
           value={day}
           onChange={() => {
             setDay(!day);
@@ -1041,9 +1035,8 @@ export const Days = ({
           style={{
             flexDirection: "row",
             marginTop: 10,
-            width:250
-          }}
-        >
+            width: 250,
+          }}>
           <TouchableOpacity
             disabled={!day}
             onPress={() => {
@@ -1051,8 +1044,8 @@ export const Days = ({
             }}
             style={{
               flexDirection: "row",
-              height:40,
-              width:115,
+              height: 40,
+              width: 115,
               justifyContent: "center",
               alignItems: "center",
               borderWidth: 1,
@@ -1061,17 +1054,15 @@ export const Days = ({
               marginVertical: 5,
               flex: 1,
               opacity: day ? 1 : 0.4,
-            }}
-          >
+            }}>
             <SvgXml xml={clock} />
             <Text
               style={{
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
-                
+
                 marginLeft: 10,
-              }}
-            >
+              }}>
               {OpeningTime ? toTime(OpeningTime) : "Opening Time"}
             </Text>
             <DateTimePickerModal
@@ -1117,23 +1108,21 @@ export const Days = ({
               marginVertical: 5,
               flex: 1,
               opacity: day ? 1 : 0.4,
-              height:40,
-              width:115,
-              marginLeft:12
-            }}
-          >
+              height: 40,
+              width: 115,
+              marginLeft: 12,
+            }}>
             <SvgXml xml={clock} />
             <Text
               style={{
                 fontSize: 12,
                 fontFamily: "Poppins-Medium",
-                
+
                 marginLeft: 10,
-              }}
-            >
+              }}>
               {ClosingTime ? toTime(ClosingTime) : "Closing Time"}
             </Text>
-            
+
             <DateTimePickerModal
               date={ClosingTime ? ClosingTime : new Date()}
               buttonTextColorIOS={backgroundColor}
@@ -1149,7 +1138,6 @@ export const Days = ({
                 setError(null);
                 setClosingTime(e);
                 setClose(false);
-                
               }}
               onCancel={() => {
                 setClose(false);
@@ -1164,16 +1152,24 @@ export const Days = ({
     </View>
   );
 };
-export const CheckBox = ({ onChange, value, title, style, disabled,decline }) => {
+export const CheckBox = ({
+  onChange,
+  value,
+  title,
+  style,
+  disabled,
+  decline,
+}) => {
   const [checked, setChecked] = React.useState(false);
   React.useEffect(() => {
     setChecked(value);
   }, [value]);
   return (
-    <Pressable disabled={disabled}
+    <Pressable
+      disabled={disabled}
       onPress={() => {
-        if(decline){
-          return
+        if (decline) {
+          return;
         }
         if (onChange) {
           onChange(title);
@@ -1184,12 +1180,11 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
         {
           flexDirection: "row",
           alignItems: "center",
-          opacity:disabled?.5:1,
-          flexWrap:"wrap"
+          opacity: disabled ? 0.5 : 1,
+          flexWrap: "wrap",
         },
         style,
-      ]}
-    >
+      ]}>
       <View
         style={{
           borderColor: "#D1D1D1",
@@ -1200,9 +1195,8 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
           justifyContent: "center",
           alignItems: "center",
           marginRight: 10,
-          marginTop:2
-        }}
-      >
+          marginTop: 2,
+        }}>
         {checked && (
           <SvgXml
             style={{
@@ -1222,11 +1216,10 @@ export const CheckBox = ({ onChange, value, title, style, disabled,decline }) =>
             flex: 1,
             color: style && style.color ? style.color : "black",
             fontSize: style && style.fontSize ? style.fontSize : 16,
-            margin:0,
-            lineHeight:style?.lineHeight
+            margin: 0,
+            lineHeight: style?.lineHeight,
           },
-        ]}
-      >
+        ]}>
         {title}
       </Text>
     </Pressable>

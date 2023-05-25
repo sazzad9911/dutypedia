@@ -306,6 +306,9 @@ const FinalReview = (props) => {
     }
   };
   const confirm=async()=>{
+    
+    console.log(newData?.fullTime)
+    return
     setLoading(true);
     let blobImages = [];
     Array.isArray(newData?.images) &&
@@ -340,7 +343,8 @@ const FinalReview = (props) => {
       division:newData?.address?.division,
       district:newData?.address?.district,
       area:newData?.address?.area,
-      address:newData?.address?.address
+      address:newData?.address?.address,
+      t47:newData?.fullTime?true:false
     }
       //setLoading(false)
       const res = await createService(
