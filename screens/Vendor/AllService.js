@@ -283,7 +283,7 @@ const Rows = ({ title, item, name }) => {
     </Text>
   );
 };
-function uniq(a) {
+export function uniq(a) {
   return a.sort().filter(function (item, pos, ary) {
     return !pos || item != ary[pos - 1];
   });

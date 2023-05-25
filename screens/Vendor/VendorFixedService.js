@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -54,6 +54,8 @@ import {
   getOtherServices,
   getRelatedServices,
   getUnRelatedServices,
+  getGigs,
+  getGigById,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
 import { convertServerFacilities, serverToLocal } from "../../Class/dataConverter";
@@ -136,7 +138,8 @@ const VendorFixedService = (props) => {
     "Mobile,Tv,Application,Name,Mobile Number,++++,*****"
   );
   const params = props.route.params;
-  const data = params.data;
+  //const data = params.data;
+  const [data,setNData]=useState(params.data)
   const [newNavigation, setNewNavigation] = React.useState(1100);
   const [imageIndex, setImageIndex] = React.useState(0);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
@@ -229,6 +232,15 @@ const VendorFixedService = (props) => {
       }
     }
   }, [data,isFocused]);
+  useEffect(()=>{
+    if(data){
+      getGigById(newUser.token,data.id).then(res=>{
+        setNData(res.data.gig)
+      }).catch(err=>{
+        console.error(err.response.data.msg)
+      })
+    }
+  },[isFocused])
 
   React.useEffect(() => {
     //console.log(NewDataList.length);

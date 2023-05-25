@@ -107,12 +107,14 @@ const EditServiceList = (props) => {
     //setData(ListSelection);
   }, [gigs.id]);
   const updateData = () => {
+    
     setLoader(true);
     updateGigsData(user.token,{
       gigId:gigs.id,
       services:{
         options:localOptionsToServer(Data),
-        category:gigs.service.category
+        category:gigs.service.category,
+        type:gigs?.services?.type
       }
     }).then(res=>{
       updateVendorInfo()

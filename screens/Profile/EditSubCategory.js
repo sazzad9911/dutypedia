@@ -27,9 +27,10 @@ import IconButton from "../../components/IconButton";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { useIsFocused } from "@react-navigation/native";
 import { updateGigsData } from "../../Class/update";
-import { localOptionsToServer } from "../../Class/dataConverter";
+import { localOptionsToServer, serverToLocal } from "../../Class/dataConverter";
 import ActivityLoader from "../../components/ActivityLoader";
 import { getService } from "../../Class/service";
+import { uniq } from "../Vendor/AllService";
 
 const EditSubCategory = ({ navigation, route }) => {
   const title = route.params.title;
@@ -50,6 +51,7 @@ const EditSubCategory = ({ navigation, route }) => {
   const [loader,setLoader]=useState(false)
   const user=useSelector(state=>state.user)
   const vendor=useSelector(state=>state.vendor)
+  const [extra,setExtra]=useState([])
   //console.log(title)
 
   React.useEffect(() => {
@@ -66,6 +68,22 @@ const EditSubCategory = ({ navigation, route }) => {
   }, [isFocused]);
 
   React.useEffect(() => {
+   try{
+    let arr=[]
+    let selectedData=serverToLocal(gigs?.services?.options,gigs?.services?.category)
+    selectedData?.map((doc)=>{
+      let find=data.filter(d=>d.title===doc.title)
+      if(find?.length==0){
+        arr.push(doc.title)
+      }
+      if(doc.title===("Jingles & Intros")){
+        console.log(doc)
+      }
+    })
+    setExtra(uniq(arr))
+   }catch(e){
+    console.log(e.message)
+   }
     //console.log(listData)
     if (route.name == "SubCategories") {
       //setData(allData[id].data);
@@ -234,6 +252,25 @@ const EditSubCategory = ({ navigation, route }) => {
                 key={i}
                 onPress={() => action(data,i)}
                 title={data.title}
+                data={data}
+              />
+            ))
+        ) : (
+          <></>
+        )}
+        {Array.isArray(extra) ? (
+          extra
+            .sort((a, b) => a.title > b.title)
+            .map((data, i) => (
+              <SubCategoryCart
+                id={id}
+                nextId={i}
+                deleteData={deleteData}
+                key={i}
+                onPress={() => {
+
+                }}
+                title={data}
                 data={data}
               />
             ))

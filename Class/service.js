@@ -141,6 +141,12 @@ export const getServiceGigs = async (token) => {
   });
   return res;
 };
+export const getGigById = async (token,gigId) => {
+  const res = await axios.get(`${url}/server/services/get/gig/${gigId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
 export const changeActiveService = async (token, serviceId, type) => {
   //console.log(serviceId)
   //console.log(type)

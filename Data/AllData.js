@@ -2784,7 +2784,7 @@ export const AllData = [
         ],
       },
       {
-        title: "Dialouge Editing",
+        title: "Dialogue Editing",
         list: [
           {
             title: "Dialouge Editing",
