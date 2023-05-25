@@ -115,8 +115,8 @@ const Table = (props) => {
       listData.map((item, i) => {
         if (item.title && item.title.match(name)) {
           arr.push(item.tableName);
-        } else if (item.mainTitle && item.mainTitle.match(name)) {
-          arr.push(item.tableName);
+        } else if (item?.mainTitle && item?.mainTitle.match(name)) {
+          arr.push(item?.tableName);
         }
       });
       setData(uniq(arr));

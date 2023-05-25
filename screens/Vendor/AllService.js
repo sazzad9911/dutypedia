@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet, Dimensions } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import TopTabBar from "../Seller/components/TopTabBar";
@@ -53,7 +53,7 @@ const AllService = (props) => {
     //console.log(Services)
   }, [newListData,isFocused]);
 
-  if (Array.isArray(Services) && Services.length == 0) {
+  if (Array.isArray(Services) && Services.length == 0&&!isFocused) {
     return null;
   }
   return (
@@ -92,8 +92,11 @@ const ComponentScreen = (props) => {
       
     },
   });
+  const isFocused=useIsFocused()
+  const [array,setArray]=useState([])
 
   React.useEffect(() => {
+    
     let arr = [];
     if (newListData) {
         newListData.map((item, i) => {
@@ -103,11 +106,16 @@ const ComponentScreen = (props) => {
           }
         }
       });
+      setArray(arr)
     }
-    if (Array.isArray(arr) && arr.length > 0) {
-      setServices(uniq(arr));
+  }, [props.route.name,isFocused]);
+  useEffect(()=>{
+    if(array){
+      if (Array.isArray(array) && array.length > 0) {
+        setServices(uniq(array));
+      }
     }
-  }, [props.route.name]);
+  },[array?.length])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {Array.isArray(Services) && Services.length > 0 ? (

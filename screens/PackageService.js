@@ -881,7 +881,7 @@ const PackageService = (props) => {
               onPress={() => {
                 navigation.navigate("Service List_1", {
                   NewDataList: NewDataList,
-                  facilites: Facilities,
+                  
                 });
               }}
               style={{
