@@ -78,6 +78,7 @@ import ServiceOrder from "./screens/order/ServiceOrder";
 import ChooseDateOrder from "./screens/order/ChooseDateOrder";
 import InstructionOrder from "./screens/order/InstructionOrder";
 import { SearchSecond, SearchThird } from "./screens/Search";
+import ServiceCategory from "./screens/create_dashboard/ServiceCategory";
 
 const Stack = createStackNavigator();
 
@@ -343,6 +344,15 @@ const HomeRoute = ({ navigation }) => {
           headerShown: false,
         }}
         component={Category}
+      />
+      <Stack.Screen
+        name="ServiceCategory"
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Service Category"} />
+          ),
+        }}
+        component={ServiceCategory}
       />
       <Stack.Screen
         name="SubCategories_1"

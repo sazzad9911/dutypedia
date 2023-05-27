@@ -47,7 +47,7 @@ const Login = ({ navigation }) => {
         //console.log(res);
         if (res) {
           dispatch({ type: "SET_USER", playload: res });
-          navigation.navigate("Feed");
+          navigation?.navigate("Feed");
           getDashboard(res.token).then((result) => {
             if (result && result.data && result.data.dashboards) {
               dispatch({

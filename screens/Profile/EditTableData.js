@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Dimensions,
@@ -60,7 +60,7 @@ const EditTableData = (props) => {
   const route = props.route;
   const direct =
     route.params && route.params.direct ? route.params.direct : false;
-  const isFocused=useIsFocused()
+  const isFocused = useIsFocused();
 
   React.useEffect(() => {
     if (isFocused) {
@@ -83,13 +83,11 @@ const EditTableData = (props) => {
     }
   }, [newSelectedData.length]);
 
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
-    >
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {Array.isArray(list) ? (
           list.map((list, i) => (
@@ -156,7 +154,7 @@ const EditTableData = (props) => {
             //   image: data.image,
             //   id: id,
             // });
-            dispatch(setListData([]))
+            dispatch(setListData([]));
             dispatch({ type: "SET_LENGTH", playload: newSelectedData.length });
             //dispatch(setListData([]));
             newSelectedData.forEach((doc) => {
@@ -207,6 +205,7 @@ const Table = ({
   const mainTitle = route.params.mainTitle;
   const subTitle = route.params.subTitle;
   const titleS = route.params.title;
+  const [extras, setExtras] = useState();
 
   const [ObjectId, setObjectId] = React.useState([]);
 
@@ -268,6 +267,21 @@ const Table = ({
       setSelectedData((data) => [...data, newData]);
     }
   };
+  useEffect(() => {
+    try {
+      let arr = [];
+      listData?.map((d) => {
+        let find = data?.filter((s) => s.title == d.data.title&&tableName==d.tableName);
+        if (find?.length == 0) {
+          arr.push(d);
+        }
+        console.log(listData[0])
+      });
+      
+    } catch (e) {
+      console.log(e.message);
+    }
+  }, [listData?.length]);
   return (
     <View>
       <View
@@ -277,24 +291,20 @@ const Table = ({
           backgroundColor: primaryColor,
           borderRadius: 5,
           padding: 10,
-        }}
-      >
+        }}>
         <View
           style={{
             flexDirection: "row",
-          }}
-        >
+          }}>
           <View
             style={{
               flex: 4,
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontFamily: "Poppins-Medium",
                 fontSize: Platform.OS == "ios" ? 16 : 15,
-              }}
-            >
+              }}>
               {tableName}
             </Text>
           </View>
@@ -303,15 +313,13 @@ const Table = ({
               flex: 1.5,
               justifyContent: "center",
               alignItems: "center",
-            }}
-          >
+            }}>
             <Text
               style={{
                 fontFamily: "Poppins-Medium",
                 fontSize: Platform.OS == "ios" ? 16 : 15,
                 textAlign: "center",
-              }}
-            >
+              }}>
               Select
             </Text>
           </View>
@@ -349,8 +357,7 @@ const Table = ({
         transparent={true}
         onRequestClose={() => {
           setVisible(!Visible);
-        }}
-      >
+        }}>
         <InputModal
           onChange={(value) => {
             setText(value);
@@ -443,11 +450,11 @@ const Rows = ({
   const [Data, setData] = React.useState([]);
   React.useEffect(() => {
     let arr = listData.filter((d) => d.data.id == data.id);
-    let neArr=listData.filter(d=>d.data.title==data.title);
+    let neArr = listData.filter((d) => d.data.title == data.title);
     if (arr && arr.length > 0) {
       setChecked(true);
-    }else if(neArr&&neArr.length>0){
-      setChecked(true)
+    } else if (neArr && neArr.length > 0) {
+      setChecked(true);
     }
   }, [listData.length]);
 
@@ -457,16 +464,14 @@ const Rows = ({
         flexDirection: "row",
         alignItems: "center",
         height: 40,
-      }}
-    >
+      }}>
       <Text
         numberOfLines={2}
         style={{
           flex: 3,
           fontSize: Platform.OS == "ios" ? 16 : 14,
           fontFamily: "Poppins-Light",
-        }}
-      >
+        }}>
         {title}
       </Text>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -474,15 +479,15 @@ const Rows = ({
           <TouchableOpacity
             onPress={() => {
               deleteData(data);
-            }}
-          >
+            }}>
             <AntDesign name="delete" size={22} color="red" />
           </TouchableOpacity>
         ) : (
-          <CheckBox style={{
-            width:30,
-            height:30
-          }}
+          <CheckBox
+            style={{
+              width: 30,
+              height: 30,
+            }}
             value={checked}
             onChange={() => {
               selectData(data.title, !checked, data.id);

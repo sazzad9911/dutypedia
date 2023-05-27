@@ -171,7 +171,7 @@ const TabRoute = () => {
          
         } else {
           setLoad(!load);
-          //dispatch({ type: "SET_USER", playload: [] });
+          dispatch({ type: "SET_USER", playload: [] });
         }
       })
       .catch((err) => {

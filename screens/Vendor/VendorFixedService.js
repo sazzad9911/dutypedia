@@ -649,6 +649,7 @@ const VendorFixedService = (props) => {
                     gigs[0].services.options,
                     gigs[0].services.category
                   ),
+                  facilities:Facilities,
                   name: "VendorOrderDetails",
                   data: "ONETIME",
                   gigs:data

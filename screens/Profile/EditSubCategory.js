@@ -76,9 +76,9 @@ const EditSubCategory = ({ navigation, route }) => {
       if(find?.length==0){
         arr.push(doc.title)
       }
-      if(doc.title===("Jingles & Intros")){
-        console.log(doc)
-      }
+      // if(doc.title===("Jingles & Intros")){
+      //   console.log(doc)
+      // }
     })
     setExtra(uniq(arr))
    }catch(e){
@@ -260,7 +260,7 @@ const EditSubCategory = ({ navigation, route }) => {
         )}
         {Array.isArray(extra) ? (
           extra
-            .sort((a, b) => a.title > b.title)
+            .sort((a, b) => a > b)
             .map((data, i) => (
               <SubCategoryCart
                 id={id}
@@ -268,7 +268,14 @@ const EditSubCategory = ({ navigation, route }) => {
                 deleteData={deleteData}
                 key={i}
                 onPress={() => {
-
+                  navigation?.navigate("EditTableData", {
+                    title: data,
+                    list: [],
+                    id: id,
+                    nextId: nextId,
+                    mainTitle: params.mainTitle,
+                    title: params.title,
+                  });
                 }}
                 title={data}
                 data={data}

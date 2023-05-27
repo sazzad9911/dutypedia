@@ -53,12 +53,12 @@ const EditServiceList = (props) => {
       color: textColor,
     },
   });
-  const gigs=params.gigs
-  const isFocused=useIsFocused()
-  const NewDataList=params.NewDataList;
-  const user=useSelector(state=>state.user)
-  const [loader,setLoader]=useState(false)
-  const vendor=useSelector(state=>state.vendor)
+  const gigs = params.gigs;
+  const isFocused = useIsFocused();
+  const NewDataList = params.NewDataList;
+  const user = useSelector((state) => state.user);
+  const [loader, setLoader] = useState(false);
+  const vendor = useSelector((state) => state.vendor);
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -73,10 +73,10 @@ const EditServiceList = (props) => {
   }, [isFocused]);
 
   React.useEffect(() => {
-   // console.log(NewDataList.length)
+    // console.log(NewDataList.length)
     let arr = [];
     if (NewDataList) {
-        NewDataList.map((item, i) => {
+      NewDataList.map((item, i) => {
         if (item.title) {
           arr.push(item.title);
         } else {
@@ -95,59 +95,67 @@ const EditServiceList = (props) => {
       setServices(uniq(arr));
       //console.log(uniq(arr))
     }
-   // console.log(Services)
+    // console.log(Services)
   }, [isFocused]);
   React.useEffect(() => {
-    if(gigs.services.category){
-        setData(serverToLocal(gigs.services.options,gigs.services.category))
-    }else{
-        setData(serverToLocal(gigs.services,gigs.service.category))
+    if (gigs.services.category) {
+      setData(serverToLocal(gigs.services.options, gigs.services.category));
+    } else {
+      setData(serverToLocal(gigs.services, gigs.service.category));
     }
     //console.log(NewDataList)
     //setData(ListSelection);
   }, [gigs.id]);
   const updateData = () => {
-    
     setLoader(true);
-    updateGigsData(user.token,{
-      gigId:gigs.id,
-      services:{
-        options:localOptionsToServer(Data),
-        category:gigs.service.category,
-        type:gigs?.services?.type
-      }
-    }).then(res=>{
-      updateVendorInfo()
-    }).catch(err=>{
-      setLoader(false)
-      console.error(err.response.data.msg)
+    updateGigsData(user.token, {
+      gigId: gigs.id,
+      services: {
+        options: localOptionsToServer(Data),
+        category: gigs.service.category,
+        type: gigs?.services?.type,
+      },
     })
+      .then((res) => {
+        updateVendorInfo();
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error(err.response.data.msg);
+      });
   };
-  const updateVendorInfo=async()=>{
-    const res=await getService(user.token,vendor.service.id);
-    if(res){
-      setLoader(false)
+  const updateVendorInfo = async () => {
+    const res = await getService(user.token, vendor.service.id);
+    if (res) {
+      setLoader(false);
       dispatch({ type: "SET_VENDOR", playload: res.data });
       navigation.navigate("VendorProfile");
     }
-  }
+  };
 
   if (Array.isArray(Services) && Services.length == 0) {
     return null;
   }
-  if(loader){
-    return(
-        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-            <ActivityLoader/>
-        </View>
-    )
+  if (loader) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityLoader />
+      </View>
+    );
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <TopTabBar style={{
-        marginTop:0
-      }} {...props} id={true} />}>
+      <Tab.Navigator
+        tabBar={(props) => (
+          <TopTabBar
+            style={{
+              marginTop: 0,
+            }}
+            {...props}
+            id={true}
+          />
+        )}>
         {Services.map((doc, i) => (
           <Tab.Screen
             key={i}
@@ -156,18 +164,20 @@ const EditServiceList = (props) => {
             initialParams={{
               setData: setData,
               Data: Data,
-              NewDataList:NewDataList
+              NewDataList: NewDataList,
             }}
           />
         ))}
-        {/* <Tab.Screen
-          name={"Extra Facilities"}
-          initialParams={{
-            facilites: params.facilites,
-            setData: setFacilities,
-          }}
-          component={ExtraFacilities}
-        /> */}
+        {params?.facilities && (
+          <Tab.Screen
+            name={"Extra Facilities"}
+            initialParams={{
+              facilites: params.facilities,
+              setData: setFacilities,
+            }}
+            component={ExtraFacilities}
+          />
+        )}
       </Tab.Navigator>
       <View>
         {DataError && (
@@ -176,10 +186,10 @@ const EditServiceList = (props) => {
         <IconButton
           onPress={() => {
             //console.log(Data.length)
-            if(Data&&Data.length<2){
-                setDataError("*Please select one and more options")
+            if (Data && Data.length < 2) {
+              setDataError("*Please select one and more options");
             }
-            updateData()
+            updateData();
           }}
           style={{
             position: "absolute",
@@ -220,30 +230,27 @@ const ComponentScreen = (props) => {
       color: textColor,
     },
   });
-  const NewDataList=params.NewDataList;
-  const isFocused=useIsFocused()
+  const NewDataList = params.NewDataList;
+  const isFocused = useIsFocused();
   //console.log(NewDataList)
 
   React.useEffect(() => {
-    
     let arr = [];
     if (NewDataList) {
-        NewDataList.map((item, i) => {
+      NewDataList.map((item, i) => {
         if (item.title && item.title === props.route.name) {
           if (item.subTitle) {
             arr.push(item.subTitle);
           }
         }
       });
-
     }
-   
+
     if (Array.isArray(arr) && arr.length > 0) {
       setServices(uniq(arr));
-     // console.log(uniq(arr))
-     
+      // console.log(uniq(arr))
     }
-  }, [props.route.name,isFocused]);
+  }, [props.route.name, isFocused]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {Array.isArray(Services) && Services.length > 0 ? (
@@ -264,7 +271,12 @@ const ComponentScreen = (props) => {
         <View style={styles.view}>
           <Text style={styles.text}>Lists</Text>
           <View style={{ height: 1.5, backgroundColor: "#e5e5e5" }} />
-          <Table NewDataList={NewDataList} Data={params.Data} setData={params.setData} {...props} />
+          <Table
+            NewDataList={NewDataList}
+            Data={params.Data}
+            setData={params.setData}
+            {...props}
+          />
         </View>
       )}
       <View style={{ height: 80 }} />
@@ -278,7 +290,7 @@ const Table = (props) => {
   const { width, height } = Dimensions.get("window");
   const name = props.route.name;
   const title = props.title;
-  const NewDataList=props.NewDataList;
+  const NewDataList = props.NewDataList;
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -305,14 +317,14 @@ const Table = (props) => {
     setData([]);
     let arr = [];
     if (title) {
-        NewDataList.map((item, i) => {
+      NewDataList.map((item, i) => {
         if (item?.subTitle?.match(title) && item?.title?.match(name)) {
           arr.push(item.tableName);
         }
       });
       setData(uniq(arr));
     } else {
-        NewDataList.map((item, i) => {
+      NewDataList.map((item, i) => {
         if (item?.title && item?.title.match(name)) {
           arr.push(item.tableName);
         } else if (item.mainTitle && item.mainTitle.match(name)) {
@@ -328,8 +340,7 @@ const Table = (props) => {
       style={{
         flexDirection: "row",
         flexWrap: "wrap",
-      }}
-    >
+      }}>
       {Array.isArray(Data) &&
         Data.map((item, i) => (
           <View
@@ -338,15 +349,13 @@ const Table = (props) => {
               width: width / 2 - 30,
               marginRight: 10,
             }}
-            key={i}
-          >
+            key={i}>
             <Text
               style={{
                 fontSize: 15,
                 fontFamily: "Poppins-Medium",
                 color: "#707070",
-              }}
-            >
+              }}>
               {item}
             </Text>
             <Rows
@@ -362,7 +371,7 @@ const Table = (props) => {
     </View>
   );
 };
-const Rows = ({ title, item, name, setData, Data,NewDataList }) => {
+const Rows = ({ title, item, name, setData, Data, NewDataList }) => {
   const [text, setText] = React.useState();
   const newListData = useSelector((state) => state.newListData);
   const isDark = useSelector((state) => state.isDark);

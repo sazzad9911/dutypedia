@@ -132,7 +132,7 @@ export default function BusinessTitle({ navigation }) {
             active={name?true:false}
             disabled={!name?true:false}
             style={styles.button}
-            title={"Contine"}
+            title={"Continue"}
           />
         </View>
       </ScrollView>

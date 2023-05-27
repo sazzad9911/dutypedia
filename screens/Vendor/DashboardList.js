@@ -155,7 +155,7 @@ const DashboardList = ({ navigation, route }) => {
 
         <IconButton LeftIcon={()=><SvgXml xml={plus}/>}
           onPress={() => {
-            navigation.navigate("Category");
+            navigation.navigate("ServiceCategory");
           }}
           style={{
             borderWidth: 0,
