@@ -610,7 +610,7 @@ const VendorProfile = (props) => {
                 enterTouchDelay={10}
                 title={
                   Data
-                    ? `${Data.service.providerInfo.title} ${
+                    ? `${
                         Data.service.providerInfo.name
                       } (${Data.service.providerInfo.gender.toUpperCase()})`
                     : "No"
@@ -1729,7 +1729,7 @@ const BargainingScreen = ({ navigation, route }) => {
           }}>
           From {gigs[0].price} ৳
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate("Service List_1", {
               NewDataList: NewDataList,
@@ -1755,7 +1755,7 @@ const BargainingScreen = ({ navigation, route }) => {
             size={24}
             color="#707070"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* <View style={{ backgroundColor: primaryColor }}>
         <IconButton
