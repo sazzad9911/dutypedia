@@ -50,6 +50,9 @@ function ViewMore({
       ]}>
       <Pressable
         onPress={() => {
+          if(height<(lowHeight?lowHeight+24:97)){
+            return
+          }
           // setHeight(calculateHeight(Data?.service.about));
           setNewHeight((d) => (d == (lowHeight?lowHeight:73) ? height : (lowHeight?lowHeight:73)));
           
@@ -62,7 +65,7 @@ function ViewMore({
           
         }}>
         {component}
-        {!view&&newHeight != height && (
+        {!view&&newHeight != height&&height>(lowHeight?lowHeight+24:97) && (
           <View
             style={[{
               position: "absolute",
@@ -100,7 +103,7 @@ function ViewMore({
           </View>
         )}
       </Pressable>
-      {view&&newHeight != height && (
+      {view&&newHeight != height&&height>(lowHeight?lowHeight+24:97) && (
           <Pressable  onPress={()=>{
             setNewHeight((d) => (d == (lowHeight?lowHeight:73) ? height : (lowHeight?lowHeight:73)));
           }}

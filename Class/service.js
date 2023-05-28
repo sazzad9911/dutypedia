@@ -147,6 +147,24 @@ export const getGigById = async (token,gigId) => {
   });
   return res;
 };
+export const getCategory = async (token,query) => {
+  const res = await axios.get(`${url}/server/services/get-category-data?q=${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getCategorySkills = async (token,key) => {
+  const res = await axios.get(`${url}/server/services/get-suggestion-data?key=${key}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
+export const getSkillSuggestion = async (token,category) => {
+  const res = await axios.get(`${url}/server/services/get-skill-data?category=${category}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res;
+};
 export const changeActiveService = async (token, serviceId, type) => {
   //console.log(serviceId)
   //console.log(type)

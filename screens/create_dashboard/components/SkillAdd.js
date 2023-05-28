@@ -11,30 +11,74 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
-import { AllData } from "../../../Data/AllData";
+import { useSelector } from "react-redux";
+import { getCategorySkills, getSkillSuggestion } from "../../../Class/service";
+//import { AllData } from "../../../Data/AllData";
 import ViewMore from "../../../Hooks/ViewMore";
 import { styles } from "../BusinessTitle";
 import CommonHeader from "../CommonHeader";
 import OptionCart, { Cart } from "./OptionCart";
 const { width, height } = Dimensions.get("window");
 
-export default function SkillAdd({ onClose, onSelect }) {
+export default function SkillAdd({ onClose, onSelect, category,categoryName }) {
   const [skills, setSkills] = useState([]);
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [text, setText] = useState();
   const [data, setData] = useState([]);
+  const user = useSelector((state) => state.user);
+  const [AllCategories, setAllCategories] = useState();
+  const [All,setAll]=useState([])
+  const [AllData,setAllData]=useState([])
+ 
 
   useEffect(() => {
-    if (text && text?.split("")?.length > 2) {
-      let arr = AllData.filter((d) =>
-        d.title.toLocaleUpperCase().search(/`${text.toLocaleUpperCase()}`/)
-      );
-      setData(arr);
+    if (text && text?.split("")?.length > 1) {
+      const filteredCategory =
+      text === ""
+        ? AllData
+        : AllData.filter((cat) =>
+            cat.name
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .startsWith(text.toLowerCase().replace(/\s+/g, ""))
+          );
+      setData(filteredCategory);
       //console.log(arr[0].title)
     } else {
       setData([]);
     }
   }, [text]);
+  useEffect(() => {
+    getCategorySkills(user.token, category).then((res) => {
+      setAll(res.data.suggestions);
+     
+      setAllCategories(res.data.suggestions)
+    });
+   
+    getSkillSuggestion(user.token,categoryName).then(res=>{
+      setAllData(res.data.skills)
+    })
+    
+  }, [categoryName]);
+  
+  useEffect(() => {
+    if (All&&skills.length>0) {
+      try {
+        let arr=[]
+        All.map((doc)=>{
+          let a = skills.filter((d) => d == doc);
+          if (a?.length == 0) {
+            arr.push(doc)
+          }
+        })
+        setAllCategories(arr)
+      } catch (e) {
+        console.log(e.message);
+      }
+    }else{
+      setAllCategories(All)
+    }
+  }, [skills?.length,All?.length]);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -52,49 +96,58 @@ export default function SkillAdd({ onClose, onSelect }) {
         style={{
           paddingHorizontal: 20,
         }}>
-        <ViewMore
-          view={true}
-          style={{
-            marginTop: 24,
-          }}
-          lowHeight={70}
-          width={135}
-          position={{
-            bottom: 0,
-          }}
-          height={layoutHeight}
-          component={
-            <View
-              onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
-              style={{ width: "100%", flexDirection: "row", flexWrap: "wrap" }}>
-              <Text
+        {AllCategories&&AllCategories?.length>0 && (
+          <ViewMore
+            view={true}
+            style={{
+              marginTop: 24,
+            }}
+            lowHeight={70}
+            width={135}
+            position={{
+              bottom: 0,
+            }}
+            height={layoutHeight}
+            component={
+              <View
+                onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
                 style={{
-                  fontSize: 16,
-                  fontWeight: "600",
-                  lineHeight: 24,
-                  marginRight: 15,
+                  width: "100%",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
                 }}>
-                Suggest Skill{""}
-              </Text>
-              {[
-                1, 2, 3, 3, 4, 4, 3, 5, 5, 5, 3, 4, 5, 6, 7, 4, 6, 3, 4, 4, 3,
-                4, 5,
-              ].map((doc, i) => (
                 <Text
-                  key={i}
                   style={{
-                    fontSize: 14,
-                    fontWeight: "400",
+                    fontSize: 16,
+                    fontWeight: "600",
                     lineHeight: 24,
-                    textDecorationLine: "underline",
                     marginRight: 15,
                   }}>
-                  logo design
+                  Suggest Skill{""}
                 </Text>
-              ))}
-            </View>
-          }
-        />
+                {AllCategories.map((doc, i) => (
+                  <Text onPress={()=>{
+                    try {
+                      setSkills((d) => [...d, doc]);
+                    } catch (e) {
+                      console.log(e.message);
+                    }
+                  }}
+                    key={i}
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "400",
+                      lineHeight: 24,
+                      textDecorationLine: "underline",
+                      marginRight: 15,
+                    }}>
+                    {doc}
+                  </Text>
+                ))}
+              </View>
+            }
+          />
+        )}
         <View>
           {skills && skills.length < 50 && (
             <AddBox
@@ -149,12 +202,12 @@ export default function SkillAdd({ onClose, onSelect }) {
               Child={(data) => (
                 <Cart
                   onPress={() => {
-                    setText(data?.doc?.title);
+                    setText(data?.doc?.name);
                     setTimeout(() => {
                       setData([]);
                     }, 100);
                   }}
-                  title={data?.doc?.title}
+                  title={data?.doc?.name}
                   key={data?.index}
                   index={data?.index}
                 />
@@ -235,7 +288,6 @@ const AddBox = ({ onChange, onWrite, value }) => {
         returnKeyType="done"
         returnKeyLabel="add"
         onSubmitEditing={() => {
-          
           if (!text) {
             return;
           }

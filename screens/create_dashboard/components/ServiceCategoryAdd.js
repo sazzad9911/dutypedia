@@ -7,6 +7,8 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { getCategory } from "../../../Class/service";
 import IconButton from "../../../components/IconButton";
 import Input from "../../../components/Input";
 import { AllData } from "../../../Data/AllData";
@@ -18,17 +20,32 @@ const { width, height } = Dimensions.get("window");
 export default function ServiceCategoryAdd({ onClose,onSelect }) {
   const [text, setText] = useState();
   const [data, setData] = useState();
+  const user=useSelector(state=>state.user)
+  const [key,setKey]=useState()
+  const [categories,setCategories]=useState()
+
   useEffect(() => {
-    if (text && text?.split("")?.length > 2) {
-      let arr = AllData.filter((d) =>
-        d.title.toLocaleUpperCase().search(/`${text.toLocaleUpperCase()}`/)
-      );
-      setData(arr);
+    if (text&&text?.split("")?.length>1&&categories) {
+      const filteredCategory =
+      text === ""
+        ? categories
+        : categories.filter((cat) =>
+            cat.name
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .startsWith(text.toLowerCase().replace(/\s+/g, ""))
+          );
+      setData(filteredCategory);
       //console.log(arr[0].title)
     } else {
       setData([]);
     }
-  }, [text]);
+  }, [text,categories]);
+  useEffect(()=>{
+    getCategory(user.token).then(res=>{
+      setCategories(res.data.categories)
+    })
+  },[])
 
   return (
     <KeyboardAvoidingView
@@ -48,7 +65,7 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
         <View>
           <Input returnKeyType={"done"} onSubmitEditing={()=>{
             if(onSelect){
-              onSelect(text)
+              onSelect(text,key)
           }
           if(onClose){
               onClose(false)
@@ -77,12 +94,13 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
               Child={(data) => (
                 <Cart
                   onPress={() => {
-                    setText(data?.doc?.title);
+                    setText(data?.doc?.name);
+                    setKey(data?.doc?.key)
                     setTimeout(() => {
                       setData([]);
                     }, 100);
                   }}
-                  title={data?.doc?.title}
+                  title={data?.doc?.name}
                   key={data?.index}
                   index={data?.index}
                 />
@@ -93,7 +111,7 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
         </View>
         <IconButton onPress={()=>{
             if(onSelect){
-                onSelect(text)
+                onSelect(text,key)
             }
             if(onClose){
                 onClose(false)

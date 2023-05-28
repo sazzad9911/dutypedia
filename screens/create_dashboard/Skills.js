@@ -42,6 +42,8 @@ export default function Skills({ navigation, route }) {
   const [length,setLength]=useState(0)
   const serviceCategory=route?.params?.serviceCategory;
   const [modalVisible,setModalVisible]=useState(false)
+  const key=route?.params?.key
+  
 
   useEffect(()=>{
     setLength(skills.length)
@@ -195,7 +197,7 @@ export default function Skills({ navigation, route }) {
         </View>
       </ScrollView>
       <Modal animationType="slide" visible={modalVisible} onRequestClose={setModalVisible}>
-        <SkillAdd onSelect={setSkill} onClose={setModalVisible}/>
+        <SkillAdd category={key} categoryName={serviceCategory} onSelect={setSkill} onClose={setModalVisible}/>
       </Modal>
     </KeyboardAvoidingView>
   );

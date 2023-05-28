@@ -32,6 +32,7 @@ export default function ServiceCategory({ navigation, route }) {
   const [serviceCategory,setServiceCategory]=useState(businessForm?.serviceCategory)
   const isFocused=useIsFocused()
   const dispatch=useDispatch()
+  const [key,setKey]=useState()
   
 
 
@@ -151,13 +152,18 @@ export default function ServiceCategory({ navigation, route }) {
         <IconButton onPress={()=>{
           dispatch({ type: "SERVICE_CATEGORY", playload: serviceCategory });
           navigation?.navigate("Skills",{
-            serviceCategory:serviceCategory
+            serviceCategory:serviceCategory,
+            key:key
           })
         }} active={serviceCategory?true:false}
         disabled={serviceCategory?false:true} style={styles.button} title={"Continue"}/>
       </ScrollView>
       <Modal animationType="slide" visible={modalVisible} onRequestClose={setModalVisible}>
-        <ServiceCategoryAdd onSelect={e=>setServiceCategory(e)} onClose={setModalVisible} navigation={navigation}/>
+        <ServiceCategoryAdd onSelect={(e,key)=>{
+          setServiceCategory(e)
+          setKey(key)
+          //console.log(key)
+        }} onClose={setModalVisible} navigation={navigation}/>
       </Modal>
     </KeyboardAvoidingView>
   );
