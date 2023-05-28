@@ -24,6 +24,7 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
 export default function WorkingTime({ navigation, route }) {
   const businessForm=useSelector(state=>state.businessForm)
@@ -101,6 +102,7 @@ export default function WorkingTime({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={8} totalPage={14}/>
         <View
           style={{
             marginTop: 24,
@@ -329,6 +331,9 @@ export default function WorkingTime({ navigation, route }) {
                   established: data.established,
                   workingTime: Times?.filter(d=>d?.checked),
                   fullTime: checked,
+                  serviceCategory:data?.serviceCategory,
+                  skills:data?.skills,
+                  facilities:data?.facilities,
                 },
               });
             }}

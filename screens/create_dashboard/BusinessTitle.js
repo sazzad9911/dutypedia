@@ -17,13 +17,18 @@ import Input from "../../components/Input";
 import AnimatedHeight from "../../Hooks/AnimatedHeight";
 import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
-export default function BusinessTitle({ navigation }) {
+export default function BusinessTitle({ navigation ,route}) {
   const businessForm=useSelector(state=>state.businessForm)
   const [name, setName] = useState(businessForm?.serviceCenterName);
   const [nameError, setNameError] = useState();
   const [layoutHeight,setLayoutHeight]=useState(0)
   const isFocused=useIsFocused()
+  const serviceCategory=route?.params?.serviceCategory;
+  const skills=route?.params?.skills;
+  const facilities=route?.params?.facilities;
+
   const dispatch=useDispatch()
   React.useEffect(() => {
     if (isFocused) {
@@ -46,6 +51,7 @@ export default function BusinessTitle({ navigation }) {
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
         
       <ScrollView showsVerticalScrollIndicator={false}>
+        <PageChip currentPage={4} totalPage={14}/>
         <View
           style={{
             marginHorizontal: 20,
@@ -126,7 +132,12 @@ export default function BusinessTitle({ navigation }) {
               }
               dispatch({ type: "SERVICE_CENTER_NAME", playload: name });
               navigation.navigate("YourInformation", {
-                serviceCenterName: name,
+                data:{
+                  serviceCategory:serviceCategory,
+                  skills:skills,
+                  facilities:facilities,
+                  serviceCenterName:name,
+                }
               });
             }}
             active={name?true:false}

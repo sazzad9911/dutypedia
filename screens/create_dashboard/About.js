@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import PageChip from "./components/PageChip";
 
 export default function About({ navigation,route }) {
   const businessForm=useSelector(state=>state.businessForm)
@@ -87,6 +88,7 @@ export default function About({ navigation,route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={13} totalPage={14} />
         <View
           style={{
             marginTop: 24,
@@ -142,7 +144,7 @@ export default function About({ navigation,route }) {
             placeholder={"Type here"}
           />
           <Text style={styles.text}>Max 2000/{about?about?.split("")?.length:"0"} characters </Text>
-          <View>
+          {/* <View>
             <Text
               style={{
                 fontSize: 20,
@@ -202,7 +204,7 @@ export default function About({ navigation,route }) {
                 title={"Add More"}
               />
             )}
-          </View>
+          </View> */}
           <IconButton active={about?true:false}
           disabled={about?false:true}
             onPress={() => {
@@ -214,6 +216,7 @@ export default function About({ navigation,route }) {
               dispatch({ type: "ABOUT", playload: about });
               navigation.navigate("FinalReview",{
                 data:{
+                  keywords: data?.keywords,
                   serviceCenterName: data.serviceCenterName,
                   providerName: data.providerName,
                   gender: data.gender,
@@ -222,14 +225,16 @@ export default function About({ navigation,route }) {
                   established: data.established,
                   workingTime: data.workingTime,
                   fullTime: data.fullTime,
-                  price: data.price,
-                  skills:data.skills,
-                  serviceTitle:data.serviceTitle,
-                  serviceDescription:data.serviceDescription,
-                  images:data.images,
-                  address:data.address,
+                  price: data?.price,
+                  serviceCategory: data?.serviceCategory,
+                  skills: data?.skills,
+                  facilities: data?.facilities,
+                  serviceTitle: data.serviceTitle,
+                  serviceDescription: data.serviceDescription,
+                  images: data.images,
+                  address: data?.address,
                   about:about,
-                  facilities:Service.filter(d=>d.checked==true)
+                  
                 }
               });
             }}

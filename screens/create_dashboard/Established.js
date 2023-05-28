@@ -22,6 +22,7 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
 export default function Established({ navigation, route }) {
   const businessForm=useSelector(state=>state.businessForm)
@@ -49,6 +50,7 @@ export default function Established({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={7} totalPage={14}/>
         <View
           style={{
             marginTop: 24,
@@ -122,6 +124,9 @@ export default function Established({ navigation, route }) {
                   position: data.position,
                   numberOfTeam:data.numberOfTeam,
                   established:date,
+                  serviceCategory:data?.serviceCategory,
+                  skills:data?.skills,
+                  facilities:data?.facilities,
                 }
               });
             }}

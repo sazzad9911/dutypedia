@@ -155,6 +155,7 @@ const DashboardList = ({ navigation, route }) => {
 
         <IconButton LeftIcon={()=><SvgXml xml={plus}/>}
           onPress={() => {
+            dispatch({ type: "SET_NEW_DATA", playload: null });
             navigation.navigate("ServiceCategory");
           }}
           style={{

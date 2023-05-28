@@ -20,17 +20,20 @@ import InputButton from "../Vendor/account/InputButton";
 import IconButton from "../../components/IconButton";
 import ServiceCategoryAdd from "./components/ServiceCategoryAdd";
 import { useIsFocused } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ServiceCategory({ navigation, route }) {
+  const businessForm=useSelector(state=>state.businessForm)
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [modalVisible,setModalVisible]=useState(false)
-  const [serviceCategory,setServiceCategory]=useState()
+  const [serviceCategory,setServiceCategory]=useState(businessForm?.serviceCategory)
   const isFocused=useIsFocused()
   const dispatch=useDispatch()
+  
+
 
   React.useEffect(() => {
     if (isFocused) {
@@ -146,6 +149,7 @@ export default function ServiceCategory({ navigation, route }) {
         <InputButton value={serviceCategory} onPress={()=>setModalVisible(true)} style={[styles.input]} placeholder={"example: lawyer, graphic design,Business consultant "}/>
         <Text style={styles.text}>Max 50 characters </Text>
         <IconButton onPress={()=>{
+          dispatch({ type: "SERVICE_CATEGORY", playload: serviceCategory });
           navigation?.navigate("Skills",{
             serviceCategory:serviceCategory
           })

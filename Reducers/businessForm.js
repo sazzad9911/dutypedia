@@ -3,6 +3,9 @@ const businessForm=(state= initialState, action)=>{
     if(action.type=='SERVICE_CENTER_NAME'){
         return {...state,'serviceCenterName':action.playload}
     }
+    if(action.type=='SERVICE_CATEGORY'){
+        return {...state,'serviceCategory':action.playload}
+    }
     if(action.type=='TITLE'){
         return {...state,'title':action.playload}
     }
@@ -33,8 +36,11 @@ const businessForm=(state= initialState, action)=>{
     if(action.type=='SERVICE_TITLE'){
         return {...state,'serviceTitle':action.playload}
     }
-    if(action.type=='SPECIALITY'){
-        return {...state,'speciality':action.playload}
+    if(action.type=='SKILLS'){
+        return {...state,'skills':action.playload}
+    }
+    if(action.type=='KEYWORD'){
+        return {...state,'keyword':action.playload}
     }
     if(action.type=='DESCRIPTION'){
         return {...state,'description':action.playload}

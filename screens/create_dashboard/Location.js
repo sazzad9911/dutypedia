@@ -33,6 +33,7 @@ import { AreaList } from "../../Data/area";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
 export default function Location({ navigation, route }) {
   const businessForm = useSelector((state) => state.businessForm);
@@ -51,8 +52,9 @@ export default function Location({ navigation, route }) {
   const [select, setSelect] = useState();
   const [districtError, setDistrictError] = useState();
   const [areaError, setAreaError] = useState();
+
   // variables
-  const snapPoints = useMemo(() => [ "70%"], []);
+  const snapPoints = useMemo(() => ["70%"], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index) => {
@@ -77,6 +79,7 @@ export default function Location({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        <PageChip currentPage={12} totalPage={14} />
         <View
           style={{
             marginTop: 24,
@@ -173,11 +176,11 @@ export default function Location({ navigation, route }) {
           </View>
           <Input
             value={address}
-            onChange={e=>{
-              if(e?.split("")?.length>100){
-                return
+            onChange={(e) => {
+              if (e?.split("")?.length > 100) {
+                return;
               }
-              setAddress(e)
+              setAddress(e);
             }}
             style={[styles.input, { marginTop: 8 }]}
             placeholder={"Address"}
@@ -193,6 +196,7 @@ export default function Location({ navigation, route }) {
               dispatch({ type: "ADDRESS", playload: address });
               navigation.navigate("About", {
                 data: {
+                  keywords: data?.keywords,
                   serviceCenterName: data.serviceCenterName,
                   providerName: data.providerName,
                   gender: data.gender,
@@ -201,8 +205,10 @@ export default function Location({ navigation, route }) {
                   established: data.established,
                   workingTime: data.workingTime,
                   fullTime: data.fullTime,
-                  price: data.price,
-                  skills: data.skills,
+                  price: data?.price,
+                  serviceCategory: data?.serviceCategory,
+                  skills: data?.skills,
+                  facilities: data?.facilities,
                   serviceTitle: data.serviceTitle,
                   serviceDescription: data.serviceDescription,
                   images: data.images,
@@ -1088,7 +1094,6 @@ export const Screen = ({ select, value, onChange, onClose, type }) => {
         }}
         title={"Done"}
       />
-     
     </View>
   );
 };

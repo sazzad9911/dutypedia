@@ -46,7 +46,14 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
           Which service category best describes your business?
         </Text>
         <View>
-          <Input
+          <Input returnKeyType={"done"} onSubmitEditing={()=>{
+            if(onSelect){
+              onSelect(text)
+          }
+          if(onClose){
+              onClose(false)
+          }
+          }}
             value={text}
             onChange={e=>{
                 if(e?.split("").length>50){

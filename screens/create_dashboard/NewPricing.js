@@ -24,6 +24,7 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
 export default function NewPricing({ navigation, route }) {
   const businessForm=useSelector(state=>state.businessForm)
@@ -52,6 +53,7 @@ export default function NewPricing({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={9} totalPage={14}/>
         <View
           style={{
             marginTop: 24,
@@ -165,6 +167,9 @@ export default function NewPricing({ navigation, route }) {
                   workingTime: data.workingTime,
                   fullTime: data.fullTime,
                   price: price,
+                  serviceCategory:data?.serviceCategory,
+                  skills:data?.skills,
+                  facilities:data?.facilities,
                 },
               });
             }}

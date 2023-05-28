@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { icon, styles } from "./BusinessTitle";
@@ -27,6 +27,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function ExtraFacilities({ navigation, route }) {
   const isFocused = useIsFocused();
+  const businessForm=useSelector(state=>state.businessForm)
   const dispatch = useDispatch();
   const [layoutHeight, setLayoutHeight] = useState(0);
   const serviceCategory = route?.params?.serviceCategory;
@@ -52,6 +53,9 @@ export default function ExtraFacilities({ navigation, route }) {
   const [ServiceError, setServiceError] = React.useState();
  
   React.useEffect(() => {
+    if(businessForm?.facilities){
+        setService(businessForm.facilities)
+      }
     if (isFocused) {
       //console.log("hidden")
       dispatch(setHideBottomBar(true));
@@ -209,6 +213,7 @@ export default function ExtraFacilities({ navigation, route }) {
             disabled={false}
             onPress={() => {
               //dispatch({ type: "SPECIALITY", playload: skills });
+              dispatch({ type: "FACILITIES", playload: Service });
               navigation.navigate("BusinessTitle", {
                 serviceCategory: serviceCategory,
                 skills: skills,

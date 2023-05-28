@@ -26,6 +26,7 @@ import TextOp from "./TextOp";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 const {width}=Dimensions.get("window")
 
 export default function ServiceDescribe({ navigation,route }) {
@@ -61,6 +62,7 @@ export default function ServiceDescribe({ navigation,route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={11} totalPage={14} />
         <View
           style={{
             marginTop: 24,
@@ -211,6 +213,7 @@ export default function ServiceDescribe({ navigation,route }) {
               dispatch({ type: "FOURTH_IMAGE", playload: forthImage });
               navigation.navigate("Location",{
                 data:{
+                  keywords: data?.keywords,
                   serviceCenterName: data.serviceCenterName,
                   providerName: data.providerName,
                   gender: data.gender,
@@ -219,8 +222,10 @@ export default function ServiceDescribe({ navigation,route }) {
                   established: data.established,
                   workingTime: data.workingTime,
                   fullTime: data.fullTime,
-                  price: data.price,
-                  skills:data.skills,
+                  price: data?.price,
+                  serviceCategory: data?.serviceCategory,
+                  skills: data?.skills,
+                  facilities: data?.facilities,
                   serviceTitle:serviceTitle,
                   serviceDescription:serviceDescription,
                   images:[firstImage,secondImage,thirdImage,forthImage]

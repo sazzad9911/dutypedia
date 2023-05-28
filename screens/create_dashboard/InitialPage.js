@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React from "react";
-import { ScrollView, View,Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useDispatch } from "react-redux";
@@ -9,9 +9,9 @@ import IconButton from "../../components/IconButton";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 
 export default function InitialPage({ navigation }) {
-  const isFocused=useIsFocused()
-  const dispatch=useDispatch()
-  const inset=useSafeAreaInsets()
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const inset = useSafeAreaInsets();
 
   React.useEffect(() => {
     if (isFocused) {
@@ -34,34 +34,39 @@ export default function InitialPage({ navigation }) {
         <View style={[customStyle.shadow, { marginTop: 24 }]}>
           <SvgXml width={"100%"} xml={vectorImage} />
         </View>
-        <Text style={{
-            fontSize:16,
-           
-            fontWeight:"400"
-        }}>
+        <Text
+          style={{
+            fontSize: 16,
+
+            fontWeight: "400",
+          }}>
           We understand that creating an account may take some time, but please
           take a moment to fill out all the details correctly. Our platform
           values accuracy and professionalism, and we want to ensure the best
           experience for all our users.{" "}
-          <Text style={{
-            fontWeight:"500"
-          }}>
+          <Text
+            style={{
+              fontWeight: "500",
+            }}>
             So, take a deep breath, relax, and let's get started on your
             business journey with Duty."
           </Text>
         </Text>
-        <IconButton onPress={()=>{
-            navigation.navigate("ServiceCategory")
+        <IconButton
+          onPress={() => {
+            dispatch({ type: "SET_NEW_DATA", playload: null });
+            navigation.navigate("ServiceCategory");
             //navigation.navigate("FinalReview")
-        }} style={{
-            backgroundColor:"#4ADE80",
-            height:40,
-            marginTop:36,
-            marginBottom:32
-        }} title={"Continue"}/>
-        
+          }}
+          style={{
+            backgroundColor: "#4ADE80",
+            height: 40,
+            marginTop: 36,
+            marginBottom: 32,
+          }}
+          title={"Continue"}
+        />
       </View>
-      
     </ScrollView>
   );
 }
@@ -213,4 +218,4 @@ const vectorImage = `<svg width="372" height="256" viewBox="0 0 372 256" fill="n
 </linearGradient>
 </defs>
 </svg>
-`
+`;

@@ -24,6 +24,7 @@ import OutsideView from "react-native-detect-press-outside";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import PageChip from "./components/PageChip";
 
 export default function YourInformation({ navigation, route }) {
   const businessForm = useSelector((state) => state.businessForm);
@@ -83,6 +84,7 @@ export default function YourInformation({ navigation, route }) {
   const serviceCenterName = route?.params?.serviceCenterName;
   const suggestionBox = useRef();
   const isFocused = useIsFocused();
+  const data=route?.params?.data;
   React.useEffect(() => {
     if (isFocused) {
       //console.log("hidden")
@@ -106,6 +108,7 @@ export default function YourInformation({ navigation, route }) {
           paddingHorizontal: 20,
         }}
         showsVerticalScrollIndicator={false}>
+          <PageChip currentPage={5} totalPage={14}/>
         <OutsideView
           childRef={childRef}
           onPressOutside={() => {
@@ -234,7 +237,10 @@ export default function YourInformation({ navigation, route }) {
               dispatch({ type: "POSITION", playload: position });
               navigation.navigate("Stakeholder", {
                 data: {
-                  serviceCenterName: serviceCenterName,
+                  serviceCenterName: data?.serviceCenterName,
+                  serviceCategory:data?.serviceCategory,
+                  skills:data?.skills,
+                  facilities:data?.facilities,
                   providerName: name,
                   gender: gender,
                   position: position,

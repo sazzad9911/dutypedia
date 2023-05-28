@@ -36,7 +36,7 @@ export default function Skills({ navigation, route }) {
   const businessForm=useSelector(state=>state.businessForm)
   const dispatch=useDispatch()
   const isFocused=useIsFocused()
-  const [skills, setSkill] = useState(businessForm?.speciality?businessForm.speciality:[]);
+  const [skills, setSkill] = useState(businessForm?.skills?businessForm.skills:[]);
   //const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [length,setLength]=useState(0)
@@ -183,7 +183,7 @@ export default function Skills({ navigation, route }) {
           <IconButton active={length>0?true:false}
           disabled={length>0?false:true}
             onPress={() => {
-              dispatch({ type: "SPECIALITY", playload: skills });
+              dispatch({ type: "SKILLS", playload: skills });
               navigation.navigate("ExtraFacilities",{
                 serviceCategory:serviceCategory,
                 skills:skills

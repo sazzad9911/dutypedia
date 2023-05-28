@@ -232,6 +232,18 @@ const AddBox = ({ onChange, onWrite, value }) => {
         marginTop: 24,
       }}>
       <TextInput
+        returnKeyType="done"
+        returnKeyLabel="add"
+        onSubmitEditing={() => {
+          
+          if (!text) {
+            return;
+          }
+          if (onChange) {
+            onChange(text);
+            setText();
+          }
+        }}
         value={text}
         onChangeText={(e) => {
           if (e?.split("")?.length > 25) {

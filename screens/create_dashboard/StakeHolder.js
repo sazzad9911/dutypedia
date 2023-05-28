@@ -14,6 +14,7 @@ import Input from "../../components/Input";
 import ViewMore from "../../Hooks/ViewMore";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import { icon, styles } from "./BusinessTitle";
+import PageChip from "./components/PageChip";
 
 export default function StakeHolder({ navigation,route }) {
   const [layoutHeight,setLayoutHeight]=useState(0)
@@ -41,6 +42,7 @@ export default function StakeHolder({ navigation,route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={6} totalPage={14}/>
         <View
           style={{
             marginTop: 24,
@@ -94,7 +96,10 @@ export default function StakeHolder({ navigation,route }) {
                   providerName: data.providerName,
                   gender: data.gender,
                   position: data.position,
-                  numberOfTeam:number
+                  numberOfTeam:number,
+                  serviceCategory:data?.serviceCategory,
+                  skills:data?.skills,
+                  facilities:data?.facilities,
                 }
               });
             }}
