@@ -154,7 +154,7 @@ export default function NewPricing({ navigation, route }) {
               }
 
               dispatch({ type: "PRICE", playload: price });
-              navigation.navigate("Skills", {
+              navigation.navigate("ProfileKeyword", {
                 data: {
                   serviceCenterName: data.serviceCenterName,
                   providerName: data.providerName,

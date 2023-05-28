@@ -139,6 +139,8 @@ import EditVendorAddress from "./Vendor/EditVendorAddress";
 import FakeVendorProfile from "./Vendor/FakeVendorProfile";
 import EditServicePrice from "./Profile/EditServicePrice";
 import EditAbout from "./Profile/EditAbout";
+import ExtraFacilities from "./create_dashboard/ExtraFacilities";
+import ProfileKeyWord from "./create_dashboard/ProfileKeyWord";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -315,6 +317,24 @@ const Profile = ({ navigation }) => {
           ),
         }}
         component={EditSubCategory}
+      />
+      <Stack.Screen
+        name="ExtraFacilities"
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Extra Facilities"} />
+          ),
+        }}
+        component={ExtraFacilities}
+      />
+       <Stack.Screen
+        name="ProfileKeyword"
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Profile Keyword"} />
+          ),
+        }}
+        component={ProfileKeyWord}
       />
       <Stack.Screen
         name="EditSubCategory_1"

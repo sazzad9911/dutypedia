@@ -3,7 +3,7 @@ import { Pressable, StatusBar, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SvgXml } from 'react-native-svg'
 
-export default function CommonHeader({navigation,title,no}) {
+export default function CommonHeader({navigation,title,no,onPress}) {
     const inset=useSafeAreaInsets()
   return (
     <View style={{
@@ -16,6 +16,10 @@ export default function CommonHeader({navigation,title,no}) {
         //marginTop:!no?StatusBar.currentHeight:0
     }}>
         <Pressable onPress={()=>{
+            if(onPress){
+                onPress()
+                return
+            }
             navigation.goBack()
         }} style={{
             position:"absolute",

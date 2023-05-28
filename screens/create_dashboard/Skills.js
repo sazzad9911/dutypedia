@@ -9,6 +9,7 @@ import {
   TextInput,
   Image,
   Dimensions,
+  Modal,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -26,6 +27,9 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
+import InputButton from "../Vendor/account/InputButton";
+import SkillAdd from "./components/SkillAdd";
+import PageChip from "./components/PageChip";
 const { width, height } = Dimensions.get("window");
 
 export default function Skills({ navigation, route }) {
@@ -33,9 +37,11 @@ export default function Skills({ navigation, route }) {
   const dispatch=useDispatch()
   const isFocused=useIsFocused()
   const [skills, setSkill] = useState(businessForm?.speciality?businessForm.speciality:[]);
-  const data = route?.params?.data;
+  //const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [length,setLength]=useState(0)
+  const serviceCategory=route?.params?.serviceCategory;
+  const [modalVisible,setModalVisible]=useState(false)
 
   useEffect(()=>{
     setLength(skills.length)
@@ -59,9 +65,10 @@ export default function Skills({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <PageChip currentPage={2} totalPage={14} />
         <View
           style={{
-            marginTop: 24,
+            marginTop: 0,
             paddingHorizontal: 20,
           }}>
           <Image
@@ -83,7 +90,7 @@ export default function Skills({ navigation, route }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine, { flex: 1 }]}>Tips for skill</Text>
+            <Text style={[styles.headLine, { flex: 1 }]}>Tips for {serviceCategory} skill</Text>
           </View>
           <ViewMore view={true}
             style={{
@@ -101,53 +108,58 @@ export default function Skills({ navigation, route }) {
               <View
                 onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
                 style={{ width: "100%" }}>
+                <Text style={[styles.spText,{marginTop:0}]}>Maximize Your Profile Impact with {serviceCategory} Skills:{"\n"}Stand Out and Connect with Ease</Text>
+                <Text style={[styles.spText,{marginTop:20}]}>Choosing the right {serviceCategory} skills is crucial to effectively showcase your expertise and connect with potential buyers. Here are some key tips to optimize your profile:</Text>
                 <TextOp
-                  style={{ marginTop: 0 }}
+                  style={{ marginTop: 20 }}
                   text={
-                    "Choose relevant skills: Be specific about what you offer, whether you're an individual or representing a company. This could be anything from graphic design to plumbing services."
+                    `Define Your Expertise: Clearly specify the services you offer within the ${serviceCategory} service category. Whether you're an individual or representing a company, take the time to highlight the key areas that align with your expertise. For example, if you specialize in ${serviceCategory}, ensure that your profile reflects that focus.`
                   }
+                  number={"1."}
                 />
                 <TextOp
                   style={{ marginTop: 5 }}
                   text={
-                    "Use specific terms: Use clear and specific terms to describe what you do. This helps buyers find you easily and understand what you offer."
+                    `Use Clear and Precise Language: Help buyers find you easily by using specific terms to describe what you offer within your ${serviceCategory} skillset. By utilizing descriptive and targeted language, you increase the chances of attracting the right audience and conveying the value you bring.`
                   }
+                  number={"2."}
                 />
                 <TextOp
                   style={{ marginTop: 5 }}
                   text={
-                    "Prioritize your strongest skills: List your best skills first to show buyers what you excel at."
+                    `Prioritize Your Strengths: Showcase your top ${serviceCategory} skills prominently on your profile. By listing your best capabilities first, you capture the attention of potential buyers and emphasize your expertise within your chosen service category. This prioritization can make a significant impact on their decision-making process.`
                   }
+                  number={"3."}
                 />
                 <TextOp
                   style={{ marginTop: 5 }}
                   text={
-                    "Update regularly: Keep your skills list up to date with new experience or skills. This helps you stay relevant and attract new buyers."
+                    ` Stay Updated and Relevant: Regularly update your skills list to reflect any new experiences or additional ${serviceCategory} skills you acquire. This demonstrates your commitment to growth and ensures that buyers see the most accurate representation of your abilities. By staying current, you increase your chances of attracting new clients seeking your specific ${serviceCategory} skills.`
                   }
+                  number={"4."}
                 />
                 <TextOp
                   style={{ marginTop: 5 }}
                   text={
-                    "Be honest: Represent your abilities accurately. Buyers rely on your skills to make informed decisions, so it's important to be honest about what you can and cannot do."
+                    " Foster Trust with Honesty: Represent your abilities accurately and honestly. Buyers rely on your skills to make informed decisions, so it's crucial to provide an authentic portrayal of what you can deliver. Building trust through transparency establishes a solid foundation for successful business relationships."
                   }
+                  number={"5."}
                 />
+                <Text style={[styles.spText,{marginTop:20}]}>By optimizing your profile with these strategies, you can enhance your visibility, attract the right buyers, and unlock new opportunities for your business.</Text>
+                <Text style={[styles.spText,{marginTop:20}]}>Thank you for taking the time to maximize your profile and showcase your expertise within your chosen {serviceCategory} service. We wish you continued success in connecting with and serving your clients!"</Text>
               </View>
             }
           />
-          <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
-          {skills&&skills.length<25&&(
-            <AddBox
-            onChange={(e) => {
-              
-              try {
-
-                setSkill((d) => [...d, e]);
-              } catch (e) {
-                console.log(e.message);
-              }
-            }}
-          />
-          )}
+          <Text style={[styles.headLine, { marginTop: 36 }]}>Add {serviceCategory} Skill</Text>
+          {/* 
+         
+           */}
+          {/* <Text style={[styles.text, { marginTop: 32 }]}>
+            Example : Bridge Builder, Business Plans, Graphic design, Events
+            Items, Bike repair, photographer, Baby Care, Business lawyers,
+            Cooking Lessons, Dj Mixing{" "}
+          </Text> */}
+          <InputButton onPress={()=>setModalVisible(true)} style={styles.input} placeholder={"Example: web development, mobile apps, hair cutting, facial wash"}/>
           <Text style={styles.text}>Max 25 character </Text>
           {skills && skills.length > 0 && (
             <View
@@ -168,28 +180,13 @@ export default function Skills({ navigation, route }) {
               ))}
             </View>
           )}
-          <Text style={[styles.text, { marginTop: 32 }]}>
-            Example : Bridge Builder, Business Plans, Graphic design, Events
-            Items, Bike repair, photographer, Baby Care, Business lawyers,
-            Cooking Lessons, Dj Mixing{" "}
-          </Text>
           <IconButton active={length>0?true:false}
           disabled={length>0?false:true}
             onPress={() => {
               dispatch({ type: "SPECIALITY", playload: skills });
-              navigation.navigate("ServiceDescribe",{
-                data:{
-                  serviceCenterName: data.serviceCenterName,
-                  providerName: data.providerName,
-                  gender: data.gender,
-                  position: data.position,
-                  numberOfTeam: data.numberOfTeam,
-                  established: data.established,
-                  workingTime: data.workingTime,
-                  fullTime: data.fullTime,
-                  price: data.price,
-                  skills:skills
-                }
+              navigation.navigate("ExtraFacilities",{
+                serviceCategory:serviceCategory,
+                skills:skills
               });
             }}
             style={styles.button}
@@ -197,6 +194,9 @@ export default function Skills({ navigation, route }) {
           />
         </View>
       </ScrollView>
+      <Modal animationType="slide" visible={modalVisible} onRequestClose={setModalVisible}>
+        <SkillAdd onSelect={setSkill} onClose={setModalVisible}/>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

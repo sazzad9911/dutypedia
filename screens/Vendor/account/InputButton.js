@@ -22,7 +22,7 @@ export default function InputButton({ style, value, onPress, placeholder,error,I
           { borderColor: "#e5e5e5" },
           style,
         ]}>
-        <Text
+        <Text numberOfLines={1}
           style={{
             fontFamily: "Poppins-Light",
             fontSize: 15,

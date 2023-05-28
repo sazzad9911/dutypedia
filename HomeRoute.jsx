@@ -79,6 +79,8 @@ import ChooseDateOrder from "./screens/order/ChooseDateOrder";
 import InstructionOrder from "./screens/order/InstructionOrder";
 import { SearchSecond, SearchThird } from "./screens/Search";
 import ServiceCategory from "./screens/create_dashboard/ServiceCategory";
+import ExtraFacilities from "./screens/create_dashboard/ExtraFacilities";
+import ProfileKeyWord from "./screens/create_dashboard/ProfileKeyWord";
 
 const Stack = createStackNavigator();
 
@@ -353,6 +355,24 @@ const HomeRoute = ({ navigation }) => {
           ),
         }}
         component={ServiceCategory}
+      />
+      <Stack.Screen
+        name="ExtraFacilities"
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Extra Facilities"} />
+          ),
+        }}
+        component={ExtraFacilities}
+      />
+      <Stack.Screen
+        name="ProfileKeyword"
+        options={{
+          header: (props) => (
+            <CommonHeader {...props} title={"Profile Keyword"} />
+          ),
+        }}
+        component={ProfileKeyWord}
       />
       <Stack.Screen
         name="SubCategories_1"
