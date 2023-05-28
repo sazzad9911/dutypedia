@@ -57,7 +57,11 @@ import {
   createService,
 } from "../../Class/service";
 import { useSelector, useDispatch } from "react-redux";
-import { localTimeToServerTime, serverTimeToLocalTime, serverToLocal } from "../../Class/dataConverter";
+import {
+  localTimeToServerTime,
+  serverTimeToLocalTime,
+  serverToLocal,
+} from "../../Class/dataConverter";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useIsFocused } from "@react-navigation/native";
 import Avatar from "../../components/Avatar";
@@ -95,10 +99,12 @@ import { updateData } from "../../Class/update";
 import { CheckBox } from "../Seller/Pricing";
 import { vendorLogin } from "../../Class/auth";
 import customStyle from "../../assets/stylesheet";
+import ViewMore from "../../Hooks/ViewMore";
+import ServiceListViewer from "../../components/ServiceListViewer";
 
 const { width, height } = Dimensions.get("window");
 const FinalReview = (props) => {
-  const newData=props?.route?.params?.data;
+  const newData = props?.route?.params?.data;
   const window = Dimensions.get("window");
   const newUser = useSelector((state) => state.user);
   const [image, setImage] = React.useState(null);
@@ -136,7 +142,7 @@ const FinalReview = (props) => {
   const [ServiceList, setServiceList] = React.useState([]);
   const [ActiveService, setActiveService] = React.useState();
   const [SubServiceList, setSubServiceList] = React.useState([]);
-  const listData=useSelector(state=>state.listData)
+  const listData = useSelector((state) => state.listData);
   // const user= useSelector((state) => state.user);
   const [Loader, setLoader] = React.useState(true);
   const [Data, setData] = React.useState();
@@ -148,7 +154,7 @@ const FinalReview = (props) => {
   const [Price, setPrice] = React.useState();
   const [Refresh, setRefresh] = React.useState(false);
   const [RelatedServices, setRelatedServices] = React.useState();
-  const [UnRelatedServices, setUnRelatedServices] = React.useState(); 
+  const [UnRelatedServices, setUnRelatedServices] = React.useState();
   const [OpenDetails, setOpenDetails] = React.useState(false);
   const [NameDropDown, setNameDropDown] = React.useState(false);
   const [PositionDropDown, setPositionDropDown] = React.useState(false);
@@ -162,7 +168,7 @@ const FinalReview = (props) => {
     new Animation.Value(specialtyHeight)
   );
   const { handleScroll, showButton } = useHandleScroll();
-  const [Specialty, setSpecialty] = React.useState(); 
+  const [Specialty, setSpecialty] = React.useState();
   const [newNavigation, setNewNavigation] = React.useState(1100);
   const [scrollEnabled, setScrollEnabled] = React.useState(false);
   const [offset, setOffset] = React.useState();
@@ -171,13 +177,15 @@ const FinalReview = (props) => {
   const changeScreenName = React.useCallback((val) => {
     setScreenName(val);
   });
-  const [wallPhoto, setWallPhoto] = useState("https://i.ibb.co/BNCTDBs/2023-03-26-20-48-43.jpg");
+  const [wallPhoto, setWallPhoto] = useState(
+    "https://i.ibb.co/BNCTDBs/2023-03-26-20-48-43.jpg"
+  );
   const [modalVisible, setModalVisible] = useState(false);
   //console.log(SeeMore)
   const newImage = useImage(wallPhoto);
   const [imageUploader, setImageUploader] = useState(false);
-  const [ButtonPress,setButtonPress]=useState(false)
-  const [loading,setLoading]=useState(false)
+  const [ButtonPress, setButtonPress] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     if (isFocused) {
@@ -192,12 +200,13 @@ const FinalReview = (props) => {
     }
   }, [isFocused]);
   React.useEffect(() => {
-   //console.log(newData)
+    //console.log(newData)
+    setData(newData);
     setSpecialty(newData.skills.join(","));
-    let img=[]
-    newData?.images?.map((doc)=>{
-      img.push(doc.uri)
-    })
+    let img = [];
+    newData?.images?.map((doc) => {
+      img.push(doc.uri);
+    });
     setImages(img);
     setPrice(newData?.price);
     setTitle(newData?.serviceTitle);
@@ -209,18 +218,15 @@ const FinalReview = (props) => {
     try {
       dispatch({
         type: "SET_NEW_LIST_DATA",
-        playload: listData
+        playload: listData,
       });
-      setNewDataList(
-        listData
-      );
+      setNewDataList(listData);
     } catch (e) {
       setLoader(false);
       console.warn(e.message);
     }
-
   }, [newData, isFocused]);
-  
+
   React.useEffect(() => {
     //console.log(NewDataList.length);
     if (Array.isArray(NewDataList)) {
@@ -260,14 +266,14 @@ const FinalReview = (props) => {
       }
     }
   }, [ActiveService + Click + Refresh, isFocused]);
-  
+
   React.useEffect(() => {
     if (Specialty && !Array.isArray(Specialty)) {
       let arr = Specialty.split(",");
       setSpecialty(arr);
     }
   }, [Specialty, isFocused]);
- 
+
   React.useEffect(() => {
     Animation.timing(specialtyAnimation, {
       duration: 300,
@@ -299,16 +305,13 @@ const FinalReview = (props) => {
     arr.push(fileFromURL(image));
     const res = await uploadFile(arr, newUser.token);
     setImageUploader(false);
-    if(isProfile){
-      setImage(res[0])
-    }else{
-      setWallPhoto(res[0])
+    if (isProfile) {
+      setImage(res[0]);
+    } else {
+      setWallPhoto(res[0]);
     }
   };
-  const confirm=async()=>{
-    
-    console.log(newData?.fullTime)
-    return
+  const confirm = async () => {
     setLoading(true);
     let blobImages = [];
     Array.isArray(newData?.images) &&
@@ -316,80 +319,83 @@ const FinalReview = (props) => {
         blobImages.push(fileFromURL(image));
       });
     const result = await uploadFile(blobImages, newUser.token);
-    if(!result){
+    if (!result) {
       setLoading(false);
       //console.log(result)
-      Alert.alert("Opps!","Failed to upload images")
+      Alert.alert("Opps!", "Failed to upload images");
     }
-    let businessForm={
-      workingTime:newData?.workingTime,
-      startDate:{
-        day:newData?.established?.getDate(),
-        month:newData?.established?.getMonth(),
-        year:newData?.established?.getFullYear()
+    let businessForm = {
+      workingTime: newData?.workingTime,
+      startDate: {
+        day: newData?.established?.getDate(),
+        month: newData?.established?.getMonth(),
+        year: newData?.established?.getFullYear(),
       },
-      about:newData?.about,
-      speciality:newData?.skills?.join(","),
-      serviceTitle:newData?.serviceTitle,
-      description:newData?.serviceDescription,
-      serviceCenterName:newData?.serviceCenterName,
-      title:"",
-      name:newData?.providerName,
-      gender:newData?.gender,
-      position:newData?.position,
-      teamNumber:parseInt(newData?.numberOfTeam),
-      price:parseInt(newData?.price),
-      facilities:newData?.facilities,
-      division:newData?.address?.division,
-      district:newData?.address?.district,
-      area:newData?.address?.area,
-      address:newData?.address?.address,
-      t47:newData?.fullTime?true:false
-    }
-      //setLoading(false)
-      const res = await createService(
-        businessForm,
-        listData,
-        result,
-        newUser.token,
-        image ,
-        wallPhoto
-      ).catch(err=>{
-        console.warn(err.response.data.msg)
-        Alert.alert(res.response.data.msg)
-      })
-      if(!res){
-        setLoading(false);
-        //Alert.alert(res.response.data.msg)
-        return
-      }
-      const data=await vendorLogin(newUser.token, res.data.service.id);
-      if(!data){
-        setLoading(false);
-        Alert.alert("Opps!",data.response.data.msg)
-        return
-      }
+      about: newData?.about,
+      serviceTitle: newData?.serviceTitle,
+      description: newData?.serviceDescription,
+      serviceCenterName: newData?.serviceCenterName,
+      title: "",
+      name: newData?.providerName,
+      gender: newData?.gender,
+      position: newData?.position,
+      teamNumber: parseInt(newData?.numberOfTeam),
+      price: parseInt(newData?.price),
+      facilities: newData?.facilities,
+      division: newData?.address?.division,
+      district: newData?.address?.district,
+      area: newData?.address?.area,
+      address: newData?.address?.address,
+      t47: newData?.fullTime ? true : false,
+      skills: newData?.skills,
+      keywords: newData?.keywords,
+      category: newData?.serviceCategory,
+    };
+    //setLoading(false)
+    const res = await createService(
+      businessForm,
+      listData,
+      result,
+      newUser.token,
+      image,
+      wallPhoto
+    ).catch((err) => {
       setLoading(false);
-      dispatch({ type: "SET_VENDOR", playload: data });
-      navigation.navigate("MainProfile");
-      navigation.navigate("VendorProfile");
-      // try{
-      //   props.navigation.navigate("VendorProfile");
-      // }catch(err){
-      //   Alert.alert("Ops!",err.message)
-      // }
+      console.warn(err.response.data.msg);
+      Alert.alert(res.response.data.msg);
+    });
+    if (!res) {
+      setLoading(false);
+      //Alert.alert(res.response.data.msg)
+      return;
+    }
+    const data = await vendorLogin(newUser.token, res.data.service.id);
+    if (!data) {
+      setLoading(false);
+      Alert.alert("Opps!", "Failed Login");
+      return;
+    }
+    setLoading(false);
+    dispatch({ type: "SET_VENDOR", playload: data });
+    navigation.navigate("MainProfile");
+    navigation.navigate("VendorProfile");
+    // try{
+    //   props.navigation.navigate("VendorProfile");
+    // }catch(err){
+    //   Alert.alert("Ops!",err.message)
+    // }
+  };
+
+  if (Images.length == 0) {
+    return null;
   }
- 
-if(Images.length==0){
-  return null
-}
-if(loading){
-  return(
-    <View style={customStyle.fullBox}>
-      <ActivityLoader/>
-    </View>
-  )
-}
+  if (loading) {
+    return (
+      <View style={customStyle.fullBox}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1, backgroundColor: primaryColor }}>
       {/* {Platform.OS == "ios" && scrollEnabled && (
@@ -409,7 +415,6 @@ if(loading){
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
         ref={scrollRef}
-        
         showsVerticalScrollIndicator={false}
         style={{
           backgroundColor: primaryColor,
@@ -542,7 +547,6 @@ if(loading){
                 : "Easin Arafat It Consulting Center"}
             </Text>
             <View style={{ flex: 0.5 }} />
-            
           </View>
           <Animation.View
             style={{
@@ -552,17 +556,17 @@ if(loading){
               marginVertical: 15,
               flex: 1,
             }}>
-            
-              <Avatar onPress={() => {
+            <Avatar
+              onPress={() => {
                 setModalVisible((val) => !val);
               }}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderWidth: image ? 0 : 0.5,
-                }}
-                source={{ uri: image }}
-              />
+              style={{
+                width: 40,
+                height: 40,
+                borderWidth: image ? 0 : 0.5,
+              }}
+              source={{ uri: image }}
+            />
             <View
               style={{
                 flex: 3,
@@ -571,7 +575,9 @@ if(loading){
                 enterTouchDelay={10}
                 title={
                   newData
-                    ? `${newData?.providerName} (${newData?.gender.toUpperCase()})`
+                    ? `${
+                        newData?.providerName
+                      } (${newData?.gender.toUpperCase()})`
                     : "No"
                 }>
                 <View
@@ -595,8 +601,10 @@ if(loading){
                       fontFamily: "Poppins-SemiBold",
                     }}>
                     {newData
-                    ? `${newData?.providerName} (${newData?.gender.toUpperCase()})`
-                    : "No"}
+                      ? `${
+                          newData?.providerName
+                        } (${newData?.gender.toUpperCase()})`
+                      : "No"}
                   </Text>
                 </View>
               </Tooltip>
@@ -605,9 +613,7 @@ if(loading){
               style={{
                 flex: 2,
               }}>
-              <Tooltip
-                enterTouchDelay={10}
-                title={newData?.position}>
+              <Tooltip enterTouchDelay={10} title={newData?.position}>
                 <View
                   style={{
                     flex: 1,
@@ -651,7 +657,6 @@ if(loading){
                 }}>
                 Specialty In
               </Text>
-              
             </View>
             <Animation.View style={{ height: specialtyAnimation }}>
               <View
@@ -768,41 +773,47 @@ if(loading){
             onLayout={(e) => {
               if (OpenDetails) {
                 //setCalenderHeight(e.nativeEvent.layout.height);
-              } 
+              }
             }}>
-            
             <ProfileOption
               onPress={() => {
                 //console.log(newData?.workingTime)
-                let arr=[]
-                newData?.workingTime?.map((doc,i)=>{
-                  arr.push(localTimeToServerTime(doc))
-                })
-                
-                navigation.navigate("Company Calender", { workingTime:arr,t47:arr?.length==0?true:false });
+                let arr = [];
+                newData?.workingTime?.map((doc, i) => {
+                  arr.push(localTimeToServerTime(doc));
+                });
+
+                navigation.navigate("Company Calender", {
+                  workingTime: arr,
+                  t47: arr?.length == 0 ? true : false,
+                });
               }}
               Icon={() => <SvgXml xml={calenderIcon} height="22" width="22" />}
               title="Company Calender"
             />
             <ProfileOption
               onPress={() => {
-                navigation.navigate("Vendor Address", { serviceId: Data?.service.id,address:{
-                  address:newData?.address?.address,
-                  area:newData?.address?.area,
-                  city:newData?.address?.district,
-                  region:newData?.address?.division
-                },noEdit:true });
+                navigation.navigate("Vendor Address", {
+                  serviceId: Data?.service.id,
+                  address: {
+                    address: newData?.address?.address,
+                    area: newData?.address?.area,
+                    city: newData?.address?.district,
+                    region: newData?.address?.division,
+                  },
+                  noEdit: true,
+                });
               }}
               style={{
                 marginBottom: 0,
-                marginTop:5
+                marginTop: 5,
               }}
               Icon={() => (
                 <Ionicons name="location-sharp" size={24} color={"#4ADE80"} />
               )}
               title="Work Location"
             />
-            
+
             <BarOption
               icon={user}
               title={`Worker and Team (${newData?.numberOfTeam} member)`}
@@ -815,12 +826,14 @@ if(loading){
         <View
           transition={{ type: "timing" }}
           animate={{ height: newNavigation }}
-          style={[
-            // {
-            //   overflow: "hidden",
-            //   height: newNavigation,
-            // },
-          ]}>
+          style={
+            [
+              // {
+              //   overflow: "hidden",
+              //   height: newNavigation,
+              // },
+            ]
+          }>
           {/* <Tab.Navigator
             screenOptions={{
               tabBarStyle: {
@@ -885,49 +898,64 @@ if(loading){
             />
             
           </Tab.Navigator> */}
-          <BargainingScreen navigation={navigation} initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                changeScrollStatus: changeScrollStatus,
-                scrollTo: scrollTo,
-                changeScreenName: changeScreenName,
-              }}/>
+          <BargainingScreen
+            navigation={navigation}
+            initialParams={{
+              Images: Images,
+              primaryColor: primaryColor,
+              textColor: textColor,
+              Title: Title,
+              Description: Description,
+              ServiceList: ServiceList,
+              SubServiceList: SubServiceList,
+              NewDataList: NewDataList,
+              Facilities: Facilities,
+              Data: Data,
+              Price: Price,
+              setNewNavigation: setNewNavigation,
+              RelatedServices: RelatedServices,
+              UnRelatedServices: UnRelatedServices,
+              changeScrollStatus: changeScrollStatus,
+              scrollTo: scrollTo,
+              changeScreenName: changeScreenName,
+            }}
+          />
         </View>
       </ScrollView>
       <View style={{ backgroundColor: primaryColor }}>
-        <Pressable onPress={() => {
-            setButtonPress(!ButtonPress);
-          }} style={{flexDirection:"row",marginTop: 10,marginHorizontal: 20,justifyContent:"center"}}>
-        <CheckBox
-          value={ButtonPress}
-          onChange={() => {
+        <Pressable
+          onPress={() => {
             setButtonPress(!ButtonPress);
           }}
           style={{
-            
-            marginRight:10,
-            width:30
-          }}
-         
-        />
-        <Text style={{fontSize:16}}>I agree with all the <Text onPress={()=>{
-          navigation.navigate("WebViewsGlobal", {
-            url: "https://duty.com.bd/legal/app/terms-and-conditions",
-            title: "Terms & Conditions",
-          });
-        }} style={{color:"blue"}}>terms and conditions</Text></Text>
+            flexDirection: "row",
+            marginTop: 10,
+            marginHorizontal: 20,
+            justifyContent: "center",
+          }}>
+          <CheckBox
+            value={ButtonPress}
+            onChange={() => {
+              setButtonPress(!ButtonPress);
+            }}
+            style={{
+              marginRight: 10,
+              width: 30,
+            }}
+          />
+          <Text style={{ fontSize: 16 }}>
+            I agree with all the{" "}
+            <Text
+              onPress={() => {
+                navigation.navigate("WebViewsGlobal", {
+                  url: "https://duty.com.bd/legal/app/terms-and-conditions",
+                  title: "Terms & Conditions",
+                });
+              }}
+              style={{ color: "blue" }}>
+              terms and conditions
+            </Text>
+          </Text>
         </Pressable>
         <IconButton
           onPress={confirm}
@@ -939,13 +967,12 @@ if(loading){
             borderRadius: 5,
             backgroundColor: ButtonPress ? "#4ADE80" : "#e6e6e6",
             borderWidth: 0,
-            color:ButtonPress ? "white" : "black",
+            color: ButtonPress ? "white" : "black",
           }}
           title="Confirm"
         />
       </View>
-      
-     
+
       <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       {offset < 100 && offset > -1 && (
         <Animated.View
@@ -1149,7 +1176,7 @@ function uniq(a) {
 }
 const BargainingScreen = (props) => {
   const params = props.initialParams;
-  const navigation=props.navigation;
+  const navigation = props.navigation;
   const Images = params.Images;
   //console.log(Images)
   const primaryColor = params.primaryColor;
@@ -1161,11 +1188,12 @@ const BargainingScreen = (props) => {
   const sub = params.SubServiceList;
   const [SubServiceList, setSubServiceList] = React.useState(sub);
   const NewDataList = params.NewDataList;
-  const [ActiveService, setActiveService] = React.useState(
-    ServiceList ? ServiceList[0] : NewDataList[0]?.mainTitle
-  );
+  
   const Facilities = params.Facilities;
   const Data = params.Data;
+  const [ActiveService, setActiveService] = React.useState(
+    Data?.serviceCategory?.name
+  );
   const Price = params.Price;
   const startingHeight = 120;
   const fullHeight = calculateHeight(Description, 25);
@@ -1186,16 +1214,7 @@ const BargainingScreen = (props) => {
   const dispatch = useDispatch();
   //console.log(Data);
 
-  React.useEffect(() => {
-    if (ServiceList && ServiceList.length > 0) {
-      setActiveService(ServiceList[0]);
-      return;
-    }
-    if (Array.isArray(NewDataList)) {
-      setActiveService(NewDataList[0]?.mainTitle);
-      return;
-    }
-  }, [NewDataList + ServiceList]);
+  
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -1249,9 +1268,9 @@ const BargainingScreen = (props) => {
   React.useEffect(() => {
     if (navHeight && isFocused) {
       //console.log(textHeight)
-     // changeScreenName("BARGAINING");
+      // changeScreenName("BARGAINING");
       setTimeout(() => {
-      //  setNewNavigation(navHeight + textHeight);
+        //  setNewNavigation(navHeight + textHeight);
       }, 0);
     }
   }, [navHeight + isFocused + textHeight]);
@@ -1295,16 +1314,15 @@ const BargainingScreen = (props) => {
         <View
           style={{
             marginHorizontal: 20,
-            marginTop:10
+            marginTop: 10,
           }}>
           {Description && (
             <AnimatedHeight
               onChange={(height) => {
                 //setNewNavigation(newHeight + 55 + height);
                 //console.log(height)
-                setTextHeight(height-50);
+                setTextHeight(height - 50);
               }}
-              
               button={true}
               text={Description}
             />
@@ -1317,9 +1335,7 @@ const BargainingScreen = (props) => {
             justifyContent: "flex-end",
             marginVertical: 0,
             marginTop: 10,
-          }}>
-          
-        </View>
+          }}></View>
         <Carousel
           panGestureHandlerProps={{
             activeOffsetX: [-10, 10],
@@ -1342,166 +1358,7 @@ const BargainingScreen = (props) => {
           )}
         />
       </View>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingHorizontal: 20,
-        }}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}>
-          <Text
-            style={{
-              fontFamily: "Poppins-SemiBold",
-              fontSize: Platform.OS == "ios" ? 22 : 20.5,
-              marginBottom: 20,
-              marginTop: 35,
-              color: "#535353",
-            }}>
-            Service List
-          </Text>
-          
-        </View>
-
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            overflowY: "hidden",
-            overflow: "hidden",
-
-            height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-          }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}>
-            <View
-              onLayout={(e) => {
-                //console.log(e.nativeEvent.layout.height);
-                setServiceTableHeight(e.nativeEvent.layout.height);
-              }}
-              style={{
-                flex: 1.2,
-                maxHeight: 182,
-              }}>
-              {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                ServiceList.map((item, i) => (
-                  <Button
-                    onPress={() => {
-                      setActiveService(item);
-                    }}
-                    key={i}
-                    style={
-                      ActiveService == item
-                        ? styles.activeButton
-                        : styles.inactiveButton
-                    }
-                    title={item}
-                  />
-                ))
-              ) : (
-                <Button
-                  onPress={() => {
-                    setActiveService(NewDataList[0]?.mainTitle);
-                  }}
-                  style={
-                    NewDataList?.length > 0 &&
-                    NewDataList[0]?.mainTitle == ActiveService
-                      ? styles.activeButton
-                      : styles.inactiveButton
-                  }
-                  title={NewDataList?.length > 0 && NewDataList[0]?.mainTitle}
-                />
-              )}
-              {Facilities && Facilities?.length != 0 && (
-                <Button
-                  onPress={() => {
-                    setActiveService("Extra Facilities");
-                  }}
-                  style={
-                    ActiveService == "Extra Facilities"
-                      ? styles.activeButton
-                      : styles.inactiveButton
-                  }
-                  title={"Extra Facilities"}
-                />
-              )}
-            </View>
-            <View
-              style={{
-                width: 1,
-                backgroundColor: "#FFF3F3",
-                marginLeft: 20,
-                marginRight: 30,
-              }}
-            />
-            <View
-              style={{
-                flex: 2,
-                marginRight: 0,
-                maxHeight: ServiceTableHeight,
-              }}>
-              {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
-                SubServiceList.map((item, i) => (
-                  <ServiceTable
-                    key={i}
-                    item={item}
-                    i={i}
-                    name={ActiveService}
-                    NewDataList={NewDataList}
-                    height={ServiceTableHeight}
-                  />
-                ))
-              ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable
-                  height={ServiceTableHeight}
-                  NewDataList={NewDataList}
-                  name={ActiveService}
-                />
-              ) : (
-                <></>
-              )}
-              {ActiveService == "Extra Facilities" && (
-                <View>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                      fontFamily: "Poppins-SemiBold",
-                      color: "#95979D",
-                      
-                    }}>
-                    Extra Facilities
-                  </Text>
-                  {Array.isArray(Facilities) &&
-                    Facilities.map((doc, i) =>
-                      ServiceTableHeight - 30 > (i + 1) * 25 ? (
-                        <Text
-                          numberOfLines={1}
-                          onLayout={(e) => {
-                            //console.log(e.nativeEvent.layout.height);
-                          }}
-                          style={{
-                            fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                            fontFamily: "Poppins-Medium",
-                            
-                            color: textColor,
-                          }}
-                          key={i + 1}>
-                          {doc.title}
-                        </Text>
-                      ) : null
-                    )}
-                </View>
-              )}
-            </View>
-          </View>
-        </View>
-      </View>
+      <ServiceListViewer serviceCategory={Data?.serviceCategory} facilities={Facilities} skills={Data?.skills}/>
       <View
         style={{
           backgroundColor: primaryColor,
@@ -1692,8 +1549,8 @@ const newStar = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" 
 
 const calculateHeight = (text, plus, minus) => {
   let textLength = text?.split("").length;
-  if(!textLength){
-    return
+  if (!textLength) {
+    return;
   }
   textLength = parseInt(textLength);
   let lineHeight = Platform.OS == "ios" ? 26 : 26;
@@ -1779,14 +1636,7 @@ const editIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="41.275" height=
 </svg>
 `;
 
-const ServiceTable = ({
-  item,
-  i,
-  name,
-  NewDataList,
-  onLayout,
-  height,
-}) => {
+const ServiceTable = ({ item, i, name, NewDataList, onLayout, height }) => {
   const isDark = useSelector((state) => state.isDark);
   const colors = new Color(isDark);
   const primaryColor = colors.getPrimaryColor();
@@ -1847,7 +1697,6 @@ const ServiceTable = ({
             fontSize: Platform.OS == "ios" ? 16.5 : 15,
             margin: 0,
             color: "#535353",
-            
           }}>
           {item}
         </Text>
@@ -1863,7 +1712,6 @@ const ServiceTable = ({
                     fontFamily: "Poppins-Medium",
                     fontSize: Platform.OS == "ios" ? 16.5 : 15,
                     color: "#95979D",
-                  
                   }}>
                   {doc}
                 </Text>
@@ -1885,7 +1733,6 @@ const ServiceTable = ({
               fontFamily: "Poppins-Medium",
               fontSize: Platform.OS == "ios" ? 16.5 : 15,
               color: "#95979D",
-          
             }}>
             {name}
           </Text>
@@ -1944,7 +1791,7 @@ const Rows = ({ title, item, name, NewDataList, height, index }) => {
         fontSize: Platform.OS == "ios" ? 16.5 : 15,
         fontFamily: "Poppins-Medium",
         color: textColor,
-       
+
         maxHeight: 160,
       }}>
       {text}

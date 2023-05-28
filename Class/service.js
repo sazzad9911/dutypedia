@@ -38,9 +38,6 @@ export const createService = async (
     });
   myHeaders.append("Authorization", `Bearer ${token}`);
 
-  const text = listData[0].mainTitle;
-  const dashboard = AllData.filter((d) => d.title == text)[0].key;
-
   let month = DateTime.month.indexOf(businessForm.startDate.month) + 1;
   month = month > 9 ? month : "0" + month;
   let day =
@@ -50,12 +47,9 @@ export const createService = async (
   let dateIs = `${businessForm.startDate.year}-${month}-${day}`;
   const formData = {
     data: {
-      optionsData: {
-        category: dashboard,
-        type: listData[0].subTitle ? 3 : listData[0].title ? 2 : 1,
-        options: localOptionsToServer(listData),
-      },
-      dashboard: dashboard,
+      keywords:businessForm?.keywords,
+      category:businessForm?.category,
+      skills:businessForm?.skills,
       uploadServiceData: {
         about: businessForm.about.toString(),
         speciality: businessForm.speciality,
@@ -92,7 +86,7 @@ export const createService = async (
     wallPhotoUrl: img2,
   };
   //console.log('----------------------------------------------------');
-  //console.log(formData)
+  
   const options = {
     method: "POST",
     headers: myHeaders,

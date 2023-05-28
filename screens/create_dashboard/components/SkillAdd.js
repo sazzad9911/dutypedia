@@ -49,17 +49,18 @@ export default function SkillAdd({ onClose, onSelect, category,categoryName }) {
     }
   }, [text]);
   useEffect(() => {
+   
     getCategorySkills(user.token, category).then((res) => {
       setAll(res.data.suggestions);
-     
       setAllCategories(res.data.suggestions)
     });
    
     getSkillSuggestion(user.token,categoryName).then(res=>{
       setAllData(res.data.skills)
+      
     })
     
-  }, [categoryName]);
+  }, [categoryName,category]);
   
   useEffect(() => {
     if (All&&skills.length>0) {

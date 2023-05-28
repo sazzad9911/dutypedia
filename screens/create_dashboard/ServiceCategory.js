@@ -152,16 +152,15 @@ export default function ServiceCategory({ navigation, route }) {
         <IconButton onPress={()=>{
           dispatch({ type: "SERVICE_CATEGORY", playload: serviceCategory });
           navigation?.navigate("Skills",{
-            serviceCategory:serviceCategory,
-            key:key
+            serviceCategory:key,
           })
         }} active={serviceCategory?true:false}
         disabled={serviceCategory?false:true} style={styles.button} title={"Continue"}/>
       </ScrollView>
       <Modal animationType="slide" visible={modalVisible} onRequestClose={setModalVisible}>
-        <ServiceCategoryAdd onSelect={(e,key)=>{
+        <ServiceCategoryAdd onSelect={(e,object)=>{
           setServiceCategory(e)
-          setKey(key)
+          setKey(object)
           //console.log(key)
         }} onClose={setModalVisible} navigation={navigation}/>
       </Modal>

@@ -65,7 +65,9 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
         <View>
           <Input returnKeyType={"done"} onSubmitEditing={()=>{
             if(onSelect){
-              onSelect(text,key)
+              onSelect(text,key?key:{
+                name:text
+              })
           }
           if(onClose){
               onClose(false)
@@ -95,7 +97,7 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
                 <Cart
                   onPress={() => {
                     setText(data?.doc?.name);
-                    setKey(data?.doc?.key)
+                    setKey(data?.doc)
                     setTimeout(() => {
                       setData([]);
                     }, 100);
@@ -111,7 +113,9 @@ export default function ServiceCategoryAdd({ onClose,onSelect }) {
         </View>
         <IconButton onPress={()=>{
             if(onSelect){
-                onSelect(text,key)
+                onSelect(text,key?key:{
+                  name:key,
+                })
             }
             if(onClose){
                 onClose(false)
