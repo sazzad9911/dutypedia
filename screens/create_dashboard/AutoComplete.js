@@ -160,8 +160,9 @@ export const AutoComplete = memo(({ onChange, value, onFocus,blur,innerRef }) =>
           textInputProps={{
             placeholder: "Position",
             placeholderTextColor: "#767676",
-            
+            value:value
           }}
+          
           rightButtonsContainerStyle={{
             height: 30,
             alignSelf: "center",

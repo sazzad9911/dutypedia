@@ -69,6 +69,9 @@ import { setHideBottomBar } from "../Reducers/hideBottomBar";
 import FixedBackHeader from "./Seller/components/FixedBackHeader";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import OfferNow from "./Seller/OfferNow";
+import ActivityLoader from "../components/ActivityLoader";
+import ServiceListViewer from "../components/ServiceListViewer";
+import ProfileSkeleton from "../components/ProfileSkeleton";
 
 const { width, height } = Dimensions.get("window");
 const FixedService = (props) => {
@@ -209,73 +212,13 @@ const FixedService = (props) => {
           }
         });
       });
-      setCategory(data.service.category);
+      setCategory(data?.service?.category);
       setActiveServiceData(arr);
-      try {
-        if (data.services.category) {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(
-              data.services.options,
-              data.services.category
-            ),
-          });
-          setNewDataList(
-            serverToLocal(data.services.options, data.services.category)
-          );
-        } else {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(data.services, data.service.category),
-          });
-          setNewDataList(serverToLocal(data.services, data.service.category));
-        }
-      } catch (e) {
-        console.warn(e.message);
-      }
+      
     }
   }, [data]);
 
-  React.useEffect(() => {
-    //console.log(NewDataList.length);
-    if (Array.isArray(NewDataList)) {
-      let array = [];
-      NewDataList.map((item, i) => {
-        if (item.title) {
-          if (i == 0) {
-            setActiveService(item.title);
-          }
-          array.push(item.title);
-        } else {
-          if (i == 0) {
-            setServiceList([]);
-            setActiveService(item.mainTitle);
-          }
-        }
-      });
-      if (array.length > 0) {
-        setServiceList(uniq(array));
-      }
-    }
-  }, [NewDataList + Click + Refresh]);
-  React.useEffect(() => {
-    setSubServiceList([]);
-
-    if (Array.isArray(NewDataList)) {
-      let arr = [];
-      NewDataList.map((item) => {
-        if (item.title && item.title.match(ActiveService)) {
-          arr.push(item.subTitle);
-        } else {
-          setSubServiceList([]);
-        }
-      });
-      if (arr.length > 0) {
-        setSubServiceList(uniq(arr));
-      }
-    }
-  }, [ActiveService + Click + Refresh]);
-
+ 
   React.useEffect(() => {
     if (newUser && Data) {
       setLoader(true);
@@ -313,13 +256,10 @@ const FixedService = (props) => {
     Loader ||
     !Data ||
     !RelatedServices ||
-    !UnRelatedServices ||
-    !NewDataList
+    !UnRelatedServices 
   ) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
-      </View>
+      <ProfileSkeleton/>
     );
   }
 
@@ -606,179 +546,9 @@ const FixedService = (props) => {
                 text={Description}
               />
             </View>
-            {/* <Carousel
-              loop={false}
-              width={width}
-              height={width + 30}
-              autoPlay={false}
-              data={Images}
-              scrollAnimationDuration={500}
-              onSnapToItem={(index) => {}}
-              renderItem={({ index }) => (
-                <Image
-                  style={{
-                    width: width,
-                    height: width + 30,
-                  }}
-                  source={{ uri: Images[index] }}
-                />
-              )}
-            /> */}
+            
           </View>
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              paddingHorizontal: 20,
-              paddingTop: 15,
-            }}>
-            <Text
-              style={{
-                fontFamily: "Poppins-SemiBold",
-                fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                marginBottom: 20,
-                marginTop: 0,
-                color: "#535353",
-              }}>
-              Service List
-            </Text>
-
-            <View
-              style={{
-                backgroundColor: primaryColor,
-                overflowY: "hidden",
-                overflow: "hidden",
-
-                height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-              }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}>
-                <View
-                  onLayout={(e) => {
-                    //console.log(e.nativeEvent.layout.height);
-                    setServiceTableHeight(e.nativeEvent.layout.height);
-                  }}
-                  style={{
-                    flex: 1.2,
-                    maxHeight: 182,
-                  }}>
-                  {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                    ServiceList.map((item, i) => (
-                      <Button
-                        onPress={() => {
-                          setActiveService(item);
-                        }}
-                        key={i}
-                        style={
-                          ActiveService == item
-                            ? styles.activeButton
-                            : styles.inactiveButton
-                        }
-                        title={item}
-                      />
-                    ))
-                  ) : (
-                    <Button
-                      onPress={() => {
-                        setActiveService(NewDataList[0].mainTitle);
-                      }}
-                      style={
-                        NewDataList.length > 0 &&
-                        NewDataList[0].mainTitle == ActiveService
-                          ? styles.activeButton
-                          : styles.inactiveButton
-                      }
-                      title={NewDataList.length > 0 && NewDataList[0].mainTitle}
-                    />
-                  )}
-                  {Facilities && Facilities.length != 0 && (
-                    <Button
-                      onPress={() => {
-                        setActiveService("Extra Facilities");
-                      }}
-                      style={
-                        ActiveService == "Extra Facilities"
-                          ? styles.activeButton
-                          : styles.inactiveButton
-                      }
-                      title={"Extra Facilities"}
-                    />
-                  )}
-                </View>
-                <View
-                  style={{
-                    width: 1,
-                    backgroundColor: "#FFF3F3",
-                    marginLeft: 20,
-                    marginRight: 30,
-                  }}
-                />
-                <View
-                  style={{
-                    flex: 2,
-                    marginRight: 0,
-                    maxHeight: ServiceTableHeight,
-                  }}>
-                  {Array.isArray(SubServiceList) &&
-                  SubServiceList.length > 0 ? (
-                    SubServiceList.map((item, i) => (
-                      <ServiceTable
-                        key={i}
-                        item={item}
-                        i={i}
-                        name={ActiveService}
-                        NewDataList={NewDataList}
-                        height={ServiceTableHeight}
-                      />
-                    ))
-                  ) : ActiveService != "Extra Facilities" ? (
-                    <ServiceTable
-                      height={ServiceTableHeight}
-                      NewDataList={NewDataList}
-                      name={ActiveService}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {ActiveService == "Extra Facilities" && (
-                    <View>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                          fontFamily: "Poppins-SemiBold",
-                          color: "#95979D",
-                          
-                        }}>
-                        Extra Facilities
-                      </Text>
-                      {Array.isArray(Facilities) &&
-                        Facilities.map((doc, i) =>
-                          ServiceTableHeight - 30 > (i + 1) * 25 ? (
-                            <Text
-                              numberOfLines={1}
-                              onLayout={(e) => {
-                                console.log(e.nativeEvent.layout.height);
-                              }}
-                              style={{
-                                fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                                fontFamily: "Poppins-Medium",
-                                
-                                color: textColor,
-                              }}
-                              key={i + 1}>
-                              {doc.title}
-                            </Text>
-                          ) : null
-                        )}
-                    </View>
-                  )}
-                </View>
-              </View>
-            </View>
-          </View>
+          <ServiceListViewer skills={data?.skills} serviceCategory={{name:data?.service?.category}} facilities={Facilities}/>
           <View
             style={{
               backgroundColor: primaryColor,
@@ -797,33 +567,7 @@ const FixedService = (props) => {
               }}>
               From {Price} ৳
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Service List_1", {
-                  NewDataList: NewDataList,
-                  facilites: Facilities?.length>0?Facilities:null,
-                });
-              }}
-              style={{
-                flexDirection: "row",
-                minWidth: 10,
-                alignItems: "center",
-              }}>
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                  fontFamily: "Poppins-SemiBold",
-                  color: "#707070",
-                  marginRight: 0,
-                }}>
-                Show All
-              </Text>
-              <MaterialIcons
-                name="keyboard-arrow-right"
-                size={24}
-                color="#707070"
-              />
-            </TouchableOpacity>
+            
           </View>
           <View style={{ backgroundColor: primaryColor }}>
             {newUser?.user?.username!=Data?.service?.user?.username&&(
@@ -835,7 +579,7 @@ const FixedService = (props) => {
                     gigs: data,
                     data: data,
                     facilities:Facilities,
-                    serviceList:NewDataList
+                    serviceList:data?.skills
                   });
                 } else {
                   navigation.navigate("LogIn");

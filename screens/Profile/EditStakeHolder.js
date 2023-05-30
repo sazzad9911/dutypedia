@@ -90,7 +90,7 @@ export default function EditStakeHolder({ navigation,route }) {
           disabled={parseInt(number)>0?false:true}
             onPress={() => {
               dispatch({ type: "TEAM_NUMBER", playload: number });
-              navigation.navigate("EditSkills",{
+              navigation.navigate("EditKeywords",{
                 data:{
                   serviceCenterName: data.serviceCenterName,
                   providerName: data.providerName,

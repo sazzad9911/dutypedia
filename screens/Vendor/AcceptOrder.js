@@ -25,7 +25,7 @@ import {
   getOfflineOrders,
   getOrders,
 } from "../../Class/service";
-import { localOptionsToServer } from "../../Class/dataConverter";
+import { convertServerFacilities, localOptionsToServer } from "../../Class/dataConverter";
 import Animated, { FadeIn, StretchInY } from "react-native-reanimated";
 import { socket } from "../../Class/socket";
 import { setOfflineOrders } from "../../Reducers/offlineOrders";
@@ -252,13 +252,11 @@ const AcceptOrder = (props) => {
 
     if (newVendor) {
       //console.log(data.installmentData)
-      // console.log(data.services)
-      // return
       createVendorOrder(
         user.token,
         userId,
-        data.facilites,
-        data.services,
+        convertServerFacilities(data.facilites),
+        data.skills,
         data.service.id,
         data.type,
         parseInt(selectedPackage ? selectedPackage.price : data.price),
@@ -316,11 +314,7 @@ const AcceptOrder = (props) => {
     }
     acceptOrder(user.token, {
       orderId: params.id,
-      selectedServices: {
-        options: localOptionsToServer(ListSelection),
-        type: ListSelection[0].subTitle ? 3 : ListSelection[0].title ? 2 : 1,
-        category: params.data.service.category,
-      },
+      selectedServices: ListSelection,
       deliverBy: Deliver,
       serviceType: Service,
       deliverMethodPhysical: Select,

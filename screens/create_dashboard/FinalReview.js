@@ -377,8 +377,12 @@ const FinalReview = (props) => {
     }
     setLoading(false);
     dispatch({ type: "SET_VENDOR", playload: data });
-    navigation.navigate("MainProfile");
-    navigation.navigate("VendorProfile");
+    try {
+      navigation.navigate("MainProfile");
+      navigation.navigate("VendorProfile");
+    } catch (e) {
+      navigation.navigate("Profile");
+    }
     // try{
     //   props.navigation.navigate("VendorProfile");
     // }catch(err){
@@ -794,7 +798,7 @@ const FinalReview = (props) => {
             <ProfileOption
               onPress={() => {
                 navigation.navigate("Vendor Address", {
-                  serviceId: Data?.service.id,
+                  serviceId: null,
                   address: {
                     address: newData?.address?.address,
                     area: newData?.address?.area,
@@ -1188,7 +1192,7 @@ const BargainingScreen = (props) => {
   const sub = params.SubServiceList;
   const [SubServiceList, setSubServiceList] = React.useState(sub);
   const NewDataList = params.NewDataList;
-  
+
   const Facilities = params.Facilities;
   const Data = params.Data;
   const [ActiveService, setActiveService] = React.useState(
@@ -1214,7 +1218,6 @@ const BargainingScreen = (props) => {
   const dispatch = useDispatch();
   //console.log(Data);
 
-  
   React.useEffect(() => {
     setSubServiceList([]);
 
@@ -1358,7 +1361,11 @@ const BargainingScreen = (props) => {
           )}
         />
       </View>
-      <ServiceListViewer serviceCategory={Data?.serviceCategory} facilities={Facilities} skills={Data?.skills}/>
+      <ServiceListViewer
+        serviceCategory={Data?.serviceCategory}
+        facilities={Facilities}
+        skills={Data?.skills}
+      />
       <View
         style={{
           backgroundColor: primaryColor,
@@ -1377,7 +1384,7 @@ const BargainingScreen = (props) => {
           }}>
           From {Price} ৳
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate("Service List_1", {
               NewDataList: NewDataList,
@@ -1403,7 +1410,7 @@ const BargainingScreen = (props) => {
             size={24}
             color="#707070"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {/* <View style={{ backgroundColor: primaryColor }}>
         <IconButton

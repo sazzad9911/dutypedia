@@ -113,7 +113,7 @@ export default function Skills({ navigation, route }) {
                 <TextOp
                   style={{ marginTop: 20 }}
                   text={
-                    `Define Your Expertise: Clearly specify the services you offer within the ${serviceCategory} service category. Whether you're an individual or representing a company, take the time to highlight the key areas that align with your expertise. For example, if you specialize in ${serviceCategory?.name}, ensure that your profile reflects that focus.`
+                    `Define Your Expertise: Clearly specify the services you offer within the ${serviceCategory?.name} service category. Whether you're an individual or representing a company, take the time to highlight the key areas that align with your expertise. For example, if you specialize in ${serviceCategory?.name}, ensure that your profile reflects that focus.`
                   }
                   number={"1."}
                 />
@@ -195,7 +195,7 @@ export default function Skills({ navigation, route }) {
         </View>
       </ScrollView>
       <Modal animationType="slide" visible={modalVisible} onRequestClose={setModalVisible}>
-        <SkillAdd category={serviceCategory?.key} categoryName={serviceCategory?.name} onSelect={setSkill} onClose={setModalVisible}/>
+        <SkillAdd oldSkills={skills} category={serviceCategory?.key} categoryName={serviceCategory?.name} onSelect={setSkill} onClose={setModalVisible}/>
       </Modal>
     </KeyboardAvoidingView>
   );

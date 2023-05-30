@@ -100,6 +100,7 @@ import OfferNow from "./Seller/OfferNow";
 import { CheckBox } from "./Seller/Pricing";
 import { setSaveList } from "../Reducers/saveList";
 import ProfileSkeleton from "../components/ProfileSkeleton";
+import ServiceListViewer from "../components/ServiceListViewer";
 
 const { width, height } = Dimensions.get("window");
 const OtherProfile = (props) => {
@@ -271,7 +272,7 @@ const OtherProfile = (props) => {
               (d) => d.type == "STARTING"
             );
             setData(response.data);
-            setSpecialty(response.data.service.speciality);
+            setSpecialty(response.data.service.keywords);
 
             setBackgroundImage(response.data.service.wallPhoto);
             setImage(response.data.service.profilePhoto);
@@ -281,7 +282,7 @@ const OtherProfile = (props) => {
             setDescription(gigs[0].description);
             //setNewDataList(response.data.service.gigs[0].services.options)
             setFacilities(convertServerFacilities(gigs[0].facilites));
-            console.log(convertServerFacilities(gigs[0].facilites))
+            //console.log(convertServerFacilities(gigs[0].facilites))
             let arr = initialState;
             response.data.service.activeServiceTypes.forEach((doc) => {
               arr = arr.map((d) => {
@@ -297,27 +298,10 @@ const OtherProfile = (props) => {
                 }
               });
             });
-            setCategory(gigs[0].services.category);
+            setCategory(data?.services?.category);
             setActiveServiceData(arr);
             setUserInfo(response.data.service.user);
-            try {
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              setNewDataList(
-                serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                )
-              );
-            } catch (e) {
-              setLoader(false);
-              console.warn(e.message);
-            }
+            
           }
         })
         .catch((error) => {
@@ -338,7 +322,7 @@ const OtherProfile = (props) => {
       setTitle(gigs[0].title);
       setDescription(gigs[0].description);
       //setNewDataList(response.data.service.gigs[0].services.options)
-      setFacilities(gigs[0].facilites.selectedOptions);
+      setFacilities(convertServerFacilities(gigs[0].facilites));
       let arr = initialState;
       Data.service.activeServiceTypes.forEach((doc) => {
         arr = arr.map((d) => {
@@ -354,77 +338,13 @@ const OtherProfile = (props) => {
           }
         });
       });
-      setCategory(gigs[0].services.category);
+      setCategory(data?.services?.category);
       setActiveServiceData(arr);
-      try {
-        //console.log(Data.service.gigs[0].services.options)
-        dispatch({
-          type: "SET_NEW_LIST_DATA",
-          playload: serverToLocal(
-            gigs[0].services.options,
-            gigs[0].services.category
-          ),
-        });
-        setNewDataList(
-          serverToLocal(gigs[0].services.options, gigs[0].services.category)
-        );
-      } catch (e) {
-        console.warn(e.message);
-        // dispatch({
-        //   type: "SET_NEW_LIST_DATA",
-        //   playload: serverToLocal(
-        //     Data.service.gigs[0].services.options,
-        //     Data.service.gigs[0].services.category
-        //   ),
-        // });
-        // setNewDataList(
-        //   serverToLocal(
-        //     Data.service.gigs[0].services.options,
-        //     Data.service.gigs[0].services.category
-        //   )
-        // );
-      }
+      
     }
   }, [Bargaining + Data, Refresh]);
-  React.useEffect(() => {
-    //console.log(NewDataList.length);
-    if (Array.isArray(NewDataList)) {
-      let array = [];
-      NewDataList.map((item, i) => {
-        if (item.title) {
-          if (i == 0) {
-            setActiveService(item.title);
-          }
-          array.push(item.title);
-        } else {
-          if (i == 0) {
-            setServiceList([]);
-            setActiveService(item.mainTitle);
-          }
-        }
-      });
-      if (array.length > 0) {
-        setServiceList(uniq(array));
-      }
-    }
-  }, [NewDataList + Click + Refresh]);
-  React.useEffect(() => {
-    setSubServiceList([]);
-
-    if (Array.isArray(NewDataList)) {
-      let arr = [];
-      NewDataList.map((item) => {
-        if (item.title && item.title.match(ActiveService)) {
-          arr.push(item.subTitle);
-        } else {
-          setSubServiceList([]);
-        }
-      });
-      if (arr.length > 0) {
-        setSubServiceList(uniq(arr));
-      }
-    }
-  }, [ActiveService + Click + Refresh]);
+  
+  
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -498,12 +418,7 @@ const OtherProfile = (props) => {
     }
   }, [data, Refresh]);
 
-  React.useEffect(() => {
-    if (Specialty && !Array.isArray(Specialty)) {
-      let arr = Specialty.split(",");
-      setSpecialty(arr);
-    }
-  }, [Specialty, Refresh]);
+ 
   React.useState(()=>{
     if(newUser&&data){
       getFullRating(newUser?.token,data?.service?.id).then(res=>{
@@ -580,8 +495,7 @@ const OtherProfile = (props) => {
     !Array.isArray(FixedService) ||
     !Array.isArray(PackageService) ||
     !RelatedServices ||
-    !UnRelatedServices ||
-    !NewDataList
+    !UnRelatedServices
   ) {
     return <ProfileSkeleton />;
   }
@@ -1766,7 +1680,9 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const newUser = useSelector((state) => state.user);
-
+  const gigs = Data.service.gigs.filter(
+    (d) => d.type == "STARTING"
+  );
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1918,155 +1834,7 @@ const BargainingScreen = ({ navigation, route }) => {
           )}
         />
       </View>
-      <View
-        style={{
-          backgroundColor: primaryColor,
-          paddingHorizontal: 20,
-        }}>
-        <Text
-          style={{
-            fontFamily: "Poppins-SemiBold",
-            fontSize: Platform.OS == "ios" ? 22 : 20.5,
-            marginBottom: 20,
-            marginTop: 35,
-            color: "#535353",
-          }}>
-          Service List
-        </Text>
-
-        <View
-          style={{
-            backgroundColor: primaryColor,
-            overflowY: "hidden",
-            overflow: "hidden",
-
-            height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-          }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}>
-            <View
-              onLayout={(e) => {
-                //console.log(e.nativeEvent.layout.height);
-                setServiceTableHeight(e.nativeEvent.layout.height);
-              }}
-              style={{
-                flex: 1.2,
-                maxHeight: 182,
-              }}>
-              {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                ServiceList.map((item, i) => (
-                  <Button
-                    onPress={() => {
-                      setActiveService(item);
-                    }}
-                    key={i}
-                    style={
-                      ActiveService == item
-                        ? styles.activeButton
-                        : styles.inactiveButton
-                    }
-                    title={item}
-                  />
-                ))
-              ) : (
-                <Button
-                  onPress={() => {
-                    setActiveService(NewDataList[0].mainTitle);
-                  }}
-                  style={
-                    NewDataList.length > 0 &&
-                    NewDataList[0].mainTitle == ActiveService
-                      ? styles.activeButton
-                      : styles.inactiveButton
-                  }
-                  title={NewDataList.length > 0 && NewDataList[0].mainTitle}
-                />
-              )}
-              <Button
-                onPress={() => {
-                  setActiveService("Extra Facilities");
-                }}
-                style={
-                  ActiveService == "Extra Facilities"
-                    ? styles.activeButton
-                    : styles.inactiveButton
-                }
-                title={"Extra Facilities"}
-              />
-            </View>
-            <View
-              style={{
-                width: 1,
-                backgroundColor: "#FFF3F3",
-                marginLeft: 20,
-                marginRight: 30,
-              }}
-            />
-            <View
-              style={{
-                flex: 2,
-                marginRight: 0,
-                maxHeight: ServiceTableHeight,
-              }}>
-              {Array.isArray(SubServiceList) && SubServiceList.length > 0 ? (
-                SubServiceList.map((item, i) => (
-                  <ServiceTable
-                    key={i}
-                    item={item}
-                    i={i}
-                    name={ActiveService}
-                    NewDataList={NewDataList}
-                    height={ServiceTableHeight}
-                  />
-                ))
-              ) : ActiveService != "Extra Facilities" ? (
-                <ServiceTable
-                  height={ServiceTableHeight}
-                  NewDataList={NewDataList}
-                  name={ActiveService}
-                />
-              ) : (
-                <></>
-              )}
-              {ActiveService == "Extra Facilities" && (
-                <View>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                      fontFamily: "Poppins-SemiBold",
-                      color: "#95979D",
-                    }}>
-                    Extra Facilities
-                  </Text>
-                  {Array.isArray(Facilities) &&
-                    Facilities.map((doc, i) =>
-                      ServiceTableHeight - 30 > (i + 1) * 25 ? (
-                        <Text
-                          numberOfLines={1}
-                          onLayout={(e) => {
-                            //console.log(e.nativeEvent.layout.height);
-                          }}
-                          style={{
-                            fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                            fontFamily: "Poppins-Medium",
-
-                            color: textColor,
-                          }}
-                          key={i + 1}>
-                          {doc.title}
-                        </Text>
-                      ) : null
-                    )}
-                </View>
-              )}
-            </View>
-          </View>
-        </View>
-      </View>
+     <ServiceListViewer skills={gigs[0].skills} serviceCategory={{name:Data?.service?.category}} facilities={Facilities}/>
       <View
         style={{
           backgroundColor: primaryColor,
@@ -2085,33 +1853,7 @@ const BargainingScreen = ({ navigation, route }) => {
           }}>
           From {Price} ৳
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Service List_1", {
-              NewDataList: NewDataList,
-              facilites: Facilities?.length>0?Facilities:null,
-            });
-          }}
-          style={{
-            flexDirection: "row",
-            minWidth: 10,
-            alignItems: "center",
-          }}>
-          <Text
-            style={{
-              fontSize: Platform.OS == "ios" ? 16.5 : 15,
-              fontFamily: "Poppins-SemiBold",
-              color: "#707070",
-              marginRight: 0,
-            }}>
-            Show All
-          </Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            size={24}
-            color="#707070"
-          />
-        </TouchableOpacity>
+        
       </View>
       <View style={{ backgroundColor: primaryColor }}>
         {newUser?.user?.id != Data?.service?.user?.id && (

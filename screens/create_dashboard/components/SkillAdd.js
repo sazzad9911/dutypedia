@@ -20,8 +20,8 @@ import CommonHeader from "../CommonHeader";
 import OptionCart, { Cart } from "./OptionCart";
 const { width, height } = Dimensions.get("window");
 
-export default function SkillAdd({ onClose, onSelect, category,categoryName }) {
-  const [skills, setSkills] = useState([]);
+export default function SkillAdd({ onClose, onSelect, category,categoryName,oldSkills }) {
+  const [skills, setSkills] = useState(oldSkills?oldSkills:[]);
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [text, setText] = useState();
   const [data, setData] = useState([]);

@@ -69,6 +69,8 @@ import { MotiView } from "moti";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
 import FixedBackHeader from "../Seller/components/FixedBackHeader";
+import ActivityLoader from "../../components/ActivityLoader";
+import ServiceListViewer from "../../components/ServiceListViewer";
 
 const { width, height } = Dimensions.get("window");
 const VendorFixedService = (props) => {
@@ -204,92 +206,30 @@ const VendorFixedService = (props) => {
           }
         });
       });
-      setCategory(data.service.category);
+     
       setActiveServiceData(arr);
-      try {
-       // console.log(data.services.category)
-        if (data.services.category) {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(
-              data.services.options,
-              data.services.category
-            ),
-          });
-          setNewDataList(
-            serverToLocal(data.services.options, data.services.category)
-          );
-        } else {
-          dispatch({
-            type: "SET_NEW_LIST_DATA",
-            playload: serverToLocal(data.services, data.service.category),
-          });
-          //console.log(serverToLocal(data.services, data.service.category))
-          setNewDataList(serverToLocal(data.services, data.service.category));
-        }
-      } catch (e) {
-        console.warn(e.message);
-      }
+      
     }
   }, [data,isFocused]);
   useEffect(()=>{
     if(data){
       getGigById(newUser.token,data.id).then(res=>{
         setNData(res.data.gig)
+        setFacilities(convertServerFacilities(res.data.gig.facilites));
+        //console.log(res.data.gig.facilites)
       }).catch(err=>{
         console.error(err.response.data.msg)
       })
     }
   },[isFocused])
 
-  React.useEffect(() => {
-    //console.log(NewDataList.length);
-    if (Array.isArray(NewDataList)) {
-      let array = [];
-      NewDataList.map((item, i) => {
-        if (item.title) {
-          if (i == 0) {
-            setActiveService(item.title);
-          }
-          array.push(item.title);
-        } else {
-          if (i == 0) {
-            setServiceList([]);
-            setActiveService(item.mainTitle);
-          }
-        }
-      });
-      if (array.length > 0) {
-        setServiceList(uniq(array));
-      }
-    }
-  }, [NewDataList + Click + Refresh]);
-  React.useEffect(() => {
-    setSubServiceList([]);
-
-    if (Array.isArray(NewDataList)) {
-      let arr = [];
-      NewDataList.map((item) => {
-        if (item.title && item.title.match(ActiveService)) {
-          arr.push(item.subTitle);
-        } else {
-          setSubServiceList([]);
-        }
-      });
-      if (arr.length > 0) {
-        setSubServiceList(uniq(arr));
-      }
-    }
-  }, [ActiveService + Click + Refresh]);
-
 
   if (
-    !Data ||
-    !NewDataList
+    !Data
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+        <ActivityLoader/>
       </View>
     );
   }
@@ -351,41 +291,7 @@ const VendorFixedService = (props) => {
             setImageIndex(index);
           }}
           renderItem={({ index }) => (
-            // <Canvas style={{ width: width, height: 400 }}>
-            //   <Fill color={primaryColor} />
-            //   <Box
-            //     box={rrect(rect(0, 0, width - 3, 390), 5, 5)}
-            //     color={primaryColor}
-            //   >
-            //     <BoxShadow
-            //       dx={30}
-            //       dy={30}
-            //       blur={20}
-            //       color={Platform.OS == "ios" ? "#e6e6e6" : "#cdcdcd"}
-            //       inner
-            //     />
-            //     <BoxShadow
-            //       dx={-10}
-            //       dy={-10}
-            //       blur={20}
-            //       color={Platform.OS == "ios" ? "#e6e6e6" : "#cdcdcd"}
-            //       inner
-            //     />
-            //     <BoxShadow
-            //       dx={5}
-            //       dy={5}
-            //       blur={20}
-            //       color={Platform.OS == "ios" ? "#e6e6e6" : "#cdcdcd"}
-            //     />
-            //     <BoxShadow
-            //       dx={-20}
-            //       dy={-20}
-            //       blur={20}
-            //       color={Platform.OS == "ios" ? "#e6e6e6" : "#cdcdcd"}
-            //     />
-            //   </Box>
-
-            // </Canvas>
+           
             <Image
               source={{ uri: Images[index] }}
               fit="cover"
@@ -596,213 +502,18 @@ const VendorFixedService = (props) => {
                 text={Description}
               />
             </View>
-            {/* <Carousel
-              loop={false}
-              width={width}
-              height={width + 30}
-              autoPlay={false}
-              data={Images}
-              scrollAnimationDuration={500}
-              onSnapToItem={(index) => {}}
-              renderItem={({ index }) => (
-                <Image
-                  style={{
-                    width: width,
-                    height: width + 30,
-                  }}
-                  source={{ uri: Images[index] }}
-                />
-              )}
-            /> */}
+            
           </View>
-          <View
-            style={{
-              backgroundColor: primaryColor,
-              paddingHorizontal: 20,
-              paddingTop: 15,
-            }}
-          >
-            <View style={{
-              flexDirection:"row",
-              justifyContent:"space-between",
-              alignItems:"flex-start",
-              
-            }}>
-              <Text
-                style={{
-                  fontFamily: "Poppins-SemiBold",
-                  fontSize: Platform.OS == "ios" ? 22 : 20.5,
-                  marginBottom: 20,
-                  marginTop: 0,
-                  color: "#535353",
-                }}
-              >
-                Service List
-              </Text>
-              <TouchableOpacity style={{
-                marginTop:-20
-              }}  onPress={()=>{
-                const gigs=vendor.service.gigs.filter(d=>d.type=="STARTING")
-                
-                navigation.navigate("EditServiceList", {
-                  NewDataList: serverToLocal(
-                    gigs[0].services.options,
-                    gigs[0].services.category
-                  ),
-                  facilities:Facilities,
-                  name: "VendorOrderDetails",
-                  data: "ONETIME",
-                  gigs:data
-                });
-               
-              }}>
-                <SvgXml xml={editIcon} height={"50"} width={"50"} />
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                backgroundColor: primaryColor,
-                overflowY: "hidden",
-                overflow: "hidden",
-
-                height: ServiceTableHeight != 0 ? ServiceTableHeight : "auto",
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View
-                  onLayout={(e) => {
-                    //console.log(e.nativeEvent.layout.height);
-                    setServiceTableHeight(e.nativeEvent.layout.height);
-                  }}
-                  style={{
-                    flex: 1.2,
-                    maxHeight: 182,
-                  }}
-                >
-                  {Array.isArray(ServiceList) && ServiceList.length > 0 ? (
-                    ServiceList.map((item, i) => (
-                      <Button
-                        onPress={() => {
-                          setActiveService(item);
-                        }}
-                        key={i}
-                        style={
-                          ActiveService == item
-                            ? styles.activeButton
-                            : styles.inactiveButton
-                        }
-                        title={item}
-                      />
-                    ))
-                  ) : (
-                    <Button
-                      onPress={() => {
-                        setActiveService(NewDataList[0].mainTitle);
-                      }}
-                      style={
-                        NewDataList.length > 0 &&
-                        NewDataList[0].mainTitle == ActiveService
-                          ? styles.activeButton
-                          : styles.inactiveButton
-                      }
-                      title={NewDataList.length > 0 && NewDataList[0].mainTitle}
-                    />
-                  )}
-                  {Facilities&&Facilities.length!=0&&(
-                    <Button
-                    onPress={() => {
-                      setActiveService("Extra Facilities");
-                    }}
-                    style={
-                      ActiveService == "Extra Facilities"
-                        ? styles.activeButton
-                        : styles.inactiveButton
-                    }
-                    title={"Extra Facilities"}
-                  />
-                  )}
-                </View>
-                <View
-                  style={{
-                    width: 1,
-                    backgroundColor: "#FFF3F3",
-                    marginLeft: 20,
-                    marginRight: 30,
-                  }}
-                />
-                <View
-                  style={{
-                    flex: 2,
-                    marginRight: 0,
-                    maxHeight: ServiceTableHeight,
-                  }}
-                >
-                  {Array.isArray(SubServiceList) &&
-                  SubServiceList.length > 0 ? (
-                    SubServiceList.map((item, i) => (
-                      <ServiceTable
-                        key={i}
-                        item={item}
-                        i={i}
-                        name={ActiveService}
-                        NewDataList={NewDataList}
-                        height={ServiceTableHeight}
-                      />
-                    ))
-                  ) : ActiveService != "Extra Facilities" ? (
-                    <ServiceTable
-                      height={ServiceTableHeight}
-                      NewDataList={NewDataList}
-                      name={ActiveService}
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {ActiveService == "Extra Facilities" && (
-                    <View>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                          fontFamily: "Poppins-SemiBold",
-                          color: "#95979D",
-                         
-                        }}
-                      >
-                        Extra Facilities
-                      </Text>
-                      {Array.isArray(Facilities) &&
-                        Facilities.map((doc, i) =>
-                          ServiceTableHeight - 30 > (i + 1) * 25 ? (
-                            <Text
-                              numberOfLines={1}
-                              onLayout={(e) => {
-                                console.log(e.nativeEvent.layout.height);
-                              }}
-                              style={{
-                                fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                                fontFamily: "Poppins-Medium",
-                               
-                                color: textColor,
-                              }}
-                              key={i + 1}
-                            >
-                              {doc.title}
-                            </Text>
-                          ) : null
-                        )}
-                    </View>
-                  )}
-                </View>
-              </View>
-            </View>
-          </View>
+          <ServiceListViewer onEdit={()=>{
+            navigation.navigate("EditServiceList", {
+                skills:data.skills,
+                category:data?.service?.category,
+                facilities: Facilities,
+                name: "VendorOrderDetails",
+                data: "ONETIME",
+                gigs: data,
+              });
+          }} editable={true} skills={Data?.skills} facilities={Facilities} serviceCategory={{name:data?.service?.category}}/>
           <View
             style={{
               backgroundColor: primaryColor,
@@ -823,35 +534,7 @@ const VendorFixedService = (props) => {
             >
               From {Price} ৳
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("Service List_1", {
-                  NewDataList: NewDataList,
-                  facilites: Facilities?.length>0?Facilities:null,
-                });
-              }}
-              style={{
-                flexDirection: "row",
-                minWidth: 10,
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: Platform.OS == "ios" ? 16.5 : 15,
-                  fontFamily: "Poppins-SemiBold",
-                  color: "#707070",
-                  marginRight: 0,
-                }}
-              >
-                Show All
-              </Text>
-              <MaterialIcons
-                name="keyboard-arrow-right"
-                size={24}
-                color="#707070"
-              />
-            </TouchableOpacity>
+            
           </View>
           
         </View>

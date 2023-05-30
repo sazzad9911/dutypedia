@@ -1,5 +1,6 @@
 import React from "react";
 import { View,ScrollView, StyleSheet,Text, Dimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgXml } from "react-native-svg";
 import { useSelector } from "react-redux";
 import SubHeader from "../../components/SubHeader";
@@ -7,12 +8,13 @@ import ViewMore from "../../Hooks/ViewMore";
 const { width, height } = Dimensions.get("window");
 
 export default function InstructionOrder({navigation,route}) {
+  const inset=useSafeAreaInsets()
   return (
     <View style={{ flex: 1 }}>
       <SubHeader
         
         style={{
-          marginTop: 0,
+          marginTop: inset?.top,
         }}
         navigation={navigation}
         title={"How to order work"}
@@ -180,7 +182,7 @@ const Cart = ({
     },
     spText: {
       fontSize: 16,
-      
+      lineHeight:24,
       fontWeight: "400",
       marginTop: 24,
       color: "#1A1A1A",

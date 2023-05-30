@@ -9,6 +9,7 @@ import {
   TextInput,
   Image,
   Dimensions,
+  Modal,
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import Input from "../../components/Input";
@@ -26,22 +27,33 @@ import ViewMore from "../../Hooks/ViewMore";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
-import { updateData } from "../../Class/update";
-import { getService } from "../../Class/service";
+import InputButton from "../Vendor/account/InputButton";
+import SkillAdd from "../create_dashboard/components/SkillAdd";
+import customStyle from "../../assets/stylesheet";
 import ActivityLoader from "../../components/ActivityLoader";
+import { updateGigsData } from "../../Class/update";
+import { getService } from "../../Class/service";
+//import PageChip from "./components/PageChip";
 const { width, height } = Dimensions.get("window");
 
 export default function EditSkills({ navigation, route }) {
   const businessForm = useSelector((state) => state.businessForm);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const [skills, setSkill] = useState(
-    businessForm?.speciality ? businessForm.speciality : []
-  );
-  const data = route?.params?.data;
+  const sk = route?.params?.skills;
+  const [skills, setSkill] = useState(sk ? sk : []);
+  //const data = route?.params?.data;
   const [layoutHeight, setLayoutHeight] = useState(0);
   const [length, setLength] = useState(0);
-  
+  const serviceCategory = route?.params?.serviceCategory;
+  const [modalVisible, setModalVisible] = useState(false);
+  const user = useSelector((state) => state.user);
+  const [loader, setLoader] = useState(false);
+  const vendor = useSelector((state) => state.vendor);
+  const gigs = vendor.service.gigs.filter(
+    (d) => d.type == "STARTING"
+  );
+  const facilities=route?.params?.facilities;
 
   useEffect(() => {
     setLength(skills.length);
@@ -58,13 +70,37 @@ export default function EditSkills({ navigation, route }) {
       dispatch(setHideBottomBar(false));
     }
   }, [isFocused]);
-  useEffect(() => {
-    if (data.data) {
-      setSkill(data.data?.service?.speciality?.split(","));
-    }
-  }, []);
-  
 
+  const updateData = () => {
+    setLoader(true);
+    updateGigsData(user.token, {
+      gigId: gigs[0]?.id,
+      skills: skills
+    })
+      .then((res) => {
+        updateVendorInfo();
+      })
+      .catch((err) => {
+        setLoader(false);
+        console.error(err.response.data.msg);
+      });
+  };
+  const updateVendorInfo = async () => {
+    const res = await getService(user.token, vendor.service.id);
+    if (res) {
+      setLoader(false);
+      dispatch({ type: "SET_VENDOR", playload: res.data });
+      navigation.navigate("VendorProfile");
+    }
+  };
+
+  if (loader) {
+    return (
+      <View style={customStyle.fullBox}>
+        <ActivityLoader />
+      </View>
+    );
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -73,7 +109,7 @@ export default function EditSkills({ navigation, route }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
-            marginTop: 24,
+            marginTop: 0,
             paddingHorizontal: 20,
           }}>
           <Image
@@ -95,7 +131,9 @@ export default function EditSkills({ navigation, route }) {
               }}
               xml={icon}
             />
-            <Text style={[styles.headLine, { flex: 1 }]}>Tips for skill</Text>
+            <Text style={[styles.headLine, { flex: 1 }]}>
+              Tips for {serviceCategory?.name} skill
+            </Text>
           </View>
           <ViewMore
             view={true}
@@ -112,51 +150,75 @@ export default function EditSkills({ navigation, route }) {
               <View
                 onLayout={(e) => setLayoutHeight(e.nativeEvent.layout.height)}
                 style={{ width: "100%" }}>
+                <Text style={[styles.spText, { marginTop: 0 }]}>
+                  Maximize Your Profile Impact with {serviceCategory?.name}{" "}
+                  Skills:{"\n"}Stand Out and Connect with Ease
+                </Text>
+                <Text style={[styles.spText, { marginTop: 20 }]}>
+                  Choosing the right {serviceCategory?.name} skills is crucial
+                  to effectively showcase your expertise and connect with
+                  potential buyers. Here are some key tips to optimize your
+                  profile:
+                </Text>
                 <TextOp
-                  style={{ marginTop: 0 }}
-                  text={
-                    "Choose relevant skills: Be specific about what you offer, whether you're an individual or representing a company. This could be anything from graphic design to plumbing services."
-                  }
+                  style={{ marginTop: 20 }}
+                  text={`Define Your Expertise: Clearly specify the services you offer within the ${serviceCategory?.name} service category. Whether you're an individual or representing a company, take the time to highlight the key areas that align with your expertise. For example, if you specialize in ${serviceCategory?.name}, ensure that your profile reflects that focus.`}
+                  number={"1."}
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={`Use Clear and Precise Language: Help buyers find you easily by using specific terms to describe what you offer within your ${serviceCategory?.name} skillset. By utilizing descriptive and targeted language, you increase the chances of attracting the right audience and conveying the value you bring.`}
+                  number={"2."}
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={`Prioritize Your Strengths: Showcase your top ${serviceCategory?.name} skills prominently on your profile. By listing your best capabilities first, you capture the attention of potential buyers and emphasize your expertise within your chosen service category. This prioritization can make a significant impact on their decision-making process.`}
+                  number={"3."}
+                />
+                <TextOp
+                  style={{ marginTop: 5 }}
+                  text={` Stay Updated and Relevant: Regularly update your skills list to reflect any new experiences or additional ${serviceCategory?.name} skills you acquire. This demonstrates your commitment to growth and ensures that buyers see the most accurate representation of your abilities. By staying current, you increase your chances of attracting new clients seeking your specific ${serviceCategory?.name} skills.`}
+                  number={"4."}
                 />
                 <TextOp
                   style={{ marginTop: 5 }}
                   text={
-                    "Use specific terms: Use clear and specific terms to describe what you do. This helps buyers find you easily and understand what you offer."
+                    " Foster Trust with Honesty: Represent your abilities accurately and honestly. Buyers rely on your skills to make informed decisions, so it's crucial to provide an authentic portrayal of what you can deliver. Building trust through transparency establishes a solid foundation for successful business relationships."
                   }
+                  number={"5."}
                 />
-                <TextOp
-                  style={{ marginTop: 5 }}
-                  text={
-                    "Prioritize your strongest skills: List your best skills first to show buyers what you excel at."
-                  }
-                />
-                <TextOp
-                  style={{ marginTop: 5 }}
-                  text={
-                    "Update regularly: Keep your skills list up to date with new experience or skills. This helps you stay relevant and attract new buyers."
-                  }
-                />
-                <TextOp
-                  style={{ marginTop: 5 }}
-                  text={
-                    "Be honest: Represent your abilities accurately. Buyers rely on your skills to make informed decisions, so it's important to be honest about what you can and cannot do."
-                  }
-                />
+                <Text style={[styles.spText, { marginTop: 20 }]}>
+                  By optimizing your profile with these strategies, you can
+                  enhance your visibility, attract the right buyers, and unlock
+                  new opportunities for your business.
+                </Text>
+                <Text style={[styles.spText, { marginTop: 20 }]}>
+                  Thank you for taking the time to maximize your profile and
+                  showcase your expertise within your chosen{" "}
+                  {serviceCategory?.name} service. We wish you continued success
+                  in connecting with and serving your clients!"
+                </Text>
               </View>
             }
           />
-          <Text style={[styles.headLine, { marginTop: 36 }]}>Add Skill</Text>
-          {length<25&&(
-            <AddBox
-            onChange={(e) => {
-              try {
-                setSkill((d) => [...d, e]);
-              } catch (e) {
-                console.log(e.message);
-              }
-            }}
+          <Text style={[styles.headLine, { marginTop: 36 }]}>
+            Add {serviceCategory?.name} Skill
+          </Text>
+          {/* 
+         
+           */}
+          {/* <Text style={[styles.text, { marginTop: 32 }]}>
+            Example : Bridge Builder, Business Plans, Graphic design, Events
+            Items, Bike repair, photographer, Baby Care, Business lawyers,
+            Cooking Lessons, Dj Mixing{" "}
+          </Text> */}
+          <InputButton
+            onPress={() => setModalVisible(true)}
+            style={styles.input}
+            placeholder={
+              "Example: web development, mobile apps, hair cutting, facial wash"
+            }
           />
-          )}
           <Text style={styles.text}>Max 25 character </Text>
           {skills && skills.length > 0 && (
             <View
@@ -177,49 +239,35 @@ export default function EditSkills({ navigation, route }) {
               ))}
             </View>
           )}
-          <Text style={[styles.text, { marginTop: 32,}]}>
-            Example : Bridge Builder, Business Plans, Graphic design, Events
-            Items, Bike repair, photographer, Baby Care, Business lawyers,
-            Cooking Lessons, Dj Mixing{" "}
-          </Text>
           <IconButton
             active={length > 0 ? true : false}
             disabled={length > 0 ? false : true}
             onPress={() => {
+             //updateData()
+             navigation?.navigate("EditExtraFacilities",{
+              skills:skills,
+              gigs:gigs[0],
+              facilities:facilities,
               
-             dispatch({ type: "SPECIALITY", playload: skills });
-            //   navigation.navigate("ServiceDescribe", {
-            //     data: {
-            //       serviceCenterName: data.serviceCenterName,
-            //       providerName: data.providerName,
-            //       gender: data.gender,
-            //       position: data.position,
-            //       numberOfTeam: data.numberOfTeam,
-            //       established: data.established,
-            //       workingTime: data.workingTime,
-            //       fullTime: data.fullTime,
-            //       price: data.price,
-            //       skills: skills,
-            //     },
-            //   });
-              //updateInfo()
-              navigation?.navigate("EditAbout",{
-                data:{
-                  serviceCenterName:data?.serviceCenterName,
-                  providerName:data?.providerName,
-                  gender:data?.gender,
-                  worker:data?.numberOfTeam,
-                  speciality: skills?.join(),
-                  position:data?.position,
-                  data:data?.data
-                }
-              })
+             })
             }}
             style={styles.button}
             title={"Continue"}
           />
         </View>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={setModalVisible}>
+        <SkillAdd
+          oldSkills={skills}
+          category={serviceCategory?.key}
+          categoryName={serviceCategory?.name}
+          onSelect={setSkill}
+          onClose={setModalVisible}
+        />
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -240,11 +288,11 @@ const AddBox = ({ onChange }) => {
       }}>
       <TextInput
         value={text}
-        onChangeText={e=>{
-          if(e?.split("")?.length>25){
-            return
+        onChangeText={(e) => {
+          if (e?.split("")?.length > 25) {
+            return;
           }
-          setText(e)
+          setText(e);
         }}
         style={{
           flex: 1,
@@ -275,7 +323,7 @@ const AddBox = ({ onChange }) => {
         <Text
           style={{
             fontSize: 14,
-            
+
             color: text ? "#ffffff" : "#767676",
           }}>
           Add

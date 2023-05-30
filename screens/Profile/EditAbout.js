@@ -108,18 +108,6 @@ export default function EditAbout({ navigation, route }) {
   }, [isFocused]);
   const updateInfo = async () => {
     setLoader(true);
-    let fac = Service.filter((d) => d.checked);
-    try {
-      await updateGigsData(user?.token, {
-        gigId: gigs[0]?.id,
-        facilites: {
-          title: "Selected Options",
-          selectedOptions: fac,
-        },
-      });
-    } catch (err) {
-      console.error(err.message);
-    }
     updateData(user.token, {
       serviceId: vendor.service.id,
       serviceCenterName: data?.serviceCenterName,
@@ -130,7 +118,7 @@ export default function EditAbout({ navigation, route }) {
         position: data?.position,
       },
       worker: parseInt(data?.worker),
-      speciality: data?.speciality,
+      keywords: data?.keywords,
       about: about,
     })
       .then((res) => {
@@ -221,67 +209,7 @@ export default function EditAbout({ navigation, route }) {
           <Text style={styles.text}>
             Max 2000/{about ? about?.split("")?.length : "0"} characters{" "}
           </Text>
-          <View>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "400",
-                marginTop: 36,
-              }}>
-              Add your extra facilities
-            </Text>
-            {Array.isArray(Service) &&
-              Service.map((doc, i) => (
-                <CheckBox
-                  key={i}
-                  style={{
-                    marginTop: 24,
-                  }}
-                  value={doc.checked}
-                  title={doc.title}
-                  onChange={() => {
-                    let arr = Service;
-                    setService(null);
-                    arr[i] = {
-                      title: doc.title,
-                      checked: !doc.checked,
-                      id: i + 1,
-                    };
-                    setService(arr);
-                    //setChange(!change);
-                    //console.log(arr);
-                  }}
-                />
-              ))}
-            {ServiceError && (
-              <Text
-                style={{
-                  fontSize: 12,
-                  marginLeft: 2,
-                  fontFamily: "Poppins-Light",
-                  color: "red",
-                  marginTop: 3,
-                }}>
-                {ServiceError}
-              </Text>
-            )}
-
-            {Service && Service.length < 24 && (
-              <IconButton
-                onPress={() => {
-                  setButtonVisible(true);
-                }}
-                style={{
-                  flexDirection: "row",
-                  borderWidth: 0,
-                  width: 100,
-                  marginTop: 20,
-                }}
-                LeftIcon={() => <SvgXml xml={plus} />}
-                title={"Add More"}
-              />
-            )}
-          </View>
+          
           <IconButton
             active={about ? true : false}
             disabled={about ? false : true}

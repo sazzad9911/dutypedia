@@ -41,7 +41,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Barcode from "./../../components/Barcode";
 import IconButton from "./../../components/IconButton";
 import { AntDesign } from "@expo/vector-icons";
-import { serverToLocal } from "../../Class/dataConverter";
+import { convertServerFacilities, serverToLocal } from "../../Class/dataConverter";
 import { useFocusEffect } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
 import {
@@ -151,61 +151,15 @@ const OrderDetails = ({ navigation, route }) => {
     //console.log(data.selectedServices);
     //console.warn(subsOrder)
     if (data) {
-      try {
-        if (data && data.selectedServices && data.selectedServices.category) {
-          // console.log(serverToLocal(
-          //   data.selectedServices.options,
-          //   data.selectedServices.category
-          // ))
-          setListData(
-            serverToLocal(
-              data.selectedServices.options,
-              data.selectedServices.category
-            )
-          );
-          dispatch({
-            type: "SET_LIST_SELECTION",
-            playload: serverToLocal(
-              data.selectedServices.options,
-              data.selectedServices.category
-            ),
-          });
-        } else if (Array.isArray(data.selectedServices)) {
-          let arr = [];
-          // console.log("2")
-          data.selectedServices.map((doc, i) => {
-            arr.push({
-              title: "dfsfds",
-              tableName: "sdad",
-              mainTitle: "asad",
-              data: doc,
-            });
-          });
-          setListData(arr);
-          dispatch({ type: "SET_LIST_SELECTION", playload: arr });
-        } else if (data && data.selectedServices) {
-          //console.log("3")
-          setListData(
-            serverToLocal(data.selectedServices, data.service.category)
-          );
-          dispatch({
-            type: "SET_LIST_SELECTION",
-            playload: serverToLocal(
-              data.selectedServices,
-              data.service.category
-            ),
-          });
-        }
-      } catch (e) {
-        console.warn(e.message);
-      }
+      
+     setListData(data.selectedServices)
     }
     if (
       data &&
       data.facilites &&
       Array.isArray(data.facilites.selectedOptions)
     ) {
-      setFacilities(data.facilites.selectedOptions);
+      setFacilities(convertServerFacilities(data.facilites));
     } else if (data && Array.isArray(data.facilites)) {
       setFacilities(data.facilites);
     }
@@ -281,18 +235,10 @@ const OrderDetails = ({ navigation, route }) => {
   const addService = () => {
     setServiceError()
     const gigs = data.service.gigs.filter((d) => d.type == "STARTING");
-    dispatch({
-      type: "SET_NEW_LIST_DATA",
-      playload: serverToLocal(
-        gigs[0].services.options,
-        gigs[0].services.category
-      ),
-    });
+    
     navigation.navigate("AddServiceList", {
-      NewDataList: serverToLocal(
-        gigs[0].services.options,
-        gigs[0].services.category
-      ),
+      skills:gigs[0].skills,
+      category:vendor?.service?.category,
       facilites: gigs[0].facilites.selectedOptions,
       setListData: setListData,
       name: "VendorOrderDetails",
@@ -387,6 +333,7 @@ const OrderDetails = ({ navigation, route }) => {
           status={data?.status}
           serviceError={ServiceError}
           type={data?.type}
+          
         />
         <StatusCart
           vendor={true}

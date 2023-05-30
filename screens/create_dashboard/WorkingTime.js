@@ -60,6 +60,25 @@ export default function WorkingTime({ navigation, route }) {
       //console.log("seen")
       dispatch(setHideBottomBar(false));
     }
+    if(Array.isArray(businessForm?.workingTime)){
+      businessForm?.workingTime?.map((doc)=>{
+        if(doc.title=="Saturday"){
+          setSat(doc)
+        }else if(doc.title=="Sunday"){
+          setSun(doc)
+        }else if(doc.title=="Monday"){
+          setMon(doc)
+        }else if(doc.title=="Tuesday"){
+          setTue(doc)
+        }else if(doc.title=="Wednesday"){
+          setWed(doc)
+        }else if(doc.title=="Thursday"){
+          setThu(doc)
+        }else if(doc.title=="Friday"){
+          setFri(doc)
+        }
+      })
+    }
   }, [isFocused]);
   const setAllTimes=(value)=>{
     if(!sat){
@@ -319,7 +338,7 @@ export default function WorkingTime({ navigation, route }) {
               
               dispatch({
                 type: "WORKING_TIME",
-                playload: Times?.filter(d=>d?.checked)?.length == 0 ? true : Times,
+                playload: checked ? true : Times,
               });
               navigation.navigate("NewPricing", {
                 data: {

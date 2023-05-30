@@ -193,11 +193,7 @@ export const createOtherService = async (
         ? businessForm.facilities.filter((data) => data.checked == true)
         : [],
     },
-    services: {
-      category: getDashboardTitle(listData[0].mainTitle),
-      type: listData[0].subTitle ? 3 : listData[0].title ? 2 : 1,
-      options: localOptionsToServer(listData),
-    },
+    skills:listData,
     description: businessForm.description,
     images: images,
     serviceId: serviceId,

@@ -7,6 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { dateConverter, dateDifference } from "../../action";
 import ReadMoreText from "rn-read-more-text";
 import { styles } from "../create_dashboard/BusinessTitle";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ChooseDateOrder({ navigation, route }) {
   const [FromVisible, setFromVisible] = React.useState(false);
@@ -23,11 +24,12 @@ export default function ChooseDateOrder({ navigation, route }) {
       textRef.toggle()
     }
   };
+  const inset=useSafeAreaInsets()
   return (
     <View style={{ flex: 1 }}>
       <SubHeader
         style={{
-          marginTop: 0,
+          marginTop: inset?.top,
         }}
         navigation={navigation}
         title={"Chose Delivery Date"}

@@ -349,7 +349,9 @@ export default function CompanyCalendar({ navigation, route }) {
 }
 const TimeCart=({t47,workingTime,title})=>{
   const time=workingTime?.filter(d=>d.day.toLowerCase().match(title.toLowerCase()))
-
+  if(time&&time?.length==0&&!t47){
+    return null
+  }
   return(
     <View style={{
       flexDirection:"row",
@@ -363,7 +365,9 @@ const TimeCart=({t47,workingTime,title})=>{
       }}>{title}</Text>
       <View style={{
         flexDirection:"row",
-        alignItems:"center"
+        alignItems:"center",
+        justifyContent:"flex-start",
+       
       }}>
       <Feather name="clock" size={20} color="black" />
         <Text style={{

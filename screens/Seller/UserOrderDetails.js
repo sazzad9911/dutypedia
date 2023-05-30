@@ -36,7 +36,7 @@ import {
   getDutyFee,
 } from "../../Class/service";
 import Barcode from "./../../components/Barcode";
-import { serverToLocal } from "../../Class/dataConverter";
+import { convertServerFacilities, serverToLocal } from "../../Class/dataConverter";
 import Toast from "react-native-root-toast";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { socket } from "../../Class/socket";
@@ -122,48 +122,24 @@ const UserOrderDetails = ({ navigation, route }) => {
     }
   }, [orderId,refreshing]);
   React.useEffect(() => {
+    //console.log(data.selectedServices);
+    //console.warn(subsOrder)
     if (data) {
-      try {
-        if (data && data.selectedServices && data.selectedServices.category) {
-          setListData(
-            serverToLocal(
-              data.selectedServices.options,
-              data.selectedServices.category
-            )
-          );
-        } else if (Array.isArray(data.selectedServices)) {
-          let arr = [];
-          data.selectedServices.map((doc, i) => {
-            arr.push({
-              title: "dfsfds",
-              tableName: "sdad",
-              mainTitle: "asad",
-              data: doc,
-            });
-          });
-          setListData(arr);
-        } else if (data && data.selectedServices) {
-          setListData(
-            serverToLocal(data.selectedServices, data.service.category)
-          );
-        }
-      } catch (e) {
-        console.warn(e.message);
-      }
-
-      if (
-        data &&
-        data.facilites &&
-        Array.isArray(data.facilites.selectedOptions)
-      ) {
-        setFacilities(data.facilites.selectedOptions);
-      } else if (data && Array.isArray(data.facilites)) {
-        setFacilities(data.facilites);
-      }
-      if (data && data.type == "PACKAGE") {
-        setFacilities(data.selectedPackage?.features);
-      }
+     setListData(data.selectedServices)
     }
+    if (
+      data &&
+      data.facilites &&
+      Array.isArray(data.facilites.selectedOptions)
+    ) {
+      setFacilities(convertServerFacilities(data.facilites));
+    } else if (data && Array.isArray(data.facilites)) {
+      setFacilities(data.facilites);
+    }
+    if (data && data.type == "PACKAGE") {
+      setFacilities(data.selectedPackage?.features);
+    }
+    //console.log(data.selectedPackage)
   }, [data]);
   const loadData = async (receiverId, order) => {
     //setLoader(false);
@@ -307,7 +283,7 @@ const UserOrderDetails = ({ navigation, route }) => {
           }}
           uri={data?.service?.profilePhoto}
           title={data?.service?.serviceCenterName}
-          name={`${data?.service?.providerInfo.title} ${data.service.providerInfo.name}`}
+          name={`${data.service.providerInfo.name}`}
           position={data?.service?.providerInfo?.position}
         />
         <View style={styles.textContainer}>

@@ -128,17 +128,9 @@ const OfferNow = (props) => {
     if (gigs) {
       //console.log(data.subsData)
       setPrice(gigs.price);
-      try {
-        if (gigs.services.category) {
-          setListData(
-            serverToLocal(gigs.services.options, gigs.services.category)
-          );
-        } else {
-          setListData(serverToLocal(gigs.services, data.service.category));
-        }
-      } catch (e) {
-        console.warn(e.message);
-      }
+      setListData(
+          gigs?.skills  
+        );
       setFacilities(gigs.facilites.selectedOptions);
     }
     if (selectedPackage) {
@@ -284,9 +276,9 @@ const OfferNow = (props) => {
       let text = "";
       props?.serviceList.map((doc, i) => {
         if (i != 0) {
-          text = text + `, ${doc.data.title}`;
+          text = text + `, ${doc}`;
         } else {
-          text = doc.data.title;
+          text = doc;
         }
       });
       setServices(text);
@@ -709,8 +701,18 @@ const OfferNow = (props) => {
               fontSize: 16,
               fontWeight: "400",
             }}>
-            I agree with all the <Text style={{ color: "#0003FF" }}>Order</Text>{" "}
-            & <Text style={{ color: "#0003FF" }}>refund policy</Text>
+            I agree with all the <Text onPress={() => {
+              navigation?.navigate("WebViewsGlobal", {
+                url: "https://duty.com.bd/legal/app/order-policy",
+                title: "Order Policy",
+              });
+            }} style={{ color: "#0003FF" }}>Order</Text>{" "}
+            & <Text onPress={() => {
+                navigation?.navigate("WebViewsGlobal", {
+                  url: "https://duty.com.bd/legal/app/refund-policy",
+                  title: "Refund policy",
+                });
+              }} style={{ color: "#0003FF" }}>refund policy</Text>
           </Text>
         </View>
 

@@ -913,25 +913,13 @@ const VendorProfile = (props) => {
           }}>
           <Pressable
             onPress={() => {
-              
-              dispatch({ type: "SET_NEW_DATA", playload: null });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
               const gigs = vendor.service.gigs.filter(
                 (d) => d.type == "STARTING"
               );
               
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
               navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
+                skills:gigs[0].skills,
+                category:vendor.service.category,
                 name: "VendorOrderDetails",
                 data: "ONETIME",
               });
@@ -970,18 +958,11 @@ const VendorProfile = (props) => {
               const gigs = vendor.service.gigs.filter(
                 (d) => d.type == "STARTING"
               );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
+              
               navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
+                skills:gigs[0]?.skills,
+                category:data?.service?.category,
+
                 name: "VendorOrderDetails",
                 data: "PACKAGE",
               });
@@ -990,105 +971,7 @@ const VendorProfile = (props) => {
           </Pressable>
         </Animated.View>
       )}
-      {showButton && ScreenName == "SUBS" && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_PACKAGES", playload: [] });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "SUBSCRIPTION",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
-      {showButton && ScreenName == "INSTALLMENT" && (
-        <Animated.View
-          entering={FadeIn}
-          style={{
-            shadowOffset: {
-              width: 1,
-              height: 1,
-            },
-            shadowColor: "#707070",
-            shadowRadius: 3,
-            elevation: 0,
-            shadowOpacity: 0.3,
-            position: "absolute",
-            right: 20,
-            bottom: 20,
-            backgroundColor: "#4ADE80",
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Pressable
-            onPress={() => {
-              dispatch({ type: "SET_PACKAGES", playload: [] });
-              dispatch({ type: "SET_LIST_SELECTION", playload: [] });
-              const gigs = vendor.service.gigs.filter(
-                (d) => d.type == "STARTING"
-              );
-              dispatch({
-                type: "SET_NEW_LIST_DATA",
-                playload: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-              });
-              navigation.navigate("AddServiceList_1", {
-                NewDataList: serverToLocal(
-                  gigs[0].services.options,
-                  gigs[0].services.category
-                ),
-                name: "VendorOrderDetails",
-                data: "INSTALLMENT",
-              });
-            }}>
-            <AntDesign name="plus" size={25} color="white" />
-          </Pressable>
-        </Animated.View>
-      )}
-
+  
       <FixedBackHeader navigation={navigation} Yoffset={offset ? offset : 0} />
       {offset < 100 && offset > -1 && (
         <Animated.View
@@ -1710,7 +1593,10 @@ const BargainingScreen = ({ navigation, route }) => {
           )}
         />
       </View>
-      <ServiceListViewer serviceCategory={{name:vendor?.service?.category}} skills={gigs[0]?.skills} facilities={Facilities}/>
+      <ServiceListViewer onEdit={()=>{
+       
+        navigation?.navigate("EditSkills",{serviceCategory:{name:vendor?.service?.category,key:vendor?.service?.categoryKey},skills:gigs[0].skills,facilities:Facilities})
+      }} editable={true}  serviceCategory={{name:vendor?.service?.category}} skills={gigs[0]?.skills} facilities={Facilities}/>
       <View
         style={{
           backgroundColor: primaryColor,
@@ -1729,55 +1615,9 @@ const BargainingScreen = ({ navigation, route }) => {
           }}>
           From {gigs[0].price} ৳
         </Text>
-        {/* <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Service List_1", {
-              NewDataList: NewDataList,
-              facilites: Facilities.length>0?Facilities:null,
-            });
-          }}
-          style={{
-            flexDirection: "row",
-            minWidth: 10,
-            alignItems: "center",
-          }}>
-          <Text
-            style={{
-              fontSize: Platform.OS == "ios" ? 16.5 : 15,
-              fontFamily: "Poppins-SemiBold",
-              color: "#707070",
-              marginRight: 0,
-            }}>
-            Show All
-          </Text>
-          <MaterialIcons
-            name="keyboard-arrow-right"
-            size={24}
-            color="#707070"
-          />
-        </TouchableOpacity> */}
+       
       </View>
-      {/* <View style={{ backgroundColor: primaryColor }}>
-        <IconButton
-          onPress={() => {
-            navigation.navigate("OfferNow", {
-              data: Data,
-              type: "STARTING",
-            });
-          }}
-          style={{
-            borderRadius: 5,
-            marginHorizontal: 20,
-            backgroundColor: "#FEA31E",
-            borderWidth: 0,
-            marginVertical: 0,
-            color: textColor,
-            marginTop: 0,
-            height: 40,
-          }}
-          title="Offer Now"
-        />
-      </View> */}
+      
       <View style={{ height: 70 }} />
     </View>
   );

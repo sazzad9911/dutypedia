@@ -15,8 +15,8 @@ import {
 import { SvgXml } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 import { setHideBottomBar } from "../../Reducers/hideBottomBar";
-import { icon, styles } from "./BusinessTitle";
-import PageChip from "./components/PageChip";
+import { icon, styles } from "./EditBusinessTitle";
+//import PageChip from "./components/PageChip";
 import keyword from "../../assets/keyword.png";
 import ViewMore from "../../Hooks/ViewMore";
 import TextOp from "./TextOp";
@@ -24,7 +24,7 @@ import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
 const { width, height } = Dimensions.get("window");
 
-export default function ProfileKeyWord({ navigation, route }) {
+export default function EditKeywords({ navigation, route }) {
   const isFocused = useIsFocused();
   const businessForm = useSelector((state) => state.businessForm);
   const dispatch = useDispatch();
@@ -50,6 +50,9 @@ export default function ProfileKeyWord({ navigation, route }) {
       //console.log("seen")
       dispatch(setHideBottomBar(false));
     }
+    if (data.data) {
+      setKeyword(data.data.service.keywords);
+    }
   }, [isFocused]);
   return (
     <KeyboardAvoidingView
@@ -57,7 +60,7 @@ export default function ProfileKeyWord({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <PageChip currentPage={10} totalPage={14} />
+        {/* <PageChip currentPage={10} totalPage={14} /> */}
         <View
           style={{
             marginTop: 0,
@@ -196,21 +199,15 @@ export default function ProfileKeyWord({ navigation, route }) {
             disabled={length > 0 ? false : true}
             onPress={() => {
               dispatch({ type: "KEYWORD", playload: keywords });
-              navigation.navigate("ServiceDescribe", {
+              navigation?.navigate("EditAbout", {
                 data: {
+                  serviceCenterName: data?.serviceCenterName,
+                  providerName: data?.providerName,
+                  gender: data?.gender,
+                  worker: data?.numberOfTeam,
                   keywords: keywords,
-                  serviceCenterName: data.serviceCenterName,
-                  providerName: data.providerName,
-                  gender: data.gender,
-                  position: data.position,
-                  numberOfTeam: data.numberOfTeam,
-                  established: data.established,
-                  workingTime: data.workingTime,
-                  fullTime: data.fullTime,
-                  price: data?.price,
-                  serviceCategory: data?.serviceCategory,
-                  skills: data?.skills,
-                  facilities: data?.facilities,
+                  position: data?.position,
+                  data: data?.data,
                 },
               });
             }}
@@ -237,7 +234,8 @@ const AddBox = ({ onChange, onWrite, value }) => {
         borderColor: "#A3A3A3",
         marginTop: 24,
       }}>
-      <TextInput returnKeyType="done"
+      <TextInput
+        returnKeyType="done"
         onEndEditing={() => {
           if (!text) {
             return;

@@ -131,7 +131,6 @@ import ServiceOrder from "./order/ServiceOrder";
 import ChooseDateOrder from "./order/ChooseDateOrder";
 import InstructionOrder from "./order/InstructionOrder";
 import CommonHeader from "./create_dashboard/CommonHeader";
-import EditSkills from "./Profile/EditSkills";
 import EditStakeHolder from "./Profile/EditStakeHolder";
 import EditYourInformation from "./Profile/EditYourInformation";
 import EditBusinessTitle from "./Profile/EditBusinessTitle";
@@ -141,6 +140,10 @@ import EditServicePrice from "./Profile/EditServicePrice";
 import EditAbout from "./Profile/EditAbout";
 import ExtraFacilities from "./create_dashboard/ExtraFacilities";
 import ProfileKeyWord from "./create_dashboard/ProfileKeyWord";
+import EditKeywords from "./Profile/EditKeywords";
+import EditExtraFacilities from "./Profile/EditExtraFacilities";
+import EditServiceCategory from "./Profile/EditServiceCategory";
+import EditSkills from "./Profile/EditSkills";
 //import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
@@ -880,6 +883,27 @@ const Profile = ({ navigation }) => {
         }}
         name="EditStakeHolder"
         component={EditStakeHolder}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Profile Keywords"} />,
+        }}
+        name="EditKeywords"
+        component={EditKeywords}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Extra Facilities"} />,
+        }}
+        name="EditExtraFacilities"
+        component={EditExtraFacilities}
+      />
+      <Stack.Screen
+        options={{
+          header: (props) => <CommonHeader {...props} title={"Service Category"} />,
+        }}
+        name="EditServiceCategory"
+        component={EditServiceCategory}
       />
       <Stack.Screen
         options={{

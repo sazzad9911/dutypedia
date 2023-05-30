@@ -16,10 +16,11 @@ export default function OrderInfo({
   onAddService,
   status,
   serviceError,
-  type
+  type,
+  accepted
 }) {
   const [wid, setWid] = useState(0);
-  
+  //console.log(services)
   return (
     <View
       style={{
@@ -88,8 +89,8 @@ export default function OrderInfo({
               {title}
             </Text>
             <Text style={[styles.text, { marginTop: 12 }]}>
-              {services.map((doc, i) => {
-                return `${i == 0 ? "" : ", "}${doc.data.title}`;
+              {services?.map((doc, i) => {
+                return `${i == 0 ? "" : ", "}${doc}`;
               })}
             </Text>
           </View>
