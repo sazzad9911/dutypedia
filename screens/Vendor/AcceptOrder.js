@@ -312,9 +312,10 @@ const AcceptOrder = (props) => {
         });
       return;
     }
+    
     acceptOrder(user.token, {
       orderId: params.id,
-      selectedServices: ListSelection,
+      selectedServices: data?.type=="BARGAINING"? ListSelection:data.selectedServices,
       deliverBy: Deliver,
       serviceType: Service,
       deliverMethodPhysical: Select,

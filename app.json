@@ -37,7 +37,8 @@
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
-      "enabled": false
+      "enabled": false,
+      "url": "https://u.expo.dev/b28fc789-60c8-4840-b587-57ef57e830fe"
     },
     "assetBundlePatterns": [
       "assets/*"
@@ -51,7 +52,10 @@
         ]
       },
       "bitcode": false,
-      "bundleIdentifier": "com.duty.bd"
+      "bundleIdentifier": "com.duty.bd",
+      "runtimeVersion": {
+        "policy": "sdkVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -66,8 +70,10 @@
         "android.permission.BLUETOOTH",
         "android.permission.CAMERA",
         "android.permission.INTERNET",
-        "android.permission.SYSTEM_ALERT_WINDOW"
-      ]
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -117,7 +117,7 @@ const OfferNow = (props) => {
   const [dutyFee, setDutyFee] = useState();
 
   React.useEffect(() => {
-    console.log(data.installmentData);
+    //console.log(data.installmentData);
     if (category && service) {
       // try {
       //   setServices(serverToLocal(service.options, service.category));
@@ -193,7 +193,7 @@ const OfferNow = (props) => {
       From,
       To,
       vendor ? "VENDOR" : "USER",
-      service ? service : gigs ? gigs.services : "",
+      service ? service : gigs ? gigs.skills : "",
       service ? [] : gigs ? gigs.facilites.selectedOptions : "",
       selectedPackage ? selectedPackage : undefined,
       params.packageData,

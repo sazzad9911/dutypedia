@@ -63,28 +63,8 @@ export default function App() {
     try {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
-        Alert.alert(
-          "Update!",
-          "New update is available. Are you want to download?",
-          [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel",
-            },
-            {
-              text: "OK",
-              onPress: async () => {
-                try {
-                  await Updates.fetchUpdateAsync();
-                  await Updates.reloadAsync();
-                } catch (err) {
-                  Alert.alert("Ops!", err.message);
-                }
-              },
-            },
-          ]
-        );
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
       }
     } catch (error) {
       // You can also add an alert() to see the error message in case of an error when fetching updates.
@@ -173,15 +153,21 @@ const Views = () => {
       socket.on("connect", () => {
         getSocket(user?.user?.id);
       });
+      updateDeviceToken(user.token, expoPushToken).then(res=>{
+        console.log("Success")
+      }).catch(e=>{
+        console.log(e.response.data.msg)
+      })
     }
-    
-  },[isOffline,user])
+  },[isOffline,user,expoPushToken])
+
   const regNotification = async () => {
     const token = await registerForPushNotificationsAsync();
     setExpoPushToken(token);
-    if (!Array.isArray(user) && user?.token && token) {
-      await updateDeviceToken(user.token, token);
-    }
+    //console.log(token)
+    // if (!Array.isArray(user) && user?.token && token) {
+    //   await updateDeviceToken(user.token, token);
+    // }
   };
   const getNetworkStatus=async()=>{
     const res=await Network.getNetworkStateAsync();

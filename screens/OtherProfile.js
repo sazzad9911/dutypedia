@@ -216,7 +216,7 @@ const OtherProfile = (props) => {
   const [reviews, setReviews] = useState();
   const [bargaining, setActiveBargaining] = useState(true);
   const [condition, setCondition] = useState(false);
-  const [rating,setRating]=useState(0)
+  const [rating, setRating] = useState(0);
   //console.log(SeeMore)
   const newImage = useImage(data.service.wallPhoto);
   const wait = (timeout) => {
@@ -301,7 +301,6 @@ const OtherProfile = (props) => {
             setCategory(data?.services?.category);
             setActiveServiceData(arr);
             setUserInfo(response.data.service.user);
-            
           }
         })
         .catch((error) => {
@@ -340,11 +339,9 @@ const OtherProfile = (props) => {
       });
       setCategory(data?.services?.category);
       setActiveServiceData(arr);
-      
     }
   }, [Bargaining + Data, Refresh]);
-  
-  
+
   React.useEffect(() => {
     if (newUser && Data) {
       getOtherServices(newUser.token, data.service.id, "ONETIME")
@@ -418,14 +415,13 @@ const OtherProfile = (props) => {
     }
   }, [data, Refresh]);
 
- 
-  React.useState(()=>{
-    if(newUser&&data){
-      getFullRating(newUser?.token,data?.service?.id).then(res=>{
-        setRating(res?.data?.rating)
-      })
+  React.useState(() => {
+    if (newUser && data) {
+      getFullRating(newUser?.token, data?.service?.id).then((res) => {
+        setRating(res?.data?.rating);
+      });
     }
-  },[data,newUser])
+  }, [data, newUser]);
 
   const clickFixed = (doc) => {
     navigation.navigate("FixedService", { data: doc });
@@ -481,7 +477,7 @@ const OtherProfile = (props) => {
     if (!data) {
       return;
     }
-    
+
     const res = await setLikeGigs(newUser.token, data.id);
     //console.log(res.data)
     const response = await getLikeGigs(newUser.token);
@@ -661,7 +657,7 @@ const OtherProfile = (props) => {
                 }}
                 title="Report"
               />
-              <Menu.Item onPress={() => {}} title="Copy URL" />
+              {/* <Menu.Item onPress={() => {}} title="Copy URL" /> */}
             </Menu>
 
             <SvgXml
@@ -687,7 +683,7 @@ const OtherProfile = (props) => {
               height={Platform.OS == "ios" ? "50" : "45"}
               width={Platform.OS == "ios" ? "50" : "45"}
             />
-            <SvgXml
+            {/* <SvgXml
               style={{
                 shadowOffset: {
                   width: 0,
@@ -701,7 +697,7 @@ const OtherProfile = (props) => {
               xml={shareIcon}
               height={Platform.OS == "ios" ? "50" : "45"}
               width={Platform.OS == "ios" ? "50" : "45"}
-            />
+            /> */}
 
             <SvgXml
               onPress={() => {
@@ -1078,11 +1074,19 @@ const OtherProfile = (props) => {
 
         <View
           transition={{ type: "timing" }}
-          animate={{ height: newUser?.user?.id==Data?.service?.user?.id? (newNavigation-40):newNavigation }}
+          animate={{
+            height:
+              newUser?.user?.id == Data?.service?.user?.id
+                ? newNavigation - 40
+                : newNavigation,
+          }}
           style={[
             {
               overflow: "hidden",
-              height: newUser?.user?.id==Data?.service?.user?.id? (newNavigation-40):newNavigation,
+              height:
+                newUser?.user?.id == Data?.service?.user?.id
+                  ? newNavigation - 40
+                  : newNavigation,
             },
           ]}>
           <Tab.Navigator
@@ -1228,79 +1232,6 @@ const OtherProfile = (props) => {
               }}
               component={PackageScreen}
             />
-
-            {/* <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[4].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[4].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickSubs,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                data: data,
-              }}
-              component={Subscriptions}
-            /> */}
-            {/* <Tab.Screen
-              options={{
-                tabBarLabel: ({ focused, color, size }) => (
-                  <Text
-                    style={{
-                      color: focused ? "#4ADE80" : "black",
-                      fontFamily: "Poppins-SemiBold",
-                      fontSize: Platform.OS == "ios" ? 18 : 17,
-                    }}>
-                    {initialState[3].title}
-                  </Text>
-                ),
-              }}
-              name={initialState[3].title}
-              initialParams={{
-                Images: Images,
-                primaryColor: primaryColor,
-                textColor: textColor,
-                Title: Title,
-                Description: Description,
-                ServiceList: ServiceList,
-                SubServiceList: SubServiceList,
-                NewDataList: NewDataList,
-                Facilities: Facilities,
-                Data: Data,
-                Price: Price,
-                onPress: clickInstallment,
-                PackageService: PackageService,
-                setNewNavigation: setNewNavigation,
-                RelatedServices: RelatedServices,
-                UnRelatedServices: UnRelatedServices,
-                scrollTo: scrollTo,
-                data: data,
-              }}
-              component={Installment}
-            /> */}
           </Tab.Navigator>
         </View>
         {bargaining && (
@@ -1455,6 +1386,8 @@ const OtherProfile = (props) => {
               navigation.navigate("ChatScreen", {
                 data: {
                   users: [user],
+                  service: Data?.service,
+                  serviceId: Data?.service?.id,
                 },
                 username: userInfo.username,
                 serviceId: data?.service?.id,
@@ -1472,21 +1405,6 @@ const OtherProfile = (props) => {
         navigation={navigation}
         Yoffset={offset ? offset : 0}
       />
-
-      {/* <BottomSheet
-        ref={sheetRef}
-        index={index}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-        enablePanDownToClose={true}
-        handleIndicatorStyle={{
-          backgroundColor: "#ffffff",
-        }}
-        handleStyle={{
-          paddingTop: -30,
-        }}>
-        <OfferNow navigation={navigation} type={"STARTING"} data={Data} />
-      </BottomSheet> */}
     </View>
   );
 };
@@ -1680,9 +1598,7 @@ const BargainingScreen = ({ navigation, route }) => {
   const [ServiceTableHeight, setServiceTableHeight] = React.useState(0);
   const scrollTo = params.scrollTo;
   const newUser = useSelector((state) => state.user);
-  const gigs = Data.service.gigs.filter(
-    (d) => d.type == "STARTING"
-  );
+  const gigs = Data.service.gigs.filter((d) => d.type == "STARTING");
   //console.log(Data);
 
   React.useEffect(() => {
@@ -1834,7 +1750,11 @@ const BargainingScreen = ({ navigation, route }) => {
           )}
         />
       </View>
-     <ServiceListViewer skills={gigs[0].skills} serviceCategory={{name:Data?.service?.category}} facilities={Facilities}/>
+      <ServiceListViewer
+        skills={gigs[0].skills}
+        serviceCategory={{ name: Data?.service?.category }}
+        facilities={Facilities}
+      />
       <View
         style={{
           backgroundColor: primaryColor,
@@ -1853,7 +1773,6 @@ const BargainingScreen = ({ navigation, route }) => {
           }}>
           From {Price} ৳
         </Text>
-        
       </View>
       <View style={{ backgroundColor: primaryColor }}>
         {newUser?.user?.id != Data?.service?.user?.id && (

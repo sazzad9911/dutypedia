@@ -42,7 +42,7 @@ import Barcode from "./../../components/Barcode";
 import IconButton from "./../../components/IconButton";
 import { AntDesign } from "@expo/vector-icons";
 import { convertServerFacilities, serverToLocal } from "../../Class/dataConverter";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { CheckBox } from "../Seller/Pricing";
 import {
   convertDate,
@@ -119,18 +119,20 @@ const OrderDetails = ({ navigation, route }) => {
     }
     wait(1000).then(() => setRefreshing(false));
   }, []);  
+  const isFocused=useIsFocused()
   useFocusEffect(
     React.useCallback(() => {
       return setListData(ListSelection);
     }, [ListSelection])
   );
   useEffect(() => {
-    if (orderId) {
+    if (orderId&&isFocused) {
+      setLoader(false);
       dataLoader(orderId);
     }else{
       setLoader(false);
     }
-  }, [orderId,refreshing]);
+  }, [orderId,refreshing,isFocused]);
   React.useEffect(() => {
     //console.log(data.selectedServices);
     //console.warn(subsOrder)
@@ -167,7 +169,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     //   return;
     // }
-    if (ListSelection.length == 0) {
+    if (ListData.length == 0) {
       setServiceError("*There at list one service required");
       ref?.current?.scrollTo({ y: 200 });
       return;

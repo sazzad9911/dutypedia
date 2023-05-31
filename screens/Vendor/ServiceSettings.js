@@ -1,5 +1,12 @@
-import React from "react";
-import { View, ScrollView, Text, Platform, Switch, Dimensions } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  Platform,
+  Switch,
+  Dimensions,
+} from "react-native";
 import { textColor, backgroundColor, primaryColor } from "../../assets/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { storeJson } from "../../Class/storage";
@@ -7,11 +14,10 @@ import { changeActiveService, getService } from "../../Class/service";
 import { vendorLogin } from "../../Class/auth";
 import { useIsFocused } from "@react-navigation/native";
 import ActivityLoader from "../../components/ActivityLoader";
-const {width,height}=Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 const ServiceSettings = ({ navigation, route }) => {
   const serviceSettings = useSelector((state) => state.serviceSettings);
   const initialState = [
-    
     {
       title: "Fixed",
       value: false,
@@ -40,14 +46,14 @@ const ServiceSettings = ({ navigation, route }) => {
   const [layoutHeight, setLayoutHeight] = React.useState();
   const isFocused = useIsFocused();
   const changeScreenName = params.changeScreenName;
-  const user=useSelector(state=>state.user)
-  const dispatch=useDispatch()
-  
- 
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [loader, setLoader] = useState(false);
+
   React.useEffect(() => {
     // console.log(serviceSettings);
-    if(vendor){
-      updateVendorInfo(vendor?.service?.id)
+    if (vendor) {
+      updateVendorInfo(vendor?.service?.id);
     }
   }, [isFocused]);
   const updateVendorInfo = async (id) => {
@@ -76,15 +82,14 @@ const ServiceSettings = ({ navigation, route }) => {
   React.useEffect(() => {
     if (layoutHeight && isFocused) {
       changeScreenName("Settings");
-      if(width<350&&Platform.OS=="android"){
+      if (width < 350 && Platform.OS == "android") {
         setNewNavigation(400);
-      }else{
+      } else {
         setNewNavigation(350);
       }
     }
   }, [layoutHeight + isFocused]);
 
-  
   return (
     <View
       onLayout={(e) => {
@@ -92,8 +97,7 @@ const ServiceSettings = ({ navigation, route }) => {
           setLayoutHeight(e.nativeEvent.layout.height);
         }
       }}
-      style={{ flex: 1 }}
-    >
+      style={{ flex: 1 }}>
       <View style={{ backgroundColor: primaryColor }}>
         {/* <Text
           style={{
@@ -109,7 +113,7 @@ const ServiceSettings = ({ navigation, route }) => {
       </View>
       <View>
         <View style={{ height: 20 }} />
-        {Array.isArray(Data) &&
+        {Array.isArray(Data)&&
           Data.map((doc, i) => (
             <Cart
               i={i}
@@ -117,32 +121,46 @@ const ServiceSettings = ({ navigation, route }) => {
               data={doc}
               title={doc.title}
               value={doc.value}
+              setLoader={setLoader}
             />
           ))}
-          {!Data&&(
-            <View style={{height:150,justifyContent:"center",alignItems:"center"}}>
-              <ActivityLoader/>
-            </View>
-          )}
+        {!Data||loader && (
+          <View
+            style={{
+              height: 150,
+              justifyContent: "center",
+              alignItems: "center",
+              position:"absolute",
+              zIndex:100,
+              width:"100%",
+              backgroundColor:"#ffffff"
+            }}>
+            <ActivityLoader />
+          </View>
+        )}
       </View>
     </View>
   );
 };
 
 export default ServiceSettings;
-const Cart = ({ title, value, i, data }) => {
+const Cart = ({ title, value, i, data,setLoader }) => {
   const [isEnabled, setIsEnabled] = React.useState(value);
   const dispatch = useDispatch();
   const serviceSettings = useSelector((state) => state.serviceSettings);
   const user = useSelector((state) => state.user);
   const vendor = useSelector((state) => state.vendor);
+  //const [loader, setLoader] = useState(false);
 
   const toggleSwitch = () => {
     if (user && vendor) {
       //console.log(user.token);
-      setIsEnabled((val) => !val);
+      setLoader(true);
       changeActiveService(user.token, vendor.service.id, data.type)
         .then((res) => {
+          setLoader(false);
+          //console.log(res.data.updatedService.activeServiceTypes)
+          setIsEnabled((val) => !val);
           vendorLogin(user.token, vendor.service.id)
             .then((res) => {
               if (res) {
@@ -154,8 +172,9 @@ const Cart = ({ title, value, i, data }) => {
             });
         })
         .catch((err) => {
+          setLoader(false);
           console.warn(err.response.data);
-          setIsEnabled((val) => !val);
+          //setIsEnabled((val) => !val);
         });
     }
   };
@@ -164,8 +183,7 @@ const Cart = ({ title, value, i, data }) => {
     <View
       style={{
         flexDirection: "row",
-      }}
-    >
+      }}>
       <View
         style={{
           flexDirection: "row",
@@ -176,34 +194,34 @@ const Cart = ({ title, value, i, data }) => {
           borderBottomColor: "#e5e5e5",
           paddingVertical: 10,
           paddingHorizontal: 20,
-        }}
-      >
+        }}>
         <Text
           style={{
             fontSize: 15,
             fontFamily: "Poppins-Medium",
             marginLeft: 5,
-          }}
-        >
+          }}>
           {title}
         </Text>
         <View>
-          <Switch
-            style={{
-              transform: [
-                { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
-                { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
-              ],
-            }}
-            trackColor={{ false: "#B0BEC5", true: "#06BD06" }}
-            thumbColor={isEnabled ? "#ECEFF1" : "#ECEFF1"}
-            ios_backgroundColor="#B0BEC5"
-            value={isEnabled}
-            onValueChange={(val) => {
-              //setMute(val);
-              toggleSwitch();
-            }}
-          />
+          
+            <Switch
+              style={{
+                transform: [
+                  { scaleX: Platform.OS == "ios" ? 0.8 : 1 },
+                  { scaleY: Platform.OS == "ios" ? 0.8 : 1 },
+                ],
+              }}
+              trackColor={{ false: "#B0BEC5", true: "#06BD06" }}
+              thumbColor={isEnabled ? "#ECEFF1" : "#ECEFF1"}
+              ios_backgroundColor="#B0BEC5"
+              value={isEnabled}
+              onValueChange={(val) => {
+                //setMute(val);
+                toggleSwitch();
+              }}
+            />
+       
         </View>
       </View>
       <View style={{ width: 0 }} />

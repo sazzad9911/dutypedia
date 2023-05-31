@@ -439,7 +439,7 @@ const FixedService = (props) => {
               }}
               title="Report"
             />
-            <Menu.Item onPress={() => {}} title="Copy URL" />
+            {/* <Menu.Item onPress={() => {}} title="Copy URL" /> */}
           </Menu>
 
           <SvgXml
@@ -457,7 +457,7 @@ const FixedService = (props) => {
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
           />
-          <SvgXml
+          {/* <SvgXml
             style={{
               shadowOffset: {
                 width: 0,
@@ -471,7 +471,7 @@ const FixedService = (props) => {
             xml={shareIcon}
             height={Platform.OS == "ios" ? "50" : "45"}
             width={Platform.OS == "ios" ? "50" : "45"}
-          />
+          /> */}
 
           {/* <SvgXml
             onPress={() => {

@@ -117,10 +117,11 @@ const UserOrderDetails = ({ navigation, route }) => {
     }
   }, [isFocused]);
   useEffect(() => {
-    if (orderId) {
+    if (orderId&&isFocused) {
+      setLoader(false);
       dataLoader(orderId);
     }
-  }, [orderId,refreshing]);
+  }, [orderId,refreshing,isFocused]);
   React.useEffect(() => {
     //console.log(data.selectedServices);
     //console.warn(subsOrder)
